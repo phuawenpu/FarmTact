@@ -1,12 +1,12 @@
 import { mkdir, writeFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const baseURL = process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:8080'
-const screenshotDir = resolve(root, 'apps/web/screenshots')
-const reportPath = resolve(root, 'reports/browser.json')
+const screenshotDir = resolve(root, process.env.FARMTACT_SCREENSHOT_DIR || 'apps/web/screenshots')
+const reportPath = resolve(root, process.env.FARMTACT_BROWSER_REPORT || 'reports/browser.json')
 const terminalStatuses = new Set(['ACCEPTED_FOR_SIMULATION', 'NO_FEASIBLE_PLAN', 'FAILED', 'CANCELLED', 'STALE_INPUT'])
 
 const report = {
@@ -65,7 +65,7 @@ async function waitForLatestRun(page, expectedParent = undefined) {
 async function capture(page, filename) {
   const path = resolve(screenshotDir, filename)
   await page.screenshot({ path, animations: 'disabled', caret: 'hide' })
-  report.screenshots.push(`apps/web/screenshots/${filename}`)
+  report.screenshots.push(relative(root, path))
 }
 
 await mkdir(screenshotDir, { recursive: true })

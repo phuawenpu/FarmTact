@@ -22,3 +22,10 @@ G0–G3 implemented and demonstrated. Ten crop profiles, twenty evidence records
 DeepSeek DS-G1/DS-G2 passed with real authenticated discovery/text/tool/vision/stream/six-role calls; the final bounded aggregate used 15/16 requests. The integrated app run `014966c917b7d2d0ce0bc1d94a41e256` passed vision, all six roles, automatic Balanced acceptance, recorded replay and a separately labelled numerical disruption replan. A rejected unsupported claim remains visible.
 
 G4 development verification passed: 191 Python tests, 44 real browser checks, generated-contract drift checks, and isolated clean-checkout reproduction. The clean build fetched 200 public rows and completed numerical import/planning/replay/replan with no inference calls. Final application source digest matches the clean tested tree. Mobile screenshots were inspected, including corrected total-horizon resource labels and stable opaque dialogs. See `reports/completion_audit.md` for commands, source/probe evidence and explicit non-production scope.
+
+
+## Fly deployment addendum — 2026-09-08
+
+The primary development instance is now https://farmtact.fly.dev/ on the existing `farmtact` app in Singapore. The separate `Dockerfile.fly` is built and deployed, with PostgreSQL on an encrypted persistent volume. Fly health checks and 44 remote browser checks passed; saved farm/session data survived deployment, and logs confirmed graceful PostgreSQL shutdown and cluster reuse. Twelve targeted deployment/security tests passed.
+
+Actual Fly vision and six DeepSeek roles completed, but an unsupported critic threshold caused claim validation to withhold acceptance; that composite report remains INCOMPLETE. Numerical mission acceptance and disruption replanning passed separately. Historical Sprite verification above retains its original scope and counts. See [Fly deployment evidence](../reports/fly_deployment.md) and the deployment runbook for current results and limitations.

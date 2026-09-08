@@ -120,3 +120,13 @@ def test_chunked_upload_stops_at_limit_and_invalid_length_is_client_error(env):
         for _ in range(17):yield b'x'*65536
     assert c.post('/api/v1/imports',content=chunks()).status_code==413
     assert c.post('/api/v1/imports',content=b'{}',headers={'Content-Length':'bad'}).status_code==400
+
+
+def test_tls_terminated_deployment_forces_secure_session_cookie(monkeypatch):
+    monkeypatch.setenv('FARMTACT_SECURE_COOKIES','true')
+    with TestClient(create_app(Store('sqlite://'),start_worker=False)) as client:
+        response=client.get('/api/v1/bootstrap')
+        assert response.status_code==200
+        assert all(cookie.secure for cookie in client.cookies.jar)
+        assert 'HttpOnly' in response.headers['set-cookie']
+        assert 'SameSite=strict' in response.headers['set-cookie']

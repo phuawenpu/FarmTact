@@ -180,7 +180,7 @@ def create_app(store=None,start_worker=True):
     def bootstrap(request:Request,response:Response):
         t=app.state.store.authenticate(request.cookies.get('farmtact_session'))
         if not t:
-            t,token=app.state.store.new_session();response.set_cookie('farmtact_session',token,httponly=True,samesite='strict',secure=request.url.scheme=='https',max_age=86400)
+            t,token=app.state.store.new_session();response.set_cookie('farmtact_session',token,httponly=True,samesite='strict',secure=request.url.scheme=='https' or os.environ.get('FARMTACT_SECURE_COOKIES')=='true',max_age=86400)
             app.state.store.save_farm(t,synthetic_farm().model_dump(mode='json'))
         farm=Farm.model_validate(app.state.store.latest_farm(t));r=app.state.store.latest_run(t)
         return dict(farm=farm_view(farm),crops=crop_views(farm),sources=source_views(),capabilities=capabilities(),latest_run=public_run(t,r) if r else None)

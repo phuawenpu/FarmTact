@@ -37,3 +37,10 @@ The service's Python egress hook allows only DeepSeek HTTPS and the configured P
 Final full suite: 191 Python cases passed; real browser suite: 44/44, zero console/page errors. New standalone dependency environments and an isolated PostgreSQL database reproduced public ingestion (200 rows), feature build, frontend build and numerical import/acceptance/replay/replan without inference. Application source digest was compared to the final tree and matched. Supplied credential values were absent from repository candidates. Optional Docker startup and operational farm promotion are explicitly unverified/out of scope.
 
 Screenshot inspection corrected an animation-timing capture and exposed a resource-label mismatch: total-horizon labour is now compared to horizon capacity, while summed new sowing area is distinguished from peak bed occupancy. Numerical downside metrics now take each metric's minimum across declared scenarios rather than assuming the low-yield scenario always has the lowest margin. Historical integration/replay quantities remain immutable.
+
+
+## Fly deployment addendum — 2026-09-08
+
+The primary development instance is now https://farmtact.fly.dev/ on the existing `farmtact` app in Singapore. The separate `Dockerfile.fly` is built and deployed, with PostgreSQL on an encrypted persistent volume. Fly health checks and 44 remote browser checks passed; saved farm/session data survived deployment, and logs confirmed graceful PostgreSQL shutdown and cluster reuse. Twelve targeted deployment/security tests passed.
+
+Actual Fly vision and six DeepSeek roles completed, but an unsupported critic threshold caused claim validation to withhold acceptance; that composite report remains INCOMPLETE. Numerical mission acceptance and disruption replanning passed separately. Historical Sprite verification above retains its original scope and counts. See [Fly deployment evidence](../reports/fly_deployment.md) and the deployment runbook for current results and limitations.

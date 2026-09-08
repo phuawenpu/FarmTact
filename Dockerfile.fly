@@ -1,0 +1,39 @@
+FROM node:24-bookworm-slim AS web
+WORKDIR /build/apps/web
+COPY apps/web/package*.json ./
+RUN npm ci
+COPY apps/web/ ./
+RUN npm run build
+
+FROM python:3.13-slim-bookworm AS python
+COPY requirements.lock.txt /tmp/requirements.lock.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.lock.txt
+
+# Both runtime stages use Bookworm so Python and PostgreSQL share the same ABI.
+FROM postgres:18-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates libbz2-1.0 libexpat1 libffi8 liblzma5 libreadline8 libsqlite3-0 \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --uid 10001 farmtact
+COPY --from=python /usr/local/ /usr/local/
+RUN ldconfig && python --version && postgres --version \
+    && python -c "import psycopg, sqlalchemy, pyarrow, duckdb; from ortools.sat.python import cp_model; from PIL import Image"
+WORKDIR /app
+COPY packages/ packages/
+COPY services/ services/
+COPY runtime/ runtime/
+COPY config/ config/
+COPY research/ research/
+COPY scripts/ scripts/
+COPY data/fixtures/ data/fixtures/
+COPY reports/deepseek/latest.json reports/deepseek/latest.json
+COPY --from=web /build/apps/web/dist apps/web/dist
+RUN for part in raw normalized manifests reports runtime; do \
+      ln -s /data/public-data/$part /app/data/$part; \
+    done \
+    && chmod -R a+rX /app \
+    && chmod 755 scripts/fly_entrypoint.sh \
+    && gosu farmtact python -c "import os; from services.api.app import app; from packages.fixtures import synthetic_farm; assert len(synthetic_farm().beds) == 16; assert not os.access('config/deepseek_runtime.json', os.W_OK)"
+ENV PYTHONUNBUFFERED=1
+EXPOSE 8080
+ENTRYPOINT ["/app/scripts/fly_entrypoint.sh"]

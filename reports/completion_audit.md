@@ -39,3 +39,10 @@ Predictions, margins, resource costs, scenario weights and outcomes come from a 
 Recorded integration/council reports preserve their original times, quantities and rejected claims. Later gateway/label/validation corrections are verified separately; replay does not pretend to be a fresh inference call. A numerical-only run has `council_status=not_run` and cannot pass authenticated provider gates.
 
 The demo's Python socket policy permits DeepSeek HTTPS and the configured PostgreSQL destination. It is defense in depth, not an OS/container network security boundary. Production needs infrastructure egress enforcement, a separate credential boundary, real tenant authorization/retention controls, farm recipe validation and operational approval. In-flight HTTP cancellation is bounded by timeouts rather than instantaneous interruption.
+
+
+## Fly deployment addendum — 2026-09-08
+
+The primary development instance is now https://farmtact.fly.dev/ on the existing `farmtact` app in Singapore. The separate `Dockerfile.fly` is built and deployed, with PostgreSQL on an encrypted persistent volume. Fly health checks and 44 remote browser checks passed; saved farm/session data survived deployment, and logs confirmed graceful PostgreSQL shutdown and cluster reuse. Twelve targeted deployment/security tests passed.
+
+Actual Fly vision and six DeepSeek roles completed, but an unsupported critic threshold caused claim validation to withhold acceptance; that composite report remains INCOMPLETE. Numerical mission acceptance and disruption replanning passed separately. Historical Sprite verification above retains its original scope and counts. See [Fly deployment evidence](fly_deployment.md) and the deployment runbook for current results and limitations.

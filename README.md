@@ -4,6 +4,10 @@ A mobile tactical planning board for a fictional Singapore vegetable farm. Ten c
 
 **This is a working development demonstration.** Farm orders, recipes, outcomes and financial results are synthetic. Public weather/trade/climate sources are separate, with observed/retrieved time, freshness, units, licence and source lineage. No planting, purchase or operational approval is sent to a real farm.
 
+## Deployed app
+
+**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. See the [Fly deployment runbook](docs/deployment/fly.md) and [deployment verification](reports/fly_deployment.md).
+
 ## Running in this Sprite
 
 The app is served at https://farm001-bqddl.sprites.app/ and locally at http://127.0.0.1:8080/. It uses PostgreSQL over a private Unix socket. The Sprite gateway retains its existing access policy.
@@ -33,7 +37,7 @@ npm run build --prefix apps/web
 
 In Sprite, use `sprite-env services create` for the final server command, rather than launching an unmanaged background process. Public ingestion has bounded timeouts and explicit failure/cache states. For offline normalization from already fetched bytes, use `scripts/build_dataset.py --offline`; raw snapshots are deliberately not committed. A fresh checkout needs the bounded live fetch to obtain them.
 
-A Docker/Compose definition is also included. Generate the ignored local database secret with `python scripts/bootstrap_env.py`, build the public context with the command above, then run `docker compose up --build`. Container startup is not yet verified in this Sprite; the running application uses the tested Sprite services.
+A Docker/Compose definition is also included. Generate the ignored local database secret with `python scripts/bootstrap_env.py`, build the public context with the command above, then run `docker compose up --build`. This optional Compose definition remains unverified. The separate `Dockerfile.fly` has been built and deployed successfully on Fly.io.
 
 ## Verify
 
@@ -44,7 +48,7 @@ node tests/browser/run.mjs
 .venv/bin/python scripts/generate_web_contracts.py --check
 ```
 
-Latest verification: **191 Python tests and 44 browser checks passed**, plus an isolated clean-checkout build and numerical workflow. See [the completion audit](reports/completion_audit.md) and [clean-checkout report](reports/clean_checkout.json).
+Original development verification: **191 Python tests and 44 browser checks passed**, plus an isolated clean-checkout build and numerical workflow. See [the completion audit](reports/completion_audit.md) and [clean-checkout report](reports/clean_checkout.json).
 
 The PostgreSQL concurrency tests use isolated test tenants and clean their own rows. Browser checks use Chromium against the running app at widths 360, 390, 430 and 1280; they select numerical-only planning to avoid paid calls. Install the browser once with `cd apps/web && npx playwright install chromium`.
 

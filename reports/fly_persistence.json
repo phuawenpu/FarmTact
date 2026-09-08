@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "secure_cookie": true,
+  "session_and_farm_survived_deployment": true,
+  "farm_version": 2,
+  "public_source_count": 7,
+  "source_states": {
+    "D01": "validated",
+    "D02": "validated",
+    "D03": "validated",
+    "D04": "validated",
+    "D05": "validated",
+    "D06": "validated",
+    "D11": "validated"
+  },
+  "secrets_printed": false,
+  "graceful_database_shutdown_observed": true,
+  "database_shutdown_utc": "2026-09-08T15:56:55Z",
+  "database_ready_after_deployment_utc": "2026-09-08T15:57:01Z"
+}
