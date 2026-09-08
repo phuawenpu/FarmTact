@@ -9,6 +9,8 @@ kill_timeout = 90
 [env]
   FARMTACT_EXECUTION_MODE = "test"
   FARMTACT_SECURE_COOKIES = "true"
+  FARMTACT_PUBLIC_ORIGIN = "https://farmtact.fly.dev"
+  FARMTACT_TRUST_FLY_PROXY = "true"
   FARMTACT_DATA_MODE = "synthetic_demo"
   FARMTACT_DATABASE_URL = "postgresql+psycopg://farmtact@/farmtact?host=/tmp/farmtact-pg"
   PYTHONUNBUFFERED = "1"

@@ -2,7 +2,7 @@
 import os, secrets, hashlib
 from contextlib import contextmanager
 from contextvars import ContextVar
-from datetime import datetime,timezone
+from datetime import datetime,timezone,timedelta
 from pathlib import Path
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, JSON, ForeignKey, ForeignKeyConstraint, UniqueConstraint, select, update
 from sqlalchemy.pool import StaticPool
@@ -29,6 +29,7 @@ class Store:
         # Register additive gameplay tables before schema creation.
         import services.api.scenarios
         import services.api.conversation_store
+        import services.api.security
         metadata.create_all(self.engine)
         if self.engine.dialect.name=='postgresql':
             from sqlalchemy import inspect,text
@@ -59,7 +60,8 @@ class Store:
         return tenant,token
     def authenticate(self,token):
         if not token or len(token)>200:return None
-        with self.connection() as c:return c.execute(select(tenants.c.id).where(tenants.c.session_hash==hashlib.sha256(token.encode()).hexdigest())).scalar_one_or_none()
+        cutoff=(datetime.now(timezone.utc)-timedelta(days=1)).isoformat()
+        with self.connection() as c:return c.execute(select(tenants.c.id).where(tenants.c.session_hash==hashlib.sha256(token.encode()).hexdigest(),tenants.c.created_at>=cutoff)).scalar_one_or_none()
     def latest_farm(self,tenant):
         with self.connection() as c:return c.execute(select(farms.c.payload).where(farms.c.tenant_id==tenant).order_by(farms.c.version.desc()).limit(1)).scalar_one_or_none()
     def save_farm(self,tenant,payload):
@@ -110,17 +112,18 @@ class Store:
             for row in rows:
                 p=row['payload'];p['status']='FAILED';p['warnings'].append('Worker restarted during execution; inference was not repeated. Start a new mission explicitly.')
                 c.execute(update(runs).where(runs.c.id==row['id']).values(status='FAILED',payload=p))
-    def release_unused_calls(self,count):
-        if not isinstance(count,int) or count<0:raise ValueError('Nonnegative unused reservation required')
+    def release_unused_calls(self,count,day=None):
+        if not isinstance(count,int) or isinstance(count,bool) or count<0:raise ValueError('Nonnegative unused reservation required')
         if count==0:return
-        day=now()[:10]
+        day=day or now()[:10]
         with self.connection(write=True) as c:
             result=c.execute(update(budget).where(budget.c.id==day,budget.c.reserved_calls>=count).values(reserved_calls=budget.c.reserved_calls-count))
             if result.rowcount!=1:raise ValueError('Invalid budget reconciliation')
-    def reserve_calls(self,count,limit=48):
+    def reserve_calls(self,count,limit=48,day=None):
         if not isinstance(count,int) or isinstance(count,bool) or count<=0:raise ValueError("Positive request reservation required")
+        if not isinstance(limit,int) or isinstance(limit,bool) or not 1<=limit<=48:raise ValueError('Daily limit must be within the hard 48-call ceiling')
         # One global daily reservation prevents public demo sessions multiplying paid requests.
-        day=now()[:10]
+        day=day or now()[:10]
         from sqlalchemy.exc import IntegrityError
         try:
             with self.connection(write=True) as c:c.execute(budget.insert().values(id=day,reserved_calls=0))

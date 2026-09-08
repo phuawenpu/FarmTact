@@ -12,6 +12,7 @@ import io
 import json
 import math
 import os
+import re
 import threading
 import time
 import warnings
@@ -63,6 +64,8 @@ TIME_LIMIT_CEILINGS = {
     "write_timeout_seconds": 30.0,
     "pool_timeout_seconds": 5.0,
 }
+DEFAULT_PROVIDER_USER_ID = "farmtact_standalone_trial"
+PROVIDER_USER_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,512}\Z")
 
 
 class DeepSeekGatewayError(RuntimeError):
@@ -384,13 +387,17 @@ class DeepSeekGateway:
         config: GatewayConfig,
         *,
         api_key: str | None = None,
+        user_id: str = DEFAULT_PROVIDER_USER_ID,
         budget: RunBudget | None = None,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
         key = api_key if api_key is not None else os.environ.get("DEEPSEEK_API_KEY")
         if not key:
             raise DeepSeekBlockedError("DeepSeek credential is unavailable")
+        if not isinstance(user_id, str) or not PROVIDER_USER_ID_PATTERN.fullmatch(user_id):
+            raise DeepSeekPolicyError("DeepSeek provider user_id is outside reviewed bounds")
         self.config = config
+        self._user_id = user_id
         self._concurrency = threading.BoundedSemaphore(config.limits.max_concurrency)
         self.budget = budget or RunBudget(
             max_requests=config.limits.max_requests,
@@ -419,10 +426,17 @@ class DeepSeekGateway:
         path: str | Path,
         *,
         api_key: str | None = None,
+        user_id: str = DEFAULT_PROVIDER_USER_ID,
         budget: RunBudget | None = None,
         transport: httpx.BaseTransport | None = None,
     ) -> "DeepSeekGateway":
-        return cls(GatewayConfig.load(path), api_key=api_key, budget=budget, transport=transport)
+        return cls(
+            GatewayConfig.load(path),
+            api_key=api_key,
+            user_id=user_id,
+            budget=budget,
+            transport=transport,
+        )
 
     def __enter__(self) -> "DeepSeekGateway":
         return self
@@ -740,6 +754,7 @@ class DeepSeekGateway:
             "messages": clean_messages,
             "max_tokens": max_tokens,
             "thinking": {"type": thinking},
+            "user_id": self._user_id,
         }
         if reasoning_effort is not None:
             if thinking != "enabled":
@@ -984,6 +999,15 @@ def _encode_payload(payload: Mapping[str, Any], max_bytes: int) -> bytes:
     if len(encoded) > max_bytes:
         raise DeepSeekPolicyError("DeepSeek request exceeds FarmTact byte limit")
     return encoded
+
+
+def provider_user_id_for_tenant(tenant_id: str) -> str:
+    """Return a stable provider pseudonym without disclosing the internal tenant ID."""
+
+    if not isinstance(tenant_id, str) or not 1 <= len(tenant_id) <= 200:
+        raise DeepSeekPolicyError("Internal tenant identifier is outside reviewed bounds")
+    digest = hashlib.sha256(tenant_id.encode("utf-8")).hexdigest()
+    return f"farmtact_{digest}"
 
 
 def _status_error(status_code: int, request_id: str | None) -> DeepSeekGatewayError:

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "source": "Read-only PostgreSQL inference_budget query through authenticated Fly SSH",
+  "utc_day": "2026-09-08",
+  "reserved_calls_before_probes": 26,
+  "reserved_calls_after_probes": 26,
+  "additional_provider_reservations": 0,
+  "live_probe_valid_inference_jobs_submitted": 0
+}

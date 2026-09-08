@@ -75,13 +75,14 @@ class Worker:
             emit('tool_completed',dict(tool='forecast_and_optimize',candidate_count=computed['candidate_count']))
             for s in r['strategies']:emit('strategy_ready',dict(id=s['id'],name=s['name'],status=s['status']))
             claims=[];audits=[]
+            reservation_day=now()[:10]
             if r['council_requested']:
                 if not os.environ.get('DEEPSEEK_API_KEY'):
                     r['council_status']='blocked';r['warnings'].append('DeepSeek environment credential unavailable. Numerical baseline remains available; no agent discussion was generated.')
-                elif not store.reserve_calls(9 if r.get('with_vision') else 8):
+                elif not store.reserve_calls(9 if r.get('with_vision') else 8,48,reservation_day):
                     r['council_status']='blocked';r['warnings'].append('Daily development inference budget reached; no additional paid requests were made.')
                 else:
-                    from runtime.deepseek_gateway import RunBudget
+                    from runtime.deepseek_gateway import RunBudget,provider_user_id_for_tenant
                     class AuditedBudget(RunBudget):
                         def reserve(self,output_tokens):
                             super().reserve(output_tokens)
@@ -95,9 +96,9 @@ class Worker:
                         if r.get('with_vision'):
                             from services.api.vision import observe_fixture
                             emit('tool_started',dict(tool='vision_observation',role='visual_observer'))
-                            visual=observe_fixture(id,budget=call_budget);r['visual_observation']=visual
+                            visual=observe_fixture(id,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant));r['visual_observation']=visual
                             emit('tool_completed',dict(tool='vision_observation',role='visual_observer',asset_id=visual['asset_id'],review_status=visual['review_status']))
-                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget)
+                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant))
                         r['council_status']='completed' if all(c['status']=='validated' for c in claims) else 'claims_rejected'
                     except Exception as exc:
                         # No raw provider/transport message or request may enter public records.
@@ -108,7 +109,7 @@ class Worker:
                         emit('input_warning',dict(message=r['warnings'][-1]))
                     finally:
                         unused=reserved_calls-call_budget.request_count
-                        store.release_unused_calls(unused)
+                        store.release_unused_calls(unused,reservation_day)
                         r['inference_budget']=dict(reserved_calls=reserved_calls,requests_consumed=call_budget.request_count,unused_released=unused,reserved_output_tokens=call_budget.reserved_output_tokens)
             else:r['council_status']='not_run'
             r['claims']=claims;r['inference_audit']=audits
@@ -144,10 +145,12 @@ def create_app(store=None,start_worker=True):
     @asynccontextmanager
     async def lifespan(app):
         app.state.store=store or Store();app.state.worker=Worker(app.state.store)
+        from services.api.security import AbuseLimits
+        app.state.abuse_limits=AbuseLimits(app.state.store)
         if start_worker:app.state.worker.start()
         yield
         app.state.worker.stop.set()
-    app=FastAPI(title='FarmTact',version='0.1.0',lifespan=lifespan,docs_url=None,redoc_url=None)
+    app=FastAPI(title='FarmTact',version='0.1.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
     @app.middleware('http')
     async def boundaries(request,call_next):
         if request.method not in ('GET','HEAD','OPTIONS'):
@@ -161,10 +164,13 @@ def create_app(store=None,start_worker=True):
             if declared>1048576:return JSONResponse({'detail':'Upload exceeds 1 MiB'},413)
             # Enforce the cap while consuming a chunked upload, before allocation/parsing.
             chunks=[];received=0
-            async for chunk in request.stream():
-                received+=len(chunk)
-                if received>1048576:return JSONResponse({'detail':'Upload exceeds 1 MiB'},413)
-                chunks.append(chunk)
+            try:
+                async with asyncio.timeout(15):
+                    async for chunk in request.stream():
+                        received+=len(chunk)
+                        if received>1048576:return JSONResponse({'detail':'Upload exceeds 1 MiB'},413)
+                        chunks.append(chunk)
+            except TimeoutError:return JSONResponse({'detail':'Request body timed out'},408)
             request._body=b''.join(chunks)
         response=await call_next(request)
         response.headers['X-Content-Type-Options']='nosniff'
@@ -172,6 +178,8 @@ def create_app(store=None,start_worker=True):
         response.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
         response.headers['Cache-Control']='no-store' if request.url.path.startswith('/api') else 'public, max-age=60'
         return response
+    from services.api.security import AbuseMiddleware
+    app.add_middleware(AbuseMiddleware)
     @app.exception_handler(RequestValidationError)
     async def invalid(request,exc):return JSONResponse({'detail':'Invalid request schema','errors':[{'loc':e['loc'],'type':e['type']} for e in exc.errors()]},422)
     def tenant(request):

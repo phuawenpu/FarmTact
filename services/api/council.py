@@ -15,7 +15,7 @@ class Claim(Strict):
     tool_result_refs: list[str] = Field(min_length=1,max_length=8)
     recommendation: Literal['proceed_simulation','exclude_unsupported','no_feasible_plan']
 
-def council(computed,run_id,event,cancelled=lambda:False,visual=None,progress=None,budget=None):
+def council(computed,run_id,event,cancelled=lambda:False,visual=None,progress=None,budget=None,provider_user_id=None):
     refs={}
     for s in computed['strategies']:
         for k,v in s['metrics'].items():refs[f"strategy:{s['id']}.metrics.{k}"]=v
@@ -32,7 +32,7 @@ def council(computed,run_id,event,cancelled=lambda:False,visual=None,progress=No
     data['evidence_context']=[{k:e.get(k) for k in ('evidence_id','finding','scope','limit','access_review_status')} for e in records if e['evidence_id'] in ('P01','P04','P06','P08','P16','P19')]
     permitted={e['evidence_id'] for e in data['evidence_context']}
     claims=[]; audits=[]; repairs=0
-    with DeepSeekGateway.from_config(ROOT/'config/deepseek_runtime.json',budget=budget or RunBudget(max_requests=8,max_reserved_output_tokens=16384,max_wall_seconds=300)) as gateway:
+    with DeepSeekGateway.from_config(ROOT/'config/deepseek_runtime.json',budget=budget or RunBudget(max_requests=8,max_reserved_output_tokens=16384,max_wall_seconds=300),**({'user_id':provider_user_id} if provider_user_id else {})) as gateway:
         for role in ROLES:
             if cancelled():raise RuntimeError('Mission cancelled')
             event('tool_started',dict(tool='deepseek_review',role=role))

@@ -27,6 +27,7 @@ from runtime.deepseek_gateway import (
     DeepSeekGatewayError,
     DeepSeekResponseError,
     RunBudget,
+    provider_user_id_for_tenant,
 )
 from services.api.conversation_store import ConversationStore
 from services.api.store import now
@@ -1187,7 +1188,8 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
 
     council_mode = request_payload["mode"] == "council"
     reserved_calls = 10 if council_mode else 5
-    if not store.reserve_calls(reserved_calls):
+    reservation_day = now()[:10]
+    if not store.reserve_calls(reserved_calls, 48, reservation_day):
         message = "Daily development inference budget reached; no advisor response was generated."
         _finish_request(
             persistence,
@@ -1231,7 +1233,9 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
             previous_reply = generated[-1]["id"]
     try:
         with DeepSeekGateway.from_config(
-            ROOT / "config/deepseek_runtime.json", budget=budget
+            ROOT / "config/deepseek_runtime.json",
+            budget=budget,
+            user_id=provider_user_id_for_tenant(tenant),
         ) as gateway:
             for turn_index, role in enumerate(
                 request_payload["roles"][completed_turns:], start=completed_turns
@@ -1417,4 +1421,4 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
         )
     finally:
         unused = reserved_calls - budget.request_count
-        store.release_unused_calls(unused)
+        store.release_unused_calls(unused, reservation_day)

@@ -26,7 +26,12 @@ def test_idempotency_and_schema_cannot_override_provider_or_phase(env):
     c,app=env;one=start(c);two=start(c)
     assert one.json()['id']==two.json()['id'] and two.json()['reused']
     assert start(c,council=True).status_code==409
+    # Space schema probes across rate windows; abuse rejection has separate tests.
+    import time
+    tick=[time.time()]
+    app.state.abuse_limits.clock=lambda:tick[0]
     for field in ('provider','model','tenant_id','development_phase','execution_mode','decision_policy'):
+        tick[0]+=61
         assert c.post('/api/v1/planning-runs',json={'council':False,field:'attacker'},headers={'Idempotency-Key':field}).status_code==422
 
 def test_cross_origin_and_upload_limits(env):

@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Fly health is available",
+      "pass": true
+    },
+    {
+      "name": "No public schema or generic provider proxy at /openapi.json",
+      "pass": true
+    },
+    {
+      "name": "No public schema or generic provider proxy at /docs",
+      "pass": true
+    },
+    {
+      "name": "No public schema or generic provider proxy at /redoc",
+      "pass": true
+    },
+    {
+      "name": "No public schema or generic provider proxy at /v1/chat/completions",
+      "pass": true
+    },
+    {
+      "name": "No public schema or generic provider proxy at /api/v1/deepseek",
+      "pass": true
+    },
+    {
+      "name": "Cross-origin writes are rejected",
+      "pass": true
+    },
+    {
+      "name": "Rotating XFF and invalid cookies cannot evade the AI IP limit",
+      "pass": true,
+      "statuses": [
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        429
+      ]
+    },
+    {
+      "name": "Rate denial includes a bounded Retry-After",
+      "pass": true
+    },
+    {
+      "name": "Forging Fly client identity cannot reopen the allowance",
+      "pass": true,
+      "status": 429
+    },
+    {
+      "name": "Read-only health remains available after AI throttling",
+      "pass": true
+    }
+  ],
+  "valid_inference_jobs_submitted": 0
+}
