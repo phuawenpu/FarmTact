@@ -1,0 +1,191 @@
+{
+  "started_at": "2026-09-08T17:11:27.010Z",
+  "base_url": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "farm world is the homepage",
+      "pass": true
+    },
+    {
+      "name": "world renders all 16 real beds",
+      "pass": true,
+      "detail": 16
+    },
+    {
+      "name": "all six advisors are reachable",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "all eight farm facilities are tappable",
+      "pass": true,
+      "detail": 8
+    },
+    {
+      "name": "mobile navigation exposes all six rooms",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "scene touch targets are at least 44 pixels",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "zoom control changes the world transform",
+      "pass": true
+    },
+    {
+      "name": "mouse wheel zooms without scrolling the page",
+      "pass": true,
+      "detail": {
+        "transform": "transform: translate(0px, 0px) scale(1.12);",
+        "before": 222,
+        "after": 222
+      }
+    },
+    {
+      "name": "pointer drag pans the world",
+      "pass": true
+    },
+    {
+      "name": "date scrubber previews scheduled changes",
+      "pass": true,
+      "detail": {
+        "changed": 8
+      }
+    },
+    {
+      "name": "preview is explicitly non-observational",
+      "pass": true
+    },
+    {
+      "name": "accessible table lists all beds",
+      "pass": true,
+      "detail": 16
+    },
+    {
+      "name": "dialog restores focus to launcher",
+      "pass": true
+    },
+    {
+      "name": "quest journal exposes four repeatable challenges",
+      "pass": true
+    },
+    {
+      "name": "busy-market quest opens with relevant demand change",
+      "pass": true,
+      "detail": "125"
+    },
+    {
+      "name": "all five bounded sandbox controls are visible",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "branch result names explicit policy",
+      "pass": true
+    },
+    {
+      "name": "before-after table shows exact deltas",
+      "pass": true
+    },
+    {
+      "name": "result exposes frozen snapshot association",
+      "pass": true
+    },
+    {
+      "name": "experiment persisted as an isolated completed branch",
+      "pass": true,
+      "detail": {
+        "id": "d32e9a188b1720e39b4958fd63a31f96",
+        "status": "COMPLETED",
+        "inference_calls": 0
+      }
+    },
+    {
+      "name": "inspection earns the trade-off badge only after review",
+      "pass": true
+    },
+    {
+      "name": "interpretation stays attached to exact scenario branch",
+      "pass": true
+    },
+    {
+      "name": "conversation replay adds no messages or paid calls",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 0
+      }
+    },
+    {
+      "name": "typed follow-up and council controls remain available",
+      "pass": true
+    },
+    {
+      "name": "completed branches remain revisitable",
+      "pass": true
+    },
+    {
+      "name": "reduced motion is honored",
+      "pass": true,
+      "detail": "1e-05s"
+    },
+    {
+      "name": "360px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "no browser console errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "console_errors": [],
+  "page_errors": [],
+  "screenshots": [
+    "apps/web/screenshots/gameplay/quest-comparison-390.png",
+    "apps/web/screenshots/gameplay/farm-world-360.png",
+    "apps/web/screenshots/gameplay/farm-world-390.png",
+    "apps/web/screenshots/gameplay/farm-world-430.png",
+    "apps/web/screenshots/gameplay/farm-world-1280.png"
+  ],
+  "scenario_id": "d32e9a188b1720e39b4958fd63a31f96",
+  "completed_at": "2026-09-08T17:12:04.963Z",
+  "status": "PASS"
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Mature curly kale illustration">
+  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5f9c64"/><stop offset=".55" stop-color="#2d7352"/><stop offset="1" stop-color="#154a3b"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".055" numOctaves="2" seed="25" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.5"/></filter></defs>
+  <ellipse cx="60" cy="91" rx="43" ry="7" fill="#173a2b" opacity=".18"/>
+  <g filter="url(#paint)" stroke="#245b43" stroke-linejoin="round">
+    <path d="M59 87C57 65 57 43 59 20M58 71 27 49M60 65l32-25M59 51 38 24M60 45 79 18" fill="none" stroke="#91b784" stroke-width="5" stroke-linecap="round"/>
+    <path d="M29 54c-5 6-15 4-16-4-9 0-12-10-5-15-5-8 2-16 10-13 2-8 13-9 17-2 8-4 16 3 13 11 8 3 8 14 0 17-3 8-13 10-19 6Z" fill="url(#leaf)"/>
+    <path d="M91 45c6 6 15 3 16-5 9-1 11-11 4-15 4-9-4-16-12-12-3-8-14-8-17-1-8-3-16 5-12 13-8 3-7 14 1 17 4 7 14 9 20 3Z" fill="url(#leaf)"/>
+    <path d="M38 29c-6 2-11-5-8-11-7-4-4-13 4-14 1-8 11-11 17-5 7-4 15 3 12 11 6 6 1 15-7 15-3 8-13 10-18 4Z" fill="url(#leaf)"/>
+    <path d="M78 23c5 3 11-2 10-9 8-2 7-12 0-14-1-8-11-10-16-4-7-3-14 5-10 12-5 6 1 14 9 13 3 7 12 8 17 3Z" fill="url(#leaf)"/>
+    <path d="M59 35c-10 1-16-7-12-15-6-7 1-16 10-13 5-8 16-4 16 6 8 5 5 16-4 18-1 4-5 5-10 4Z" fill="#417f59"/>
+  </g>
+  <path d="M19 88c24-7 58-7 82 0" fill="none" stroke="#936843" stroke-width="5" stroke-linecap="round"/>
+</svg>

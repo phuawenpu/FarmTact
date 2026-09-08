@@ -14,27 +14,36 @@ export function CropArt({ cropId, color = '#93c64b', stage = 'growing', compact 
       </div>
     )
   }
-  const seed = [...cropId].reduce((total, char) => total + char.charCodeAt(0), 0)
-  const leafCount = stage === 'nursery' ? 3 : stage === 'ready' ? 9 : 6
-  const stems = Array.from({ length: leafCount }, (_, index) => {
-    const angle = -68 + (136 / Math.max(leafCount - 1, 1)) * index
-    const length = 31 + ((seed + index * 7) % 19)
-    return { angle, length, width: 11 + ((seed + index * 3) % 8) }
-  })
+
+  const illustratedCrops = new Set([
+    'caixin', 'pak_choi', 'kailan', 'bayam', 'kangkong',
+    'lettuce', 'kale', 'mustard_greens', 'malabar_spinach', 'sweet_potato_leaves',
+  ])
+  const stagedCrops = new Set(['caixin', 'pak_choi', 'kailan', 'lettuce'])
+  const normalizedStage = /nursery|seed|sow/.test(stage)
+    ? 'seedling'
+    : /ready|harvest|mature/.test(stage)
+      ? 'ready'
+      : 'growing'
+
+  if (!illustratedCrops.has(cropId)) {
+    return (
+      <div className={`crop-art crop-art--empty ${compact ? 'crop-art--compact' : ''}`} aria-hidden="true">
+        <svg viewBox="0 0 120 100"><path d="M14 72c23-12 69-14 92 0v18H14z" fill="#886545"/><path d="M25 79h70M37 72v18M61 70v20M84 72v18" stroke="#b99567" strokeWidth="2"/></svg>
+      </div>
+    )
+  }
+
+  const assetStage = stagedCrops.has(cropId) ? normalizedStage : 'ready'
+  const background = `linear-gradient(165deg, color-mix(in srgb, ${color} 12%, #eef2d8), #d9e2bd)`
   return (
-    <div className={`crop-art ${compact ? 'crop-art--compact' : ''}`} aria-hidden="true">
-      <svg viewBox="0 0 120 100">
-        <ellipse cx="60" cy="88" rx="35" ry="7" fill="#142f24" opacity=".16" />
-        {stems.map(({ angle, length, width }, index) => (
-          <g key={index} transform={`translate(60 82) rotate(${angle})`}>
-            <path d={`M0 0 Q 2 -${length / 2} 0 -${length}`} stroke="#397345" strokeWidth="3" fill="none" />
-            <ellipse cx="0" cy={-length} rx={width} ry={width * 1.55} fill={color} transform={`rotate(${index % 2 ? 18 : -18})`} />
-            <path d={`M0 -${length + width}v${width * 1.8}`} stroke="#f2f5bc" strokeWidth="1.4" opacity=".65" />
-          </g>
-        ))}
-        <circle cx="60" cy="78" r={stage === 'ready' ? 17 : 12} fill={color} />
-        <path d="M29 87c16-4 45-5 62 0" stroke="#8e6948" strokeWidth="5" strokeLinecap="round" />
-      </svg>
+    <div className={`crop-art ${compact ? 'crop-art--compact' : ''}`} aria-hidden="true" style={{ background }}>
+      <img
+        src={`/art/crops/${cropId}-${assetStage}.svg`}
+        alt=""
+        draggable="false"
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+      />
     </div>
   )
 }

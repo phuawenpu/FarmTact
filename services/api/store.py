@@ -26,6 +26,9 @@ class Store:
             from sqlalchemy import event
             @event.listens_for(self.engine,'connect')
             def fk(dbapi,record): dbapi.execute('PRAGMA foreign_keys=ON')
+        # Register additive gameplay tables before schema creation.
+        import services.api.scenarios
+        import services.api.conversation_store
         metadata.create_all(self.engine)
         if self.engine.dialect.name=='postgresql':
             from sqlalchemy import inspect,text

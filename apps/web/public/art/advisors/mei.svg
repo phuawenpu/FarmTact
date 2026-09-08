@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Mei, crop scientist">
+  <defs><linearGradient id="coat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8f3dc"/><stop offset="1" stop-color="#c7dbc4"/></linearGradient><linearGradient id="skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0bd8d"/><stop offset="1" stop-color="#c97f5e"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".035" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".65"/></filter></defs>
+  <circle cx="60" cy="60" r="57" fill="#dcebd2"/>
+  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 118c2-27 17-43 42-43s40 16 42 43Z" fill="url(#coat)" stroke="#426d55" stroke-width="2"/>
+    <path d="m45 78 15 23 15-23" fill="#78a658" stroke="#426d55" stroke-width="2"/>
+    <path d="M50 80V67h20v13c-4 7-16 7-20 0Z" fill="url(#skin)"/>
+    <path d="M35 43c0-20 10-31 26-31 18 0 27 13 26 33l-6 22c-7 11-14 16-22 16-10 0-18-8-23-20Z" fill="url(#skin)" stroke="#814f3f" stroke-width="1.4"/>
+    <path d="M34 47c-4-23 8-39 27-39 16 0 27 11 28 30-10-1-18-7-25-16-7 11-17 18-30 18Z" fill="#263b35"/>
+    <path d="M35 45c-8 1-8 14 2 16M86 45c8 1 8 14-2 16" fill="url(#skin)" stroke="#814f3f" stroke-width="1.4"/>
+    <g fill="none" stroke="#365a58" stroke-width="2"><rect x="39" y="44" width="17" height="12" rx="5"/><rect x="65" y="44" width="17" height="12" rx="5"/><path d="M56 49h9"/></g>
+    <path d="M55 67c4 3 8 3 12 0" fill="none" stroke="#914d48" stroke-width="1.8"/>
+    <path d="M30 112c4-12 10-17 18-19M90 112c-4-12-10-17-18-19" fill="none" stroke="#9ab899" stroke-width="3"/>
+    <g transform="translate(84 82) rotate(8)"><path d="M0 18V4" stroke="#447b49" stroke-width="2"/><path d="M1 10C-8 9-11 3-9-2-1-3 4 2 3 9Z" fill="#7fb456"/><path d="M1 6c8-1 11-6 10-12-8 0-13 4-12 11Z" fill="#559547"/></g>
+  </g>
+</svg>

@@ -1,13 +1,15 @@
-import { Activity, Database, FlaskConical, LayoutGrid, Leaf, Menu, MoreHorizontal, Plus, Settings2, Sprout, X } from 'lucide-react'
+import { Activity, Database, FlaskConical, Leaf, Map, Menu, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
 import { CropLibrary, DataRoom, Outcomes, Setup } from './components/Rooms'
 import { StatePanel, StatusPill } from './components/Visuals'
+import { World } from './components/World'
 import { api } from './lib/api'
 import type { AppView, Bootstrap, Crop, Run } from './lib/types'
 
-const navItems: Array<{ id: AppView; label: string; icon: typeof LayoutGrid }> = [
-  { id: 'board', label: 'Board', icon: LayoutGrid },
+const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
+  { id: 'world', label: 'Farm', icon: Map },
+  { id: 'board', label: 'Farm tools', icon: Wrench },
   { id: 'crops', label: 'Crops', icon: Leaf },
   { id: 'data', label: 'Data', icon: Database },
   { id: 'outcomes', label: 'Outcomes', icon: FlaskConical },
@@ -15,7 +17,7 @@ const navItems: Array<{ id: AppView; label: string; icon: typeof LayoutGrid }> =
 ]
 
 export default function App() {
-  const [view, setView] = useState<AppView>('board')
+  const [view, setView] = useState<AppView>('world')
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
   const [loading, setLoading] = useState(true)
@@ -133,14 +135,14 @@ export default function App() {
 
   const seed = async () => {
     setBusy('seed'); setError(null)
-    try { await api.importSeed(); await loadBootstrap(); setView('board') }
+    try { await api.importSeed(); await loadBootstrap(); setView('world') }
     catch (caught) { setError(caught instanceof Error ? caught.message : 'The synthetic demo could not be imported.') }
     finally { setBusy(null) }
   }
 
   const importFarm = async (farm: unknown) => {
     setBusy('import'); setError(null)
-    try { await api.importFarm(farm); await loadBootstrap(); setView('board') }
+    try { await api.importFarm(farm); await loadBootstrap(); setView('world') }
     catch (caught) { setError(caught instanceof Error ? caught.message : 'The farm record could not be imported.') }
     finally { setBusy(null) }
   }
@@ -178,6 +180,7 @@ export default function App() {
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
+              {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
               {view === 'data' && <DataRoom sources={bootstrap.sources} capabilities={bootstrap.capabilities} />}
@@ -189,8 +192,7 @@ export default function App() {
       </div>
 
       <nav className="thumb-nav" aria-label="FarmTact rooms">
-        {navItems.slice(0, 4).map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => setView(id)}><span><Icon size={20}/></span><small>{label}</small></button>)}
-        <button className={view === 'setup' ? 'is-active' : ''} onClick={() => setView('setup')}><span><Menu size={20}/></span><small>Setup</small></button>
+        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => setView(id)}><span><Icon size={19}/></span><small>{id === 'board' ? 'Tools' : label}</small></button>)}
       </nav>
     </div>
   )

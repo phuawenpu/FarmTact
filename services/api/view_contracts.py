@@ -44,6 +44,8 @@ class Bed(ViewModel):
     area_m2: float
     system: str
     crop_id: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
+    batch_id: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
+    transplant_date: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
     stage: BedStage
     sow_date: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
     harvest_date: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
@@ -72,6 +74,7 @@ class Farm(ViewModel):
     timezone: str
     data_mode: str
     cutoff: str
+    planning_date: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
     horizon_days: int
     beds: list[Bed]
     resources: FarmResources

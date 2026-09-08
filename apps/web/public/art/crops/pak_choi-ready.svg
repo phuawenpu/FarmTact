@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Harvest-ready pak choi illustration">
+  <defs><radialGradient id="leaf"><stop stop-color="#67a947"/><stop offset="1" stop-color="#174f32"/></radialGradient><linearGradient id="petiole"><stop stop-color="#fffced"/><stop offset=".55" stop-color="#d9e7c2"/><stop offset="1" stop-color="#9dbb84"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".04" numOctaves="2" seed="10" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".85"/></filter></defs>
+  <ellipse cx="60" cy="91" rx="45" ry="7" fill="#173a2b" opacity=".18"/>
+  <g filter="url(#paint)" stroke-linejoin="round">
+    <path d="M55 87C42 69 28 53 13 38M58 88C51 64 46 42 43 20M61 88C60 62 61 40 62 15M64 88c8-24 16-44 24-60M66 87c15-18 28-33 41-44" fill="none" stroke="url(#petiole)" stroke-width="11" stroke-linecap="round"/>
+    <path d="M16 44C-1 49-9 35-2 19c19-4 33 6 34 22Z" fill="url(#leaf)" stroke="#245b37"/>
+    <path d="M44 25C28 22 22 9 31-3c17 2 27 13 24 27Z" fill="url(#leaf)" stroke="#245b37"/>
+    <path d="M62 20C50 11 52-2 64-9c14 8 17 20 7 31Z" fill="url(#leaf)" stroke="#245b37"/>
+    <path d="M87 33C91 15 104 7 118 16c-3 18-15 27-30 21Z" fill="url(#leaf)" stroke="#245b37"/>
+    <path d="M103 49c5-17 18-24 31-15-5 17-17 24-30 19Z" fill="url(#leaf)" stroke="#245b37"/>
+    <path d="M22 88c23-7 52-7 76 0" fill="none" stroke="#936843" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

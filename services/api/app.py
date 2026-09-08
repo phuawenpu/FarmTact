@@ -40,11 +40,25 @@ class Worker:
     def __init__(self,store):self.store=store;self.stop=threading.Event();self.thread=None
     def start(self):
         self.store.interrupt_abandoned()
+        from services.api.scenarios import interrupt_scenarios
+        interrupt_scenarios(self.store)
+        from services.api.conversation_store import ConversationStore
+        ConversationStore(self.store).interrupt_abandoned()
         self.thread=threading.Thread(target=self.loop,daemon=True);self.thread.start()
     def loop(self):
         while not self.stop.wait(.3):
             for tenant,id in self.store.pending():
                 if self.store.claim(tenant,id):self.execute(tenant,id)
+            from services.api.scenarios import pending_scenarios, execute_scenario
+            for tenant,id in pending_scenarios(self.store):
+                if self.stop.is_set():break
+                execute_scenario(self.store,tenant,id)
+            from services.api.conversation_store import ConversationStore
+            from services.api.conversations import execute_conversation_job
+            conversations=ConversationStore(self.store)
+            for tenant,id in conversations.pending():
+                if self.stop.is_set():break
+                if conversations.claim(tenant,id):execute_conversation_job(self.store,tenant,id)
     def execute(self,tenant,id):
         store=self.store;r=store.get_run(tenant,id)
         if r.get('cancel_requested'):
@@ -308,9 +322,14 @@ def create_app(store=None,start_worker=True):
             for s in r['strategies']:
                 if s['id']==id:return s
         raise HTTPException(404,'Strategy not found')
+    from services.api.scenarios import install_routes
+    install_routes(app,tenant)
+    from services.api.conversations import install_routes as install_conversations
+    install_conversations(app,tenant)
     dist=ROOT/'apps/web/dist'
     if dist.exists():
         app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+        if (dist/'art').exists():app.mount('/art',StaticFiles(directory=dist/'art'),name='art')
         @app.get('/')
         def index():return FileResponse(dist/'index.html')
     return app

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ravi, demand analyst">
+  <defs><linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2a44e"/><stop offset="1" stop-color="#c86b3c"/></linearGradient><linearGradient id="skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#bd7750"/><stop offset="1" stop-color="#75452f"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".035" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".65"/></filter></defs>
+  <circle cx="60" cy="60" r="57" fill="#f5ddb2"/>
+  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 118c3-27 20-42 46-42 27 0 43 15 46 42Z" fill="url(#shirt)" stroke="#824838" stroke-width="2"/>
+    <path d="M50 80V68h21v12c-5 8-16 8-21 0Z" fill="url(#skin)"/>
+    <path d="M34 43c1-20 11-31 28-31 18 1 27 14 25 34l-6 21c-6 11-14 16-23 16-10-1-18-8-23-21Z" fill="url(#skin)" stroke="#5e392b" stroke-width="1.4"/>
+    <path d="M34 43c-2-20 10-35 29-35 17 0 27 13 26 31-10-1-18-5-25-13-9 8-18 12-30 11Z" fill="#2d2927"/>
+    <path d="M34 47c-8 1-7 14 2 16M86 47c8 1 7 14-2 16" fill="url(#skin)" stroke="#5e392b" stroke-width="1.4"/>
+    <path d="M46 48h8M68 48h8" stroke="#3b2924" stroke-width="2"/>
+    <path d="M51 67c5 4 10 4 15 0" fill="none" stroke="#592c2d" stroke-width="1.8"/>
+    <path d="M47 78 60 91l13-13" fill="#f8d59a" stroke="#8f563a" stroke-width="1.5"/>
+    <g transform="translate(79 86) rotate(5)"><rect width="21" height="29" rx="2" fill="#fff8e7" stroke="#68523d" stroke-width="1.5"/><rect x="6" y="-3" width="9" height="6" rx="2" fill="#68523d"/><path d="M5 9h11M5 15h8M5 21h10" stroke="#d07042" stroke-width="1.5"/></g>
+  </g>
+</svg>

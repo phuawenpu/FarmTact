@@ -47,3 +47,19 @@ def test_generated_web_contract_is_current_and_deterministic() -> None:
     assert "anyOf" not in first
     assert "export type BedStage = 'empty' | 'nursery' | 'growing' | 'ready'" in first
     assert "violations: Array<string | ConstraintViolation>" in first
+
+
+def test_public_forecast_card_uses_forecast_source_rows(monkeypatch):
+    from types import SimpleNamespace
+    from services.api.views import source_views
+    context={
+        'sources':[{'source_id':'D04','status':'validated','coverage':{'row_count':1},'source_time':'2026-09-08T00:00:00Z'}],
+        'weather_observations':[],
+        'weather_forecasts':[{'source_id':'D04','value':'Cloudy with afternoon showers'}],
+        'snapshots':[], 'execution_mode':'cached_snapshot',
+    }
+    monkeypatch.setattr('packages.ingestion.get_public_context',lambda *_:SimpleNamespace(as_dict=lambda:context))
+    card=source_views()[0]
+    assert card['summary']=='Cloudy with afternoon showers'
+    assert card['observed_at']=='2026-09-08T00:00:00Z'
+    assert card['origin']=='public' and card['execution_mode']=='cached_snapshot'

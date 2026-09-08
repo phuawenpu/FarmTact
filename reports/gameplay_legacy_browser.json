@@ -1,0 +1,244 @@
+{
+  "started_at": "2026-09-08T16:53:36.032Z",
+  "base_url": "http://127.0.0.1:8080",
+  "execution_policy": "numerical-only browser missions; shared replay read-only; no paid council calls",
+  "checks": [
+    {
+      "name": "root serves application",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "DeepSeek mission action visible",
+      "pass": true
+    },
+    {
+      "name": "numerical mission action visible",
+      "pass": true
+    },
+    {
+      "name": "recorded replay action visible",
+      "pass": true
+    },
+    {
+      "name": "shared replay visibly labelled",
+      "pass": true
+    },
+    {
+      "name": "shared replay has no replan action",
+      "pass": true
+    },
+    {
+      "name": "shared replay has no worklist link",
+      "pass": true
+    },
+    {
+      "name": "shared replay leaves numerical mission available",
+      "pass": true
+    },
+    {
+      "name": "shared replay exposes six stored advisor findings",
+      "pass": true
+    },
+    {
+      "name": "Escape closes council dialog",
+      "pass": true
+    },
+    {
+      "name": "numerical mission accepted",
+      "pass": true,
+      "detail": "ACCEPTED_FOR_SIMULATION"
+    },
+    {
+      "name": "numerical mission skipped council",
+      "pass": true,
+      "detail": "not_run"
+    },
+    {
+      "name": "numerical mission returns three strategies",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "Balanced selected automatically",
+      "pass": true
+    },
+    {
+      "name": "labour is explicitly horizon-scoped",
+      "pass": true
+    },
+    {
+      "name": "weekly labour label is absent",
+      "pass": true
+    },
+    {
+      "name": "labour meter uses full horizon capacity",
+      "pass": true
+    },
+    {
+      "name": "new sowing area avoids peak-occupancy claim",
+      "pass": true
+    },
+    {
+      "name": "accepted strategy sheet exposes worklist",
+      "pass": true
+    },
+    {
+      "name": "accepted worklist downloads",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "worklist is simulation-labelled CSV",
+      "pass": true
+    },
+    {
+      "name": "Escape closes strategy dialog",
+      "pass": true
+    },
+    {
+      "name": "timeline table alternative visible",
+      "pass": true
+    },
+    {
+      "name": "timeline table includes allocations",
+      "pass": true
+    },
+    {
+      "name": "terminal event stream is readable",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "crop-delay replan accepted",
+      "pass": true,
+      "detail": "ACCEPTED_FOR_SIMULATION"
+    },
+    {
+      "name": "replan remains numerical-only",
+      "pass": true,
+      "detail": "not_run"
+    },
+    {
+      "name": "replan is parent-linked",
+      "pass": true
+    },
+    {
+      "name": "replan disruption is synthetic",
+      "pass": true
+    },
+    {
+      "name": "replan returns three strategies",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "stale prior worklist is rejected",
+      "pass": true,
+      "detail": 409
+    },
+    {
+      "name": "360px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "Data room renders current source cards",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "Data room labels DeepSeek text capability",
+      "pass": true
+    },
+    {
+      "name": "Data room humanizes public execution",
+      "pass": true
+    },
+    {
+      "name": "crop detail loads evidence records",
+      "pass": true
+    },
+    {
+      "name": "Escape closes crop profile",
+      "pass": true
+    },
+    {
+      "name": "Outcomes labels demand fill correctly",
+      "pass": true
+    },
+    {
+      "name": "owned run exposes worklist in Outcomes",
+      "pass": true
+    },
+    {
+      "name": "no browser console errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "console_errors": [],
+  "page_errors": [],
+  "screenshots": [
+    "apps/web/screenshots/gameplay-legacy/final-shared-replay-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-plan-resources-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-balanced-sheet-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-timeline-table-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-disruption-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-board-360.png",
+    "apps/web/screenshots/gameplay-legacy/final-board-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-board-430.png",
+    "apps/web/screenshots/gameplay-legacy/final-board-1280.png",
+    "apps/web/screenshots/gameplay-legacy/final-data-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-crop-evidence-390.png",
+    "apps/web/screenshots/gameplay-legacy/final-outcomes-390.png"
+  ],
+  "runs": {
+    "numerical": {
+      "id": "2e33cc8f53192f976abfb69e1b751cf4",
+      "status": "ACCEPTED_FOR_SIMULATION",
+      "council_status": "not_run"
+    },
+    "replan": {
+      "id": "bab9bdc8fecb20754087c639e4b918b1",
+      "status": "ACCEPTED_FOR_SIMULATION",
+      "council_status": "not_run",
+      "parent_run_id": "2e33cc8f53192f976abfb69e1b751cf4"
+    }
+  },
+  "completed_at": "2026-09-08T16:54:11.659Z",
+  "status": "PASS"
+}

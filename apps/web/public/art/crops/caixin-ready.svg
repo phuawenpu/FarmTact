@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Harvest-ready caixin illustration">
+  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9dd15b"/><stop offset=".55" stop-color="#4b9848"/><stop offset="1" stop-color="#24643d"/></linearGradient><linearGradient id="stem" x1="0" x2="1"><stop stop-color="#b7d77b"/><stop offset="1" stop-color="#609c50"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".045" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".75"/></filter></defs>
+  <ellipse cx="60" cy="90" rx="42" ry="7" fill="#173a2b" opacity=".17"/>
+  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M58 87C57 61 57 36 59 12M62 79C46 66 34 55 22 43M60 69c15-15 26-30 35-45M58 56C44 44 36 31 32 18M59 45c11-11 18-22 20-34" fill="none" stroke="url(#stem)" stroke-width="5"/>
+    <path d="M22 46C8 49 1 40 5 28c14-1 24 6 25 15Z" fill="url(#leaf)" stroke="#285f3b"/>
+    <path d="M95 27c0-15 10-24 23-21 0 14-8 23-21 24Z" fill="url(#leaf)" stroke="#285f3b"/>
+    <path d="M32 21C18 20 12 10 17 1c13 2 20 9 20 19Z" fill="url(#leaf)" stroke="#285f3b"/>
+    <path d="M79 14C84 3 94-1 102 4c-2 11-11 17-22 16Z" fill="url(#leaf)" stroke="#285f3b"/>
+    <path d="M58 18c-8-5-10-13-5-18 9 3 12 9 10 17Z" fill="url(#leaf)" stroke="#285f3b"/>
+    <g fill="#f2c94c" stroke="#b88127" stroke-width=".7"><circle cx="59" cy="9" r="3.2"/><circle cx="52" cy="13" r="2.7"/><circle cx="65" cy="14" r="2.6"/><circle cx="58" cy="3" r="2.4"/></g>
+    <path d="M25 87c21-6 49-6 70 0" fill="none" stroke="#966a45" stroke-width="5"/>
+  </g>
+</svg>

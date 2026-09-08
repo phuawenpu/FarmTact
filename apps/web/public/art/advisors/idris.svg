@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Idris, independent critic">
+  <defs><linearGradient id="vest" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4d6770"/><stop offset="1" stop-color="#283e49"/></linearGradient><linearGradient id="skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#986344"/><stop offset="1" stop-color="#593724"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".035" numOctaves="2" seed="12" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".65"/></filter></defs>
+  <circle cx="60" cy="60" r="57" fill="#dce3dc"/>
+  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 118c3-28 19-43 46-43s43 15 46 43Z" fill="#e6dfcc" stroke="#40535a" stroke-width="2"/>
+    <path d="M28 115c2-19 10-31 22-37l10 20 11-20c12 7 20 19 22 37Z" fill="url(#vest)"/>
+    <path d="M50 79V67h21v12c-5 8-16 8-21 0Z" fill="url(#skin)"/>
+    <path d="M34 43c1-20 11-31 28-31 18 1 27 14 25 34l-6 21c-6 11-14 16-23 16-10-1-18-8-23-21Z" fill="url(#skin)" stroke="#43281f" stroke-width="1.4"/>
+    <path d="M34 43c-2-20 9-35 28-35 17 0 27 12 28 30-11 0-20-5-27-13-8 8-17 12-29 12Z" fill="#20272a"/>
+    <path d="M34 47c-8 1-7 14 2 16M86 47c8 1 7 14-2 16" fill="url(#skin)" stroke="#43281f" stroke-width="1.4"/>
+    <g fill="none" stroke="#2a3438" stroke-width="2"><rect x="39" y="44" width="17" height="12" rx="3"/><rect x="65" y="44" width="17" height="12" rx="3"/><path d="M56 49h9"/></g>
+    <path d="M51 65c5 1 10 1 15 0" fill="none" stroke="#482525" stroke-width="1.8"/>
+    <path d="m45 78 15 20 15-20" fill="#f4efe1" stroke="#40535a" stroke-width="1.5"/>
+    <g transform="translate(91 89) rotate(-10)"><circle r="11" fill="#cce5e7" fill-opacity=".55" stroke="#526970" stroke-width="3"/><path d="m8 8 10 12" stroke="#526970" stroke-width="5"/></g>
+    <path d="M17 107h25" stroke="#b58b52" stroke-width="3"/><path d="M20 101h20M23 95h15" stroke="#8d6e49" stroke-width="2"/>
+  </g>
+</svg>

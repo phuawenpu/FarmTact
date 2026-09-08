@@ -21,9 +21,9 @@ def farm_view(farm):
         v.update(stage='empty',progress=0)
         if b:
             r=recipes[b.recipe_id];progress=max(0,min(1,(day-b.sow_date).days/(b.harvest_date-b.sow_date).days))
-            v.update(crop_id=r.crop_id,stage='ready' if b.harvest_date<=day else ('nursery' if day<b.transplant_date else 'growing'),sow_date=str(b.sow_date),harvest_date=str(b.harvest_date),progress=round(progress,3))
+            v.update(batch_id=b.id,transplant_date=str(b.transplant_date),crop_id=r.crop_id,stage='ready' if b.harvest_date<=day else ('nursery' if day<b.transplant_date else 'growing'),sow_date=str(b.sow_date),harvest_date=str(b.harvest_date),progress=round(progress,3))
         beds.append(v)
-    return dict(id=farm.id,name=farm.name,location=farm.location,timezone=farm.timezone,data_mode=farm.data_mode,cutoff=farm.cutoff.isoformat(),horizon_days=farm.horizon_days,beds=beds,resources=dict(area_m2=sum(float(b.area_m2) for b in farm.beds),nursery_sites=farm.resources.nursery_sites,labour_hours_per_week=float(farm.resources.labour_hours_per_week),cash_sgd=float(farm.resources.cash_sgd)),orders=[dict(id=o.id,crop_id=o.crop_id,due_date=str(o.due_date),quantity_kg=float(o.quantity_kg-o.cancelled_kg),price_sgd_per_kg=float(o.price_sgd_per_kg)) for o in farm.orders],version=farm.version)
+    return dict(id=farm.id,name=farm.name,location=farm.location,timezone=farm.timezone,data_mode=farm.data_mode,cutoff=farm.cutoff.isoformat(),planning_date=str(farm.planning_date),horizon_days=farm.horizon_days,beds=beds,resources=dict(area_m2=sum(float(b.area_m2) for b in farm.beds),nursery_sites=farm.resources.nursery_sites,labour_hours_per_week=float(farm.resources.labour_hours_per_week),cash_sgd=float(farm.resources.cash_sgd)),orders=[dict(id=o.id,crop_id=o.crop_id,due_date=str(o.due_date),quantity_kg=float(o.quantity_kg-o.cancelled_kg),price_sgd_per_kg=float(o.price_sgd_per_kg)) for o in farm.orders],version=farm.version)
 
 def capabilities():
     report_path=ROOT/'reports/deepseek/latest.json'
@@ -45,7 +45,7 @@ def source_views():
     for source in context.get('sources',[]):
         id=source['source_id'];rows=[r for r in context['weather_observations'] if r['source_id']==id and id in ('D01','D02','D03')]
         row=min(rows,key=lambda r:(float(r.get('latitude') or 0)-1.43)**2+((float(r.get('longitude') or 0)-103.71)*cos(radians(1.43)))**2) if rows else None
-        forecasts=[r for r in context['weather_forecasts'] if r['source_id']==id and id in ('D01','D02','D03')]
+        forecasts=[r for r in context['weather_forecasts'] if r['source_id']==id and id in ('D04','D05')]
         coverage=source.get('coverage',{})
         summary=f"{coverage.get('row_count',0)} validated observations. "
         value=None;unit=source.get('unit')

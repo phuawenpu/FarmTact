@@ -27,7 +27,7 @@ function check(name, pass, detail = undefined) {
 }
 
 async function visibleButton(page, name) {
-  return page.getByRole('button', { name, exact: true }).filter({ visible: true }).first()
+  return page.getByRole('button', { name: name === 'Farm tools' ? /^(Farm tools|Tools)$/ : name, exact: true }).filter({ visible: true }).first()
 }
 
 async function openRoomByKeyboard(page, name) {
@@ -82,6 +82,7 @@ try {
 
   const rootResponse = await page.goto(baseURL, { waitUntil: 'networkidle' })
   check('root serves application', rootResponse?.status() === 200, rootResponse?.status())
+  await openRoomByKeyboard(page, 'Farm tools')
   check('DeepSeek mission action visible', await page.getByRole('button', { name: 'Plan with DeepSeek council' }).isVisible())
   check('numerical mission action visible', await page.getByRole('button', { name: 'Plan with numerical tools' }).isVisible())
   check('recorded replay action visible', await page.getByRole('button', { name: 'Replay recorded demo' }).isVisible())
@@ -111,6 +112,7 @@ try {
   check('numerical mission returns three strategies', numericalRun.strategies?.length === 3, numericalRun.strategies?.length)
   check('Balanced selected automatically', numericalRun.strategies?.find(item => item.id === numericalRun.accepted_strategy_id)?.name === 'Balanced')
   await page.reload({ waitUntil: 'networkidle' })
+  await openRoomByKeyboard(page, 'Farm tools')
 
   const currentFarm = await page.evaluate(async () => (await (await fetch('/api/v1/bootstrap')).json()).farm)
   const labourLabel = `Labour over ${currentFarm.horizon_days} days`
@@ -169,11 +171,13 @@ try {
   const staleWorklist = worklistHref ? await context.request.get(`${baseURL}${worklistHref}`) : null
   check('stale prior worklist is rejected', staleWorklist?.status() === 409, staleWorklist?.status())
   await page.reload({ waitUntil: 'networkidle' })
+  await openRoomByKeyboard(page, 'Farm tools')
   await capture(page, 'final-disruption-390.png')
 
   for (const width of [360, 390, 430, 1280]) {
     await page.setViewportSize({ width, height: width === 1280 ? 900 : 844 })
     await page.goto(baseURL, { waitUntil: 'networkidle' })
+    await openRoomByKeyboard(page, 'Farm tools')
     const dimensions = await page.evaluate(() => ({ body: document.body.scrollWidth, viewport: innerWidth }))
     check(`${width}px has no body overflow`, dimensions.body <= dimensions.viewport + 1, dimensions)
     await capture(page, `final-board-${width}.png`)

@@ -8,6 +8,8 @@ export interface Bed {
   area_m2: number
   system: string
   crop_id?: string
+  batch_id?: string
+  transplant_date?: string
   stage: BedStage
   sow_date?: string
   harvest_date?: string
@@ -39,6 +41,7 @@ export interface Farm {
   timezone: string
   data_mode: string
   cutoff: string
+  planning_date?: string
   horizon_days: number
   beds: Bed[]
   resources: FarmResources
@@ -277,4 +280,4 @@ export interface Bootstrap {
   [key: string]: unknown
 }
 
-export type AppView = 'board' | 'crops' | 'data' | 'outcomes' | 'setup'
+export type AppView = 'world' | 'board' | 'crops' | 'data' | 'outcomes' | 'setup'

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Lettuce seedling illustration">
+  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c4dc69"/><stop offset="1" stop-color="#62a84f"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".06" numOctaves="2" seed="17" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1"/></filter></defs>
+  <ellipse cx="60" cy="87" rx="29" ry="5" fill="#173a2b" opacity=".15"/>
+  <g filter="url(#paint)" stroke-linejoin="round">
+    <path d="M59 83 45 50M61 83l14-35M60 79V40" fill="none" stroke="#76a94d" stroke-width="3" stroke-linecap="round"/>
+    <path d="M46 53C30 56 21 46 27 33c15-2 26 5 27 17Z" fill="url(#leaf)" stroke="#568e45"/>
+    <path d="M74 52c1-14 11-22 24-17 0 13-9 21-23 20Z" fill="url(#leaf)" stroke="#568e45"/>
+    <path d="M60 43c-9-7-9-17-1-23 10 6 11 15 4 23Z" fill="url(#leaf)" stroke="#568e45"/>
+    <path d="M44 85c10-4 22-4 32 0" fill="none" stroke="#9b704a" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>
