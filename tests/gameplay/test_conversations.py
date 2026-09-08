@@ -8,8 +8,10 @@ from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
 from packages.contracts import content_hash
+from packages.planner.engine import allocations_existing
 from runtime.deepseek_gateway import DeepSeekGatewayError, DeepSeekResponseError, SafeAudit, Usage
 from services.api.app import create_app
 from services.api.conversation_store import ConversationStore
@@ -36,6 +38,7 @@ def minimal_plan(farm):
 
 def minimal_three_policy_plan(farm):
     strategies = []
+    allocations = allocations_existing(farm)
     for index, name in enumerate(("Lean", "Balanced", "Resilient")):
         strategies.append(
             {
@@ -44,7 +47,8 @@ def minimal_three_policy_plan(farm):
                 "status": "FEASIBLE",
                 "metrics": {"margin_sgd": 500.0 - index, "fill_rate": 0.9},
                 "violations": [],
-                "allocations": [],
+                "allocations": deepcopy(allocations),
+                "ledger": [],
             }
         )
     return {
@@ -75,12 +79,18 @@ class FakeGateway:
             if isinstance(response, Exception):
                 raise response
         else:
+            relationship = (
+                "conclusion"
+                if "relationship should normally be conclusion"
+                in messages[0]["content"]
+                else "answer"
+            )
             response = {
                 "content": f"{ADVISORS[next(key for key, row in ADVISORS.items() if row['role'] == role)]['name']} reviewed the frozen comparison.",
                 "evidence_refs": [],
                 "tool_refs": ["farm:resources.cash_sgd"],
                 "highlight_refs": ["bed:bed-01"],
-                "relationship": "answer",
+                "relationship": relationship,
                 "proposed_actions": [],
             }
         data = output_model.model_validate(response)
@@ -128,6 +138,18 @@ def gateway_factory(monkeypatch, calls, responses=None):
     monkeypatch.setattr(
         "services.api.conversations.DeepSeekGateway.from_config", staticmethod(factory)
     )
+
+
+def schema_failure(response):
+    try:
+        AdvisorReply.model_validate(response)
+    except ValidationError as cause:
+        error = DeepSeekResponseError(
+            "DeepSeek structured output failed local validation"
+        )
+        error.__cause__ = cause
+        return error
+    raise AssertionError("Fixture response unexpectedly passed schema validation")
 
 
 def create(client, key="conversation", **body):
@@ -258,6 +280,38 @@ def test_invitation_is_two_sided_exchange_with_specific_reply_graph_and_prior_tu
     context = json.loads(second_invitation_call["messages"][1]["content"])
     assert any(turn["id"] == invited_reply["id"] for turn in context["prior_turns"])
 
+    return_invitation = client.post(
+        f"/api/v1/conversations/{conversation_id}/invite",
+        json={
+            "advisor": "mei",
+            "question": "Answer Ravi's selected point.",
+            "reply_to": invited_reply["id"],
+        },
+        headers={"Idempotency-Key": "invite-mei-to-ravi"},
+    )
+    assert return_invitation.status_code == 202
+    execute(store, tenant, return_invitation.json()["id"])
+    messages = client.get(f"/api/v1/conversations/{conversation_id}").json()[
+        "messages"
+    ]
+    mei_reply, ravi_return = messages[-2:]
+    assert mei_reply["speaker_id"] == "mei"
+    assert mei_reply["reply_to"] == invited_reply["id"]
+    assert ravi_return["speaker_id"] == "ravi"
+    assert ravi_return["reply_to"] == mei_reply["id"]
+
+    same_author = client.post(
+        f"/api/v1/conversations/{conversation_id}/invite",
+        json={
+            "advisor": "ravi",
+            "question": "Reply to your own selected point.",
+            "reply_to": invited_reply["id"],
+        },
+        headers={"Idempotency-Key": "invite-ravi-to-ravi"},
+    )
+    assert same_author.status_code == 422
+    assert same_author.json()["detail"] == "Invite a different advisor into this exchange"
+
 
 def test_council_has_eight_bounded_turns_all_with_prior_claims_and_critic_conclusion(
     env, monkeypatch
@@ -292,7 +346,44 @@ def test_council_has_eight_bounded_turns_all_with_prior_claims_and_critic_conclu
         earlier = [turn for turn in context["prior_turns"] if turn["speaker"] == "advisor"]
         assert len(earlier) == index
     assert advisor_messages[-1]["critic_conclusion"] is True
+    assert all(message["request_mode"] == "council" for message in advisor_messages)
+    assert advisor_messages[-1]["relationship"] == "conclusion"
+    assert advisor_messages[-1]["validation_status"] == "references_verified"
     assert advisor_messages[-1]["reply_to"] == advisor_messages[-2]["id"]
+
+
+def test_council_final_answer_is_unsupported_and_not_a_critic_conclusion(
+    env, monkeypatch
+):
+    client, store, tenant = env
+    calls = []
+    malformed_final = {
+        "content": "The final review remains attached to the frozen evidence.",
+        "evidence_refs": [],
+        "tool_refs": ["farm:resources.cash_sgd"],
+        "highlight_refs": [],
+        "relationship": "answer",
+        "proposed_actions": [],
+    }
+    gateway_factory(monkeypatch, calls, responses=[malformed_final] * 8)
+    conversation_id = create(client, key="malformed-council-conversation").json()["id"]
+    council = client.post(
+        f"/api/v1/conversations/{conversation_id}/council",
+        json={"question": "Reach a critic conclusion from the frozen evidence."},
+        headers={"Idempotency-Key": "malformed-council"},
+    ).json()
+    execute(store, tenant, council["id"])
+    transcript = client.get(f"/api/v1/conversations/{conversation_id}").json()
+    final_message = transcript["messages"][-1]
+    assert len(calls) == 8
+    assert final_message["advisor_role"] == "independent_critic"
+    assert final_message["relationship"] == "answer"
+    assert final_message["validation_status"] == "unsupported"
+    assert final_message["critic_conclusion"] is False
+    assert (
+        "Final independent critic turn must use the conclusion relationship"
+        in final_message["validation_errors"]
+    )
 
 
 def test_unsupported_numbers_evidence_and_actions_are_visible_but_never_executed(
@@ -331,6 +422,104 @@ def test_unsupported_numbers_evidence_and_actions_are_visible_but_never_executed
         "validation_errors"
     ]
     assert reply["proposed_actions"][0]["status"] == "blocked_unsupported"
+    assert store.latest_farm(tenant) == farm_before
+
+
+@pytest.mark.parametrize(
+    ("action", "expected_errors"),
+    [
+        (
+            {
+                "control": "delay_days",
+                "target_id": None,
+                "value": 15,
+                "unit": "percent",
+            },
+            {
+                "Delay action unit must be days",
+                "Delay action value must be between 0 and 14 days",
+                "Delay action must target an actual frozen batch",
+            },
+        ),
+        (
+            {
+                "control": "yield_percent",
+                "target_id": "missing-batch",
+                "value": 49,
+                "unit": "days",
+            },
+            {
+                "Yield action unit must be percent",
+                "Yield action value must be between 50 and 100 percent",
+                "Yield action must target an actual frozen batch",
+            },
+        ),
+        (
+            {
+                "control": "demand_percent",
+                "target_id": "unsupported-crop",
+                "value": 151,
+                "unit": "days",
+            },
+            {
+                "Demand action unit must be percent",
+                "Demand action value must be between 50 and 150 percent",
+                "Demand action must target a supported simulated crop",
+            },
+        ),
+        (
+            {
+                "control": "cash_percent",
+                "target_id": "batch-01",
+                "value": 49,
+                "unit": "days",
+            },
+            {
+                "Resource action unit must be percent",
+                "Resource action value must be between 50 and 150 percent",
+                "Resource actions must use a null target_id",
+            },
+        ),
+    ],
+    ids=["delay", "yield", "demand", "resource"],
+)
+def test_cross_field_action_errors_persist_as_blocked_without_schema_repair(
+    env, monkeypatch, action, expected_errors
+):
+    client, store, tenant = env
+    calls = []
+    gateway_factory(
+        monkeypatch,
+        calls,
+        responses=[
+            {
+                "content": "The frozen context supports a cautious review. This proposed experiment needs corrected controls.",
+                "evidence_refs": [],
+                "tool_refs": ["farm:resources.cash_sgd"],
+                "highlight_refs": [],
+                "relationship": "answer",
+                "proposed_actions": [action],
+            }
+        ],
+    )
+    conversation_id = create(
+        client, key=f"invalid-{action['control']}-conversation"
+    ).json()["id"]
+    queued = send(
+        client, conversation_id, key=f"invalid-{action['control']}-message"
+    ).json()
+    farm_before = deepcopy(store.latest_farm(tenant))
+    execute(store, tenant, queued["id"])
+    request = ConversationStore(store).get_request(tenant, queued["id"])
+    reply = client.get(f"/api/v1/conversations/{conversation_id}").json()[
+        "messages"
+    ][-1]
+    assert len(calls) == 1
+    assert request["status"] == "COMPLETED"
+    assert request["repair_attempts"] == 0
+    assert reply["validation_status"] == "unsupported"
+    assert expected_errors.issubset(reply["validation_errors"])
+    assert reply["proposed_actions"] == [{**action, "status": "blocked_unsupported"}]
     assert store.latest_farm(tenant) == farm_before
 
 
@@ -508,8 +697,15 @@ def test_interruption_and_provider_error_preserve_partial_state_without_requeue(
 def test_one_direct_format_repair_and_second_invalid_response_stops(env, monkeypatch):
     client, store, tenant = env
     calls = []
-    schema_error = DeepSeekResponseError(
-        "DeepSeek structured output failed local validation"
+    schema_error = schema_failure(
+        {
+            "content": "x" * 901,
+            "evidence_refs": [],
+            "tool_refs": [],
+            "highlight_refs": [],
+            "relationship": "answer",
+            "proposed_actions": [],
+        }
     )
     gateway_factory(monkeypatch, calls, responses=[schema_error, schema_error])
     conversation_id = create(client).json()["id"]
@@ -519,6 +715,70 @@ def test_one_direct_format_repair_and_second_invalid_response_stops(env, monkeyp
     assert request["status"] == "FAILED"
     assert request["repair_attempts"] == 1
     assert len(calls) == 2
+    terminal_event = next(
+        event
+        for event in ConversationStore(store).get_events(tenant, conversation_id)
+        if event["event_type"] == "conversation_request_failed"
+    )
+    assert terminal_event["body"]["validation_issues"] == [
+        {"field": "content", "type": "string_too_long"}
+    ]
+
+
+def test_schema_repair_reports_safe_field_type_and_corrects_long_content(
+    env, monkeypatch
+):
+    client, store, tenant = env
+    calls = []
+    schema_error = schema_failure(
+        {
+            "content": "x" * 901,
+            "evidence_refs": [],
+            "tool_refs": ["farm:resources.cash_sgd"],
+            "highlight_refs": [],
+            "relationship": "answer",
+            "proposed_actions": [],
+        }
+    )
+    gateway_factory(
+        monkeypatch,
+        calls,
+        responses=[
+            schema_error,
+            {
+                "content": "The frozen evidence supports caution. Review the cited cash context.",
+                "evidence_refs": [],
+                "tool_refs": ["farm:resources.cash_sgd"],
+                "highlight_refs": [],
+                "relationship": "answer",
+                "proposed_actions": [],
+            },
+        ],
+    )
+    conversation_id = create(client, key="repair-context-conversation").json()["id"]
+    queued = send(client, conversation_id, key="repair-context-message").json()
+    execute(store, tenant, queued["id"])
+    request = ConversationStore(store).get_request(tenant, queued["id"])
+    assert request["status"] == "COMPLETED"
+    assert request["repair_attempts"] == 1
+    assert len(calls) == 2
+    system_prompt = calls[0]["messages"][0]["content"]
+    assert "exactly two short sentences and no more than 400 characters" in system_prompt
+    assert "at most three tool_refs, one evidence_ref" in system_prompt
+    assert '"relationship":"answer"' in system_prompt
+    assert '"proposed_actions":[]' in system_prompt
+    repair_prompt = calls[1]["messages"][-1]["content"]
+    assert "Your response did not match the required JSON schema." in repair_prompt
+    assert "content:string_too_long" in repair_prompt
+    assert "x" * 100 not in repair_prompt
+    repair_event = next(
+        event
+        for event in ConversationStore(store).get_events(tenant, conversation_id)
+        if event["event_type"] == "advisor_reply_repair"
+    )
+    assert repair_event["body"]["validation_issues"] == [
+        {"field": "content", "type": "string_too_long"}
+    ]
 
 
 def test_tenant_isolation_and_last_event_id_resume(env, monkeypatch):
@@ -584,6 +844,8 @@ def test_whitespace_is_rejected_and_reply_to_advisor_targets_that_speaker(env, m
     assert calls[0]["role"] == "independent_critic"
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["speaker_id"] == "idris" and reply["reply_to"] == queued["message_id"]
+    assert reply["relationship"] == "answer"
+    assert reply["critic_conclusion"] is False
 
 
 def test_real_postgres_conversation_idempotency_sequences_and_restart_persistence():
@@ -702,15 +964,26 @@ def test_real_postgres_conversation_idempotency_sequences_and_restart_persistenc
         store.engine.dispose()
 
 
-def test_deployed_trial_runner_dry_contract_uses_eleven_mocked_calls(
-    env, monkeypatch, tmp_path
+@pytest.mark.parametrize("fail_initial", [False, True])
+def test_deployed_trial_runner_dry_contract_stays_within_aggregate_call_limit(
+    env, monkeypatch, tmp_path, fail_initial
 ):
     import scripts.deepseek_conversation_trial as trial
     from services.api.scenarios import execute_scenario, pending_scenarios
 
     client, store, tenant = env
     calls = []
-    gateway_factory(monkeypatch, calls)
+    initial_failures = (
+        [
+            DeepSeekResponseError(
+                "DeepSeek structured output failed local validation"
+            )
+            for _ in range(2)
+        ]
+        if fail_initial
+        else None
+    )
+    gateway_factory(monkeypatch, calls, responses=initial_failures)
     monkeypatch.setattr("services.api.scenarios.plan", minimal_three_policy_plan)
 
     class DryClient:
@@ -738,13 +1011,31 @@ def test_deployed_trial_runner_dry_contract_uses_eleven_mocked_calls(
 
     monkeypatch.setattr(trial.httpx, "Client", DryClient)
     state_path = tmp_path / "private-trial-state.json"
-    result = trial.run("https://dry.invalid", timeout=5, state_path=state_path)
+    if fail_initial:
+        with pytest.raises(RuntimeError, match="direct advisor exchange did not complete"):
+            trial.run("https://dry.invalid", timeout=5, state_path=state_path)
+        assert len(calls) == 2
+        result = trial.run(
+            "https://dry.invalid",
+            timeout=5,
+            state_path=state_path,
+            retry_failed=True,
+        )
+    else:
+        result = trial.run("https://dry.invalid", timeout=5, state_path=state_path)
+    expected_calls = 13 if fail_initial else 11
     assert result["status"] == "PASS"
-    assert result["actual_inference_requests"] == 11
+    assert result["actual_inference_requests"] == expected_calls
+    assert result["preserved_failed_requests"] == (1 if fail_initial else 0)
     assert result["favourable_recommendation_required"] is False
-    assert len(calls) == 11
+    assert len(calls) == expected_calls
     assert state_path.stat().st_mode & 0o777 == 0o600
-    resumed = trial.run("https://dry.invalid", timeout=5, state_path=state_path)
+    resumed = trial.run(
+        "https://dry.invalid",
+        timeout=5,
+        state_path=state_path,
+        retry_failed=fail_initial,
+    )
     assert resumed["status"] == "PASS"
-    assert resumed["actual_inference_requests"] == 11
-    assert len(calls) == 11
+    assert resumed["actual_inference_requests"] == expected_calls
+    assert len(calls) == expected_calls

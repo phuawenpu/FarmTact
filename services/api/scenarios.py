@@ -101,7 +101,7 @@ def execute_scenario(store, tenant, id):
     s=get_scenario(store,tenant,id);s['status']='RUNNING';save_scenario(store,tenant,s)
     try:
         s['baseline']=s.get('baseline') or plan(Farm.model_validate(s['baseline_snapshot']))
-        s['result']=plan(Farm.model_validate(s['input_snapshot']))
+        s['result']=deepcopy(s['baseline']) if s['input_hash']==s['baseline_hash'] else plan(Farm.model_validate(s['input_snapshot']))
         s['policy_comparisons']=policy_comparisons(s['baseline'],s['result'])
         farm=Farm.model_validate(s['input_snapshot'])
         eligible=[r for r in s['result']['strategies'] if r['status']=='FEASIBLE' and not validate_allocations(farm,r['allocations'])]
@@ -111,7 +111,7 @@ def execute_scenario(store, tenant, id):
         s['accepted_strategy_id']=chosen['id'] if chosen else None
         s['acceptance']=dict(actor='development-policy-service', policy_version='scenario-simulation-v1',input_hash=s['input_hash'],input_version=farm.version,strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),decision_policy='automatic_development',execution_mode='test',data_mode='synthetic_demo',simulation_only=True,occurred_at=now()) if chosen else None
         s['completed_at']=now()
-        s['affected_deliveries']=[dict(crop_id=o['crop_id'],due_date=o['due_date'],order_id=o['id']) for o in s['input_snapshot']['orders'] if o['crop_id'] in s['affected_crop_ids']]
+        s.update(computed_impacts(s))
     except Exception as exc:
         s['status']='FAILED';s['warnings'].append(f'Numerical experiment failed ({type(exc).__name__}). Inputs were preserved; no inference was used.')
     with store.transaction(tenant):
@@ -127,6 +127,25 @@ def policy_comparisons(baseline, result):
         deltas={key:round(value-before['metrics'][key],6) for key,value in after['metrics'].items() if isinstance(value,(int,float)) and isinstance(before['metrics'].get(key),(int,float))}
         rows.append(dict(policy=after['name'],baseline_strategy_id=before['id'],scenario_strategy_id=after['id'],baseline_status=before['status'],scenario_status=after['status'],baseline_metrics=before['metrics'],scenario_metrics=after['metrics'],deltas=deltas,violations=after['violations']))
     return rows
+
+def computed_impacts(s):
+    """Compare declared allocations and daily totals; do not infer per-order fulfilment."""
+    changed_beds=set(); changed_dates=set()
+    for after in s['result']['strategies']:
+        before=next(row for row in s['baseline']['strategies'] if row['name']==after['name'])
+        def by_bed(strategy):
+            grouped={}
+            for allocation in strategy['allocations']:
+                grouped.setdefault(allocation['bed_id'],[]).append(content_hash(allocation))
+            return {bed:sorted(values) for bed,values in grouped.items()}
+        old,new=by_bed(before),by_bed(after)
+        changed_beds.update(bed for bed in old.keys()|new.keys() if old.get(bed)!=new.get(bed))
+        old_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in before['ledger']}
+        new_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in after['ledger']}
+        changed_dates.update(day for day in old_days.keys()|new_days.keys() if old_days.get(day)!=new_days.get(day))
+    old_orders={row['id']:row for row in s['baseline_snapshot']['orders']}
+    deliveries=[dict(crop_id=row['crop_id'],due_date=row['due_date'],order_id=row['id']) for row in s['input_snapshot']['orders'] if row['due_date'] in changed_dates or old_orders.get(row['id'])!=row]
+    return dict(affected_bed_ids=sorted(changed_beds),affected_deliveries=deliveries,affected_basis='Changed allocations across policies; deliveries to inspect on dates with changed aggregate demand or delivery totals, or changed order inputs. This is not per-order fulfilment attribution.')
 
 def interrupt_scenarios(store):
     # Numerical jobs may safely resume after restart; no inference side effects exist.

@@ -496,3 +496,28 @@ a.source-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
   .farm-world-shell .world-pan-hint { left: 8px; top: 8px; bottom: auto; }
 }
 @media (max-width: 700px) { .farm-world-shell .world-controls { top: 70px; bottom: auto; display: flex; } }
+
+/* Keep all six advisor shortcuts usable when replay metadata fills the panel. */
+.advisor-switcher { min-height: 58px; flex: 0 0 auto; padding-bottom: 2px; }
+.advisor-switcher span { font-size: .625rem; line-height: 1.2; }
+.conversation-composer input { font-size: .75rem; }
+.conversation-actions label, .conversation-actions button { min-height: 44px; font-size: .6875rem; }
+.conversation-actions select { font-size: .6875rem; }
+
+/* Scenario results stay readable when one to three branches are compared. */
+.scenario-brief > label, .scenario-targets label { font-size: .6875rem; line-height: 1.35; }
+.scenario-brief select, .scenario-targets select { height: 44px; font-size: .75rem; }
+.range-control b, .range-control output, .range-control small { font-size: .6875rem; line-height: 1.35; }
+.metric-delta { font-size: .6875rem; line-height: 1.35; }
+.branch-cards { grid-template-columns: repeat(auto-fit,minmax(min(240px,100%),1fr)); gap: 12px; }
+.branch-cards article { padding: 14px; gap: 8px; }
+.branch-cards .kicker { font-size: .6875rem; }
+.branch-cards h3 { font-size: .9375rem; line-height: 1.3; white-space: normal; overflow: visible; }
+.branch-cards p:not(.kicker), .branch-cards > article > small, .branch-cards details, .branch-cards span { font-size: .8125rem; line-height: 1.45; }
+.branch-cards .computed-debrief { margin: 2px 0; border-left: 3px solid #91a86d; border-radius: 4px 9px 9px 4px; padding: 9px 10px; background: #e9efe0; }
+.branch-cards button { min-height: 44px; padding: 8px; font-size: .75rem; }
+
+@media (max-width: 700px) {
+  .branch-cards { display: grid; grid-template-columns: 1fr; overflow: visible; }
+  .branch-cards article { width: 100%; }
+}

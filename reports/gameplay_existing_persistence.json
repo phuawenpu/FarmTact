@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "phase": "verify",
+  "main_farm_preserved": true,
+  "recorded_run_preserved": true,
+  "secrets_printed": false
+}

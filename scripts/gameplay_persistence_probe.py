@@ -62,6 +62,11 @@ with httpx.Client(base_url=args.url,timeout=30) as client:
                     actual=hashlib.sha256(json.dumps(conversation['messages'],sort_keys=True,separators=(',',':')).encode()).hexdigest()
                     assert actual==state['conversation_messages_hash'],'Recorded advisor messages changed during release'
                     report['advisor_messages_preserved']=len(conversation['messages'])
+                if state.get('prior_partial_conversation_id'):
+                    partial=checked(client.get('/api/v1/conversations/'+state['prior_partial_conversation_id']))
+                    partial_hash=hashlib.sha256(json.dumps(partial['messages'],sort_keys=True,separators=(',',':')).encode()).hexdigest()
+                    assert partial_hash==state['prior_partial_messages_hash'],'Earlier partial dialogue changed during release'
+                    report['partial_dialogue_messages_preserved']=len(partial['messages'])
                 quests=checked(client.get('/api/v1/quests'))['quests']
                 assert next(q for q in quests if q['id']=='tight_budget')['status']=='completed'
                 report.update(branch_result_preserved=True,conversation_preserved=True,quest_progress_preserved=True)

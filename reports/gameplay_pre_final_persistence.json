@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "phase": "verify-gameplay",
+  "main_farm_preserved": true,
+  "recorded_run_preserved": true,
+  "secrets_printed": false,
+  "advisor_messages_preserved": 14,
+  "partial_dialogue_messages_preserved": 5,
+  "branch_result_preserved": true,
+  "conversation_preserved": true,
+  "quest_progress_preserved": true
+}

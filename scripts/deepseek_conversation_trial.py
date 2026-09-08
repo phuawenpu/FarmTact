@@ -86,7 +86,7 @@ def session_cookie(cookies: httpx.Cookies) -> str | None:
     )
 
 
-def run(base_url: str, timeout: float, state_path: Path | None = None) -> dict:
+def run(base_url: str, timeout: float, state_path: Path | None = None, retry_failed: bool = False) -> dict:
     state = json.loads(state_path.read_text()) if state_path and state_path.exists() else {}
     if state.get("url"):
         base_url = state["url"]
@@ -164,7 +164,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None) -> dict:
                     "advisor": "mei",
                     "snapshot_kind": "scenario",
                     "snapshot_id": scenario["id"],
-                    "selected_bed_id": scenario["affected_bed_ids"][0],
+                        "selected_bed_id": next(iter(scenario.get("affected_bed_ids", [])), bootstrap.json()["farm"]["beds"][0]["id"]),
                 },
                 state["conversation_trial_conversation_key"],
             )
@@ -200,6 +200,14 @@ def run(base_url: str, timeout: float, state_path: Path | None = None) -> dict:
                 completed = request_messages(transcript_before, request_id)
                 if len(completed) == expected_messages:
                     return transcript_before, completed
+                retry_field = f"conversation_trial_{name}_release_retry"
+                if retry_failed and transcript_before.get("last_request_status") == "FAILED" and not completed and not state.get(retry_field):
+                    # Explicit post-fix retry only. Preserve the failure and all consumed
+                    # calls in this conversation's unchanged aggregate allowance.
+                    state[retry_field] = request_id
+                    state[key_field] = f"{state[key_field]}-release-repair"
+                    state.pop(request_field, None)
+                    save_state()
             used = inference_count()
             if used + worst_case_requests > 16:
                 raise RuntimeError(
@@ -306,6 +314,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None) -> dict:
             "favourable_recommendation_required": False,
             "replay_inference_triggered": replay["inference_triggered"],
             "private_state_updated": bool(state_path),
+            "preserved_failed_requests": sum(key.endswith('_release_retry') for key in state),
         }
 
 
@@ -324,12 +333,13 @@ def main() -> None:
         action="store_true",
         help="Required acknowledgement that the deployed server may make billable DeepSeek calls.",
     )
+    parser.add_argument('--retry-failed', action='store_true', help='After a reviewed fix, retry an empty failed stage once while retaining its failures and the aggregate request ceiling.')
     args = parser.parse_args()
     if not args.live:
         parser.error("Pass --live to run the deployed billable conversation trial")
     print(
         json.dumps(
-            run(args.base_url, args.timeout, args.state), indent=2, sort_keys=True
+            run(args.base_url, args.timeout, args.state, args.retry_failed), indent=2, sort_keys=True
         )
     )
 

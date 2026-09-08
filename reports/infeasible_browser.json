@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-08T17:14:13.351Z",
+  "started_at": "2026-09-08T21:30:09.459Z",
   "base_url": "http://127.0.0.1:8080",
   "fixture_policy": "The application and bootstrap are real. Scenario and quest APIs are intercepted; no planner, worker, database mutation, or advisor is used.",
   "checks": [
@@ -49,7 +49,7 @@
       "name": "390px Lean shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuecash limit for farm budget: 1900 SGD required; 700 available",
+        "constraintText": "1 constraint issuecash limit for farm budget: 1900 SGD required; 700 SGD available",
         "expectedParts": [
           "cash limit",
           "1900",
@@ -68,7 +68,7 @@
       "name": "390px Balanced shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuelabour capacity for week 3: 92 hours required; 16 available",
+        "constraintText": "1 constraint issuelabour capacity for week 3: 92 hours required; 16 hours available",
         "expectedParts": [
           "labour capacity",
           "92",
@@ -87,7 +87,7 @@
       "name": "390px Resilient shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuearea capacity for growing beds: 520 m2 required; 180 available",
+        "constraintText": "1 constraint issuearea capacity for growing beds: 520 m2 required; 180 m2 available",
         "expectedParts": [
           "area capacity",
           "520",
@@ -207,7 +207,7 @@
       "name": "1280px Lean shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuecash limit for farm budget: 1900 SGD required; 700 available",
+        "constraintText": "1 constraint issuecash limit for farm budget: 1900 SGD required; 700 SGD available",
         "expectedParts": [
           "cash limit",
           "1900",
@@ -226,7 +226,7 @@
       "name": "1280px Balanced shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuelabour capacity for week 3: 92 hours required; 16 available",
+        "constraintText": "1 constraint issuelabour capacity for week 3: 92 hours required; 16 hours available",
         "expectedParts": [
           "labour capacity",
           "92",
@@ -245,7 +245,7 @@
       "name": "1280px Resilient shows required, available, and unit",
       "pass": true,
       "detail": {
-        "constraintText": "1 constraint issuearea capacity for growing beds: 520 m2 required; 180 available",
+        "constraintText": "1 constraint issuearea capacity for growing beds: 520 m2 required; 180 m2 available",
         "expectedParts": [
           "area capacity",
           "520",
@@ -457,6 +457,6 @@
     "conversations": [],
     "providers": []
   },
-  "completed_at": "2026-09-08T17:14:17.449Z",
+  "completed_at": "2026-09-08T21:30:13.982Z",
   "status": "PASS"
 }

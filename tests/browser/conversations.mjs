@@ -21,7 +21,7 @@ const report = {
   started_at: new Date().toISOString(),
   base_url: baseURL,
   execution_policy: 'Browser-only deterministic intercepted API fixtures. No DeepSeek or other inference provider calls.',
-  checks: [], failures: [], console_errors: [], page_errors: [], screenshots: [],
+  checks: [], failures: [], console_errors: [], expected_console_errors: [], page_errors: [], screenshots: [],
   intercepted: { conversation_requests: [], scenario_requests: [], provider_requests: [] },
 }
 
@@ -48,6 +48,16 @@ function json(route, body, status = 200) {
   return route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
 }
 
+function reducedDuration(value) {
+  return value.split(',').every(part => {
+    const duration = part.trim()
+    const numeric = Number.parseFloat(duration)
+    if (!Number.isFinite(numeric)) return false
+    const seconds = duration.endsWith('ms') ? numeric / 1000 : duration.endsWith('s') ? numeric : Number.POSITIVE_INFINITY
+    return seconds <= 0.00001
+  })
+}
+
 function fixtureApi() {
   const conversations = new Map()
   const scenarioBodies = []
@@ -55,8 +65,10 @@ function fixtureApi() {
   let conversationSerial = 0
   let messageSerial = 0
   let replayGets = 0
+  let eventStreamGets = 0
   let reconnectId = null
   let reconnectReads = 0
+  const delayedReads = new Map()
 
   const now = () => new Date().toISOString()
   const message = (conversation, speaker, content, fields = {}) => {
@@ -146,6 +158,7 @@ function fixtureApi() {
         interpretation_status: 'unverified_advisor_interpretation',
         tool_refs: unsupported ? [] : ['batch:batch-01.harvest_date', 'comparison:balanced.deltas.margin_sgd'],
         evidence_refs: unsupported ? [] : ['P01'],
+        highlight_refs: unsupported ? [] : ['bed:bed-01'],
         proposed_actions: [{ control: 'delay_days', target_id: 'batch-01', value: 3, unit: 'days', status: unsupported ? 'blocked_unsupported' : 'hypothesis_only' }],
       })
     complete(conversation)
@@ -174,7 +187,8 @@ function fixtureApi() {
       const article = ['agreement', 'answer'].includes(relationship) ? 'an' : 'a'
       const turn = message(conversation, speaker, `${fixtureLabel} ${advisorById[speaker].name} records ${article} ${relationship} for the council transcript.`, {
         reply_to: replied, relationship, tool_refs: speaker === 'hana' ? [] : ['comparison:balanced.deltas.margin_sgd'],
-        evidence_refs: speaker === 'hana' ? ['P01'] : [],
+        evidence_refs: speaker === 'hana' ? ['P01'] : [], request_mode: 'council',
+        critic_conclusion: speaker === 'idris' && relationship === 'conclusion',
       })
       replied = turn.id
     }
@@ -195,7 +209,20 @@ function fixtureApi() {
 
   return {
     conversations, postBodies, scenarioBodies,
+    createConversation,
+    addMessage: message,
+    delayConversationRead(id) {
+      let markStarted, releaseRead
+      const started = new Promise(resolve => { markStarted = resolve })
+      const released = new Promise(resolve => { releaseRead = resolve })
+      delayedReads.set(id, { markStarted, released })
+      return {
+        waitForStart: (timeout = 5_000) => Promise.race([started, new Promise((_, reject) => setTimeout(() => reject(new Error(`Timed out waiting for delayed read ${id}`)), timeout))]),
+        release: () => releaseRead(),
+      }
+    },
     get replayGets() { return replayGets },
+    get eventStreamGets() { return eventStreamGets },
     setReconnect(id) { reconnectId = id; reconnectReads = 0; const conversation = conversations.get(id); conversation.last_request_status = 'RUNNING'; message(conversation, 'user', 'Reconnect to this saved partial exchange.'); },
     async conversationRoute(route) {
       const request = route.request()
@@ -216,6 +243,12 @@ function fixtureApi() {
       const conversation = conversations.get(match[1])
       const action = match[2]
       if (!action && method === 'GET') {
+        const delayed = delayedReads.get(conversation.id)
+        if (delayed) {
+          delayed.markStarted()
+          await delayed.released
+          delayedReads.delete(conversation.id)
+        }
         if (reconnectId === conversation.id) {
           reconnectReads += 1
           if (reconnectReads >= 2 && conversation.last_request_status === 'RUNNING') {
@@ -231,12 +264,24 @@ function fixtureApi() {
         replayGets += 1
         return json(route, { ...publicConversation(conversation), transcript_mode: 'replay', replay: true, inference_triggered: false, inference_origin: 'stored_messages' })
       }
-      if (action === 'events' && method === 'GET') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: '' })
+      if (action === 'events' && method === 'GET') {
+        eventStreamGets += 1
+        return route.fulfill({ status: 200, contentType: 'text/event-stream', body: 'data: {"type":"fixture_event"}\n\n' })
+      }
       if (method !== 'POST') return json(route, { detail: 'Method not allowed' }, 405)
       postBodies.push({ endpoint: action, body, conversation_id: conversation.id })
       if (action === 'messages') {
         if (body?.content === 'fixture-budget-state') return json(route, { detail: 'Daily inference budget exhausted for this fixture.' }, 429)
         if (body?.content === 'fixture-service-state') return json(route, { detail: 'Advisor service interrupted; the saved exchange can be retried.' }, 503)
+        if (body?.content === 'fixture-delayed-switch') {
+          const user = message(conversation, 'user', body.content)
+          await new Promise(resolve => setTimeout(resolve, 1_200))
+          message(conversation, conversation.advisor_id, `${fixtureLabel} Delayed Mei response stayed with Mei.`, {
+            reply_to: user.id, relationship: 'answer', tool_refs: ['farm:resources.cash_sgd'], evidence_refs: ['P01'],
+          })
+          complete(conversation)
+          return json(route, { id: conversation.last_request_id, conversation_id: conversation.id, status: 'COMPLETED', message_id: user.id }, 202)
+        }
         const result = answerTo(conversation, body || {})
         return json(route, { id: conversation.last_request_id || `fixture-request-${messageSerial}`, conversation_id: conversation.id, status: conversation.last_request_status || 'INTERRUPTED', message_id: result.user.id }, 202)
       }
@@ -279,7 +324,13 @@ try {
   await context.route('**/api/v1/conversations**', route => fixtures.conversationRoute(route))
   await context.route('**/api/v1/scenarios**', route => fixtures.scenarioRoute(route))
   const page = await context.newPage()
-  page.on('console', message => { if (message.type() === 'error') report.console_errors.push(message.text()) })
+  page.on('console', message => {
+    if (message.type() !== 'error') return
+    const detail = { text: message.text(), location: message.location() }
+    const expectedFixtureError = /status of (429|503)/.test(detail.text) && detail.location.url.includes('/api/v1/conversations/') && detail.location.url.endsWith('/messages')
+    if (expectedFixtureError) report.expected_console_errors.push(detail)
+    else report.console_errors.push(detail)
+  })
   page.on('pageerror', error => report.page_errors.push(error.message))
   await page.goto(baseURL, { waitUntil: 'networkidle' })
 
@@ -301,6 +352,48 @@ try {
   await page.getByRole('dialog', { name: 'Idris · Independent critic' }).getByRole('button', { name: 'Close' }).click()
   check('all six advisor conversation records use their role ids', new Set([...fixtures.conversations.values()].map(item => item.advisor_id)).size === 6, [...fixtures.conversations.values()].map(item => item.advisor_id))
 
+  const currentMei = [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei' && item.snapshot_ref.id === 'demo-farm:v1')
+  const savedMei = fixtures.createConversation({ advisor: 'mei', snapshot_kind: 'farm', snapshot_id: 'demo-farm', selected_bed_id: 'bed-01' })
+  savedMei.snapshot_ref.id = 'fixture-saved:v0'
+  fixtures.addMessage(savedMei, 'mei', `${fixtureLabel} This is the deliberately selected older saved discussion.`)
+  const currentRead = fixtures.delayConversationRead(currentMei.id)
+  const savedRead = fixtures.delayConversationRead(savedMei.id)
+  await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
+  const raceDialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  const savedSelect = raceDialog.getByLabel('Saved discussions')
+  await savedSelect.waitFor()
+  await currentRead.waitForStart()
+  await savedSelect.selectOption(savedMei.id)
+  await savedRead.waitForStart()
+  const loadingLocks = {
+    composer: await raceDialog.getByLabel('Message Mei').isDisabled(),
+    send: await raceDialog.getByRole('button', { name: 'Send message' }).isDisabled(),
+    invite: await raceDialog.getByRole('button', { name: 'Invite advisor' }).isDisabled(),
+    council: await raceDialog.getByRole('button', { name: 'Convene council' }).isDisabled(),
+    suggestions: await raceDialog.locator('.prompt-row button').evaluateAll(buttons => buttons.every(button => button.disabled)),
+  }
+  check('saved-discussion loading disables every inference action', Object.values(loadingLocks).every(Boolean), loadingLocks)
+  savedRead.release()
+  await raceDialog.getByText(/Saved frozen discussion · fixture-saved:v0/).waitFor()
+  currentRead.release()
+  await page.waitForTimeout(250)
+  check('delayed current-snapshot read cannot overwrite a selected saved discussion', await savedSelect.inputValue() === savedMei.id && await raceDialog.getByText(`${fixtureLabel} This is the deliberately selected older saved discussion.`).isVisible(), { selected: await savedSelect.inputValue(), expected: savedMei.id })
+  await raceDialog.getByRole('button', { name: 'Close' }).click()
+
+  await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
+  const delayedMeiDialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  await delayedMeiDialog.getByLabel('Message Mei').fill('fixture-delayed-switch')
+  await delayedMeiDialog.getByRole('button', { name: 'Send message' }).click()
+  await delayedMeiDialog.getByRole('button', { name: 'Talk to Ravi', exact: true }).click()
+  const switchedRaviDialog = page.getByRole('dialog', { name: 'Ravi · Demand analyst' })
+  await switchedRaviDialog.waitFor()
+  await page.waitForTimeout(1_500)
+  check('delayed response cannot overwrite a newly selected advisor', await switchedRaviDialog.getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).count() === 0 && await switchedRaviDialog.getByLabel('Message Ravi').isVisible())
+  await switchedRaviDialog.getByRole('button', { name: 'Talk to Mei', exact: true }).click()
+  await page.getByRole('dialog', { name: 'Mei · Crop scientist' }).getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).waitFor({ timeout: 8_000 })
+  check('delayed response remains in its originating saved conversation', [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei')?.messages.some(item => item.content.includes('Delayed Mei response stayed with Mei.')) === true)
+  await page.getByRole('dialog', { name: 'Mei · Crop scientist' }).getByRole('button', { name: 'Close' }).click()
+
   const meiLauncher = page.getByRole('button', { name: /^Talk to Mei,/ })
   await meiLauncher.focus(); await meiLauncher.click()
   const dialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
@@ -312,16 +405,25 @@ try {
   await close.focus()
 
   const composer = dialog.getByLabel('Message Mei')
+  const streamsBeforeFirstMessage = fixtures.eventStreamGets
   await composer.fill('Why is the selected bed delayed?')
   await dialog.getByRole('button', { name: 'Send message' }).click()
   const firstReply = dialog.locator('.message-card--advisor').filter({ hasText: `${fixtureLabel} The frozen schedule` })
   await firstReply.waitFor({ timeout: 8_000 })
   check('typed question produces an attached advisor response', await firstReply.isVisible())
+  check('typed response subscribes to stored conversation events', fixtures.eventStreamGets > streamsBeforeFirstMessage, { before: streamsBeforeFirstMessage, after: fixtures.eventStreamGets })
   check('verified references are labelled without claiming semantic validation', await firstReply.getByText('References checked · advisor interpretation').isVisible() && await firstReply.getByText(/interpretation remains unverified/i).isVisible())
   check('frozen fact cards render exact referenced values', await firstReply.getByText('Facts from this frozen snapshot').isVisible() && await firstReply.getByText('14 Sept 2026').isVisible() && await firstReply.getByText(/-\$42\.50/).isVisible())
+  check('supported control is labelled as a proposed experiment', await firstReply.getByText('Proposed experiment', { exact: true }).isVisible())
   const evidence = firstReply.getByText('P01 · Fixture crop timing reference')
   await evidence.click()
   check('evidence expands with scope, limit, and source link', await firstReply.getByText(/Illustrative UI test data/).isVisible() && await firstReply.getByText(/does not establish conditions/).isVisible() && await firstReply.getByRole('link', { name: 'Read source ↗' }).isVisible())
+
+  await firstReply.getByRole('button', { name: 'Show referenced plots' }).click()
+  await dialog.waitFor({ state: 'hidden' })
+  check('verified message highlights its referenced farm plot', await page.locator('.world-bed.is-affected').filter({ has: page.getByLabel('Referenced by advisor') }).count() === 1)
+  await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
+  await dialog.waitFor()
 
   const firstReplyId = [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei').messages.find(item => item.content.includes('frozen schedule')).id
   await firstReply.getByRole('button', { name: 'Reply to this point' }).click()
@@ -340,19 +442,23 @@ try {
   const invitePost = fixtures.postBodies.filter(item => item.endpoint === 'invite').at(-1)
   check('invitation targets the specifically selected point', invitePost?.body?.reply_to === firstReplyId, { expected: firstReplyId, actual: invitePost?.body?.reply_to, body: invitePost?.body })
   check('invited advisor and original advisor exchange specific linked replies', await dialog.locator('.message-card--advisor > p').filter({ hasText: `${fixtureLabel} Idris disagrees` }).isVisible() && await dialog.locator('.message-card--advisor > p').filter({ hasText: `${fixtureLabel} Mei answers that disagreement` }).isVisible() && await dialog.getByText(/replies to Idris/).first().isVisible())
+  check('a two-advisor invitation is not mislabeled as a council', await dialog.getByLabel('Council speakers').count() === 0)
 
   await composer.fill('Compare the trade-offs and record the critic conclusion.')
   await dialog.getByRole('button', { name: 'Convene council' }).click()
   await dialog.getByText(`${fixtureLabel} Idris records a conclusion for the council transcript.`).waitFor({ timeout: 8_000 })
-  check('council renders eight bounded advisor turns', await dialog.locator('.message-card--advisor').filter({ hasText: `${fixtureLabel}` }).count() >= 12, await dialog.locator('.message-card--advisor').count())
+  const councilTurns = [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei').messages.filter(item => item.request_mode === 'council')
+  const renderedCouncilTurns = await dialog.locator('.message-card--advisor').filter({ hasText: 'for the council transcript.' }).count()
+  check('council renders eight bounded advisor turns', councilTurns.length === 8 && renderedCouncilTurns === 8, { recorded: councilTurns.length, rendered: renderedCouncilTurns })
   check('council transcript exposes agreements, disagreements, and critic conclusion', await dialog.getByText(/records an agreement/).count() > 0 && await dialog.getByText(/records a disagreement/).count() > 0 && await dialog.getByText(/Idris records a conclusion/).count() > 0)
+  check('critic conclusion is explicitly identified', await dialog.getByText('Critic’s conclusion', { exact: true }).isVisible() && councilTurns.at(-1)?.critic_conclusion === true)
   check('council discussion is staged with all six speakers', await dialog.getByLabel('Council speakers').isVisible() && await dialog.getByLabel('Council speakers').locator('span').count() === 6)
 
   await composer.fill('fixture-unsupported-proposal')
   await dialog.getByRole('button', { name: 'Send message' }).click()
   const unsupported = dialog.locator('.message-card--advisor').filter({ hasText: 'has no accepted frozen reference' })
   await unsupported.waitFor({ timeout: 8_000 })
-  check('unsupported advice is visibly flagged', await unsupported.getByText('Unsupported advice cannot authorize a change.').isVisible())
+  check('unsupported advice is visibly flagged', await unsupported.getByText('Unsupported suggestion · blocked', { exact: true }).isVisible() && await unsupported.getByText('Unsupported advice cannot authorize a change.').isVisible())
   check('unsupported proposed controls cannot open an experiment', await unsupported.getByRole('button', { name: /delay days = 3 days/i }).isDisabled())
 
   await firstReply.getByRole('button', { name: /delay days = 3 days/i }).click()
@@ -379,12 +485,14 @@ try {
   await page.waitForTimeout(1_100)
   check('interrupted request state is visible in the conversation', await dialog.getByText(/Response interrupted|Request interrupted|Saved partial/i).isVisible())
 
+  const streamsBeforeReconnect = fixtures.eventStreamGets
   fixtures.setReconnect(meiConversation.id)
   await page.reload({ waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
   const reconnected = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
   await reconnected.getByText(`${fixtureLabel} The saved partial exchange resumed without duplicating the user message.`).waitFor({ timeout: 8_000 })
   check('reload reconnects to the pending stored exchange', await reconnected.getByText(/resumed without duplicating/).isVisible())
+  check('reconnect subscribes to stored conversation events', fixtures.eventStreamGets > streamsBeforeReconnect, { before: streamsBeforeReconnect, after: fixtures.eventStreamGets })
   const reconnectUsers = meiConversation.messages.filter(item => item.content === 'Reconnect to this saved partial exchange.').length
   check('reconnect does not duplicate the saved user turn', reconnectUsers === 1, reconnectUsers)
 
@@ -396,8 +504,43 @@ try {
   check('replay reads the stored transcript without POST or new messages', postsAfterReplay === postsBeforeReplay && meiConversation.messages.length === messagesBeforeReplay && fixtures.replayGets === 1, { postsBeforeReplay, postsAfterReplay, messagesBeforeReplay, messagesAfterReplay: meiConversation.messages.length, replayGets: fixtures.replayGets })
 
   const reducedDurations = await reconnected.locator('.game-panel,.thinking-dots i,.message-card').evaluateAll(nodes => nodes.map(node => ({ className: node.className, animationDuration: getComputedStyle(node).animationDuration, transitionDuration: getComputedStyle(node).transitionDuration })))
-  check('conversation honors reduced motion', reducedDurations.every(item => item.animationDuration === '0s' || item.animationDuration === '0.00001ms'), reducedDurations)
+  check('conversation honors reduced motion', reducedDurations.every(item => reducedDuration(item.animationDuration) && reducedDuration(item.transitionDuration)), reducedDurations)
   await capture(page, 'conversation-replay-390.png')
+
+  await page.setViewportSize({ width: 360, height: 844 })
+  const shortcutLayout = await reconnected.locator('.advisor-switcher').evaluate(node => {
+    const box = node.getBoundingClientRect()
+    const buttons = [...node.querySelectorAll('button')]
+    return {
+      height: box.height,
+      overflow_x: node.scrollWidth > node.clientWidth,
+      buttons: buttons.map(button => {
+        const buttonBox = button.getBoundingClientRect()
+        const nameBox = button.querySelector('span')?.getBoundingClientRect()
+        return { height: buttonBox.height, name: button.textContent?.trim(), name_inside_row: Boolean(nameBox && nameBox.top >= box.top && nameBox.bottom <= box.bottom) }
+      }),
+    }
+  })
+  check('all six advisor shortcuts remain usable in a nonshrinking mobile row', shortcutLayout.height >= 58 && shortcutLayout.overflow_x && shortcutLayout.buttons.length === 6 && shortcutLayout.buttons.every(button => button.height >= 58 && button.name_inside_row), shortcutLayout)
+  await reconnected.locator('.game-panel__body').evaluate(node => { node.scrollTop = node.scrollHeight })
+  const mobileConversationLayout = await reconnected.evaluate(node => {
+    const transcript = node.querySelector('.conversation-transcript')
+    const composer = node.querySelector('.conversation-composer')
+    const input = node.querySelector('.conversation-composer input')
+    const actions = [...node.querySelectorAll('.conversation-actions > *')]
+    const insideViewport = element => { const box = element.getBoundingClientRect(); return box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight }
+    return {
+      body_overflow: document.body.scrollWidth - innerWidth,
+      transcript_height: transcript?.getBoundingClientRect().height || 0,
+      composer_visible: Boolean(composer && insideViewport(composer)),
+      composer_font_size: input ? Number.parseFloat(getComputedStyle(input).fontSize) : 0,
+      action_count: actions.length,
+      action_heights: actions.map(action => action.getBoundingClientRect().height),
+      actions_visible: actions.every(insideViewport),
+    }
+  })
+  check('360px preserves the transcript, readable composer, and bottom actions', mobileConversationLayout.body_overflow <= 1 && mobileConversationLayout.transcript_height >= 210 && mobileConversationLayout.composer_visible && mobileConversationLayout.composer_font_size >= 12 && mobileConversationLayout.action_count === 4 && mobileConversationLayout.action_heights.every(height => height >= 44) && mobileConversationLayout.actions_visible, mobileConversationLayout)
+  await capture(page, 'conversation-replay-360.png')
 
   const launcher = page.getByRole('button', { name: /^Talk to Mei,/ })
   await page.keyboard.press('Escape')

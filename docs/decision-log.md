@@ -55,8 +55,20 @@ Conversation-backed experiments carry `source_conversation_id`; the scenario ser
 
 Advisor prose is qualitative interpretation. Digit-form quantities, common spelled quantities and date expressions are conservatively rejected; authoritative figures are rendered separately from immutable backend references with backend-derived labels and units. `references_verified` means reference membership and supported-control validation, not evidence entailment or agronomic correctness. Proposed actions are hypotheses that open editable frozen experiments. They never authorize farm operations.
 
-Quest completion requires a changed assumption relevant to that quest and changed frozen inputs. A completed numerical experiment may earn a discovery badge even if infeasible or if output metrics do not change. Inspecting tradeoffs is a separate persisted learning action. Map highlights derive from changed controls, not merely selected dropdown targets. Branch comparisons use the same Lean, Balanced or Resilient policy and display fill-rate changes in percentage points.
+Quest completion requires a changed assumption relevant to that quest and changed frozen inputs. A completed numerical experiment may earn a discovery badge even if infeasible or if output metrics do not change. Inspecting tradeoffs is a separate persisted learning action. Completed map highlights derive from computed allocation differences across policies, including future allocations on empty beds; draft previews use changed controls. Delivery highlights identify changed inputs or dates with changed aggregate totals, without claiming per-order fulfilment. Branch comparisons use the same Lean, Balanced or Resilient policy and display fill-rate changes in percentage points.
 
 The release acceptance exercises real numerical browser journeys for every quest and branch continuation, plus separately labelled intercepted conversation and infeasibility fixtures for deterministic UI error/reconnect testing. A bounded live deployed conversation, invitation and council trial remains the provider acceptance check; it does not require a favourable recommendation.
 
 The farm public view now includes authoritative `batch_id`, `transplant_date`, and Singapore civil `planning_date` for accurate preview/target selection. Existing NEA forecast-card selection incorrectly filtered forecast sources as observation IDs; this was corrected to D04/D05 so Hana and the Data room can use the actual recorded forecast summary and freshness metadata.
+
+### Public hosting
+
+The user clarified that the Sprite URL is acceptable only as the temporary development server. After the verified Fly rollout, stop and remove the Sprite web service registration so it cannot auto-start through its public HTTP URL. Preserve the workspace and development database. `https://farmtact.fly.dev` is the public application address. Sprites' HTTP proxy and Fly's application hostname are independent services, as confirmed in their official service/networking documentation.
+
+### Live dialogue validation corrections
+
+Live acceptance exposed oversized reply formatting and semantically invalid action combinations. The prompt now requests compact replies with explicit action units, ranges and targets, and schema-repair feedback includes only safe field/type diagnostics. Structural JSON errors retain the existing bounded repair allowance. Well-formed replies containing out-of-range or mistargeted actions are persisted visibly as unsupported, with actions blocked; they do not consume a repair or discard the rest of the dialogue. Global inference limits and backend scenario validation remain unchanged. Earlier failed and partial discussions remain recorded.
+
+### Interactive-world release completed
+
+Final verification passed 257 backend tests, 281 local browser checks, 87 deployed numerical checks and 12 deployed live-replay checks. A fresh live direct/invited/council exchange completed with eleven replies and eleven DeepSeek calls; its earlier partial attempt remains saved. A final redeployment preserved the old farm/run, new branch and quest, fourteen complete-discussion messages and five partial-discussion messages. The Sprite web service was stopped and its registration removed after Fly passed; its database/workspace remain. See [the complete release report](../reports/interactive_world.md).

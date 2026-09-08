@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Live transcript contains eleven persisted advisor replies",
+      "pass": true
+    },
+    {
+      "name": "Council shows all six speakers",
+      "pass": true
+    },
+    {
+      "name": "Final critic conclusion is visible",
+      "pass": true
+    },
+    {
+      "name": "Frozen facts render from tool references",
+      "pass": true
+    },
+    {
+      "name": "Invited advisor disagreement is visible",
+      "pass": true
+    },
+    {
+      "name": "Unsupported live suggestions remain disabled",
+      "pass": true
+    },
+    {
+      "name": "390px recorded-council shortcuts retain their height",
+      "pass": true
+    },
+    {
+      "name": "390px replay has no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "1280px recorded-council shortcuts retain their height",
+      "pass": true
+    },
+    {
+      "name": "1280px replay has no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "Viewing and replaying live messages requests no inference",
+      "pass": true
+    },
+    {
+      "name": "Live transcript has no page exceptions",
+      "pass": true
+    }
+  ],
+  "screenshots": [
+    "apps/web/screenshots/live/advisor-replay-390.png",
+    "apps/web/screenshots/live/advisor-replay-1280.png"
+  ],
+  "inference_posts": 0,
+  "advisor_card_count": 11
+}

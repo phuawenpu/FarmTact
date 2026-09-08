@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "interpretations_remain_unverified": true,
+  "messages": [
+    {
+      "advisor": "mei",
+      "mode": "direct",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "ravi",
+      "mode": "invite",
+      "relation": "disagreement",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "mei",
+      "mode": "invite",
+      "relation": "synthesis",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 2,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "ravi",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "unsupported",
+      "issues": [
+        "Highlight outside supplied frozen snapshot"
+      ],
+      "tool_refs": 3,
+      "blocked_actions": 1
+    },
+    {
+      "advisor": "mei",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "hana",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "ben",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "asha",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "idris",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "asha",
+      "mode": "council",
+      "relation": "answer",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    },
+    {
+      "advisor": "idris",
+      "mode": "council",
+      "relation": "conclusion",
+      "validation": "references_verified",
+      "issues": [],
+      "tool_refs": 3,
+      "blocked_actions": 0
+    }
+  ]
+}

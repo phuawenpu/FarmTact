@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-08T17:11:27.010Z",
+  "started_at": "2026-09-08T21:28:16.645Z",
   "base_url": "http://127.0.0.1:8080",
   "checks": [
     {
@@ -32,6 +32,11 @@
       "detail": []
     },
     {
+      "name": "map controls are not occluded by mobile navigation",
+      "pass": true,
+      "detail": []
+    },
+    {
       "name": "zoom control changes the world transform",
       "pass": true
     },
@@ -40,8 +45,8 @@
       "pass": true,
       "detail": {
         "transform": "transform: translate(0px, 0px) scale(1.12);",
-        "before": 222,
-        "after": 222
+        "before": 51,
+        "after": 51
       }
     },
     {
@@ -65,6 +70,10 @@
       "detail": 16
     },
     {
+      "name": "dialog traps keyboard focus",
+      "pass": true
+    },
+    {
       "name": "dialog restores focus to launcher",
       "pass": true
     },
@@ -73,14 +82,92 @@
       "pass": true
     },
     {
+      "name": "empty plot remains explorable through the accessible farm list",
+      "pass": true
+    },
+    {
       "name": "busy-market quest opens with relevant demand change",
       "pass": true,
       "detail": "125"
     },
     {
-      "name": "all five bounded sandbox controls are visible",
+      "name": "empty plot falls back to an actual occupied batch",
+      "pass": true,
+      "detail": {
+        "selected": "batch-01",
+        "options": [
+          "batch-01",
+          "batch-02",
+          "batch-03",
+          "batch-04",
+          "batch-05",
+          "batch-06",
+          "batch-07",
+          "batch-08"
+        ]
+      }
+    },
+    {
+      "name": "all five bounded scenario controls are visible",
       "pass": true,
       "detail": 5
+    },
+    {
+      "name": "scenario form labels and selects remain readable on mobile",
+      "pass": true,
+      "detail": {
+        "labels": [
+          {
+            "text": "Harvest delay",
+            "fontSize": 11
+          },
+          {
+            "text": "Expected yield",
+            "fontSize": 11
+          },
+          {
+            "text": "Market demand",
+            "fontSize": 11
+          },
+          {
+            "text": "Available labour",
+            "fontSize": 11
+          },
+          {
+            "text": "Available cash",
+            "fontSize": 11
+          },
+          {
+            "text": "Selected batchA1 · caixinA2 · pak choiA3 · kailanA4 · lettuceB1 · caixinB2 · pak choiB3 · kailanB4 · lettuce",
+            "fontSize": 11
+          },
+          {
+            "text": "Demand cropCaixinXiao bai cai / pak choiKailanLettuce",
+            "fontSize": 11
+          },
+          {
+            "text": "Continue branchMain farm baseline",
+            "fontSize": 11
+          }
+        ],
+        "selects": [
+          {
+            "label": "Selected batch",
+            "fontSize": 12,
+            "height": 44
+          },
+          {
+            "label": "Demand crop",
+            "fontSize": 12,
+            "height": 44
+          },
+          {
+            "label": "Continue branch",
+            "fontSize": 12,
+            "height": 44
+          }
+        ]
+      }
     },
     {
       "name": "branch result names explicit policy",
@@ -98,9 +185,42 @@
       "name": "experiment persisted as an isolated completed branch",
       "pass": true,
       "detail": {
-        "id": "d32e9a188b1720e39b4958fd63a31f96",
+        "id": "59cadb96de0c0c140e9f68d666de874b",
         "status": "COMPLETED",
         "inference_calls": 0
+      }
+    },
+    {
+      "name": "empty-plot non-harvest quest creates a real branch with the fallback batch",
+      "pass": true,
+      "detail": {
+        "quest_id": "busy_market",
+        "batch_id": "batch-01",
+        "valid_batch_ids": [
+          "batch-01",
+          "batch-02",
+          "batch-03",
+          "batch-04",
+          "batch-05",
+          "batch-06",
+          "batch-07",
+          "batch-08"
+        ]
+      }
+    },
+    {
+      "name": "scenario debrief card is readable without mobile overflow",
+      "pass": true,
+      "detail": {
+        "overflow": 0,
+        "container_width": 364,
+        "card_width": 364,
+        "body_font_size": 13,
+        "debrief_font_size": 13,
+        "button_heights": [
+          44,
+          44
+        ]
       }
     },
     {
@@ -141,6 +261,51 @@
       }
     },
     {
+      "name": "360px all three map controls are coordinate-hittable above fixed navigation",
+      "pass": true,
+      "detail": [
+        {
+          "label": "Zoom in",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 413.0625,
+            "right": 57,
+            "bottom": 457.0625,
+            "left": 13
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Zoom out",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 413.0625,
+            "right": 105,
+            "bottom": 457.0625,
+            "left": 61
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Recenter farm",
+          "hit": true,
+          "hit_element": "svg",
+          "bounds": {
+            "top": 413.0625,
+            "right": 153,
+            "bottom": 457.0625,
+            "left": 109
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        }
+      ]
+    },
+    {
       "name": "390px has no body overflow",
       "pass": true,
       "detail": {
@@ -149,12 +314,102 @@
       }
     },
     {
+      "name": "390px all three map controls are coordinate-hittable above fixed navigation",
+      "pass": true,
+      "detail": [
+        {
+          "label": "Zoom in",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 413.0625,
+            "right": 57,
+            "bottom": 457.0625,
+            "left": 13
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Zoom out",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 413.0625,
+            "right": 105,
+            "bottom": 457.0625,
+            "left": 61
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Recenter farm",
+          "hit": true,
+          "hit_element": "svg",
+          "bounds": {
+            "top": 413.0625,
+            "right": 153,
+            "bottom": 457.0625,
+            "left": 109
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        }
+      ]
+    },
+    {
       "name": "430px has no body overflow",
       "pass": true,
       "detail": {
         "body": 430,
         "viewport": 430
       }
+    },
+    {
+      "name": "430px all three map controls are coordinate-hittable above fixed navigation",
+      "pass": true,
+      "detail": [
+        {
+          "label": "Zoom in",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 401.15625,
+            "right": 57,
+            "bottom": 445.15625,
+            "left": 13
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Zoom out",
+          "hit": true,
+          "hit_element": "path",
+          "bounds": {
+            "top": 401.15625,
+            "right": 105,
+            "bottom": 445.15625,
+            "left": 61
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        },
+        {
+          "label": "Recenter farm",
+          "hit": true,
+          "hit_element": "svg",
+          "bounds": {
+            "top": 401.15625,
+            "right": 153,
+            "bottom": 445.15625,
+            "left": 109
+          },
+          "navigation_top": 768,
+          "above_navigation": true
+        }
+      ]
     },
     {
       "name": "1280px has no body overflow",
@@ -185,7 +440,7 @@
     "apps/web/screenshots/gameplay/farm-world-430.png",
     "apps/web/screenshots/gameplay/farm-world-1280.png"
   ],
-  "scenario_id": "d32e9a188b1720e39b4958fd63a31f96",
-  "completed_at": "2026-09-08T17:12:04.963Z",
+  "scenario_id": "59cadb96de0c0c140e9f68d666de874b",
+  "completed_at": "2026-09-08T21:28:45.648Z",
   "status": "PASS"
 }

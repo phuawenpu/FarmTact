@@ -1,0 +1,8 @@
+{
+  "status": "FAILED_PRESERVED",
+  "stage": "initial_direct",
+  "advisor_messages": 0,
+  "inference_calls": 2,
+  "reason": "Advisor exchange incomplete (DeepSeek structured output failed local validation); completed messages were preserved and no provider fallback was used.",
+  "main_and_branch_unchanged": true
+}

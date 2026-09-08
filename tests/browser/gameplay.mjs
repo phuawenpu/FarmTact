@@ -92,21 +92,53 @@ try {
   await openButton(page, 'Quest journal')
   const journal = page.getByRole('dialog', { name: 'Quest journal' })
   check('quest journal exposes four repeatable challenges', await journal.locator('.quest-list article').count() === 4)
-  await journal.getByRole('button', { name: 'Start quest' }).nth(1).click()
+  await page.keyboard.press('Escape')
+
+  await openButton(page, 'Accessible farm list')
+  const emptyBedRow = page.getByRole('dialog', { name: 'Farm list' }).locator('tbody tr').filter({ hasText: 'C1' })
+  await emptyBedRow.getByRole('button', { name: 'Inspect' }).click()
+  const emptyBed = page.getByRole('dialog', { name: 'C1' })
+  check('empty plot remains explorable through the accessible farm list', await emptyBed.getByText('Unplanted bed').isVisible())
+  await emptyBed.getByRole('button', { name: 'Try a change' }).click()
   const lab = page.getByRole('dialog', { name: 'Scenario lab' })
   await lab.waitFor()
+  await lab.getByLabel('Challenge').selectOption('busy_market')
   const demandControl = lab.locator('.range-control').filter({ hasText: 'Market demand' }).locator('input')
   check('busy-market quest opens with relevant demand change', Number(await demandControl.inputValue()) !== 100, await demandControl.inputValue())
+  const batchControl = lab.getByLabel('Selected batch')
+  const actualBatchIds = await batchControl.locator('option').evaluateAll(options => options.map(option => option.value))
+  check('empty plot falls back to an actual occupied batch', actualBatchIds.length > 0 && actualBatchIds.includes(await batchControl.inputValue()) && await batchControl.inputValue() !== 'batch-09', { selected: await batchControl.inputValue(), options: actualBatchIds })
   await demandControl.fill('130')
-  check('all five bounded sandbox controls are visible', await lab.locator('.range-control').count() === 5, await lab.locator('.range-control').count())
+  check('all five bounded scenario controls are visible', await lab.locator('.range-control').count() === 5, await lab.locator('.range-control').count())
+  const formReadability = await lab.evaluate(node => ({
+    labels: [...node.querySelectorAll('.range-control b,.scenario-targets label')].map(label => ({ text: label.textContent?.trim(), fontSize: Number.parseFloat(getComputedStyle(label).fontSize) })),
+    selects: [...node.querySelectorAll('.scenario-targets select')].map(select => ({ label: select.parentElement?.childNodes[0]?.textContent?.trim(), fontSize: Number.parseFloat(getComputedStyle(select).fontSize), height: select.getBoundingClientRect().height })),
+  }))
+  check('scenario form labels and selects remain readable on mobile', formReadability.labels.every(label => label.fontSize >= 11) && formReadability.selects.every(select => select.fontSize >= 11 && select.height >= 44), formReadability)
   await lab.getByRole('button', { name: 'Run experiment' }).click()
   await lab.getByText('Inspect the trade-offs').waitFor({ timeout: 60_000 })
-  check('branch result names explicit policy', await lab.getByText('Compare the same policy').isVisible())
+  check('branch result names explicit policy', await lab.getByText('Compare the same policy', { exact: true }).isVisible())
   check('before-after table shows exact deltas', await lab.getByRole('table').isVisible() && await lab.locator('.metric-delta').count() >= 6)
   check('result exposes frozen snapshot association', await lab.getByText(/Snapshot .* baseline/i).isVisible())
   const scenarioResponse = await page.evaluate(async () => (await (await fetch('/api/v1/scenarios')).json()).scenarios[0])
   report.scenario_id = scenarioResponse?.id || null
   check('experiment persisted as an isolated completed branch', scenarioResponse?.status === 'COMPLETED' && scenarioResponse?.inference_calls === 0, { id: scenarioResponse?.id, status: scenarioResponse?.status, inference_calls: scenarioResponse?.inference_calls })
+  check('empty-plot non-harvest quest creates a real branch with the fallback batch', scenarioResponse?.quest_id === 'busy_market' && actualBatchIds.includes(scenarioResponse?.controls?.batch_id), { quest_id: scenarioResponse?.quest_id, batch_id: scenarioResponse?.controls?.batch_id, valid_batch_ids: actualBatchIds })
+  const branchReadability = await lab.locator('.branch-cards').evaluate(node => {
+    const card = node.querySelector('article')
+    const debrief = node.querySelector('.computed-debrief')
+    const body = card?.querySelector('p:not(.kicker)')
+    const buttons = [...node.querySelectorAll('button')]
+    return {
+      overflow: node.scrollWidth - node.clientWidth,
+      container_width: node.clientWidth,
+      card_width: card?.getBoundingClientRect().width || 0,
+      body_font_size: body ? Number.parseFloat(getComputedStyle(body).fontSize) : 0,
+      debrief_font_size: debrief ? Number.parseFloat(getComputedStyle(debrief).fontSize) : 0,
+      button_heights: buttons.map(button => button.getBoundingClientRect().height),
+    }
+  })
+  check('scenario debrief card is readable without mobile overflow', branchReadability.overflow <= 1 && branchReadability.card_width >= branchReadability.container_width - 1 && branchReadability.body_font_size >= 13 && branchReadability.debrief_font_size >= 13 && branchReadability.button_heights.every(height => height >= 44), branchReadability)
   await lab.getByRole('button', { name: 'Mark trade-offs inspected' }).click()
   await lab.getByRole('button', { name: 'Trade-off badge earned' }).waitFor()
   check('inspection earns the trade-off badge only after review', await lab.getByRole('button', { name: 'Trade-off badge earned' }).isDisabled())
@@ -141,6 +173,27 @@ try {
     await page.goto(baseURL, { waitUntil: 'networkidle' })
     const dimensions = await page.evaluate(() => ({ body: document.body.scrollWidth, viewport: innerWidth }))
     check(`${width}px has no body overflow`, dimensions.body <= dimensions.viewport + 1, dimensions)
+    if (width < 700) {
+      const controlHits = await page.locator('.world-controls button').evaluateAll(nodes => {
+        const navigation = document.querySelector('.thumb-nav')
+        const navigationBox = navigation?.getBoundingClientRect()
+        return nodes.map(node => {
+          const box = node.getBoundingClientRect()
+          const x = box.left + box.width / 2
+          const y = box.top + box.height / 2
+          const target = document.elementFromPoint(x, y)
+          return {
+            label: node.getAttribute('aria-label'),
+            hit: target === node || Boolean(target && node.contains(target)),
+            hit_element: target?.getAttribute('aria-label') || target?.tagName || null,
+            bounds: { top: box.top, right: box.right, bottom: box.bottom, left: box.left },
+            navigation_top: navigationBox?.top ?? null,
+            above_navigation: Boolean(navigationBox && box.bottom <= navigationBox.top),
+          }
+        })
+      })
+      check(`${width}px all three map controls are coordinate-hittable above fixed navigation`, controlHits.length === 3 && controlHits.every(control => control.hit && control.above_navigation), controlHits)
+    }
     await capture(page, `farm-world-${width}.png`)
   }
   check('no browser console errors', report.console_errors.length === 0, report.console_errors)

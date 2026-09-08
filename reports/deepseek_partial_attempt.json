@@ -1,0 +1,16 @@
+{
+  "status": "PARTIAL_PRESERVED",
+  "advisor_messages": 2,
+  "message_count": 5,
+  "inference_calls": 6,
+  "repair_validation_issues": [
+    [],
+    [
+      {
+        "field": "proposed_actions.0",
+        "type": "value_error"
+      }
+    ]
+  ],
+  "subsequent_acceptance_trial_maximum_calls": 16
+}

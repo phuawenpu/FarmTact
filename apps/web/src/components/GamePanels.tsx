@@ -63,7 +63,7 @@ export function BedDetailPanel({ open, bed, crop, farm, run, previewDate, alloca
   </PanelShell>
 }
 
-export function ConversationPanel({ open, advisor, advisors, farm, run, selectedBed, scenario, onSelectAdvisor, onClose, onOpenScenario }: { open: boolean; advisor: Advisor; advisors: Advisor[]; farm: Farm; run: Run | null; selectedBed: Bed | null; scenario: Scenario | null; onSelectAdvisor: (advisor: Advisor) => void; onClose: () => void; onOpenScenario: (action?: ProposedAction, conversationId?: string) => void }) {
+export function ConversationPanel({ open, advisor, advisors, farm, run, selectedBed, scenario, onSelectAdvisor, onClose, onOpenScenario, onHighlight }: { open: boolean; advisor: Advisor; advisors: Advisor[]; farm: Farm; run: Run | null; selectedBed: Bed | null; scenario: Scenario | null; onSelectAdvisor: (advisor: Advisor) => void; onClose: () => void; onOpenScenario: (action?: ProposedAction, conversationId?: string) => void; onHighlight: (refs: string[]) => void }) {
   const [conversation, setConversation] = useState<Conversation | null>(null)
   const [loading, setLoading] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -74,6 +74,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
   const [savedConversations, setSavedConversations] = useState<Conversation[]>([])
   const transcriptRef = useRef<HTMLDivElement>(null)
   const conversationGeneration = useRef(0)
+  const stopStream = useRef<(() => void) | null>(null)
 
   const refresh = useCallback(async (id: string, generation = conversationGeneration.current) => { const value = await api.conversation(id); if (generation === conversationGeneration.current) setConversation(value); return value }, [])
 
@@ -81,42 +82,67 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
     if (!open) return
     const generation = ++conversationGeneration.current
     let cancelled = false
+    const isCurrent = () => !cancelled && generation === conversationGeneration.current
     setLoading(true); setBusy(false); setError(null); setConversation(null); setReplyTo(null)
     void (async () => {
       try {
         const available = await api.conversations()
-        if (!cancelled) setSavedConversations(available.filter(item => item.advisor_id === advisor.id || item.advisor_ids?.includes(advisor.id)))
+        if (!isCurrent()) return
+        setSavedConversations(available.filter(item => item.advisor_id === advisor.id || item.advisor_ids?.includes(advisor.id)))
         const expectedSnapshotId = scenario?.id || `${farm.id}:v${farm.version}`
         let match = available.find(item => (item.advisor_id === advisor.id || item.advisor_ids?.includes(advisor.id)) && snapshotId(item) === expectedSnapshotId && (item.selected_bed_id || null) === (selectedBed?.id || null))
         if (!match) {
           const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: scenario ? 'scenario' : 'farm', snapshot_id: scenario?.id || farm.id, selected_bed_id: selectedBed?.id })
           match = await api.conversation(created.id)
         } else match = await api.conversation(match.id)
-        if (!cancelled) {
+        if (isCurrent()) {
           setConversation(match)
-          if (requestActive(match.last_request_status)) { setBusy(true); await pollForMessages(match.id, match.messages.length, generation); setBusy(false) }
+          if (requestActive(match.last_request_status)) { setBusy(true); await pollForMessages(match.id, match.messages.length, generation); if (isCurrent()) setBusy(false) }
         }
-      } catch (caught) { if (!cancelled) setError(messageFor(caught, 'Conversation history is unavailable.')) }
-      finally { if (!cancelled) setLoading(false) }
+      } catch (caught) { if (isCurrent()) setError(messageFor(caught, 'Conversation history is unavailable.')) }
+      finally { if (isCurrent()) setLoading(false) }
     })()
-    return () => { cancelled = true; if (conversationGeneration.current === generation) conversationGeneration.current += 1 }
+    return () => { cancelled = true; stopStream.current?.(); if (conversationGeneration.current === generation) conversationGeneration.current += 1 }
   }, [open, advisor.id, farm.id, farm.version, run?.id, scenario?.id, selectedBed?.id])
 
   useEffect(() => { transcriptRef.current?.scrollTo({ top: transcriptRef.current.scrollHeight, behavior: 'smooth' }) }, [conversation?.messages.length])
 
-  const pollForMessages = async (id: string, _previous: number, generation = conversationGeneration.current) => {
-    for (let attempt = 0; attempt < 330; attempt += 1) {
-      await new Promise(resolve => window.setTimeout(resolve, 900))
-      if (generation !== conversationGeneration.current) return false
-      const next = await refresh(id, generation)
-      if (!requestActive(next.last_request_status)) return true
-    }
-    if (generation === conversationGeneration.current) setError('The response is still running. It is saved and will resume when this discussion reopens.')
-    return false
+  const pollForMessages = (id: string, _previous: number, generation = conversationGeneration.current): Promise<boolean> => {
+    stopStream.current?.()
+    return new Promise(resolve => {
+      let ended = false, reading = false
+      const stream = new EventSource(`/api/v1/conversations/${encodeURIComponent(id)}/events?stream=true`)
+      const finish = (completed: boolean) => {
+        if (ended) return
+        ended = true; stream.close(); window.clearInterval(fallback); window.clearTimeout(deadline)
+        if (stopStream.current === stop) stopStream.current = null
+        resolve(completed)
+      }
+      const stop = () => finish(false)
+      const read = async () => {
+        if (ended || reading) return
+        if (generation !== conversationGeneration.current) { finish(false); return }
+        reading = true
+        try {
+          const next = await refresh(id, generation)
+          if (!requestActive(next.last_request_status)) finish(true)
+        } catch { /* A reconnect or the bounded fallback retries this read without inference. */ }
+        finally { reading = false }
+      }
+      stream.onmessage = () => { void read() }
+      stream.onerror = () => { void read() }
+      const fallback = window.setInterval(() => { void read() }, 5000)
+      const deadline = window.setTimeout(() => {
+        if (generation === conversationGeneration.current) setError('The response is still running. It is saved and will resume when this discussion reopens.')
+        finish(false)
+      }, 310000)
+      stopStream.current = stop
+      void read()
+    })
   }
 
   const send = async (prompt = content) => {
-    if (!conversation || !prompt.trim() || busy) return
+    if (!conversation || !prompt.trim() || busy || loading) return
     const generation = conversationGeneration.current
     setBusy(true); setError(null)
     try {
@@ -133,7 +159,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
   const invite = async () => {
     const selected = replyTo ? conversation?.messages.find(message => message.id === replyTo && message.speaker === 'advisor') : undefined
     const target = selected || [...(conversation?.messages || [])].reverse().find(message => message.speaker === 'advisor')
-    if (!conversation || !target || busy) return
+    if (!conversation || !target || busy || loading) return
     const generation = conversationGeneration.current
     setBusy(true); setError(null)
     try { const before = conversation.messages.length; await api.inviteAdvisor(conversation.id, { advisor: invitee, question: `Please respond to this point: ${target.content}`, reply_to: target.id }); if (generation !== conversationGeneration.current) return; setReplyTo(null); await pollForMessages(conversation.id, before, generation) }
@@ -142,7 +168,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
   }
 
   const council = async () => {
-    if (!conversation || busy) return
+    if (!conversation || busy || loading) return
     const generation = conversationGeneration.current
     setBusy(true); setError(null)
     try { const before = conversation.messages.length; await api.conveneCouncil(conversation.id, { question: content.trim() || `What should we learn from ${selectedBed?.name || 'this farm snapshot'}?`, ...(replyTo ? { reply_to: replyTo } : {}) }); if (generation !== conversationGeneration.current) return; setContent(''); await pollForMessages(conversation.id, before, generation) }
@@ -165,45 +191,48 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
         <img src={`/art/advisors/${advisor.id}.svg`} alt={`Portrait of ${advisor.name}`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
       </div>
       <div className="advisor-switcher" aria-label="Advisor shortcuts">{advisors.map(item => <button key={item.id} className={item.id === advisor.id ? 'is-active' : ''} onClick={() => onSelectAdvisor(item)} aria-label={`Talk to ${item.name}`}><img src={`/art/advisors/${item.id}.svg`} alt=""/><span>{item.name}</span></button>)}</div>
-      {!!savedConversations.length && <label className="saved-discussions"><span>Saved discussions</span><select value={conversation?.id || ''} onChange={event => { setLoading(true); void refresh(event.target.value).finally(() => setLoading(false)) }}><option value="" disabled>Select a frozen record</option>{savedConversations.map(item => <option key={item.id} value={item.id}>{item.advisor_id || 'advisor'} · {snapshotId(item) || 'frozen snapshot'}{item.selected_bed_id ? ` · ${item.selected_bed_id}` : ''}</option>)}</select></label>}
+      {!!savedConversations.length && <label className="saved-discussions"><span>Saved discussions</span><select value={conversation?.id || ''} onChange={event => { stopStream.current?.(); const generation = ++conversationGeneration.current; setLoading(true); setBusy(false); setReplyTo(null); void refresh(event.target.value, generation).then(async value => { if (generation === conversationGeneration.current && requestActive(value.last_request_status)) { setBusy(true); await pollForMessages(value.id, value.messages.length, generation) } }).catch(caught => { if (generation === conversationGeneration.current) setError(messageFor(caught, 'Saved discussion could not be opened.')) }).finally(() => { if (generation === conversationGeneration.current) { setLoading(false); setBusy(false) } }) }}><option value="" disabled>Select a frozen record</option>{savedConversations.map(item => <option key={item.id} value={item.id}>{item.advisor_id || 'advisor'} · {snapshotId(item) || 'frozen snapshot'}{item.selected_bed_id ? ` · ${item.selected_bed_id}` : ''}</option>)}</select></label>}
       {conversation && snapshotId(conversation) !== (scenario?.id || `${farm.id}:v${farm.version}`) && <div className="replay-label"><RotateCcw size={15}/><span>Saved frozen discussion · {snapshotId(conversation)}. This is not the current farm snapshot.</span></div>}
       {conversation?.transcript_mode === 'replay' && <div className="replay-label"><RotateCcw size={15}/><span>Recorded replay · opening and replaying use no new inference.</span></div>}
       {conversation?.last_request_status && ['INTERRUPTED','PARTIAL','FAILED','BLOCKED'].includes(conversation.last_request_status.toUpperCase()) && <div className="partial-conversation" role="status"><CircleAlert size={15}/><span><strong>Saved partial discussion · {conversation.last_request_status.toLowerCase()}</strong>Your existing messages are preserved. You can retry the question safely from this snapshot.</span></div>}
-      {conversation?.messages.some(message => message.request_mode === 'council' || ['agreement','disagreement','challenge','synthesis','conclusion'].includes(message.relationship || '')) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={`/art/advisors/${item.id}.svg`} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
+      {conversation?.messages.some(message => message.request_mode === 'council' || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={`/art/advisors/${item.id}.svg`} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
       <div className="prompt-row" aria-label="Suggested questions">
-        {[advisor.prompt, 'Show me the evidence.', 'What could I change?'].map(prompt => <button key={prompt} onClick={() => void send(prompt)} disabled={busy || loading}>{prompt}</button>)}
+        {[advisor.prompt, 'Show me the evidence.', 'What could I change?'].map(prompt => <button key={prompt} onClick={() => void send(prompt)} disabled={!conversation || busy || loading}>{prompt}</button>)}
       </div>
       <div className="conversation-transcript" ref={transcriptRef} aria-live="polite">
         {loading && !conversation ? <div className="panel-loading"><LoaderCircle className="spinner-icon"/> Opening recorded messages…</div> : null}
         {!loading && conversation && !conversation.messages.length ? <div className="conversation-empty"><MessageCircle size={27}/><strong>Start with a farm question</strong><p>Advice stays attached to this frozen snapshot.</p></div> : null}
-        {conversation?.messages.map(message => <MessageCard key={message.id} message={message} messages={conversation.messages} conversation={conversation} replying={replyTo === message.id} onReply={() => setReplyTo(message.id)} onOpenScenario={action => onOpenScenario(action, conversation.id)}/>) }
+        {!!conversation?.messages.length && <details className="recorded-transcript" open><summary style={{ minHeight: 44, cursor: 'pointer', fontSize: '.8rem', padding: 10 }}>Recorded discussion · {conversation.messages.length} messages</summary>{conversation.messages.map(message => <MessageCard key={message.id} message={message} messages={conversation.messages} conversation={conversation} onHighlight={onHighlight} replying={replyTo === message.id} onReply={() => setReplyTo(message.id)} onOpenScenario={action => onOpenScenario(action, conversation.id)}/>)}</details>}
         {busy && <div className="thinking-row"><span className="thinking-dots"><i/><i/><i/></span>Waiting for a bounded response…</div>}
       </div>
       {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
       {replyTo && <button className="reply-banner" onClick={() => setReplyTo(null)}>Replying to a specific message <X size={14}/></button>}
       <form className="conversation-composer" onSubmit={event => { event.preventDefault(); void send() }}>
-        <label className="sr-only" htmlFor="advisor-message">Message {advisor.name}</label><input id="advisor-message" value={content} onChange={event => setContent(event.target.value)} placeholder={`Ask ${advisor.name} about this snapshot…`} maxLength={1000}/><button type="submit" aria-label="Send message" disabled={!content.trim() || busy}><Send size={18}/></button>
+        <label className="sr-only" htmlFor="advisor-message">Message {advisor.name}</label><input id="advisor-message" value={content} onChange={event => setContent(event.target.value)} placeholder={`Ask ${advisor.name} about this snapshot…`} maxLength={1000} disabled={loading}/><button type="submit" aria-label="Send message" disabled={!conversation || !content.trim() || busy || loading}><Send size={18}/></button>
       </form>
       <div className="conversation-actions">
         <label><span>Invite</span><select value={invitee} onChange={event => setInvitee(event.target.value as typeof invitee)}>{advisors.filter(item => item.id !== advisor.id).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-        <button onClick={() => void invite()} disabled={busy || !conversation?.messages.length}><Bot size={16}/> Invite advisor</button>
-        <button onClick={() => void council()} disabled={busy || !conversation}><Users size={16}/> Convene council</button>
-        <button onClick={() => void replay()} disabled={!conversation || busy}><RotateCcw size={16}/> Replay</button>
+        <button onClick={() => void invite()} disabled={busy || loading || !conversation?.messages.length}><Bot size={16}/> Invite advisor</button>
+        <button onClick={() => void council()} disabled={busy || loading || !conversation}><Users size={16}/> Convene council</button>
+        <button onClick={() => void replay()} disabled={!conversation || busy || loading}><RotateCcw size={16}/> Replay</button>
       </div>
     </div>
   </PanelShell>
 }
 
-function MessageCard({ message, messages, conversation, replying, onReply, onOpenScenario }: { message: ConversationMessage; messages: ConversationMessage[]; conversation: Conversation; replying: boolean; onReply: () => void; onOpenScenario: (action: ProposedAction) => void }) {
+function MessageCard({ message, messages, conversation, replying, onReply, onOpenScenario, onHighlight }: { message: ConversationMessage; messages: ConversationMessage[]; conversation: Conversation; replying: boolean; onReply: () => void; onOpenScenario: (action: ProposedAction) => void; onHighlight: (refs: string[]) => void }) {
   const author = message.speaker === 'user' ? 'You' : message.speaker_name || message.speaker_id || message.speaker
   const unsupported = message.validation_status === 'unsupported' || message.validation_status === 'blocked_unsupported'
+  const blockedAction = unsupported || message.proposed_actions?.some(action => action.status === 'blocked_unsupported')
   const replied = message.reply_to ? messages.find(item => item.id === message.reply_to) : undefined
   return <article className={`message-card message-card--${message.speaker} ${replying ? 'is-replying' : ''}`}>
     {message.reply_to && <span className="message-relationship"><ArrowRight size={12}/> replies to {replied?.speaker_name || replied?.speaker_id || 'earlier message'}{replied ? `: “${replied.content.slice(0, 48)}${replied.content.length > 48 ? '…' : ''}”` : ''}</span>}
     <header><strong>{author}</strong><span className={`validation-chip ${unsupported ? 'validation-chip--bad' : ''}`}>{message.validation_status === 'references_verified' ? 'References checked · advisor interpretation' : message.validation_status || 'recorded'}</span></header>
+    {message.speaker === 'advisor' && message.relationship && <span className="message-relationship">{message.critic_conclusion === true ? 'Critic’s conclusion' : message.relationship.replaceAll('_', ' ')}</span>}
     <p>{message.content}</p>
     <AdvisorEvidence message={message} conversation={conversation}/>
-    {!!message.proposed_actions?.length && <div className="proposed-actions"><strong>Supported experiment</strong>{message.proposed_actions.map((action, index) => <button key={`${action.control}-${index}`} onClick={() => onOpenScenario(action)} disabled={action.status === 'blocked_unsupported'}><FlaskConical size={14}/>{action.control.replaceAll('_', ' ')} = {action.value}{action.unit === 'percent' ? '%' : ' days'} <ChevronRight size={14}/></button>)}</div>}
+    {!!message.highlight_refs?.length && <button className="message-reply" disabled={unsupported} onClick={() => onHighlight(message.highlight_refs || [])}>Show referenced plots</button>}
+    {!!message.proposed_actions?.length && <div className="proposed-actions"><strong>{blockedAction ? 'Unsupported suggestion · blocked' : 'Proposed experiment'}</strong>{message.proposed_actions.map((action, index) => <button key={`${action.control}-${index}`} onClick={() => onOpenScenario(action)} disabled={unsupported || action.status === 'blocked_unsupported'}><FlaskConical size={14}/>{action.control.replaceAll('_', ' ')} = {action.value}{action.unit === 'percent' ? '%' : ' days'} <ChevronRight size={14}/></button>)}</div>}
     {unsupported && <p className="unsupported-note"><CircleAlert size={13}/> Unsupported advice cannot authorize a change.</p>}
     {message.validation_status === 'references_verified' && <p className="interpretation-note">Citations and proposed controls were checked. The advisor’s interpretation remains unverified.</p>}
     <button className="message-reply" onClick={onReply}>Reply to this point</button>
@@ -230,7 +259,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
   const [quests, setQuests] = useState<Quest[]>(QUEST_FALLBACKS)
   const [questId, setQuestId] = useState('sandbox')
   const [parentId, setParentId] = useState('')
-  const [controls, setControls] = useState<ScenarioControls>(() => sandboxControls(selectedBed, farm.orders[0]?.crop_id))
+  const [controls, setControls] = useState<ScenarioControls>(() => sandboxControls(selectedBed, farm))
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [comparison, setComparison] = useState<ScenarioComparison | null>(null)
   const [busy, setBusy] = useState(false)
@@ -255,11 +284,11 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
     }).catch(caught => { if (!cancelled) setError(messageFor(caught, 'Saved scenario branches are unavailable.')) })
     return () => { cancelled = true }
   }, [open, load])
-  useEffect(() => { setControls(questId === 'sandbox' ? sandboxControls(selectedBed, farm.orders[0]?.crop_id) : questControls(questId, selectedBed, farm.orders[0]?.crop_id)) }, [selectedBed?.id])
+  useEffect(() => { setControls(questId === 'sandbox' ? sandboxControls(selectedBed, farm) : questControls(questId, selectedBed, farm)) }, [selectedBed?.id])
   useEffect(() => {
     if (!open) return
-    if (initialQuestId) { setQuestId(initialQuestId); setControls(questControls(initialQuestId, selectedBed, farm.orders[0]?.crop_id)); setPhase('brief') }
-    else if (!proposedAction) { setQuestId('sandbox'); setControls(sandboxControls(selectedBed, farm.orders[0]?.crop_id)); setPhase('brief') }
+    if (initialQuestId) { setQuestId(initialQuestId); setControls(questControls(initialQuestId, selectedBed, farm)); setPhase('brief') }
+    else if (!proposedAction) { setQuestId('sandbox'); setControls(sandboxControls(selectedBed, farm)); setPhase('brief') }
   }, [open, initialQuestId])
   useEffect(() => {
     if (!open || !proposedAction) return
@@ -303,7 +332,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
     <div className="scenario-layout">
       <aside className="scenario-brief">
         <div className="scenario-steps" aria-label="Experiment steps"><button className={phase === 'brief' ? 'is-active' : ''} onClick={() => setPhase('brief')}>1 <span>Briefing</span></button><button className={phase === 'assumptions' ? 'is-active' : ''} onClick={() => setPhase('assumptions')}>2 <span>Assumptions</span></button><button className={phase === 'result' ? 'is-active' : ''} onClick={() => setPhase('result')}>3 <span>Compare</span></button></div>
-        <label>Challenge<select value={questId} onChange={event => { setQuestId(event.target.value); setControls(event.target.value === 'sandbox' ? sandboxControls(selectedBed, farm.orders[0]?.crop_id) : questControls(event.target.value, selectedBed, farm.orders[0]?.crop_id)); setPhase('brief') }}><option value="sandbox">Open sandbox</option>{quests.map(item => <option key={item.id} value={item.id}>{item.name || item.title}</option>)}</select></label>
+        <label>Challenge<select value={questId} onChange={event => { setQuestId(event.target.value); setControls(event.target.value === 'sandbox' ? sandboxControls(selectedBed, farm) : questControls(event.target.value, selectedBed, farm)); setPhase('brief') }}><option value="sandbox">Open sandbox</option>{quests.map(item => <option key={item.id} value={item.id}>{item.name || item.title}</option>)}</select></label>
         <div className="brief-card"><img src={`/art/advisors/${quest.advisor_id || 'asha'}.svg`} alt=""/><div><p className="kicker">Advisor briefing</p><h3>{quest.name || quest.title}</h3><p>{quest.description}</p></div></div>
         <p className="preview-note">Every experiment creates a branch from frozen farm inputs. The main farm and its latest run remain unchanged.{proposedAction ? ' This branch is linked to the exact conversation snapshot.' : ''}</p>
       </aside>
@@ -317,7 +346,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
             <RangeControl label="Available labour" value={controls.labour_percent} min={50} max={150} suffix="%" onChange={value => setControls(current => ({ ...current, labour_percent: value }))}/>
             <RangeControl label="Available cash" value={controls.cash_percent} min={50} max={150} suffix="%" onChange={value => setControls(current => ({ ...current, cash_percent: value }))}/>
           </div>
-          <div className="scenario-targets"><label>Selected batch<select value={controls.batch_id || ''} onChange={event => setControls(current => ({ ...current, batch_id: event.target.value }))}>{farm.beds.filter(bed => bed.crop_id).map((bed, index) => <option key={bed.id} value={batchId(bed, index)}>{bed.name} · {bed.crop_id?.replaceAll('_', ' ')}</option>)}</select></label><label>Demand crop<select value={controls.demand_crop_id || ''} onChange={event => setControls(current => ({ ...current, demand_crop_id: event.target.value }))}>{crops.filter(crop => farm.orders.some(order => order.crop_id === crop.id)).map(crop => <option key={crop.id} value={crop.id}>{crop.label}</option>)}</select></label><label>Continue branch<select value={parentId} onChange={event => setParentId(event.target.value)}><option value="">Main farm baseline</option>{scenarios.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
+          <div className="scenario-targets"><label>Selected batch<select value={controls.batch_id || ''} onChange={event => setControls(current => ({ ...current, batch_id: event.target.value }))}>{farm.beds.filter(hasActualBatch).map(bed => <option key={bed.id} value={bed.batch_id}>{bed.name} · {bed.crop_id?.replaceAll('_', ' ')}</option>)}</select></label><label>Demand crop<select value={controls.demand_crop_id || ''} onChange={event => setControls(current => ({ ...current, demand_crop_id: event.target.value }))}>{crops.filter(crop => farm.orders.some(order => order.crop_id === crop.id)).map(crop => <option key={crop.id} value={crop.id}>{crop.label}</option>)}</select></label><label>Continue branch<select value={parentId} onChange={event => setParentId(event.target.value)}><option value="">Main farm baseline</option>{scenarios.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
           {parentId && <p className="panel-note">Assumptions are relative to this branch; comparison retains the original farm baseline.</p>}
           {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
           <div className="panel-actions"><button className="button button--forest" onClick={() => setPhase('assumptions')}>Review assumptions</button><button className="button button--coral" onClick={() => void run()} disabled={busy}>{busy ? <LoaderCircle className="spinner-icon"/> : <Play size={17}/>} Run experiment</button></div>
@@ -335,8 +364,8 @@ function ScenarioResults({ scenarios, quests, selectedIds, setSelectedIds, compa
     <button className="button button--forest compare-button" onClick={onCompare} disabled={busy || !selectedIds.length}>{busy ? <LoaderCircle className="spinner-icon"/> : <GitBranch size={17}/>} Compare selected</button>
     {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
     {!!displayed.length && <div className="policy-picker" aria-label="Planning policy"><span>Compare the same policy</span>{['Lean','Balanced','Resilient'].map(name => <button key={name} className={policy === name ? 'is-active' : ''} onClick={() => setPolicy(name)}>{name}</button>)}</div>}
-    {!!displayed.length && <div className="comparison-table-wrap"><table className="comparison-table"><caption>{policy} policy · baseline, branch outcome and computed change</caption><thead><tr><th>Outcome</th><th>Baseline</th>{displayed.map(item => <th key={item.id}>{item.name}<small> outcome · Δ</small></th>)}</tr></thead><tbody>{['fill_rate','margin_sgd','waste_kg','shortfall_kg','labour_hours','cost_sgd'].map(metric => <tr key={metric}><th>{metric.replaceAll('_', ' ')}</th><td>{policyMetric(displayed[0], policy, metric, 'baseline')}</td>{displayed.map(item => <td key={item.id} className={item.simulation_status === 'NO_FEASIBLE_PLAN' ? 'is-warning' : ''}>{policyMetric(item, policy, metric, 'scenario')} <small className="metric-delta">{formatDelta(item.policy_comparisons?.find(row => row.policy === policy)?.deltas?.[metric as keyof StrategyMetrics], metric)}</small></td>)}</tr>)}</tbody></table></div>}
-    {!!displayed.length && <div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p><small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} deliveries</span> : null}{item.affected_deliveries?.length ? <details><summary>Affected deliveries</summary>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Ask an advisor about this branch</button>}</article>})}</div>}
+    {!!displayed.length && <div className="comparison-table-wrap"><table className="comparison-table"><caption>{policy} policy · baseline, branch outcome and computed change</caption><thead><tr><th>Outcome</th><th>Baseline</th>{displayed.map(item => <th key={item.id}>{item.name}<small> outcome · Δ</small></th>)}</tr></thead><tbody>{['fill_rate','margin_sgd','waste_kg','shortfall_kg','labour_hours','cost_sgd'].map(metric => <tr key={metric}><th>{({ fill_rate: 'Demand filled', margin_sgd: 'Contribution margin', waste_kg: 'Waste', shortfall_kg: 'Unfilled demand', labour_hours: 'Labour needed', cost_sgd: 'Total cost' } as Record<string,string>)[metric]}</th><td>{policyMetric(displayed[0], policy, metric, 'baseline')}</td>{displayed.map(item => <td key={item.id} className={item.simulation_status === 'NO_FEASIBLE_PLAN' ? 'is-warning' : ''}>{policyMetric(item, policy, metric, 'scenario')} <small className="metric-delta">{formatDelta(item.policy_comparisons?.find(row => row.policy === policy)?.deltas?.[metric as keyof StrategyMetrics], metric)}</small></td>)}</tr>)}</tbody></table></div>}
+    {!!displayed.length && <div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p>{completed && row && <p className="computed-debrief"><strong>Computed debrief · {policy}</strong><br/>{scenarioDebrief(item, policy)}</p>}<small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} delivery dates to inspect</span> : null}{item.affected_deliveries?.length ? <details><summary>Deliveries to inspect</summary><p>Dates with changed planned totals or changed order inputs; not per-order fulfilment.</p>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Ask an advisor about this branch</button>}</article>})}</div>}
   </div>
 }
 
@@ -348,16 +377,20 @@ export function AccessibleFarmView({ open, farm, crops, previewDate, allocations
   return <PanelShell open={open} title="Farm list" eyebrow={`Schedule preview · ${formatPreviewDate(previewDate)}`} wide onClose={onClose}><div className="accessible-world-table"><p className="preview-note">Keyboard-friendly alternative to the farm scene. Previewed stages use scheduled dates and do not create observations.</p><table><caption>All {farm.beds.length} growing beds</caption><thead><tr><th>Bed</th><th>Crop</th><th>Stage</th><th>Progress</th><th>Next action</th><th/></tr></thead><tbody>{farm.beds.map(bed => { const state = previewBed(bed, previewDate, allocations.get(bed.id)); return <tr key={bed.id}><th>{bed.name}</th><td>{state.cropId ? crops.get(state.cropId)?.label || state.cropId : 'Open bed'}</td><td>{state.stage}</td><td>{Math.round(state.progress)}%</td><td>{state.nextAction}</td><td><button onClick={() => onSelect(bed)}>Inspect</button></td></tr> })}</tbody></table></div></PanelShell>
 }
 
-function sandboxControls(bed: Bed | null, fallbackCrop?: string): ScenarioControls { return { batch_id: bed ? batchId(bed, 0) : 'batch-01', delay_days: 0, yield_percent: 100, demand_crop_id: bed?.crop_id || fallbackCrop, demand_percent: 100, labour_percent: 100, cash_percent: 100 } }
-function questControls(questId: string, bed: Bed | null, fallbackCrop?: string): ScenarioControls {
-  const controls: ScenarioControls = { batch_id: bed ? batchId(bed, 0) : 'batch-01', delay_days: 0, yield_percent: 100, demand_crop_id: bed?.crop_id || fallbackCrop, demand_percent: 100, labour_percent: 100, cash_percent: 100 }
+function hasActualBatch(bed: Bed): bed is Bed & { batch_id: string } { return Boolean(bed.crop_id && typeof bed.batch_id === 'string' && bed.batch_id) }
+function scenarioTargetBed(selectedBed: Bed | null, farm: Farm) { return selectedBed && hasActualBatch(selectedBed) ? selectedBed : farm.beds.find(hasActualBatch) || null }
+function sandboxControls(selectedBed: Bed | null, farm: Farm): ScenarioControls {
+  const bed = scenarioTargetBed(selectedBed, farm)
+  return { batch_id: bed?.batch_id, delay_days: 0, yield_percent: 100, demand_crop_id: bed?.crop_id || farm.orders[0]?.crop_id, demand_percent: 100, labour_percent: 100, cash_percent: 100 }
+}
+function questControls(questId: string, selectedBed: Bed | null, farm: Farm): ScenarioControls {
+  const controls = sandboxControls(selectedBed, farm)
   if (questId === 'late_harvest') { controls.delay_days = 3; controls.yield_percent = 90 }
   if (questId === 'busy_market') controls.demand_percent = 125
   if (questId === 'short_handed_week') controls.labour_percent = 70
   if (questId === 'tight_budget') controls.cash_percent = 65
   return controls
 }
-function batchId(bed: Bed, index: number) { return typeof bed.batch_id === 'string' ? bed.batch_id : bed.id.startsWith('bed-') ? bed.id.replace('bed-', 'batch-') : `batch-${String(index + 1).padStart(2, '0')}` }
 function scenarioTerminal(status: string) { return ['completed','feasible','infeasible','failed','no_feasible_plan'].some(value => status.toLowerCase().includes(value)) }
 function mergeQuests(values: Quest[]) { return QUEST_FALLBACKS.map(fallback => ({ ...fallback, ...(values.find(value => value.id === fallback.id) || {}) })) }
 function messageFor(caught: unknown, fallback: string) { return caught instanceof Error ? caught.message : fallback }
@@ -386,3 +419,16 @@ function formatConstraint(value: unknown) {
 function snapshotId(conversation: Conversation) { return typeof conversation.snapshot_ref === 'object' ? conversation.snapshot_ref?.id : conversation.snapshot_ref }
 function requestActive(status?: string | null) { return ['QUEUED','RUNNING'].includes(String(status || '').toUpperCase()) }
 function scenarioStatusLabel(scenario: Scenario) { if (scenario.simulation_status === 'NO_FEASIBLE_PLAN') return 'Infeasible result'; if (scenario.simulation_status === 'ACCEPTED_FOR_SIMULATION') return 'Feasible branch · simulation only'; if (scenario.status === 'COMPLETED') return 'Experiment complete'; return scenario.status.replaceAll('_', ' ').toLowerCase() }
+
+function scenarioDebrief(scenario: Scenario, policy: string) {
+  const row = scenario.policy_comparisons?.find(item => item.policy === policy)
+  if (!row) return 'This policy has no computed comparison yet.'
+  if (row.scenario_status !== 'FEASIBLE') return 'This policy does not satisfy every hard constraint. Its figures describe an infeasible experiment; inspect the required and available resources below before considering another change.'
+  const d = row.deltas || {}
+  const fill = typeof d.fill_rate === 'number' ? `Demand filled ${d.fill_rate === 0 ? 'is unchanged' : `${d.fill_rate > 0 ? 'rises' : 'falls'} by ${Math.abs(d.fill_rate * 100).toLocaleString('en-SG', { maximumFractionDigits: 2 })} percentage points`}` : ''
+  const change = (key: keyof StrategyMetrics, name: string) => {
+    const value = d[key]
+    return typeof value === 'number' ? `${name} ${value === 0 ? 'is unchanged' : `${value > 0 ? 'rises' : 'falls'} by ${formatMetric(Math.abs(value), String(key))}`}` : ''
+  }
+  return [fill, change('margin_sgd', 'contribution margin'), change('labour_hours', 'labour needed'), change('cost_sgd', 'total cost')].filter(Boolean).join('; ') + '. These changes compare the same policy with the frozen baseline.'
+}

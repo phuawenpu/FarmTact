@@ -29,6 +29,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [scenarioAffected, setScenarioAffected] = useState<string[]>([])
+  const [advisorReferenced, setAdvisorReferenced] = useState<string[]>([])
   const [scenarioContext, setScenarioContext] = useState<Scenario | null>(null)
   const [proposedAction, setProposedAction] = useState<{ action: ProposedAction; conversationId: string } | null>(null)
   const [questContext, setQuestContext] = useState<string | null>(null)
@@ -37,17 +38,30 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
   const cropMap = useMemo(() => new Map(crops.map(crop => [crop.id, crop])), [crops])
   const selectedBed = farm.beds.find(bed => bed.id === selectedBedId) || null
   const previewDate = addDays(farm.planning_date || singaporeCivilDate(farm.cutoff), previewDay)
-  const accepted = run?.strategies.find(strategy => strategy.id === run.accepted_strategy_id)
+  const currentRun = run && !run.shared_demo && String(run.input_version) === String(farm.version) ? run : null
+  const accepted = currentRun?.strategies.find(strategy => strategy.id === currentRun.accepted_strategy_id)
   const allocationsByBed = useMemo(() => {
     const grouped = new Map<string, Allocation[]>()
     for (const allocation of accepted?.allocations || []) grouped.set(allocation.bed_id, [...(grouped.get(allocation.bed_id) || []), allocation])
     return grouped
   }, [accepted])
-  const affected = new Set<string>([...scenarioAffected, ...(Array.isArray(run?.disruption && typeof run.disruption === 'object' ? run.disruption.affected_bed_ids : null)
+  const affected = new Set<string>([...scenarioAffected, ...advisorReferenced, ...(Array.isArray(run?.disruption && typeof run.disruption === 'object' ? run.disruption.affected_bed_ids : null)
     ? (run?.disruption as { affected_bed_ids: string[] }).affected_bed_ids : [])])
 
   const openAdvisor = (advisor: Advisor) => { setSelectedAdvisor(advisor); setPanel('conversation') }
   const recenter = () => { setZoom(1); setPan({ x: 0, y: 0 }) }
+  const highlightReferences = (refs: string[]) => {
+    const referenced = new Set(refs)
+    const deliveryCrops = new Set(farm.orders.filter(order => referenced.has(`delivery:${order.id}`)).map(order => order.crop_id))
+    const beds = farm.beds.filter(bed => referenced.has(`bed:${bed.id}`) || (bed.batch_id && referenced.has(`batch:${bed.batch_id}`)) || (bed.crop_id && deliveryCrops.has(bed.crop_id)))
+    setAdvisorReferenced(beds.map(bed => bed.id))
+    if (beds[0]) {
+      setSelectedBedId(beds[0].id)
+      const position = bedPosition(farm.beds.indexOf(beds[0]))
+      setZoom(1); setPan({ x: 520 - position.x, y: 330 - position.y })
+    }
+    setPanel(null)
+  }
   useEffect(() => {
     const viewport = viewportRef.current
     if (!viewport) return
@@ -116,7 +130,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
                   <span className="world-bed__soil" />
                   {cropImage && <img src={cropImage} alt="" draggable={false}/>} 
                   <span className="world-bed__label"><b>{bed.name}</b><small>{crop?.label || 'Open bed'}</small></span>
-                  {affected.has(bed.id) && <span className="world-bed__alert" aria-label="Affected by scenario">!</span>}
+                  {affected.has(bed.id) && <span className="world-bed__alert" aria-label={advisorReferenced.includes(bed.id) ? "Referenced by advisor" : "Affected by scenario"}>!</span>}
                 </button>
               )
             })}
@@ -157,7 +171,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
       </section>
 
       <BedDetailPanel open={panel === 'bed'} bed={selectedBed} crop={selectedBed?.crop_id ? cropMap.get(selectedBed.crop_id) : undefined} farm={farm} run={run} previewDate={previewDate} allocations={selectedBed ? allocationsByBed.get(selectedBed.id) : undefined} onClose={() => setPanel(null)} onExperiment={() => { setQuestContext(null); setProposedAction(null); setPanel('scenarios') }} onAsk={() => { setSelectedAdvisor(ADVISORS[0]); setScenarioContext(null); setPanel('conversation') }}/>
-      <ConversationPanel open={panel === 'conversation'} advisor={selectedAdvisor} advisors={ADVISORS} farm={farm} run={run} selectedBed={selectedBed} scenario={scenarioContext} onSelectAdvisor={setSelectedAdvisor} onClose={() => setPanel(null)} onOpenScenario={(action, conversationId) => { setProposedAction(action && conversationId ? { action, conversationId } : null); setPanel('scenarios') }}/>
+      <ConversationPanel open={panel === 'conversation'} advisor={selectedAdvisor} advisors={ADVISORS} farm={farm} run={run} selectedBed={selectedBed} scenario={scenarioContext} onHighlight={highlightReferences} onSelectAdvisor={setSelectedAdvisor} onClose={() => setPanel(null)} onOpenScenario={(action, conversationId) => { setProposedAction(action && conversationId ? { action, conversationId } : null); setPanel('scenarios') }}/>
       <QuestJournal open={panel === 'quests'} farm={farm} onClose={() => setPanel(null)} onStartQuest={quest => { setQuestContext(quest.id); setPanel('scenarios') }}/>
       <ScenarioLab open={panel === 'scenarios'} farm={farm} crops={crops} selectedBed={selectedBed} initialQuestId={questContext} proposedAction={proposedAction} onClose={() => setPanel(null)} onHighlight={ids => { setScenarioAffected(ids); if (ids[0]) setSelectedBedId(ids[0]) }} onInterpret={scenario => { setScenarioContext(scenario); setSelectedAdvisor(ADVISORS[4]); setPanel('conversation') }}/>
       <AccessibleFarmView open={panel === 'list'} farm={farm} crops={cropMap} previewDate={previewDate} allocations={allocationsByBed} onSelect={bed => { setSelectedBedId(bed.id); setPanel('bed') }} onClose={() => setPanel(null)}/>

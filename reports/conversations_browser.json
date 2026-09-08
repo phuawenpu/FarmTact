@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-08T17:13:53.264Z",
+  "started_at": "2026-09-08T22:06:20.693Z",
   "base_url": "http://127.0.0.1:8080",
   "execution_policy": "Browser-only deterministic intercepted API fixtures. No DeepSeek or other inference provider calls.",
   "checks": [
@@ -64,6 +64,33 @@
       ]
     },
     {
+      "name": "saved-discussion loading disables every inference action",
+      "pass": true,
+      "detail": {
+        "composer": true,
+        "send": true,
+        "invite": true,
+        "council": true,
+        "suggestions": true
+      }
+    },
+    {
+      "name": "delayed current-snapshot read cannot overwrite a selected saved discussion",
+      "pass": true,
+      "detail": {
+        "selected": "fixture-conversation-7-mei",
+        "expected": "fixture-conversation-7-mei"
+      }
+    },
+    {
+      "name": "delayed response cannot overwrite a newly selected advisor",
+      "pass": true
+    },
+    {
+      "name": "delayed response remains in its originating saved conversation",
+      "pass": true
+    },
+    {
       "name": "conversation modal focuses its close control",
       "pass": true
     },
@@ -77,6 +104,14 @@
       "pass": true
     },
     {
+      "name": "typed response subscribes to stored conversation events",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
       "name": "verified references are labelled without claiming semantic validation",
       "pass": true
     },
@@ -85,7 +120,15 @@
       "pass": true
     },
     {
+      "name": "supported control is labelled as a proposed experiment",
+      "pass": true
+    },
+    {
       "name": "evidence expands with scope, limit, and source link",
+      "pass": true
+    },
+    {
+      "name": "verified message highlights its referenced farm plot",
       "pass": true
     },
     {
@@ -97,7 +140,7 @@
       "pass": true,
       "detail": {
         "content": "Which part of that point would you challenge?",
-        "reply_to": "fixture-message-2"
+        "reply_to": "fixture-message-5"
       }
     },
     {
@@ -108,12 +151,12 @@
       "name": "invitation targets the specifically selected point",
       "pass": true,
       "detail": {
-        "expected": "fixture-message-2",
-        "actual": "fixture-message-2",
+        "expected": "fixture-message-5",
+        "actual": "fixture-message-5",
         "body": {
           "advisor": "idris",
           "question": "Please respond to this point: [INTERCEPTED FIXTURE] The frozen schedule and comparison support inspecting timing and margin together.",
-          "reply_to": "fixture-message-2"
+          "reply_to": "fixture-message-5"
         }
       }
     },
@@ -122,12 +165,23 @@
       "pass": true
     },
     {
+      "name": "a two-advisor invitation is not mislabeled as a council",
+      "pass": true
+    },
+    {
       "name": "council renders eight bounded advisor turns",
       "pass": true,
-      "detail": 12
+      "detail": {
+        "recorded": 8,
+        "rendered": 8
+      }
     },
     {
       "name": "council transcript exposes agreements, disagreements, and critic conclusion",
+      "pass": true
+    },
+    {
+      "name": "critic conclusion is explicitly identified",
       "pass": true
     },
     {
@@ -174,11 +228,19 @@
     },
     {
       "name": "interrupted request state is visible in the conversation",
-      "pass": false
+      "pass": true
     },
     {
       "name": "reload reconnects to the pending stored exchange",
       "pass": true
+    },
+    {
+      "name": "reconnect subscribes to stored conversation events",
+      "pass": true,
+      "detail": {
+        "before": 6,
+        "after": 7
+      }
     },
     {
       "name": "reconnect does not duplicate the saved user turn",
@@ -189,17 +251,27 @@
       "name": "replay reads the stored transcript without POST or new messages",
       "pass": true,
       "detail": {
-        "postsBeforeReplay": 14,
-        "postsAfterReplay": 14,
-        "messagesBeforeReplay": 21,
-        "messagesAfterReplay": 21,
+        "postsBeforeReplay": 15,
+        "postsAfterReplay": 15,
+        "messagesBeforeReplay": 23,
+        "messagesAfterReplay": 23,
         "replayGets": 1
       }
     },
     {
       "name": "conversation honors reduced motion",
-      "pass": false,
+      "pass": true,
       "detail": [
+        {
+          "className": "message-card message-card--user ",
+          "animationDuration": "1e-05s",
+          "transitionDuration": "1e-05s"
+        },
+        {
+          "className": "message-card message-card--advisor ",
+          "animationDuration": "1e-05s",
+          "transitionDuration": "1e-05s"
+        },
         {
           "className": "message-card message-card--user ",
           "animationDuration": "1e-05s",
@@ -306,6 +378,64 @@
           "transitionDuration": "1e-05s"
         }
       ]
+    },
+    {
+      "name": "all six advisor shortcuts remain usable in a nonshrinking mobile row",
+      "pass": true,
+      "detail": {
+        "height": 60,
+        "overflow_x": true,
+        "buttons": [
+          {
+            "height": 58,
+            "name": "Mei",
+            "name_inside_row": true
+          },
+          {
+            "height": 58,
+            "name": "Ravi",
+            "name_inside_row": true
+          },
+          {
+            "height": 58,
+            "name": "Hana",
+            "name_inside_row": true
+          },
+          {
+            "height": 58,
+            "name": "Ben",
+            "name_inside_row": true
+          },
+          {
+            "height": 58,
+            "name": "Asha",
+            "name_inside_row": true
+          },
+          {
+            "height": 58,
+            "name": "Idris",
+            "name_inside_row": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "360px preserves the transcript, readable composer, and bottom actions",
+      "pass": true,
+      "detail": {
+        "body_overflow": 0,
+        "transcript_height": 210,
+        "composer_visible": true,
+        "composer_font_size": 12,
+        "action_count": 4,
+        "action_heights": [
+          44,
+          44,
+          44,
+          44
+        ],
+        "actions_visible": true
+      }
     },
     {
       "name": "Escape closes the modal and restores launcher focus",
@@ -325,6 +455,7 @@
       "name": "fixture responses are visibly labelled and distinguishable from DeepSeek",
       "pass": true,
       "detail": [
+        "[INTERCEPTED FIXTURE] Delayed Mei response stayed with Mei.",
         "[INTERCEPTED FIXTURE] The frozen schedule and comparison support inspecting timing and margin together.",
         "[INTERCEPTED FIXTURE] I am answering the selected point while keeping this reply attached to it.",
         "[INTERCEPTED FIXTURE] Idris disagrees with the selected point and requests a comparison.",
@@ -343,11 +474,8 @@
     },
     {
       "name": "no browser console errors",
-      "pass": false,
-      "detail": [
-        "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
-        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
-      ]
+      "pass": true,
+      "detail": []
     },
     {
       "name": "no uncaught page errors",
@@ -355,135 +483,34 @@
       "detail": []
     }
   ],
-  "failures": [
+  "failures": [],
+  "console_errors": [],
+  "expected_console_errors": [
     {
-      "name": "interrupted request state is visible in the conversation"
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "location": {
+        "url": "http://127.0.0.1:8080/api/v1/conversations/fixture-conversation-1-mei/messages",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
     },
     {
-      "name": "conversation honors reduced motion",
-      "detail": [
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--user ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        },
-        {
-          "className": "message-card message-card--advisor ",
-          "animationDuration": "1e-05s",
-          "transitionDuration": "1e-05s"
-        }
-      ]
-    },
-    {
-      "name": "no browser console errors",
-      "detail": [
-        "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
-        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
-      ]
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "location": {
+        "url": "http://127.0.0.1:8080/api/v1/conversations/fixture-conversation-1-mei/messages",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
     }
-  ],
-  "console_errors": [
-    "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
-    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
   ],
   "page_errors": [],
   "screenshots": [
-    "apps/web/screenshots/conversations/conversation-replay-390.png"
+    "apps/web/screenshots/conversations/conversation-replay-390.png",
+    "apps/web/screenshots/conversations/conversation-replay-360.png"
   ],
   "intercepted": {
     "conversation_requests": [
@@ -638,6 +665,68 @@
         "idempotency_key_present": false
       },
       {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-7-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/messages",
+        "body": {
+          "content": "fixture-delayed-switch"
+        },
+        "idempotency_key_present": true
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-2-ravi",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
         "method": "POST",
         "path": "/api/v1/conversations/fixture-conversation-1-mei/messages",
         "body": {
@@ -658,11 +747,29 @@
         "idempotency_key_present": false
       },
       {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
         "method": "POST",
         "path": "/api/v1/conversations/fixture-conversation-1-mei/messages",
         "body": {
           "content": "Which part of that point would you challenge?",
-          "reply_to": "fixture-message-2"
+          "reply_to": "fixture-message-5"
         },
         "idempotency_key_present": true
       },
@@ -675,6 +782,12 @@
       {
         "method": "GET",
         "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
         "body": null,
         "idempotency_key_present": false
       },
@@ -684,13 +797,19 @@
         "body": {
           "advisor": "idris",
           "question": "Please respond to this point: [INTERCEPTED FIXTURE] The frozen schedule and comparison support inspecting timing and margin together.",
-          "reply_to": "fixture-message-2"
+          "reply_to": "fixture-message-5"
         },
         "idempotency_key_present": true
       },
       {
         "method": "GET",
         "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
         "body": null,
         "idempotency_key_present": false
       },
@@ -709,6 +828,12 @@
         "idempotency_key_present": false
       },
       {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
         "method": "POST",
         "path": "/api/v1/conversations/fixture-conversation-1-mei/messages",
         "body": {
@@ -719,6 +844,18 @@
       {
         "method": "GET",
         "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
         "body": null,
         "idempotency_key_present": false
       },
@@ -772,6 +909,12 @@
       },
       {
         "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
         "path": "/api/v1/conversations",
         "body": null,
         "idempotency_key_present": false
@@ -785,6 +928,12 @@
       {
         "method": "GET",
         "path": "/api/v1/conversations/fixture-conversation-1-mei",
+        "body": null,
+        "idempotency_key_present": false
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations/fixture-conversation-1-mei/events",
         "body": null,
         "idempotency_key_present": false
       },
@@ -826,6 +975,6 @@
     ],
     "provider_requests": []
   },
-  "completed_at": "2026-09-08T17:14:05.303Z",
-  "status": "FAIL"
+  "completed_at": "2026-09-08T22:06:30.117Z",
+  "status": "PASS"
 }
