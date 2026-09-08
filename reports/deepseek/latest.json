@@ -1,0 +1,535 @@
+{
+  "actual_request_count": 15,
+  "capabilities": {
+    "flash_json": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "0b4bbc5128eb93323e858dd934428a455b6377d41cf2fca699a3aa1e436dffcb",
+        "latency_ms": 772,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash",
+        "returned_model": "deepseek-v4-flash",
+        "role": "demand_analyst",
+        "usage": {
+          "completion_tokens": 15,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 45,
+          "prompt_tokens": 45,
+          "reasoning_tokens": null,
+          "total_tokens": 60
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-flash",
+      "status": "PASS",
+      "validated_content": {
+        "capability": "json",
+        "marker": 17,
+        "status": "ok"
+      }
+    },
+    "model_discovery": {
+      "required_models_available": true,
+      "reviewed_models_discovered": [
+        "deepseek-v4-flash",
+        "deepseek-v4-flash-vision-exp",
+        "deepseek-v4-pro"
+      ],
+      "status": "PASS"
+    },
+    "pro_json": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "0234b0e162f41fe550d6b6531fa589ae8829e0a90195778f752639924065322d",
+        "latency_ms": 989,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-pro",
+        "returned_model": "deepseek-v4-pro",
+        "role": "crop_scientist",
+        "usage": {
+          "completion_tokens": 41,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 81,
+          "prompt_tokens": 81,
+          "reasoning_tokens": null,
+          "total_tokens": 122
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-pro",
+      "status": "PASS",
+      "validated_content": {
+        "crop_id": "caixin",
+        "delivery_window_days": 7,
+        "new_crop_lead_time_days": 35,
+        "new_sowing_can_meet_delivery": false
+      }
+    },
+    "streaming": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "8bcc72c12cda3b9923f10d727dbaf36ba441a435beb1b930ecce5ddaadba56df",
+        "latency_ms": 825,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash",
+        "returned_model": "deepseek-v4-flash",
+        "role": "demand_analyst",
+        "usage": {
+          "completion_tokens": 7,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 18,
+          "prompt_tokens": 18,
+          "reasoning_tokens": null,
+          "total_tokens": 25
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-flash",
+      "status": "PASS",
+      "validated_content": "FARMTACT_STREAM_OK"
+    },
+    "thinking_tool_continuation": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "2c17e002f78149d890e31291a77722f6f9024ecc7ebfe9e680e689b6693e8a6a",
+        "latency_ms": 1363,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash",
+        "returned_model": "deepseek-v4-flash",
+        "role": "demand_analyst",
+        "usage": {
+          "completion_tokens": 62,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 391,
+          "prompt_tokens": 647,
+          "reasoning_tokens": 0,
+          "total_tokens": 709
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-flash",
+      "private_reasoning_retention": "preserved in-memory for continuation and excluded from report",
+      "status": "PASS",
+      "validated_content": {
+        "crop_id": "caixin",
+        "near_term_supply_kg": 12.4,
+        "new_sowing_can_close_shortfall": false,
+        "order_kg": 20.0,
+        "shortfall_kg": 7.6,
+        "source_tool": "get_supply_snapshot"
+      }
+    },
+    "vision_json": {
+      "audit": {
+        "capability": "vision",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "63e1c081d7a52333729d0a8251a0f47a690c0190decfc90d4c950814371a533a",
+        "latency_ms": 2042,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash-vision-exp",
+        "returned_model": "deepseek-v4-flash-vision-exp",
+        "role": "visual_observer",
+        "usage": {
+          "completion_tokens": 140,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 727,
+          "prompt_tokens": 727,
+          "reasoning_tokens": null,
+          "total_tokens": 867
+        }
+      },
+      "finish_reason": "stop",
+      "image_transport": {
+        "asset_id": "synthetic-vision-probe",
+        "height": 520,
+        "normalized_bytes": 28626,
+        "normalized_sha256": "7c7eadf8c95758280df42bf8070e1bb152c14e129413205913f72e343ab0f929",
+        "raw_or_base64_persisted": false,
+        "source_sha256": "9d4c8c76d08900f2e3bf7d157d756654e52572dc95cbf5cb378516782da50e40",
+        "width": 1100
+      },
+      "model": "deepseek-v4-flash-vision-exp",
+      "status": "PASS",
+      "validated_content": {
+        "ambiguity": "No ambiguity; batch identifier is clearly legible.",
+        "asset_id": "synthetic-vision-probe",
+        "batch_id": "SG-CX-4827",
+        "review_status": "proposed_observation",
+        "source_sha256": "9d4c8c76d08900f2e3bf7d157d756654e52572dc95cbf5cb378516782da50e40",
+        "unknowns": [
+          "Yield cannot be inferred from this image"
+        ],
+        "visible_findings": [
+          "Text 'SYNTHETIC CAIXIN' in green uppercase",
+          "Text 'BATCH SG-CX-4827' in black uppercase",
+          "Green rectangular border"
+        ]
+      }
+    }
+  },
+  "council": {
+    "backend_validation": {
+      "all_six_roles_present": true,
+      "critic_completed": true,
+      "lead_time_preserved": true,
+      "selected_strategy_feasible": true
+    },
+    "computed_plans": [
+      {
+        "farm_supply_kg": 15.0,
+        "feasible": false,
+        "new_sowing_for_this_delivery_kg": 0.0,
+        "partner_supply_kg": 0.0,
+        "planned_delivery_kg": 15.0,
+        "policy": "Lean",
+        "shortfall_kg": 5.0,
+        "strategy_id": "lean-v1"
+      },
+      {
+        "farm_supply_kg": 15.0,
+        "feasible": true,
+        "new_sowing_for_this_delivery_kg": 0.0,
+        "partner_supply_kg": 5.0,
+        "planned_delivery_kg": 20.0,
+        "policy": "Balanced",
+        "shortfall_kg": 0.0,
+        "strategy_id": "balanced-v1"
+      },
+      {
+        "buffer_kg": 1.0,
+        "farm_supply_kg": 15.0,
+        "feasible": true,
+        "new_sowing_for_this_delivery_kg": 0.0,
+        "partner_supply_kg": 6.0,
+        "planned_delivery_kg": 20.0,
+        "policy": "Resilient",
+        "shortfall_kg": 0.0,
+        "strategy_id": "resilient-v1"
+      }
+    ],
+    "decision_event": {
+      "actor": "service:farmtact-development-policy",
+      "data_mode": "synthetic_demo",
+      "event_type": "ACCEPTED_FOR_SIMULATION",
+      "execution_mode": "test",
+      "human_approval_event": false,
+      "operational_live_promotion": "disabled",
+      "policy_version": "automatic-development-v1",
+      "strategy_id": "balanced-v1"
+    },
+    "role_results": [
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "fb31b01ff86229f58d3af3f0b98352bf1632638fdeff93f6bcba70e2962fa578",
+          "latency_ms": 1777,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-flash",
+          "returned_model": "deepseek-v4-flash",
+          "role": "demand_analyst",
+          "usage": {
+            "completion_tokens": 128,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 725,
+            "prompt_tokens": 725,
+            "reasoning_tokens": null,
+            "total_tokens": 853
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-flash",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001",
+            "recipe-caixin-demo-v1",
+            "solver-run-toy-v1"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Order 20kg caixin can be met by balanced or resilient plan using farm and partner supply, no shortfall.",
+          "risks": [
+            "Partner supply may fail",
+            "Harvest yields uncertain"
+          ],
+          "role": "demand_analyst"
+        }
+      },
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "a059c4bdee1ea2105dd3e0cd87cc6482aae18e176e62473efc42127fa8976fd0",
+          "latency_ms": 2600,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-pro",
+          "returned_model": "deepseek-v4-pro",
+          "role": "crop_scientist",
+          "usage": {
+            "completion_tokens": 127,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 725,
+            "prompt_tokens": 725,
+            "reasoning_tokens": null,
+            "total_tokens": 852
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-pro",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001",
+            "solver-run-toy-v1"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Use Balanced or Resilient plan with partner supply to meet 20 kg order, as farm supply is insufficient.",
+          "risks": [
+            "Partner supply may be unreliable",
+            "Mature harvest quantity may vary",
+            "Inventory quality could affect shelf life"
+          ],
+          "role": "crop_scientist"
+        }
+      },
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "99ceffd38ffe06fe06d983bdedf0b2719d73bb3338f414bdd86f56facda3c464",
+          "latency_ms": 1307,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-flash",
+          "returned_model": "deepseek-v4-flash",
+          "role": "supply_weather_scout",
+          "usage": {
+            "completion_tokens": 117,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 729,
+            "prompt_tokens": 729,
+            "reasoning_tokens": null,
+            "total_tokens": 846
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-flash",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Balanced or resilient strategy covers 20kg within 7 days; lean shortfalls 5kg. No new sowing can meet this delivery.",
+          "risks": [
+            "Supply data may be approximate",
+            "Weather unpredictability not considered"
+          ],
+          "role": "supply_weather_scout"
+        }
+      },
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "0bef4b42eae7e83c9f4674d177cfb1b40b4bb177a902baf1438358c4972b9ec8",
+          "latency_ms": 1799,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-flash",
+          "returned_model": "deepseek-v4-flash",
+          "role": "resources_margin_analyst",
+          "usage": {
+            "completion_tokens": 162,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 724,
+            "prompt_tokens": 724,
+            "reasoning_tokens": null,
+            "total_tokens": 886
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-flash",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001",
+            "recipe-caixin-demo-v1",
+            "solver-run-toy-v1"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Balanced or resilient plans are feasible, using 15kg farm and 5-6kg partner supply, but new sowing cannot meet 7-day delivery.",
+          "risks": [
+            "Partner supply may not be available in time",
+            "Farm harvest could be less than expected",
+            "Buffer stock is minimal in balanced plan",
+            "Weather or logistics disruptions may delay delivery"
+          ],
+          "role": "resources_margin_analyst"
+        }
+      },
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "ad841a26f2f9725c908e6b9e7cdd7a03ddb79a7ed29d8049b64392eff76604f1",
+          "latency_ms": 2629,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-pro",
+          "returned_model": "deepseek-v4-pro",
+          "role": "planning_chair",
+          "usage": {
+            "completion_tokens": 155,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 721,
+            "prompt_tokens": 721,
+            "reasoning_tokens": null,
+            "total_tokens": 876
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-pro",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001",
+            "solver-run-toy-v1"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Select resilient-v1 for a 1kg buffer: 15kg farm supply plus 6kg partner supply meets the 20kg order with no shortfall.",
+          "risks": [
+            "Partner supply may be delayed or unavailable",
+            "Farm yield could be lower than estimated",
+            "Buffer may be insufficient if unexpected losses occur"
+          ],
+          "role": "planning_chair"
+        }
+      },
+      {
+        "audit": {
+          "capability": "text",
+          "data_mode": "synthetic_demo",
+          "execution_mode": "test",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "a3961a2ece4abca7c3dc5e0c7e0df7267cfa41caa67994ed9a05f36032dbcbae",
+          "latency_ms": 3188,
+          "provider": "deepseek",
+          "request_id": null,
+          "requested_model": "deepseek-v4-pro",
+          "returned_model": "deepseek-v4-pro",
+          "role": "independent_critic",
+          "usage": {
+            "completion_tokens": 151,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 722,
+            "prompt_tokens": 722,
+            "reasoning_tokens": null,
+            "total_tokens": 873
+          }
+        },
+        "finish_reason": "stop",
+        "model": "deepseek-v4-pro",
+        "status": "PASS",
+        "validated_content": {
+          "evidence_refs": [
+            "synthetic-order-001",
+            "inventory-lot-001",
+            "mature-batch-001"
+          ],
+          "new_sowing_can_meet_seven_day_delivery": false,
+          "recommendation": "Approve balanced-v1 as it meets the 20 kg order with 15 kg farm and 5 kg partner, zero shortfall.",
+          "risks": [
+            "Farm supply relies on validated mature harvest of 6 kg plus inventory of 9 kg, exactly 15 kg, no buffer",
+            "Partner supply of 5 kg may have delivery reliability issues",
+            "No buffer in balanced-v1 unlike resilient-v1"
+          ],
+          "role": "independent_critic"
+        }
+      }
+    ],
+    "scope_note": "Transport/workflow seed; not a finished optimizer or evidence of production benefit.",
+    "snapshot": {
+      "crop_id": "caixin",
+      "data_mode": "synthetic_demo",
+      "delivery_window_days": 7,
+      "evidence_refs": [
+        "synthetic-order-001",
+        "inventory-lot-001",
+        "mature-batch-001",
+        "recipe-caixin-demo-v1",
+        "solver-run-toy-v1"
+      ],
+      "inventory_kg": 9.0,
+      "new_crop_lead_time_days": 35,
+      "order_kg": 20.0,
+      "snapshot_id": "synthetic-caixin-2026-09-08",
+      "validated_mature_harvest_kg": 6.0
+    },
+    "status": "PASS"
+  },
+  "data_mode": "synthetic_demo",
+  "decision_policy": "automatic_development",
+  "development_phase": "autonomous_development",
+  "execution_mode": "test",
+  "finished_at": "2026-09-08T08:41:44.152791+00:00",
+  "origin": "https://api.deepseek.com",
+  "overall_status": "PASS",
+  "planned_request_count": 15,
+  "provider": "deepseek",
+  "request_ceiling": 16,
+  "reserved_output_token_ceiling": 8192,
+  "reserved_output_tokens": 7232,
+  "resume": {
+    "prior_report": "reports/deepseek/deepseek_authenticated_trial_20260908T084007Z.json",
+    "prior_request_count_included": 9,
+    "reason": "Corrected probe prompt/schema or documented compatibility; passing probes reused with prior requests and token reservations counted."
+  },
+  "retry_policy": "none",
+  "schema_version": "1.0",
+  "started_at": "2026-09-08T08:41:30.805680+00:00",
+  "trial": "DS-G1+DS-G2",
+  "trial_version": "4-explicit-council-schema",
+  "wall_clock_ceiling_seconds": 300
+}

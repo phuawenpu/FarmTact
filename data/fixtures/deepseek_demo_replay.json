@@ -1,0 +1,5013 @@
+{
+  "id": "014966c917b7d2d0ce0bc1d94a41e256",
+  "status": "ACCEPTED_FOR_SIMULATION",
+  "created_at": "2026-09-08T08:26:07.608691+00:00",
+  "input_version": 2,
+  "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+  "source_snapshot": [
+    {
+      "id": "D01",
+      "name": "Rainfall \u00b7 Singapore stations",
+      "status": "validated",
+      "observed_at": "2026-09-08T16:15:00+08:00",
+      "available_at": "2026-09-08T16:15:00+08:00",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "fresh",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "Lim Chu Kang Road: 0 mm. Nearest available station to the fictional farm; context only.",
+      "unit": "mm",
+      "value": 0,
+      "url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall",
+      "snapshot_id": "d01-3135519ebd628b7c4f69",
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 88,
+        "station_count": 88
+      },
+      "licence_state": "verified_singapore_open_data_licence",
+      "availability_status": "uncertain_assumed_equal_to_observed_at"
+    },
+    {
+      "id": "D02",
+      "name": "Air temperature \u00b7 Singapore stations",
+      "status": "validated",
+      "observed_at": "2026-09-08T16:18:00+08:00",
+      "available_at": "2026-09-08T16:18:00+08:00",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "fresh",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "S23: 33.4 degC. Nearest available station to the fictional farm; context only.",
+      "unit": "degC",
+      "value": 33.4,
+      "url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature",
+      "snapshot_id": "d02-43c6d519e5d9ee0c72fe",
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 18,
+        "station_count": 18
+      },
+      "licence_state": "verified_singapore_open_data_licence",
+      "availability_status": "uncertain_assumed_equal_to_observed_at"
+    },
+    {
+      "id": "D03",
+      "name": "Relative humidity \u00b7 Singapore stations",
+      "status": "validated",
+      "observed_at": "2026-09-08T16:18:00+08:00",
+      "available_at": "2026-09-08T16:18:00+08:00",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "fresh",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "S23: 53.6 %. Nearest available station to the fictional farm; context only.",
+      "unit": "%",
+      "value": 53.6,
+      "url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity",
+      "snapshot_id": "d03-a9ed681709ae031454f5",
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 18,
+        "station_count": 18
+      },
+      "licence_state": "verified_singapore_open_data_licence",
+      "availability_status": "uncertain_assumed_equal_to_observed_at"
+    },
+    {
+      "id": "D04",
+      "name": "Next day \u00b7 NEA outlook",
+      "status": "validated",
+      "observed_at": "2026-09-08T11:41:03+08:00",
+      "available_at": null,
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "fresh",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "20 validated observations. ",
+      "unit": [
+        "%",
+        "degC"
+      ],
+      "value": null,
+      "url": "https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast",
+      "snapshot_id": "d04-2191b56daed3754fd469",
+      "coverage": {
+        "location_count": 6,
+        "row_count": 20,
+        "valid_from": "2026-09-08T12:00:00+08:00",
+        "valid_to": "2026-09-09T12:00:00+08:00"
+      },
+      "licence_state": "verified_singapore_open_data_licence",
+      "availability_status": null
+    },
+    {
+      "id": "D05",
+      "name": "Four-day \u00b7 NEA outlook",
+      "status": "validated",
+      "observed_at": "2026-09-08T09:31:34+08:00",
+      "available_at": null,
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "fresh",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "20 validated observations. ",
+      "unit": [
+        "%",
+        "degC"
+      ],
+      "value": null,
+      "url": "https://api-open.data.gov.sg/v2/real-time/api/four-day-outlook",
+      "snapshot_id": "d05-fd41e1884567b5cd09e4",
+      "coverage": {
+        "day_count": 4,
+        "row_count": 20,
+        "valid_from": "2026-09-09T00:00:00+08:00",
+        "valid_to": "2026-09-12T23:59:59+08:00"
+      },
+      "licence_state": "verified_singapore_open_data_licence",
+      "availability_status": null
+    },
+    {
+      "id": "D06",
+      "name": "Vegetable trade volume \u00b7 SingStat",
+      "status": "validated",
+      "observed_at": null,
+      "available_at": null,
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "unknown",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "Public trade volume is market context, never customer demand or farm selling price.",
+      "unit": [
+        "tonne"
+      ],
+      "value": null,
+      "url": "https://tablebuilder.singstat.gov.sg/api/table/tabledata/T010002",
+      "snapshot_id": "d06-aec77c6136dd523bc807",
+      "coverage": {
+        "frequency": "Monthly",
+        "invalid_selected_quantities": 0,
+        "is_more": true,
+        "next_cursor": "eyJSb3dJZCI6MjM3ODMyOTh9",
+        "provider_rows": 5000,
+        "requested_period_end": "2026 Jul",
+        "requested_period_start": "2020 Jan",
+        "row_count": 15,
+        "selected_rows": 15,
+        "table_id": "T010002",
+        "title": "Merchandise Trade Volume by Commodity and Market, Monthly"
+      },
+      "licence_state": "not_verified_for_redistribution",
+      "availability_status": null
+    },
+    {
+      "id": "D11",
+      "name": "Historical climate \u00b7 NASA POWER",
+      "status": "validated",
+      "observed_at": "2026-08-09T00:00:00+00:00",
+      "available_at": null,
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "freshness": "unknown",
+      "origin": "public",
+      "execution_mode": "live_public_refresh",
+      "summary": "Seven days of historical gridded climate in UTC. Not a station, on-farm sensor or forecast; release time is unknown.",
+      "unit": [
+        "%",
+        "C",
+        "mm/day"
+      ],
+      "value": null,
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point",
+      "snapshot_id": "d11-73655d52a24357bcca7b",
+      "coverage": {
+        "attempted_periods": [
+          {
+            "end": "2026-08-09",
+            "start": "2026-08-03"
+          }
+        ],
+        "day_count": 7,
+        "point": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "row_count": 21,
+        "selected_period": {
+          "end": "2026-08-09",
+          "start": "2026-08-03"
+        },
+        "time_standard": "UTC"
+      },
+      "licence_state": "terms_not_reviewed_for_redistribution",
+      "availability_status": null
+    }
+  ],
+  "evidence_version": "89be98b29b6ff2f6ccbd9a6ad1031f0eb769654c0c1e2b4d0424f13694e9c8b0",
+  "execution_mode": "replay",
+  "data_mode": "synthetic_demo",
+  "development_phase": "autonomous_development",
+  "decision_policy": "automatic_development",
+  "council_requested": true,
+  "with_vision": true,
+  "council_status": "claims_rejected",
+  "strategies": [
+    {
+      "id": "5ad91d8d75a378abf4d1",
+      "name": "Lean",
+      "status": "FEASIBLE",
+      "description": "Keep inputs light. Accept more uncovered demand to limit surplus.",
+      "policy_parameters": {
+        "shortage": 1,
+        "waste": 9,
+        "commit": 0.2,
+        "capital_fraction": 0.65,
+        "description": "Keep inputs light. Accept more uncovered demand to limit surplus."
+      },
+      "metrics": {
+        "fill_rate": 0.443,
+        "margin_sgd": 2594.58,
+        "waste_kg": 130.99,
+        "harvest_kg": 662.0,
+        "shortfall_kg": 606.02,
+        "cost_sgd": 1161.53,
+        "labour_hours": 55.94,
+        "area_m2": 120.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 3756.11
+      },
+      "cost_breakdown": {
+        "inputs_sgd": 326.0,
+        "labour_sgd": 671.28,
+        "packing_sgd": 144.6,
+        "disposal_sgd": 19.65
+      },
+      "allocations": [
+        {
+          "id": "batch-01",
+          "bed_id": "bed-01",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-24",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-02",
+          "bed_id": "bed-02",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-17",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-03",
+          "bed_id": "bed-03",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-03",
+          "transplant_date": "2026-08-13",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-04",
+          "bed_id": "bed-04",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-20",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "batch-05",
+          "bed_id": "bed-05",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-31",
+          "transplant_date": "2026-09-07",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-06",
+          "bed_id": "bed-06",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-08-31",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-07",
+          "bed_id": "bed-07",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-27",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-08",
+          "bed_id": "bed-08",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-09-03",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "bed-02-pak_choi-20",
+          "bed_id": "bed-02",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-05",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        },
+        {
+          "id": "bed-03-kailan-13",
+          "bed_id": "bed-03",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": false
+        },
+        {
+          "id": "bed-07-caixin-27",
+          "bed_id": "bed-07",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-10-05",
+          "transplant_date": "2026-10-12",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-11-lettuce-13",
+          "bed_id": "bed-11",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-12-lettuce-6",
+          "bed_id": "bed-12",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-24",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-16-lettuce-20",
+          "bed_id": "bed-16",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-08",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        }
+      ],
+      "weekly": [
+        {
+          "week": 0,
+          "date": "2026-09-08",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 1,
+          "date": "2026-09-15",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 2,
+          "date": "2026-09-22",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 3,
+          "date": "2026-09-29",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 4,
+          "date": "2026-10-06",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 5,
+          "date": "2026-10-13",
+          "demand_kg": 136.0,
+          "harvest_kg": 46.0,
+          "delivered_kg": 37.0,
+          "shortfall_kg": 99.0
+        },
+        {
+          "week": 6,
+          "date": "2026-10-20",
+          "demand_kg": 136.0,
+          "harvest_kg": 46.0,
+          "delivered_kg": 37.0,
+          "shortfall_kg": 99.0
+        },
+        {
+          "week": 7,
+          "date": "2026-10-27",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "date": "2026-09-08",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-09",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-10",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-11",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 5.0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-12",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-13",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-14",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-15",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-16",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-17",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-18",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-19",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-20",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-21",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-22",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-23",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-26",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-27",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-28",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-29",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-30",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-01",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-02",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-03",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-04",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-05",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-06",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-07",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-08",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-09",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-10",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-11",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-12",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-13",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-14",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-15",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-16",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-17",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-18",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-19",
+          "opening_kg": 0,
+          "harvest_kg": 46.0,
+          "delivered_kg": 37.001,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-20",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-21",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-22",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-23",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 8.999,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-26",
+          "opening_kg": 0,
+          "harvest_kg": 46.0,
+          "delivered_kg": 37.001,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-27",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-28",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-29",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 8.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-30",
+          "opening_kg": 8.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 8.999,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-31",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-01",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-02",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        }
+      ],
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.4426,
+            "margin_sgd": 2820.32,
+            "waste_kg": 47.89,
+            "harvest_kg": 562.7,
+            "shortfall_kg": 628.52,
+            "cost_sgd": 1070.79,
+            "labour_hours": 48.99,
+            "area_m2": 120.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3891.11
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.443,
+            "margin_sgd": 2594.58,
+            "waste_kg": 130.99,
+            "harvest_kg": 662.0,
+            "shortfall_kg": 606.02,
+            "cost_sgd": 1161.53,
+            "labour_hours": 55.94,
+            "area_m2": 120.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3756.11
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.4433,
+            "margin_sgd": 2444.08,
+            "waste_kg": 186.39,
+            "harvest_kg": 728.2,
+            "shortfall_kg": 591.02,
+            "cost_sgd": 1222.03,
+            "labour_hours": 60.57,
+            "area_m2": 120.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3666.11
+          }
+        }
+      ],
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_seed": 20260908,
+      "violations": [],
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.002,
+        "time_limit_seconds": 4,
+        "objective": 645868290.0,
+        "best_bound": 827006895.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "model_version": "recipe-ewma-v1",
+      "calculation_version": "daily-bed-cpsat-v1",
+      "assumptions": [
+        "Synthetic recipes and scenario weights; not commercial yield validation.",
+        "Fresh marketable yield includes packout once.",
+        "Future sowing cannot cover earlier deliveries.",
+        "SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg."
+      ],
+      "risk": {
+        "downside_fill_rate": 0.4426,
+        "downside_margin_sgd": 2820.32
+      }
+    },
+    {
+      "id": "ae6f305d345e0a87e6bf",
+      "name": "Balanced",
+      "status": "FEASIBLE",
+      "description": "Balance customer coverage, growing cost and avoidable surplus.",
+      "policy_parameters": {
+        "shortage": 4,
+        "waste": 5,
+        "commit": 0.04,
+        "capital_fraction": 0.85,
+        "description": "Balance customer coverage, growing cost and avoidable surplus."
+      },
+      "metrics": {
+        "fill_rate": 0.5358,
+        "margin_sgd": 2957.37,
+        "waste_kg": 181.99,
+        "harvest_kg": 814.0,
+        "shortfall_kg": 505.01,
+        "cost_sgd": 1540.76,
+        "labour_hours": 71.38,
+        "area_m2": 180.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 4498.13
+      },
+      "cost_breakdown": {
+        "inputs_sgd": 482.0,
+        "labour_sgd": 856.56,
+        "packing_sgd": 174.91,
+        "disposal_sgd": 27.3
+      },
+      "allocations": [
+        {
+          "id": "batch-01",
+          "bed_id": "bed-01",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-24",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-02",
+          "bed_id": "bed-02",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-17",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-03",
+          "bed_id": "bed-03",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-03",
+          "transplant_date": "2026-08-13",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-04",
+          "bed_id": "bed-04",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-20",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "batch-05",
+          "bed_id": "bed-05",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-31",
+          "transplant_date": "2026-09-07",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-06",
+          "bed_id": "bed-06",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-08-31",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-07",
+          "bed_id": "bed-07",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-27",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-08",
+          "bed_id": "bed-08",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-09-03",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "bed-01-lettuce-13",
+          "bed_id": "bed-01",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-02-lettuce-20",
+          "bed_id": "bed-02",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-08",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-03-pak_choi-13",
+          "bed_id": "bed-03",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-09-28",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        },
+        {
+          "id": "bed-07-pak_choi-20",
+          "bed_id": "bed-07",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-05",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        },
+        {
+          "id": "bed-09-kailan-13",
+          "bed_id": "bed-09",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": false
+        },
+        {
+          "id": "bed-12-kailan-6",
+          "bed_id": "bed-12",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-24",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": false
+        },
+        {
+          "id": "bed-13-caixin-27",
+          "bed_id": "bed-13",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-10-05",
+          "transplant_date": "2026-10-12",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-14-lettuce-6",
+          "bed_id": "bed-14",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-24",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-16-pak_choi-6",
+          "bed_id": "bed-16",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-21",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        }
+      ],
+      "weekly": [
+        {
+          "week": 0,
+          "date": "2026-09-08",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 1,
+          "date": "2026-09-15",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 2,
+          "date": "2026-09-22",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 3,
+          "date": "2026-09-29",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 4,
+          "date": "2026-10-06",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 5,
+          "date": "2026-10-13",
+          "demand_kg": 136.0,
+          "harvest_kg": 98.0,
+          "delivered_kg": 70.0,
+          "shortfall_kg": 66.0
+        },
+        {
+          "week": 6,
+          "date": "2026-10-20",
+          "demand_kg": 136.0,
+          "harvest_kg": 146.0,
+          "delivered_kg": 105.0,
+          "shortfall_kg": 31.0
+        },
+        {
+          "week": 7,
+          "date": "2026-10-27",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "date": "2026-09-08",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-09",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-10",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-11",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 5.0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-12",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-13",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-14",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-15",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-16",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-17",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-18",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-19",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-20",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-21",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-22",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-23",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-26",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-27",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-28",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-29",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-30",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-01",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-02",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-03",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-04",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-05",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-06",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-07",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-08",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-09",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-10",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-11",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-12",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-13",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-14",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-15",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-16",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-17",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-18",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-19",
+          "opening_kg": 0,
+          "harvest_kg": 98.0,
+          "delivered_kg": 70.002,
+          "disposed_kg": 0,
+          "closing_kg": 27.998,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-20",
+          "opening_kg": 27.998,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 27.998,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-21",
+          "opening_kg": 27.998,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 27.998,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-22",
+          "opening_kg": 27.998,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 27.998,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-23",
+          "opening_kg": 27.998,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 27.998,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-26",
+          "opening_kg": 0,
+          "harvest_kg": 146.0,
+          "delivered_kg": 105.003,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-27",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-28",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-29",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-30",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 40.997,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-31",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-01",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-02",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        }
+      ],
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.5353,
+            "margin_sgd": 3231.27,
+            "waste_kg": 72.64,
+            "harvest_kg": 691.9,
+            "shortfall_kg": 524.06,
+            "cost_sgd": 1427.96,
+            "labour_hours": 62.83,
+            "area_m2": 180.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4659.23
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.5358,
+            "margin_sgd": 2957.37,
+            "waste_kg": 181.99,
+            "harvest_kg": 814.0,
+            "shortfall_kg": 505.01,
+            "cost_sgd": 1540.76,
+            "labour_hours": 71.38,
+            "area_m2": 180.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4498.13
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.5363,
+            "margin_sgd": 2774.77,
+            "waste_kg": 254.89,
+            "harvest_kg": 895.4,
+            "shortfall_kg": 492.31,
+            "cost_sgd": 1615.96,
+            "labour_hours": 77.08,
+            "area_m2": 180.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4390.73
+          }
+        }
+      ],
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_seed": 20260908,
+      "violations": [],
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.002,
+        "time_limit_seconds": 4,
+        "objective": 1412373205.0,
+        "best_bound": 1677264820.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "model_version": "recipe-ewma-v1",
+      "calculation_version": "daily-bed-cpsat-v1",
+      "assumptions": [
+        "Synthetic recipes and scenario weights; not commercial yield validation.",
+        "Fresh marketable yield includes packout once.",
+        "Future sowing cannot cover earlier deliveries.",
+        "SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg."
+      ],
+      "risk": {
+        "downside_fill_rate": 0.5353,
+        "downside_margin_sgd": 3231.27
+      }
+    },
+    {
+      "id": "663ddf621fa8585ec41a",
+      "name": "Resilient",
+      "status": "FEASIBLE",
+      "description": "Protect delivery coverage under the shared low-yield scenario.",
+      "policy_parameters": {
+        "shortage": 25,
+        "waste": 1,
+        "commit": 0,
+        "capital_fraction": 1,
+        "description": "Protect delivery coverage under the shared low-yield scenario."
+      },
+      "metrics": {
+        "fill_rate": 0.6213,
+        "margin_sgd": 3193.15,
+        "waste_kg": 220.98,
+        "harvest_kg": 946.0,
+        "shortfall_kg": 412.01,
+        "cost_sgd": 1862.99,
+        "labour_hours": 85.42,
+        "area_m2": 240.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 5056.15
+      },
+      "cost_breakdown": {
+        "inputs_sgd": 602.0,
+        "labour_sgd": 1025.04,
+        "packing_sgd": 202.81,
+        "disposal_sgd": 33.15
+      },
+      "allocations": [
+        {
+          "id": "batch-01",
+          "bed_id": "bed-01",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-24",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-02",
+          "bed_id": "bed-02",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-17",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-03",
+          "bed_id": "bed-03",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-03",
+          "transplant_date": "2026-08-13",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-04",
+          "bed_id": "bed-04",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-10",
+          "transplant_date": "2026-08-20",
+          "harvest_date": "2026-09-14",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "batch-05",
+          "bed_id": "bed-05",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-08-31",
+          "transplant_date": "2026-09-07",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": true
+        },
+        {
+          "id": "batch-06",
+          "bed_id": "bed-06",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-08-31",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": true
+        },
+        {
+          "id": "batch-07",
+          "bed_id": "bed-07",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-27",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": true
+        },
+        {
+          "id": "batch-08",
+          "bed_id": "bed-08",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-08-24",
+          "transplant_date": "2026-09-03",
+          "harvest_date": "2026-09-28",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": true
+        },
+        {
+          "id": "bed-01-kailan-13",
+          "bed_id": "bed-01",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": false
+        },
+        {
+          "id": "bed-02-caixin-27",
+          "bed_id": "bed-02",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-10-05",
+          "transplant_date": "2026-10-12",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-03-lettuce-6",
+          "bed_id": "bed-03",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-24",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-05-lettuce-13",
+          "bed_id": "bed-05",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-08-caixin-20",
+          "bed_id": "bed-08",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-05",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-09-pak_choi-13",
+          "bed_id": "bed-09",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-09-28",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        },
+        {
+          "id": "bed-10-pak_choi-6",
+          "bed_id": "bed-10",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-21",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        },
+        {
+          "id": "bed-12-caixin-13",
+          "bed_id": "bed-12",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-09-28",
+          "harvest_date": "2026-10-19",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-13-lettuce-20",
+          "bed_id": "bed-13",
+          "crop_id": "lettuce",
+          "recipe_id": "lettuce-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-08",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 46.0,
+          "executed": false
+        },
+        {
+          "id": "bed-14-caixin-6",
+          "bed_id": "bed-14",
+          "crop_id": "caixin",
+          "recipe_id": "caixin-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-21",
+          "harvest_date": "2026-10-12",
+          "area_m2": 20.0,
+          "expected_kg": 44.0,
+          "executed": false
+        },
+        {
+          "id": "bed-15-kailan-6",
+          "bed_id": "bed-15",
+          "crop_id": "kailan",
+          "recipe_id": "kailan-demo-v1",
+          "sow_date": "2026-09-14",
+          "transplant_date": "2026-09-24",
+          "harvest_date": "2026-10-26",
+          "area_m2": 20.0,
+          "expected_kg": 48.0,
+          "executed": false
+        },
+        {
+          "id": "bed-16-pak_choi-20",
+          "bed_id": "bed-16",
+          "crop_id": "pak_choi",
+          "recipe_id": "pak_choi-demo-v1",
+          "sow_date": "2026-09-28",
+          "transplant_date": "2026-10-05",
+          "harvest_date": "2026-11-02",
+          "area_m2": 20.0,
+          "expected_kg": 52.0,
+          "executed": false
+        }
+      ],
+      "weekly": [
+        {
+          "week": 0,
+          "date": "2026-09-08",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 1,
+          "date": "2026-09-15",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 2,
+          "date": "2026-09-22",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 3,
+          "date": "2026-09-29",
+          "demand_kg": 136.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "shortfall_kg": 136.0
+        },
+        {
+          "week": 4,
+          "date": "2026-10-06",
+          "demand_kg": 136.0,
+          "harvest_kg": 44.0,
+          "delivered_kg": 31.0,
+          "shortfall_kg": 105.0
+        },
+        {
+          "week": 5,
+          "date": "2026-10-13",
+          "demand_kg": 136.0,
+          "harvest_kg": 142.0,
+          "delivered_kg": 101.0,
+          "shortfall_kg": 35.0
+        },
+        {
+          "week": 6,
+          "date": "2026-10-20",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        },
+        {
+          "week": 7,
+          "date": "2026-10-27",
+          "demand_kg": 136.0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.0,
+          "shortfall_kg": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "date": "2026-09-08",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-09",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-10",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 5.0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-11",
+          "opening_kg": 5.0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 5.0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-12",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-13",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-14",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-15",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-16",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-17",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-18",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-19",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-20",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-21",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-22",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-23",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-26",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-27",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-09-28",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-29",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-09-30",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-01",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-02",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-03",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-04",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-05",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 136.004,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-06",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-07",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-08",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-09",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-10",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-11",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-12",
+          "opening_kg": 0,
+          "harvest_kg": 44.0,
+          "delivered_kg": 31.001,
+          "disposed_kg": 0,
+          "closing_kg": 12.999,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-13",
+          "opening_kg": 12.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 12.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-14",
+          "opening_kg": 12.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 12.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-15",
+          "opening_kg": 12.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 12.999,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-16",
+          "opening_kg": 12.999,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 12.999,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-17",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-18",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-19",
+          "opening_kg": 0,
+          "harvest_kg": 142.0,
+          "delivered_kg": 101.003,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-20",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-21",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-22",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 40.997,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-23",
+          "opening_kg": 40.997,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 40.997,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-24",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-25",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-10-26",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-27",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-28",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-29",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-30",
+          "opening_kg": 53.996,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 53.996,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0.0
+        },
+        {
+          "date": "2026-10-31",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-01",
+          "opening_kg": 0,
+          "harvest_kg": 0,
+          "delivered_kg": 0,
+          "disposed_kg": 0,
+          "closing_kg": 0,
+          "demand_kg": 0,
+          "balance_error": 0
+        },
+        {
+          "date": "2026-11-02",
+          "opening_kg": 0,
+          "harvest_kg": 190.0,
+          "delivered_kg": 136.004,
+          "disposed_kg": 0,
+          "closing_kg": 53.996,
+          "demand_kg": 136.004,
+          "balance_error": 0.0
+        }
+      ],
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.6205,
+            "margin_sgd": 3505.09,
+            "waste_kg": 88.68,
+            "harvest_kg": 804.1,
+            "shortfall_kg": 427.91,
+            "cost_sgd": 1731.06,
+            "labour_hours": 75.49,
+            "area_m2": 240.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 5236.15
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.6213,
+            "margin_sgd": 3193.15,
+            "waste_kg": 220.98,
+            "harvest_kg": 946.0,
+            "shortfall_kg": 412.01,
+            "cost_sgd": 1862.99,
+            "labour_hours": 85.42,
+            "area_m2": 240.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 5056.15
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.6219,
+            "margin_sgd": 2985.2,
+            "waste_kg": 309.18,
+            "harvest_kg": 1040.6,
+            "shortfall_kg": 401.41,
+            "cost_sgd": 1950.95,
+            "labour_hours": 92.04,
+            "area_m2": 240.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4936.15
+          }
+        }
+      ],
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_seed": 20260908,
+      "violations": [],
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.002,
+        "time_limit_seconds": 4,
+        "objective": 6073457620.0,
+        "best_bound": 6211097620.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "model_version": "recipe-ewma-v1",
+      "calculation_version": "daily-bed-cpsat-v1",
+      "assumptions": [
+        "Synthetic recipes and scenario weights; not commercial yield validation.",
+        "Fresh marketable yield includes packout once.",
+        "Future sowing cannot cover earlier deliveries.",
+        "SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg."
+      ],
+      "risk": {
+        "downside_fill_rate": 0.6205,
+        "downside_margin_sgd": 3505.09
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_type": "observation",
+      "statement": "Among feasible strategies, the Resilient option shows the highest fill_rate but also the most waste, suggesting diminishing returns from expanding area beyond Balanced.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.metrics.fill_rate",
+        "strategy:663ddf621fa8585ec41a.metrics.fill_rate",
+        "strategy:663ddf621fa8585ec41a.metrics.waste_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.waste_kg"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "demand_analyst",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "validated",
+      "rejection_reasons": []
+    },
+    {
+      "claim_type": "challenge",
+      "statement": "All three strategies report identical opening_stock_kg (5.0) and closing_stock_kg (54.0) despite different harvest_kg and shortfall_kg; verify whether this reflects intended inventory constraints or a simulation artefact.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.metrics.opening_stock_kg",
+        "strategy:5ad91d8d75a378abf4d1.metrics.closing_stock_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.opening_stock_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.closing_stock_kg",
+        "strategy:663ddf621fa8585ec41a.metrics.opening_stock_kg",
+        "strategy:663ddf621fa8585ec41a.metrics.closing_stock_kg"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "crop_scientist",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "validated",
+      "rejection_reasons": []
+    },
+    {
+      "claim_type": "observation",
+      "statement": "All three strategies are feasible with no constraint violations, but shortfalls remain substantial across the board.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.constraints",
+        "strategy:ae6f305d345e0a87e6bf.constraints",
+        "strategy:663ddf621fa8585ec41a.constraints",
+        "strategy:5ad91d8d75a378abf4d1.metrics.shortfall_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.shortfall_kg",
+        "strategy:663ddf621fa8585ec41a.metrics.shortfall_kg"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "supply_weather_scout",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "validated",
+      "rejection_reasons": []
+    },
+    {
+      "claim_type": "observation",
+      "statement": "The 30% larger area of Balanced over Lean raises margin SGD by 362.79 while Resilient's larger area raises it by only 235.78 relative to Balanced, showing diminishing returns on expansion.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.metrics.margin_sgd",
+        "strategy:ae6f305d345e0a87e6bf.metrics.margin_sgd",
+        "strategy:663ddf621fa8585ec41a.metrics.margin_sgd"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "resources_margin_analyst",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "rejected",
+      "rejection_reasons": [
+        "Numeric literal lacks an exact cited tool value"
+      ]
+    },
+    {
+      "claim_type": "observation",
+      "statement": "All three strategies remain feasible with no constraint violations, indicating a valid simulation scope despite varied fill rates and shortfalls.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.constraints",
+        "strategy:ae6f305d345e0a87e6bf.constraints",
+        "strategy:663ddf621fa8585ec41a.constraints"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "planning_chair",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "validated",
+      "rejection_reasons": []
+    },
+    {
+      "claim_type": "challenge",
+      "statement": "All three strategies report identical opening_stock_kg (5.0) and closing_stock_kg (54.0) despite large differences in harvest_kg, shortfall_kg, waste_kg, and area_m2; verify whether synthetic inventory constraints are correctly modeled or an artefact.",
+      "evidence_ids": [],
+      "tool_result_refs": [
+        "strategy:5ad91d8d75a378abf4d1.metrics.opening_stock_kg",
+        "strategy:5ad91d8d75a378abf4d1.metrics.closing_stock_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.opening_stock_kg",
+        "strategy:ae6f305d345e0a87e6bf.metrics.closing_stock_kg",
+        "strategy:663ddf621fa8585ec41a.metrics.opening_stock_kg",
+        "strategy:663ddf621fa8585ec41a.metrics.closing_stock_kg"
+      ],
+      "recommendation": "proceed_simulation",
+      "role": "independent_critic",
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+      "status": "validated",
+      "rejection_reasons": []
+    }
+  ],
+  "events": [
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 1,
+      "occurred_at": "2026-09-08T08:26:07.660292+00:00",
+      "event_type": "run_started",
+      "schema_version": "1.0",
+      "body": {
+        "message": "Freezing the synthetic farm and checking available inputs."
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 2,
+      "occurred_at": "2026-09-08T08:26:07.667546+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "forecast_and_optimize",
+        "message": "Calculating crop timing, demand and resource-feasible alternatives."
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 3,
+      "occurred_at": "2026-09-08T08:26:20.298110+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "forecast_and_optimize",
+        "candidate_count": 168
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 4,
+      "occurred_at": "2026-09-08T08:26:20.302132+00:00",
+      "event_type": "strategy_ready",
+      "schema_version": "1.0",
+      "body": {
+        "id": "5ad91d8d75a378abf4d1",
+        "name": "Lean",
+        "status": "FEASIBLE"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 5,
+      "occurred_at": "2026-09-08T08:26:20.305588+00:00",
+      "event_type": "strategy_ready",
+      "schema_version": "1.0",
+      "body": {
+        "id": "ae6f305d345e0a87e6bf",
+        "name": "Balanced",
+        "status": "FEASIBLE"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 6,
+      "occurred_at": "2026-09-08T08:26:20.309062+00:00",
+      "event_type": "strategy_ready",
+      "schema_version": "1.0",
+      "body": {
+        "id": "663ddf621fa8585ec41a",
+        "name": "Resilient",
+        "status": "FEASIBLE"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 7,
+      "occurred_at": "2026-09-08T08:26:20.528044+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "vision_observation",
+        "role": "visual_observer"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 8,
+      "occurred_at": "2026-09-08T08:26:20.615575+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 9,
+      "occurred_at": "2026-09-08T08:26:22.592784+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "vision_observation",
+        "role": "visual_observer",
+        "asset_id": "synthetic-label-014966c917b7d2d0ce0bc1d94a41e256",
+        "review_status": "label_verified_against_fixture"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 10,
+      "occurred_at": "2026-09-08T08:26:22.606374+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "demand_analyst"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 11,
+      "occurred_at": "2026-09-08T08:26:22.612083+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 12,
+      "occurred_at": "2026-09-08T08:26:24.128961+00:00",
+      "event_type": "agent_claim",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "observation",
+        "statement": "Among feasible strategies, the Resilient option shows the highest fill_rate but also the most waste, suggesting diminishing returns from expanding area beyond Balanced.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.metrics.fill_rate",
+          "strategy:663ddf621fa8585ec41a.metrics.fill_rate",
+          "strategy:663ddf621fa8585ec41a.metrics.waste_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.waste_kg"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "demand_analyst",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "validated",
+        "rejection_reasons": []
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 13,
+      "occurred_at": "2026-09-08T08:26:24.133098+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "demand_analyst",
+        "model": "deepseek-v4-flash",
+        "usage": {
+          "prompt_tokens": 3361,
+          "completion_tokens": 143,
+          "total_tokens": 3504,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 3105,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 14,
+      "occurred_at": "2026-09-08T08:26:24.139842+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "crop_scientist"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 15,
+      "occurred_at": "2026-09-08T08:26:24.145387+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 3,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 16,
+      "occurred_at": "2026-09-08T08:26:27.836592+00:00",
+      "event_type": "agent_claim",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "challenge",
+        "statement": "All three strategies report identical opening_stock_kg (5.0) and closing_stock_kg (54.0) despite different harvest_kg and shortfall_kg; verify whether this reflects intended inventory constraints or a simulation artefact.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.metrics.opening_stock_kg",
+          "strategy:5ad91d8d75a378abf4d1.metrics.closing_stock_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.opening_stock_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.closing_stock_kg",
+          "strategy:663ddf621fa8585ec41a.metrics.opening_stock_kg",
+          "strategy:663ddf621fa8585ec41a.metrics.closing_stock_kg"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "crop_scientist",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "validated",
+        "rejection_reasons": []
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 17,
+      "occurred_at": "2026-09-08T08:26:27.841229+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "crop_scientist",
+        "model": "deepseek-v4-pro",
+        "usage": {
+          "prompt_tokens": 3361,
+          "completion_tokens": 252,
+          "total_tokens": 3613,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 3105,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 18,
+      "occurred_at": "2026-09-08T08:26:27.846406+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "supply_weather_scout"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 19,
+      "occurred_at": "2026-09-08T08:26:27.852594+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 4,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 20,
+      "occurred_at": "2026-09-08T08:26:30.437898+00:00",
+      "event_type": "claim_rejected",
+      "schema_version": "1.0",
+      "body": {
+        "role": "supply_weather_scout",
+        "status": "invalid_schema",
+        "repair_attempt": 1,
+        "statement": "Response did not match the required claim schema; performing a bounded format repair."
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 21,
+      "occurred_at": "2026-09-08T08:26:30.442901+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 5,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 22,
+      "occurred_at": "2026-09-08T08:26:31.850971+00:00",
+      "event_type": "agent_claim",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "observation",
+        "statement": "All three strategies are feasible with no constraint violations, but shortfalls remain substantial across the board.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.constraints",
+          "strategy:ae6f305d345e0a87e6bf.constraints",
+          "strategy:663ddf621fa8585ec41a.constraints",
+          "strategy:5ad91d8d75a378abf4d1.metrics.shortfall_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.shortfall_kg",
+          "strategy:663ddf621fa8585ec41a.metrics.shortfall_kg"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "supply_weather_scout",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "validated",
+        "rejection_reasons": []
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 23,
+      "occurred_at": "2026-09-08T08:26:31.855142+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "supply_weather_scout",
+        "model": "deepseek-v4-flash",
+        "usage": {
+          "prompt_tokens": 3446,
+          "completion_tokens": 180,
+          "total_tokens": 3626,
+          "prompt_cache_hit_tokens": 3328,
+          "prompt_cache_miss_tokens": 118,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 24,
+      "occurred_at": "2026-09-08T08:26:31.860427+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "resources_margin_analyst"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 25,
+      "occurred_at": "2026-09-08T08:26:31.866208+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 6,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 26,
+      "occurred_at": "2026-09-08T08:26:33.719593+00:00",
+      "event_type": "claim_rejected",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "observation",
+        "statement": "The 30% larger area of Balanced over Lean raises margin SGD by 362.79 while Resilient's larger area raises it by only 235.78 relative to Balanced, showing diminishing returns on expansion.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.metrics.margin_sgd",
+          "strategy:ae6f305d345e0a87e6bf.metrics.margin_sgd",
+          "strategy:663ddf621fa8585ec41a.metrics.margin_sgd"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "resources_margin_analyst",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "rejected",
+        "rejection_reasons": [
+          "Numeric literal lacks an exact cited tool value"
+        ]
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 27,
+      "occurred_at": "2026-09-08T08:26:33.723682+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "resources_margin_analyst",
+        "model": "deepseek-v4-flash",
+        "usage": {
+          "prompt_tokens": 3363,
+          "completion_tokens": 158,
+          "total_tokens": 3521,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 3107,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 28,
+      "occurred_at": "2026-09-08T08:26:33.729089+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "planning_chair"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 29,
+      "occurred_at": "2026-09-08T08:26:33.734191+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 7,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 30,
+      "occurred_at": "2026-09-08T08:26:36.543374+00:00",
+      "event_type": "agent_claim",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "observation",
+        "statement": "All three strategies remain feasible with no constraint violations, indicating a valid simulation scope despite varied fill rates and shortfalls.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.constraints",
+          "strategy:ae6f305d345e0a87e6bf.constraints",
+          "strategy:663ddf621fa8585ec41a.constraints"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "planning_chair",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "validated",
+        "rejection_reasons": []
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 31,
+      "occurred_at": "2026-09-08T08:26:36.548102+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "planning_chair",
+        "model": "deepseek-v4-pro",
+        "usage": {
+          "prompt_tokens": 4465,
+          "completion_tokens": 121,
+          "total_tokens": 4586,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 4209,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 32,
+      "occurred_at": "2026-09-08T08:26:36.554089+00:00",
+      "event_type": "tool_started",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "independent_critic"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 33,
+      "occurred_at": "2026-09-08T08:26:36.559387+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 8,
+        "reserved_output_tokens": 2048
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 34,
+      "occurred_at": "2026-09-08T08:26:40.476915+00:00",
+      "event_type": "agent_claim",
+      "schema_version": "1.0",
+      "body": {
+        "claim_type": "challenge",
+        "statement": "All three strategies report identical opening_stock_kg (5.0) and closing_stock_kg (54.0) despite large differences in harvest_kg, shortfall_kg, waste_kg, and area_m2; verify whether synthetic inventory constraints are correctly modeled or an artefact.",
+        "evidence_ids": [],
+        "tool_result_refs": [
+          "strategy:5ad91d8d75a378abf4d1.metrics.opening_stock_kg",
+          "strategy:5ad91d8d75a378abf4d1.metrics.closing_stock_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.opening_stock_kg",
+          "strategy:ae6f305d345e0a87e6bf.metrics.closing_stock_kg",
+          "strategy:663ddf621fa8585ec41a.metrics.opening_stock_kg",
+          "strategy:663ddf621fa8585ec41a.metrics.closing_stock_kg"
+        ],
+        "recommendation": "proceed_simulation",
+        "role": "independent_critic",
+        "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+        "snapshot_id": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "status": "validated",
+        "rejection_reasons": []
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 35,
+      "occurred_at": "2026-09-08T08:26:40.482230+00:00",
+      "event_type": "tool_completed",
+      "schema_version": "1.0",
+      "body": {
+        "tool": "deepseek_review",
+        "role": "independent_critic",
+        "model": "deepseek-v4-pro",
+        "usage": {
+          "prompt_tokens": 4674,
+          "completion_tokens": 257,
+          "total_tokens": 4931,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 4418,
+          "reasoning_tokens": null
+        }
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 36,
+      "occurred_at": "2026-09-08T08:26:40.494533+00:00",
+      "event_type": "acceptance_validating",
+      "schema_version": "1.0",
+      "body": {
+        "strategy_id": "ae6f305d345e0a87e6bf"
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 37,
+      "occurred_at": "2026-09-08T08:26:40.500298+00:00",
+      "event_type": "accepted_for_simulation",
+      "schema_version": "1.0",
+      "body": {
+        "actor": "development-policy-service",
+        "policy_version": "automatic-development-v1",
+        "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+        "input_version": 2,
+        "strategy_id": "ae6f305d345e0a87e6bf",
+        "strategy_hash": "851a90757d21db8737352701d401614239b11a6dd076be14b528788e6d7ac884",
+        "validation_report_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "occurred_at": "2026-09-08T08:26:40.497678+00:00",
+        "simulation_only": true
+      }
+    },
+    {
+      "run_id": "014966c917b7d2d0ce0bc1d94a41e256",
+      "sequence": 38,
+      "occurred_at": "2026-09-08T08:26:40.515871+00:00",
+      "event_type": "run_completed",
+      "schema_version": "1.0",
+      "body": {
+        "status": "ACCEPTED_FOR_SIMULATION",
+        "council_status": "claims_rejected"
+      }
+    }
+  ],
+  "warnings": [],
+  "parent_run_id": null,
+  "disruption": null,
+  "forecast": {
+    "model_version": "recipe-ewma-v1",
+    "validation_status": "demo_only",
+    "cutoff": "2026-09-08T00:00:00+00:00",
+    "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+    "demand": [
+      {
+        "crop_id": "caixin",
+        "week": 0,
+        "date": "2026-09-14",
+        "confirmed_kg": 22.0,
+        "residual_kg": 9.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 1,
+        "date": "2026-09-21",
+        "confirmed_kg": 24.0,
+        "residual_kg": 7.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 2,
+        "date": "2026-09-28",
+        "confirmed_kg": 26.0,
+        "residual_kg": 5.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 3,
+        "date": "2026-10-05",
+        "confirmed_kg": 22.0,
+        "residual_kg": 9.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 4,
+        "date": "2026-10-12",
+        "confirmed_kg": 24.0,
+        "residual_kg": 7.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 5,
+        "date": "2026-10-19",
+        "confirmed_kg": 26.0,
+        "residual_kg": 5.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 6,
+        "date": "2026-10-26",
+        "confirmed_kg": 22.0,
+        "residual_kg": 9.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "caixin",
+        "week": 7,
+        "date": "2026-11-02",
+        "confirmed_kg": 24.0,
+        "residual_kg": 7.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 0,
+        "date": "2026-09-14",
+        "confirmed_kg": 26.0,
+        "residual_kg": 7.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 1,
+        "date": "2026-09-21",
+        "confirmed_kg": 28.0,
+        "residual_kg": 5.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 2,
+        "date": "2026-09-28",
+        "confirmed_kg": 30.0,
+        "residual_kg": 3.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 3,
+        "date": "2026-10-05",
+        "confirmed_kg": 26.0,
+        "residual_kg": 7.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 4,
+        "date": "2026-10-12",
+        "confirmed_kg": 28.0,
+        "residual_kg": 5.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 5,
+        "date": "2026-10-19",
+        "confirmed_kg": 30.0,
+        "residual_kg": 3.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 6,
+        "date": "2026-10-26",
+        "confirmed_kg": 26.0,
+        "residual_kg": 7.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "pak_choi",
+        "week": 7,
+        "date": "2026-11-02",
+        "confirmed_kg": 28.0,
+        "residual_kg": 5.001,
+        "expected_kg": 33.001,
+        "price_sgd_per_kg": 7.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 0,
+        "date": "2026-09-14",
+        "confirmed_kg": 22.0,
+        "residual_kg": 13.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 1,
+        "date": "2026-09-21",
+        "confirmed_kg": 24.0,
+        "residual_kg": 11.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 2,
+        "date": "2026-09-28",
+        "confirmed_kg": 26.0,
+        "residual_kg": 9.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 3,
+        "date": "2026-10-05",
+        "confirmed_kg": 22.0,
+        "residual_kg": 13.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 4,
+        "date": "2026-10-12",
+        "confirmed_kg": 24.0,
+        "residual_kg": 11.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 5,
+        "date": "2026-10-19",
+        "confirmed_kg": 26.0,
+        "residual_kg": 9.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 6,
+        "date": "2026-10-26",
+        "confirmed_kg": 22.0,
+        "residual_kg": 13.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "kailan",
+        "week": 7,
+        "date": "2026-11-02",
+        "confirmed_kg": 24.0,
+        "residual_kg": 11.001,
+        "expected_kg": 35.001,
+        "price_sgd_per_kg": 8.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 0,
+        "date": "2026-09-14",
+        "confirmed_kg": 26.0,
+        "residual_kg": 11.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 1,
+        "date": "2026-09-21",
+        "confirmed_kg": 28.0,
+        "residual_kg": 9.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 2,
+        "date": "2026-09-28",
+        "confirmed_kg": 30.0,
+        "residual_kg": 7.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 3,
+        "date": "2026-10-05",
+        "confirmed_kg": 26.0,
+        "residual_kg": 11.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 4,
+        "date": "2026-10-12",
+        "confirmed_kg": 28.0,
+        "residual_kg": 9.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 5,
+        "date": "2026-10-19",
+        "confirmed_kg": 30.0,
+        "residual_kg": 7.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 6,
+        "date": "2026-10-26",
+        "confirmed_kg": 26.0,
+        "residual_kg": 11.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      },
+      {
+        "crop_id": "lettuce",
+        "week": 7,
+        "date": "2026-11-02",
+        "confirmed_kg": 28.0,
+        "residual_kg": 9.001,
+        "expected_kg": 37.001,
+        "price_sgd_per_kg": 9.0,
+        "history_periods": 12
+      }
+    ],
+    "harvest": [
+      {
+        "batch_id": "batch-01",
+        "crop_id": "caixin",
+        "harvest_date": "2026-09-14",
+        "marketable_kg": 44.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-02",
+        "crop_id": "pak_choi",
+        "harvest_date": "2026-09-14",
+        "marketable_kg": 52.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-03",
+        "crop_id": "kailan",
+        "harvest_date": "2026-09-14",
+        "marketable_kg": 48.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-04",
+        "crop_id": "lettuce",
+        "harvest_date": "2026-09-14",
+        "marketable_kg": 46.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-05",
+        "crop_id": "caixin",
+        "harvest_date": "2026-09-28",
+        "marketable_kg": 44.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-06",
+        "crop_id": "pak_choi",
+        "harvest_date": "2026-09-28",
+        "marketable_kg": 52.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-07",
+        "crop_id": "kailan",
+        "harvest_date": "2026-09-28",
+        "marketable_kg": 48.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      },
+      {
+        "batch_id": "batch-08",
+        "crop_id": "lettuce",
+        "harvest_date": "2026-09-28",
+        "marketable_kg": 46.0,
+        "endpoint": "fresh_marketable_kg",
+        "origin": "synthetic"
+      }
+    ],
+    "uncertainty": "Declared synthetic scenarios, not calibrated confidence intervals"
+  },
+  "scenario_set": [
+    {
+      "id": "low-yield-high-demand",
+      "yield_factor": 0.85,
+      "demand_factor": 1.15,
+      "weight": 0.3333333333333333
+    },
+    {
+      "id": "central",
+      "yield_factor": 1,
+      "demand_factor": 1,
+      "weight": 0.3333333333333333
+    },
+    {
+      "id": "high-yield-low-demand",
+      "yield_factor": 1.1,
+      "demand_factor": 0.9,
+      "weight": 0.3333333333333333
+    }
+  ],
+  "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+  "visual_observation": {
+    "asset_id": "synthetic-label-014966c917b7d2d0ce0bc1d94a41e256",
+    "source_sha256": "6847b9963626e2431eae27f1745339c93182f79402cdecde70fe1298916f5e2b",
+    "normalized_sha256": "be62cce275dadbfcb0b77c8158937cc38a19a4f7798bef21e87ac1e85b9b512d",
+    "origin": "synthetic",
+    "observation": {
+      "batch_id": "FT-014966",
+      "visible_condition": "SYNTHETIC BATCH",
+      "uncertain": false
+    },
+    "review_status": "label_verified_against_fixture",
+    "agronomic_measurement": false,
+    "audit": {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-flash-vision-exp",
+      "returned_model": "deepseek-v4-flash-vision-exp",
+      "role": "visual_observer",
+      "capability": "vision",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "82eb14a8035d05a94adad9ffd392a067c0f5430712b85bc0051e117e0e153568",
+      "request_id": null,
+      "latency_ms": 1972,
+      "usage": {
+        "prompt_tokens": 283,
+        "completion_tokens": 30,
+        "total_tokens": 313,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 283,
+        "reasoning_tokens": null
+      }
+    }
+  },
+  "inference_budget": {
+    "reserved_calls": 9,
+    "requests_consumed": 8,
+    "unused_released": 1,
+    "reserved_output_tokens": 15360
+  },
+  "inference_audit": [
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-flash",
+      "returned_model": "deepseek-v4-flash",
+      "role": "demand_analyst",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "bc5fc213e32ed93fa300ba26b50d764502c8f714fb2cb167296a6bce3722bad2",
+      "request_id": null,
+      "latency_ms": 1513,
+      "usage": {
+        "prompt_tokens": 3361,
+        "completion_tokens": 143,
+        "total_tokens": 3504,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 3105,
+        "reasoning_tokens": null
+      }
+    },
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-pro",
+      "returned_model": "deepseek-v4-pro",
+      "role": "crop_scientist",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "de649f9461039313419ee3a07a713ae16722d77dfb4b5f48ef09337d8b4e70f4",
+      "request_id": null,
+      "latency_ms": 3686,
+      "usage": {
+        "prompt_tokens": 3361,
+        "completion_tokens": 252,
+        "total_tokens": 3613,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 3105,
+        "reasoning_tokens": null
+      }
+    },
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-flash",
+      "returned_model": "deepseek-v4-flash",
+      "role": "supply_weather_scout",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "59cfd0a72bf2031f1391b1f8c9f23d41095cc2874f299efbb72476ce1bca9261",
+      "request_id": null,
+      "latency_ms": 1403,
+      "usage": {
+        "prompt_tokens": 3446,
+        "completion_tokens": 180,
+        "total_tokens": 3626,
+        "prompt_cache_hit_tokens": 3328,
+        "prompt_cache_miss_tokens": 118,
+        "reasoning_tokens": null
+      }
+    },
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-flash",
+      "returned_model": "deepseek-v4-flash",
+      "role": "resources_margin_analyst",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "7b7a64e22a8c58ba48a38e2d2736d23e0005fc2488d7e3265db1502c59df5e4e",
+      "request_id": null,
+      "latency_ms": 1848,
+      "usage": {
+        "prompt_tokens": 3363,
+        "completion_tokens": 158,
+        "total_tokens": 3521,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 3107,
+        "reasoning_tokens": null
+      }
+    },
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-pro",
+      "returned_model": "deepseek-v4-pro",
+      "role": "planning_chair",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "ff5b563d7e86deaa684c5d3f814f904ce1b0c36d25997962b5ddcbaeaedac364",
+      "request_id": null,
+      "latency_ms": 2804,
+      "usage": {
+        "prompt_tokens": 4465,
+        "completion_tokens": 121,
+        "total_tokens": 4586,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 4209,
+        "reasoning_tokens": null
+      }
+    },
+    {
+      "provider": "deepseek",
+      "requested_model": "deepseek-v4-pro",
+      "returned_model": "deepseek-v4-pro",
+      "role": "independent_critic",
+      "capability": "text",
+      "execution_mode": "test",
+      "data_mode": "synthetic_demo",
+      "inference_origin": "deepseek_api",
+      "input_sha256": "e49e90adbb044f933996549100927770a61816d3b245578d8e3c0c7161e7cca5",
+      "request_id": null,
+      "latency_ms": 3913,
+      "usage": {
+        "prompt_tokens": 4674,
+        "completion_tokens": 257,
+        "total_tokens": 4931,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 4418,
+        "reasoning_tokens": null
+      }
+    }
+  ],
+  "accepted_strategy_id": "ae6f305d345e0a87e6bf",
+  "acceptance": {
+    "actor": "development-policy-service",
+    "policy_version": "automatic-development-v1",
+    "input_hash": "d4a17db3bd254018660cbd706c6d1fd86c1be13932d74223a9c80ee1b3c21218",
+    "input_version": 2,
+    "strategy_id": "ae6f305d345e0a87e6bf",
+    "strategy_hash": "851a90757d21db8737352701d401614239b11a6dd076be14b528788e6d7ac884",
+    "validation_report_id": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "occurred_at": "2026-09-08T08:26:40.497678+00:00",
+    "simulation_only": true
+  },
+  "simulated_outcome": {
+    "origin": "synthetic",
+    "scenario_seed": 20260908,
+    "ledger": [
+      {
+        "date": "2026-09-08",
+        "opening_kg": 5.0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 5.0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-09",
+        "opening_kg": 5.0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 5.0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-10",
+        "opening_kg": 5.0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 5.0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-11",
+        "opening_kg": 5.0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 5.0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-12",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-13",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-14",
+        "opening_kg": 0,
+        "harvest_kg": 190.0,
+        "delivered_kg": 136.004,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 136.004,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-15",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-16",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-17",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-18",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 53.996,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-19",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-20",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-21",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 136.004,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-22",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-23",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-24",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-25",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-26",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-27",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-09-28",
+        "opening_kg": 0,
+        "harvest_kg": 190.0,
+        "delivered_kg": 136.004,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 136.004,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-29",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-09-30",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-01",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-02",
+        "opening_kg": 53.996,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 53.996,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-03",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-04",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-05",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 136.004,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-06",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-07",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-08",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-09",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-10",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-11",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-12",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 136.004,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-13",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-14",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-15",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-16",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-17",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-18",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-19",
+        "opening_kg": 0,
+        "harvest_kg": 98.0,
+        "delivered_kg": 70.002,
+        "disposed_kg": 0,
+        "closing_kg": 27.998,
+        "demand_kg": 136.004,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-20",
+        "opening_kg": 27.998,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 27.998,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-21",
+        "opening_kg": 27.998,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 27.998,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-22",
+        "opening_kg": 27.998,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 27.998,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-23",
+        "opening_kg": 27.998,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 27.998,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-24",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-25",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-10-26",
+        "opening_kg": 0,
+        "harvest_kg": 146.0,
+        "delivered_kg": 105.003,
+        "disposed_kg": 0,
+        "closing_kg": 40.997,
+        "demand_kg": 136.004,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-27",
+        "opening_kg": 40.997,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 40.997,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-28",
+        "opening_kg": 40.997,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 40.997,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-29",
+        "opening_kg": 40.997,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 40.997,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-30",
+        "opening_kg": 40.997,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 40.997,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0.0
+      },
+      {
+        "date": "2026-10-31",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-11-01",
+        "opening_kg": 0,
+        "harvest_kg": 0,
+        "delivered_kg": 0,
+        "disposed_kg": 0,
+        "closing_kg": 0,
+        "demand_kg": 0,
+        "balance_error": 0
+      },
+      {
+        "date": "2026-11-02",
+        "opening_kg": 0,
+        "harvest_kg": 190.0,
+        "delivered_kg": 136.004,
+        "disposed_kg": 0,
+        "closing_kg": 53.996,
+        "demand_kg": 136.004,
+        "balance_error": 0.0
+      }
+    ],
+    "metrics": {
+      "fill_rate": 0.5358,
+      "margin_sgd": 2957.37,
+      "waste_kg": 181.99,
+      "harvest_kg": 814.0,
+      "shortfall_kg": 505.01,
+      "cost_sgd": 1540.76,
+      "labour_hours": 71.38,
+      "area_m2": 180.0,
+      "closing_stock_kg": 54.0,
+      "opening_stock_kg": 5.0,
+      "revenue_sgd": 4498.13
+    },
+    "work": [
+      {
+        "id": "bed-01-lettuce-13",
+        "bed_id": "bed-01",
+        "crop_id": "lettuce",
+        "recipe_id": "lettuce-demo-v1",
+        "sow_date": "2026-09-21",
+        "transplant_date": "2026-10-01",
+        "harvest_date": "2026-10-26",
+        "area_m2": 20.0,
+        "expected_kg": 46.0,
+        "executed": false
+      },
+      {
+        "id": "bed-02-lettuce-20",
+        "bed_id": "bed-02",
+        "crop_id": "lettuce",
+        "recipe_id": "lettuce-demo-v1",
+        "sow_date": "2026-09-28",
+        "transplant_date": "2026-10-08",
+        "harvest_date": "2026-11-02",
+        "area_m2": 20.0,
+        "expected_kg": 46.0,
+        "executed": false
+      },
+      {
+        "id": "bed-03-pak_choi-13",
+        "bed_id": "bed-03",
+        "crop_id": "pak_choi",
+        "recipe_id": "pak_choi-demo-v1",
+        "sow_date": "2026-09-21",
+        "transplant_date": "2026-09-28",
+        "harvest_date": "2026-10-26",
+        "area_m2": 20.0,
+        "expected_kg": 52.0,
+        "executed": false
+      },
+      {
+        "id": "bed-07-pak_choi-20",
+        "bed_id": "bed-07",
+        "crop_id": "pak_choi",
+        "recipe_id": "pak_choi-demo-v1",
+        "sow_date": "2026-09-28",
+        "transplant_date": "2026-10-05",
+        "harvest_date": "2026-11-02",
+        "area_m2": 20.0,
+        "expected_kg": 52.0,
+        "executed": false
+      },
+      {
+        "id": "bed-09-kailan-13",
+        "bed_id": "bed-09",
+        "crop_id": "kailan",
+        "recipe_id": "kailan-demo-v1",
+        "sow_date": "2026-09-21",
+        "transplant_date": "2026-10-01",
+        "harvest_date": "2026-11-02",
+        "area_m2": 20.0,
+        "expected_kg": 48.0,
+        "executed": false
+      },
+      {
+        "id": "bed-12-kailan-6",
+        "bed_id": "bed-12",
+        "crop_id": "kailan",
+        "recipe_id": "kailan-demo-v1",
+        "sow_date": "2026-09-14",
+        "transplant_date": "2026-09-24",
+        "harvest_date": "2026-10-26",
+        "area_m2": 20.0,
+        "expected_kg": 48.0,
+        "executed": false
+      },
+      {
+        "id": "bed-13-caixin-27",
+        "bed_id": "bed-13",
+        "crop_id": "caixin",
+        "recipe_id": "caixin-demo-v1",
+        "sow_date": "2026-10-05",
+        "transplant_date": "2026-10-12",
+        "harvest_date": "2026-11-02",
+        "area_m2": 20.0,
+        "expected_kg": 44.0,
+        "executed": false
+      },
+      {
+        "id": "bed-14-lettuce-6",
+        "bed_id": "bed-14",
+        "crop_id": "lettuce",
+        "recipe_id": "lettuce-demo-v1",
+        "sow_date": "2026-09-14",
+        "transplant_date": "2026-09-24",
+        "harvest_date": "2026-10-19",
+        "area_m2": 20.0,
+        "expected_kg": 46.0,
+        "executed": false
+      },
+      {
+        "id": "bed-16-pak_choi-6",
+        "bed_id": "bed-16",
+        "crop_id": "pak_choi",
+        "recipe_id": "pak_choi-demo-v1",
+        "sow_date": "2026-09-14",
+        "transplant_date": "2026-09-21",
+        "harvest_date": "2026-10-19",
+        "area_m2": 20.0,
+        "expected_kg": 52.0,
+        "executed": false
+      }
+    ]
+  },
+  "completed_at": "2026-09-08T08:26:40.502762+00:00",
+  "measured_wait_seconds": 33.289,
+  "original_execution_mode": "test",
+  "inference_origin": "recorded_deepseek",
+  "shared_demo": true,
+  "replay_of": "014966c917b7d2d0ce0bc1d94a41e256"
+}

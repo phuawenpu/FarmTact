@@ -1,17 +1,35 @@
 # FarmTact
 ## Dataset-first research and coding specification for a master Codex agent and specialist subagents
 
-**Version:** 1.1 — DeepSeek-only runtime amendment · **Research cut-off:** 8 September 2026 · **Market:** Singapore · **Product:** SME farm production planning web application
+**Version:** 1.2 — Autonomous development phase · **Research cut-off:** 8 September 2026 · **Market:** Singapore · **Product:** SME farm production planning web application
 
 **Status of this handoff:** researched specification, curated source/crop/evidence registries, coding-agent instructions, contract seeds, and synthetic-fixture tooling. This is not a deployed application, trained agronomic model, downloaded collection of the referenced datasets, or evidence of achieved farm savings.
 
 **Mandatory runtime amendment:** Read `FarmTact_DeepSeek_Runtime_Specification.md`. GPT/Codex may build and research; every actual FarmTact LLM call in development, platform test, demo, staging or live use must use the official DeepSeek API. No alternative-provider fallback. The amended environment template supersedes the old GPT runtime defaults.
 
+## 0. Current phase: autonomous development
+
+**No human approval is required to complete this development phase.** This section takes precedence over conflicting approval, sign-off, manual review or operator-confirmation language in these specifications and referenced development briefs. The DeepSeek amendment continues to control runtime-provider policy.
+
+The coding agents may make implementation decisions, construct and validate datasets, research permitted sources, create synthetic recipes and fixtures, change schemas and development migrations, implement models and UI, run bounded authenticated DeepSeek tests with the supplied environment credential, perform independent agent review, integrate changes and advance development gates without asking the user to approve each step. Record decisions and evidence in `docs/decision-log.md`. Reviews and gates are technical checks performed by code and reviewing agents; passing checks advance the work automatically. A failed check triggers repair, exclusion or a recorded blocker, never an invented pass or a request for routine sign-off.
+
+This phase covers local development, isolated test/staging environments and synthetic demonstrations. Set `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` by default; replay and contract tests use their explicit execution modes. Use `data_mode=synthetic_demo` by default. Lawfully available public data and already-authorized historical data may be used with their original provenance. Account/API access and source licence failures block only dependent capabilities; continue independent work. Missing farm facts become explicit unresolved fields or separately labelled fixture assumptions, never fabricated real observations.
+
+The application backend automatically selects a feasible strategy under a versioned policy after numerical, provenance, scope and critic checks pass. Default selection uses the Balanced policy, then a validated deterministic baseline if Balanced has no feasible candidate; rank candidates by the configured numerical objective and use stable strategy IDs to break ties. In an explicitly deterministic baseline run, an independently tested validator supplies the audit report in place of an LLM critic; record `council_status=not_run` or `failed` as applicable, and do not count this as passing council tests. Never relax constraints to force a selection. Unmet buyer conditions exclude a strategy from automatic selection unless an explicitly synthetic scenario supplies that condition. A deterministic simulation runner records simulated work and outcomes so the full planning/replanning loop runs unattended. A council message alone cannot accept or execute a plan.
+
+Automatic acceptance is restricted server-side to isolated development tenants with `synthetic_demo` or `historical_replay` data and `test` or `replay` execution. Historical outcomes remain immutable; simulated counterfactual outcomes are stored separately. Use `ACCEPTED_FOR_SIMULATION`, never a fabricated human approval. Persist policy version, service actor, input/strategy hashes, validation report IDs, modes and timestamp. Changed inputs invalidate acceptance and trigger validation and selection again. No approval button, human-review queue or manual fixture entry may be required for the default development workflow.
+
+Throughout these docs, **approved**, **reviewed** and **validated** for development sources, mappings, recipes, models, configuration and gates mean recorded technical validation by code and an independent reviewing agent where specified. They do not require a human signature. Synthetic recipe/model acceptance is `demo_only`; it cannot establish commercial or agronomic validation. Preserve scientific, licensing, tenant-isolation, credential, budget and feasibility checks.
+
+Real planting, purchases, buyer communications, contract changes, actuator control, private-asset transmission without existing authorization and promotion to live farm operations are outside this phase. Keep those integrations disabled and exercise their simulated equivalents without pausing development. Future operational human-approval flows may be implemented and tested with service actors/fixtures, but are not a development completion gate. Changing to a future operational phase is a separate scope decision; an API key, passing demo or agent decision must not switch it automatically.
+
+**Initial repository baseline:** before implementation, the checkout contained the README and three specification/research Markdown files. At that baseline, referenced registries, master prompt, runtime seed, scripts, tests and reports were intended deliverables rather than verified existing artifacts. Subsequent implementation status and evidence belong in the execution plan and completion audit. Inventory the checkout, create missing development artifacts autonomously and record actual test results. No missing handoff file requires human approval to begin implementation.
+
 ---
 
 ## 1. Product mandate
 
-Build **FarmTact**, an evidence-grounded farming strategy room. A Singapore farmer supplies the farm's actual orders, production system, growing spaces, crop recipes and current crop batches. A small council of specialist agents uses typed retrieval, forecasting and optimization tools to discuss feasible planting strategies. The farmer sees disagreements, underlying evidence, uncertainty, trade-offs and the exact work implied by each strategy, then approves one versioned plan.
+Build **FarmTact**, an evidence-grounded farming strategy room. A Singapore farmer supplies the farm's actual orders, production system, growing spaces, crop recipes and current crop batches. A small council of specialist agents uses typed retrieval, forecasting and optimization tools to discuss feasible planting strategies. The farmer sees disagreements, underlying evidence, uncertainty, trade-offs and the exact work implied by each strategy, then sees one versioned plan selected automatically for simulation during development. Future operational use includes farmer approval.
 
 The central question is:
 
@@ -25,7 +43,7 @@ Primary user: an owner-manager or production planner of a Singapore vegetable SM
 
 Near-term decisions concern current crops, harvest timing within safe maturity windows, labour and buyer allocation. Medium-term decisions concern sowing, transplanting, crop mix, staggered batches and optional partner supply. Long-term capital investment is scenario analysis, not automatically available capacity.
 
-Default demo: one fictional Singapore SME growing four crops from the researched ten-crop portfolio. All ten must appear in the crop knowledge base; only crops with an approved farm-specific recipe are selectable for a production commitment. A farm can activate more crops by supplying the missing parameters. This prevents a demo from pretending that ten experimentally validated local models already exist.
+Default demo: one fictional Singapore SME growing four crops from the researched ten-crop portfolio. All ten must appear in the crop knowledge base; only crops with a technically validated, explicitly synthetic recipe are selectable for simulated commitments in this phase. Real production commitments require future farm-specific validation. A farm can activate more crops by supplying the missing parameters. This prevents a demo from pretending that ten experimentally validated local models already exist.
 
 ### 1.2 Non-goals
 
@@ -33,7 +51,7 @@ Do not build an autonomous chemical-dosing, pesticide-selection, machinery-contr
 
 ### 1.3 Success criteria
 
-A user can inspect data quality; understand the origin and applicability of an agronomic assumption; generate at least three genuinely different feasible strategies; see quantitative trade-offs produced by code; approve a strategy; and replan after a new observation without reversing executed work. Every material quantitative recommendation links to a calculation, model version and input snapshot. Every research claim links to its source and context.
+A user can inspect data quality; understand the origin and applicability of an agronomic assumption; generate at least three genuinely different feasible strategies; see quantitative trade-offs produced by code; observe automatic acceptance of a strategy for simulation; and replan after a new observation without reversing executed work. Every material quantitative recommendation links to a calculation, model version and input snapshot. Every research claim links to its source and context.
 
 Business outcomes are measured as customer fill rate, marketable output, physical waste, contribution margin, resource use and planning time. Prototype simulation gains must be labelled **simulated**, not described as actual SME impact.
 
@@ -118,7 +136,7 @@ For each source, report `discovered`, `metadata_verified`, `licence_reviewed`, `
 
 **Features:** point-in-time joins and derived variables with a cutoff, dependency IDs and transformations. Features must be rebuildable from versioned inputs.
 
-**Decision artifacts:** frozen demand/yield predictions, scenario draws, candidate actions, solver status, council claims, approval state and outcome accounting. A later data correction creates a new version; it does not overwrite the evidence used for an earlier decision.
+**Decision artifacts:** frozen demand/yield predictions, scenario draws, candidate actions, solver status, council claims, development acceptance state and outcome accounting. A later data correction creates a new version; it does not overwrite the evidence used for an earlier decision.
 
 ### 3.3 Core tables and grains
 
@@ -132,7 +150,7 @@ For each source, report `discovered`, `metadata_verified`, `licence_reviewed`, `
 | `crop_hs_mapping` | Crop/SKU ↔ commodity code; nomenclature version, mapping scope/confidence/reviewer |
 | `evidence_document` | DOI/publication/version; access, licence, correction and review status |
 | `evidence_claim` | One contextual result; source locator, endpoint, treatment, comparator, scope |
-| `crop_parameter` | Parameter + crop/cultivar/stage/system/endpoint; value or range, unit, provenance, approval |
+| `crop_parameter` | Parameter + crop/cultivar/stage/system/endpoint; value or range, unit, provenance, technical validation status and permitted use scope |
 | `tenant` / `farm` | Owner and production location; timezone, currency, permissions |
 | `zone` | Outdoor/protected/indoor environment; coordinate/polygon, nutrient/light/HVAC grouping |
 | `growing_space` | Bed/rack/bench layer; effective canopy m², sites, physical footprint, allowed crops |
@@ -156,7 +174,7 @@ For each source, report `discovered`, `metadata_verified`, `licence_reviewed`, `
 | `planning_run` | Farm/cutoff/horizon/input hashes/scenario seed/state and budget |
 | `strategy` | Candidate plan + objective, constraints, uncertainty, feasibility and model versions |
 | `agent_claim` | Runtime assertion/proposal/challenge; referenced evidence/tools, status and concise rationale |
-| `approval_event` | User + strategy/input version + action + timestamp; immutable |
+| `decision_event` | Immutable acceptance/rejection/invalidation; service actor, policy version, strategy/input hashes, validation report IDs, phase, data/execution modes and timestamp; future human approval uses a distinct event type |
 | `audit_event` | Security and operational changes; actor, reason, target and trace ID |
 
 All private tables require tenant scope. Composite keys and foreign keys must prevent a batch, lot or order from accidentally linking across tenants. Use decimals for money; use explicitly bounded integers or validated decimals for solver quantities. Financial models use SGD by default and record any exchange-rate source and date when another currency is present.
@@ -185,7 +203,7 @@ Demand targets come from customer orders and bookings, not just shipments. Keep 
 
 Production targets are actual marketable harvest and actual maturity dates by batch/recipe/system. Weather, imagery and papers provide explanatory features or priors; they do not create the missing outcome labels.
 
-For the hackathon, use the supplied synthetic generator as a starting fixture. Every synthetic row carries its origin. Synthetic relationships and coefficients must never be inserted into the scientific evidence register. A model trained only on synthetic data must be labelled `demo_only` and blocked from `production_validated` status.
+For the hackathon, implement the referenced synthetic generator as a deterministic starting fixture if it is absent. Every synthetic row carries its origin. Synthetic relationships and coefficients must never be inserted into the scientific evidence register. A model trained only on synthetic data must be labelled `demo_only` and blocked from `production_validated` status.
 
 ---
 
@@ -243,13 +261,13 @@ P04's Zenodo supplement is described as LC-MS data [D21]; treat its utility acco
 
 Each connector implements `discover()`, `fetch(query, checkpoint)`, `normalize(snapshot)`, `validate(batch)` and `describe_licence()`. Fetching must have connect/read timeouts, bounded retries with jitter, `Retry-After` handling, byte limits, pagination safeguards and provider-specific request budgets. Idempotency uses source, parameters, snapshot version and content hash.
 
-No runtime LLM writes arbitrary SQL, executes downloaded Python, chooses unrestricted URLs or edits connector code. An LLM can propose a schema mapping or ask a typed connector to refresh an approved source. Schema changes require validation and an explicit migration review.
+No runtime LLM writes arbitrary SQL, executes downloaded Python, chooses unrestricted URLs or edits connector code. An LLM can propose a schema mapping or ask a typed connector to refresh an approved source. Schema changes require automated validation and recorded migration review by a coding agent; apply passing development migrations without human confirmation.
 
 ### 4.7 Dataset quality gate
 
 Before modeling, produce coverage by crop, source, date and farm system; completeness; invalid units; duplicates; unresolved aliases/codes; licence blockers; freshness; missing outcomes; and evidence applicability. Assign no fabricated row-count target. Report actual rows fetched versus requested, plus exclusions.
 
-The gate passes when all ten crop records and their caveats exist; the activated recipes have approved parameters; at least one real public connector has successfully produced validated records; the synthetic/private-data boundary is enforceable; and every feature can be traced back to a source snapshot. A source whose endpoint is blocked may remain in the backlog but cannot be displayed as live.
+The gate passes when all ten crop records and their caveats exist; the activated development recipes have technically validated parameters with explicit provenance and `demo_only` scope where synthetic; at least one real public connector has successfully produced validated records; the synthetic/private-data boundary is enforceable; and every feature can be traced back to a source snapshot. A source whose endpoint is blocked may remain in the backlog but cannot be displayed as live.
 
 ---
 
@@ -279,7 +297,7 @@ Generate joint scenarios for demand, crop timing, marketable yield and selected 
 
 Use historical block/residual sampling as a transparent first method. Quantile or conformal-style calibration is an optional extension evaluated for temporal coverage. Under distribution shift, empirically measured coverage matters more than an advertised guarantee.
 
-Global supply indicators are evidence about possible exposure. A chain from regional rainfall to lower crop output to fewer Singapore imports to this farm's higher demand requires separate support at each step. Where a link is unvalidated, produce a conditional scenario and ask for buyer confirmation; do not automatically increase acreage.
+Global supply indicators are evidence about possible exposure. A chain from regional rainfall to lower crop output to fewer Singapore imports to this farm's higher demand requires separate support at each step. Where a link is unvalidated, produce a conditional scenario and exclude the unsupported uplift from automatic selection. An explicitly labelled synthetic buyer condition may exercise that branch in development; no buyer contact or confirmation is required to finish this phase. Do not automatically increase acreage on an unsupported assumption.
 
 ### 5.4 Optimization
 
@@ -293,7 +311,7 @@ Track demand MAE/WAPE where denominators are nonzero, pinball loss for quantiles
 
 Compare decision outcomes against a fixed baseline on identical held-out scenarios. Model prediction accuracy and decision value are separate. A slightly more accurate forecast that causes excess planting may produce worse margin or waste.
 
-Promotion requires versioned training data, temporal/grouped splits, reproducible seeds, baseline comparisons, leakage checks and reviewer approval. Actuals can trigger a proposed model update; one unexpected harvest must not instantly “teach” a permanent agronomic law. Preserve rollback capability.
+Promotion requires versioned training data, temporal/grouped splits, reproducible seeds, baseline comparisons, leakage checks and recorded independent agent review. Passing checks automatically promote models within development scope; synthetic-only models remain `demo_only`. Actuals can trigger a proposed model update; one unexpected harvest must not instantly “teach” a permanent agronomic law. Preserve rollback capability.
 
 ---
 
@@ -345,9 +363,9 @@ Optional strategies are energy-conscious indoor scheduling, repeated-harvest smo
 
 ### 6.6 Demonstration case without biological shortcuts
 
-A future harvest week has an uncovered requirement and enough time remains for a new crop. The council compares staggered sowing against one large batch. After approval, a later event reduces the forecast of crops already growing.
+A future harvest week has an uncovered requirement and enough time remains for a new crop. The council compares staggered sowing against one large batch. After automatic acceptance for simulation, a later event reduces the forecast of crops already growing.
 
-If the affected orders are due before any new sowing can mature, the planner must switch to feasible actions: verify harvestable adjacent lots, negotiate a buyer-approved substitution, obtain a verified partner quote or show an unavoidable shortfall. It must **not** claim that planting additional seedlings today resolves a shortage next week.
+If the affected orders are due before any new sowing can mature, the planner must switch to feasible actions: verify harvestable adjacent lots, evaluate a substitution or partner quote already present in the fixture, or show an unavoidable shortfall. Buyer negotiation and quote acquisition are simulated events in this phase; no external communication or purchase is required. It must **not** claim that planting additional seedlings today resolves a shortage next week.
 
 All quantities, prices and shocks used in this demonstration come from a fixture labelled synthetic. Never present fixture percentages as findings from NEA, satellite data or a crop paper.
 
@@ -374,13 +392,13 @@ These are roles in an auditable workflow, not a claim that six separate model in
 
 ### 7.2 State machine
 
-`CREATED → VALIDATING_INPUTS → SNAPSHOTTING → ANALYSING → PROPOSING → CHALLENGING → OPTIMIZING → SIMULATING → CRITIC_REVIEW → READY_FOR_APPROVAL`
+`CREATED → VALIDATING_INPUTS → SNAPSHOTTING → ANALYSING → PROPOSING → CHALLENGING → OPTIMIZING → SIMULATING → CRITIC_REVIEW → VALIDATING_ACCEPTANCE → ACCEPTED_FOR_SIMULATION`
 
-Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILABLE`, `BUDGET_EXCEEDED`, `FAILED`, `CANCELLED`. Approval creates `APPROVED`; execution records come from user-confirmed work, not an agent's text.
+Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILABLE`, `BUDGET_EXCEEDED`, `FAILED`, `CANCELLED`. The backend applies the automatic-development policy after all required checks pass; failure produces the relevant exception state. Simulated execution records come from the deterministic runner with fixture/run provenance. Historical actuals remain separate. The future operational branch `READY_FOR_APPROVAL → APPROVED` is disabled for this phase and cannot block its workflow.
 
 The chair first validates inputs and freezes the cutoff. The four specialists create independent evidence briefs from the same snapshot. They propose concerns and candidate actions, not numerical plan totals they have invented. The chair sends these to deterministic candidate generation and the optimizer. The council then challenges actual candidate results. A second, final challenge round can trigger a new solver run. The independent critic checks the final outputs and the chair summarizes unresolved dissent.
 
-Default policy: at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configurable by operator. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
+Default policy: at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configured in versioned development settings by the coding agents without human confirmation. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
 
 ### 7.3 Claim types and discussion rules
 
@@ -400,7 +418,7 @@ Resources Analyst: “The nursery is constrained on the first date; the second s
 
 Chair: “Evaluate the confirmed-demand plan and a separate buyer-confirmed uplift scenario using the same resource calendar.”
 
-Critic: “Both outputs pass lead-time and occupancy checks. The uplift plan should not be approved until the buyer condition is resolved.”
+Critic: “Both outputs pass lead-time and occupancy checks. The uplift plan is excluded from automatic selection while the buyer condition is unresolved; the confirmed-demand plan can proceed. A separate synthetic scenario can supply a labelled buyer confirmation.”
 
 The implementation displays actual figures only when returned by tools. This example is a behavioural specification, not a claim about a particular farm.
 
@@ -421,7 +439,7 @@ Implement a typed tool registry with a JSON schema, permission, timeout, retry p
 - `simulate_strategy(strategy_id, scenario_set_id)` and `validate_strategy(strategy_id)`.
 - `request_missing_input(field, reason, affected_decision)`.
 
-All data retrieval is tenant-scoped and read-only. The runtime tool set does not include `execute_sql`, `run_shell`, unrestricted `fetch_url`, `change_recipe`, `purchase_crop` or `control_irrigation`. Approval and execution actions are authenticated application operations with dedicated permissions, not ordinary LLM tools.
+All data retrieval is tenant-scoped and read-only. The runtime tool set does not include `execute_sql`, `run_shell`, unrestricted `fetch_url`, `change_recipe`, `purchase_crop` or `control_irrigation`. Automatic development acceptance and simulated execution are authenticated backend operations with dedicated service permissions, not ordinary LLM tools. They follow Section 0 and require no human action. Future operational approval routes remain disabled in this phase.
 
 ### 8.2 Evidence claim shape
 
@@ -440,17 +458,20 @@ All data retrieval is tenant-scoped and read-only. The runtime tool set does not
     "commercial_validation": "absent"
   },
   "numeric_values": [],
-  "requires_human_review": true
+  "review_policy": "independent_agent_and_schema_validation",
+  "review_status": "pending",
+  "requires_human_review": false,
+  "development_scope": "simulation_only"
 }
 ```
 
-This is a contract example. In production, the statement, evidence access rights and applicability fields are generated and validated against retrieved records; the example is not a pre-approved claim for every farm.
+This is a development contract example. Pending claims receive automated and independent agent review; unsupported claims are rejected or excluded without waiting for a human. In future production, the statement, evidence access rights and applicability fields are generated and validated against retrieved records; the example is not a pre-approved claim for every farm.
 
 ### 8.3 Planning-run input
 
-Require `farm_id`, `cutoff`, `horizon_start`, `horizon_end`, `recipe_version_ids`, `demand_policy`, `resource_version`, `scenario_seed` and `run_mode`. `run_mode` is one of `synthetic_demo`, `historical_replay` or `live_advisory`. Do not infer mode from the presence of an API key. Display it on every strategy and exported plan.
+Require `farm_id`, `cutoff`, `horizon_start`, `horizon_end`, `recipe_version_ids`, `demand_policy`, `resource_version`, `scenario_seed` and `run_mode`. `run_mode` is one of `synthetic_demo`, `historical_replay` or `live_advisory`. Use `data_mode` as the canonical field; `run_mode` is its legacy alias and conflicting values must be rejected. Also require server-derived `development_phase`, `decision_policy` and `execution_mode`. Enforce Section 0 eligibility for automatic acceptance. Do not infer mode from the presence of an API key. Display modes on every strategy and exported plan.
 
-Optional inputs include service target, risk penalty, cash cap, manually confirmed opportunity, locked actions and enabled data sources. Validate horizon ordering and ensure the cutoff is not in the future for a live run. Manual changes create a new input version and invalidate prior approvals.
+Optional inputs include service target, risk penalty, cash cap, opportunity conditions with provenance, locked actions and enabled data sources. Supply versioned fixture defaults for the unattended demo; do not require manual entry. Validate horizon ordering and ensure the cutoff is not in the future for a live run. Any input change creates a new version and invalidates prior acceptance; the backend reruns validation and selection automatically.
 
 ### 8.4 Strategy output
 
@@ -474,17 +495,17 @@ Report hard violations as structured records: `constraint_code`, `entity_id`, `p
 | `/api/v1/planning-runs/{id}/events` | GET | Server-sent events with sequence IDs |
 | `/api/v1/planning-runs/{id}/cancel` | POST | Authorized cancellation |
 | `/api/v1/strategies/{id}` | GET | Full strategy, assumptions and constraint audit |
-| `/api/v1/strategies/{id}/approve` | POST | User + expected input/strategy version; returns conflict if stale |
-| `/api/v1/actuals/harvests` | POST | Validated harvest/grade records |
-| `/api/v1/actuals/work` | POST | User-confirmed execution state |
+| `/api/v1/strategies/{id}/accept-for-simulation` | POST | Development service actor only; checks phase/modes, expected versions, policy and validation reports; idempotent, 409 if stale; called automatically by the backend |
+| `/api/v1/actuals/harvests` | POST | Validated actual records or explicitly synthetic simulation records, stored separately |
+| `/api/v1/actuals/work` | POST | Service-recorded simulated execution in development; preserve imported historical actuals separately |
 | `/api/v1/outcomes/compare` | GET | Baseline comparison with mode and cohort definitions |
 | `/api/v1/reports/{id}` | GET | Audit-safe export; redact private data appropriately |
 
-Use request IDs, pagination, size limits, validation errors, tenant checks and clear 401/403/409/422/429 handling. Treat uploads as untrusted. Implement optimistic concurrency on approvals. Plan creation must accept an idempotency key so UI retries do not launch duplicate expensive council runs.
+Use request IDs, pagination, size limits, validation errors, tenant checks and clear 401/403/409/422/429 handling. Treat uploads as untrusted. Implement optimistic concurrency and idempotency on automatic acceptance and simulated work; stale versions trigger recomputation without a human approval prompt. Plan creation must accept an idempotency key so UI retries do not launch duplicate expensive council runs.
 
 ### 8.6 Streaming events
 
-Events include `run_started`, `input_warning`, `source_state`, `tool_started`, `tool_completed`, `agent_claim`, `claim_rejected`, `strategy_ready`, `critic_result`, `approval_required`, `run_failed` and `run_completed`. Payloads carry `run_id`, monotonic `sequence`, `occurred_at`, `event_type`, `schema_version` and a typed body. SSE reconnects must resume from the last event ID. A stream disconnection is not a reason to restart the calculation.
+Events include `run_started`, `input_warning`, `source_state`, `tool_started`, `tool_completed`, `agent_claim`, `claim_rejected`, `strategy_ready`, `critic_result`, `acceptance_validating`, `accepted_for_simulation`, `acceptance_invalidated`, `run_failed` and `run_completed`. Payloads carry `run_id`, monotonic `sequence`, `occurred_at`, `event_type`, `schema_version` and a typed body. SSE reconnects must resume from the last event ID. A stream disconnection is not a reason to restart the calculation.
 
 ---
 
@@ -543,11 +564,11 @@ Use authenticated sessions, server-side authorization and tenant-scoped data acc
 
 Treat external documents as untrusted data, not instructions. A paper saying “ignore previous instructions” or requesting access to credentials must have no effect on the runtime. Enforce source/hostname allowlists; block local/private-network and cloud-metadata URLs; validate redirects; bound decompression/file size; sanitize exported CSV cells; reject malicious archive paths. Do not execute formulas or code embedded in imported files.
 
-Require approval before changing recipes, committing planting work, sending external communications, placing orders or modifying contracts. The initial product has no actuator integrations. Keep agronomic safety and food-quality decisions under appropriate human oversight. This is a technical safeguard design, not a legal compliance certification.
+During development, coding agents may version and validate synthetic recipes and the backend may record simulated planting work automatically. Real planting commitments, external communications, purchases, contract changes and actuator integrations remain disabled. Future operational human-approval controls may be tested using fixtures; no human interaction is required to complete this phase. This is a technical safeguard design, not a legal compliance certification.
 
 ### 9.5 Observability and operating cost
 
-Track source freshness, failed imports, quarantine counts, model/run duration, solver status, token usage, tool budgets and approval conflicts. Audit prompts using redacted or hashed references where possible. Do not log credentials or full private datasets by default.
+Track source freshness, failed imports, quarantine counts, model/run duration, solver status, token usage, tool budgets and acceptance/version conflicts. Audit prompts using redacted or hashed references where possible. Do not log credentials or full private datasets by default.
 
 Use cached context/evidence, incremental ingestion and bounded parallelism. Define project performance budgets—for example a cached demo completing within a chosen presentation limit—but benchmark before promising them. Show measured runtime rather than an invented SLA. A failed remote integration must produce a labelled cached/replay state, not a fake “live” badge.
 
@@ -561,21 +582,21 @@ FarmTact is a tactical planning board, not a generic ERP dashboard and not a cas
 
 ### 10.2 Required screens
 
-**Farm setup:** choose growing systems, enter effective capacity, customer commitments, crop recipes and available resources. Import CSVs with a mapping preview. Show missing fields and unresolved crop names before allowing a plan.
+**Farm setup:** load a complete versioned fictional farm automatically for the default demo; optional editing lets a user choose growing systems, enter effective capacity, customer commitments, crop recipes and available resources. Import CSVs with a mapping preview. Show missing fields and unresolved crop names before allowing a plan.
 
 **Data room:** source cards labelled live/cached/synthetic/blocked; last observation and retrieval times; licence/access status; coverage, quality and unresolved mappings. Let a judge see that public data and fictional farm records are different layers.
 
 **Crop library:** ten crop cards with local aliases, harvested part, system compatibility, research references, stage/time-basis warnings and approved-versus-provisional parameters. Clicking a parameter opens its source and applicability. No fake nationally ranked “top ten” badge.
 
-**Strategy room:** user sets the planning horizon and goal. Show specialist evidence briefs, tool activity and two bounded challenge rounds. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
+**Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs, tool activity and two bounded challenge rounds. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
 
-**Tactical board:** bed/rack occupancy timeline, nursery-to-grow-out transitions, harvest windows and customer due dates. Strategy cards compare service, margin, waste, resources and downside—not just a composite score. Selecting a card changes the board. Locked/executed actions remain locked.
+**Tactical board:** bed/rack occupancy timeline, nursery-to-grow-out transitions, harvest windows and customer due dates. Strategy cards compare service, margin, waste, resources and downside—not just a composite score. The automatically accepted strategy populates the board; selecting another card previews it. No approval click is required. Locked/executed actions remain locked.
 
-**Outcome/replay:** enter actual work and harvest; reconcile stock, delivery, rejects and waste; compare the decision against the stated baseline. Explain forecast error versus execution shortfall. Replay event scenarios using fixed seeds and clear synthetic labels.
+**Outcome/replay:** automatically generate labelled simulated work and harvest from fixed-seed fixtures; optional actual-data import remains separate; reconcile stock, delivery, rejects and waste; compare the decision against the stated baseline. Explain forecast error versus execution shortfall. Replay event scenarios using fixed seeds and clear synthetic labels.
 
 ### 10.3 Gamified interaction
 
-A “mission” might be to cover a future buyer requirement while remaining within available beds and a waste threshold. The player chooses among feasible strategies or requests a modification. Event cards represent a confirmed order change, an observed crop delay, source-data loss or a simulated hazard. Every card identifies whether the event is real, imported or synthetic.
+A “mission” might be to cover a future buyer requirement while remaining within available beds and a waste threshold. The development policy selects among feasible strategies automatically; a user can optionally explore alternatives or request a modification. Event cards represent a confirmed order change, an observed crop delay, source-data loss or a simulated hazard. Every card identifies whether the event is real, imported or synthetic.
 
 Earn progress for data completeness, resolving ambiguities, respecting constraints and making a well-documented decision. Keep this learning score separate from farm profitability and measured service. Avoid public farmer leaderboards without consent and comparability controls; otherwise different crop mixes and resources produce unfair comparisons.
 
@@ -585,7 +606,7 @@ After a turn, show which assumptions were wrong and what measurement would impro
 
 Support keyboard navigation, readable contrast, non-colour warning indicators, explicit units, Singapore dates/timezone, SGD defaults and mobile-friendly cards. Chinese/Malay/English crop aliases may appear while the interface remains English initially. Do not translate ambiguous crop names automatically into an unverified taxon.
 
-Provide an accessible table alternative to the timeline. Prefer short evidence cards over animated conversations that the user must wait through. Respect reduced-motion settings. Export a practical sow/transplant/harvest worklist with version and approval status.
+Provide an accessible table alternative to the timeline. Prefer short evidence cards over animated conversations that the user must wait through. Respect reduced-motion settings. Export a practical sow/transplant/harvest worklist with version, modes, automatic-acceptance status and a simulation-only label.
 
 ---
 
@@ -593,7 +614,7 @@ Provide an accessible table alternative to the timeline. Prefer short evidence c
 
 ### 11.1 Coordination principles
 
-The master owns scope, shared interfaces, migrations, dependencies, integration and final acceptance. Specialists work on bounded packages with explicit input/output contracts and file ownership. Run at most four specialists concurrently initially; increase only when tasks are independent and the local environment/budget supports it. No specialist recursively spawns additional agents without master approval.
+The master coding agent owns scope, shared interfaces, migrations, dependencies, integration and development acceptance. No human sign-off is required for these decisions. Specialists work on bounded packages with explicit input/output contracts and file ownership. Run at most three specialists plus the master concurrently, for four running agents total, as required by the latest kickoff. No specialist recursively spawns additional agents without master approval.
 
 Use separate git worktrees or disjoint owned paths. The contract owner proposes schema changes; the master merges them and announces a version before dependents proceed. Specialists must not race to rewrite lockfiles, shared types, global configuration or database migrations. A blocked agent returns a concrete blocker and a minimal proposed resolution rather than fabricating an interface.
 
@@ -611,12 +632,12 @@ Distinguish `specified`, `implemented`, `tested`, `integrated` and `validated on
 | A06 — Global intelligence ingestion | POWER/GFS/ERA5/IMERG; optional FAO/satellite | D11–D23, T06–T07 | Versioned global context; verified exposure mapping; licence/latency restrictions |
 | A07 — Forecast modeling | Demand, maturity, yield, uncertainty | Validated data and recipe contracts | Baselines first, grouped temporal tests, challenger report, no leakage |
 | A08 — Planning/optimization | Candidates, capacity, perishability, scenarios | Forecast/resource contracts | Deterministic baseline + solver, infeasibility explanations and constraint tests |
-| A09 — Runtime agents/API | Council, tools, job lifecycle, approval semantics | Shared schemas and numerical tools | Bounded cited discussion, semantic validation, tenant security and replay mode |
+| A09 — Runtime agents/API | Council, tools, job lifecycle, automatic development acceptance | Shared schemas and numerical tools | Bounded cited discussion, semantic validation, tenant security and replay mode |
 | A10 — Frontend/gamification | Six screens, timeline, strategy comparison | OpenAPI/types, UI fixtures | Real data bindings, accessible states, visible modes, no client-calculated invented forecasts |
 | A11 — QA/scientific/security reviewer | Independent adversarial tests and audit | All outputs | Leakage, taxonomy, units, constraints, citation and security findings; release recommendation |
 | A12 — Integration/release engineer | Containers, CI, smoke/e2e runs, demo runbook | Reviewed feature packages | Reproducible local launch, dependency lock, measured tests and known-issues list |
 
-The master can combine roles on a small team, but must preserve independent review. Research agents deliver facts and gaps; they do not approve their own extracted numerical recipes for production.
+The master can combine roles on a small team, but must preserve independent reviewing-agent assessment. Agent review and deterministic checks satisfy development review requirements without a human reviewer. Research agents deliver facts and gaps; they do not approve their own extracted numerical recipes for production.
 
 ### 11.3 Dependency graph and merge gates
 
@@ -626,9 +647,9 @@ The master can combine roles on a small team, but must preserve independent revi
 
 **Gate G2 — numerical core:** A07 and A08 implement baseline forecasts, candidate schedules and constraints. A10 may build against versioned fixtures. A09 creates the tool facade but does not invent result formats. A11 runs counterexamples before council integration.
 
-**Gate G3 — council/UI:** integrate actual numerical tools and citations; add approvals, event stream and replay. All actual agent calls use DeepSeek. Pass the authenticated text/tool/vision probes and DS-G2/DS-G3 workflow checks. Compare the council with a simpler DeepSeek tool-based or deterministic baseline, not a different runtime LLM provider. Reject simulated dialogues presented as live execution.
+**Gate G3 — council/UI:** integrate actual numerical tools and citations; add automatic development acceptance, simulated execution, event stream and replay. All actual agent calls use DeepSeek. Pass the authenticated text/tool/vision probes and DS-G2/DS-G3 workflow checks. Compare the council with a simpler DeepSeek tool-based or deterministic baseline, not a different runtime LLM provider. Reject simulated dialogues presented as live execution.
 
-**Gate G4 — release:** A12 runs the full workflow from a clean checkout; A11 signs off or records blockers. The master audits every public claim in the pitch against a real source or labelled simulation.
+**Gate G4 — release:** A12 runs the full workflow from a clean checkout; A11 records a development review result or concrete blockers; the master advances passing gates without human sign-off. The master audits every public claim in the pitch against a real source or labelled simulation.
 
 ### 11.4 Specialist handoff report
 
@@ -675,27 +696,27 @@ P0 does not require satellite processing, deep learning or all optional external
 24. Solver timeout, feasible-not-optimal and infeasible states are honestly distinct.
 25. Increasing a binding resource limit cannot produce a false new hard violation due to a unit conversion.
 26. Zero demand, zero capacity, missing prices, absent buyer forecasts and 100% uncertainty all produce defined states.
-27. A partner purchase appears only with an approved quote and feasible lead time.
+27. A simulated partner purchase appears only with a validated fixture quote and feasible lead time; no real purchase is sent.
 28. Proposed margin arithmetic reconciles to modelled quantities and stated costs.
 
 ### 12.3 Agent/security/UX tests
 
 29. Every numeric recommendation references a validated tool field or approved evidence claim.
 30. A malicious instruction embedded in a paper or CSV cannot trigger tools or reveal secrets.
-31. An agent cannot mutate recipes, approve its own plan or bypass tenant authorization.
+31. A runtime council agent cannot mutate recipes, accept its own plan or bypass tenant authorization; only the backend policy may accept a validated plan for simulation in an eligible development tenant. Reject browser/prompt attempts to override phase, modes or service identity, and reject automatic acceptance for operational tenants or `live_advisory`/`live` runs.
 32. Two challenge rounds and budget limits are enforced even when agents disagree.
-33. A stale strategy approval returns a conflict; UI requires replanning or reapproval.
+33. Stale acceptance returns a conflict; the backend invalidates it and replans/revalidates automatically without waiting for a human.
 34. Cross-tenant order, evidence-upload, plan and job access is denied.
 35. Source failure shows cached/stale/blocked status instead of a fabricated live response.
 36. SSE reconnect does not create duplicate planning jobs.
-37. Keyboard-only navigation covers setup, comparison and approval.
+37. The seeded workflow completes acceptance, simulated execution and replanning with zero human clicks; optional setup, comparison and inspection support keyboard-only navigation.
 38. Demo/replay/live labels persist in screenshots, exports and outcome comparisons.
 39. Baseline and council versions can be evaluated on the same input fixture.
 40. Performance/cost claims in the demo are measured or explicitly described as targets.
 
 ### 12.4 Required release evidence
 
-The twenty additional DS-01–DS-20 acceptance cases in `FarmTact_DeepSeek_Runtime_Specification.md` are mandatory. Offline HTTP mocks are contract tests, not successful platform/live agent calls. Authenticated DeepSeek checks without a key must remain blocked, not counted as passing. Release requires account-level text/tool/vision tests and actual application egress review.
+The twenty additional DS-01–DS-20 acceptance cases in `FarmTact_DeepSeek_Runtime_Specification.md` are mandatory. Offline HTTP mocks are contract tests, not successful platform/live agent calls. Authenticated DeepSeek checks without a key must remain blocked, not counted as passing. Development release requires account-level text/tool/vision tests and actual application egress review by code and reviewing agents. Future operational approval and promotion are not part of this gate.
 
 A clean repository must build from documented commands with pinned dependencies. Include unit/contract/e2e test reports, source coverage report, dataset manifest, model evaluation report, solver feasibility report, security/scientific issue list and demo runbook. Real APIs may be tested separately from deterministic CI; never make public endpoints a hidden hard dependency of every unit test.
 
@@ -705,7 +726,7 @@ The production-readiness label stays off until real tenant data, farm-specific r
 
 ## 13. How the master should begin
 
-Read `AGENTS.md`, `MASTER_AGENT_PROMPT.md`, this specification and the research registries. Check the current Codex configuration and available models. Inventory the repository before writing. Spawn the evidence/taxonomy, two crop research and contracts roles within the parallelism cap. Ask them to improve and verify the supplied starting records, not erase access limitations or invent new facts.
+Read available `AGENTS.md` instructions, this specification and any existing master prompt/research registries. Create missing handoff artifacts under Section 0 without waiting for their delivery. Check the current Codex configuration and available models. Inventory the repository before writing. Spawn the evidence/taxonomy, two crop research and contracts roles within the parallelism cap. Ask them to improve and verify the supplied starting records, not erase access limitations or invent new facts.
 
 The first review must answer: Which sources are actually fetched? Which parameters can be used for this specific farm? Which remain literature-only? Which data is synthetic? Which fields prevent a feasible plan? Only then promote the numerical and UI branches.
 
@@ -715,15 +736,15 @@ The desired final product is not “agents confidently discussing vegetables.”
 
 ## 14. References and accompanying files
 
-Source IDs in this specification resolve in `research/source_registry.json` and `research/RESEARCH_REVIEW.md`. The latter contains publication titles, DOIs, access status and limitations. `research/dataset_registry.json` records source priorities, costs/access distinctions and ingestion traps. `research/strategy_catalogue.json` contains all 38 proposed analytical/agent strategies and their evaluation criteria.
+Source IDs in this specification are listed in the existing root-level `RESEARCH_REVIEW.md`, which contains publication titles, DOIs, access status and limitations. Populate the planned `research/source_registry.json` from those records; preserve a single canonical research review when organizing the repository. `research/dataset_registry.json` records source priorities, costs/access distinctions and ingestion traps. `research/strategy_catalogue.json` contains all 38 proposed analytical/agent strategies and their evaluation criteria.
 
 The handoff does not redistribute the referenced third-party papers, imagery or large datasets. Live endpoint access and file-level licences must be checked during the build. The supplied JSON/CSV tables are curated metadata and design artefacts; the synthetic generator creates test records only.
 
 
 ## 15. DeepSeek implementation handoff (mandatory v1.1 amendment)
 
-Read `FarmTact_DeepSeek_Runtime_Specification.md` and `docs/runbooks/deepseek_trial_and_cutover.md`. The package now contains a server-only gateway seed, a thirteen-role DeepSeek route manifest, offline provider contract tests and an opt-in authenticated trial. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
+Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepseek_trial_and_cutover.md` if absent and keep it consistent with this development policy. Implement the referenced server-only gateway seed, thirteen-role DeepSeek route manifest, offline provider contract tests and authenticated trial if absent. These artifacts are not present in the current documentation-only baseline. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
 
-Start with `python -m pytest tests/deepseek -q`, then—when the key has been injected—`python scripts/deepseek_trial.py --live --with-council` in test execution mode. The second command makes real billable calls; it does not exist merely as a stub. It tests provider compatibility and a toy council, not the completed web app. Its full workflow uses synthetic input and preserves the impossible-lead-time counterexample.
+Once those artifacts exist, run `python -m pytest tests/deepseek -q`, then automatically within the configured development budget—when the key is available—`python scripts/deepseek_trial.py --live --with-council` in test execution mode. The second command must make real billable calls within recorded request/token limits; no additional human confirmation is required for this development trial. It tests provider compatibility and a toy council, not the completed web app. Its full workflow uses synthetic input and preserves the impossible-lead-time counterexample.
 
-A09 owns `runtime/` and `config/deepseek_runtime.json` until these are integrated into the application package layout. A12 owns trial/runbook/release execution; A11 independently extends `tests/deepseek/`. Coordinate shared edits through the master. Authenticated success must be established in the target environment: no key was supplied during this amendment, and no actual DeepSeek inference is claimed by the bundled report.
+A09 owns `runtime/` and `config/deepseek_runtime.json` until these are integrated into the application package layout. A12 owns trial/runbook/release execution; A11 independently extends `tests/deepseek/`. Coordinate shared edits through the master. Authenticated success must be established in the target environment. This documentation rewrite makes no inference calls and creates no trial report; record the actual results when implementation and trials run.

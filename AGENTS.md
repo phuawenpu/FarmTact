@@ -1,0 +1,5 @@
+# FarmTact development
+
+Read CODEX_START_PROMPT.md, MASTER_AGENT_PROMPT.md and the v1.2 build/runtime specifications. User's autonomous-development policy controls: passing technical checks advance without human sign-off; actual farm operations are disabled. Use real Codex subagents for disjoint bounded packages, at most three specialists plus master concurrently. Requested build models: master gpt-6-astra; specialist gpt-5.6-sol if offered by installed harness. No silent replacement or recursive delegation.
+
+Follow docs/execution-plan.md ownership. Root owns contracts, root dependency files, migrations and integration. Use the Sprite skill for services/dependencies/checkpoints. Never serve secrets or arbitrary filesystem paths. Supplied process credentials authenticate normal GitHub/Fly CLIs; DeepSeek environment credential authenticates official DeepSeek calls only. Never print secrets. Runtime/helper/evaluation inference must use the allowlisted DeepSeek gateway; numerical calculations are local.

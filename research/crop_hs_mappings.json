@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "nomenclature_context": "SingStat T010002 descriptions observed 2026-09-08; formal nomenclature version was not exposed by the bounded table response and remains unresolved.",
+  "policy": "Mappings apply only to the provider description and product scope shown. Broad codes are not crop-specific demand series.",
+  "mappings": [
+    {"crop_id": "lettuce", "code": "07051100", "description": "CABBAGE LETTUCE FRESH OR CHILLED", "status": "approved_description_match", "scope": "fresh_or_chilled_cabbage_lettuce_only", "confidence": "high", "review_basis": "official_provider_description", "limitations": ["does not cover other lettuce"]},
+    {"crop_id": "lettuce", "code": "07051900", "description": "OTHER LETTUCE FRESH OR CHILLED", "status": "approved_description_match", "scope": "fresh_or_chilled_other_lettuce_only", "confidence": "high", "review_basis": "official_provider_description", "limitations": ["not cultivar-specific"]},
+    {"crop_id": "mustard_greens", "code": "07049020", "description": "CHINESE MUSTARD FRESH OR CHILLED", "status": "approved_description_match", "scope": "fresh_or_chilled_chinese_mustard_only", "confidence": "medium", "review_basis": "official_provider_description", "limitations": ["provider response does not identify cultivar"]},
+    {"crop_id": null, "candidate_crop_ids": ["bayam", "kangkong", "malabar_spinach"], "code": "07097000", "description": "SPINACH NEW ZEALAND SPINACH & ORACHE SPINACH FRESH OR CHILLED", "status": "unresolved", "scope": "fresh_or_chilled_spinach_group", "confidence": "none", "review_basis": "name_collision", "limitations": ["cannot assign a broad spinach code to bayam, kangkong or Basella"]},
+    {"crop_id": null, "candidate_crop_ids": ["caixin", "pak_choi", "kailan", "kale", "mustard_greens"], "code": "07049030", "description": "OTHER CABBAGES FRESH OR CHILLED", "status": "unresolved", "scope": "broad_fresh_or_chilled_cabbage_group", "confidence": "none", "review_basis": "category_too_broad", "limitations": ["cannot infer a crop-level series"]},
+    {"crop_id": null, "candidate_crop_ids": ["caixin", "pak_choi", "kailan", "bayam", "kangkong", "kale", "malabar_spinach", "sweet_potato_leaves"], "code": "07099990", "description": "OTHER VEGETABLES FRESH OR CHILLED", "status": "unresolved", "scope": "broad_other_vegetables_group", "confidence": "none", "review_basis": "category_too_broad", "limitations": ["cannot infer any named crop series"]}
+  ]
+}

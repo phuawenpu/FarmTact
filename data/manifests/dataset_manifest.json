@@ -1,0 +1,359 @@
+{
+  "artifacts": {
+    "trade_observations": {
+      "path": "normalized/trade_observations.jsonl",
+      "row_count": 15,
+      "sha256": "fd42334e81037b873df205415abfd6f9b30dace7563317081e91238867cc1102"
+    },
+    "weather_forecasts": {
+      "path": "normalized/weather_forecasts.jsonl",
+      "row_count": 40,
+      "sha256": "3d6d1810187ffd32b04955e3b6129d5bda30969f07acdfe8636ecc4cb4b2b57e"
+    },
+    "weather_observations": {
+      "path": "normalized/weather_observations.jsonl",
+      "row_count": 145,
+      "sha256": "cda7eba38eec39c41b8849e6b57ec70da0de07e93c389bd991e07211719d27e4"
+    }
+  },
+  "built_at": "2026-09-08T08:23:56.436644+00:00",
+  "dataset_id": "a6ada7a03c2aca0975580daba9ad997eda9f8e80bdd20f8d7d6c29e22de80f2a",
+  "execution_mode": "live_public_refresh",
+  "failures": [],
+  "quality_status": "passed",
+  "rebuild_command": "python scripts/build_dataset.py --data-dir data",
+  "schema_version": "1.0.0",
+  "source_snapshots": [
+    {
+      "byte_count": 12374,
+      "http_status": 200,
+      "licence_state": "verified_singapore_open_data_licence",
+      "media_type": "application/json",
+      "query": {},
+      "relative_path": "raw/d01/3135519ebd628b7c4f6913c581d1f001107e255ccec9105dd4fdb18493f5f17f.json",
+      "request_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall",
+      "response_headers": {
+        "content-type": "application/json",
+        "date": "Tue, 08 Sep 2026 08:23:57 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "3135519ebd628b7c4f6913c581d1f001107e255ccec9105dd4fdb18493f5f17f",
+      "snapshot_id": "d01-3135519ebd628b7c4f69",
+      "source_id": "D01"
+    },
+    {
+      "byte_count": 2684,
+      "http_status": 200,
+      "licence_state": "verified_singapore_open_data_licence",
+      "media_type": "application/json",
+      "query": {},
+      "relative_path": "raw/d02/43c6d519e5d9ee0c72fe39b85e2d559c6e317ecb3e3f6580ebeec97489622f4c.json",
+      "request_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature",
+      "response_headers": {
+        "content-type": "application/json",
+        "date": "Tue, 08 Sep 2026 08:23:59 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "43c6d519e5d9ee0c72fe39b85e2d559c6e317ecb3e3f6580ebeec97489622f4c",
+      "snapshot_id": "d02-43c6d519e5d9ee0c72fe",
+      "source_id": "D02"
+    },
+    {
+      "byte_count": 2698,
+      "http_status": 200,
+      "licence_state": "verified_singapore_open_data_licence",
+      "media_type": "application/json",
+      "query": {},
+      "relative_path": "raw/d03/a9ed681709ae031454f551c3859aadae62ec0266d317d14914cf55540b7a2cd0.json",
+      "request_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity",
+      "response_headers": {
+        "content-type": "application/json",
+        "date": "Tue, 08 Sep 2026 08:24:00 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "a9ed681709ae031454f551c3859aadae62ec0266d317d14914cf55540b7a2cd0",
+      "snapshot_id": "d03-a9ed681709ae031454f5",
+      "source_id": "D03"
+    },
+    {
+      "byte_count": 1698,
+      "http_status": 200,
+      "licence_state": "verified_singapore_open_data_licence",
+      "media_type": "application/json",
+      "query": {},
+      "relative_path": "raw/d04/2191b56daed3754fd469d2732f8ae45e16c0ffd331594ea1805899fa1c961578.json",
+      "request_url": "https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast",
+      "response_headers": {
+        "content-type": "application/json",
+        "date": "Tue, 08 Sep 2026 08:24:00 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "2191b56daed3754fd469d2732f8ae45e16c0ffd331594ea1805899fa1c961578",
+      "snapshot_id": "d04-2191b56daed3754fd469",
+      "source_id": "D04"
+    },
+    {
+      "byte_count": 1478,
+      "http_status": 200,
+      "licence_state": "verified_singapore_open_data_licence",
+      "media_type": "application/json",
+      "query": {},
+      "relative_path": "raw/d05/fd41e1884567b5cd09e45639adb6f596fb95d026e553cb8bce9752a37596863a.json",
+      "request_url": "https://api-open.data.gov.sg/v2/real-time/api/four-day-outlook",
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 08 Sep 2026 08:24:00 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "fd41e1884567b5cd09e45639adb6f596fb95d026e553cb8bce9752a37596863a",
+      "snapshot_id": "d05-fd41e1884567b5cd09e4",
+      "source_id": "D05"
+    },
+    {
+      "byte_count": 795,
+      "http_status": 200,
+      "licence_state": "not_verified_for_redistribution",
+      "media_type": "application/json",
+      "query": {
+        "timeFilter": "2026 Sep"
+      },
+      "relative_path": "raw/d06/5323e93b39803903ca53c26010f47061bc056cd24424c65e2a2b949952bb436a.json",
+      "request_url": "https://tablebuilder.singstat.gov.sg/api/table/tabledata/T010002",
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 08 Sep 2026 08:24:00 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "5323e93b39803903ca53c26010f47061bc056cd24424c65e2a2b949952bb436a",
+      "snapshot_id": "d06-5323e93b39803903ca53",
+      "source_id": "D06"
+    },
+    {
+      "byte_count": 872012,
+      "http_status": 200,
+      "licence_state": "not_verified_for_redistribution",
+      "media_type": "application/json",
+      "query": {
+        "timeFilter": "2026 Jul"
+      },
+      "relative_path": "raw/d06/aec77c6136dd523bc807fc26b18798f9a85a02f6ad88259cdebcb1bc96abe3bf.json",
+      "request_url": "https://tablebuilder.singstat.gov.sg/api/table/tabledata/T010002",
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Tue, 08 Sep 2026 08:24:01 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "aec77c6136dd523bc807fc26b18798f9a85a02f6ad88259cdebcb1bc96abe3bf",
+      "snapshot_id": "d06-aec77c6136dd523bc807",
+      "source_id": "D06"
+    },
+    {
+      "byte_count": 977,
+      "http_status": 200,
+      "licence_state": "terms_not_reviewed_for_redistribution",
+      "media_type": "application/json",
+      "query": {
+        "community": "AG",
+        "end": "20260809",
+        "format": "JSON",
+        "latitude": "1.3521",
+        "longitude": "103.8198",
+        "parameters": "T2M,RH2M,PRECTOTCORR",
+        "start": "20260803",
+        "time-standard": "UTC"
+      },
+      "relative_path": "raw/d11/73655d52a24357bcca7bf2460bd07ba4d27a90d3bd5481b271a48a73032a7d78.json",
+      "request_url": "https://power.larc.nasa.gov/api/temporal/daily/point",
+      "response_headers": {
+        "content-type": "application/json",
+        "date": "Tue, 08 Sep 2026 08:24:02 GMT"
+      },
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "sha256": "73655d52a24357bcca7bf2460bd07ba4d27a90d3bd5481b271a48a73032a7d78",
+      "snapshot_id": "d11-73655d52a24357bcca7b",
+      "source_id": "D11"
+    }
+  ],
+  "sources": [
+    {
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 88,
+        "station_count": 88
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "fresh",
+      "freshness_age_minutes": 8.94,
+      "kind": "weather_observation",
+      "licence_state": "verified_singapore_open_data_licence",
+      "provider": "NEA / data.gov.sg",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d01-3135519ebd628b7c4f69",
+      "source_id": "D01",
+      "source_time": "2026-09-08T16:15:00+08:00",
+      "status": "validated",
+      "unit": "mm"
+    },
+    {
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 18,
+        "station_count": 18
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "fresh",
+      "freshness_age_minutes": 5.94,
+      "kind": "weather_observation",
+      "licence_state": "verified_singapore_open_data_licence",
+      "provider": "NEA / data.gov.sg",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d02-43c6d519e5d9ee0c72fe",
+      "source_id": "D02",
+      "source_time": "2026-09-08T16:18:00+08:00",
+      "status": "validated",
+      "unit": "degC"
+    },
+    {
+      "coverage": {
+        "geography": "Singapore stations",
+        "interval_minutes": 5,
+        "row_count": 18,
+        "station_count": 18
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "fresh",
+      "freshness_age_minutes": 5.94,
+      "kind": "weather_observation",
+      "licence_state": "verified_singapore_open_data_licence",
+      "provider": "NEA / data.gov.sg",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d03-a9ed681709ae031454f5",
+      "source_id": "D03",
+      "source_time": "2026-09-08T16:18:00+08:00",
+      "status": "validated",
+      "unit": "%"
+    },
+    {
+      "coverage": {
+        "location_count": 6,
+        "row_count": 20,
+        "valid_from": "2026-09-08T12:00:00+08:00",
+        "valid_to": "2026-09-09T12:00:00+08:00"
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "fresh",
+      "freshness_age_minutes": 282.89,
+      "kind": "weather_forecast",
+      "licence_state": "verified_singapore_open_data_licence",
+      "provider": "NEA / data.gov.sg",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d04-2191b56daed3754fd469",
+      "source_id": "D04",
+      "source_time": "2026-09-08T11:41:03+08:00",
+      "status": "validated",
+      "unit": [
+        "%",
+        "degC"
+      ]
+    },
+    {
+      "coverage": {
+        "day_count": 4,
+        "row_count": 20,
+        "valid_from": "2026-09-09T00:00:00+08:00",
+        "valid_to": "2026-09-12T23:59:59+08:00"
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "fresh",
+      "freshness_age_minutes": 412.37,
+      "kind": "weather_forecast",
+      "licence_state": "verified_singapore_open_data_licence",
+      "provider": "NEA / data.gov.sg",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d05-fd41e1884567b5cd09e4",
+      "source_id": "D05",
+      "source_time": "2026-09-08T09:31:34+08:00",
+      "status": "validated",
+      "unit": [
+        "%",
+        "degC"
+      ]
+    },
+    {
+      "coverage": {
+        "frequency": "Monthly",
+        "invalid_selected_quantities": 0,
+        "is_more": true,
+        "next_cursor": "eyJSb3dJZCI6MjM3ODMyOTh9",
+        "provider_rows": 5000,
+        "requested_period_end": "2026 Jul",
+        "requested_period_start": "2020 Jan",
+        "row_count": 15,
+        "selected_rows": 15,
+        "table_id": "T010002",
+        "title": "Merchandise Trade Volume by Commodity and Market, Monthly"
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "unknown",
+      "freshness_age_minutes": null,
+      "kind": "trade_observation",
+      "licence_state": "not_verified_for_redistribution",
+      "provider": "Singapore Department of Statistics",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d06-aec77c6136dd523bc807",
+      "source_id": "D06",
+      "source_time": null,
+      "status": "validated",
+      "unit": [
+        "tonne"
+      ]
+    },
+    {
+      "coverage": {
+        "attempted_periods": [
+          {
+            "end": "2026-08-09",
+            "start": "2026-08-03"
+          }
+        ],
+        "day_count": 7,
+        "point": {
+          "latitude": 1.3521,
+          "longitude": 103.8198
+        },
+        "row_count": 21,
+        "selected_period": {
+          "end": "2026-08-09",
+          "start": "2026-08-03"
+        },
+        "time_standard": "UTC"
+      },
+      "data_mode": "real_public",
+      "failure_reason": null,
+      "freshness": "unknown",
+      "freshness_age_minutes": 43703.94,
+      "kind": "historical_climate",
+      "licence_state": "terms_not_reviewed_for_redistribution",
+      "provider": "NASA POWER",
+      "retrieved_at": "2026-09-08T08:23:56.436644+00:00",
+      "snapshot_id": "d11-73655d52a24357bcca7b",
+      "source_id": "D11",
+      "source_time": "2026-08-09T00:00:00+00:00",
+      "status": "validated",
+      "unit": [
+        "%",
+        "C",
+        "mm/day"
+      ]
+    }
+  ],
+  "transform_version": "farmtact-public-context-1.0.0"
+}

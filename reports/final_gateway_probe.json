@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "Actual authenticated JSON through final bounded streaming gateway and process egress policy",
+  "request_ceiling": 1,
+  "output_reservation": 128,
+  "validated_content": {
+    "status": "farmtact_verified"
+  },
+  "audit": {
+    "provider": "deepseek",
+    "requested_model": "deepseek-v4-flash",
+    "returned_model": "deepseek-v4-flash",
+    "role": "demand_analyst",
+    "capability": "text",
+    "execution_mode": "test",
+    "data_mode": "synthetic_demo",
+    "inference_origin": "deepseek_api",
+    "input_sha256": "1aed4d71515095a259476706d200e5373695c239c017e7fb6aca3e1b2fb398cf",
+    "request_id": null,
+    "latency_ms": 1136,
+    "usage": {
+      "prompt_tokens": 38,
+      "completion_tokens": 9,
+      "total_tokens": 47,
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 38,
+      "reasoning_tokens": null
+    }
+  }
+}

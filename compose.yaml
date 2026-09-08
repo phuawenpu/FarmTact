@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: farmtact
+      POSTGRES_DB: farmtact
+      POSTGRES_PASSWORD: ${FARMTACT_DB_PASSWORD:?Run python scripts/bootstrap_env.py}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U farmtact -d farmtact"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  web:
+    build: .
+    environment:
+      FARMTACT_DATABASE_URL: postgresql+psycopg://farmtact:${FARMTACT_DB_PASSWORD}@db/farmtact
+      FARMTACT_EXECUTION_MODE: test
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data/runtime/public_context.json:/app/data/runtime/public_context.json:ro
+volumes:
+  pgdata:

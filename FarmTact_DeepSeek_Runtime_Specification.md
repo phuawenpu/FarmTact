@@ -1,8 +1,16 @@
 # FarmTact — DeepSeek-only runtime and test specification
 
-**Version 1.1 · Documentation checked: 8 September 2026 · Applies to all application LLM execution**
+**Version 1.2 · Autonomous development phase · Provider documentation review date retained: 8 September 2026 · Applies to all application LLM execution**
 
-This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master prompt, all specialist briefs and deployment acceptance criteria. On runtime-provider questions, this amendment takes precedence over version 1.0. The agricultural evidence, ten-crop scope, data provenance, forecasting, optimization and human-approval requirements remain in force.
+This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master prompt, all specialist briefs and deployment acceptance criteria. On runtime-provider questions, this amendment takes precedence over earlier versions. Section 0 of the build specification controls the current autonomous-development phase: no human approval is required for implementation, testing, independent agent review or development acceptance. Agricultural evidence, ten-crop scope, data provenance, forecasting, optimization and security requirements remain in force.
+
+## 0. Autonomous development execution
+
+All review, route registration, configuration, schema acceptance, trial execution and development promotion in this document can be completed by coding agents and technical checks. Terms such as “approved” and “reviewed” do not imply a human checkpoint during this phase. Record review results and apply passing changes automatically within Section 0 of the build specification.
+
+The backend accepts only eligible development plans as `ACCEPTED_FOR_SIMULATION`, using a service identity and versioned policy after numerical, evidence, scope and critic checks pass. It never invents a human actor or approval. Keep `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` for actual DeepSeek calls; explicit replay and contract-test modes remain distinct. The default data is `synthetic_demo`; already-authorized historical inputs may be used in `historical_replay` with separate simulated outcomes. Real farm execution and operational `live` promotion remain disabled.
+
+Use supplied development credentials solely for the bounded official DeepSeek calls specified here. Record finite request, token, concurrency and wall-clock limits before execution; preserve the sixteen-request ceiling for the full trial and do not raise budgets automatically to bypass failures. If a required capability or credential is unavailable, record that dependency as blocked and continue work that does not need it. A synthetic fixture or deterministic baseline must never be reported as successful live inference.
 
 ## 1. The provider boundary
 
@@ -23,12 +31,12 @@ DeepSeek's current quick-start lists `deepseek-v4-flash`, `deepseek-v4-pro` and 
 | Text generation, discussion, extraction and function calls | `POST https://api.deepseek.com/chat/completions` | An approved Flash or Pro alias |
 | Farm images, scanned-page images, charts and rendered geospatial images | **The same** `POST https://api.deepseek.com/chat/completions` | **`deepseek-v4-flash-vision-exp`** |
 | Account model discovery | `GET https://api.deepseek.com/models` | Bearer authentication; model list is not proof of modality quality |
-| Optional future reusable-image upload | `POST https://api.deepseek.com/files` | Separate permission, lifecycle and integration tests |
+| Optional future reusable-image upload | `POST https://api.deepseek.com/files` | Separate capability configuration, lifecycle and integration tests; synthetic assets only by default in development |
 | Optional future strict tool schema mode | `POST https://api.deepseek.com/beta/chat/completions` | Separate reviewed beta adapter; disabled in this seed |
 
 There is no FarmTact dependency on an invented `/vision` or `/images/analyze` path. Our chosen wire format is **Chat Completions**, even when using a compatibility SDK. DeepSeek also documents other API formats; supporting them is unnecessary for this vertical slice and would add a second compatibility surface. [DS03, DS04, DS06, DS08]
 
-The seed implementation uses `httpx` directly. Using the OpenAI Python SDK as a transport library would not itself mean using OpenAI inference, but it is not necessary here. Do not initialize an SDK with a default provider URL, inherit a developer's OpenAI key, or activate framework tracing/exporters that send application content to another LLM vendor.
+Implement the development gateway with `httpx` directly. Using the OpenAI Python SDK as a transport library would not itself mean using OpenAI inference, but it is not necessary here. Do not initialize an SDK with a default provider URL, inherit a developer's OpenAI key, or activate framework tracing/exporters that send application content to another LLM vendor.
 
 ### 2.1 Capability routing
 
@@ -81,15 +89,15 @@ A field photograph can support a tentative visual observation. It does not indep
 
 For satellite work, deterministic geospatial tools calculate masks, georeferencing, indices and regional summaries. The visual helper may explain a rendered map, not replace that computation. Preserve acquisition date, processing version, cloud validity and pixel support. A render of a flood or vegetation anomaly is not a validated percentage yield loss.
 
-The official Files API is optional. If adopted, use its documented image upload contract, explicit expiry, tenant-to-file mappings, and deletion/cleanup tests. The documentation says omitting expiry keeps uploaded files permanently; do not copy that default into FarmTact. Inline encoding should not be described as a guarantee of zero provider retention. Review service/privacy terms and obtain authorization before transmitting private farm assets. [DS08]
+The official Files API is optional. If adopted, use its documented image upload contract, explicit expiry, tenant-to-file mappings, and deletion/cleanup tests. The documentation says omitting expiry keeps uploaded files permanently; do not copy that default into FarmTact. Inline encoding should not be described as a guarantee of zero provider retention. Coding agents review service/privacy terms as a technical task. Use synthetic or otherwise already-authorized assets for development probes without a confirmation step; exclude private assets lacking existing transmission authorization and continue with synthetic fixtures. [DS08]
 
 ## 4. Tool calls, structured output and reasoning
 
-The application—not the model—executes approved tools. Parse returned function arguments, validate a local schema, verify tenant and role permissions, and then call an allowlisted implementation. Preserve tool-call identifiers when returning results. No tool can run arbitrary shell commands, execute model-written SQL, approve a plan, modify recipes or make purchases. DeepSeek documents tools in both thinking and non-thinking workflows. [DS06]
+The application—not the model—executes approved tools. Parse returned function arguments, validate a local schema, verify tenant and role permissions, and then call an allowlisted implementation. Preserve tool-call identifiers when returning results. No runtime LLM tool can run arbitrary shell commands, execute model-written SQL, accept a plan, modify recipes or make purchases. The backend independently applies the automatic-development acceptance policy and records simulated work; it is not a council tool and does not need human approval. DeepSeek documents tools in both thinking and non-thinking workflows. [DS06]
 
 For the stable endpoint, use `response_format={"type":"json_object"}` plus an explicit JSON instruction and a server-side Pydantic/JSON Schema validator. JSON syntax is not the same as conformity to a FarmTact schema or scientific truth. Reject empty, truncated, malformed and semantically invalid output. Do not copy OpenAI-specific `json_schema` settings into this interface without separate documented support. [DS04, DS07]
 
-Strict function schemas are a separate beta feature. They require the beta URL and supported schema subset. The supplied gateway rejects `strict=true` rather than silently claiming enforcement on the standard URL. An optional later adapter needs its own allowlisted route, schema normalization and authenticated compatibility tests; it must never weaken business validation. [DS06]
+Strict function schemas are a separate beta feature. They require the beta URL and supported schema subset. The development gateway must reject `strict=true` rather than silently claiming enforcement on the standard URL. An optional later adapter needs its own allowlisted route, schema normalization and authenticated compatibility tests; it must never weaken business validation. [DS06]
 
 Set thinking mode explicitly rather than relying on provider defaults. Begin with disabled thinking for short extraction and image transport tests; use enabled thinking with a declared effort for deeper council work. The current API lists `low`, `high` and `max` effort values. These are provider controls, not forecast confidence scores. [DS04]
 
@@ -123,20 +131,20 @@ Distinguish **data mode** from **execution mode**:
 |---|---|
 | `synthetic_demo` | Fictional orders/crops; no farm-performance claims |
 | `historical_replay` | Historical inputs with an explicit decision cutoff |
-| `live_advisory` | Current farm inputs; human approval still required |
+| `live_advisory` | Future operational mode; unavailable to automatic development acceptance |
 
 | Execution mode | Meaning |
 |---|---|
-| `test` | Every actual LLM request goes to DeepSeek; can use synthetic inputs |
-| `live` | Every actual LLM request goes to DeepSeek; release gates required |
+| `test` | Default development mode; every actual LLM request goes to DeepSeek; automatic acceptance is simulation-only |
+| `live` | Future operational execution; disabled in the current development phase; separate operational release requirements apply |
 | `replay` | No new inference; clearly labelled stored events or deterministic outputs |
 | `contract_test` | Developer-only in-process HTTP mocks; not an interactive platform agent mode |
 
-An API key's presence must not silently change either mode. Replaying a stored DeepSeek response is not a fresh DeepSeek call. GPT-authored mock conversation is a **development fixture**, not a DeepSeek replay. Persist `execution_mode`, `data_mode`, `provider`, `requested_model`, `returned_model`, prompt/tool-schema version, input hashes and `inference_origin` on decision records and exports.
+An API key's presence must not silently change either mode. Replaying a stored DeepSeek response is not a fresh DeepSeek call. GPT-authored mock conversation is a **development fixture**, not a DeepSeek replay. Persist `development_phase`, `decision_policy`, acceptance policy/version and actor, `execution_mode`, `data_mode`, `provider`, `requested_model`, `returned_model`, prompt/tool-schema version, input hashes and `inference_origin` on decision records and exports.
 
 ### 5.1 Defense in depth
 
-The seed permits only the exact direct HTTPS origin and the reviewed model list. It disables redirects and inherited HTTP proxy settings; it has no fallback client. Production must also enforce network policy: the inference service can reach only approved DeepSeek endpoints, while ingestion services get separate data-source permissions. A Python allowlist is not a substitute for deployment egress controls.
+The development gateway must permit only the exact direct HTTPS origin and the reviewed model list, disable redirects and inherited HTTP proxy settings, and have no fallback client. Production must also enforce network policy: the inference service can reach only approved DeepSeek endpoints, while ingestion services get separate data-source permissions. A Python allowlist is not a substitute for deployment egress controls.
 
 Exclude `.codex/`, developer provider credentials and developer-only tools from runtime images. Do not add provider auto-detection. New runtime helper prompts or evaluation jobs must be included in the route registry and provider-leak audit. Scan bundles/configuration and exercise failures at runtime; a string scan alone cannot establish correct egress.
 
@@ -144,11 +152,11 @@ Use opaque tenant/user isolation identifiers generated by the server, never buye
 
 ### 5.2 Failures and cost
 
-Authentication or balance failures become a clear blocked state, not a provider switch. Invalid requests need a code/configuration correction. Rate limits and temporary service errors may get bounded backoff with jitter **only to DeepSeek**, under the same run budget. Do not blindly retry an interrupted billed generation or a business write. The seed deliberately performs no automatic retries. [DS09]
+Authentication or balance failures become a clear blocked state, not a provider switch. Invalid requests need a code/configuration correction. Rate limits and temporary service errors may get bounded backoff with jitter **only to DeepSeek**, under the same run budget. Do not blindly retry an interrupted billed generation or a business write. The initial trial must perform no automatic retries. [DS09]
 
-Stop on unavailable required models, incomplete completions, unknown finish reasons, schema errors or unexpected response models. The farmer may explicitly use a deterministic baseline without agents, but it must be labelled as such. Never manufacture an agent conversation to conceal an outage.
+Stop on unavailable required models, incomplete completions, unknown finish reasons, schema errors or unexpected response models. The development backend may automatically use an independently validated deterministic baseline without agents, labelled as such, if the run policy permits it. Record the failed DeepSeek capability separately; baseline completion cannot pass authenticated council gates. Never manufacture an agent conversation to conceal an outage.
 
-Meter input, output, cached-input and reasoning usage where returned. Load any USD cost schedule from an operator-approved, date-stamped source; do not hard-code a remembered price. The pricing page did not expose a dependable price table in this retrieval, so this amendment makes no numerical pricing claim. The trial enforces request and reserved-output-token ceilings, not an independently verified USD billing cap. Production requires a conservative total-cost reservation and a hard wall-clock cancellation mechanism.
+Meter input, output, cached-input and reasoning usage where returned. For development, coding agents verify and record any USD cost schedule from official, date-stamped provider documentation without waiting for operator sign-off; do not hard-code a remembered price. The pricing page did not expose a dependable price table in this retrieval, so this amendment makes no numerical pricing claim. The trial enforces request and reserved-output-token ceilings, not an independently verified USD billing cap. Production requires a conservative total-cost reservation and a hard wall-clock cancellation mechanism.
 
 ## 6. Implement and test DeepSeek before integrating the council
 
@@ -156,11 +164,11 @@ Meter input, output, cached-input and reasoning usage where returned. Load any U
 
 A09 and A12 inspect the existing repo for provider SDK defaults, hosted tracing, third-party OCR/vision, cloud embeddings, LLM evaluation services and runtime GPT settings. Build the shared gateway, remove runtime alternate-provider credentials and publish a route/capability manifest. A11 runs negative tests against endpoint overrides, missing keys, unknown roles/models and prompt-selected providers.
 
-**Included implementation:** `runtime/deepseek_gateway.py`, synthetic image fixture, and `tests/deepseek/test_gateway.py`. The offline tests use `httpx.MockTransport` and exercise wire-format/error handling only; they do not test DeepSeek's actual service or model quality.
+**Required implementation:** `runtime/deepseek_gateway.py`, synthetic image fixture, and `tests/deepseek/test_gateway.py`. These files are absent from the current documentation-only checkout; create them autonomously before executing the trial. The offline tests must use `httpx.MockTransport` and exercise wire-format/error handling only; they do not test DeepSeek's actual service or model quality.
 
 ### DS-G1 — Authenticated capability trial
 
-Run `scripts/deepseek_trial.py --live` with an environment key and `FARMTACT_EXECUTION_MODE=test`. This performs model discovery, Flash/Pro JSON probes, an actual thinking/tool-result round trip, an actual image-reading request and a streaming/usage probe. The image contains a batch identifier absent from the text prompt, so the test verifies image input rather than a model repeating a supplied textual answer.
+Once implemented, run `scripts/deepseek_trial.py --live` automatically with the supplied environment key and `FARMTACT_EXECUTION_MODE=test`, under the recorded development request/token budget. No human confirmation is required. Here `--live` means real authenticated HTTP calls; it does not select `execution_mode=live` or authorize farm operations. This performs model discovery, Flash/Pro JSON probes, an actual thinking/tool-result round trip, an actual image-reading request and a streaming/usage probe. The image contains a batch identifier absent from the text prompt, so the test verifies image input rather than a model repeating a supplied textual answer.
 
 The default full probe uses at most seven HTTP requests: model listing, two text calls, two calls for tool continuation, one vision call and one stream. No automatic retry is enabled. A failure stops the sequence and is reported honestly. Missing credentials are `BLOCKED` with zero calls and a nonzero exit code, not `SKIP` disguised as a passing release check.
 
@@ -168,7 +176,7 @@ Require both a discovered model and a successful content-level probe. An experim
 
 ### DS-G2 — Actual DeepSeek council on synthetic farm inputs
 
-Run the same script with `--with-council`. Six actual role calls discuss a labelled toy Singapore caixin snapshot after the capability probes. It presents a seven-day delivery window and a 35-day new-crop lead time; agents must not claim that new sowing can solve this delivery. The test validates evidence references and human-approval requirements.
+Run the same script with `--with-council`. Six actual role calls discuss a labelled toy Singapore caixin snapshot after the capability probes. It presents a seven-day delivery window and a 35-day new-crop lead time; agents must not claim that new sowing can solve this delivery. The test validates evidence references, automatic simulation acceptance after backend checks, and rejection of real operational execution. It must complete without a human approval event.
 
 This option adds six model calls, taking the successful script to thirteen HTTP requests, within its sixteen-request ceiling. It is a transport/workflow seed, not the finished optimizer, full agricultural council evaluation or evidence of production benefit. The complete app must subsequently run its real forecast and optimization tools rather than relying on this toy snapshot.
 
@@ -178,11 +186,11 @@ Once the app exists, replay the same frozen farm data through the deterministic 
 
 Add a real image-to-observation-to-text-council workflow; verify that the underlying image never reaches a text model. Introduce a weather or order change and test replanning, including the impossible-near-term-sowing counterexample. Record actual elapsed time and provider usage, not promised performance.
 
-Promotion requires authenticated core and vision probes, the full app's read-only shadow run, independent review, zero unexplained non-DeepSeek LLM egress and a deliberate operator setting change to `live`. Do not require all application development to stop while credentials are unavailable, but keep runtime-verified/release-ready claims blocked.
+Development promotion requires authenticated core and vision probes, the full app's read-only shadow run, independent agent review and zero unexplained non-DeepSeek LLM egress. Passing checks advance the development gate automatically while keeping `execution_mode=test`. A change to operational `live` is outside this phase; it is not needed for development completion. Do not require all application development to stop while credentials are unavailable, but keep runtime-verified/release-ready claims blocked.
 
 ### DS-G4 — Rollback
 
-Rollback is to a previously tested DeepSeek configuration, an explicitly labelled read-only deterministic baseline, or replay. It is never automatic migration to another provider. A changed model alias/backend fingerprint triggers reevaluation of relevant golden cases. Keep the original input and tool artifacts so model upgrades can be compared fairly.
+Development rollback is automatic under a versioned policy to a previously tested DeepSeek configuration, an explicitly labelled deterministic simulation baseline, or replay; record the reason and resulting mode without human confirmation. It is never automatic migration to another provider. A changed model alias/backend fingerprint triggers reevaluation of relevant golden cases. Keep the original input and tool artifacts so model upgrades can be compared fairly.
 
 ## 7. Mandatory acceptance cases added to the original forty
 
@@ -201,23 +209,23 @@ Rollback is to a previously tested DeepSeek configuration, an explicitly labelle
 | DS-11 | Empty/truncated/invalid outputs never become approved claims |
 | DS-12 | Unknown tools, invalid arguments and unauthorized tenant scope are rejected |
 | DS-13 | SSE keep-alives, usage and termination are parsed; incomplete streams are failures |
-| DS-14 | A six-role DeepSeek-only synthetic council preserves lead time and approval rules |
+| DS-14 | A six-role DeepSeek-only synthetic council preserves lead time; independent backend validation accepts eligible simulation plans without any human action |
 | DS-15 | Actual app image-to-council workflow preserves visual provenance and uncertainty |
 | DS-16 | 401/402/429/5xx scenarios never route to another LLM provider |
 | DS-17 | Provider/model/mode/usage metadata is retained without keys, image payloads or private reasoning |
-| DS-18 | Production egress and bundled dependency audit finds no hidden runtime provider calls |
+| DS-18 | Egress and bundled dependency audit of the isolated development deployment finds no hidden runtime provider calls; repeat for future production |
 | DS-19 | Test/live/replay labels remain distinct across UI, logs and exported strategies |
-| DS-20 | Promotion and rollback require explicit action; completed business tools are not executed twice |
+| DS-20 | Development promotion/rollback are automatic, policy-versioned and audited; stale acceptance is recomputed, simulated work is idempotent, and operational live promotion remains disabled |
 
 A09 owns gateway and council implementation; A12 owns isolated environments, network policy, trial execution and release evidence; A11 independently verifies the policy and tests. A04 adds audit/mode fields to shared contracts. A05/A06 route any LLM-assisted ingestion interpretation through the gateway. A02/A03 separate initial GPT-assisted research provenance from later DeepSeek runtime extraction. A07/A08 keep calculations local and send only their validated results to agents. A10 displays model/mode/vision availability and blocked states honestly. A01 records new runtime extraction lineage.
 
 ## 8. Handoff implementation status and remaining work
 
-Included code is a **tested gateway and trial seed**, not a production application. Offline tests cover the policy and selected wire-format behaviours. No environment key was available during this amendment; the bundled authenticated trial report is `BLOCKED`, with zero calls. Do not convert that report to `PASS` by editing it—rerun the script with real credentials.
+The current repository has **specifications only**: no gateway, trial seed, offline tests or authenticated report is present. Earlier handoff text described an external seed and a blocked trial; that is not evidence of code or tests in this checkout. Implement the missing artifacts and record newly executed results. A missing credential produces a genuine `BLOCKED` capability report while independent development continues; never manufacture a passing report.
 
 A09/A12 must still integrate tenant authorization and secret delivery; implement production async cancellation, bounded streaming tool-argument assembly, cost reservation, idempotent jobs, concurrency management and safe retry policy; connect real farm tools; and enforce deployment egress. The seed's per-request timeouts and buffered-response size checks are not a complete resource-exhaustion defense. Optional beta strict schemas and Files API are documented but not implemented/tested in the seed.
 
-The gateway gives the master a real starting point and tests to extend. It does not waive any agricultural, data-quality, security or human-approval requirements in the original specification.
+The gateway specification gives the master a concrete implementation and testing target. It preserves agricultural, data-quality and security requirements. The autonomous-development policy replaces human-approval requirements for this phase; future operational approval is not a development gate.
 
 ## 9. Primary documentation
 

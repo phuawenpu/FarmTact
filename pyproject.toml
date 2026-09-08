@@ -1,0 +1,8 @@
+[project]
+name = "farmtact"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = ["fastapi==0.141.1", "uvicorn==0.52.4", "pydantic==2.13.5", "httpx==0.28.1", "Pillow==12.3.0", "SQLAlchemy==2.0.52", "psycopg[binary]==3.3.5", "duckdb==1.5.5", "pyarrow==25.0.1", "ortools==9.15.6755", "python-multipart==0.0.32"]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

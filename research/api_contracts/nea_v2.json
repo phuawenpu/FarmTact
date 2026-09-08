@@ -1,0 +1,14 @@
+{
+  "contract_version": "2026-09-08.live-smoke-v1",
+  "base_url": "https://api-open.data.gov.sg/v2/real-time/api",
+  "verified_at": "2026-09-08",
+  "verification": "Official dataset pages and bounded successful live GET responses; response fields below are structural expectations, not a claim that optional fields are exhaustive.",
+  "common_response": {"required": ["code", "data", "errorMsg"], "success_code": 0},
+  "endpoints": [
+    {"source_id":"D01","path":"/rainfall","shape":"station_observation","required_data_fields":["readingType","readingUnit","readings","stations"],"expected_unit":"mm","reported_interval":"5 minutes"},
+    {"source_id":"D02","path":"/air-temperature","shape":"station_observation","required_data_fields":["readingType","readingUnit","readings","stations"],"expected_unit":"deg C","reported_interval":"5 minutes"},
+    {"source_id":"D03","path":"/relative-humidity","shape":"station_observation","required_data_fields":["readingType","readingUnit","readings","stations"],"expected_unit":"percentage","reported_interval":"5 minutes"},
+    {"source_id":"D04","path":"/twenty-four-hr-forecast","shape":"forecast_records","required_data_fields":["records"],"record_fields":["timestamp","updatedTimestamp","general","periods"],"reported_update_frequency":"6 hours"},
+    {"source_id":"D05","path":"/four-day-outlook","shape":"forecast_records","required_data_fields":["records"],"record_fields":["timestamp","updatedTimestamp","forecasts"],"reported_update_frequency":"12 hours"}
+  ]
+}

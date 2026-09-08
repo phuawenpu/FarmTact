@@ -1,0 +1,170 @@
+{
+  "status": "PASS",
+  "inference_calls": 0,
+  "steps": [
+    {
+      "command": [
+        "git",
+        "write-tree"
+      ],
+      "exit_code": 0,
+      "seconds": 0.02
+    },
+    {
+      "command": [
+        "git",
+        "checkout-index",
+        "--all",
+        "--prefix=/tmp/farmtact-clean-x6j4ruld/checkout/"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "command": [
+        "/home/sprite/workspaces/Code2/.venv/bin/python",
+        "-m",
+        "venv",
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv"
+      ],
+      "exit_code": 0,
+      "seconds": 4.0
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "requirements.lock.txt"
+      ],
+      "exit_code": 0,
+      "seconds": 38.84
+    },
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--prefix",
+        "apps/web"
+      ],
+      "exit_code": 0,
+      "seconds": 4.92
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--prefix",
+        "apps/web"
+      ],
+      "exit_code": 0,
+      "seconds": 1.68
+    },
+    {
+      "command": [
+        "createdb",
+        "-h",
+        "/tmp/farmtact-pg",
+        "farmtact_clean_263d133e4d45"
+      ],
+      "exit_code": 0,
+      "seconds": 0.41
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "scripts/initialize_database.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.93
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "-m",
+        "packages.fixtures"
+      ],
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "scripts/build_dataset.py",
+        "--with-power"
+      ],
+      "exit_code": 0,
+      "seconds": 6.5
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "scripts/build_features.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.98
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-x6j4ruld/checkout/.venv/bin/python",
+        "-c",
+        "\nimport json,time\nfrom fastapi.testclient import TestClient\nfrom services.api.app import create_app\n\ndef wait(c,id):\n    deadline=time.monotonic()+90\n    while time.monotonic()<deadline:\n        run=c.get('/api/v1/planning-runs/'+id).json()\n        if run['status'] not in ('CREATED','RUNNING'):return run\n        time.sleep(.2)\n    raise AssertionError('mission timeout')\nwith TestClient(create_app()) as c:\n    b=c.get('/api/v1/bootstrap'); assert b.status_code==200 and len(b.json()['crops'])==10\n    assert c.get('/').status_code==200\n    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'}); assert imported.status_code==201\n    r=c.post('/api/v1/planning-runs',json={'council':False},headers={'Idempotency-Key':'clean-plan'}); assert r.status_code==202\n    run=wait(c,r.json()['id']); assert run['status']=='ACCEPTED_FOR_SIMULATION' and len(run['strategies'])==3 and run['claims']==[]\n    replay=c.get('/api/v1/planning-runs/'+run['id']+'/replay').json(); assert replay['execution_mode']=='replay' and replay['strategies']==run['strategies']\n    assert c.get('/api/v1/planning-runs/'+run['id']+'/worklist.csv').status_code==200\n    changed=c.post('/api/v1/planning-runs/'+run['id']+'/replan',json={'council':False},headers={'Idempotency-Key':'clean-replan'}); assert changed.status_code==202\n    replanned=wait(c,changed.json()['id']); assert replanned['status']=='ACCEPTED_FOR_SIMULATION' and replanned['input_version']==3\n    assert c.get('/api/v1/planning-runs/'+run['id']+'/worklist.csv').status_code==409\n    print(json.dumps({'status':'PASS','crop_count':10,'strategy_count':3,'initial_version':run['input_version'],'replan_version':replanned['input_version'],'inference_calls':0}))\n"
+      ],
+      "exit_code": 0,
+      "seconds": 27.78
+    },
+    {
+      "command": [
+        "dropdb",
+        "-h",
+        "/tmp/farmtact-pg",
+        "farmtact_clean_263d133e4d45"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19
+    }
+  ],
+  "staged_tree": "14cd1217bb58aab1d87b228761bff14f4db84e91",
+  "source_digest": "6aa1d06a82b20c6f8b0b86886384b1b6b9cd36a122d8a8beabf28fa06c18ea96",
+  "public_data_quality": {
+    "coverage": {
+      "catalogue_profiles": 10,
+      "scientific_evidence_documents": 20
+    },
+    "failure_count": 0,
+    "issues": [],
+    "known_gaps": [
+      "NEA observation availability time is not separately supplied and remains uncertain.",
+      "SingStat exact historical release timestamps and nomenclature version remain unresolved.",
+      "Trade mappings are limited to exact provider descriptions; broad vegetable codes remain unresolved.",
+      "Public context is not farm-specific weather, demand, yield, price, or commercial recipe evidence."
+    ],
+    "row_counts": {
+      "traceable_rows": 200,
+      "trade_observations": 15,
+      "weather_forecasts": 40,
+      "weather_observations": 145
+    },
+    "source_counts": {
+      "D01": 88,
+      "D02": 18,
+      "D03": 18,
+      "D04": 20,
+      "D05": 20,
+      "D06": 15,
+      "D11": 21
+    },
+    "status": "passed"
+  },
+  "workflow": {
+    "status": "PASS",
+    "crop_count": 10,
+    "strategy_count": 3,
+    "initial_version": 2,
+    "replan_version": 3,
+    "inference_calls": 0
+  }
+}

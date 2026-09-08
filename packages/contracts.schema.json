@@ -1,0 +1,620 @@
+{
+  "$defs": {
+    "Batch": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bed_id": {
+          "title": "Bed Id",
+          "type": "string"
+        },
+        "recipe_id": {
+          "title": "Recipe Id",
+          "type": "string"
+        },
+        "sow_date": {
+          "format": "date",
+          "title": "Sow Date",
+          "type": "string"
+        },
+        "transplant_date": {
+          "format": "date",
+          "title": "Transplant Date",
+          "type": "string"
+        },
+        "harvest_date": {
+          "format": "date",
+          "title": "Harvest Date",
+          "type": "string"
+        },
+        "expected_marketable_kg": {
+          "anyOf": [
+            {
+              "maximum": 10000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Expected Marketable Kg"
+        },
+        "executed": {
+          "const": true,
+          "default": true,
+          "title": "Executed",
+          "type": "boolean"
+        },
+        "origin": {
+          "const": "synthetic",
+          "default": "synthetic",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bed_id",
+        "recipe_id",
+        "sow_date",
+        "transplant_date",
+        "harvest_date",
+        "expected_marketable_kg"
+      ],
+      "title": "Batch",
+      "type": "object"
+    },
+    "Bed": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "area_m2": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 1000.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Area M2"
+        },
+        "system": {
+          "const": "sheltered_hydroponic",
+          "default": "sheltered_hydroponic",
+          "title": "System",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "area_m2"
+      ],
+      "title": "Bed",
+      "type": "object"
+    },
+    "History": {
+      "additionalProperties": false,
+      "properties": {
+        "crop_id": {
+          "enum": [
+            "caixin",
+            "pak_choi",
+            "kailan",
+            "lettuce"
+          ],
+          "title": "Crop Id",
+          "type": "string"
+        },
+        "week": {
+          "format": "date",
+          "title": "Week",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "title": "Available At",
+          "type": "string"
+        },
+        "ordered_kg": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Ordered Kg"
+        },
+        "origin": {
+          "const": "synthetic",
+          "default": "synthetic",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "crop_id",
+        "week",
+        "available_at",
+        "ordered_kg"
+      ],
+      "title": "History",
+      "type": "object"
+    },
+    "InventoryLot": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "crop_id": {
+          "enum": [
+            "caixin",
+            "pak_choi",
+            "kailan",
+            "lettuce"
+          ],
+          "title": "Crop Id",
+          "type": "string"
+        },
+        "quantity_kg": {
+          "anyOf": [
+            {
+              "maximum": 100000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Quantity Kg"
+        },
+        "harvested_date": {
+          "format": "date",
+          "title": "Harvested Date",
+          "type": "string"
+        },
+        "expires_date": {
+          "format": "date",
+          "title": "Expires Date",
+          "type": "string"
+        },
+        "origin": {
+          "const": "synthetic",
+          "default": "synthetic",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "crop_id",
+        "quantity_kg",
+        "harvested_date",
+        "expires_date"
+      ],
+      "title": "InventoryLot",
+      "type": "object"
+    },
+    "Order": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "crop_id": {
+          "enum": [
+            "caixin",
+            "pak_choi",
+            "kailan",
+            "lettuce"
+          ],
+          "title": "Crop Id",
+          "type": "string"
+        },
+        "booked_at": {
+          "format": "date-time",
+          "title": "Booked At",
+          "type": "string"
+        },
+        "due_date": {
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "quantity_kg": {
+          "anyOf": [
+            {
+              "maximum": 100000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Quantity Kg"
+        },
+        "price_sgd_per_kg": {
+          "anyOf": [
+            {
+              "maximum": 1000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Price Sgd Per Kg"
+        },
+        "cancelled_kg": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "title": "Cancelled Kg"
+        },
+        "origin": {
+          "const": "synthetic",
+          "default": "synthetic",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "crop_id",
+        "booked_at",
+        "due_date",
+        "quantity_kg",
+        "price_sgd_per_kg"
+      ],
+      "title": "Order",
+      "type": "object"
+    },
+    "Recipe": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "crop_id": {
+          "enum": [
+            "caixin",
+            "pak_choi",
+            "kailan",
+            "lettuce"
+          ],
+          "title": "Crop Id",
+          "type": "string"
+        },
+        "system": {
+          "const": "sheltered_hydroponic",
+          "default": "sheltered_hydroponic",
+          "title": "System",
+          "type": "string"
+        },
+        "nursery_days": {
+          "maximum": 60,
+          "minimum": 0,
+          "title": "Nursery Days",
+          "type": "integer"
+        },
+        "grow_days": {
+          "maximum": 120,
+          "minimum": 1,
+          "title": "Grow Days",
+          "type": "integer"
+        },
+        "sanitation_days": {
+          "default": 2,
+          "maximum": 14,
+          "minimum": 0,
+          "title": "Sanitation Days",
+          "type": "integer"
+        },
+        "density_per_m2": {
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Density Per M2",
+          "type": "integer"
+        },
+        "marketable_kg_per_m2": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 30.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Marketable Kg Per M2"
+        },
+        "cost_sgd_per_m2": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Cost Sgd Per M2"
+        },
+        "sow_labour_hours_per_m2": {
+          "anyOf": [
+            {
+              "maximum": 10.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Sow Labour Hours Per M2"
+        },
+        "harvest_labour_hours_per_kg": {
+          "anyOf": [
+            {
+              "maximum": 10.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Harvest Labour Hours Per Kg"
+        },
+        "shelf_life_days": {
+          "maximum": 14,
+          "minimum": 1,
+          "title": "Shelf Life Days",
+          "type": "integer"
+        },
+        "validation_status": {
+          "const": "demo_only",
+          "default": "demo_only",
+          "title": "Validation Status",
+          "type": "string"
+        },
+        "origin": {
+          "const": "synthetic",
+          "default": "synthetic",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "crop_id",
+        "nursery_days",
+        "grow_days",
+        "density_per_m2",
+        "marketable_kg_per_m2",
+        "cost_sgd_per_m2",
+        "sow_labour_hours_per_m2",
+        "harvest_labour_hours_per_kg",
+        "shelf_life_days"
+      ],
+      "title": "Recipe",
+      "type": "object"
+    },
+    "Resources": {
+      "additionalProperties": false,
+      "properties": {
+        "nursery_sites": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Nursery Sites",
+          "type": "integer"
+        },
+        "labour_hours_per_week": {
+          "anyOf": [
+            {
+              "maximum": 100000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Labour Hours Per Week"
+        },
+        "cash_sgd": {
+          "anyOf": [
+            {
+              "maximum": 10000000.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "title": "Cash Sgd"
+        }
+      },
+      "required": [
+        "nursery_sites",
+        "labour_hours_per_week",
+        "cash_sgd"
+      ],
+      "title": "Resources",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "const": "demo-farm",
+      "default": "demo-farm",
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 100,
+      "title": "Name",
+      "type": "string"
+    },
+    "location": {
+      "maxLength": 100,
+      "title": "Location",
+      "type": "string"
+    },
+    "timezone": {
+      "const": "Asia/Singapore",
+      "default": "Asia/Singapore",
+      "title": "Timezone",
+      "type": "string"
+    },
+    "data_mode": {
+      "const": "synthetic_demo",
+      "default": "synthetic_demo",
+      "title": "Data Mode",
+      "type": "string"
+    },
+    "cutoff": {
+      "format": "date-time",
+      "title": "Cutoff",
+      "type": "string"
+    },
+    "horizon_days": {
+      "default": 56,
+      "maximum": 84,
+      "minimum": 7,
+      "title": "Horizon Days",
+      "type": "integer"
+    },
+    "version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "recipes": {
+      "items": {
+        "$ref": "#/$defs/Recipe"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Recipes",
+      "type": "array"
+    },
+    "beds": {
+      "items": {
+        "$ref": "#/$defs/Bed"
+      },
+      "maxItems": 40,
+      "minItems": 1,
+      "title": "Beds",
+      "type": "array"
+    },
+    "batches": {
+      "items": {
+        "$ref": "#/$defs/Batch"
+      },
+      "maxItems": 40,
+      "title": "Batches",
+      "type": "array"
+    },
+    "orders": {
+      "items": {
+        "$ref": "#/$defs/Order"
+      },
+      "maxItems": 1000,
+      "title": "Orders",
+      "type": "array"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/History"
+      },
+      "maxItems": 1000,
+      "title": "History",
+      "type": "array"
+    },
+    "inventory": {
+      "items": {
+        "$ref": "#/$defs/InventoryLot"
+      },
+      "maxItems": 100,
+      "title": "Inventory",
+      "type": "array"
+    },
+    "resources": {
+      "$ref": "#/$defs/Resources"
+    },
+    "fixture_seed": {
+      "default": 20260908,
+      "title": "Fixture Seed",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "name",
+    "location",
+    "cutoff",
+    "recipes",
+    "beds",
+    "batches",
+    "orders",
+    "history",
+    "resources"
+  ],
+  "title": "Farm",
+  "type": "object"
+}

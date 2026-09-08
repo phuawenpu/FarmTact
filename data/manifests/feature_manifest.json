@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "build_version": "point-in-time-demand-v1",
+  "input_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+  "cutoff": "2026-09-08T00:00:00+00:00",
+  "origin": "synthetic",
+  "feature_count": 32,
+  "file": "normalized/features.parquet",
+  "sha256": "57df54c342ca35c12c5c4714c1826d78938498dcd8e790b5c2a2afcc4c5e25ae",
+  "private_snapshot_sha256": "b0e8b55395b2325e699726dc15a600769bee08026469ad3f8d72d23814726a7f",
+  "dependency_rule": "Every private dependency available_at/booked_at <= cutoff; no public observation is a private target",
+  "public_features_used": [],
+  "public_context_exclusion": "Station observation availability uncertain; fixture recipe forecasts do not use public weather or trade coefficients."
+}

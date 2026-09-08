@@ -1,0 +1,378 @@
+{
+  "status": "PASS",
+  "mode": "synthetic_demo",
+  "validation_status": "demo_only",
+  "fixture_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+  "forecast_evaluation": [
+    {
+      "crop_id": "caixin",
+      "held_out_periods": 6,
+      "ewma": {
+        "mae": 2.382955712603159,
+        "wape": 0.07770507758488562
+      },
+      "last_week_naive": {
+        "mae": 2.6666666666666665,
+        "wape": 0.08695652173913043
+      }
+    },
+    {
+      "crop_id": "kailan",
+      "held_out_periods": 6,
+      "ewma": {
+        "mae": 2.3829557126031573,
+        "wape": 0.06873910709432184
+      },
+      "last_week_naive": {
+        "mae": 2.6666666666666665,
+        "wape": 0.07692307692307693
+      }
+    },
+    {
+      "crop_id": "lettuce",
+      "held_out_periods": 6,
+      "ewma": {
+        "mae": 2.382955712603156,
+        "wape": 0.06498970125281335
+      },
+      "last_week_naive": {
+        "mae": 2.6666666666666665,
+        "wape": 0.07272727272727272
+      }
+    },
+    {
+      "crop_id": "pak_choi",
+      "held_out_periods": 6,
+      "ewma": {
+        "mae": 2.3829557126031577,
+        "wape": 0.0729476238551987
+      },
+      "last_week_naive": {
+        "mae": 2.6666666666666665,
+        "wape": 0.08163265306122448
+      }
+    }
+  ],
+  "planner_version": "daily-bed-cpsat-v1",
+  "strategies": [
+    {
+      "name": "Lean",
+      "metrics": {
+        "fill_rate": 0.443,
+        "margin_sgd": 2594.58,
+        "waste_kg": 130.99,
+        "harvest_kg": 662.0,
+        "shortfall_kg": 606.02,
+        "cost_sgd": 1161.53,
+        "labour_hours": 55.94,
+        "area_m2": 120.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 3756.11
+      },
+      "risk": {
+        "downside_fill_rate": 0.4426,
+        "downside_margin_sgd": 2444.08,
+        "basis": "minimum across declared scenarios; not a calibrated quantile"
+      },
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.003,
+        "time_limit_seconds": 4,
+        "objective": 645868290.0,
+        "best_bound": 827006895.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "violations": [],
+      "policy_parameters": {
+        "shortage": 1,
+        "waste": 9,
+        "commit": 0.2,
+        "capital_fraction": 0.65,
+        "description": "Keep inputs light. Accept more uncovered demand to limit surplus."
+      },
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.4426,
+            "margin_sgd": 2820.32,
+            "waste_kg": 47.89,
+            "harvest_kg": 562.7,
+            "shortfall_kg": 628.52,
+            "cost_sgd": 1070.79,
+            "labour_hours": 48.99,
+            "area_m2": 120.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3891.11
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.443,
+            "margin_sgd": 2594.58,
+            "waste_kg": 130.99,
+            "harvest_kg": 662.0,
+            "shortfall_kg": 606.02,
+            "cost_sgd": 1161.53,
+            "labour_hours": 55.94,
+            "area_m2": 120.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3756.11
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.4433,
+            "margin_sgd": 2444.08,
+            "waste_kg": 186.39,
+            "harvest_kg": 728.2,
+            "shortfall_kg": 591.02,
+            "cost_sgd": 1222.03,
+            "labour_hours": 60.57,
+            "area_m2": 120.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 3666.11
+          }
+        }
+      ]
+    },
+    {
+      "name": "Balanced",
+      "metrics": {
+        "fill_rate": 0.5358,
+        "margin_sgd": 2957.37,
+        "waste_kg": 181.99,
+        "harvest_kg": 814.0,
+        "shortfall_kg": 505.01,
+        "cost_sgd": 1540.76,
+        "labour_hours": 71.38,
+        "area_m2": 180.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 4498.13
+      },
+      "risk": {
+        "downside_fill_rate": 0.5353,
+        "downside_margin_sgd": 2774.77,
+        "basis": "minimum across declared scenarios; not a calibrated quantile"
+      },
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.027,
+        "time_limit_seconds": 4,
+        "objective": 1412373205.0,
+        "best_bound": 1677264820.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "violations": [],
+      "policy_parameters": {
+        "shortage": 4,
+        "waste": 5,
+        "commit": 0.04,
+        "capital_fraction": 0.85,
+        "description": "Balance customer coverage, growing cost and avoidable surplus."
+      },
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.5353,
+            "margin_sgd": 3231.27,
+            "waste_kg": 72.64,
+            "harvest_kg": 691.9,
+            "shortfall_kg": 524.06,
+            "cost_sgd": 1427.96,
+            "labour_hours": 62.83,
+            "area_m2": 180.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4659.23
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.5358,
+            "margin_sgd": 2957.37,
+            "waste_kg": 181.99,
+            "harvest_kg": 814.0,
+            "shortfall_kg": 505.01,
+            "cost_sgd": 1540.76,
+            "labour_hours": 71.38,
+            "area_m2": 180.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4498.13
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.5363,
+            "margin_sgd": 2774.77,
+            "waste_kg": 254.89,
+            "harvest_kg": 895.4,
+            "shortfall_kg": 492.31,
+            "cost_sgd": 1615.96,
+            "labour_hours": 77.08,
+            "area_m2": 180.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4390.73
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resilient",
+      "metrics": {
+        "fill_rate": 0.6213,
+        "margin_sgd": 3193.15,
+        "waste_kg": 220.98,
+        "harvest_kg": 946.0,
+        "shortfall_kg": 412.01,
+        "cost_sgd": 1862.99,
+        "labour_hours": 85.42,
+        "area_m2": 240.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 5056.15
+      },
+      "risk": {
+        "downside_fill_rate": 0.6205,
+        "downside_margin_sgd": 2985.2,
+        "basis": "minimum across declared scenarios; not a calibrated quantile"
+      },
+      "solver": {
+        "status": "FEASIBLE",
+        "wall_seconds": 4.002,
+        "time_limit_seconds": 4,
+        "objective": 6073457620.0,
+        "best_bound": 6211097620.0,
+        "integer_units": "grams, cents, minutes, whole beds"
+      },
+      "violations": [],
+      "policy_parameters": {
+        "shortage": 25,
+        "waste": 1,
+        "commit": 0,
+        "capital_fraction": 1,
+        "description": "Protect delivery coverage under the shared low-yield scenario."
+      },
+      "scenario_set_id": "d4853ebeed8f98939f3846d43f114efe392d45cfa5fb539237c013d6a55ff13c",
+      "scenario_results": [
+        {
+          "scenario_id": "low-yield-high-demand",
+          "metrics": {
+            "fill_rate": 0.6205,
+            "margin_sgd": 3505.09,
+            "waste_kg": 88.68,
+            "harvest_kg": 804.1,
+            "shortfall_kg": 427.91,
+            "cost_sgd": 1731.06,
+            "labour_hours": 75.49,
+            "area_m2": 240.0,
+            "closing_stock_kg": 20.7,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 5236.15
+          }
+        },
+        {
+          "scenario_id": "central",
+          "metrics": {
+            "fill_rate": 0.6213,
+            "margin_sgd": 3193.15,
+            "waste_kg": 220.98,
+            "harvest_kg": 946.0,
+            "shortfall_kg": 412.01,
+            "cost_sgd": 1862.99,
+            "labour_hours": 85.42,
+            "area_m2": 240.0,
+            "closing_stock_kg": 54.0,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 5056.15
+          }
+        },
+        {
+          "scenario_id": "high-yield-low-demand",
+          "metrics": {
+            "fill_rate": 0.6219,
+            "margin_sgd": 2985.2,
+            "waste_kg": 309.18,
+            "harvest_kg": 1040.6,
+            "shortfall_kg": 401.41,
+            "cost_sgd": 1950.95,
+            "labour_hours": 92.04,
+            "area_m2": 240.0,
+            "closing_stock_kg": 76.2,
+            "opening_stock_kg": 5.0,
+            "revenue_sgd": 4936.15
+          }
+        }
+      ]
+    }
+  ],
+  "baseline": [
+    {
+      "scenario_id": "low-yield-high-demand",
+      "metrics": {
+        "fill_rate": 0.6205,
+        "margin_sgd": 3505.09,
+        "waste_kg": 88.68,
+        "harvest_kg": 804.1,
+        "shortfall_kg": 427.91,
+        "cost_sgd": 1731.06,
+        "labour_hours": 75.49,
+        "area_m2": 240.0,
+        "closing_stock_kg": 20.7,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 5236.15
+      }
+    },
+    {
+      "scenario_id": "central",
+      "metrics": {
+        "fill_rate": 0.6213,
+        "margin_sgd": 3193.15,
+        "waste_kg": 220.98,
+        "harvest_kg": 946.0,
+        "shortfall_kg": 412.01,
+        "cost_sgd": 1862.99,
+        "labour_hours": 85.42,
+        "area_m2": 240.0,
+        "closing_stock_kg": 54.0,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 5056.15
+      }
+    },
+    {
+      "scenario_id": "high-yield-low-demand",
+      "metrics": {
+        "fill_rate": 0.6219,
+        "margin_sgd": 2985.2,
+        "waste_kg": 309.18,
+        "harvest_kg": 1040.6,
+        "shortfall_kg": 401.41,
+        "cost_sgd": 1950.95,
+        "labour_hours": 92.04,
+        "area_m2": 240.0,
+        "closing_stock_kg": 76.2,
+        "opening_stock_kg": 5.0,
+        "revenue_sgd": 4936.15
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic-only outcomes and recipes; no real-farm forecast promotion.",
+    "Scenario weights are declared simulation weights; no calibrated intervals.",
+    "Whole-bed allocations may create surplus; no unsupported fractional beds or partner purchases."
+  ]
+}

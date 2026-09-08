@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-08",
+  "scope": "Official DeepSeek API documentation used by the FarmTact direct HTTP gateway",
+  "sources": [
+    {
+      "id": "DS01",
+      "title": "Your First API Call",
+      "url": "https://api-docs.deepseek.com/",
+      "publisher": "DeepSeek",
+      "access_status": "reviewed",
+      "supports": ["official HTTPS base URL", "current Flash, Pro, and experimental Vision aliases"]
+    },
+    {
+      "id": "DS02",
+      "title": "Change Log",
+      "url": "https://api-docs.deepseek.com/updates/",
+      "publisher": "DeepSeek",
+      "access_status": "reviewed",
+      "supports": ["model and API release history"]
+    },
+    {
+      "id": "DS03",
+      "title": "Vision",
+      "url": "https://api-docs.deepseek.com/guides/vision/",
+      "publisher": "DeepSeek",
+      "access_status": "full_page_reviewed",
+      "supports": [
+        "vision model alias",
+        "Chat Completions image content blocks",
+        "actual-content format detection",
+        "user-message restriction",
+        "provider image limits"
+      ],
+      "farmtact_note": "FarmTact applies lower local limits and accepts normalized inline PNG only."
+    },
+    {
+      "id": "DS04",
+      "title": "Chat Completions API",
+      "url": "https://api-docs.deepseek.com/api/create-chat-completion/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_reference_reviewed",
+      "supports": [
+        "POST /chat/completions",
+        "JSON object response format",
+        "thinking controls",
+        "tool-call wire fields",
+        "streaming events and usage",
+        "finish reasons",
+        "user_id isolation field"
+      ]
+    },
+    {
+      "id": "DS05",
+      "title": "Thinking Mode",
+      "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_guide_reviewed",
+      "supports": [
+        "enabled and disabled thinking",
+        "low, high, and max effort",
+        "reasoning_content continuation requirement when tools are present"
+      ]
+    },
+    {
+      "id": "DS06",
+      "title": "Tool Calls",
+      "url": "https://api-docs.deepseek.com/guides/tool_calls/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_guide_reviewed",
+      "supports": ["stable tool calls", "thinking tool calls", "beta-only strict schemas"]
+    },
+    {
+      "id": "DS06A",
+      "title": "Using DeepSeek with Oh My Pi",
+      "url": "https://api-docs.deepseek.com/quick_start/agent_integrations/oh_my_pi/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_official_integration_guide_reviewed",
+      "supports": [
+        "DeepSeek V4 thinking tool calls reject tool_choice",
+        "reasoning_content and assistant content continuation compatibility"
+      ],
+      "farmtact_note": "This current V4 compatibility detail resolved the authenticated HTTP 400 seen when the generic tool_choice field was sent."
+    },
+    {
+      "id": "DS07",
+      "title": "JSON Output",
+      "url": "https://api-docs.deepseek.com/guides/json_mode/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_guide_reviewed",
+      "supports": ["json_object response format", "requirement to instruct the model to emit JSON"]
+    },
+    {
+      "id": "DS08",
+      "title": "Files API",
+      "url": "https://api-docs.deepseek.com/guides/files_api/",
+      "publisher": "DeepSeek",
+      "access_status": "reviewed_not_implemented",
+      "supports": ["optional persistent image upload contract"],
+      "farmtact_note": "The initial gateway deliberately does not implement this optional route."
+    },
+    {
+      "id": "DS09",
+      "title": "Error Codes",
+      "url": "https://api-docs.deepseek.com/quick_start/error_codes/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_reference_reviewed",
+      "supports": ["authentication, balance, rate-limit, and service error classes"]
+    },
+    {
+      "id": "DS10",
+      "title": "Rate Limit and Isolation",
+      "url": "https://api-docs.deepseek.com/quick_start/rate_limit/",
+      "publisher": "DeepSeek",
+      "access_status": "indexed_reference_reviewed",
+      "supports": ["bounded request handling", "opaque user isolation identifier"]
+    },
+    {
+      "id": "DS11",
+      "title": "Lists Models",
+      "url": "https://api-docs.deepseek.com/api/list-models/",
+      "publisher": "DeepSeek",
+      "access_status": "full_page_reviewed",
+      "supports": ["authenticated GET /models response shape and account availability"]
+    },
+    {
+      "id": "DS12",
+      "title": "Models and Pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "publisher": "DeepSeek",
+      "access_status": "model_table_reviewed",
+      "supports": ["model capability matrix", "image token billing statement"],
+      "farmtact_note": "No numerical USD price is hard-coded by this gateway or trial."
+    }
+  ]
+}

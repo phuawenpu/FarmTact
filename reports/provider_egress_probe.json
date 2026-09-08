@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "occurred_at": "2026-09-08T08:29:39.961063+00:00",
+  "actual_requests": 1,
+  "destination": "https://api.deepseek.com/models",
+  "models": [
+    "deepseek-v4-flash",
+    "deepseek-v4-flash-vision-exp",
+    "deepseek-v4-pro"
+  ],
+  "policy": "Python socket audit hook and fixed provider gateway; production OS egress still required"
+}

@@ -1,0 +1,138 @@
+{
+  "actual_request_count": 6,
+  "capabilities": {
+    "flash_json": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "0b4bbc5128eb93323e858dd934428a455b6377d41cf2fca699a3aa1e436dffcb",
+        "latency_ms": 772,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash",
+        "returned_model": "deepseek-v4-flash",
+        "role": "demand_analyst",
+        "usage": {
+          "completion_tokens": 15,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 45,
+          "prompt_tokens": 45,
+          "reasoning_tokens": null,
+          "total_tokens": 60
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-flash",
+      "status": "PASS",
+      "validated_content": {
+        "capability": "json",
+        "marker": 17,
+        "status": "ok"
+      }
+    },
+    "model_discovery": {
+      "required_models_available": true,
+      "reviewed_models_discovered": [
+        "deepseek-v4-flash",
+        "deepseek-v4-flash-vision-exp",
+        "deepseek-v4-pro"
+      ],
+      "status": "PASS"
+    },
+    "pro_json": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "0234b0e162f41fe550d6b6531fa589ae8829e0a90195778f752639924065322d",
+        "latency_ms": 989,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-pro",
+        "returned_model": "deepseek-v4-pro",
+        "role": "crop_scientist",
+        "usage": {
+          "completion_tokens": 41,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 81,
+          "prompt_tokens": 81,
+          "reasoning_tokens": null,
+          "total_tokens": 122
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-pro",
+      "status": "PASS",
+      "validated_content": {
+        "crop_id": "caixin",
+        "delivery_window_days": 7,
+        "new_crop_lead_time_days": 35,
+        "new_sowing_can_meet_delivery": false
+      }
+    },
+    "thinking_tool_continuation": {
+      "audit": {
+        "capability": "text",
+        "data_mode": "synthetic_demo",
+        "execution_mode": "test",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "2c17e002f78149d890e31291a77722f6f9024ecc7ebfe9e680e689b6693e8a6a",
+        "latency_ms": 1363,
+        "provider": "deepseek",
+        "request_id": null,
+        "requested_model": "deepseek-v4-flash",
+        "returned_model": "deepseek-v4-flash",
+        "role": "demand_analyst",
+        "usage": {
+          "completion_tokens": 62,
+          "prompt_cache_hit_tokens": 256,
+          "prompt_cache_miss_tokens": 391,
+          "prompt_tokens": 647,
+          "reasoning_tokens": 0,
+          "total_tokens": 709
+        }
+      },
+      "finish_reason": "stop",
+      "model": "deepseek-v4-flash",
+      "private_reasoning_retention": "preserved in-memory for continuation and excluded from report",
+      "status": "PASS",
+      "validated_content": {
+        "crop_id": "caixin",
+        "near_term_supply_kg": 12.4,
+        "new_sowing_can_close_shortfall": false,
+        "order_kg": 20.0,
+        "shortfall_kg": 7.6,
+        "source_tool": "get_supply_snapshot"
+      }
+    }
+  },
+  "council": {
+    "status": "NOT_RUN"
+  },
+  "data_mode": "synthetic_demo",
+  "decision_policy": "automatic_development",
+  "development_phase": "autonomous_development",
+  "execution_mode": "test",
+  "failure": {
+    "error_code": "response_error",
+    "error_type": "DeepSeekResponseError",
+    "safe_message": "DeepSeek structured output failed local validation"
+  },
+  "finished_at": "2026-09-08T08:33:28.616681+00:00",
+  "origin": "https://api.deepseek.com",
+  "overall_status": "BLOCKED",
+  "planned_request_count": 13,
+  "provider": "deepseek",
+  "request_ceiling": 16,
+  "reserved_output_token_ceiling": 8192,
+  "reserved_output_tokens": 1024,
+  "retry_policy": "none",
+  "schema_version": "1.0",
+  "started_at": "2026-09-08T08:33:21.422427+00:00",
+  "trial": "DS-G1+DS-G2",
+  "trial_version": "2-short-json-council",
+  "wall_clock_ceiling_seconds": 300
+}

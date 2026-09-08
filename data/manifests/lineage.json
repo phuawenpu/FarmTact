@@ -1,0 +1,104 @@
+{
+  "dataset_id": "a6ada7a03c2aca0975580daba9ad997eda9f8e80bdd20f8d7d6c29e22de80f2a",
+  "edges": [
+    {
+      "from": "d01-3135519ebd628b7c4f69",
+      "to": "weather_observations",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d02-43c6d519e5d9ee0c72fe",
+      "to": "weather_observations",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d03-a9ed681709ae031454f5",
+      "to": "weather_observations",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d04-2191b56daed3754fd469",
+      "to": "weather_forecasts",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d05-fd41e1884567b5cd09e4",
+      "to": "weather_forecasts",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d06-aec77c6136dd523bc807",
+      "to": "trade_observations",
+      "transform": "farmtact-public-context-1.0.0"
+    },
+    {
+      "from": "d11-73655d52a24357bcca7b",
+      "to": "weather_observations",
+      "transform": "farmtact-public-context-1.0.0"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "d01-3135519ebd628b7c4f69",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "3135519ebd628b7c4f6913c581d1f001107e255ccec9105dd4fdb18493f5f17f"
+    },
+    {
+      "id": "d02-43c6d519e5d9ee0c72fe",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "43c6d519e5d9ee0c72fe39b85e2d559c6e317ecb3e3f6580ebeec97489622f4c"
+    },
+    {
+      "id": "d03-a9ed681709ae031454f5",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "a9ed681709ae031454f551c3859aadae62ec0266d317d14914cf55540b7a2cd0"
+    },
+    {
+      "id": "d04-2191b56daed3754fd469",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "2191b56daed3754fd469d2732f8ae45e16c0ffd331594ea1805899fa1c961578"
+    },
+    {
+      "id": "d05-fd41e1884567b5cd09e4",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "fd41e1884567b5cd09e45639adb6f596fb95d026e553cb8bce9752a37596863a"
+    },
+    {
+      "id": "d06-5323e93b39803903ca53",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "5323e93b39803903ca53c26010f47061bc056cd24424c65e2a2b949952bb436a"
+    },
+    {
+      "id": "d06-aec77c6136dd523bc807",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "aec77c6136dd523bc807fc26b18798f9a85a02f6ad88259cdebcb1bc96abe3bf"
+    },
+    {
+      "id": "d11-73655d52a24357bcca7b",
+      "kind": "immutable_raw_snapshot",
+      "sha256": "73655d52a24357bcca7bf2460bd07ba4d27a90d3bd5481b271a48a73032a7d78"
+    },
+    {
+      "id": "weather_observations",
+      "kind": "normalized_artifact",
+      "path": "normalized/weather_observations.jsonl",
+      "row_count": 145,
+      "sha256": "cda7eba38eec39c41b8849e6b57ec70da0de07e93c389bd991e07211719d27e4"
+    },
+    {
+      "id": "weather_forecasts",
+      "kind": "normalized_artifact",
+      "path": "normalized/weather_forecasts.jsonl",
+      "row_count": 40,
+      "sha256": "3d6d1810187ffd32b04955e3b6129d5bda30969f07acdfe8636ecc4cb4b2b57e"
+    },
+    {
+      "id": "trade_observations",
+      "kind": "normalized_artifact",
+      "path": "normalized/trade_observations.jsonl",
+      "row_count": 15,
+      "sha256": "fd42334e81037b873df205415abfd6f9b30dace7563317081e91238867cc1102"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

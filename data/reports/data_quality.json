@@ -1,0 +1,30 @@
+{
+  "coverage": {
+    "catalogue_profiles": 10,
+    "scientific_evidence_documents": 20
+  },
+  "failure_count": 0,
+  "issues": [],
+  "known_gaps": [
+    "NEA observation availability time is not separately supplied and remains uncertain.",
+    "SingStat exact historical release timestamps and nomenclature version remain unresolved.",
+    "Trade mappings are limited to exact provider descriptions; broad vegetable codes remain unresolved.",
+    "Public context is not farm-specific weather, demand, yield, price, or commercial recipe evidence."
+  ],
+  "row_counts": {
+    "traceable_rows": 200,
+    "trade_observations": 15,
+    "weather_forecasts": 40,
+    "weather_observations": 145
+  },
+  "source_counts": {
+    "D01": 88,
+    "D02": 18,
+    "D03": 18,
+    "D04": 20,
+    "D05": 20,
+    "D06": 15,
+    "D11": 21
+  },
+  "status": "passed"
+}

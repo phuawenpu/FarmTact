@@ -2,6 +2,16 @@
 
 Research cut-off: 2026-09-08. This is a targeted literature and source review, not a systematic review or a claim to have read every paper. Full-text availability and the portions reviewed are explicitly recorded. No numerical commercial production recipe is approved by this handoff.
 
+## Development use policy — version 1.2
+
+Section 0 of `FarmTact_Build_Specification.md` governs this phase. Coding agents perform source, taxonomy, licence, units and applicability review, with independent agent checks for critical extractions. No human approval, manual research sign-off or farmer-supplied recipe is required to build and test the system.
+
+Accept supported evidence and mappings through recorded technical checks. Quarantine ambiguous aliases, missing context and unverifiable numerical claims, then continue with unaffected records. Unknown or incompatible licences block the affected reuse; they do not require development to stop. Never convert uncertainty into a validated fact to clear a gate.
+
+Create explicitly synthetic, internally consistent crop recipes where real farm parameters are missing. Mark their parameters and derived models `demo_only`, preserve their fixture provenance and keep them outside scientific evidence claims. Automatic acceptance permits simulation only; it does not approve a commercial production recipe. The default demonstration uses complete fixtures and recorded policy decisions so it runs without human input.
+
+The publication access statuses below describe the original research handoff and are not new verification performed for this rewrite. Referenced machine-readable registries are development deliverables absent from the current checkout; construct them from these records and retain every access limitation.
+
 ## Selection and research protocol
 
 The ten-crop portfolio is anchored to NParks cultivation guidance and checked against SFA examples and a local farm catalogue [C01–C04]. It is not a verified national sales or tonnage ranking. Search synonyms and scientific names, prioritize Singapore experiments, then comparable tropical/protected systems, then other environments. Exclude microgreens, seedlings, tubers, forage, medicinal extraction and unrelated species when the endpoint is mature saleable leaves. Keep them only as explicitly scoped background.
