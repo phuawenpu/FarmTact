@@ -1,5 +1,5 @@
 {
-  "latest": "v2",
+  "latest": "v3",
   "editions": [
     {
       "id": "v1",
@@ -113,6 +113,48 @@
         "game_database": "independent",
         "reference_fixture": "synthetic_farm.json"
       }
+    },
+    {
+      "id": "v3",
+      "title": "Seven perspectives, one farm",
+      "published_at": "2026-09-09",
+      "summary": "Seven farming advisors connect demand, weather, market, production, supply chain, profit and planning. Market separates sourced community reactions from demand.",
+      "status": "published",
+      "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/f8e04999fba5a82dcb1435c7a4c920e004e76607",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/e9c3edfe10da162e4f50fd5a69df5a4394aa0812...f8e04999fba5a82dcb1435c7a4c920e004e76607",
+      "image_digest": "registry.fly.io/farmtact@sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6",
+      "review_url": "/v3/review",
+      "play_url": "/v3/",
+      "changes": [
+        {
+          "title": "Seven advisors with distinct responsibilities",
+          "description": "Follows Sumin Lee\u2019s seven-role model. Idris becomes Market; Lina joins Supply Chain; Asha concludes the council.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/f8e0499/reports/seven_agents/implementation.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Evidence checks without a critic persona",
+          "description": "Numerical and evidence validation remain automatic. Incomplete or rejected council findings withhold acceptance while computed alternatives remain inspectable.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/f8e0499/tests/seven_agents/test_mission_gate.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Honest community evidence",
+          "description": "A provenance-aware, read-only Market panel distinguishes produce reactions from quantities and prices. No social feed is connected yet; missing observations are shown explicitly.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/f8e0499/tests/seven_agents/test_market_signals.py"
+          ],
+          "status": "implemented"
+        }
+      ]
     }
   ]
 }
