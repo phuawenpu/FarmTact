@@ -187,8 +187,8 @@ def baseline(farm,cands,existing,demand):
             if not validate_allocations(farm,trial) and simulate(farm,trial,demand,scenarios()[2])['metrics']['cost_sgd']<=float(farm.resources.cash_sgd): chosen=trial; available+=a['expected_kg']
     return chosen
 
-def plan(farm:Farm,time_limit=4):
-    f=forecast(farm); ss=scenarios(farm.fixture_seed); existing=allocations_existing(farm); cands=candidates(farm); result=[]
+def plan(farm:Farm,time_limit=4,*,alpha=.35):
+    f=forecast(farm,alpha=alpha); ss=scenarios(farm.fixture_seed); existing=allocations_existing(farm); cands=candidates(farm); result=[]
     for name,p in POLICIES.items():
         chosen,solver=_solve(farm,cands,existing,f['demand'],ss,name,time_limit)
         allocations=existing+(chosen or [])
@@ -197,6 +197,6 @@ def plan(farm:Farm,time_limit=4):
         violations=validate_allocations(farm,allocations)
         sims=[simulate(farm,allocations,f['demand'],s) for s in ss]
         if any(s['metrics']['cost_sgd']>float(farm.resources.cash_sgd)+.01 for s in sims): violations.append(dict(constraint_code='TOTAL_CASH_BUDGET',entity_id=farm.id,period=None,required=max(s['metrics']['cost_sgd'] for s in sims),available=float(farm.resources.cash_sgd),unit='SGD',severity='hard',repair_options=['Reduce planting or increase the declared fixture budget']))
-        central=sims[1]; sid=content_hash(dict(name=name,input=f['input_hash'],allocations=allocations))[:20]
-        result.append(dict(id=sid,name=name,status='FEASIBLE' if not violations else 'NO_FEASIBLE_PLAN',description=p['description'],policy_parameters=p,metrics=central['metrics'],cost_breakdown=central['cost_breakdown'],allocations=allocations,weekly=central['weekly'],ledger=central['ledger'],scenario_results=[dict(scenario_id=s['scenario_id'],metrics=s['metrics']) for s in sims],scenario_set_id=content_hash(ss),scenario_seed=farm.fixture_seed,violations=violations,solver=solver,input_hash=f['input_hash'],model_version=f['model_version'],calculation_version=VERSION,assumptions=['Synthetic recipes and scenario weights; not commercial yield validation.','Fresh marketable yield includes packout once.','Future sowing cannot cover earlier deliveries.','SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg.'],risk=dict(downside_fill_rate=min(s['metrics']['fill_rate'] for s in sims),downside_margin_sgd=min(s['metrics']['margin_sgd'] for s in sims),basis='minimum across declared scenarios; not a calibrated quantile')))
-    return dict(forecast=f,scenario_set=ss,strategies=result,candidate_count=len(cands),input_hash=content_hash(farm))
+        central=sims[1]; sid=content_hash(dict(name=name,input=f['numerical_input_hash'],allocations=allocations))[:20]
+        result.append(dict(id=sid,name=name,status='FEASIBLE' if not violations else 'NO_FEASIBLE_PLAN',description=p['description'],policy_parameters=p,metrics=central['metrics'],cost_breakdown=central['cost_breakdown'],allocations=allocations,weekly=central['weekly'],ledger=central['ledger'],scenario_results=[dict(scenario_id=s['scenario_id'],metrics=s['metrics']) for s in sims],scenario_set_id=content_hash(ss),scenario_seed=farm.fixture_seed,violations=violations,solver=solver,input_hash=f['input_hash'],numerical_input_hash=f['numerical_input_hash'],configuration_hash=f['configuration_hash'],forecast_settings=f['forecast_settings'],model_version=f['model_version'],calculation_version=VERSION,assumptions=['Synthetic recipes and scenario weights; not commercial yield validation.','Fresh marketable yield includes packout once.','Future sowing cannot cover earlier deliveries.','SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg.'],risk=dict(downside_fill_rate=min(s['metrics']['fill_rate'] for s in sims),downside_margin_sgd=min(s['metrics']['margin_sgd'] for s in sims),basis='minimum across declared scenarios; not a calibrated quantile')))
+    return dict(forecast=f,scenario_set=ss,strategies=result,candidate_count=len(cands),input_hash=f['input_hash'],numerical_input_hash=f['numerical_input_hash'],configuration_hash=f['configuration_hash'],forecast_settings=f['forecast_settings'])

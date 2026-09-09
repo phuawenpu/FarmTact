@@ -1,0 +1,345 @@
+{
+  "status": "PASS",
+  "base_url": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Explorer starts from the original reference",
+      "pass": true
+    },
+    {
+      "name": "360px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "360px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "Crop filter changes plotted records",
+      "pass": true
+    },
+    {
+      "name": "Date filter changes plotted records",
+      "pass": true
+    },
+    {
+      "name": "Keyboard point selection opens actual records",
+      "pass": true
+    },
+    {
+      "name": "Charts and records retain shared crop filter",
+      "pass": true
+    },
+    {
+      "name": "Identify a delivery date with demand and no scheduled harvest",
+      "pass": true
+    },
+    {
+      "name": "Inspect the order records contributing to that forecast",
+      "pass": true
+    },
+    {
+      "name": "Search filters the actual table",
+      "pass": true
+    },
+    {
+      "name": "Filtered JSON export matches table",
+      "pass": true
+    },
+    {
+      "name": "CSV downloads the filtered record set",
+      "pass": true
+    },
+    {
+      "name": "Empty filter is explicit",
+      "pass": true
+    },
+    {
+      "name": "Records paginate at 25 rows",
+      "pass": true
+    },
+    {
+      "name": "Pagination shows remaining 23 records",
+      "pass": true
+    },
+    {
+      "name": "All six generator and smoothing controls are present",
+      "pass": true
+    },
+    {
+      "name": "Control 1 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 1 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 2 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 2 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 3 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 3 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 4 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 4 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 5 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 5 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 6 keyboard minimum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 6 keyboard maximum matches numeric input",
+      "pass": true
+    },
+    {
+      "name": "Control 1 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Control 2 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Control 3 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Control 4 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Control 5 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Control 6 individual reset restores its default",
+      "pass": true
+    },
+    {
+      "name": "Reset restores all declared defaults",
+      "pass": true
+    },
+    {
+      "name": "Out-of-range assumptions cannot be saved",
+      "pass": true
+    },
+    {
+      "name": "Playground alpha and multiplier preview numerically",
+      "pass": true
+    },
+    {
+      "name": "Save and run freezes the selected settings",
+      "pass": true
+    },
+    {
+      "name": "Planner consumes the preview forecast",
+      "pass": true
+    },
+    {
+      "name": "Playground baseline is original at alpha 0.35",
+      "pass": true
+    },
+    {
+      "name": "Save and run automatically opens the frozen result",
+      "pass": true
+    },
+    {
+      "name": "Explicit advisor opens the correct frozen result",
+      "pass": true
+    },
+    {
+      "name": "Experiment continues the selected frozen dataset",
+      "pass": true
+    },
+    {
+      "name": "Infeasible policies retain inspectable results",
+      "pass": true
+    },
+    {
+      "name": "Comparison shows the original baseline and two branches",
+      "pass": true
+    },
+    {
+      "name": "Lean comparison uses the same policy",
+      "pass": true
+    },
+    {
+      "name": "Lean includes delivery, waste, labour, cash, margin and constraints",
+      "pass": true
+    },
+    {
+      "name": "Balanced comparison uses the same policy",
+      "pass": true
+    },
+    {
+      "name": "Balanced includes delivery, waste, labour, cash, margin and constraints",
+      "pass": true
+    },
+    {
+      "name": "Resilient comparison uses the same policy",
+      "pass": true
+    },
+    {
+      "name": "Resilient includes delivery, waste, labour, cash, margin and constraints",
+      "pass": true
+    },
+    {
+      "name": "Computed tradeoff opens frozen numerical evidence",
+      "pass": true
+    },
+    {
+      "name": "390px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "390px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390px completes changed-assumption strategy run",
+      "pass": true
+    },
+    {
+      "name": "390px compares consequences with baseline",
+      "pass": true
+    },
+    {
+      "name": "390px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "390px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "430px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430px completes changed-assumption strategy run",
+      "pass": true
+    },
+    {
+      "name": "430px compares consequences with baseline",
+      "pass": true
+    },
+    {
+      "name": "430px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "430px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "1280px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280px completes changed-assumption strategy run",
+      "pass": true
+    },
+    {
+      "name": "1280px compares consequences with baseline",
+      "pass": true
+    },
+    {
+      "name": "1280px has no document overflow",
+      "pass": true
+    },
+    {
+      "name": "1280px no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "No inference while browsing",
+      "pass": true
+    },
+    {
+      "name": "Browsing preserves main farm and recorded run",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/explorer-live/overview-360.png",
+    "apps/web/screenshots/explorer-live/generator-360.png",
+    "apps/web/screenshots/explorer-live/comparison-360.png",
+    "apps/web/screenshots/explorer-live/overview-390.png",
+    "apps/web/screenshots/explorer-live/generator-390.png",
+    "apps/web/screenshots/explorer-live/comparison-390.png",
+    "apps/web/screenshots/explorer-live/overview-430.png",
+    "apps/web/screenshots/explorer-live/generator-430.png",
+    "apps/web/screenshots/explorer-live/comparison-430.png",
+    "apps/web/screenshots/explorer-live/overview-1280.png",
+    "apps/web/screenshots/explorer-live/generator-1280.png",
+    "apps/web/screenshots/explorer-live/comparison-1280.png"
+  ],
+  "page_errors": [],
+  "inference_requests": [],
+  "branches": [
+    {
+      "id": "88485a71c1283b355390212b57fb0e1a",
+      "status": "COMPLETED",
+      "alpha": 0.8
+    },
+    {
+      "id": "4c02e4065a1ed88ee0e51122bf13fbb4",
+      "status": "COMPLETED",
+      "simulation_status": "NO_FEASIBLE_PLAN"
+    },
+    {
+      "id": "02224f3e83e953c7d66c6edb5e4ad047",
+      "status": "COMPLETED",
+      "width": 390
+    },
+    {
+      "id": "cc52fdf6bfa631fd47af15bd1de7cfba",
+      "status": "COMPLETED",
+      "width": 430
+    },
+    {
+      "id": "7cb04e09e068537211afaae13e4b5c85",
+      "status": "COMPLETED",
+      "width": 1280
+    }
+  ]
+}

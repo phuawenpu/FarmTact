@@ -1,5 +1,6 @@
 """Verify the deployed application and retired workspace HTTP service."""
 import json
+import argparse
 from pathlib import Path
 import socket
 import subprocess
@@ -8,6 +9,9 @@ import httpx
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--report", default="reports/gameplay_hosting.json")
+    args = parser.parse_args()
     services = json.loads(subprocess.check_output(["sprite-env", "services", "list"]))
     report = {
         "status": "PASS",
@@ -40,7 +44,7 @@ def main() -> None:
         "development_http_port_closed", "fly_application_served", "sprite_application_not_served",
     )) and report["fly_health_status"] == 200
     report["status"] = "PASS" if passed else "FAIL"
-    Path("reports/gameplay_hosting.json").write_text(json.dumps(report, indent=2) + "\n")
+    Path(args.report).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report))
     if not passed:
         raise SystemExit(1)

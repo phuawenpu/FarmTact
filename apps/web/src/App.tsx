@@ -1,7 +1,8 @@
 import { Activity, Database, FlaskConical, Leaf, Map, Menu, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
-import { CropLibrary, DataRoom, Outcomes, Setup } from './components/Rooms'
+import { CropLibrary, Outcomes, Setup } from './components/Rooms'
+import { DataExplorer } from './components/DataExplorer'
 import { StatePanel, StatusPill } from './components/Visuals'
 import { World } from './components/World'
 import { api } from './lib/api'
@@ -183,7 +184,7 @@ export default function App() {
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
-              {view === 'data' && <DataRoom sources={bootstrap.sources} capabilities={bootstrap.capabilities} />}
+              {view === 'data' && <DataExplorer bootstrap={bootstrap} />}
               {view === 'outcomes' && <Outcomes run={run} busy={busy} onReplay={replay} />}
               {view === 'setup' && <Setup farm={bootstrap.farm} busy={busy} onSeed={seed} onImport={importFarm} />}
             </>

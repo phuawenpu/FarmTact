@@ -1,0 +1,141 @@
+{
+  "status": "PASS",
+  "base_url": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "source selector includes all 23 registry entries",
+      "pass": true
+    },
+    {
+      "name": "reduced motion preference active",
+      "pass": true
+    },
+    {
+      "name": "available source status and coverage visible",
+      "pass": true
+    },
+    {
+      "name": "numeric observation series plotted",
+      "pass": true
+    },
+    {
+      "name": "chart point opens its actual curated row",
+      "pass": true,
+      "detail": "Selected curated record · wobs-06c64ea02495c9a11368"
+    },
+    {
+      "name": "search is shared by table and chart",
+      "pass": true
+    },
+    {
+      "name": "date range is shared by records and observed series",
+      "pass": true
+    },
+    {
+      "name": "360px has no document overflow",
+      "pass": true,
+      "detail": {
+        "viewport": 360,
+        "document": 360
+      }
+    },
+    {
+      "name": "360px has no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "metadata-only source is explicit",
+      "pass": true
+    },
+    {
+      "name": "metadata-only source has no chart or records",
+      "pass": true
+    },
+    {
+      "name": "forecast records are browsable",
+      "pass": true
+    },
+    {
+      "name": "forecasts are not charted as observations",
+      "pass": true
+    },
+    {
+      "name": "verified source enables export",
+      "pass": true
+    },
+    {
+      "name": "JSON export carries source attribution",
+      "pass": true
+    },
+    {
+      "name": "unverified licence disables UI export",
+      "pass": true
+    },
+    {
+      "name": "server blocks restricted export",
+      "pass": true,
+      "detail": 403
+    },
+    {
+      "name": "390px has no document overflow",
+      "pass": true,
+      "detail": {
+        "viewport": 390,
+        "document": 390
+      }
+    },
+    {
+      "name": "390px has no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430px has no document overflow",
+      "pass": true,
+      "detail": {
+        "viewport": 430,
+        "document": 430
+      }
+    },
+    {
+      "name": "430px has no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280px has no document overflow",
+      "pass": true,
+      "detail": {
+        "viewport": 1280,
+        "document": 1280
+      }
+    },
+    {
+      "name": "1280px has no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no browser console errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "public browsing makes no inference requests",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/explorer-public/available-observations-360.png",
+    "apps/web/screenshots/explorer-public/metadata-only-360.png",
+    "apps/web/screenshots/explorer-public/trade-records-390.png",
+    "apps/web/screenshots/explorer-public/trade-records-430.png",
+    "apps/web/screenshots/explorer-public/trade-records-1280.png"
+  ],
+  "page_errors": [],
+  "console_errors": [],
+  "inference_requests": []
+}

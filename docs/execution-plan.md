@@ -39,3 +39,21 @@ Ownership: root (GPT-6-Astra) owns shared API integration, additive schema revie
 Acceptance remains technical: full automated regression, focused scenario/conversation tests, 360/390/430/1280 browser interaction and screenshot inspection, bounded real DeepSeek dialogue/council test, no repeated inference on replay, deployment preserving saved old/new state. Record actual counts and limitations in `reports/interactive_world.md` as work completes.
 
 User acceptance emphasis (2026-09-08): after first game iteration, run thorough end-to-end tests of the whole game, including functionality and UI/UX. Prioritize clearly explained strategic decisions and easy simulation: problem discovery → editable assumption → numerical consequence → same-baseline comparison → grounded explanation/debrief. Repair usability and correctness issues exposed by realistic complete journeys before declaring completion.
+
+## Data Explorer — implemented and deployed, 2026-09-08 UTC
+
+User-authorized scope: replace the Data source cards with a linked farm-data explorer, deterministic generation playground, immutable saved datasets, parameterized EWMA previews and strategy runs, source-aware public context, browser/API verification and Fly rollout preserving recorded state. Actual operations remain disabled.
+
+Ownership: root owns explorer API contracts, immutable snapshot table, scenario/forecast integration, admission limits, integration/security/persistence tests and release. Real specialists requested using the harness-offered gpt-5.6-sol: `explorer_numerics` owns fixture/settings and shared forecast/planner implementation and numerical tests; `explorer_public` owns cached public-context adapter and its tests; `explorer_ui` owns web explorer, accessible SVG components and browser journey. No recursive delegation; root retains shared contracts/dependencies/migrations. Baseline compatibility distinguishes playground reference roots from main-farm roots. No inference on browsing, preview, save or numerical runs.
+
+Backend milestone: exact original fixture JSON/hash parity; 353-test full Python regression passed, followed by focused changed-path checks. Independent review found and verified repairs for saved input/forecast hash integrity and missing-metadata downgrade. Saved snapshots now require `explorer-snapshot-v1`, complete reference/forecast metadata and matching hashes. Three adversarial review cases pass; combined explorer/model verification passed 53 tests. PostgreSQL concurrent save and interrupted numerical-worker reload passed. Public export permission is enforced from the registry. The existing Fly farm/run/branch/quest/conversation release probe has been captured privately for post-deploy preservation checks. Web chart ownership was explicitly reassigned to the numerical specialist for accurate date axes, separate series and accessible selection; main UI specialist retains the remaining web files.
+
+Data Explorer release complete: full backend milestone 353 passing tests; final
+changed-path 57 passing tests and 22 deployment/adversarial checks; production
+build/contracts pass. Complete browser journey passed 72 checks locally and
+72 on Fly, public context passed 25 locally and 25 on Fly, including widths
+360/390/430/1280 and no inference calls. Released image
+`farmtact:deployment-01M21PK80ABTT3JE5792F676N6` on the existing machine/volume.
+Pre-existing farm, run, branch, conversation and quests survived. Sprite web
+registration removed and port 8080 closed; PostgreSQL retained. Evidence and
+limitations: `reports/data_explorer.md`.

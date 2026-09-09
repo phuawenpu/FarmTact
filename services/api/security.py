@@ -50,6 +50,8 @@ SESSION_GLOBAL = Rule("new_session_global", 100, 3600)
 AI_IP_BURST = Rule("ai_ip_minute", 6, 60)
 AI_IP_HOUR = Rule("ai_ip_hour", 20, 3600)
 AI_TENANT = Rule("ai_session_hour", 12, 3600)
+PREVIEW_IP = Rule("explorer_preview_ip", 60, 60)
+PREVIEW_TENANT = Rule("explorer_preview_session", 30, 60)
 PROBE_IP = Rule("probe_ip", 30, 60)
 STREAM_IP = Rule("stream_open_ip", 12, 60)
 AI_PATH = re.compile(r"^/api/v1/(?:conversations/[^/]+/(?:messages|invite|council)|planning-runs(?:/[^/]+/replan)?)$")
@@ -154,6 +156,11 @@ class AbuseLimits:
                 raise PermissionError("Cross-origin write rejected")
         if path == "/api/v1/bootstrap" and request.method in {"GET", "HEAD"} and not tenant:
             self.consume([(SESSION_IP, network), (SESSION_GLOBAL, "all")])
+        if path == "/api/v1/data-explorer/preview" and request.method == "POST":
+            self.consume([(PREVIEW_IP, network)])
+            if not tenant:
+                raise PermissionError("Session required")
+            self.consume([(PREVIEW_TENANT, tenant)])
         if AI_PATH.fullmatch(path) and request.method == "POST":
             # Charge attempts even for missing IDs, invalid payloads and rotated cookies.
             self.consume([(AI_IP_BURST, network), (AI_IP_HOUR, network)])

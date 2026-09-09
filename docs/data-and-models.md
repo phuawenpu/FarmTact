@@ -67,3 +67,49 @@ regressor, disease classifier or production model-retraining pipeline.
 Implementation evidence: `packages/fixtures.py`, `packages/models/__init__.py`,
 `packages/planner/engine.py`, `scripts/build_features.py`,
 `reports/numerical_evaluation.json`, and `reports/agents/data_foundation.md`.
+
+## Interactive Data Explorer
+
+The Data page now has authenticated, tenant-scoped explorer interfaces under
+`/api/v1/data-explorer`. The reference fixture, each main-farm version, immutable
+saved playgrounds and frozen scenario branches are separate selections. Tables,
+features and forecasts are built from the selected snapshot; the explorer never
+reads the global private feature build as a tenant's data.
+
+The generation playground uses `synthetic-farm-v1`. For zero-based crop index `c`
+and observed week index `w` (0–11), historical kilograms are:
+
+```
+(27 + c × 2 + (w mod 4) × 2 × amplitude)
+    × history_multiplier × (1 + history_trend × w / 11)
+```
+
+At default settings all original records and the original fixture hash are
+preserved. The four-week repeating pattern is an engineering assumption, not
+measured seasonality. Order quantities and prices have separate multipliers;
+recipes, 16 beds, 12 historical weeks and eight future weeks stay fixed.
+
+`recipe-ewma-v1` supports a validated alpha from 0.05 to 0.95, default 0.35.
+It initializes from the first available historical value and folds subsequent
+values using `alpha × value + (1−alpha) × previous`. Confirmed orders are retained;
+only the positive remainder over the weekly booked total is added at week end.
+The saved snapshot freezes the actual forecast, inputs, settings, generator and
+forecast versions, planning cutoff, hashes and original reference. Persisted
+forecasts replay without recomputation. Hash validation rejects corrupted saved
+inputs or forecasts. Worker jobs reject unsupported frozen numerical versions.
+
+Saved playgrounds use the original generated dataset at default alpha as their
+comparison baseline. Child delay/yield/demand/labour/cash experiments inherit that
+baseline and the chosen alpha. Main-farm experiments retain their existing
+baseline. Comparisons reject mixing these different roots, even if their raw
+farm records happen to be identical. Daily and weekly simulation ledgers cover
+the whole farm; crop filtering cannot manufacture a crop-level resource ledger.
+
+The historical numerical evaluation is explicitly labelled with its original
+fixture hash and alpha 0.35. It does not establish accuracy for a changed
+playground or imported farm. Neither EWMA nor CP-SAT is a model trained on real
+farm outcomes. Public context remains separate from private forecasts and is not
+a numerical input. Registry-only sources have no observation charts. Public
+exports require a verified redistribution licence; all exports escape spreadsheet
+formulas and are bounded. Numerical preview admission is capped at 30 requests
+per minute per session and 60 per minute per IP, in addition to existing limits.

@@ -27,6 +27,7 @@ COPY research/ research/
 COPY scripts/ scripts/
 COPY data/fixtures/ data/fixtures/
 COPY reports/deepseek/latest.json reports/deepseek/latest.json
+COPY reports/numerical_evaluation.json reports/numerical_evaluation.json
 COPY --from=web /build/apps/web/dist apps/web/dist
 RUN for part in raw normalized manifests reports runtime; do \
       ln -s /data/public-data/$part /app/data/$part; \

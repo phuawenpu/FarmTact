@@ -330,6 +330,8 @@ def create_app(store=None,start_worker=True):
             for s in r['strategies']:
                 if s['id']==id:return s
         raise HTTPException(404,'Strategy not found')
+    from services.api.data_explorer import install_routes as install_explorer
+    install_explorer(app,tenant)
     from services.api.scenarios import install_routes
     install_routes(app,tenant)
     from services.api.conversations import install_routes as install_conversations

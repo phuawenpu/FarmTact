@@ -1,5 +1,6 @@
 import type { Bootstrap, Crop, EvidenceRecord, Run } from './types'
 import type { Conversation, Quest, Scenario, ScenarioComparison, ScenarioControls } from './game'
+import type { ExplorerDetail, ExplorerSnapshotSummary, ForecastSettings, GeneratorSettings, PublicContext } from './explorer'
 
 const API = '/api/v1'
 
@@ -81,7 +82,7 @@ export const api = {
   }),
   scenarios: async () => (await request<{ scenarios: Scenario[] }>('/scenarios')).scenarios,
   scenario: (id: string) => request<Scenario>(`/scenarios/${encodeURIComponent(id)}`),
-  createScenario: (body: { name: string; parent_scenario_id?: string; source_conversation_id?: string; controls: ScenarioControls; quest_id?: string }) => request<Scenario>('/scenarios', {
+  createScenario: (body: { name: string; parent_scenario_id?: string; source_conversation_id?: string; explorer_snapshot_id?: string; controls: ScenarioControls; quest_id?: string }) => request<Scenario>('/scenarios', {
     method: 'POST',
     headers: { 'Idempotency-Key': crypto.randomUUID() },
     body: JSON.stringify(body),
@@ -96,4 +97,11 @@ export const api = {
   inspectQuest: (questId: string, scenarioId: string) => request<Quest>(`/quests/${encodeURIComponent(questId)}/inspect`, {
     method: 'POST', body: JSON.stringify({ scenario_id: scenarioId }),
   }),
+  explorerSnapshots: async () => (await request<{ snapshots: ExplorerSnapshotSummary[] }>('/data-explorer/snapshots')).snapshots,
+  explorerSnapshot: (id: string, policy = 'Balanced') => request<ExplorerDetail>(`/data-explorer/snapshots/${encodeURIComponent(id)}?policy=${encodeURIComponent(policy)}`),
+  explorerEvaluation: () => request<Record<string, unknown>>('/data-explorer/evaluation'),
+  explorerPreview: (generator_settings: GeneratorSettings, forecast_settings: ForecastSettings, signal?: AbortSignal) => request<ExplorerDetail>('/data-explorer/preview', { method: 'POST', signal, body: JSON.stringify({ generator_settings, forecast_settings }) }),
+  saveExplorerSnapshot: (name: string, generator_settings: GeneratorSettings, forecast_settings: ForecastSettings) => request<ExplorerDetail>('/data-explorer/snapshots', { method: 'POST', headers: { 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name, generator_settings, forecast_settings }) }),
+  explorerPublic: () => request<PublicContext>('/data-explorer/public'),
+  explorerExportUrl: (params: URLSearchParams) => `${API}/data-explorer/export?${params.toString()}`,
 }
