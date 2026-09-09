@@ -9,12 +9,13 @@ const screenshotDir = resolve(root, process.env.FARMTACT_CONVERSATION_SCREENSHOT
 const reportPath = resolve(root, process.env.FARMTACT_CONVERSATION_REPORT || 'reports/conversations_browser.json')
 const fixtureLabel = '[INTERCEPTED FIXTURE]'
 const advisors = [
-  { id: 'mei', name: 'Mei', role: 'Crop scientist' },
-  { id: 'ravi', name: 'Ravi', role: 'Demand analyst' },
-  { id: 'hana', name: 'Hana', role: 'Weather scout' },
-  { id: 'ben', name: 'Ben', role: 'Resource analyst' },
-  { id: 'asha', name: 'Asha', role: 'Planning chair' },
-  { id: 'idris', name: 'Idris', role: 'Independent critic' },
+  { id: 'ravi', name: 'Ravi', role: 'Demand' },
+  { id: 'hana', name: 'Hana', role: 'Weather' },
+  { id: 'idris', name: 'Idris', role: 'Market' },
+  { id: 'mei', name: 'Mei', role: 'Production' },
+  { id: 'lina', name: 'Lina', role: 'Supply Chain' },
+  { id: 'ben', name: 'Ben', role: 'Profit' },
+  { id: 'asha', name: 'Asha', role: 'Planner' },
 ]
 const advisorById = Object.fromEntries(advisors.map(item => [item.id, item]))
 const report = {
@@ -179,8 +180,8 @@ function fixtureApi() {
   const council = (conversation, body) => {
     const user = message(conversation, 'user', body.question, { reply_to: body.reply_to || null })
     const sequence = [
-      ['ravi', 'agreement'], ['mei', 'disagreement'], ['hana', 'challenge'], ['ben', 'answer'],
-      ['asha', 'synthesis'], ['idris', 'challenge'], ['asha', 'synthesis'], ['idris', 'conclusion'],
+      ['ravi', 'agreement'], ['hana', 'challenge'], ['idris', 'answer'], ['mei', 'disagreement'],
+      ['lina', 'answer'], ['ben', 'challenge'], ['asha', 'synthesis'], ['asha', 'conclusion'],
     ]
     let replied = user.id
     for (const [speaker, relationship] of sequence) {
@@ -188,7 +189,7 @@ function fixtureApi() {
       const turn = message(conversation, speaker, `${fixtureLabel} ${advisorById[speaker].name} records ${article} ${relationship} for the council transcript.`, {
         reply_to: replied, relationship, tool_refs: speaker === 'hana' ? [] : ['comparison:balanced.deltas.margin_sgd'],
         evidence_refs: speaker === 'hana' ? ['P01'] : [], request_mode: 'council',
-        critic_conclusion: speaker === 'idris' && relationship === 'conclusion',
+        planner_conclusion: speaker === 'asha' && relationship === 'conclusion',
       })
       replied = turn.id
     }
@@ -228,7 +229,7 @@ function fixtureApi() {
       const request = route.request()
       const url = new URL(request.url())
       const method = request.method()
-      const path = url.pathname
+      const path = url.pathname.replace(/^\/(?:v1|v2|v3)(?=\/api\/v1)/, '')
       let body = null
       if (method === 'POST') { try { body = request.postDataJSON() } catch { body = null } }
       report.intercepted.conversation_requests.push({ method, path, body, idempotency_key_present: Boolean(request.headers()['idempotency-key']) })
@@ -292,7 +293,7 @@ function fixtureApi() {
     async scenarioRoute(route) {
       const request = route.request()
       const url = new URL(request.url())
-      const path = url.pathname
+      const path = url.pathname.replace(/^\/(?:v1|v2|v3)(?=\/api\/v1)/, '')
       const method = request.method()
       let body = null
       if (method === 'POST') { try { body = request.postDataJSON() } catch { body = null } }
@@ -349,8 +350,8 @@ try {
       check(`${advisor.name} shows expertise and current task`, (await advisorDialog.locator('.advisor-profile strong').textContent())?.trim().length > 10 && await advisorDialog.getByText(/Current context:/).isVisible())
     })
   }
-  await page.getByRole('dialog', { name: 'Idris · Independent critic' }).getByRole('button', { name: 'Close' }).click()
-  check('all six advisor conversation records use their role ids', new Set([...fixtures.conversations.values()].map(item => item.advisor_id)).size === 6, [...fixtures.conversations.values()].map(item => item.advisor_id))
+  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
+  check('all seven advisor conversation records use their role ids', new Set([...fixtures.conversations.values()].map(item => item.advisor_id)).size === 7, [...fixtures.conversations.values()].map(item => item.advisor_id))
 
   const currentMei = [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei' && item.snapshot_ref.id === 'demo-farm:v1')
   const savedMei = fixtures.createConversation({ advisor: 'mei', snapshot_kind: 'farm', snapshot_id: 'demo-farm', selected_bed_id: 'bed-01' })
@@ -359,7 +360,7 @@ try {
   const currentRead = fixtures.delayConversationRead(currentMei.id)
   const savedRead = fixtures.delayConversationRead(savedMei.id)
   await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
-  const raceDialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  const raceDialog = page.getByRole('dialog', { name: 'Mei · Production' })
   const savedSelect = raceDialog.getByLabel('Saved discussions')
   await savedSelect.waitFor()
   await currentRead.waitForStart()
@@ -381,7 +382,7 @@ try {
   await raceDialog.getByRole('button', { name: 'Close' }).click()
 
   await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
-  const delayedMeiDialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  const delayedMeiDialog = page.getByRole('dialog', { name: 'Mei · Production' })
   await delayedMeiDialog.getByLabel('Message Mei').fill('fixture-delayed-switch')
   await delayedMeiDialog.getByRole('button', { name: 'Send message' }).click()
   await delayedMeiDialog.getByRole('button', { name: 'Talk to Ravi', exact: true }).click()
@@ -390,13 +391,13 @@ try {
   await page.waitForTimeout(1_500)
   check('delayed response cannot overwrite a newly selected advisor', await switchedRaviDialog.getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).count() === 0 && await switchedRaviDialog.getByLabel('Message Ravi').isVisible())
   await switchedRaviDialog.getByRole('button', { name: 'Talk to Mei', exact: true }).click()
-  await page.getByRole('dialog', { name: 'Mei · Crop scientist' }).getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).waitFor({ timeout: 8_000 })
+  await page.getByRole('dialog', { name: 'Mei · Production' }).getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).waitFor({ timeout: 8_000 })
   check('delayed response remains in its originating saved conversation', [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei')?.messages.some(item => item.content.includes('Delayed Mei response stayed with Mei.')) === true)
-  await page.getByRole('dialog', { name: 'Mei · Crop scientist' }).getByRole('button', { name: 'Close' }).click()
+  await page.getByRole('dialog', { name: 'Mei · Production' }).getByRole('button', { name: 'Close' }).click()
 
   const meiLauncher = page.getByRole('button', { name: /^Talk to Mei,/ })
   await meiLauncher.focus(); await meiLauncher.click()
-  const dialog = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  const dialog = page.getByRole('dialog', { name: 'Mei · Production' })
   await dialog.waitFor()
   const close = dialog.getByRole('button', { name: 'Close' })
   check('conversation modal focuses its close control', await close.evaluate(node => node === document.activeElement))
@@ -444,15 +445,15 @@ try {
   check('invited advisor and original advisor exchange specific linked replies', await dialog.locator('.message-card--advisor > p').filter({ hasText: `${fixtureLabel} Idris disagrees` }).isVisible() && await dialog.locator('.message-card--advisor > p').filter({ hasText: `${fixtureLabel} Mei answers that disagreement` }).isVisible() && await dialog.getByText(/replies to Idris/).first().isVisible())
   check('a two-advisor invitation is not mislabeled as a council', await dialog.getByLabel('Council speakers').count() === 0)
 
-  await composer.fill('Compare the trade-offs and record the critic conclusion.')
+  await composer.fill('Compare the trade-offs and record the planner conclusion.')
   await dialog.getByRole('button', { name: 'Convene council' }).click()
-  await dialog.getByText(`${fixtureLabel} Idris records a conclusion for the council transcript.`).waitFor({ timeout: 8_000 })
+  await dialog.getByText(`${fixtureLabel} Asha records a conclusion for the council transcript.`).waitFor({ timeout: 8_000 })
   const councilTurns = [...fixtures.conversations.values()].find(item => item.advisor_id === 'mei').messages.filter(item => item.request_mode === 'council')
   const renderedCouncilTurns = await dialog.locator('.message-card--advisor').filter({ hasText: 'for the council transcript.' }).count()
   check('council renders eight bounded advisor turns', councilTurns.length === 8 && renderedCouncilTurns === 8, { recorded: councilTurns.length, rendered: renderedCouncilTurns })
-  check('council transcript exposes agreements, disagreements, and critic conclusion', await dialog.getByText(/records an agreement/).count() > 0 && await dialog.getByText(/records a disagreement/).count() > 0 && await dialog.getByText(/Idris records a conclusion/).count() > 0)
-  check('critic conclusion is explicitly identified', await dialog.getByText('Critic’s conclusion', { exact: true }).isVisible() && councilTurns.at(-1)?.critic_conclusion === true)
-  check('council discussion is staged with all six speakers', await dialog.getByLabel('Council speakers').isVisible() && await dialog.getByLabel('Council speakers').locator('span').count() === 6)
+  check('council transcript exposes agreements, disagreements, and planner conclusion', await dialog.getByText(/records an agreement/).count() > 0 && await dialog.getByText(/records a disagreement/).count() > 0 && await dialog.getByText(/Asha records a conclusion/).count() > 0)
+  check('planner conclusion is explicitly identified', await dialog.getByText('Planner’s conclusion', { exact: true }).isVisible() && councilTurns.at(-1)?.planner_conclusion === true)
+  check('council discussion is staged with all seven speakers', await dialog.getByLabel('Council speakers').isVisible() && await dialog.getByLabel('Council speakers').locator('span').count() === 7)
 
   await composer.fill('fixture-unsupported-proposal')
   await dialog.getByRole('button', { name: 'Send message' }).click()
@@ -489,7 +490,7 @@ try {
   fixtures.setReconnect(meiConversation.id)
   await page.reload({ waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /^Talk to Mei,/ }).click()
-  const reconnected = page.getByRole('dialog', { name: 'Mei · Crop scientist' })
+  const reconnected = page.getByRole('dialog', { name: 'Mei · Production' })
   await reconnected.getByText(`${fixtureLabel} The saved partial exchange resumed without duplicating the user message.`).waitFor({ timeout: 8_000 })
   check('reload reconnects to the pending stored exchange', await reconnected.getByText(/resumed without duplicating/).isVisible())
   check('reconnect subscribes to stored conversation events', fixtures.eventStreamGets > streamsBeforeReconnect, { before: streamsBeforeReconnect, after: fixtures.eventStreamGets })
@@ -521,7 +522,7 @@ try {
       }),
     }
   })
-  check('all six advisor shortcuts remain usable in a nonshrinking mobile row', shortcutLayout.height >= 58 && shortcutLayout.overflow_x && shortcutLayout.buttons.length === 6 && shortcutLayout.buttons.every(button => button.height >= 58 && button.name_inside_row), shortcutLayout)
+  check('all seven advisor shortcuts remain usable in a nonshrinking mobile row', shortcutLayout.height >= 58 && shortcutLayout.overflow_x && shortcutLayout.buttons.length === 7 && shortcutLayout.buttons.every(button => button.height >= 58 && button.name_inside_row), shortcutLayout)
   await reconnected.locator('.game-panel__body').evaluate(node => { node.scrollTop = node.scrollHeight })
   const mobileConversationLayout = await reconnected.evaluate(node => {
     const transcript = node.querySelector('.conversation-transcript')

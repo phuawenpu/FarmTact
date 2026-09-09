@@ -267,6 +267,7 @@ export interface Run {
   inference_budget?: Record<string, unknown> | null
   inference_audit?: Record<string, unknown>[] | null
   acceptance?: Record<string, unknown> | null
+  evidence_validation?: Record<string, unknown> | null
   simulated_outcome?: Record<string, unknown> | null
   [key: string]: unknown
 }

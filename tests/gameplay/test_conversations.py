@@ -172,16 +172,17 @@ def execute(store, tenant, request_id):
     execute_conversation_job(store, tenant, request_id)
 
 
-def test_six_original_advisors_and_frozen_create_idempotency(env):
+def test_seven_current_advisors_and_frozen_create_idempotency(env):
     client, store, tenant = env
     roster = client.get("/api/v1/conversations/advisors").json()["advisors"]
     assert [(row["id"], row["name"]) for row in roster] == [
-        ("mei", "Mei"),
         ("ravi", "Ravi"),
         ("hana", "Hana"),
+        ("idris", "Idris"),
+        ("mei", "Mei"),
+        ("lina", "Lina"),
         ("ben", "Ben"),
         ("asha", "Asha"),
-        ("idris", "Idris"),
     ]
     first = create(client).json()
     frozen = ConversationStore(store).get_conversation(tenant, first["id"])
@@ -200,6 +201,8 @@ def test_six_original_advisors_and_frozen_create_idempotency(env):
     assert public["tool_results"]["batch:batch-01.crop_id"] == "caixin"
     assert public["tool_results"]["recipe:caixin-demo-v1.biological_lead_days"] == 28
     assert public["tool_results"]["source:D04.summary"]
+    assert public["tool_results"]["market:signals"]["status"] == "not_connected"
+    assert public["tool_results"]["market:signals"]["connected_social_feeds"] is False
 
 
 def test_direct_message_persists_validated_reply_and_replay_makes_no_call(
@@ -313,7 +316,7 @@ def test_invitation_is_two_sided_exchange_with_specific_reply_graph_and_prior_tu
     assert same_author.json()["detail"] == "Invite a different advisor into this exchange"
 
 
-def test_council_has_eight_bounded_turns_all_with_prior_claims_and_critic_conclusion(
+def test_council_has_seven_bounded_turns_all_with_prior_claims_and_planner_conclusion(
     env, monkeypatch
 ):
     client, store, tenant = env
@@ -332,27 +335,26 @@ def test_council_has_eight_bounded_turns_all_with_prior_claims_and_critic_conclu
     ]
     assert [message["advisor_role"] for message in advisor_messages] == [
         "demand_analyst",
-        "crop_scientist",
-        "supply_weather_scout",
-        "resources_margin_analyst",
+        "weather_analyst",
+        "market_analyst",
+        "production_analyst",
+        "supply_chain_analyst",
+        "profit_analyst",
         "planning_chair",
-        "independent_critic",
-        "planning_chair",
-        "independent_critic",
     ]
-    assert len(calls) == 8
+    assert len(calls) == 7
     for index, call in enumerate(calls[1:], start=1):
         context = json.loads(call["messages"][1]["content"])
         earlier = [turn for turn in context["prior_turns"] if turn["speaker"] == "advisor"]
         assert len(earlier) == index
-    assert advisor_messages[-1]["critic_conclusion"] is True
+    assert advisor_messages[-1]["planner_conclusion"] is True
     assert all(message["request_mode"] == "council" for message in advisor_messages)
     assert advisor_messages[-1]["relationship"] == "conclusion"
     assert advisor_messages[-1]["validation_status"] == "references_verified"
     assert advisor_messages[-1]["reply_to"] == advisor_messages[-2]["id"]
 
 
-def test_council_final_answer_is_unsupported_and_not_a_critic_conclusion(
+def test_council_final_answer_is_unsupported_and_not_a_planner_conclusion(
     env, monkeypatch
 ):
     client, store, tenant = env
@@ -365,23 +367,23 @@ def test_council_final_answer_is_unsupported_and_not_a_critic_conclusion(
         "relationship": "answer",
         "proposed_actions": [],
     }
-    gateway_factory(monkeypatch, calls, responses=[malformed_final] * 8)
+    gateway_factory(monkeypatch, calls, responses=[malformed_final] * 7)
     conversation_id = create(client, key="malformed-council-conversation").json()["id"]
     council = client.post(
         f"/api/v1/conversations/{conversation_id}/council",
-        json={"question": "Reach a critic conclusion from the frozen evidence."},
+        json={"question": "Reach a planner conclusion from the frozen evidence."},
         headers={"Idempotency-Key": "malformed-council"},
     ).json()
     execute(store, tenant, council["id"])
     transcript = client.get(f"/api/v1/conversations/{conversation_id}").json()
     final_message = transcript["messages"][-1]
-    assert len(calls) == 8
-    assert final_message["advisor_role"] == "independent_critic"
+    assert len(calls) == 7
+    assert final_message["advisor_role"] == "planning_chair"
     assert final_message["relationship"] == "answer"
     assert final_message["validation_status"] == "unsupported"
-    assert final_message["critic_conclusion"] is False
+    assert final_message["planner_conclusion"] is False
     assert (
-        "Final independent critic turn must use the conclusion relationship"
+        "Final planning chair turn must use the conclusion relationship"
         in final_message["validation_errors"]
     )
 
@@ -617,7 +619,7 @@ def test_spelled_quantities_and_relative_dates_remain_unsupported(
     )
 
 
-def test_council_preflight_counts_user_and_all_eight_advisor_turns(env):
+def test_council_preflight_counts_user_and_all_seven_advisor_turns(env):
     client, store, tenant = env
     conversation_id = create(client, key="council-cap-conversation").json()["id"]
     persistence = ConversationStore(store)
@@ -841,11 +843,11 @@ def test_whitespace_is_rejected_and_reply_to_advisor_targets_that_speaker(env, m
         reply_to=critic["id"],
     ).json()
     execute(store, tenant, queued["id"])
-    assert calls[0]["role"] == "independent_critic"
+    assert calls[0]["role"] == "market_analyst"
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["speaker_id"] == "idris" and reply["reply_to"] == queued["message_id"]
     assert reply["relationship"] == "answer"
-    assert reply["critic_conclusion"] is False
+    assert "planner_conclusion" in reply and reply["planner_conclusion"] is False
 
 
 def test_real_postgres_conversation_idempotency_sequences_and_restart_persistence():
@@ -870,7 +872,7 @@ def test_real_postgres_conversation_idempotency_sequences_and_restart_persistenc
                 "id": f"conversation-pg-{secrets.token_hex(12)}",
                 "status": "OPEN",
                 "advisor_id": "mei",
-                "advisor_role": "crop_scientist",
+                "advisor_role": "production_analyst",
                 "snapshot_ref": {"hash": "frozen"},
                 "created_at": now(),
                 "updated_at": now(),
@@ -1023,7 +1025,7 @@ def test_deployed_trial_runner_dry_contract_stays_within_aggregate_call_limit(
         )
     else:
         result = trial.run("https://dry.invalid", timeout=5, state_path=state_path)
-    expected_calls = 13 if fail_initial else 11
+    expected_calls = 12 if fail_initial else 10
     assert result["status"] == "PASS"
     assert result["actual_inference_requests"] == expected_calls
     assert result["preserved_failed_requests"] == (1 if fail_initial else 0)

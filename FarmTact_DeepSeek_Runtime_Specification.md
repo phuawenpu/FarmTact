@@ -24,7 +24,7 @@ This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master p
 
 All review, route registration, configuration, schema acceptance, trial execution and development promotion in this document can be completed by coding agents and technical checks. Terms such as “approved” and “reviewed” do not imply a human checkpoint during this phase. Record review results and apply passing changes automatically within Section 0 of the build specification.
 
-The backend accepts only eligible development plans as `ACCEPTED_FOR_SIMULATION`, using a service identity and versioned policy after numerical, evidence, scope and critic checks pass. It never invents a human actor or approval. Keep `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` for actual DeepSeek calls; explicit replay and contract-test modes remain distinct. The default data is `synthetic_demo`; already-authorized historical inputs may be used in `historical_replay` with separate simulated outcomes. Real farm execution and operational `live` promotion remain disabled.
+The backend accepts only eligible development plans as `ACCEPTED_FOR_SIMULATION`, using a service identity and versioned policy after numerical, evidence, scope and evidence checks pass. It never invents a human actor or approval. Keep `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` for actual DeepSeek calls; explicit replay and contract-test modes remain distinct. The default data is `synthetic_demo`; already-authorized historical inputs may be used in `historical_replay` with separate simulated outcomes. Real farm execution and operational `live` promotion remain disabled.
 
 Use supplied development credentials solely for the bounded official DeepSeek calls specified here. Record finite request, token, concurrency and wall-clock limits before execution; preserve the sixteen-request ceiling for the full trial and do not raise budgets automatically to bypass failures. If a required capability or credential is unavailable, record that dependency as blocked and continue work that does not need it. A synthetic fixture or deterministic baseline must never be reported as successful live inference.
 
@@ -32,7 +32,7 @@ Use supplied development credentials solely for the bounded official DeepSeek ca
 
 **Build-time:** the developer's GPT/Codex master and coding/research subagents may research, author files, review code and generate explicitly labelled development fixtures. Their model configuration remains in `.codex/`. This configuration must never be loaded by the FarmTact server.
 
-**Application execution:** every actual LLM inference made by FarmTact—in development, interactive test, staging, evaluations, demo sessions, scheduled jobs or production—must go directly to the official DeepSeek API. This includes specialists, chair, critic, helpers, runtime literature extraction, alias resolution, translation, visual analysis, summarization and any LLM judge. A helper hidden behind a tool is still runtime inference. No OpenAI, Anthropic, Gemini, OpenRouter, other hosting provider or local generative LLM fallback is permitted.
+**Application execution:** every actual LLM inference made by FarmTact—in development, interactive test, staging, evaluations, demo sessions, scheduled jobs or production—must go directly to the official DeepSeek API. This includes seven specialists/planner roles and helpers, runtime literature extraction, alias resolution, translation, visual analysis, summarization and any LLM judge. A helper hidden behind a tool is still runtime inference. No OpenAI, Anthropic, Gemini, OpenRouter, other hosting provider or local generative LLM fallback is permitted.
 
 A developer may use GPT to inspect code or review research. They may not run a GPT-backed FarmTact council and label it a test of the deployed system. Do not build on GPT and defer discovering DeepSeek incompatibilities until the presentation: implement and exercise the DeepSeek gateway early.
 
@@ -59,11 +59,12 @@ Implement the development gateway with `httpx` directly. Using the OpenAI Python
 | Runtime role or helper | Proposed default | Input contract |
 |---|---|---|
 | Demand Analyst | `deepseek-v4-flash` | Typed customer-demand and tool-result text |
-| Crop Scientist | `deepseek-v4-pro` | Reviewed agronomic evidence and approved recipes |
-| Supply & Weather Scout | `deepseek-v4-flash` | Weather, trade and remote-sensing **tool outputs** |
-| Resources & Margin Analyst | `deepseek-v4-flash` | Validated capacities, costs and solver outputs |
+| Production | `deepseek-v4-pro` | Reviewed agronomic evidence and approved recipes |
+| Weather | `deepseek-v4-flash` | Weather, trade and remote-sensing **tool outputs** |
+| Profit | `deepseek-v4-flash` | Validated capacities, costs and solver outputs |
 | Planning Chair | `deepseek-v4-pro` | Comparable strategies and evidence-backed dissent |
-| Independent Critic | `deepseek-v4-pro` | Claims, provenance and constraint results |
+| Market | `deepseek-v4-flash` | Price assumptions and sourced community evidence; explicit missing-feed state |
+| Supply Chain | `deepseek-v4-flash` | Inventory, expiry and delivery timing; missing logistics identified |
 | Evidence Extractor / Crop Alias Resolver | `deepseek-v4-flash` | Source text; structured but untrusted proposed extraction |
 | Runtime Researcher | `deepseek-v4-pro` | Approved retrieval tools; no unrestricted browser or shell |
 | Visual Observer / Document Vision / Satellite Visual Reviewer | `deepseek-v4-flash-vision-exp` | Validated images plus bounded questions |
@@ -192,9 +193,9 @@ Require both a discovered model and a successful content-level probe. An experim
 
 ### DS-G2 — Actual DeepSeek council on synthetic farm inputs
 
-Run the same script with `--with-council`. Six actual role calls discuss a labelled toy Singapore caixin snapshot after the capability probes. It presents a seven-day delivery window and a 35-day new-crop lead time; agents must not claim that new sowing can solve this delivery. The test validates evidence references, automatic simulation acceptance after backend checks, and rejection of real operational execution. It must complete without a human approval event.
+Run the same script with `--with-council`. Seven actual role calls discuss a labelled toy Singapore caixin snapshot after the capability probes. It presents a seven-day delivery window and a 35-day new-crop lead time; agents must not claim that new sowing can solve this delivery. The test validates evidence references, automatic simulation acceptance after backend checks, and rejection of real operational execution. It must complete without a human approval event.
 
-This option adds six model calls, taking the successful script to thirteen HTTP requests, within its sixteen-request ceiling. It is a transport/workflow seed, not the finished optimizer, full agricultural council evaluation or evidence of production benefit. The complete app must subsequently run its real forecast and optimization tools rather than relying on this toy snapshot.
+This option adds seven model calls, taking the successful script to fourteen HTTP requests, within its sixteen-request ceiling. It is a transport/workflow seed, not the finished optimizer, full agricultural council evaluation or evidence of production benefit. The complete app must subsequently run its real forecast and optimization tools rather than relying on this toy snapshot.
 
 ### DS-G3 — Application shadow run and promotion
 
@@ -225,7 +226,7 @@ Development rollback is automatic under a versioned policy to a previously teste
 | DS-11 | Empty/truncated/invalid outputs never become approved claims |
 | DS-12 | Unknown tools, invalid arguments and unauthorized tenant scope are rejected |
 | DS-13 | SSE keep-alives, usage and termination are parsed; incomplete streams are failures |
-| DS-14 | A six-role DeepSeek-only synthetic council preserves lead time; independent backend validation accepts eligible simulation plans without any human action |
+| DS-14 | A seven-role DeepSeek-only synthetic council preserves lead time; independent backend validation accepts eligible simulation plans without any human action |
 | DS-15 | Actual app image-to-council workflow preserves visual provenance and uncertainty |
 | DS-16 | 401/402/429/5xx scenarios never route to another LLM provider |
 | DS-17 | Provider/model/mode/usage metadata is retained without keys, image payloads or private reasoning |
@@ -259,3 +260,8 @@ Documentation was checked on **8 September 2026**. Exact URLs and access notes a
 - **DS10 — Rate limits and isolation:** https://api-docs.deepseek.com/quick_start/rate_limit/
 - **DS11 — Model listing:** https://api-docs.deepseek.com/api/list-models/
 - **DS12 — Pricing:** https://api-docs.deepseek.com/quick_start/pricing — retrieval displayed quick-start content; no numerical price table adopted.
+
+
+## Seven-agent routing amendment — 2026-09-09
+
+Current runtime roles, in council order: `demand_analyst`, `weather_analyst`, `market_analyst`, `production_analyst`, `supply_chain_analyst`, `profit_analyst`, `planning_chair`. Remove the independent-critic route in v3. Existing v1/v2 deployments retain their frozen configuration. Numerical/evidence validation is local code, not a hidden replacement critic call. Each numerical council finding reserves at most 1,536 output tokens; seven calls plus two shared repairs reserve at most 13,824, leaving optional vision inside the unchanged 16,384 ceiling. No new provider, feed scraping, sentiment classifier or background inference is introduced. Market context is frozen with the result; no connected social feed is claimed. Historical evaluation reports retain their original six-role labels and settings.

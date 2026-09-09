@@ -310,7 +310,7 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
                 report["capabilities"]["flash_json"] = _record_completion(flash)
 
                 pro = gateway.chat_json(
-                    "crop_scientist",
+                    "production_analyst",
                     [{
                         "role": "user",
                         "content": (
@@ -416,14 +416,8 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
 
             if with_council:
                 snapshot, plans = _frozen_snapshot_and_plans()
-                role_prompts = [
-                    ("demand_analyst", "Assess delivery demand and the solver-computed shortfall."),
-                    ("crop_scientist", "Check the biological lead-time boundary and avoid inventing yield."),
-                    ("supply_weather_scout", "Assess only the supplied near-term supply; weather evidence is unavailable."),
-                    ("resources_margin_analyst", "Compare the computed feasible strategies without changing quantities."),
-                    ("planning_chair", "Recommend an eligible simulation strategy from the computed candidates."),
-                    ("independent_critic", "Critique constraint compliance, evidence references, and unsupported claims."),
-                ]
+                from packages.agents import ROLES, ROLE_EXPERTISE
+                role_prompts = [(role, ROLE_EXPERTISE[role]) for role in ROLES]
                 known_refs = set(snapshot["evidence_refs"])
                 council_results: list[dict] = []
                 report["council"] = {"status": "RUNNING", "role_results": council_results}
@@ -478,10 +472,10 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
                     "computed_plans": plans,
                     "role_results": council_results,
                     "backend_validation": {
-                        "all_six_roles_present": all_roles_present,
+                        "all_seven_roles_present": all_roles_present,
                         "lead_time_preserved": lead_time_preserved,
                         "selected_strategy_feasible": True,
-                        "critic_completed": True,
+                        "planner_completed": True,
                     },
                     "decision_event": {
                         "event_type": "ACCEPTED_FOR_SIMULATION",
@@ -516,7 +510,7 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", help="Perform real authenticated DeepSeek HTTP calls")
-    parser.add_argument("--with-council", action="store_true", help="Add the six-role synthetic council trial")
+    parser.add_argument("--with-council", action="store_true", help="Add the seven-role synthetic council trial")
     parser.add_argument("--resume", type=Path, help="Resume the recorded stopped compatibility trial within its original budget")
     args = parser.parse_args()
     if not args.live:

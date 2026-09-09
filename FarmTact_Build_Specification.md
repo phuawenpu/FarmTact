@@ -41,7 +41,7 @@ The coding agents may make implementation decisions, construct and validate data
 
 This phase covers local development, isolated test/staging environments and synthetic demonstrations. Set `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` by default; replay and contract tests use their explicit execution modes. Use `data_mode=synthetic_demo` by default. Lawfully available public data and already-authorized historical data may be used with their original provenance. Account/API access and source licence failures block only dependent capabilities; continue independent work. Missing farm facts become explicit unresolved fields or separately labelled fixture assumptions, never fabricated real observations.
 
-The application backend automatically selects a feasible strategy under a versioned policy after numerical, provenance, scope and critic checks pass. Default selection uses the Balanced policy, then a validated deterministic baseline if Balanced has no feasible candidate; rank candidates by the configured numerical objective and use stable strategy IDs to break ties. In an explicitly deterministic baseline run, an independently tested validator supplies the audit report in place of an LLM critic; record `council_status=not_run` or `failed` as applicable, and do not count this as passing council tests. Never relax constraints to force a selection. Unmet buyer conditions exclude a strategy from automatic selection unless an explicitly synthetic scenario supplies that condition. A deterministic simulation runner records simulated work and outcomes so the full planning/replanning loop runs unattended. A council message alone cannot accept or execute a plan.
+The application backend automatically selects a feasible strategy under a versioned policy after numerical, provenance, scope and evidence checks pass. Default selection uses the Balanced policy, then a validated deterministic baseline if Balanced has no feasible candidate; rank candidates by the configured numerical objective and use stable strategy IDs to break ties. In an explicitly deterministic baseline run, an independently tested validator supplies the audit report in place of a completed LLM council; record `council_status=not_run` or `failed` as applicable, and do not count this as passing council tests. Never relax constraints to force a selection. Unmet buyer conditions exclude a strategy from automatic selection unless an explicitly synthetic scenario supplies that condition. A deterministic simulation runner records simulated work and outcomes so the full planning/replanning loop runs unattended. A council message alone cannot accept or execute a plan.
 
 Automatic acceptance is restricted server-side to isolated development tenants with `synthetic_demo` or `historical_replay` data and `test` or `replay` execution. Historical outcomes remain immutable; simulated counterfactual outcomes are stored separately. Use `ACCEPTED_FOR_SIMULATION`, never a fabricated human approval. Persist policy version, service actor, input/strategy hashes, validation report IDs, modes and timestamp. Changed inputs invalidate acceptance and trigger validation and selection again. No approval button, human-review queue or manual fixture entry may be required for the default development workflow.
 
@@ -407,22 +407,25 @@ All actual role/helper inference—including runtime research and LLM-based eval
 
 | Runtime role | Responsibility | Authorized tools | Must challenge |
 |---|---|---|---|
-| Demand Analyst | Bookings, residual demand and buyer uncertainty | Orders, demand model, comparable import indicators | Unconfirmed sales opportunity, bookings double-counting |
-| Crop Scientist | Stage, crop recipe and scientific applicability | Crop/evidence search, batch state, harvest forecast | Wrong taxon, wrong endpoint, impossible maturity |
-| Supply & Weather Scout | Farm exposure and verified external supply risk | Approved weather/trade/optional imagery connectors | Unsupported source-region links and forecast horizons |
-| Resources & Margin Analyst | Space, labour, cash, energy and perishability | Resource calendar, costs, lot inventory | Phantom capacity, unpriced risks, surplus hidden as sales |
-| Planning Chair | Coordinate tools, request alternatives and synthesize | Candidate builder, optimizer, simulator, validation | Unsupported consensus and missing input dependencies |
-| Independent Critic | Final numerical, evidence and feasibility audit | Read-only claims, outputs and validation | Any claim not supported by the frozen run |
+| Demand — Ravi | Crop quantities and delivery dates; bookings versus baseline demand | Orders and numerical demand model | Bookings double-counting; unconfirmed sales counted as orders |
+| Weather — Hana | Conditions, freshness and environmental uncertainty | Cached weather observations and quality metadata | Unsupported yield changes and forecast horizons |
+| Market — Idris | Price assumptions, commercial context and sourced produce reactions | Prices; read-only community evidence summary | Popularity mistaken for measured demand; missing or biased sources |
+| Production — Mei | Recipes, biological lead times and growing space | Approved recipes, batches and harvest forecast | Impossible maturity, invented yield and occupied beds |
+| Supply Chain — Lina | Inventory, expiry, inputs and delivery timing | Lots, resource calendars and numerical allocations | Missing logistics represented as solved constraints |
+| Profit — Ben | Costs, cash, labour and margins | Computed resource and strategy metrics | Surplus counted as sales; unpriced risks |
+| Planner — Asha | Reconcile six findings and explain eligible strategies | Frozen numerical results and validated findings | Unsupported consensus and unresolved dependencies |
 
-These are roles in an auditable workflow, not a claim that six separate model instances always improve accuracy. Test a single-agent tool baseline against the council. Keep the council only if it improves error detection, explanation or decision completion enough to justify its latency and cost.
+These seven responsibilities follow Sumin Lee's interactive research brief and the user's 2026-09-09 direction. They are roles in an auditable workflow, not a claim that more model calls improve accuracy. The independent critic persona is removed in v3. Deterministic numerical, provenance, scope and evidence checks remain independent of every persona. Old editions and recorded critic messages keep their original semantics.
+
+The current bounded council runs six specialist findings followed by the Planner's conclusion, using the same frozen numerical snapshot. Up to two shared repair requests fit inside nine reserved requests (ten with optional vision), with the existing 16,384-token and 300-second ceilings. Dialogue councils also have seven turns. A new `planner_conclusion` closes those conversations; historical `critic_conclusion` remains a historical record.
 
 ### 7.2 State machine
 
-`CREATED → VALIDATING_INPUTS → SNAPSHOTTING → ANALYSING → PROPOSING → CHALLENGING → OPTIMIZING → SIMULATING → CRITIC_REVIEW → VALIDATING_ACCEPTANCE → ACCEPTED_FOR_SIMULATION`
+`CREATED → VALIDATING_INPUTS → SNAPSHOTTING → ANALYSING → PROPOSING → CHALLENGING → OPTIMIZING → SIMULATING → EVIDENCE_VALIDATION → VALIDATING_ACCEPTANCE → ACCEPTED_FOR_SIMULATION`
 
-Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILABLE`, `BUDGET_EXCEEDED`, `FAILED`, `CANCELLED`. The backend applies the automatic-development policy after all required checks pass; failure produces the relevant exception state. Simulated execution records come from the deterministic runner with fixture/run provenance. Historical actuals remain separate. The future operational branch `READY_FOR_APPROVAL → APPROVED` is disabled for this phase and cannot block its workflow.
+Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILABLE`, `BUDGET_EXCEEDED`, `FAILED`, `CANCELLED`, `REVIEW_WITHHELD`. The backend applies the automatic-development policy after all required checks pass; failure produces the relevant exception state. Simulated execution records come from the deterministic runner with fixture/run provenance. Historical actuals remain separate. The future operational branch `READY_FOR_APPROVAL → APPROVED` is disabled for this phase and cannot block its workflow.
 
-The chair first validates inputs and freezes the cutoff. The four specialists create independent evidence briefs from the same snapshot. They propose concerns and candidate actions, not numerical plan totals they have invented. The chair sends these to deterministic candidate generation and the optimizer. The council then challenges actual candidate results. A second, final challenge round can trigger a new solver run. The independent critic checks the final outputs and the chair summarizes unresolved dissent.
+The backend validates inputs and freezes the cutoff, numerical strategy results and Market context. Six specialists inspect these results, followed by the Planner. The backend validates every finding and runs the versioned acceptance policy; an advisor cannot accept a plan. Partial, rejected or unresolved findings withhold automatic acceptance while feasible numerical alternatives stay inspectable (`REVIEW_WITHHELD`). A council with no returned findings may expose the explicitly labelled deterministic baseline, never a claimed council success.
 
 Default policy: at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configured in versioned development settings by the coding agents without human confirmation. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
 
@@ -438,13 +441,13 @@ Store concise explanations suitable for audit, not private model chain-of-though
 
 Demand Analyst: “Bookings cover the baseline requirement. The additional opportunity is conditional on buyer confirmation.”
 
-Crop Scientist: “The proposed new sowing cannot mature in time for the earliest orders. The later delivery window is eligible.”
+Production: “The proposed new sowing cannot mature in time for the earliest orders. The later delivery window is eligible.”
 
-Resources Analyst: “The nursery is constrained on the first date; the second staggered date is feasible.”
+Profit: “The nursery is constrained on the first date; the second staggered date is feasible.”
 
 Chair: “Evaluate the confirmed-demand plan and a separate buyer-confirmed uplift scenario using the same resource calendar.”
 
-Critic: “Both outputs pass lead-time and occupancy checks. The uplift plan is excluded from automatic selection while the buyer condition is unresolved; the confirmed-demand plan can proceed. A separate synthetic scenario can supply a labelled buyer confirmation.”
+Backend evidence check: “Both outputs pass lead-time and occupancy checks. The uplift plan is excluded from automatic selection while the buyer condition is unresolved; the confirmed-demand plan can proceed. A separate synthetic scenario can supply a labelled buyer confirmation.”
 
 The implementation displays actual figures only when returned by tools. This example is a behavioural specification, not a claim about a particular farm.
 
@@ -531,7 +534,7 @@ Use request IDs, pagination, size limits, validation errors, tenant checks and c
 
 ### 8.6 Streaming events
 
-Events include `run_started`, `input_warning`, `source_state`, `tool_started`, `tool_completed`, `agent_claim`, `claim_rejected`, `strategy_ready`, `critic_result`, `acceptance_validating`, `accepted_for_simulation`, `acceptance_invalidated`, `run_failed` and `run_completed`. Payloads carry `run_id`, monotonic `sequence`, `occurred_at`, `event_type`, `schema_version` and a typed body. SSE reconnects must resume from the last event ID. A stream disconnection is not a reason to restart the calculation.
+Events include `run_started`, `input_warning`, `source_state`, `tool_started`, `tool_completed`, `agent_claim`, `claim_rejected`, `strategy_ready`, `evidence_validation`, `acceptance_validating`, `accepted_for_simulation`, `acceptance_invalidated`, `run_failed` and `run_completed`. Payloads carry `run_id`, monotonic `sequence`, `occurred_at`, `event_type`, `schema_version` and a typed body. SSE reconnects must resume from the last event ID. A stream disconnection is not a reason to restart the calculation.
 
 ---
 
@@ -774,3 +777,10 @@ Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepsee
 Once those artifacts exist, run `python -m pytest tests/deepseek -q`, then automatically within the configured development budget—when the key is available—`python scripts/deepseek_trial.py --live --with-council` in test execution mode. The second command must make real billable calls within recorded request/token limits; no additional human confirmation is required for this development trial. It tests provider compatibility and a toy council, not the completed web app. Its full workflow uses synthetic input and preserves the impossible-lead-time counterexample.
 
 A09 owns `runtime/` and `config/deepseek_runtime.json` until these are integrated into the application package layout. A12 owns trial/runbook/release execution; A11 independently extends `tests/deepseek/`. Coordinate shared edits through the master. Authenticated success must be established in the target environment. This documentation rewrite makes no inference calls and creates no trial report; record the actual results when implementation and trials run.
+
+
+## Seven-agent release amendment — 2026-09-09
+
+Publish this change as a fresh `/v3/` instance; preserve `/v1/` and `/v2/` images and game state. `packages/agents.py` defines the canonical roles. Acceptance policy `automatic-development-v2` records `council-evidence-gate-v1`, with its issues and either seven-agent findings or numerical-baseline basis.
+
+Market is distinct from Demand: it describes prices and commercial/community context; Demand computes required quantities and dates. `GET /api/v1/market-signals?crop=...` is tenant scoped, read only and makes no inference/network calls. No social or field-reaction source is connected in this release. Show an explicit empty state, never generated reactions presented as observations. Future supplied observations must have crop/source IDs, UTC observation/retrieval times, reuse permissions and point-in-time eligibility. Aggregate reported directions deterministically; preserve provenance and source restrictions. No reaction changes demand, price or yield automatically. Frozen mission/conversation context retains the selected evidence on replay.

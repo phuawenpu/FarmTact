@@ -19,9 +19,11 @@ interface BoardProps {
 
 export function Board({ farm, crops, run, busy, executionMode, transientEvent, onStart, onDemoReplay, onReplan, onReplay }: BoardProps) {
   const accepted = run?.strategies.find(strategy => strategy.id === run.accepted_strategy_id)
-  const terminalRun = Boolean(run && ['accepted_for_simulation', 'no_feasible_plan', 'failed', 'cancelled', 'stale_input'].includes(run.status.toLowerCase()))
+  const terminalRun = Boolean(run && ['accepted_for_simulation', 'review_withheld', 'no_feasible_plan', 'failed', 'cancelled', 'stale_input'].includes(run.status.toLowerCase()))
   const compactHero = terminalRun && !run?.shared_demo
-  const criticValidated = Boolean(run?.claims.some(claim => claim.role === 'independent_critic' && claim.status === 'validated'))
+  const evidenceStatus = run?.evidence_validation?.status
+  const evidenceValidated = typeof evidenceStatus === 'string' && evidenceStatus.toLowerCase() === 'passed'
+  const reviewWithheld = run?.status.toLowerCase() === 'review_withheld'
   const [previewId, setPreviewId] = useState<string | null>(null)
   const [sheet, setSheet] = useState<'strategy' | 'timeline' | 'council' | null>(null)
   const [tableView, setTableView] = useState(false)
@@ -75,10 +77,10 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
 
       {run && (
         <section className="acceptance-banner">
-          <span className="acceptance-banner__icon"><CheckCircle2 size={21} /></span>
+          <span className="acceptance-banner__icon">{reviewWithheld ? <CircleAlert size={21}/> : <CheckCircle2 size={21} />}</span>
           <div>
-            <strong>{accepted ? `${accepted.name} ${run.shared_demo ? 'was ' : ''}selected automatically` : 'Policy checks in progress'}</strong>
-            <p>{accepted ? acceptanceSummary(run, criticValidated) : 'FarmTact is validating candidates. No approval click is required.'}</p>
+            <strong>{reviewWithheld ? 'Council evidence review withheld' : accepted ? `${accepted.name} ${run.shared_demo ? 'was ' : ''}selected automatically` : 'Policy checks in progress'}</strong>
+            <p>{reviewWithheld ? acceptanceSummary(run, evidenceValidated) : accepted ? acceptanceSummary(run, evidenceValidated) : 'FarmTact is validating candidates. No approval click is required.'}</p>
           </div>
           <span className="mode-chip">{run.execution_mode}</span>
         </section>
@@ -207,9 +209,10 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
   )
 }
 
-function acceptanceSummary(run: Run, criticValidated: boolean) {
+function acceptanceSummary(run: Run, evidenceValidated: boolean) {
+  if (run.status.toLowerCase() === 'review_withheld') return 'Numerical alternatives are available, but council evidence review was withheld. This is not an infeasibility finding.'
   const subject = run.shared_demo ? 'The recorded plan was accepted' : 'Accepted'
-  if (criticValidated) return `${subject} for simulation after numerical validation and independent critic review.`
+  if (evidenceValidated) return `${subject} for simulation after numerical and evidence validation recorded by the council.`
   if (run.council_status === 'not_run') return `${subject} for simulation after numerical validation.`
   return `${subject} for simulation after numerical validation. Council findings remain separately labelled.`
 }

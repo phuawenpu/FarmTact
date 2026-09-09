@@ -14,19 +14,62 @@
     "deepseek-v4-flash-vision-exp"
   ],
   "routes": {
-    "demand_analyst": {"model": "deepseek-v4-flash", "capability": "text"},
-    "crop_scientist": {"model": "deepseek-v4-pro", "capability": "text"},
-    "supply_weather_scout": {"model": "deepseek-v4-flash", "capability": "text"},
-    "resources_margin_analyst": {"model": "deepseek-v4-flash", "capability": "text"},
-    "planning_chair": {"model": "deepseek-v4-pro", "capability": "text"},
-    "independent_critic": {"model": "deepseek-v4-pro", "capability": "text"},
-    "evidence_extractor": {"model": "deepseek-v4-flash", "capability": "text"},
-    "crop_alias_resolver": {"model": "deepseek-v4-flash", "capability": "text"},
-    "runtime_researcher": {"model": "deepseek-v4-pro", "capability": "text"},
-    "visual_observer": {"model": "deepseek-v4-flash-vision-exp", "capability": "vision"},
-    "document_vision": {"model": "deepseek-v4-flash-vision-exp", "capability": "vision"},
-    "satellite_visual_reviewer": {"model": "deepseek-v4-flash-vision-exp", "capability": "vision"},
-    "test_evaluator": {"model": "deepseek-v4-pro", "capability": "text"}
+    "demand_analyst": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "production_analyst": {
+      "model": "deepseek-v4-pro",
+      "capability": "text"
+    },
+    "weather_analyst": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "profit_analyst": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "planning_chair": {
+      "model": "deepseek-v4-pro",
+      "capability": "text"
+    },
+    "evidence_extractor": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "crop_alias_resolver": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "runtime_researcher": {
+      "model": "deepseek-v4-pro",
+      "capability": "text"
+    },
+    "visual_observer": {
+      "model": "deepseek-v4-flash-vision-exp",
+      "capability": "vision"
+    },
+    "document_vision": {
+      "model": "deepseek-v4-flash-vision-exp",
+      "capability": "vision"
+    },
+    "satellite_visual_reviewer": {
+      "model": "deepseek-v4-flash-vision-exp",
+      "capability": "vision"
+    },
+    "test_evaluator": {
+      "model": "deepseek-v4-pro",
+      "capability": "text"
+    },
+    "market_analyst": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    },
+    "supply_chain_analyst": {
+      "model": "deepseek-v4-flash",
+      "capability": "text"
+    }
   },
   "limits": {
     "max_requests": 16,

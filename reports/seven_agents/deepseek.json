@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "base_url": "http://127.0.0.1:8083",
+  "scenario_id": "c3da26536e65f536c3c7eb4aed67d2e8",
+  "conversation_id": "45fcb4cbdeb81dd6032e6bb93750ebbd",
+  "snapshot_hash": "b0aba1dbf560acc67f5d1894f681a73e5eb0d56a5c2ef15356a166290edfb6d7",
+  "actual_inference_requests": 10,
+  "maximum_permitted_requests": 16,
+  "advisor_messages": 10,
+  "validation_states": [
+    "references_verified",
+    "unsupported"
+  ],
+  "favourable_recommendation_required": false,
+  "replay_inference_triggered": false,
+  "private_state_updated": true,
+  "preserved_failed_requests": 0
+}

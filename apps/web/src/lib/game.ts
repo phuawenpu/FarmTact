@@ -1,6 +1,6 @@
 import type { Strategy, StrategyMetrics } from './types'
 
-export type AdvisorId = 'mei' | 'ravi' | 'hana' | 'ben' | 'asha' | 'idris'
+export type AdvisorId = 'ravi' | 'hana' | 'idris' | 'mei' | 'lina' | 'ben' | 'asha'
 
 export interface Advisor {
   id: AdvisorId
@@ -10,6 +10,7 @@ export interface Advisor {
   focus: string
   prompt: string
   color: string
+  roleId: string
 }
 
 export interface ConversationMessage {
@@ -31,6 +32,8 @@ export interface ConversationMessage {
   interpretation_status?: string
   relationship?: string
   request_mode?: string
+  planner_conclusion?: boolean
+  critic_conclusion?: boolean
   proposed_actions?: ProposedAction[]
   replay?: boolean
   [key: string]: unknown
@@ -143,12 +146,13 @@ export interface Quest {
 }
 
 export const ADVISORS: Advisor[] = [
-  { id: 'mei', name: 'Mei', role: 'Crop scientist', location: 'Greenhouse', focus: 'Crop development and biological constraints', prompt: 'Why is this bed delayed?', color: '#d98164' },
-  { id: 'ravi', name: 'Ravi', role: 'Demand analyst', location: 'Market stall', focus: 'Orders, shortages and buyer commitments', prompt: 'Which delivery is most exposed?', color: '#4f8d8c' },
-  { id: 'hana', name: 'Hana', role: 'Weather scout', location: 'Weather station', focus: 'Public conditions and uncertainty', prompt: 'What conditions should we watch?', color: '#4b80a3' },
-  { id: 'ben', name: 'Ben', role: 'Resource analyst', location: 'Tool shed', focus: 'Labour, cash, capacity and margin', prompt: 'Where is the tightest resource?', color: '#b07746' },
-  { id: 'asha', name: 'Asha', role: 'Planning chair', location: 'Council pavilion', focus: 'Alternatives and trade-offs', prompt: 'Compare our best alternatives.', color: '#8a6ea8' },
-  { id: 'idris', name: 'Idris', role: 'Independent critic', location: 'Evidence desk', focus: 'Challenging unsupported conclusions', prompt: 'Show me the evidence.', color: '#667457' },
+  { id: 'ravi', name: 'Ravi', role: 'Demand', roleId: 'demand_analyst', location: 'Orders desk', focus: 'Booked demand, shortages and buyer commitments in kg', prompt: 'Which delivery is most exposed?', color: '#4f8d8c' },
+  { id: 'hana', name: 'Hana', role: 'Weather', roleId: 'weather_analyst', location: 'Weather station', focus: 'Public conditions, source time and uncertainty', prompt: 'What conditions should we watch?', color: '#4b80a3' },
+  { id: 'idris', name: 'Idris', role: 'Market', roleId: 'market_analyst', location: 'Market stall', focus: 'Market evidence and explicitly connected community signals', prompt: 'What market evidence is available?', color: '#667457' },
+  { id: 'mei', name: 'Mei', role: 'Production', roleId: 'production_analyst', location: 'Greenhouse', focus: 'Crop development, yield in kg and biological timing', prompt: 'Why is this bed delayed?', color: '#d98164' },
+  { id: 'lina', name: 'Lina', role: 'Supply Chain', roleId: 'supply_chain_analyst', location: 'Packing shed', focus: 'Inventory, harvest arrivals and delivery timing in kg', prompt: 'Where could supply miss delivery?', color: '#c77b54' },
+  { id: 'ben', name: 'Ben', role: 'Profit', roleId: 'profit_analyst', location: 'Accounts desk', focus: 'Cash, cost and contribution margin in SGD', prompt: 'What drives the margin?', color: '#b07746' },
+  { id: 'asha', name: 'Asha', role: 'Planner', roleId: 'planning_chair', location: 'Council pavilion', focus: 'Validated alternatives, constraints and final synthesis', prompt: 'Compare our best alternatives.', color: '#8a6ea8' },
 ]
 
 export const QUEST_FALLBACKS: Quest[] = [

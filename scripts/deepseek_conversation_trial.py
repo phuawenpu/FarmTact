@@ -3,8 +3,8 @@
 
 This script makes no provider request itself.  It exercises the deployed API,
 whose server-side DeepSeek gateway and global budget remain authoritative.  One
-direct turn, one two-advisor invitation, and one eight-turn council consume 11
-normal requests and at most 15 requests if every allowed format repair is used.
+direct turn, one two-advisor invitation, and one seven-turn council consume ten
+normal requests and at most fourteen requests if every allowed format repair is used.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import time
 import uuid
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -79,9 +80,9 @@ def write_private_state(path: Path, state: dict) -> None:
     path.chmod(0o600)
 
 
-def session_cookie(cookies: httpx.Cookies) -> str | None:
+def session_cookie(cookies: httpx.Cookies, name: str = "farmtact_session") -> str | None:
     return next(
-        (cookie.value for cookie in cookies.jar if cookie.name == "farmtact_session"),
+        (cookie.value for cookie in cookies.jar if cookie.name == name),
         None,
     )
 
@@ -90,6 +91,8 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
     state = json.loads(state_path.read_text()) if state_path and state_path.exists() else {}
     if state.get("url"):
         base_url = state["url"]
+    edition = urlsplit(base_url).path.strip("/")
+    cookie_name = f"farmtact_{edition}_session" if edition.startswith("v") and edition[1:].isdigit() else "farmtact_session"
     prefix = state.setdefault("conversation_trial_prefix", f"conversation-trial-{uuid.uuid4().hex}")
 
     def save_state() -> None:
@@ -97,11 +100,11 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             write_private_state(state_path, state)
 
     with httpx.Client(base_url=base_url.rstrip("/"), timeout=30, follow_redirects=False) as client:
-        if state.get("cookie") and session_cookie(client.cookies) is None:
-            client.cookies.set("farmtact_session", state["cookie"])
+        if state.get("cookie") and session_cookie(client.cookies, cookie_name) is None:
+            client.cookies.set(cookie_name, state["cookie"])
         bootstrap = client.get("/api/v1/bootstrap")
         bootstrap.raise_for_status()
-        state.update(url=base_url, cookie=session_cookie(client.cookies))
+        state.update(url=base_url, cookie=session_cookie(client.cookies, cookie_name))
         save_state()
         batch_id = next(
             bed["batch_id"]
@@ -260,14 +263,14 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             "council",
             f"/api/v1/conversations/{conversation_id}/council",
             {
-                "question": "Convene the council on this frozen experiment. Compare Lean, Balanced, and Resilient consequences, retain disagreements, and let Idris conclude.",
+                "question": "Convene the council on this frozen experiment. Compare Lean, Balanced, and Resilient consequences, retain evidence-backed disagreements, and let Asha conclude.",
                 "reply_to": invited_messages[-1]["id"],
             },
-            expected_messages=8,
-            worst_case_requests=10,
+            expected_messages=7,
+            worst_case_requests=9,
         )
-        if len(council_messages) != 8 or not council_messages[-1].get("critic_conclusion"):
-            raise RuntimeError("Council transcript is missing bounded turns or critic conclusion")
+        if len(council_messages) != 7 or not council_messages[-1].get("planner_conclusion"):
+            raise RuntimeError("Council transcript is missing bounded turns or planner conclusion")
 
         events_response = client.get(f"/api/v1/conversations/{conversation_id}/events")
         events_response.raise_for_status()
@@ -292,7 +295,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
         )
         state.update(
             url=base_url,
-            cookie=session_cookie(client.cookies),
+            cookie=session_cookie(client.cookies, cookie_name),
             scenario_id=scenario["id"],
             conversation_id=conversation_id,
             conversation_snapshot_hash=transcript["snapshot_ref"]["hash"],
@@ -309,7 +312,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             "snapshot_hash": transcript["snapshot_ref"]["hash"],
             "actual_inference_requests": request_count,
             "maximum_permitted_requests": 16,
-            "advisor_messages": 11,
+            "advisor_messages": 10,
             "validation_states": validation_states,
             "favourable_recommendation_required": False,
             "replay_inference_triggered": replay["inference_triggered"],

@@ -2,7 +2,7 @@ import { ArrowRight, Award, BadgeCheck, Bot, Check, ChevronRight, CircleAlert, F
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Advisor, Conversation, ConversationMessage, ProposedAction, Quest, Scenario, ScenarioComparison, ScenarioControls } from '../lib/game'
 import { QUEST_FALLBACKS } from '../lib/game'
-import { api } from '../lib/api'
+import { api, type MarketSignals } from '../lib/api'
 import { editionFromPath, editionPath } from '../lib/edition'
 import { playAudioEffect, playSimulationResult } from '../lib/audio'
 import type { Bed, Crop, Farm, Run, StrategyMetrics } from '../lib/types'
@@ -78,6 +78,16 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
   const transcriptRef = useRef<HTMLDivElement>(null)
   const conversationGeneration = useRef(0)
   const stopStream = useRef<(() => void) | null>(null)
+  const [marketSignals, setMarketSignals] = useState<MarketSignals | null>(null)
+  const [marketSignalsError, setMarketSignalsError] = useState(false)
+
+  useEffect(() => {
+    if (!open || advisor.id !== 'idris') return
+    let cancelled = false
+    setMarketSignals(null); setMarketSignalsError(false)
+    void api.marketSignals(selectedBed?.crop_id).then(value => { if (!cancelled) setMarketSignals(value) }).catch(() => { if (!cancelled) setMarketSignalsError(true) })
+    return () => { cancelled = true }
+  }, [open, advisor.id, selectedBed?.crop_id])
 
   const refresh = useCallback(async (id: string, generation = conversationGeneration.current) => { const value = await api.conversation(id); if (generation === conversationGeneration.current) setConversation(value); return value }, [])
 
@@ -193,12 +203,13 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
       <div className="advisor-profile">
         <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt={`Portrait of ${advisor.name}`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
       </div>
+      {advisor.id === 'idris' && <MarketCommunitySignals data={marketSignals} failed={marketSignalsError}/>}
       <div className="advisor-switcher" aria-label="Advisor shortcuts">{advisors.map(item => <button key={item.id} className={item.id === advisor.id ? 'is-active' : ''} onClick={() => onSelectAdvisor(item)} aria-label={`Talk to ${item.name}`}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><span>{item.name}</span></button>)}</div>
       {!!savedConversations.length && <label className="saved-discussions"><span>Saved discussions</span><select value={conversation?.id || ''} onChange={event => { stopStream.current?.(); const generation = ++conversationGeneration.current; setLoading(true); setBusy(false); setReplyTo(null); void refresh(event.target.value, generation).then(async value => { if (generation === conversationGeneration.current && requestActive(value.last_request_status)) { setBusy(true); await pollForMessages(value.id, value.messages.length, generation) } }).catch(caught => { if (generation === conversationGeneration.current) setError(messageFor(caught, 'Saved discussion could not be opened.')) }).finally(() => { if (generation === conversationGeneration.current) { setLoading(false); setBusy(false) } }) }}><option value="" disabled>Select a frozen record</option>{savedConversations.map(item => <option key={item.id} value={item.id}>{item.advisor_id || 'advisor'} · {snapshotId(item) || 'frozen snapshot'}{item.selected_bed_id ? ` · ${item.selected_bed_id}` : ''}</option>)}</select></label>}
       {conversation && snapshotId(conversation) !== (scenario?.id || `${farm.id}:v${farm.version}`) && <div className="replay-label"><RotateCcw size={15}/><span>Saved frozen discussion · {snapshotId(conversation)}. This is not the current farm snapshot.</span></div>}
       {conversation?.transcript_mode === 'replay' && <div className="replay-label"><RotateCcw size={15}/><span>Recorded replay · opening and replaying use no new inference.</span></div>}
       {conversation?.last_request_status && ['INTERRUPTED','PARTIAL','FAILED','BLOCKED'].includes(conversation.last_request_status.toUpperCase()) && <div className="partial-conversation" role="status"><CircleAlert size={15}/><span><strong>Saved partial discussion · {conversation.last_request_status.toLowerCase()}</strong>Your existing messages are preserved. You can retry the question safely from this snapshot.</span></div>}
-      {conversation?.messages.some(message => message.request_mode === 'council' || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
+      {conversation?.messages.some(message => message.request_mode === 'council' || message.planner_conclusion === true || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
       <div className="prompt-row" aria-label="Suggested questions">
         {[advisor.prompt, 'Show me the evidence.', 'What could I change?'].map(prompt => <button key={prompt} onClick={() => void send(prompt)} disabled={!conversation || busy || loading}>{prompt}</button>)}
       </div>
@@ -231,7 +242,7 @@ function MessageCard({ message, messages, conversation, replying, onReply, onOpe
   return <article className={`message-card message-card--${message.speaker} ${replying ? 'is-replying' : ''}`}>
     {message.reply_to && <span className="message-relationship"><ArrowRight size={12}/> replies to {replied?.speaker_name || replied?.speaker_id || 'earlier message'}{replied ? `: “${replied.content.slice(0, 48)}${replied.content.length > 48 ? '…' : ''}”` : ''}</span>}
     <header><strong>{author}</strong><span className={`validation-chip ${unsupported ? 'validation-chip--bad' : ''}`}>{message.validation_status === 'references_verified' ? 'References checked · advisor interpretation' : message.validation_status || 'recorded'}</span></header>
-    {message.speaker === 'advisor' && message.relationship && <span className="message-relationship">{message.critic_conclusion === true ? 'Critic’s conclusion' : message.relationship.replaceAll('_', ' ')}</span>}
+    {message.speaker === 'advisor' && message.relationship && <span className="message-relationship">{message.planner_conclusion === true ? 'Planner’s conclusion' : message.critic_conclusion === true ? 'Critic’s conclusion · archived role' : message.relationship.replaceAll('_', ' ')}</span>}
     <p>{message.content}</p>
     <AdvisorEvidence message={message} conversation={conversation}/>
     {!!message.highlight_refs?.length && <button className="message-reply" disabled={unsupported} onClick={() => onHighlight(message.highlight_refs || [])}>Show referenced plots</button>}
@@ -240,6 +251,20 @@ function MessageCard({ message, messages, conversation, replying, onReply, onOpe
     {message.validation_status === 'references_verified' && <p className="interpretation-note">Citations and proposed controls were checked. The advisor’s interpretation remains unverified.</p>}
     <button className="message-reply" onClick={onReply}>Reply to this point</button>
   </article>
+}
+
+function MarketCommunitySignals({ data, failed }: { data: MarketSignals | null; failed: boolean }) {
+  const firstSource = data?.sources?.[0] || data?.source
+  const source = typeof firstSource === 'string' ? firstSource : firstSource?.name || firstSource?.id
+  const count = data?.observation_count ?? data?.observations?.length ?? 0
+  const connected = data?.connected_social_feeds ?? Boolean(data?.feeds?.length)
+  return <section className="market-signals" aria-label="Market community signals">
+    <div><p className="kicker">Community signals · read only</p><strong>{source || 'No connected social feeds'}</strong><span className={`validation-chip ${failed || !connected ? 'validation-chip--bad' : ''}`}>{failed ? 'unavailable' : data?.status?.replaceAll('_', ' ') || 'loading'}</span></div>
+    <p>{failed ? 'The market-signals status could not be loaded.' : data?.summary || 'No connected social feeds. No community posts or sentiment observations are available.'}</p>
+    <dl><div><dt>Connected feeds</dt><dd>{connected ? String(data?.feeds?.length || 'yes') : '0'}</dd></div><div><dt>Observations</dt><dd>{count}</dd></div></dl>
+    {data?.provenance && <small>Provenance: {Array.isArray(data.provenance) ? data.provenance.join(' · ') : data.provenance}</small>}
+    {!!data?.limitations?.length && <small>Limits: {data.limitations.join(' · ')}</small>}
+  </section>
 }
 
 export function QuestJournal({ open, farm, onClose, onStartQuest }: { open: boolean; farm: Farm; onClose: () => void; onStartQuest: (quest: Quest) => void }) {

@@ -19,13 +19,14 @@ interface WorldProps {
 
 const advisorPositions: Record<AdvisorId, { x: number; y: number }> = {
   mei: { x: 792, y: 214 }, ravi: { x: 848, y: 493 }, hana: { x: 166, y: 185 },
-  ben: { x: 160, y: 494 }, asha: { x: 667, y: 552 }, idris: { x: 535, y: 625 },
+  ben: { x: 160, y: 494 }, asha: { x: 667, y: 552 }, idris: { x: 535, y: 625 }, lina: { x: 925, y: 635 },
 }
+const advisorById = (id: AdvisorId) => ADVISORS.find(advisor => advisor.id === id)!
 
 export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrops, onOpenOutcomes }: WorldProps) {
   const [panel, setPanel] = useState<Panel>(null)
   const [selectedBedId, setSelectedBedId] = useState<string | null>(farm.beds[0]?.id || null)
-  const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor>(ADVISORS[0])
+  const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor>(advisorById('mei'))
   const [previewDay, setPreviewDay] = useState(0)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -82,7 +83,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
       <section className="world-heading" aria-labelledby="farm-world-title">
         <div><p className="kicker">{farm.location} · synthetic simulation</p><h1 id="farm-world-title">{farm.name}</h1><p>Tap a bed or visit an advisor to explore the plan.</p></div>
         <div className="world-heading__actions">
-          <button className="world-chip" onClick={() => { setSelectedAdvisor(ADVISORS[4]); setScenarioContext(null); setPanel('conversation') }}><Users size={17}/><span>Talk to advisors</span></button>
+          <button className="world-chip" onClick={() => { setSelectedAdvisor(advisorById('asha')); setScenarioContext(null); setPanel('conversation') }}><Users size={17}/><span>Talk to advisors</span></button>
           <button className="world-chip" onClick={() => setPanel('quests')}><ClipboardList size={17}/><span>Quest journal</span></button>
           <button className="world-chip" onClick={() => { setQuestContext(null); setProposedAction(null); setPanel('scenarios') }}><FlaskConical size={17}/><span>Scenario lab</span></button>
           <button className="world-chip" onClick={onOpenCrops}><BookOpen size={17}/><span>Crop almanac</span></button>
@@ -136,14 +137,15 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
         >
           <div className="farm-world-canvas" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}>
             <FarmLandscape />
-            <button className="world-facility" style={{ left: 742, top: 148 }} onClick={() => openAdvisor(ADVISORS[0])}>Visit greenhouse</button>
+            <button className="world-facility" style={{ left: 742, top: 148 }} onClick={() => openAdvisor(advisorById('mei'))}>Visit greenhouse</button>
             <button className="world-facility" style={{ left: 430, top: 112 }} onClick={() => setPanel('list')}>View nursery schedule</button>
-            <button className="world-facility" style={{ left: 855, top: 407 }} onClick={() => openAdvisor(ADVISORS[1])}>Visit market stall</button>
-            <button className="world-facility" style={{ left: 174, top: 386 }} onClick={() => openAdvisor(ADVISORS[3])}>Visit tool shed</button>
-            <button className="world-facility" style={{ left: 668, top: 444 }} onClick={() => openAdvisor(ADVISORS[4])}>Enter council pavilion</button>
+            <button className="world-facility" style={{ left: 855, top: 407 }} onClick={() => openAdvisor(advisorById('idris'))}>Visit market stall</button>
+            <button className="world-facility" style={{ left: 174, top: 386 }} onClick={() => openAdvisor(advisorById('ben'))}>Visit accounts desk</button>
+            <button className="world-facility" style={{ left: 668, top: 444 }} onClick={() => openAdvisor(advisorById('asha'))}>Enter council pavilion</button>
             <button className="world-facility" style={{ left: 869, top: 585 }} onClick={onOpenOutcomes}>Open packing schedule</button>
-            <button className="world-facility" style={{ left: 733, top: 651 }} onClick={() => openAdvisor(ADVISORS[5])}>Open evidence desk</button>
-            <button className="world-facility" style={{ left: 155, top: 101 }} onClick={() => openAdvisor(ADVISORS[2])}>Check weather station</button>
+            <button className="world-facility" style={{ left: 934, top: 684 }} onClick={() => openAdvisor(advisorById('lina'))}>Visit packing shed</button>
+            <button className="world-facility" style={{ left: 733, top: 651 }} onClick={() => openAdvisor(advisorById('idris'))}>Open market evidence</button>
+            <button className="world-facility" style={{ left: 155, top: 101 }} onClick={() => openAdvisor(advisorById('hana'))}>Check weather station</button>
             {farm.beds.map((bed, index) => {
               const position = bedPosition(index)
               const state = previewBed(bed, previewDate, allocationsByBed.get(bed.id))
@@ -166,7 +168,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
             })}
             {ADVISORS.map(advisor => {
               const position = advisorPositions[advisor.id]
-              const hasNotice = advisor.id === 'idris' ? Boolean(run?.claims.some(claim => claim.status !== 'validated')) : Boolean(run?.claims.some(claim => roleMatchesAdvisor(claim.role, advisor.id)))
+              const hasNotice = Boolean(run?.claims.some(claim => roleMatchesAdvisor(claim.role, advisor.id)))
               return (
                 <button key={advisor.id} className={`world-advisor world-advisor--${advisor.id}`} style={{ left: position.x, top: position.y, zIndex: 80 + position.y }} onClick={() => openAdvisor(advisor)} aria-label={`Talk to ${advisor.name}, ${advisor.role} at ${advisor.location}`}>
                   {hasNotice && <span className="world-advisor__notice">!</span>}
@@ -201,14 +203,14 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
 
       <section className="world-shortcuts" aria-label="Farm shortcuts">
         <button onClick={() => setPanel('list')}><List size={19}/><span><b>Accessible farm list</b><small>All 16 beds and next actions</small></span></button>
-        <button onClick={() => { setSelectedAdvisor(ADVISORS[4]); setPanel('conversation') }}><Users size={19}/><span><b>Advisor shortcuts</b><small>Talk, invite or convene council</small></span></button>
+        <button onClick={() => { setSelectedAdvisor(advisorById('asha')); setPanel('conversation') }}><Users size={19}/><span><b>Advisor shortcuts</b><small>Talk, invite or convene council</small></span></button>
         <button onClick={onOpenTools}><Wrench size={19}/><span><b>Planning tools</b><small>Strategies, timeline and resources</small></span></button>
       </section>
 
-      <BedDetailPanel open={panel === 'bed'} bed={selectedBed} crop={selectedBed?.crop_id ? cropMap.get(selectedBed.crop_id) : undefined} farm={farm} run={run} previewDate={previewDate} allocations={selectedBed ? allocationsByBed.get(selectedBed.id) : undefined} onClose={() => setPanel(null)} onExperiment={() => { setQuestContext(null); setProposedAction(null); setPanel('scenarios') }} onAsk={() => { setSelectedAdvisor(ADVISORS[0]); setScenarioContext(null); setPanel('conversation') }}/>
+      <BedDetailPanel open={panel === 'bed'} bed={selectedBed} crop={selectedBed?.crop_id ? cropMap.get(selectedBed.crop_id) : undefined} farm={farm} run={run} previewDate={previewDate} allocations={selectedBed ? allocationsByBed.get(selectedBed.id) : undefined} onClose={() => setPanel(null)} onExperiment={() => { setQuestContext(null); setProposedAction(null); setPanel('scenarios') }} onAsk={() => { setSelectedAdvisor(advisorById('mei')); setScenarioContext(null); setPanel('conversation') }}/>
       <ConversationPanel open={panel === 'conversation'} advisor={selectedAdvisor} advisors={ADVISORS} farm={farm} run={run} selectedBed={selectedBed} scenario={scenarioContext} onHighlight={highlightReferences} onSelectAdvisor={setSelectedAdvisor} onClose={() => setPanel(null)} onOpenScenario={(action, conversationId) => { setProposedAction(action && conversationId ? { action, conversationId } : null); setPanel('scenarios') }}/>
       <QuestJournal open={panel === 'quests'} farm={farm} onClose={() => setPanel(null)} onStartQuest={quest => { setQuestContext(quest.id); setPanel('scenarios') }}/>
-      <ScenarioLab open={panel === 'scenarios'} farm={farm} crops={crops} selectedBed={selectedBed} initialQuestId={questContext} proposedAction={proposedAction} onClose={() => setPanel(null)} onHighlight={ids => { setScenarioAffected(ids); if (ids[0]) setSelectedBedId(ids[0]) }} onInterpret={scenario => { setScenarioContext(scenario); setSelectedAdvisor(ADVISORS[4]); setPanel('conversation') }}/>
+      <ScenarioLab open={panel === 'scenarios'} farm={farm} crops={crops} selectedBed={selectedBed} initialQuestId={questContext} proposedAction={proposedAction} onClose={() => setPanel(null)} onHighlight={ids => { setScenarioAffected(ids); if (ids[0]) setSelectedBedId(ids[0]) }} onInterpret={scenario => { setScenarioContext(scenario); setSelectedAdvisor(advisorById('asha')); setPanel('conversation') }}/>
       <AccessibleFarmView open={panel === 'list'} farm={farm} crops={cropMap} previewDate={previewDate} allocations={allocationsByBed} onSelect={bed => { setSelectedBedId(bed.id); setPanel('bed') }} onClose={() => setPanel(null)}/>
     </div>
   )
@@ -285,6 +287,6 @@ function singaporeCivilDate(iso: string) {
 export function formatPreviewDate(date: Date) { return new Intl.DateTimeFormat('en-SG', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(date) }
 function clamp(value: number, min: number, max: number) { return Math.max(min, Math.min(max, value)) }
 function roleMatchesAdvisor(role: string, advisor: AdvisorId) {
-  const roleMap: Record<AdvisorId, string[]> = { mei: ['crop', 'scientist'], ravi: ['demand', 'market'], hana: ['weather'], ben: ['resource'], asha: ['chair', 'planner'], idris: ['critic'] }
+  const roleMap: Record<AdvisorId, string[]> = { mei: ['production', 'crop', 'scientist'], ravi: ['demand'], hana: ['weather'], ben: ['profit', 'resource'], asha: ['chair', 'planner'], idris: ['market'], lina: ['supply_chain', 'supply chain'] }
   return roleMap[advisor].some(part => role.toLowerCase().includes(part))
 }

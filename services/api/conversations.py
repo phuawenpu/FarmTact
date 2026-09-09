@@ -1,4 +1,4 @@
-"""Persistent typed conversations with FarmTact's six named advisors.
+"""Persistent typed conversations with FarmTact's seven named advisors.
 
 Opening and replaying a conversation are read-only.  Only explicit message,
 invitation, and council requests enqueue DeepSeek work.  Numerical statements
@@ -22,6 +22,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import Field, ValidationError, field_validator, model_validator
 
 from packages.contracts import Strict, content_hash
+from packages.agents import ADVISORS, ROLES, ROLE_EXPERTISE, ROLE_TO_ADVISOR
 from runtime.deepseek_gateway import (
     DeepSeekGateway,
     DeepSeekGatewayError,
@@ -30,84 +31,25 @@ from runtime.deepseek_gateway import (
     provider_user_id_for_tenant,
 )
 from services.api.conversation_store import ConversationStore
+from services.api.market_signals import summarize_signals
 from services.api.store import now
 
 
 ROOT = Path(__file__).parents[2]
-AdvisorId = Literal["mei", "ravi", "hana", "ben", "asha", "idris"]
+AdvisorId = Literal["ravi", "hana", "idris", "mei", "lina", "ben", "asha"]
 AdvisorRole = Literal[
-    "crop_scientist",
     "demand_analyst",
-    "supply_weather_scout",
-    "resources_margin_analyst",
+    "weather_analyst",
+    "market_analyst",
+    "production_analyst",
+    "supply_chain_analyst",
+    "profit_analyst",
     "planning_chair",
-    "independent_critic",
 ]
-
-ADVISORS: dict[str, dict[str, str]] = {
-    "mei": {
-        "id": "mei",
-        "name": "Mei",
-        "role": "crop_scientist",
-        "title": "Crop scientist",
-        "location": "Greenhouse",
-        "expertise": "Crop development and biological constraints",
-    },
-    "ravi": {
-        "id": "ravi",
-        "name": "Ravi",
-        "role": "demand_analyst",
-        "title": "Demand analyst",
-        "location": "Market stall",
-        "expertise": "Orders, shortages, and buyer commitments",
-    },
-    "hana": {
-        "id": "hana",
-        "name": "Hana",
-        "role": "supply_weather_scout",
-        "title": "Weather scout",
-        "location": "Weather station",
-        "expertise": "Public conditions and uncertainty",
-    },
-    "ben": {
-        "id": "ben",
-        "name": "Ben",
-        "role": "resources_margin_analyst",
-        "title": "Resource analyst",
-        "location": "Tool shed",
-        "expertise": "Labour, cash, capacity, and margin",
-    },
-    "asha": {
-        "id": "asha",
-        "name": "Asha",
-        "role": "planning_chair",
-        "title": "Planning chair",
-        "location": "Council pavilion",
-        "expertise": "Alternatives and tradeoffs",
-    },
-    "idris": {
-        "id": "idris",
-        "name": "Idris",
-        "role": "independent_critic",
-        "title": "Independent critic",
-        "location": "Evidence desk",
-        "expertise": "Challenging unsupported conclusions",
-    },
-}
-ROLE_TO_ADVISOR = {advisor["role"]: advisor_id for advisor_id, advisor in ADVISORS.items()}
-COUNCIL_TURNS: tuple[str, ...] = (
-    "demand_analyst",
-    "crop_scientist",
-    "supply_weather_scout",
-    "resources_margin_analyst",
-    "planning_chair",
-    "independent_critic",
-    "planning_chair",
-    "independent_critic",
-)
+COUNCIL_TURNS: tuple[str, ...] = tuple(ROLES)
 DIRECT_MAX_TURNS = 4
 DIRECT_MAX_REPAIRS = 1
-COUNCIL_MAX_TURNS = 8
+COUNCIL_MAX_TURNS = 7
 COUNCIL_MAX_REPAIRS = 2
 TERMINAL_REQUEST_STATUSES = {
     "COMPLETED",
@@ -235,6 +177,7 @@ def _tool_results(
     scenario: dict[str, Any] | None = None,
     planning: dict[str, Any] | None = None,
     source_context: Any | None = None,
+    market_signals: Any | None = None,
 ) -> dict[str, Any]:
     refs: dict[str, Any] = {}
     refs["farm:version"] = snapshot.get("version")
@@ -325,6 +268,12 @@ def _tool_results(
         "status": "unavailable",
         "scope": "No frozen public weather source snapshot is attached. Do not describe current conditions.",
     }
+    refs["market:signals"] = market_signals or {
+        "status": "not_connected",
+        "summary": "No community evidence source is connected.",
+        "connected_social_feeds": False,
+        "observations": [],
+    }
     if isinstance(source_context, list):
         for source in source_context:
             source_id = source.get("id")
@@ -403,6 +352,7 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         bed.get("id") for bed in snapshot.get("beds", [])
     }:
         raise HTTPException(422, "Selected bed is outside the frozen snapshot")
+    market_signals = summarize_signals(snapshot)
     return {
         "snapshot": snapshot,
         "scenario": scenario,
@@ -419,11 +369,13 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
             scenario,
             planning,
             frozen_sources,
+            market_signals,
         ),
         "highlight_refs": sorted(_highlight_refs(snapshot, scenario)),
         "evidence": _evidence_context(snapshot),
         "planning": planning,
         "source_context": frozen_sources,
+        "market_signals": market_signals,
     }
 
 
@@ -659,6 +611,7 @@ def build_conversation_router(
             "_evidence": frozen["evidence"],
             "_planning": frozen["planning"],
             "_source_context": frozen["source_context"],
+            "_market_signals": frozen["market_signals"],
         }
         try:
             result, created = persistence.create_conversation(
@@ -697,11 +650,12 @@ def build_conversation_router(
         replied_message = _resolve_reply(
             persistence, tenant, conversation_id, body.reply_to
         )
-        target_role = (
-            replied_message.get("advisor_role")
-            if replied_message and replied_message.get("speaker") == "advisor"
-            else conversation["advisor_role"]
-        )
+        target_role = conversation["advisor_role"]
+        if replied_message and replied_message.get("speaker") == "advisor":
+            current_advisor = ADVISORS.get(str(replied_message.get("speaker_id")))
+            if current_advisor is None:
+                raise HTTPException(422, "Referenced message has no supported advisor author")
+            target_role = current_advisor["role"]
         return _enqueue(
             persistence,
             tenant,
@@ -928,7 +882,7 @@ def _system_prompt(
     advisor = _advisor_from_role(role)
     relationship = (
         "conclusion"
-        if mode == "council" and final_turn and role == "independent_critic"
+        if mode == "council" and final_turn and role == "planning_chair"
         else "answer"
     )
     compact_example = {
@@ -941,6 +895,7 @@ def _system_prompt(
     }
     return (
         f"You are {advisor['name']}, FarmTact's {advisor['title'].lower()}. "
+        f"Your responsibility is: {ROLE_EXPERTISE[role]}. Keep findings within that responsibility. "
         "Return JSON only, conforming exactly to this schema: "
         + json.dumps(AdvisorReply.model_json_schema(), separators=(",", ":"))
         + ". You are responding to message "
@@ -954,7 +909,7 @@ def _system_prompt(
         "Action rules: delay_days uses unit days, a value from 0 through 14, and an actual batch target_id; yield_percent uses unit percent, a value from 50 through 100, and an actual batch target_id; demand_percent uses unit percent, a value from 50 through 150, and an actual crop target_id; labour_percent and cash_percent use unit percent, a value from 50 through 150, and target_id null. "
         "You may propose only those declared sandbox controls; proposals are hypotheses and never authorize a farm or scenario change. "
         "Never claim a simulated value is an observation, never permit real farm operations, and keep the answer concise. "
-        "Every council speaker receives all earlier public turns, including disagreements and rejected claims. "
+        "Every council speaker receives all earlier public turns, including disagreements and rejected claims. Agreement or disagreement is optional and must follow the frozen evidence. Community and produce reactions are provenance-labelled context, not measured demand. "
         f"For this turn, relationship should normally be {relationship}."
     )
 
@@ -1150,6 +1105,7 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                 conversation["_snapshot"],
                 planning=planning,
                 source_context=conversation.get("_source_context"),
+                market_signals=conversation.get("_market_signals"),
             )
             conversation["updated_at"] = now()
             persistence.save_conversation(tenant, conversation)
@@ -1187,7 +1143,7 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
         return
 
     council_mode = request_payload["mode"] == "council"
-    reserved_calls = 10 if council_mode else 5
+    reserved_calls = 9 if council_mode else 5
     reservation_day = now()[:10]
     if not store.reserve_calls(reserved_calls, 48, reservation_day):
         message = "Daily development inference budget reached; no advisor response was generated."
@@ -1213,9 +1169,10 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                 },
             )
 
+    output_tokens = 1_536 if council_mode else 1_024
     budget = AuditedBudget(
         max_requests=reserved_calls,
-        max_reserved_output_tokens=reserved_calls * 1_024,
+        max_reserved_output_tokens=reserved_calls * output_tokens,
         max_wall_seconds=300,
     )
     max_repairs = COUNCIL_MAX_REPAIRS if council_mode else DIRECT_MAX_REPAIRS
@@ -1261,7 +1218,7 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                         role,
                         messages,
                         AdvisorReply,
-                        max_tokens=1_024,
+                        max_tokens=output_tokens,
                         thinking="disabled",
                     )
                 except DeepSeekResponseError as exc:
@@ -1297,27 +1254,27 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                         role,
                         messages,
                         AdvisorReply,
-                        max_tokens=1_024,
+                        max_tokens=output_tokens,
                         thinking="disabled",
                     )
                 reply = completion.data
                 if reply is None:
                     raise DeepSeekResponseError("DeepSeek returned no validated advisor reply")
                 errors, actions = _validate_reply(reply, conversation)
-                final_critic_conclusion = (
+                final_planner_conclusion = (
                     council_mode
                     and final_turn
-                    and role == "independent_critic"
+                    and role == "planning_chair"
                     and reply.relationship == "conclusion"
                 )
                 if (
                     council_mode
                     and final_turn
-                    and role == "independent_critic"
+                    and role == "planning_chair"
                     and reply.relationship != "conclusion"
                 ):
                     errors.append(
-                        "Final independent critic turn must use the conclusion relationship"
+                        "Final planning chair turn must use the conclusion relationship"
                     )
                     for action in actions:
                         action["status"] = "blocked_unsupported"
@@ -1344,7 +1301,7 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                     "interpretation_status": "unverified_advisor_interpretation",
                     "proposed_actions": actions,
                     "relationship": reply.relationship,
-                    "critic_conclusion": final_critic_conclusion,
+                    "planner_conclusion": final_planner_conclusion,
                     "created_at": now(),
                     "model": completion.model,
                     "usage": asdict(completion.usage),

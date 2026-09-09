@@ -1,0 +1,204 @@
+{
+  "url": "http://127.0.0.1:8080/v3/",
+  "checks": [
+    {
+      "name": "360px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "360px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "360px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+    },
+    {
+      "name": "360px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "360px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 484.625,
+        "width": 334,
+        "height": 60
+      }
+    },
+    {
+      "name": "360px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "360px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "390px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "390px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "390px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+    },
+    {
+      "name": "390px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "390px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 484.625,
+        "width": 364,
+        "height": 60
+      }
+    },
+    {
+      "name": "390px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "390px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "430px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "430px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "430px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+    },
+    {
+      "name": "430px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "430px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 472.09375,
+        "width": 404,
+        "height": 60
+      }
+    },
+    {
+      "name": "430px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "430px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "1280px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "1280px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "1280px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+    },
+    {
+      "name": "1280px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "1280px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 816,
+        "y": 403.25,
+        "width": 434,
+        "height": 60
+      }
+    },
+    {
+      "name": "1280px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "1280px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/seven-agents-360.png",
+    "apps/web/screenshots/seven-agents-390.png",
+    "apps/web/screenshots/seven-agents-430.png",
+    "apps/web/screenshots/seven-agents-1280.png"
+  ]
+}

@@ -78,3 +78,10 @@ browser, 16 audio state/failure, 58 mobile navigation and 94 archived public
 review checks. Sprite web/test registrations removed, ports 8080–8082 closed,
 PostgreSQL retained. See `reports/editions/implementation.md` and release manifests
 for source/image pins, evidence and physical-device testing limitations.
+
+
+## Seven-agent council — active implementation, 2026-09-09
+
+User-approved scope: Sumin's Demand, Weather, Market, Production, Supply Chain, Profit and Planner roles; remove the independent critic persona and repurpose Idris as Market, with Lina joining Supply Chain. Keep deterministic evidence and numerical acceptance checks. No community feed is connected: expose a truthful read-only scaffold with provenance, bounds and cutoff checks, never fake reactions or automatic demand changes. Publish as fresh v3, preserving earlier editions.
+
+Root owns canonical roles, provider routing, mission acceptance, release/spec integration and verification. Three bounded gpt-5.6-sol specialists, without recursive delegation: seven_council owns council/dialogue backend and focused tests; seven_ui owns web roster/world/Market panel and browser checks; market_signals owns pure market summary adapter and tests. Root keeps shared contracts/dependencies and deployment. Continue meaningful GitHub progress pushes at least every 20 minutes during active implementation. Verification covers seven ordered roles, planner conclusion, rejected/partial evidence, bounded requests, provenance/no-feed behavior, tenant isolation, mobile/keyboard/replay and unchanged prior editions.

@@ -75,7 +75,7 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
   }, [run?.id, run?.superseded_by, fetchRun])
 
   useEffect(() => {
-    if (!run?.id || ['completed', 'failed', 'cancelled', 'accepted_for_simulation', 'no_feasible_plan', 'stale_input'].includes(run.status.toLowerCase())) return
+    if (!run?.id || ['completed', 'failed', 'cancelled', 'accepted_for_simulation', 'review_withheld', 'no_feasible_plan', 'stale_input'].includes(run.status.toLowerCase())) return
     const id = run.id
     const source = new EventSource(api.eventsUrl(id))
     source.onmessage = event => {

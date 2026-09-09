@@ -112,8 +112,8 @@ def test_alternate_provider_origin_path_and_model_configs_fail_closed(tmp_path: 
 def test_reviewed_roles_are_complete_and_council_has_no_provider_or_model_override() -> None:
     config = GatewayConfig.load(CONFIG)
     expected_roles = {
-        "demand_analyst", "crop_scientist", "supply_weather_scout", "resources_margin_analyst",
-        "planning_chair", "independent_critic", "evidence_extractor", "crop_alias_resolver",
+        "demand_analyst", "production_analyst", "weather_analyst", "profit_analyst",
+        "planning_chair", "market_analyst", "supply_chain_analyst", "evidence_extractor", "crop_alias_resolver",
         "runtime_researcher", "visual_observer", "document_vision",
         "satellite_visual_reviewer", "test_evaluator",
     }

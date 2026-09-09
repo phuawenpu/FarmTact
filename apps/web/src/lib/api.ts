@@ -3,6 +3,20 @@ import type { Conversation, Quest, Scenario, ScenarioComparison, ScenarioControl
 import type { ExplorerDetail, ExplorerSnapshotSummary, ForecastSettings, GeneratorSettings, PublicContext } from './explorer'
 import { editionPath } from './edition'
 
+export interface MarketSignals {
+  crop_id?: string | null
+  source?: string | { id?: string; name?: string }
+  status: string
+  observation_count?: number
+  observations?: unknown[]
+  connected_social_feeds?: boolean
+  feeds?: unknown[]
+  sources?: Array<string | { id?: string; name?: string }>
+  summary?: string
+  provenance?: string | string[]
+  limitations?: string[]
+}
+
 const API = () => editionPath('/api/v1')
 
 export class ApiError extends Error {
@@ -104,5 +118,6 @@ export const api = {
   explorerPreview: (generator_settings: GeneratorSettings, forecast_settings: ForecastSettings, signal?: AbortSignal) => request<ExplorerDetail>('/data-explorer/preview', { method: 'POST', signal, body: JSON.stringify({ generator_settings, forecast_settings }) }),
   saveExplorerSnapshot: (name: string, generator_settings: GeneratorSettings, forecast_settings: ForecastSettings) => request<ExplorerDetail>('/data-explorer/snapshots', { method: 'POST', headers: { 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name, generator_settings, forecast_settings }) }),
   explorerPublic: () => request<PublicContext>('/data-explorer/public'),
+  marketSignals: (crop?: string) => request<MarketSignals>(`/market-signals${crop ? `?crop=${encodeURIComponent(crop)}` : ''}`),
   explorerExportUrl: (params: URLSearchParams) => `${API()}/data-explorer/export?${params.toString()}`,
 }

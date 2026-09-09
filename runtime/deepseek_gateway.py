@@ -34,11 +34,12 @@ REVIEWED_MODELS = frozenset(
 )
 REVIEWED_ROUTES: dict[str, tuple[str, str]] = {
     "demand_analyst": ("deepseek-v4-flash", "text"),
-    "crop_scientist": ("deepseek-v4-pro", "text"),
-    "supply_weather_scout": ("deepseek-v4-flash", "text"),
-    "resources_margin_analyst": ("deepseek-v4-flash", "text"),
+    "production_analyst": ("deepseek-v4-pro", "text"),
+    "weather_analyst": ("deepseek-v4-flash", "text"),
+    "profit_analyst": ("deepseek-v4-flash", "text"),
     "planning_chair": ("deepseek-v4-pro", "text"),
-    "independent_critic": ("deepseek-v4-pro", "text"),
+    "market_analyst": ("deepseek-v4-flash", "text"),
+    "supply_chain_analyst": ("deepseek-v4-flash", "text"),
     "evidence_extractor": ("deepseek-v4-flash", "text"),
     "crop_alias_resolver": ("deepseek-v4-flash", "text"),
     "runtime_researcher": ("deepseek-v4-pro", "text"),

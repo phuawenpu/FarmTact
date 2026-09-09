@@ -281,6 +281,7 @@ class Run(ViewModel):
     inference_budget: dict[str, Any] | None = None
     inference_audit: list[dict[str, Any]] | None = None
     acceptance: dict[str, Any] | None = None
+    evidence_validation: dict[str, Any] | None = None
     simulated_outcome: dict[str, Any] | None = None
 
 

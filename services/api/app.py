@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field
 from packages.contracts import Farm,Strict,content_hash
 from packages.fixtures import synthetic_farm
+from packages.agents import COUNCIL_VERSION, COUNCIL_MAX_REQUESTS, council_review_issues
 from packages.planner import plan,validate_allocations
 from services.api.store import Store,now
 from services.api.views import ROOT,farm_view,crop_views,source_views,capabilities
@@ -32,6 +33,9 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
     snapshot=store.latest_farm(t);fingerprint=content_hash(dict(snapshot=snapshot,request=body.model_dump(),parent=parent,disruption=disruption,replan_request=replan_request))
     if not key or len(key)>128:raise HTTPException(422,'Idempotency-Key required, maximum 128 characters')
     r=dict(id=secrets.token_hex(16),status='CREATED',created_at=now(),input_version=snapshot['version'],input_hash=content_hash(snapshot),input_snapshot=snapshot,source_snapshot=source_views(),evidence_version=content_hash((ROOT/'research/evidence_register.json').read_text()) if (ROOT/'research/evidence_register.json').exists() else None,execution_mode='test',data_mode='synthetic_demo',development_phase='autonomous_development',decision_policy='automatic_development',council_requested=body.council,with_vision=body.with_vision,council_status='pending' if body.council else 'not_run',strategies=[],claims=[],events=[],warnings=[],parent_run_id=parent,disruption=disruption,replan_request=replan_request)
+    from services.api.market_signals import summarize_signals
+    r['council_version']=COUNCIL_VERSION
+    r['market_signals']=summarize_signals(snapshot)
     try:result,created=store.create_run(t,key,fingerprint,r)
     except ValueError as e:raise HTTPException(409,str(e))
     return dict(id=result['id'],status=result['status'],reused=not created)
@@ -79,7 +83,7 @@ class Worker:
             if r['council_requested']:
                 if not os.environ.get('DEEPSEEK_API_KEY'):
                     r['council_status']='blocked';r['warnings'].append('DeepSeek environment credential unavailable. Numerical baseline remains available; no agent discussion was generated.')
-                elif not store.reserve_calls(9 if r.get('with_vision') else 8,48,reservation_day):
+                elif not store.reserve_calls(COUNCIL_MAX_REQUESTS + int(bool(r.get('with_vision'))),48,reservation_day):
                     r['council_status']='blocked';r['warnings'].append('Daily development inference budget reached; no additional paid requests were made.')
                 else:
                     from runtime.deepseek_gateway import RunBudget,provider_user_id_for_tenant
@@ -87,7 +91,7 @@ class Worker:
                         def reserve(self,output_tokens):
                             super().reserve(output_tokens)
                             emit('inference_request_reserved',dict(request_index=self.request_count,reserved_output_tokens=output_tokens))
-                    reserved_calls=9 if r.get('with_vision') else 8
+                    reserved_calls=COUNCIL_MAX_REQUESTS + int(bool(r.get('with_vision')))
                     call_budget=AuditedBudget(max_requests=reserved_calls,max_reserved_output_tokens=16384,max_wall_seconds=300)
                     try:
                         from services.api.council import council
@@ -98,8 +102,8 @@ class Worker:
                             emit('tool_started',dict(tool='vision_observation',role='visual_observer'))
                             visual=observe_fixture(id,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant));r['visual_observation']=visual
                             emit('tool_completed',dict(tool='vision_observation',role='visual_observer',asset_id=visual['asset_id'],review_status=visual['review_status']))
-                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant))
-                        r['council_status']='completed' if all(c['status']=='validated' for c in claims) else 'claims_rejected'
+                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant),market_signals=r.get('market_signals'))
+                        r['council_status']='completed' if not council_review_issues(claims) else 'claims_rejected'
                     except Exception as exc:
                         # No raw provider/transport message or request may enter public records.
                         claims=progress.get('claims',[]) if 'progress' in locals() else [];audits=progress.get('audits',[]) if 'progress' in locals() else []
@@ -125,16 +129,17 @@ class Worker:
                 else:
                     eligible=[s for s in r['strategies'] if s['status']=='FEASIBLE' and not validate_allocations(farm,s['allocations'])]
                     chosen=next((s for s in eligible if s['name']=='Balanced'),eligible[0] if eligible else None)
-                    critic=next((c for c in claims if c['role']=='independent_critic'),None)
-                    if critic and (critic['status']!='validated' or critic['recommendation']!='proceed_simulation'):
-                        chosen=None;r['warnings'].append('Independent critic did not clear the plan. Evidence remains available; acceptance withheld.')
+                    review_issues=council_review_issues(claims) if claims else []
+                    r['evidence_validation']=dict(version='council-evidence-gate-v1',status='withheld' if review_issues else 'passed',basis='seven-agent-findings' if claims else 'numerical-baseline',issues=review_issues)
+                    if review_issues:
+                        chosen=None;r['warnings'].extend(review_issues)
                     if chosen:
                         emit('acceptance_validating',dict(strategy_id=chosen['id']))
                         r['accepted_strategy_id']=chosen['id'];r['status']='ACCEPTED_FOR_SIMULATION'
-                        r['acceptance']=dict(actor='development-policy-service',policy_version='automatic-development-v1',input_hash=r['input_hash'],input_version=r['input_version'],strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),occurred_at=now(),simulation_only=True)
+                        r['acceptance']=dict(actor='development-policy-service',policy_version='automatic-development-v2',input_hash=r['input_hash'],input_version=r['input_version'],strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),occurred_at=now(),simulation_only=True)
                         r['simulated_outcome']=dict(origin='synthetic',scenario_seed=farm.fixture_seed,ledger=chosen['ledger'],metrics=chosen['metrics'],work=[a for a in chosen['allocations'] if not a.get('executed')])
                         emit('accepted_for_simulation',r['acceptance'])
-                    else:r['status']='NO_FEASIBLE_PLAN'
+                    else:r['status']='REVIEW_WITHHELD' if eligible and review_issues else 'NO_FEASIBLE_PLAN'
                 r['completed_at']=now();r['events']=store.get_events(tenant,id)
                 store.save_run(tenant,r);emit('run_completed',dict(status=r['status'],council_status=r['council_status']))
         except Exception as exc:
@@ -337,6 +342,8 @@ def create_app(store=None,start_worker=True):
             for s in r['strategies']:
                 if s['id']==id:return s
         raise HTTPException(404,'Strategy not found')
+    from services.api.market_signals import install_routes as install_market_signals
+    install_market_signals(app,tenant)
     from services.api.data_explorer import install_routes as install_explorer
     install_explorer(app,tenant)
     from services.api.scenarios import install_routes
