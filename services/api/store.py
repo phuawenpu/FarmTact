@@ -21,6 +21,10 @@ class Store:
         opts={}
         if url=='sqlite://': opts=dict(connect_args={'check_same_thread':False},poolclass=StaticPool)
         self.engine=create_engine(url,**opts)
+        self.control = None
+        if os.environ.get('FARMTACT_EDITION'):
+            from services.api.edition_control import RemoteControl
+            self.control = RemoteControl.from_environment()
         self._transaction=ContextVar("farmtact_transaction",default=None)
         if url.startswith('sqlite'):
             from sqlalchemy import event
@@ -114,6 +118,8 @@ class Store:
                 p=row['payload'];p['status']='FAILED';p['warnings'].append('Worker restarted during execution; inference was not repeated. Start a new mission explicitly.')
                 c.execute(update(runs).where(runs.c.id==row['id']).values(status='FAILED',payload=p))
     def release_unused_calls(self,count,day=None):
+        if self.control is not None:
+            return self.control.release_unused_calls(count,day)
         if not isinstance(count,int) or isinstance(count,bool) or count<0:raise ValueError('Nonnegative unused reservation required')
         if count==0:return
         day=day or now()[:10]
@@ -121,6 +127,8 @@ class Store:
             result=c.execute(update(budget).where(budget.c.id==day,budget.c.reserved_calls>=count).values(reserved_calls=budget.c.reserved_calls-count))
             if result.rowcount!=1:raise ValueError('Invalid budget reconciliation')
     def reserve_calls(self,count,limit=48,day=None):
+        if self.control is not None:
+            return self.control.reserve_calls(count,limit,day)
         if not isinstance(count,int) or isinstance(count,bool) or count<=0:raise ValueError("Positive request reservation required")
         if not isinstance(limit,int) or isinstance(limit,bool) or not 1<=limit<=48:raise ValueError('Daily limit must be within the hard 48-call ceiling')
         # One global daily reservation prevents public demo sessions multiplying paid requests.

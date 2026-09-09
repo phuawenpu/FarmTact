@@ -1,4 +1,30 @@
 # FarmTact
+
+### Release amendment — 9 September 2026
+
+The public root is an edition chooser. The current mobile/data-explorer/review
+release becomes `/v1/`; `/v2/` adds edition navigation, feedback/change/verification
+notes, and optional original gentle music/effects. Each published application
+iteration receives a new immutable numbered edition with a separate private
+deployment, database, worker, cached sources, browser storage and session cookie.
+Returning to an edition resumes its own farm; new editions start with fresh
+reference fixtures. The v1 compatibility adaptation preserves existing gameplay
+and recorded data. Operational abuse counters and inference spending ceilings
+remain shared across editions; they contain no shared game settings or progress.
+
+The side menu and mobile menu expose Edition & evolution, edition-specific
+changes and reviews. The public review archive retains original tested-build
+provenance; targeted retests link feedback to verified changes without rewriting
+earlier reviews or requiring a new full panel for each edition.
+
+Audio is muted until deliberately enabled, is locally bundled and originally
+composed, and has separate music/effects controls and edition-specific volume
+preferences. It pauses in hidden tabs and never substitutes for visible feedback.
+Keep textareas compatible with device-keyboard voice typing and add a short hint
+where appropriate. No custom recording/transcription service is included now.
+Update these specifications as implementation evolves and push progress to GitHub
+at least every 20 minutes during active development.
+
 ## Dataset-first research and coding specification for a master Codex agent and specialist subagents
 
 **Version:** 1.2 — Autonomous development phase · **Research cut-off:** 8 September 2026 · **Market:** Singapore · **Product:** SME farm production planning web application

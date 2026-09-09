@@ -123,6 +123,8 @@ class AbuseLimits:
 
     def consume(self, rules: list[tuple[Rule, str]]) -> None:
         """Atomic, shared across processes/redeployments; failed groups roll back."""
+        if getattr(self.store, 'control', None) is not None:
+            return self.store.control.consume(rules)
         timestamp = self.clock()
         with self.lock, self.store.engine.begin() as connection:
             for rule, principal in sorted(rules, key=lambda item: item[0].name):
@@ -187,7 +189,7 @@ class AbuseMiddleware:
         request = Request(scope)
         path = request.url.path
         # Fixed read-only health and static artwork need neither DB admission nor sessions.
-        if request.method in {"GET", "HEAD"} and (path == "/api/v1/health" or path.startswith(("/assets/", "/art/", "/review-evidence/"))):
+        if request.method in {"GET", "HEAD"} and (path == "/api/v1/health" or path.startswith(("/assets/", "/art/", "/review-evidence/", "/audio/"))):
             return await self.app(scope, receive, send)
         limits = scope["app"].state.abuse_limits
         headers = {"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"}

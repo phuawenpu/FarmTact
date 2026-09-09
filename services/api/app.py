@@ -180,6 +180,8 @@ def create_app(store=None,start_worker=True):
         return response
     from services.api.security import AbuseMiddleware
     app.add_middleware(AbuseMiddleware)
+    from services.api.edition_ingress import EditionIngress
+    app.add_middleware(EditionIngress)
     @app.exception_handler(RequestValidationError)
     async def invalid(request,exc):return JSONResponse({'detail':'Invalid request schema','errors':[{'loc':e['loc'],'type':e['type']} for e in exc.errors()]},422)
     def tenant(request):
@@ -343,6 +345,9 @@ def create_app(store=None,start_worker=True):
         app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
         if (dist/'art').exists():app.mount('/art',StaticFiles(directory=dist/'art'),name='art')
         if (dist/'review-evidence').exists():app.mount('/review-evidence',StaticFiles(directory=dist/'review-evidence'),name='review-evidence')
+        if (dist/'audio').exists():app.mount('/audio',StaticFiles(directory=dist/'audio'),name='audio')
+        @app.get('/changes')
+        @app.get('/changes/')
         @app.get('/review')
         @app.get('/review/')
         @app.get('/')

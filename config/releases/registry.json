@@ -1,0 +1,64 @@
+{
+  "latest": "v2",
+  "editions": [
+    {
+      "id": "v1",
+      "title": "The reference farm",
+      "published_at": "2026-09-09",
+      "summary": "The current farm, data explorer and independent review baseline, preserved as an edition.",
+      "status": "published",
+      "source_commit": "705b640",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/705b640",
+      "compare_url": "",
+      "image_digest": "",
+      "review_url": "/v1/review",
+      "play_url": "/v1/",
+      "changes": [
+        {
+          "title": "Preserved gameplay",
+          "description": "The deployed reference gameplay and prior progress. Edition routing and navigation are compatibility adaptations; no new audio is added to v1.",
+          "feedback_ids": [],
+          "status": "implemented",
+          "evidence": []
+        }
+      ],
+      "original_image": "registry.fly.io/farmtact:deployment-01M22EM68AXASMMMMZB6V715BR"
+    },
+    {
+      "id": "v2",
+      "title": "Editions and a quieter farm",
+      "published_at": "2026-09-09",
+      "summary": "Choose independent editions, follow feedback into changes, and optionally add gentle music and sound effects.",
+      "status": "published",
+      "source_commit": "pending",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/705b640",
+      "compare_url": "",
+      "image_digest": "",
+      "review_url": "/v2/review",
+      "play_url": "/v2/",
+      "changes": [
+        {
+          "title": "Independent editions",
+          "description": "Each edition has its own saved farm, assumptions, branches, conversations and settings.",
+          "feedback_ids": [],
+          "status": "implemented",
+          "evidence": []
+        },
+        {
+          "title": "Feedback to evolution",
+          "description": "Original reviews retain their tested builds. New changes link to evidence without claiming unrelated findings are fixed.",
+          "feedback_ids": [],
+          "status": "implemented",
+          "evidence": []
+        },
+        {
+          "title": "Optional gentle audio",
+          "description": "Original quiet music and soft effects start muted, with separate controls and per-edition preferences.",
+          "feedback_ids": [],
+          "status": "implemented",
+          "evidence": []
+        }
+      ]
+    }
+  ]
+}

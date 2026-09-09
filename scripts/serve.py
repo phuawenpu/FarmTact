@@ -18,4 +18,5 @@ os.environ.setdefault('FARMTACT_EXECUTION_MODE','test')
 from services.api.egress import install
 install()
 import uvicorn
-uvicorn.run('services.api.app:app',host='0.0.0.0',port=8080,access_log=False,proxy_headers=False,limit_concurrency=64,timeout_keep_alive=5)
+target = 'services.api.edition_gateway:create_gateway' if os.environ.get('FARMTACT_ROLE') == 'gateway' else 'services.api.app:app'
+uvicorn.run(target,factory=os.environ.get('FARMTACT_ROLE') == 'gateway',host='0.0.0.0',port=int(os.environ.get('FARMTACT_PORT','8080')),access_log=False,proxy_headers=False,limit_concurrency=64,timeout_keep_alive=5)

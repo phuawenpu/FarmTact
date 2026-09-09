@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PGDATA = Path('/data/postgres')
 SOCKET = '/tmp/farmtact-pg'
 SECRET_NAMES = ('DEEPSEEK_API_KEY', 'GH_TOKEN', 'GITHUB_TOKEN', 'FLY_API_TOKEN',
-                'FLY_ACCESS_TOKEN', 'MOONSHOT_API_KEY', 'MINIMAX_API_KEY')
+                'FLY_ACCESS_TOKEN', 'MOONSHOT_API_KEY', 'MINIMAX_API_KEY', 'FARMTACT_CONTROL_SECRET')
 
 
 def public_environment():
@@ -28,8 +28,10 @@ def public_environment():
 
 def web_environment():
     env = public_environment()
-    if os.environ.get('DEEPSEEK_API_KEY'):
+    if os.environ.get('DEEPSEEK_API_KEY') and os.environ.get('FARMTACT_ROLE') != 'gateway':
         env['DEEPSEEK_API_KEY'] = os.environ['DEEPSEEK_API_KEY']
+    if os.environ.get('FARMTACT_CONTROL_SECRET') and (os.environ.get('FARMTACT_EDITION') or os.environ.get('FARMTACT_ROLE') == 'gateway'):
+        env['FARMTACT_CONTROL_SECRET'] = os.environ['FARMTACT_CONTROL_SECRET']
     return env
 
 
@@ -100,7 +102,7 @@ def main():
         if stopping:
             return 0
         subprocess.run([sys.executable, str(ROOT / 'scripts/initialize_database.py')],
-                       cwd=ROOT, check=True, env=safe_env, timeout=30)
+                       cwd=ROOT, check=True, env={k:v for k,v in safe_env.items() if k not in ('FARMTACT_EDITION','FARMTACT_CONTROL_URL')}, timeout=30)
         if stopping:
             return 0
         web = subprocess.Popen([sys.executable, str(ROOT / 'scripts/serve.py')], cwd=ROOT, env=web_environment())
@@ -108,8 +110,9 @@ def main():
             return 0
         # One bounded public refresh per boot. Existing snapshots survive restarts;
         # failed/missing sources stay visibly unavailable or stale in the UI.
-        refresh = subprocess.Popen([sys.executable, str(ROOT / 'scripts/build_dataset.py'),
-                                    '--with-power'], cwd=ROOT, env=safe_env)
+        if not os.environ.get('FARMTACT_EDITION') and os.environ.get('FARMTACT_ROLE') != 'gateway':
+            refresh = subprocess.Popen([sys.executable, str(ROOT / 'scripts/build_dataset.py'),
+                                        '--with-power'], cwd=ROOT, env=safe_env)
         refresh_deadline = time.monotonic() + 120
         while not stopping:
             if database.poll() is not None or web.poll() is not None:

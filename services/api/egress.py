@@ -16,6 +16,18 @@ def install():
     database_host = database.hostname if database.scheme.startswith('postgresql') else None
     database_port = database.port or 5432
     destinations = {'api.deepseek.com': 443}
+    # Edition/control hosts are deployment-owned infrastructure, not providers.
+    # Only a validated registry id can select a private game upstream.
+    if os.environ.get('FARMTACT_ROLE') == 'gateway':
+        from services.api.release_registry import registry, upstream
+        for entry in registry()['editions']:
+            target = urlsplit(upstream(entry['id']))
+            destinations[target.hostname] = target.port or 80
+    if os.environ.get('FARMTACT_CONTROL_URL'):
+        control = urlsplit(os.environ['FARMTACT_CONTROL_URL'])
+        if control.scheme != 'http' or not control.hostname or not control.hostname.endswith('.flycast') or control.username or control.password or control.query or control.fragment or control.path not in ('', '/'):
+            raise ValueError('Invalid internal control destination')
+        destinations[control.hostname] = control.port or (443 if control.scheme == 'https' else 80)
     if database_host:
         if database_host == 'api.deepseek.com':
             raise ValueError('Database and inference destinations must differ')
@@ -25,6 +37,17 @@ def install():
 
     def resolve(host, port, *args, **kwargs):
         hostname = host.decode('ascii') if isinstance(host, bytes) else host
+        if hostname not in destinations and os.environ.get('FARMTACT_ROLE') == 'gateway':
+            # New editions can be published atomically without rebuilding the
+            # chooser. Recheck only the deployment-owned, validated registry.
+            from services.api.release_registry import registry, upstream
+            for entry in registry()['editions']:
+                candidate = urlsplit(upstream(entry['id']))
+                if candidate.hostname == hostname:
+                    with lock:
+                        destinations[hostname] = candidate.port or 80
+                        addresses.setdefault(hostname, set())
+                    break
         if hostname not in destinations and hostname not in ('0.0.0.0', None):
             raise PermissionError('Outbound hostname is not permitted for the inference service')
         result = original(host, port, *args, **kwargs)

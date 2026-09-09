@@ -1,5 +1,21 @@
 # FarmTact — DeepSeek-only runtime and test specification
 
+### Edition and voice-input amendment — 9 September 2026
+
+Versioned editions keep independent game databases and application workers.
+Existing public abuse limits and the 48-call daily application inference ceiling
+apply across all editions through authenticated private operational controls.
+An unavailable control service blocks paid work; it never falls back to an
+independent per-edition allowance. Edition browsing, change summaries, reviews,
+numerical experimentation and locally bundled sound perform no inference calls.
+
+For initial voice input, users may use their device keyboard's dictation where
+available. FarmTact receives ordinary text input and does not request microphone
+access or transmit audio. A future custom transcription integration requires a
+separate capability/provider decision; mentioning a future key does not configure
+a speech endpoint or change the current DeepSeek-only application runtime.
+
+
 **Version 1.2 · Autonomous development phase · Provider documentation review date retained: 8 September 2026 · Applies to all application LLM execution**
 
 This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master prompt, all specialist briefs and deployment acceptance criteria. On runtime-provider questions, this amendment takes precedence over earlier versions. Section 0 of the build specification controls the current autonomous-development phase: no human approval is required for implementation, testing, independent agent review or development acceptance. Agricultural evidence, ten-crop scope, data provenance, forecasting, optimization and security requirements remain in force.
