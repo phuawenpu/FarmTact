@@ -110,3 +110,14 @@ No sessions or inference calls were created by the hosting assessment. Curated
 inventory/prices/memory are in
 [fly_cost_evidence.json](../../reports/v5/fly_cost_evidence.json), with checks in
 [fly_readonly_checks.json](../../reports/v5/fly_readonly_checks.json).
+
+## Post-v5 inventory update
+
+V5 was subsequently published on 9 September 2026 using the retained topology.
+Its one shared-vCPU/2GB Machine has one attached encrypted 3 GB volume, bringing
+the total to six started Machines and 19 GB of provisioned volumes. The base run
+rate is therefore $81.48 compute + $2.85 volumes = **$84.33 per 30 days** before the
+other charges above. A single 6-vCPU / 12-GB shared host is quoted at $81.47 compute,
+a one-cent rounding difference at equal allocated capacity, before migration,
+new storage or retained rollback resources. The original comparison table remains
+the inventory measured when only v1-v4 were published. No consolidation was made.

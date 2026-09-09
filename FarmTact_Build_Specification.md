@@ -1,8 +1,8 @@
 # FarmTact
 
-### V5 planning amendment — 9 September 2026
+### V5 release amendment — 9 September 2026
 
-V4 remains the current published release. The next engagement release follows
+V5 is the current published release. Its engagement work follows
 `docs/v5-engagement-plan.md`, using Sumin's business proposal and the original
 briefing's page-13 rubric. News supports the seven-member decision council with
 bounded, dated and frozen public evidence. Crop recognition, audio audibility and
@@ -54,8 +54,8 @@ actual result status. Digital signal and browser tests do not establish physical
 speaker audibility or human preference. Independent AI reviews and these limits
 must remain visible in release evidence.
 
-Implementation and independent acceptance remain in progress; these changes have
-not been published as v5 yet. Test/release evidence belongs in reports/v5.
+The verified source was published as immutable v5 at /v5/, while v1-v4 retained
+their source/image and recorded state. Test/release evidence belongs in reports/v5.
 
 ### Release amendment — 9 September 2026
 

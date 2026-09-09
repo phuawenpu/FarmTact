@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "closed_ports": {
+    "8080": true,
+    "8085": true
+  },
+  "remaining_services": [
+    "farmtact-db",
+    "keepalive-manual-keepalive"
+  ],
+  "http_registrations": 0,
+  "database_retained": true
+}

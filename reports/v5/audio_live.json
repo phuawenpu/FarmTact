@@ -1,0 +1,310 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "edition": "v5",
+  "checks": [
+    {
+      "name": "v5 begins silent",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "silent-start explanation is visible",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "audible v5 defaults are exposed when no preference was saved",
+      "pass": true,
+      "detail": {
+        "music": "55",
+        "effects": "70"
+      }
+    },
+    {
+      "name": "buttons and actual slider inputs are at least 44 px high",
+      "pass": true,
+      "detail": [
+        {
+          "tag": "BUTTON",
+          "width": 295.234375,
+          "height": 44
+        },
+        {
+          "tag": "BUTTON",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "tag": "BUTTON",
+          "width": 116,
+          "height": 44
+        },
+        {
+          "tag": "INPUT",
+          "width": 172.046875,
+          "height": 44
+        },
+        {
+          "tag": "BUTTON",
+          "width": 116,
+          "height": 44
+        },
+        {
+          "tag": "INPUT",
+          "width": 172.046875,
+          "height": 44
+        },
+        {
+          "tag": "BUTTON",
+          "width": 345.625,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "volume slider responds to keyboard",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "preference write is edition-scoped",
+      "pass": true,
+      "detail": {
+        "farmtact:v5:audio:preferences": "{\"musicEnabled\":true,\"effectsEnabled\":true,\"musicVolume\":0.56,\"effectsVolume\":0.68}"
+      }
+    },
+    {
+      "name": "partial playback failure stays visible and recoverable while collapsed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "explicit retry clears error and starts both channels",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "v5 requests edition-pinned music and test",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/navigate.wav",
+        "/v5/audio/detail.wav",
+        "/v5/audio/confirm.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "music has real decode, advancing playhead, loop and configured gain",
+      "pass": true,
+      "detail": {
+        "path": "/v5/audio/farm-garden-loop.wav",
+        "paused": false,
+        "currentTime": 0.051141,
+        "duration": 64,
+        "volume": 0.56,
+        "readyState": 4,
+        "loop": true
+      }
+    },
+    {
+      "name": "sound test entered native play state at configured gain",
+      "pass": true,
+      "detail": {
+        "path": "/v5/audio/sound-test.wav",
+        "paused": false,
+        "currentTime": 0.051138,
+        "duration": 0.38,
+        "volume": 0.68,
+        "readyState": 4,
+        "loop": false
+      }
+    },
+    {
+      "name": "persisted effects-off is respected by master activation",
+      "pass": true,
+      "detail": {
+        "before": 1,
+        "after": 1
+      }
+    },
+    {
+      "name": "effects-off preference remains persisted",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "all semantic assets decode",
+      "pass": true,
+      "detail": [
+        {
+          "name": "farm-garden-loop",
+          "status": 200,
+          "duration": 64,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "navigate",
+          "status": 200,
+          "duration": 0.14,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "detail",
+          "status": 200,
+          "duration": 0.2,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "confirm",
+          "status": 200,
+          "duration": 0.3,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "complete",
+          "status": 200,
+          "duration": 0.48,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "shortfall",
+          "status": 200,
+          "duration": 0.48,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "withheld",
+          "status": 200,
+          "duration": 0.58,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "error",
+          "status": 200,
+          "duration": 0.34,
+          "sampleRate": 44100,
+          "channels": 1
+        },
+        {
+          "name": "sound-test",
+          "status": 200,
+          "duration": 0.38,
+          "sampleRate": 44100,
+          "channels": 1
+        }
+      ]
+    },
+    {
+      "name": "complete result maps to exactly one semantic player",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "shortfall result maps to exactly one semantic player",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "withheld result maps to exactly one semantic player",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "error result maps to exactly one semantic player",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "polling duplicate creates no second result player",
+      "pass": true,
+      "detail": [
+        "/v5/audio/farm-garden-loop.wav",
+        "/v5/audio/sound-test.wav",
+        "/v5/audio/complete.wav",
+        "/v5/audio/shortfall.wav",
+        "/v5/audio/withheld.wav",
+        "/v5/audio/error.wav"
+      ]
+    },
+    {
+      "name": "hidden tab pauses every player",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reload remains opt-in",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "browser run has no uncaught errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "requests": [
+    "/v5/audio/farm-garden-loop.wav",
+    "/v5/audio/sound-test.wav",
+    "/v5/audio/farm-garden-loop.wav",
+    "/v5/audio/navigate.wav",
+    "/v5/audio/detail.wav",
+    "/v5/audio/confirm.wav",
+    "/v5/audio/complete.wav",
+    "/v5/audio/shortfall.wav",
+    "/v5/audio/withheld.wav",
+    "/v5/audio/error.wav",
+    "/v5/audio/sound-test.wav",
+    "/v5/audio/complete.wav",
+    "/v5/audio/shortfall.wav",
+    "/v5/audio/withheld.wav",
+    "/v5/audio/error.wav"
+  ]
+}

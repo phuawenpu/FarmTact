@@ -1,8 +1,8 @@
 # V5 engagement and hosting plan
 
-Status: implemented candidate undergoing final acceptance; v4 remains published. Updated 2026-09-09.
+Status: complete; immutable v5 is published and deployed checks are recorded. Updated 2026-09-09.
 
-The next unused immutable edition turns Sumin Lee's decision-support proposal into
+The published v5 edition turns Sumin Lee's decision-support proposal into
 a clearer playable loop: find a delivery shortage, inspect its records, change an
 assumption, calculate three strategies, compare the same policy and explain the
 consequence using saved numerical evidence. Sumin's root PDF is the business
@@ -60,3 +60,15 @@ recorded run. Shut down Sprite public HTTP services after final verification.
 Keep specifications and evidence current and push meaningful Git progress at
 least every 20 minutes during active work. Baseline reports are findings, not
 proof that their proposed fixes have shipped.
+
+
+## Completed release
+
+V5 is live at https://farmtact.fly.dev/v5/. Candidate acceptance passed 443 backend
+tests and the full browser journeys. Deployed game 30, explorer 73, audio 22,
+News 24, release chooser 6, snapshot race 3, decision semantics 6 and API smoke 17
+checks pass. News live uses a documented latency-tolerant test harness. Earlier
+concurrent navigation timeouts remain visible, and concurrent service capacity is
+not certified by the later isolated passes. Source/image and captured owned state
+for v1-v4 are preserved. Sprite public HTTP is shut down. See
+[implementation and limitations](../reports/v5/implementation.md).

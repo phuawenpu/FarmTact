@@ -163,3 +163,22 @@ cited frozen News; replay made no additional call. Final review repaired same-ha
 but different-root mission association and enlarged constraint detail targets.
 Publication and deployed smoke/preservation checks are next. No old edition has
 been changed; next release remains the unused v5.
+
+
+V5 publication: source 0f54565 is frozen at /v5/ with image
+sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103;
+manifest commit 255f1b1. Deployed API smoke passes 17 checks, including one actual
+explicit advisor call and zero-call replay. Game 30, explorer 73 (five completed
+numerical jobs), audio 22, News 24, edition chooser 6, snapshot race 3 and isolated decision semantics 6 pass.
+Parallel navigation timeouts and measured latency are retained in reports/v5;
+isolated checks distinguish functional behavior from unproven concurrent capacity.
+Prior v1-v4 pinned releases and captured owned records are unchanged. Sprite HTTP
+registrations were removed, ports 8080/8085 are closed, and its database remains.
+With v5 published, six shared-vCPU/2GB Machines plus 19GB of provisioned volumes
+have an estimated $84.33 base 30-day run rate before other charges. Equivalent
+consolidated compute saves one cent, so the current topology remains in place.
+
+Final sequential deployed probes returned HTTP 200 in 0.027–0.187 seconds. News
+live assertions use documented DOM readiness/time bounds and clean route disposal;
+they do not erase the original network-idle timeout. All release evidence is in
+reports/v5. This engagement and conditional hosting goal is complete.

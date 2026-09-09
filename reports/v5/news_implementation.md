@@ -1,6 +1,6 @@
 # V5 News implementation milestone
 
-2026-09-09 UTC; not yet published.
+2026-09-09 UTC; published as immutable v5 at https://farmtact.fly.dev/v5/.
 
 Four RSS feeds collected 346 valid metadata records: SFA Newsroom 154, SFA
 Circulars 123, AFSIS 64 and ASEAN Agri-food 5. The source's year 0001 placeholder
@@ -25,13 +25,14 @@ responses. An additional source-date test exposed ignored AM/PM markers; the
 parser now handles SFA's exact format before generic email dates. Revalidation of
 the existing development cache corrected 69 timestamps/hashes from preserved raw
 publication strings without inventing a new retrieval time. All 346 records remain
-valid. No production records were changed.
+valid. This correction preceded publication; older editions were not modified.
 
-Verification: 37 focused News/review/Fly-boot checks pass, including the separate
-collector's stripped credential environment. A wider backend regression passed
-113 checks before the final date-parser additions; the 37-check run covers those
-changed paths. The initial News browser run passed 22 checks; a final failed-filter/retry disclosure
-check is being added. A real local explicit Market advisor request completed in one
-DeepSeek call, cited the frozen title and context hash, and replayed without
-inference (reports/v5/advisor_local.json). These remain local candidate results;
-publication and deployed verification are pending.
+Verification: 37 focused News/review/Fly-boot checks passed, including the separate
+collector's stripped credential environment; the final complete backend suite
+passed 443 tests. Candidate News browser verification passed 24 checks, including
+failed-filter disclosure and retry. The Fly collector independently ingested the
+same 346 records. Both the local and deployed explicit Market advisor checks used
+one actual DeepSeek request each, cited the frozen title and context hash, and
+replayed without additional inference (advisor_local.json and live_api.json).
+Deployed browser outcomes and transport timing are recorded separately; see the
+final implementation report for the complete release acceptance evidence.

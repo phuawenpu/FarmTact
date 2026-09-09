@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "root chooser exposes five editions",
+      "pass": true,
+      "detail": [
+        "Play V1 ",
+        "Play V2 ",
+        "Play V3 ",
+        "Play V4 ",
+        "Play V5 "
+      ]
+    },
+    {
+      "name": "release registry has v1 through v5 summaries",
+      "pass": true,
+      "detail": [
+        {
+          "id": "v1",
+          "summary": "The current farm, data explorer and independent review baseline, preserved as an edition.",
+          "change_count": 1
+        },
+        {
+          "id": "v2",
+          "summary": "Choose independent editions, follow feedback into changes, and optionally add gentle music and sound effects.",
+          "change_count": 5
+        },
+        {
+          "id": "v3",
+          "summary": "Seven farming advisors connect demand, weather, market, production, supply chain, profit and planning. Market separates sourced community reactions from demand.",
+          "change_count": 3
+        },
+        {
+          "id": "v4",
+          "summary": "The seven-agent farm with a usable mobile message field and device-keyboard voice guidance on its own row.",
+          "change_count": 2
+        },
+        {
+          "id": "v5",
+          "summary": "Trace a dated supply gap into frozen strategies, distinctive crops, clearer optional sound and sourced News context.",
+          "change_count": 5
+        }
+      ]
+    },
+    {
+      "name": "side selector exposes v1 through v5",
+      "pass": true,
+      "detail": [
+        "V1 \u00b7 The reference farm",
+        "V2 \u00b7 Editions and a quieter farm",
+        "V3 \u00b7 Seven perspectives, one farm",
+        "V4 \u00b7 Room to ask a question",
+        "V5 \u00b7 Follow a delivery decision"
+      ]
+    },
+    {
+      "name": "side selector explains isolated edition state",
+      "pass": true
+    },
+    {
+      "name": "no page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "read-only chooser made no POST/provider request",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "page_errors": [],
+  "provider_requests": [],
+  "observed_wall_seconds": 1.3
+}

@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "prior_editions": {
+    "v1": {
+      "farms/demo-farm/snapshot": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+      "scenarios": "dfc20128eda24663db9c5d0a6f12c4574f83cedcdcb9cc973a096ff7021e2a0f",
+      "quests": "eeb980da3085cb73239e720fed4906a0718a1035f1d5460b8871066015d053de",
+      "planning-runs/01fdb5fce7fcad2e78ad41281ce04f99": "b36f523c169055e234525ef2ac781910c0f5fdb928332e5f52acad24f4a3d744",
+      "scenarios/4bed943390a0a37b2969703908d0d748": "6a5ccc49b5917ef15a7984a3a11c81037dfeef83316b39d70f67ae3b3397033c",
+      "conversations/563bc09a3efa7a80af198813e0edad6f": "08db08a6bc04d19f361e2a64d00918798b0e0c163d5ed796ee87f97062b5ecd9",
+      "release": "07a1d7a05bbaac08e24cece7e63437f1a9b34207dec500bebac2a50a54ab243d"
+    },
+    "v2": {
+      "farms/demo-farm/snapshot": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+      "scenarios": "9cc94e02ec3f17d1318d90d3a2f788ec37ba0f7f09fb69ecde07ea73dfd9e302",
+      "quests": "b2e8742e516c84e48ababb0efb860141879c5dadd6cf71396e042e829fa4d404",
+      "release": "0fba8c2b6a1181af6f0e0745140822c5bc6c5616a6ccdb631adfcbf48208050d"
+    },
+    "v3": {
+      "farms/demo-farm/snapshot": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+      "scenarios": "673497177242cbe61d7d1d8132d0c132bde33dc737c0ac810efbd1ed97aa257d",
+      "quests": "b2e8742e516c84e48ababb0efb860141879c5dadd6cf71396e042e829fa4d404",
+      "data-explorer/snapshots/saved:0f4c4385cc0fee47688aad12e0754e3c": "a106d7a4154829e4df7a18eaa9e46a0ca4d13ea1f8a1a2ef5fb176128298685b",
+      "conversations/175e14622f4c2ee4f61a10e2fb4b5913": "0e2dfc224df092fd9da9f9c576c249805c560029558e6b2006d18809e4b4b895",
+      "planning-runs/764e1ce62377ef6e6838e01a5f8a89e6": "11a7690b1e9bccf629295b55ef6ba86857138166fd403696b470c832190de6dc",
+      "release": "118552a6f591581312f95409504716d1fb0ae76cdef172e4409a863b88da3f19"
+    },
+    "v4": {
+      "farms/demo-farm/snapshot": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+      "scenarios": "b324a9a7fee0492cae3d3b387d9310140674214954a1c15056b7192686891d64",
+      "quests": "ee1ffa6608d87e326476040b94fe04227f03341a450b1d8ad236fda2c56ff625",
+      "release": "ae417c08111c999e590f09d5c537d393f703b24f547d2ba6b87ac7e2e5d7d84e"
+    }
+  },
+  "provider_calls": 0,
+  "scope": "Read-only owned records, unchanged manifests and exact health source pins before/after v5"
+}

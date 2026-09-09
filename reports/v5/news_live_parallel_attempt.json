@@ -1,0 +1,23 @@
+{
+  "status": "FAIL",
+  "base": "https://farmtact.fly.dev",
+  "edition": "v5",
+  "checks": [],
+  "page_errors": [],
+  "provider_submissions": 0,
+  "fixtures": [],
+  "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://farmtact.fly.dev/v5/\", waiting until \"networkidle\"\u001b[22m\n",
+  "attempt_observations": [
+    {
+      "harness": "original",
+      "observed_wall_seconds": 58.6,
+      "result": "networkidle timeout during parallel load; zero checks recorded"
+    },
+    {
+      "harness": "latency-tolerant temporary copy",
+      "observed_wall_seconds": 73.8,
+      "result": "delayed route.fetch still pending when context disposed",
+      "pending_request_path": "/v5/api/v1/news?geography=singapore&period=all"
+    }
+  ]
+}

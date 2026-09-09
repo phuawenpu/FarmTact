@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "url": "https://farmtact.fly.dev/v5/",
+  "checks": [
+    {
+      "name": "exact immutable source",
+      "pass": true
+    },
+    {
+      "name": "edition cookie cannot read prior edition",
+      "pass": true
+    },
+    {
+      "name": "seven council roles",
+      "pass": true
+    },
+    {
+      "name": "public numerical observations retained",
+      "pass": true
+    },
+    {
+      "name": "real cached News metadata",
+      "pass": true
+    },
+    {
+      "name": "news changes no numerical inputs",
+      "pass": true
+    },
+    {
+      "name": "real numerical worker completed",
+      "pass": true
+    },
+    {
+      "name": "saved alpha reaches strategy inputs",
+      "pass": true
+    },
+    {
+      "name": "same-policy alternatives retained",
+      "pass": true
+    },
+    {
+      "name": "scenario freezes exact News context",
+      "pass": true
+    },
+    {
+      "name": "continuation retains root and News",
+      "pass": true
+    },
+    {
+      "name": "sandbox leaves main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "advisor attached to selected frozen scenario",
+      "pass": true
+    },
+    {
+      "name": "explicit advisor completes through configured gateway",
+      "pass": true
+    },
+    {
+      "name": "advisor cites exact frozen News evidence",
+      "pass": true
+    },
+    {
+      "name": "direct request stays within two-call repair ceiling",
+      "pass": true
+    },
+    {
+      "name": "replay reuses frozen News without inference",
+      "pass": true
+    }
+  ],
+  "provider_calls": 1,
+  "new_provider_calls": 1,
+  "scenario_id": "22275ac48f7e66f0683935e28770b73f",
+  "snapshot_id": "saved:19a10b5f44213030dc9993442ef99160",
+  "news_context_hash": "a6bb42d78516a8d2a88804a14ed5ff6b847d4494b49a059864702c1a9ad18b7c",
+  "news_records": 346,
+  "advisor_requested": true
+}

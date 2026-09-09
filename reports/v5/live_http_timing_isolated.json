@@ -1,0 +1,29 @@
+{
+  "context": "Sequential read-only requests after browser/numerical suites settled; no new sessions or inference",
+  "requests": [
+    {
+      "path": "/api/releases",
+      "status": 200,
+      "seconds": 0.027,
+      "bytes": 12039
+    },
+    {
+      "path": "/v5/api/v1/health",
+      "status": 200,
+      "seconds": 0.023,
+      "bytes": 134
+    },
+    {
+      "path": "/v5/",
+      "status": 200,
+      "seconds": 0.07,
+      "bytes": 575
+    },
+    {
+      "path": "/v5/api/v1/news",
+      "status": 200,
+      "seconds": 0.187,
+      "bytes": 15587
+    }
+  ]
+}

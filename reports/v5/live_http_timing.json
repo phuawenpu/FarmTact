@@ -1,0 +1,30 @@
+[
+  {
+    "path": "/api/releases",
+    "status": 200,
+    "seconds": 0.018,
+    "bytes": 12039,
+    "request_id": "01M23H10M3RNKPH4WZTB6RDNXB-sin"
+  },
+  {
+    "path": "/v5/api/v1/health",
+    "status": 200,
+    "seconds": 0.305,
+    "bytes": 134,
+    "request_id": "01M23H10MBX845SZ74KATKSEK1-sin"
+  },
+  {
+    "path": "/v5/",
+    "status": 200,
+    "seconds": 2.073,
+    "bytes": 575,
+    "request_id": "01M23H10XW6T3VD5W5NM3PRJTP-sin"
+  },
+  {
+    "path": "/v5/api/v1/news",
+    "status": 200,
+    "seconds": 8.564,
+    "bytes": 15587,
+    "request_id": "01M23H12YNADYQ2NGYKV7DDAMA-sin"
+  }
+]
