@@ -51,6 +51,10 @@ def test_timezone_assumption_is_disclosed():
     assert news.instant(rows[0]["published_at"]).hour == 1
     assert "publication_timezone_assumed_Asia_Singapore" in rows[0]["quality_issues"]
     with pytest.raises(ValueError): news.parse_publication("09 Sep 2026 09:00 AM", news.SOURCES[2])
+    afternoon, _ = news.parse_publication("09 Sep 2026 01:00 PM", news.SOURCES[0])
+    midnight, _ = news.parse_publication("09 Sep 2026 12:00 AM", news.SOURCES[0])
+    assert afternoon.hour == 5 and afternoon.day == 9
+    assert midnight.hour == 16 and midnight.day == 8
 
 
 def test_future_event_uses_explicit_event_date_not_publication_or_headline_year():
@@ -122,6 +126,18 @@ def test_collection_is_allowlisted_bounded_and_preserves_old_cache_on_failure(tm
     assert failed['sources'][0]['last_success_at']==news.stamp(AT)
     assert news.load_cache(path)['records']==first['records']
     path.write_text('{bad cache')
+    assert news.load_cache(path)['quality_issue']=='cache_invalid'
+
+
+def test_compressed_source_and_null_cache_time_fail_closed(tmp_path):
+    import gzip
+    with httpx.Client(transport=httpx.MockTransport(lambda r:httpx.Response(
+            200,content=gzip.compress(feed()),headers={'content-type':'text/xml','content-encoding':'gzip'}))) as client:
+        result=news.refresh(tmp_path/'compressed.json',client=client,at=AT)
+    assert result['records']==[]
+    assert all(s['status']=='unavailable' for s in result['sources'][:4])
+    invalid=cache();invalid['refreshed_at']=None
+    path=tmp_path/'invalid.json';path.write_text(json.dumps(invalid))
     assert news.load_cache(path)['quality_issue']=='cache_invalid'
 
 

@@ -6,6 +6,7 @@ export interface NewsRecord {
   published_at_raw: string
   published_at: string
   retrieved_at: string
+  observed_at?: string | null
   event_start_at?: string | null
   event_end_at?: string | null
   event_date_basis?: string | null

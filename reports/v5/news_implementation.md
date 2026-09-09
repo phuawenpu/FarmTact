@@ -18,10 +18,18 @@ from explicit structured fields; current collected feeds supplied none. CDC's
 calendar has future dates but reuse terms block collection, and Reddit access is
 unavailable. These absences remain visible rather than fabricated.
 
-Verification at this milestone: 19 focused News tests pass (two existing dependency
-deprecation warnings), including XML/byte/URL bounds, date semantics, hash
-integrity, cache failure preservation, idempotency, freeze/citation reuse, no
-external requests and tenant isolation. Boot regression previously passed 10 tests
-alongside the first News test pass; the new scheduled path needs its own focused
-review. Real local health/bootstrap and News returned successfully. Independent
-review, browser filters/stale responses and release acceptance remain in progress.
+Independent review repaired redirect-policy bypass, null/malformed cache states,
+parent-mission context inheritance, and missing observation/ongoing-event fields.
+The collector explicitly requests uncompressed feeds and rejects compressed
+responses. An additional source-date test exposed ignored AM/PM markers; the
+parser now handles SFA's exact format before generic email dates. Revalidation of
+the existing development cache corrected 69 timestamps/hashes from preserved raw
+publication strings without inventing a new retrieval time. All 346 records remain
+valid. No production records were changed.
+
+Verification: 37 focused News/review/Fly-boot checks pass, including the separate
+collector's stripped credential environment. A wider backend regression passed
+113 checks before the final date-parser additions; the 37-check run covers those
+changed paths. Browser filters, stale-response handling and final release
+acceptance remain in progress. These are local candidate results, not deployment
+or actual provider-call evidence.

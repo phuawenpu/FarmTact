@@ -37,7 +37,10 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
     r['council_version']=COUNCIL_VERSION
     r['market_signals']=summarize_signals(snapshot)
     from packages.news import freeze_for_farm
-    r['news_context']=freeze_for_farm(snapshot,r['created_at'])
+    parent_record=store.get_run(t,parent) if parent else None
+    if parent and not parent_record:raise HTTPException(404,'Parent mission not found')
+    from copy import deepcopy
+    r['news_context']=deepcopy(parent_record.get('news_context')) if parent_record else freeze_for_farm(snapshot,r['created_at'])
     try:result,created=store.create_run(t,key,fingerprint,r)
     except ValueError as e:raise HTTPException(409,str(e))
     return dict(id=result['id'],status=result['status'],reused=not created)

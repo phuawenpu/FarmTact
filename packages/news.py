@@ -63,6 +63,7 @@ SOURCES = (
 
 
 def instant(value: str | datetime) -> datetime:
+    if not isinstance(value,(str,datetime)): raise ValueError("An ISO timestamp or aware datetime is required")
     result = value if isinstance(value, datetime) else datetime.fromisoformat(value.replace("Z", "+00:00"))
     if result.tzinfo is None:
         raise ValueError("An aware timestamp is required")
@@ -101,6 +102,12 @@ def plain(value: str, limit: int = 240) -> str:
     return " ".join(" ".join(parser.parts).split())[:limit]
 
 
+def record_hash(fields: dict) -> str:
+    # An absent observation time has no semantic content. Keep hashes compatible
+    # with v1 metadata collected before this optional field was exposed.
+    return content_hash({k:v for k,v in fields.items() if k not in ('content_hash','retrieved_at') and not (k=='observed_at' and v is None)})
+
+
 class NewsRecord(Strict):
     id: str = Field(pattern=r"^news_[0-9a-f]{24}$")
     source_id: str = Field(max_length=40)
@@ -110,6 +117,7 @@ class NewsRecord(Strict):
     published_at_raw: str = Field(max_length=150)
     published_at: datetime
     retrieved_at: datetime
+    observed_at: datetime | None = None
     event_start_at: datetime | None = None
     event_end_at: datetime | None = None
     event_date_basis: str | None = Field(default=None, max_length=80)
@@ -124,7 +132,7 @@ class NewsRecord(Strict):
     @classmethod
     def source_url(cls, value): return https_url(value)
 
-    @field_validator("published_at", "retrieved_at", "event_start_at", "event_end_at")
+    @field_validator("published_at", "retrieved_at", "observed_at", "event_start_at", "event_end_at")
     @classmethod
     def dates(cls, value): return instant(value) if value is not None else None
 
@@ -138,12 +146,14 @@ class NewsRecord(Strict):
         if self.id != "news_" + content_hash([self.source_id, self.external_id])[:24]: raise ValueError("News identity mismatch")
         if self.published_at.year < 2000 or self.published_at > self.retrieved_at:
             raise ValueError("Publication time is invalid or after retrieval")
+        if any(value and value.year < 2000 for value in (self.observed_at,self.event_start_at,self.event_end_at)): raise ValueError("Invalid observation/event year")
+        if self.observed_at and self.observed_at > self.retrieved_at: raise ValueError("Observation cannot follow retrieval")
         if self.event_end_at and (not self.event_start_at or self.event_end_at < self.event_start_at):
             raise ValueError("Invalid event interval")
         if self.event_start_at and not self.event_date_basis: raise ValueError("Event dates need an explicit source basis")
         if any(c not in CROPS for c in self.crop_ids): raise ValueError("Unknown crop tag")
         data = self.model_dump(mode="json", exclude={"content_hash", "retrieved_at"})
-        if content_hash(data) != self.content_hash: raise ValueError("News content hash mismatch")
+        if record_hash(data) != self.content_hash: raise ValueError("News content hash mismatch")
         return self
 
 
@@ -151,7 +161,10 @@ def parse_publication(raw: str, source: dict) -> tuple[datetime, list[str]]:
     issues = []
     year = re.search(r"\b(\d{4})\b", raw)
     if not year or int(year.group(1)) < 2000: raise ValueError("Invalid explicit publication year")
-    try: result = parsedate_to_datetime(raw)
+    try:
+        if re.fullmatch(r"\d{1,2} [A-Za-z]{3} \d{4} \d{1,2}:\d{2} (?:AM|PM)", raw, re.I):
+            result = datetime.strptime(raw, "%d %b %Y %I:%M %p")
+        else: result = parsedate_to_datetime(raw)
     except (ValueError, TypeError):
         try: result = datetime.fromisoformat(raw.replace("Z", "+00:00"))
         except ValueError: result = datetime.strptime(raw, "%d %b %Y %I:%M %p")
@@ -194,7 +207,7 @@ def parse_feed(source: dict, payload: bytes, retrieved_at: datetime) -> tuple[li
             fields = dict(id=identity, source_id=source["id"], external_id=external,
                           title=title, canonical_url=url, published_at_raw=raw,
                           published_at=stamp(published), retrieved_at=stamp(retrieved_at),
-                          event_start_at=None, event_end_at=None, event_date_basis=None,
+                          observed_at=None, event_start_at=None, event_end_at=None, event_date_basis=None,
                           geography=source["geography"],
                           crop_ids=[crop for crop, aliases in ALIASES.items() if any(a in title.lower() for a in aliases)],
                           topics=[topic for topic, words in TOPICS.items() if any(w in title.lower() for w in words)],
@@ -207,7 +220,7 @@ def parse_feed(source: dict, payload: bytes, retrieved_at: datetime) -> tuple[li
                 fields.update(event_start_at=stamp(instant(event["startDate"])),
                               event_end_at=stamp(instant(event["endDate"])) if event.get("endDate") else None,
                               event_date_basis="explicit_schema_org_RSS_event_fields")
-            fields["content_hash"] = content_hash({k: v for k, v in fields.items() if k != "retrieved_at"})
+            fields["content_hash"] = record_hash(fields)
             records.append(NewsRecord.model_validate(fields).model_dump(mode="json")); seen.add(identity)
         except (ValueError, TypeError, OverflowError): rejected += 1
     return records, rejected
@@ -219,6 +232,28 @@ def empty_cache() -> dict:
              last_attempt_at=None, last_success_at=None, record_count=0, rejected_count=0) for s in SOURCES])
 
 
+class SourceState(Strict):
+    source_id: str
+    status: str = Field(pattern=r"^(available|not_collected|not_connected|refresh_failed|unavailable)$")
+    last_attempt_at: datetime | None = None
+    last_success_at: datetime | None = None
+    record_count: int = Field(default=0,ge=0,le=MAX_ITEMS)
+    rejected_count: int = Field(default=0,ge=0,le=MAX_ITEMS)
+    error_kind: str | None = Field(default=None,max_length=80,pattern=r"^[A-Za-z]+$")
+
+    @field_validator("last_attempt_at", "last_success_at")
+    @classmethod
+    def timestamps(cls,value):
+        if value is not None and instant(value).year < 2000: raise ValueError("Invalid source timestamp")
+        return instant(value) if value is not None else None
+
+    @model_validator(mode="after")
+    def source_and_dates(self):
+        if self.source_id not in {s["id"] for s in SOURCES}: raise ValueError("Unknown source state")
+        if self.last_success_at and (not self.last_attempt_at or self.last_success_at > self.last_attempt_at): raise ValueError("Invalid success time")
+        return self
+
+
 def load_cache(path: Path = CACHE) -> dict:
     if not path.is_file(): return empty_cache()
     try:
@@ -226,8 +261,15 @@ def load_cache(path: Path = CACHE) -> dict:
         data = json.loads(path.read_text())
         if data["version"] != VERSION or len(data["records"]) > MAX_RECORDS: raise ValueError("Invalid cache version/size")
         data["records"] = [NewsRecord.model_validate(r).model_dump(mode="json") for r in data["records"]]
+        refreshed = instant(data["refreshed_at"])
+        if refreshed.year < 2000: raise ValueError("Invalid cache timestamp")
+        states = [SourceState.model_validate(s) for s in data["sources"]]
+        if len(states) != len(SOURCES) or {s.source_id for s in states} != {s["id"] for s in SOURCES}: raise ValueError("Invalid source inventory")
+        if any(s.last_attempt_at and s.last_attempt_at > refreshed for s in states): raise ValueError("Source state after cache cutoff")
+        if any(instant(r['retrieved_at']) > refreshed for r in data['records']): raise ValueError("Record after cache cutoff")
+        data['sources'] = [s.model_dump(mode='json',exclude_none=True) for s in states]
         return data
-    except (ValueError, KeyError, TypeError):
+    except (ValueError, KeyError, TypeError, OSError):
         data = empty_cache(); data["quality_issue"] = "cache_invalid"; return data
 
 
@@ -244,12 +286,13 @@ def refresh(path: Path = CACHE, *, client=None, at: datetime | None = None) -> d
             old = [r for r in previous["records"] if r["source_id"] == source["id"]]
             if source["adapter"] != "rss":
                 states.append(dict(source_id=source["id"], status="not_connected", record_count=0)); continue
-            if state.get("last_attempt_at") and at - instant(state["last_attempt_at"]) < timedelta(hours=REFRESH_HOURS):
+            if state.get("last_attempt_at") and timedelta(0) <= at - instant(state["last_attempt_at"]) < timedelta(hours=REFRESH_HOURS):
                 records.extend(old); states.append(state); continue
             row = dict(source_id=source["id"], last_attempt_at=stamp(at), last_success_at=state.get("last_success_at"), rejected_count=0)
             try:
-                with client.stream("GET", source["url"]) as response:
+                with client.stream("GET", source["url"], follow_redirects=False, headers={"Accept-Encoding":"identity"}) as response:
                     response.raise_for_status()
+                    if response.headers.get("content-encoding", "identity").lower() not in ("", "identity"): raise ValueError("Compressed feeds are not accepted")
                     kind = response.headers.get("content-type", "").split(";")[0]
                     if kind not in ("text/xml", "application/xml", "application/rss+xml"): raise ValueError("Unexpected feed media type")
                     body = bytearray()
@@ -278,12 +321,12 @@ def context(*, cutoff: datetime, farm_cutoff: datetime | None = None, cache: dic
     """Pure point-in-time selection. Both retrieval and publication must be known."""
     cutoff = instant(cutoff); cache = load_cache() if cache is None else cache
     if crop is not None and crop not in CROPS: raise ValueError("Unknown crop")
-    if geography not in ("all", "singapore", "regional") or period not in ("all", "recent", "future", "historical"): raise ValueError("Unknown filter")
+    if geography not in ("all", "singapore", "regional") or period not in ("all", "recent", "future", "ongoing", "historical"): raise ValueError("Unknown filter")
     if not 1 <= limit <= 50: raise ValueError("Limit outside bounds")
     rows = []; excluded = 0
     for raw in cache["records"]:
         record = NewsRecord.model_validate(raw); row = record.model_dump(mode="json")
-        if record.published_at > cutoff or record.retrieved_at > cutoff:
+        if record.published_at > cutoff or record.retrieved_at > cutoff or (record.observed_at and record.observed_at > cutoff):
             excluded += 1; continue
         if crop and crop not in record.crop_ids: continue
         if geography != "all" and record.geography != geography: continue
@@ -326,6 +369,6 @@ def evidence_refs(frozen: dict | None) -> dict:
     if not frozen: return {"news:status": "No News context was frozen for this older decision."}
     refs = {"news:status": frozen["status"], "news:cutoff": frozen["cutoff"], "news:context_hash": frozen["content_hash"]}
     for row in frozen["records"]:
-        for key in ("title", "canonical_url", "published_at", "retrieved_at", "event_start_at", "event_end_at", "relevance"):
+        for key in ("title", "canonical_url", "published_at", "retrieved_at", "observed_at", "event_start_at", "event_end_at", "relevance"):
             if row.get(key) is not None: refs[f"news:{row['id']}.{key}"] = row[key]
     return refs

@@ -135,3 +135,11 @@ numerical perspectives. Root implements bounded RSS collection, News API/UI,
 mission/scenario/conversation freezing and credential-free scheduled refresh.
 Nineteen News contract/security tests pass; independent review and complete browser
 journeys are underway. No v5 deployment or physical-device listening is claimed.
+
+
+V5 independent News review fixes are implemented: strict cache/source-date
+validation, explicit redirect/compression bounds, parent-context inheritance,
+observation and ongoing-event semantics. Focused verification passed 37 checks;
+broader backend regression passed 113. The local cache contains 346 public feed
+metadata records and no structured future events. Browser and complete release
+acceptance are still underway; production remains v4.

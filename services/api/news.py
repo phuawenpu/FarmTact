@@ -11,7 +11,7 @@ def install_routes(app, tenant):
     @app.get("/api/v1/news")
     def news(request: Request, crop: str | None = Query(default=None, max_length=40),
              geography: Literal["all", "singapore", "regional"] = "all",
-             period: Literal["all", "recent", "future", "historical"] = "all",
+             period: Literal["all", "recent", "future", "ongoing", "historical"] = "all",
              limit: int = Query(default=12, ge=1, le=50),
              scenario_id: str | None = Query(default=None, max_length=64),
              run_id: str | None = Query(default=None, max_length=64)):

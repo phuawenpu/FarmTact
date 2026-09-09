@@ -191,6 +191,21 @@ def test_forced_shutdown_wait_budget_fits_inside_fly_kill_timeout(
     assert sum(waits) + 5 <= fly_config["kill_timeout"]
 
 
+def test_edition_news_refresh_is_separate_and_receives_no_credentials(tmp_path, monkeypatch):
+    monkeypatch.setenv('FARMTACT_EDITION', 'v5')
+    monkeypatch.delenv('FARMTACT_ROLE', raising=False)
+    for name in fly_boot.SECRET_NAMES:
+        monkeypatch.setenv(name, f'sentinel-{name}')
+    calls, processes, waits = _exercise_supervisor(tmp_path, monkeypatch)
+    assert len(calls) == 3
+    assert calls[2][0][-1].endswith('/scripts/refresh_news.py')
+    assert all(name not in calls[2][1]['env'] for name in fly_boot.SECRET_NAMES)
+    assert processes[2].signals == [signal.SIGTERM]
+    assert calls[1][1]['env']['DEEPSEEK_API_KEY'] == 'sentinel-DEEPSEEK_API_KEY'
+    assert calls[1][1]['env']['FARMTACT_CONTROL_SECRET'] == 'sentinel-FARMTACT_CONTROL_SECRET'
+    assert sum(waits) + 5 <= 90
+
+
 def test_signal_handler_precedes_bounded_initdb_and_prevents_postgres_start(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
