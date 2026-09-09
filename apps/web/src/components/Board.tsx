@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarDays, CheckCircle2, ChevronRight, CircleAlert, Gauge, Layers3, ListTree, Play, RotateCcw, Sparkles, Table2, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Crop, Farm, Run, Strategy } from '../lib/types'
+import { editionPath } from '../lib/edition'
 import { CropArt, EventIcon, formatDate, formatMoney, humanizeExecutionMode, humanizeSystem, Meter, StatusPill } from './Visuals'
 
 interface BoardProps {
@@ -231,7 +232,7 @@ function StrategyDetails({ strategy, accepted, runId, sharedDemo }: { strategy: 
   ]
   return (
     <div className="sheet-stack">
-      <div className="sheet-intro"><StatusPill status={strategy.status} /><p>{strategy.description}</p>{accepted && <div className="accepted-note"><CheckCircle2 size={17} /> {sharedDemo ? 'Recorded acceptance for simulation.' : 'Accepted for simulation by development policy.'}</div>}{accepted && runId && !sharedDemo && <a className="button button--forest worklist-link" href={`/api/v1/planning-runs/${encodeURIComponent(runId)}/worklist.csv`} download>Download accepted worklist</a>}</div>
+      <div className="sheet-intro"><StatusPill status={strategy.status} /><p>{strategy.description}</p>{accepted && <div className="accepted-note"><CheckCircle2 size={17} /> {sharedDemo ? 'Recorded acceptance for simulation.' : 'Accepted for simulation by development policy.'}</div>}{accepted && runId && !sharedDemo && <a className="button button--forest worklist-link" href={editionPath(`/api/v1/planning-runs/${encodeURIComponent(runId)}/worklist.csv`)} download>Download accepted worklist</a>}</div>
       <div className="metric-grid">{metrics.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
       {strategy.violations.length > 0 && <div className="warning-box"><CircleAlert size={18} /><div><strong>Constraint warnings</strong>{strategy.violations.map((item, index) => <p key={typeof item === 'string' ? item : `${item.constraint_code}-${index}`}>{formatViolation(item)}</p>)}</div></div>}
       <div><h3 className="subheading">Assumptions</h3>{strategy.assumptions.length ? <ul className="clean-list">{strategy.assumptions.map(item => <li key={item}>{item}</li>)}</ul> : <p className="muted-copy">No assumptions reported.</p>}</div>

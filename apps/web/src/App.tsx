@@ -6,6 +6,9 @@ import { DataExplorer } from './components/DataExplorer'
 import { StatePanel, StatusPill } from './components/Visuals'
 import { World } from './components/World'
 import { api } from './lib/api'
+import { AudioControls } from './components/AudioControls'
+import { EditionSwitcher } from './components/EditionChooser'
+import { playAudioEffect, playSimulationResult } from './lib/audio'
 import type { AppView, Bootstrap, Crop, Run } from './lib/types'
 
 const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
@@ -17,7 +20,7 @@ const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
   { id: 'setup', label: 'Setup', icon: Settings2 },
 ]
 
-export default function App() {
+export default function App({ editionId = 'v1' }: { editionId?: string }) {
   const [view, setView] = useState<AppView>('world')
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
@@ -44,6 +47,7 @@ export default function App() {
 
   useEffect(() => { void loadBootstrap() }, [loadBootstrap])
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }) }, [view])
+  useEffect(() => { if (editionId === 'v1' || !run) return; const status=run.status.toLowerCase(); if (['completed','accepted_for_simulation'].includes(status)) playSimulationResult(run.id,'complete'); else if (['failed','cancelled','no_feasible_plan','stale_input'].includes(status)) playSimulationResult(run.id,'error') }, [editionId,run?.id,run?.status])
 
   const fetchRun = useCallback(async (id: string) => {
     try {
@@ -149,30 +153,32 @@ export default function App() {
   }
 
   const loadCrop = (id: string): Promise<Crop> => api.crop(id)
+  const navigate = (next: AppView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
 
   return (
     <div className="app-shell">
       <aside className="side-rail">
         <Brand />
         <nav aria-label="FarmTact rooms">
-          {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => setView(id)}><Icon size={20}/><span>{label}</span></button>)}
+          {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => navigate(id)}><Icon size={20}/><span>{label}</span></button>)}
         </nav>
-        <div className="side-rail__mode"><a className="public-review-link" href="/review">Independent reviews</a><span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong></div>
+        <div className="side-rail__mode"><EditionSwitcher editionId={editionId}/>{editionId !== 'v1' ? <><span>Edition &amp; evolution</span><strong>{editionId.toUpperCase()} · evolving farm</strong><a href={`/${editionId}/changes`}>What changed</a><a className="public-review-link" href={`/${editionId}/review`}>Edition reviews</a><AudioControls editionKey={editionId}/></> : <a className="public-review-link" href="/review">Independent reviews</a>}<span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong></div>
       </aside>
 
       <div className="app-content">
         <header className="topbar">
           <div className="topbar__mobile-brand"><Brand /></div>
+          {editionId!=='v1'&&<div className="mobile-audio-controls"><AudioControls editionKey={editionId}/></div>}
           <div className="farm-identity">
             <span className="farm-identity__icon"><Sprout size={20}/></span>
             <span><small>Active farm</small><strong>{bootstrap?.farm.name || 'Farm not loaded'}</strong></span>
           </div>
           <div className="topbar__status">
             {run && <StatusPill status={run.status} />}
-            <button className="icon-button" onClick={() => setView('setup')} aria-label="Add or import farm"><Plus size={20}/></button>
+            <button className="icon-button" onClick={() => navigate('setup')} aria-label="Add or import farm"><Plus size={20}/></button>
             <button className="icon-button topbar__more" onClick={() => setMoreOpen(value => !value)} aria-label="Workspace status"><MoreHorizontal size={20}/></button>
           </div>
-          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><a className="public-review-link" href="/review">Independent reviews</a><span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
+          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><EditionSwitcher editionId={editionId}/><a className="public-review-link" href={editionId==='v1'?'/review':`/${editionId}/review`}>Independent reviews</a>{editionId!=='v1'&&<><a href={`/${editionId}/changes`}>Edition &amp; evolution</a><AudioControls editionKey={editionId}/></>}<span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
         </header>
 
         <main>
@@ -193,7 +199,7 @@ export default function App() {
       </div>
 
       <nav className="thumb-nav" aria-label="FarmTact rooms">
-        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => setView(id)}><span><Icon size={19}/></span><small>{id === 'board' ? 'Tools' : label}</small></button>)}
+        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => navigate(id)}><span><Icon size={19}/></span><small>{id === 'board' ? 'Tools' : label}</small></button>)}
       </nav>
     </div>
   )

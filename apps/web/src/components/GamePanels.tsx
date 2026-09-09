@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Advisor, Conversation, ConversationMessage, ProposedAction, Quest, Scenario, ScenarioComparison, ScenarioControls } from '../lib/game'
 import { QUEST_FALLBACKS } from '../lib/game'
 import { api } from '../lib/api'
+import { editionFromPath, editionPath } from '../lib/edition'
+import { playAudioEffect, playSimulationResult } from '../lib/audio'
 import type { Bed, Crop, Farm, Run, StrategyMetrics } from '../lib/types'
 import { formatPreviewDate, previewBed } from './World'
 import { AdvisorEvidence } from './AdvisorEvidence'
@@ -13,6 +15,7 @@ function PanelShell({ open, title, eyebrow, wide, onClose, children }: PanelShel
   const closeRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLElement>(null)
   const closeHandler = useRef(onClose)
+  useEffect(() => { if (open && editionFromPath() !== 'v1') playAudioEffect('detail') }, [open])
   closeHandler.current = onClose
   useEffect(() => {
     if (!open) return
@@ -50,7 +53,7 @@ export function BedDetailPanel({ open, bed, crop, farm, run, previewDate, alloca
   return <PanelShell open={open} title={bed.name} eyebrow="Growing bed" onClose={onClose}>
     <div className="bed-inspector">
       <div className="bed-inspector__hero">
-        {preview.cropId && preview.stage !== 'empty' ? <img src={`/art/crops/${preview.cropId}-${preview.stage === 'nursery' ? 'seedling' : preview.stage === 'ready' ? 'ready' : 'growing'}.svg`} alt={`${crop?.label || preview.cropId}, ${preview.stage}`}/> : <span>Open soil</span>}
+        {preview.cropId && preview.stage !== 'empty' ? <img src={editionPath(`/art/crops/${preview.cropId}-${preview.stage === 'nursery' ? 'seedling' : preview.stage === 'ready' ? 'ready' : 'growing'}.svg`)} alt={`${crop?.label || preview.cropId}, ${preview.stage}`}/> : <span>Open soil</span>}
       </div>
       <div className="bed-inspector__title"><div><p className="kicker">{preview.stage}</p><h3>{crop?.label || 'Unplanted bed'}</h3></div><strong>{Math.round(preview.progress)}%</strong></div>
       <div className="bed-progress" role="progressbar" aria-label={`${bed.name} growth preview`} aria-valuenow={Math.round(preview.progress)} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${preview.progress}%` }}/></div>
@@ -111,7 +114,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
     stopStream.current?.()
     return new Promise(resolve => {
       let ended = false, reading = false
-      const stream = new EventSource(`/api/v1/conversations/${encodeURIComponent(id)}/events?stream=true`)
+      const stream = new EventSource(editionPath(`/api/v1/conversations/${encodeURIComponent(id)}/events?stream=true`))
       const finish = (completed: boolean) => {
         if (ended) return
         ended = true; stream.close(); window.clearInterval(fallback); window.clearTimeout(deadline)
@@ -188,14 +191,14 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
   return <PanelShell open={open} title={`${advisor.name} · ${advisor.role}`} eyebrow={advisor.location} onClose={onClose}>
     <div className="conversation-shell">
       <div className="advisor-profile">
-        <img src={`/art/advisors/${advisor.id}.svg`} alt={`Portrait of ${advisor.name}`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
+        <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt={`Portrait of ${advisor.name}`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
       </div>
-      <div className="advisor-switcher" aria-label="Advisor shortcuts">{advisors.map(item => <button key={item.id} className={item.id === advisor.id ? 'is-active' : ''} onClick={() => onSelectAdvisor(item)} aria-label={`Talk to ${item.name}`}><img src={`/art/advisors/${item.id}.svg`} alt=""/><span>{item.name}</span></button>)}</div>
+      <div className="advisor-switcher" aria-label="Advisor shortcuts">{advisors.map(item => <button key={item.id} className={item.id === advisor.id ? 'is-active' : ''} onClick={() => onSelectAdvisor(item)} aria-label={`Talk to ${item.name}`}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><span>{item.name}</span></button>)}</div>
       {!!savedConversations.length && <label className="saved-discussions"><span>Saved discussions</span><select value={conversation?.id || ''} onChange={event => { stopStream.current?.(); const generation = ++conversationGeneration.current; setLoading(true); setBusy(false); setReplyTo(null); void refresh(event.target.value, generation).then(async value => { if (generation === conversationGeneration.current && requestActive(value.last_request_status)) { setBusy(true); await pollForMessages(value.id, value.messages.length, generation) } }).catch(caught => { if (generation === conversationGeneration.current) setError(messageFor(caught, 'Saved discussion could not be opened.')) }).finally(() => { if (generation === conversationGeneration.current) { setLoading(false); setBusy(false) } }) }}><option value="" disabled>Select a frozen record</option>{savedConversations.map(item => <option key={item.id} value={item.id}>{item.advisor_id || 'advisor'} · {snapshotId(item) || 'frozen snapshot'}{item.selected_bed_id ? ` · ${item.selected_bed_id}` : ''}</option>)}</select></label>}
       {conversation && snapshotId(conversation) !== (scenario?.id || `${farm.id}:v${farm.version}`) && <div className="replay-label"><RotateCcw size={15}/><span>Saved frozen discussion · {snapshotId(conversation)}. This is not the current farm snapshot.</span></div>}
       {conversation?.transcript_mode === 'replay' && <div className="replay-label"><RotateCcw size={15}/><span>Recorded replay · opening and replaying use no new inference.</span></div>}
       {conversation?.last_request_status && ['INTERRUPTED','PARTIAL','FAILED','BLOCKED'].includes(conversation.last_request_status.toUpperCase()) && <div className="partial-conversation" role="status"><CircleAlert size={15}/><span><strong>Saved partial discussion · {conversation.last_request_status.toLowerCase()}</strong>Your existing messages are preserved. You can retry the question safely from this snapshot.</span></div>}
-      {conversation?.messages.some(message => message.request_mode === 'council' || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={`/art/advisors/${item.id}.svg`} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
+      {conversation?.messages.some(message => message.request_mode === 'council' || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
       <div className="prompt-row" aria-label="Suggested questions">
         {[advisor.prompt, 'Show me the evidence.', 'What could I change?'].map(prompt => <button key={prompt} onClick={() => void send(prompt)} disabled={!conversation || busy || loading}>{prompt}</button>)}
       </div>
@@ -208,7 +211,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
       {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
       {replyTo && <button className="reply-banner" onClick={() => setReplyTo(null)}>Replying to a specific message <X size={14}/></button>}
       <form className="conversation-composer" onSubmit={event => { event.preventDefault(); void send() }}>
-        <label className="sr-only" htmlFor="advisor-message">Message {advisor.name}</label><input id="advisor-message" value={content} onChange={event => setContent(event.target.value)} placeholder={`Ask ${advisor.name} about this snapshot…`} maxLength={1000} disabled={loading}/><button type="submit" aria-label="Send message" disabled={!conversation || !content.trim() || busy || loading}><Send size={18}/></button>
+        <label className="sr-only" htmlFor="advisor-message">Message {advisor.name}</label><input id="advisor-message" value={content} onChange={event => setContent(event.target.value)} placeholder={`Ask ${advisor.name} about this snapshot…`} maxLength={1000} disabled={loading}/><button type="submit" aria-label="Send message" disabled={!conversation || !content.trim() || busy || loading}><Send size={18}/></button>{editionFromPath()!=='v1'&&<small className="voice-typing-hint">Voice typing: use the microphone on your device keyboard, if available.</small>}
       </form>
       <div className="conversation-actions">
         <label><span>Invite</span><select value={invitee} onChange={event => setInvitee(event.target.value as typeof invitee)}>{advisors.filter(item => item.id !== advisor.id).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
@@ -271,6 +274,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
     setScenarios(savedScenarios); setQuests(mergeQuests(savedQuests))
     return savedScenarios
   }, [])
+  useEffect(() => { if (editionFromPath() !== 'v1') for (const scenario of scenarios) { if (scenarioTerminal(scenario.status)) playSimulationResult(scenario.id, scenario.status === 'COMPLETED' ? 'complete' : 'error') } }, [scenarios])
   useEffect(() => {
     if (!open) return
     let cancelled = false
@@ -302,6 +306,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
     setBusy(true); setError(null); setComparison(null)
     try {
       let scenario = await api.createScenario({ name: `${quest.name || quest.title} · ${new Date().toLocaleDateString('en-SG')}`, controls, ...(questId !== 'sandbox' ? { quest_id: questId } : {}), ...(proposedAction ? { source_conversation_id: proposedAction.conversationId } : parentId ? { parent_scenario_id: parentId } : {}) })
+      if (editionFromPath() !== 'v1') playAudioEffect('confirm')
       scenario = await api.runScenario(scenario.id)
       for (let attempt = 0; !scenarioTerminal(scenario.status) && attempt < 300; attempt += 1) { await new Promise(resolve => window.setTimeout(resolve, 500)); scenario = await api.scenario(scenario.id) }
       setScenarios(values => [scenario, ...values.filter(item => item.id !== scenario.id)])
@@ -333,7 +338,7 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
       <aside className="scenario-brief">
         <div className="scenario-steps" aria-label="Experiment steps"><button className={phase === 'brief' ? 'is-active' : ''} onClick={() => setPhase('brief')}>1 <span>Briefing</span></button><button className={phase === 'assumptions' ? 'is-active' : ''} onClick={() => setPhase('assumptions')}>2 <span>Assumptions</span></button><button className={phase === 'result' ? 'is-active' : ''} onClick={() => setPhase('result')}>3 <span>Compare</span></button></div>
         <label>Challenge<select value={questId} onChange={event => { setQuestId(event.target.value); setControls(event.target.value === 'sandbox' ? sandboxControls(selectedBed, farm) : questControls(event.target.value, selectedBed, farm)); setPhase('brief') }}><option value="sandbox">Open sandbox</option>{quests.map(item => <option key={item.id} value={item.id}>{item.name || item.title}</option>)}</select></label>
-        <div className="brief-card"><img src={`/art/advisors/${quest.advisor_id || 'asha'}.svg`} alt=""/><div><p className="kicker">Advisor briefing</p><h3>{quest.name || quest.title}</h3><p>{quest.description}</p></div></div>
+        <div className="brief-card"><img src={editionPath(`/art/advisors/${quest.advisor_id || 'asha'}.svg`)} alt=""/><div><p className="kicker">Advisor briefing</p><h3>{quest.name || quest.title}</h3><p>{quest.description}</p></div></div>
         <p className="preview-note">Every experiment creates a branch from frozen farm inputs. The main farm and its latest run remain unchanged.{proposedAction ? ' This branch is linked to the exact conversation snapshot.' : ''}</p>
       </aside>
       <div className="scenario-workbench">

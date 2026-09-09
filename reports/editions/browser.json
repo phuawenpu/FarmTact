@@ -1,0 +1,695 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "Chooser creates no game session",
+      "pass": true
+    },
+    {
+      "name": "360: chooser fits viewport",
+      "pass": true
+    },
+    {
+      "name": "360: v1 is silent",
+      "pass": true
+    },
+    {
+      "name": "360: selector reaches independent v2",
+      "pass": true
+    },
+    {
+      "name": "360: v2 game fits viewport",
+      "pass": true
+    },
+    {
+      "name": "360: changes load from public registry",
+      "pass": true
+    },
+    {
+      "name": "360: changes fit viewport",
+      "pass": true
+    },
+    {
+      "name": "360: original reviews remain inspectable",
+      "pass": true
+    },
+    {
+      "name": "360: review fits viewport",
+      "pass": true
+    },
+    {
+      "name": "390: chooser fits viewport",
+      "pass": true
+    },
+    {
+      "name": "390: v1 is silent",
+      "pass": true
+    },
+    {
+      "name": "390: selector reaches independent v2",
+      "pass": true
+    },
+    {
+      "name": "390: v2 game fits viewport",
+      "pass": true
+    },
+    {
+      "name": "390: changes load from public registry",
+      "pass": true
+    },
+    {
+      "name": "390: changes fit viewport",
+      "pass": true
+    },
+    {
+      "name": "390: original reviews remain inspectable",
+      "pass": true
+    },
+    {
+      "name": "390: review fits viewport",
+      "pass": true
+    },
+    {
+      "name": "430: chooser fits viewport",
+      "pass": true
+    },
+    {
+      "name": "430: v1 is silent",
+      "pass": true
+    },
+    {
+      "name": "430: selector reaches independent v2",
+      "pass": true
+    },
+    {
+      "name": "430: v2 game fits viewport",
+      "pass": true
+    },
+    {
+      "name": "430: changes load from public registry",
+      "pass": true
+    },
+    {
+      "name": "430: changes fit viewport",
+      "pass": true
+    },
+    {
+      "name": "430: original reviews remain inspectable",
+      "pass": true
+    },
+    {
+      "name": "430: review fits viewport",
+      "pass": true
+    },
+    {
+      "name": "1280: chooser fits viewport",
+      "pass": true
+    },
+    {
+      "name": "1280: v1 is silent",
+      "pass": true
+    },
+    {
+      "name": "1280: selector reaches independent v2",
+      "pass": true
+    },
+    {
+      "name": "1280: v2 game fits viewport",
+      "pass": true
+    },
+    {
+      "name": "1280: changes load from public registry",
+      "pass": true
+    },
+    {
+      "name": "1280: changes fit viewport",
+      "pass": true
+    },
+    {
+      "name": "1280: original reviews remain inspectable",
+      "pass": true
+    },
+    {
+      "name": "1280: review fits viewport",
+      "pass": true
+    },
+    {
+      "name": "No audio loads before enabling",
+      "pass": true
+    },
+    {
+      "name": "Original WAV decodes and plays with native browser audio",
+      "pass": true
+    },
+    {
+      "name": "Master mute pauses every audio player",
+      "pass": true
+    },
+    {
+      "name": "Native keyboard voice-typing hint is present",
+      "pass": true
+    },
+    {
+      "name": "All art/audio requests stay edition-pinned",
+      "pass": true
+    },
+    {
+      "name": "No unversioned game API requests",
+      "pass": true
+    },
+    {
+      "name": "Browsing makes no provider submissions",
+      "pass": true
+    },
+    {
+      "name": "No page errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/reviews",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/reviews",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/reviews",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v1/api/v1/reviews",
+      "method": "GET"
+    },
+    {
+      "path": "/api/releases",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/bootstrap",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/caixin-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/pak_choi-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/kailan-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/crops/lettuce-growing.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/mei.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ravi.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/hana.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/ben.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/asha.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/art/advisors/idris.svg",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/audio/farm-garden-loop.wav",
+      "method": "GET"
+    },
+    {
+      "path": "/v2/api/v1/conversations",
+      "method": "GET"
+    }
+  ],
+  "screenshots": [
+    "apps/web/screenshots/editions/v2-360.png",
+    "apps/web/screenshots/editions/v2-390.png",
+    "apps/web/screenshots/editions/v2-430.png",
+    "apps/web/screenshots/editions/v2-1280.png"
+  ]
+}

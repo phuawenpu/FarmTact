@@ -1,6 +1,7 @@
 import { AlertCircle, ChevronLeft, ChevronRight, Database, Download, LoaderCircle, Search } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChartTable, ExplorerChart, type ChartPoint } from './ExplorerChart'
+import { editionPath } from '../lib/edition'
 
 type DatasetKey = 'weather_observations' | 'weather_forecasts' | 'trade_observations'
 type PublicSource = {
@@ -64,7 +65,7 @@ export function PublicExplorer() {
     const controller = new AbortController()
     void (async () => {
       try {
-        const response = await fetch('/api/v1/data-explorer/public', { credentials: 'same-origin', signal: controller.signal })
+        const response = await fetch(editionPath('/api/v1/data-explorer/public'), { credentials: 'same-origin', signal: controller.signal })
         if (!response.ok) throw new Error(await responseError(response))
         const body = await response.json() as PublicContext
         setData(body)
@@ -131,7 +132,7 @@ export function PublicExplorer() {
       if (sourceId) params.set('source_id', sourceId)
       if (start) params.set('start', start)
       if (end) params.set('end', end)
-      const response = await fetch(`/api/v1/data-explorer/public/export?${params}`, { credentials: 'same-origin' })
+      const response = await fetch(editionPath(`/api/v1/data-explorer/public/export?${params}`), { credentials: 'same-origin' })
       if (!response.ok) throw new Error(await responseError(response))
       const blob = await response.blob(), url = URL.createObjectURL(blob), anchor = document.createElement('a')
       anchor.href = url; anchor.download = `farmtact-public-${dataset}.${format}`; anchor.click(); URL.revokeObjectURL(url)

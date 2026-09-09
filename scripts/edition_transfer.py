@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import sys
 import tarfile
 
 import psycopg
@@ -85,8 +86,29 @@ def restore():
     print('Restored v1 database and cache; all game-table counts and hashes match.')
 
 
+def control():
+    if os.environ.get('FARMTACT_EDITION'): raise RuntimeError('Control migration runs only on the original gateway machine')
+    with psycopg.connect('host=/tmp/farmtact-pg user=farmtact dbname=postgres', autocommit=True) as connection:
+        if not connection.execute("SELECT 1 FROM pg_database WHERE datname='farmtact_control'").fetchone():
+            connection.execute('CREATE DATABASE farmtact_control')
+    sys.path.insert(0, '/app')
+    from services.api.store import Store
+    Store('postgresql+psycopg://farmtact@/farmtact_control?host=/tmp/farmtact-pg')
+    copied = {}
+    with psycopg.connect(DATABASE) as source, psycopg.connect('host=/tmp/farmtact-pg user=farmtact dbname=farmtact_control') as target:
+        for table in ('inference_budget', 'abuse_security_settings', 'abuse_rate_counters'):
+            rows = source.execute(sql.SQL('SELECT * FROM {}').format(sql.Identifier(table))).fetchall()
+            if target.execute(sql.SQL('SELECT count(*) FROM {}').format(sql.Identifier(table))).fetchone()[0]:
+                raise RuntimeError('Refusing to overwrite existing shared operational counters')
+            if rows:
+                with target.cursor() as cursor:
+                    cursor.executemany(sql.SQL('INSERT INTO {} VALUES ({})').format(sql.Identifier(table), sql.SQL(',').join(sql.Placeholder() for _ in rows[0])), rows)
+            copied[table] = len(rows)
+    print('Preserved operational counters in separate control database; no farm rows copied.')
+
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(); parser.add_argument('action', choices=['freeze', 'resume', 'export', 'restore', 'verify'])
+    parser = argparse.ArgumentParser(); parser.add_argument('action', choices=['freeze', 'resume', 'export', 'restore', 'verify', 'control'])
     args = parser.parse_args(); os.umask(0o077)
     if not DIRECTORY.is_dir(): raise SystemExit('Prepare owned private transfer directory first')
     if args.action == 'verify':

@@ -4,6 +4,7 @@ import os
 import re
 from contextlib import asynccontextmanager
 from http.cookies import SimpleCookie
+from http.cookiejar import CookieJar, DefaultCookiePolicy
 
 import httpx
 from fastapi import FastAPI, Request
@@ -12,9 +13,13 @@ from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
 from services.api.release_registry import ROOT, registry, upstream
-from services.api.security import client_network
+from services.api.security import client_network, is_event_stream
 
 HOP = {'host', 'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'content-length', 'content-encoding'}
+
+
+class NoUpstreamCookies(DefaultCookiePolicy):
+    def set_ok(self, cookie, request): return False
 
 
 def create_gateway(store=None, transport=None):
@@ -26,8 +31,9 @@ def create_gateway(store=None, transport=None):
         await app.state.client.aclose()
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
-    app.state.client = httpx.AsyncClient(transport=transport, timeout=httpx.Timeout(365, connect=15), follow_redirects=False, trust_env=False)
+    app.state.client = httpx.AsyncClient(transport=transport, cookies=CookieJar(policy=NoUpstreamCookies()), timeout=httpx.Timeout(365, connect=15), follow_redirects=False, trust_env=False)
     app.state.store = store
+    app.state.streams = {}
     @app.middleware('http')
     async def boundaries(request, call_next):
         if os.environ.get('FARMTACT_TRUST_FLY_PROXY') == 'true' and request.headers.get('host') == 'farmtact.fly.dev' and request.headers.get('x-forwarded-proto') == 'http':
@@ -83,10 +89,13 @@ def create_gateway(store=None, transport=None):
         # client_network aggregates IPv6 for rate limiting; send a parseable host
         # representation to the backend, whose limiter applies the same grouping.
         network = network.split('/')[0]
+        stream = is_event_stream(request)
+        if stream and (app.state.streams.get(network, 0) >= 4 or sum(app.state.streams.values()) >= 32):
+            return JSONResponse({'detail': 'Too many active event streams'}, 429, headers={'Retry-After': '5'})
         headers = {k: v for k, v in request.headers.items() if k.lower() not in HOP | {'cookie', 'authorization', 'fly-client-ip'} and not k.lower().startswith(('x-farmtact-', 'x-forwarded-'))}
         from urllib.parse import urlsplit
         public_host = urlsplit(os.environ.get('FARMTACT_PUBLIC_ORIGIN', 'https://farmtact.fly.dev')).netloc
-        headers.update({'host': public_host, 'x-farmtact-gateway': secret, 'x-farmtact-client-ip': network, 'accept-encoding': 'identity'})
+        headers.update({'host': public_host, 'x-farmtact-gateway': secret, 'x-farmtact-client-ip': network, 'accept-encoding': 'identity', 'cookie': ''})
         cookie_name = f'farmtact_{edition}_session'
         cookie = request.cookies.get(cookie_name)
         legacy = edition == 'v1' and not cookie and request.cookies.get('farmtact_session')
@@ -102,9 +111,16 @@ def create_gateway(store=None, transport=None):
         url = upstream(edition).rstrip('/') + '/' + path
         if request.url.query: url += '?' + request.url.query
         try:
+            if stream: app.state.streams[network] = app.state.streams.get(network, 0) + 1
             response = await app.state.client.send(app.state.client.build_request(request.method, url, headers=headers, content=bytes(body)), stream=True)
         except httpx.RequestError:
+            if stream: app.state.streams[network] -= 1
             return JSONResponse({'detail': 'This edition is temporarily unavailable. Your saved farm remains in this edition.'}, 503)
+        async def close_response():
+            await response.aclose()
+            if stream:
+                app.state.streams[network] -= 1
+                if not app.state.streams[network]: del app.state.streams[network]
         output_headers = {k: v for k, v in response.headers.items() if k.lower() not in HOP | {'set-cookie'}}
         location = output_headers.get('location')
         if location and location.startswith('/') and not location.startswith('//'): output_headers['location'] = f'/{edition}' + location
@@ -113,10 +129,10 @@ def create_gateway(store=None, transport=None):
             content = (await response.aread()).decode('utf-8')
             # Only generated local asset attributes, never arbitrary source rewriting.
             content = re.sub(r'((?:src|href)=["\'])/(assets|art|audio)/', rf'\1/{edition}/\2/', content)
-            await response.aclose()
+            await close_response()
             result = HTMLResponse(content, response.status_code, headers=output_headers)
         else:
-            result = StreamingResponse(response.aiter_bytes(), status_code=response.status_code, headers=output_headers, background=BackgroundTask(response.aclose))
+            result = StreamingResponse(response.aiter_bytes(), status_code=response.status_code, headers=output_headers, background=BackgroundTask(close_response))
         for raw in response.headers.get_list('set-cookie'):
             parsed = SimpleCookie(); parsed.load(raw)
             if 'farmtact_session' in parsed:

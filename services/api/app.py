@@ -199,7 +199,12 @@ def create_app(store=None,start_worker=True):
             result['acceptance_stale']=True
         return result
     @app.get('/api/v1/health')
-    def health():return {'status':'ok','development_phase':'autonomous_development'}
+    def health():
+        result = {'status':'ok','development_phase':'autonomous_development'}
+        if os.environ.get('FARMTACT_EDITION'):
+            source = ROOT/'config/build-source.txt'
+            result.update(edition=os.environ['FARMTACT_EDITION'],source_commit=source.read_text().strip() if source.is_file() else 'development')
+        return result
     @app.get('/api/v1/bootstrap')
     def bootstrap(request:Request,response:Response):
         t=app.state.store.authenticate(request.cookies.get('farmtact_session'))

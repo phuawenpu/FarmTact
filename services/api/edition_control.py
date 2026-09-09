@@ -150,12 +150,13 @@ class ControlService:
         from sqlalchemy.dialects.postgresql import insert as pg_insert
         from sqlalchemy.dialects.sqlite import insert as sqlite_insert
         self.insert = pg_insert if store.engine.dialect.name == "postgresql" else sqlite_insert
-        from services.api.release_registry import registry
-        self.allowed_editions = frozenset(item["id"] for item in registry()["editions"])
         metadata.create_all(store.engine)
 
     def _known_edition(self, edition_id: str) -> None:
-        if edition_id not in self.allowed_editions:
+        # The gateway registry is atomically replaced during publication; read
+        # its validated current contents so a new edition needs no process restart.
+        from services.api.release_registry import registry
+        if edition_id not in {item["id"] for item in registry()["editions"]}:
             raise ValueError("Unknown edition")
 
     def reserve(self, request: ReserveRequest) -> dict:

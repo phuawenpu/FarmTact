@@ -1,8 +1,9 @@
 import type { Bootstrap, Crop, EvidenceRecord, Run } from './types'
 import type { Conversation, Quest, Scenario, ScenarioComparison, ScenarioControls } from './game'
 import type { ExplorerDetail, ExplorerSnapshotSummary, ForecastSettings, GeneratorSettings, PublicContext } from './explorer'
+import { editionPath } from './edition'
 
-const API = '/api/v1'
+const API = () => editionPath('/api/v1')
 
 export class ApiError extends Error {
   status: number
@@ -15,7 +16,7 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API}${path}`, {
+  const response = await fetch(`${API()}${path}`, {
     ...init,
     headers: {
       ...(init?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
@@ -62,7 +63,7 @@ export const api = {
   }),
   replay: (id: string) => request<Run>(`/planning-runs/${encodeURIComponent(id)}/replay`),
   demoReplay: () => request<Run>('/demo/replay'),
-  eventsUrl: (id: string) => `${API}/planning-runs/${encodeURIComponent(id)}/events`,
+  eventsUrl: (id: string) => `${API()}/planning-runs/${encodeURIComponent(id)}/events`,
   conversations: async () => (await request<{ conversations: Conversation[] }>('/conversations')).conversations,
   conversation: (id: string) => request<Conversation>(`/conversations/${encodeURIComponent(id)}`),
   conversationReplay: (id: string) => request<Conversation>(`/conversations/${encodeURIComponent(id)}/replay`),
@@ -103,5 +104,5 @@ export const api = {
   explorerPreview: (generator_settings: GeneratorSettings, forecast_settings: ForecastSettings, signal?: AbortSignal) => request<ExplorerDetail>('/data-explorer/preview', { method: 'POST', signal, body: JSON.stringify({ generator_settings, forecast_settings }) }),
   saveExplorerSnapshot: (name: string, generator_settings: GeneratorSettings, forecast_settings: ForecastSettings) => request<ExplorerDetail>('/data-explorer/snapshots', { method: 'POST', headers: { 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name, generator_settings, forecast_settings }) }),
   explorerPublic: () => request<PublicContext>('/data-explorer/public'),
-  explorerExportUrl: (params: URLSearchParams) => `${API}/data-explorer/export?${params.toString()}`,
+  explorerExportUrl: (params: URLSearchParams) => `${API()}/data-explorer/export?${params.toString()}`,
 }

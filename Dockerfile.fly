@@ -29,6 +29,9 @@ COPY data/fixtures/ data/fixtures/
 COPY reports/deepseek/latest.json reports/deepseek/latest.json
 COPY reports/numerical_evaluation.json reports/numerical_evaluation.json
 COPY --from=web /build/apps/web/dist apps/web/dist
+ARG SOURCE_COMMIT=unknown
+LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
+RUN printf '%s' "$SOURCE_COMMIT" > config/build-source.txt
 RUN for part in raw normalized manifests reports runtime; do \
       ln -s /data/public-data/$part /app/data/$part; \
     done \

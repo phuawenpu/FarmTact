@@ -42,7 +42,7 @@ def test_legacy_only_reaches_v1(gateway):
     client, seen = gateway
     client.cookies.set('farmtact_session', 'legacy_session_123456789012345')
     client.get('/v2/api/v1/bootstrap')
-    assert 'cookie' not in seen[-1].headers
+    assert not seen[-1].headers.get('cookie')
     response = client.get('/v1/api/v1/bootstrap')
     assert seen[-1].headers['cookie'].startswith('farmtact_session=legacy')
     assert any('farmtact_v1_session=' in h for h in response.headers.get_list('set-cookie'))
@@ -72,3 +72,13 @@ def test_chooser_metadata_does_not_bootstrap(gateway):
     assert [e['id'] for e in response.json()['editions']] == ['v1', 'v2']
     assert not client.cookies and not seen
     assert 'flycast' not in response.text
+
+
+def test_gateway_never_reuses_upstream_cookie_between_visitors(gateway):
+    client, seen = gateway
+    client.get('/v1/api/v1/new')
+    client.cookies.clear()
+    client.get('/v1/api/v1/bootstrap')
+    assert not seen[-1].headers.get('cookie')
+    client.get('/v2/api/v1/bootstrap')
+    assert not seen[-1].headers.get('cookie')

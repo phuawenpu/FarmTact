@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Allocation, Bed, Crop, Farm, Run } from '../lib/types'
 import { ADVISORS, type Advisor, type AdvisorId, type ProposedAction, type Scenario } from '../lib/game'
 import { AccessibleFarmView, BedDetailPanel, ConversationPanel, QuestJournal, ScenarioLab } from './GamePanels'
+import { editionPath } from '../lib/edition'
 
 type Panel = 'bed' | 'conversation' | 'quests' | 'scenarios' | 'list' | null
 
@@ -147,7 +148,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
               const position = bedPosition(index)
               const state = previewBed(bed, previewDate, allocationsByBed.get(bed.id))
               const crop = state.cropId ? cropMap.get(state.cropId) : undefined
-              const cropImage = state.cropId && state.stage !== 'empty' ? `/art/crops/${state.cropId}-${assetStage(state.stage)}.svg` : null
+              const cropImage = state.cropId && state.stage !== 'empty' ? editionPath(`/art/crops/${state.cropId}-${assetStage(state.stage)}.svg`) : null
               return (
                 <button
                   key={bed.id}
@@ -170,7 +171,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
                 <button key={advisor.id} className={`world-advisor world-advisor--${advisor.id}`} style={{ left: position.x, top: position.y, zIndex: 80 + position.y }} onClick={() => openAdvisor(advisor)} aria-label={`Talk to ${advisor.name}, ${advisor.role} at ${advisor.location}`}>
                   {hasNotice && <span className="world-advisor__notice">!</span>}
                   <span className="world-advisor__bubble">{advisor.prompt}</span>
-                  <img src={`/art/advisors/${advisor.id}.svg`} alt="" draggable={false}/>
+                  <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt="" draggable={false}/>
                   <span className="world-advisor__name"><b>{advisor.name}</b><small>{advisor.role}</small></span>
                 </button>
               )

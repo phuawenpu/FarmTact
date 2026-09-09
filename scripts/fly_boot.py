@@ -91,13 +91,14 @@ def main():
             time.sleep(.2)
         if stopping:
             return 0
+        database_name = 'farmtact_control' if os.environ.get('FARMTACT_ROLE') == 'gateway' else 'farmtact'
         exists = subprocess.run(['psql', '-h', SOCKET, '-U', 'farmtact', '-d', 'postgres',
-                                 '-Atc', "SELECT 1 FROM pg_database WHERE datname='farmtact'"],
+                                 '-Atc', f"SELECT 1 FROM pg_database WHERE datname='{database_name}'"],
                                 capture_output=True, text=True, check=True, env=safe_env, timeout=10)
         if stopping:
             return 0
         if exists.stdout.strip() != '1':
-            subprocess.run(['createdb', '-h', SOCKET, '-U', 'farmtact', 'farmtact'],
+            subprocess.run(['createdb', '-h', SOCKET, '-U', 'farmtact', database_name],
                            check=True, env=safe_env, timeout=15)
         if stopping:
             return 0

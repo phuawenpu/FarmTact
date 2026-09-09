@@ -1,5 +1,6 @@
 import { AlertTriangle, Check, Clock3, CloudOff, LoaderCircle, Sprout } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { editionPath } from '../lib/edition'
 
 export function CropArt({ cropId, color = '#93c64b', stage = 'growing', compact = false }: {
   cropId?: string
@@ -39,7 +40,7 @@ export function CropArt({ cropId, color = '#93c64b', stage = 'growing', compact 
   return (
     <div className={`crop-art ${compact ? 'crop-art--compact' : ''}`} aria-hidden="true" style={{ background }}>
       <img
-        src={`/art/crops/${cropId}-${assetStage}.svg`}
+        src={editionPath(`/art/crops/${cropId}-${assetStage}.svg`)}
         alt=""
         draggable="false"
         style={{ width: '100%', height: '100%', objectFit: 'contain' }}

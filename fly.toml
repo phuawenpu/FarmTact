@@ -7,12 +7,13 @@ kill_timeout = 90
   dockerfile = "Dockerfile.fly"
 
 [env]
+  FARMTACT_ROLE = "gateway"
   FARMTACT_EXECUTION_MODE = "test"
   FARMTACT_SECURE_COOKIES = "true"
   FARMTACT_PUBLIC_ORIGIN = "https://farmtact.fly.dev"
   FARMTACT_TRUST_FLY_PROXY = "true"
   FARMTACT_DATA_MODE = "synthetic_demo"
-  FARMTACT_DATABASE_URL = "postgresql+psycopg://farmtact@/farmtact?host=/tmp/farmtact-pg"
+  FARMTACT_DATABASE_URL = "postgresql+psycopg://farmtact@/farmtact_control?host=/tmp/farmtact-pg"
   PYTHONUNBUFFERED = "1"
 
 [[mounts]]
@@ -22,7 +23,7 @@ kill_timeout = 90
 
 [http_service]
   internal_port = 8080
-  force_https = true
+  force_https = false
   auto_stop_machines = "off"
   auto_start_machines = true
   min_machines_running = 1

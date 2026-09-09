@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "Root chooser creates no farm session",
+      "pass": true
+    },
+    {
+      "name": "Published registry contains v1 and v2",
+      "pass": true
+    },
+    {
+      "name": "Private controls are not publicly accessible",
+      "pass": true
+    },
+    {
+      "name": "Unknown edition never falls back",
+      "pass": true
+    },
+    {
+      "name": "v1 bootstrap succeeds",
+      "pass": true
+    },
+    {
+      "name": "v1 uses its own named session",
+      "pass": true
+    },
+    {
+      "name": "v2 bootstrap succeeds",
+      "pass": true
+    },
+    {
+      "name": "v2 uses its own named session",
+      "pass": true
+    },
+    {
+      "name": "Edition session tokens differ",
+      "pass": true
+    },
+    {
+      "name": "V2 saves its own reproducible dataset",
+      "pass": true
+    },
+    {
+      "name": "Saved dataset survives reloading v2",
+      "pass": true
+    },
+    {
+      "name": "V1 cannot read v2 dataset",
+      "pass": true
+    },
+    {
+      "name": "V1 remains unchanged by v2 save",
+      "pass": true
+    },
+    {
+      "name": "V2 sandbox save leaves its main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "Manually swapped edition credential is rejected",
+      "pass": true
+    }
+  ]
+}
