@@ -1,46 +1,54 @@
 # FarmTact on Fly.io
 
-The active topology is now defined in [the editions runbook](editions.md).
-`config/hosting/shared.json` identifies the active 4-vCPU/4-GB Machine and
-single 3-GB shared volume. The immutable publisher updates that Machine with
-separate, pinned gateway/edition containers. `fly.toml` remains an image-build and
-historical bootstrap input: a generic `fly deploy` would replace the shared
-container configuration and must not be used for current publication.
+Live: [edition chooser](https://farmtact.fly.dev/) and
+[v6](https://farmtact.fly.dev/v6/), Singapore (`sin`). This is a synthetic
+development demonstration; actual farm operations remain disabled.
 
-The sections below document the historical single-app deployment. Follow the
-editions runbook for current deployment, resource sizes and verification.
+## Active runtime
 
-Target: `farmtact`, https://farmtact.fly.dev, Singapore (`sin`). Deployment preserves the autonomous-development/synthetic-simulation policy. This is a development instance, not operational farm promotion.
+One shared 4-vCPU/4096-MB Machine runs the gateway and v1–v6 as seven containers,
+each pinned to its release image. One encrypted 3-GB volume provides isolated
+subtrees for their PostgreSQL clusters, caches and saved state. The common storage
+parent is unmounted before each app drops privileges. PostgreSQL uses private
+Unix sockets. Only the gateway receives public HTTP traffic.
 
-## Runtime
+`config/hosting/shared.json` identifies the active Machine and volume;
+`config/releases/registry.json` records the immutable editions. Six superseded
+Machines and seven old volumes were deleted after verified migration. Empty
+edition app registrations remain; unrelated Fly apps were untouched.
 
-`Dockerfile.fly` builds the web bundle and locked Python environment, then combines Python 3.13 and PostgreSQL 18 on matching Debian Bookworm images. Its build smoke imports native dependencies and the actual app as the unprivileged runtime user. Source/configuration remain root-owned and read-only to that user.
+`Dockerfile.fly` builds the locked Python/Node application with PostgreSQL 18.
+Encrypted runtime secrets supply credentials; never use build arguments or
+committed files for keys. New edition containers receive the required secret
+names from the existing app. Shared operational controls enforce inference and
+abuse limits while each edition retains independent game state.
 
-One shared-CPU Machine with 2 GB RAM runs the API worker and PostgreSQL. The encrypted 3 GB `farmtact_data` volume holds PostgreSQL and public-data snapshots. PostgreSQL listens only on a private Unix socket; only HTTP port 8080 is routed by Fly. The supervisor checks the database/schema before starting the web app, strips unrelated credentials from children, and allows bounded graceful shutdown. Existing PostgreSQL data is reused and mismatched major versions fail closed.
+## Publish and inspect
 
-A bounded public refresh runs separately at boot without provider credentials; its snapshots, source times and failures persist. DeepSeek credentials are supplied with Fly encrypted secrets at runtime, never build arguments or image files. The passwordless Unix-socket database URL is intentionally non-secret. Fly's secret behavior is described in the [official secrets documentation](https://fly.io/docs/apps/secrets/).
-
-## Deploy and inspect
+Follow [Publishing immutable editions](editions.md). The publisher updates the
+shared Machine, probes the next edition, then atomically appends the registry.
+Do not run a generic `fly deploy`: root `fly.toml` is retained for image building
+and historical bootstrap and does not describe the active container topology.
 
 ```bash
-fly config validate
-.venv/bin/python -m pytest tests/deployment -q
-fly deploy --app farmtact --remote-only --ha=false --yes
-fly status --app farmtact
+fly machines list --app farmtact
 fly checks list --app farmtact
+fly volumes list --app farmtact
+.venv/bin/python -m pytest tests/deployment tests/editions -q
 ```
 
-The initial deployment creates one Machine; `--ha=false` avoids a second independent database on a separate volume. Do not scale the process horizontally without first introducing shared database/worker coordination. One Machine means deployment/host failures can interrupt availability. Scheduled volume snapshots retain seven days; that is not a tested database restore procedure. See [Fly's volume documentation](https://fly.io/docs/volumes/overview/).
+Operator configuration updates use `scripts/shared_host_config.py` as described
+in the edition runbook. Do not scale horizontally without shared database/worker
+coordination. One host is one failure boundary and shared updates can interrupt
+all editions. Volume snapshots alone are not a verified database restore process.
 
-For initial setup, create `farmtact_data` in `sin` and stage the supplied DeepSeek key using `fly secrets import --stage --app farmtact` through stdin from a credential manager. The active app is already configured; do not rotate or reprint credentials to redeploy.
+## Verification and local development
 
-## Verify the remote application
+[V6 rollout evidence](../../reports/v6/implementation.md) records public browser,
+strategy, isolation, transfer and health checks. No inference calls were requested
+by that rollout. Historical provider reports retain their actual model settings
+and limitations; do not treat a numerical test as a live advisor capability test.
 
-```bash
-FARMTACT_BASE_URL=https://farmtact.fly.dev FARMTACT_BROWSER_REPORT=reports/fly_browser.json FARMTACT_SCREENSHOT_DIR=apps/web/screenshots/fly node tests/browser/run.mjs
-.venv/bin/python scripts/integrated_demo.py --url https://farmtact.fly.dev --council --vision --replan --deterministic-replan --report reports/fly_integrated_demo.json --browser-state /tmp/farmtact-fly-browser-state.json
-```
-
-Browser checks create numerical missions only. The second command makes bounded actual DeepSeek calls. Replay makes none. Browser session-state files stay private and outside the repository. A fresh Fly session receives its own synthetic tenant; it does not automatically migrate Sprite session cookies or private databases.
-
-Latest rollout: health and 44 browser checks passed, and saved farm/session data survived image replacement with clean PostgreSQL shutdown. The actual DeepSeek council completed provider calls but acceptance was withheld for an unsupported critic threshold. See [deployment verification](../../reports/fly_deployment.md) for the separate results and exact deployed image.
+The Sprite HTTP and private tunnel services are shut down; the local PostgreSQL
+service is retained. Register temporary development services through the Sprite
+skill. Do not expose backups, credentials or arbitrary filesystem paths over HTTP.

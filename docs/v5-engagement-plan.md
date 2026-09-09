@@ -1,6 +1,6 @@
 # V5 engagement and hosting plan
 
-Status: complete; immutable v5 is published and deployed checks are recorded. Updated 2026-09-09.
+Status: completed historical v5 plan. V6 is now current; its hosting and two additional crop profiles are documented in [the v6 report](../reports/v6/implementation.md). V5 evidence below retains its original scope. Updated 2026-09-09.
 
 The published v5 edition turns Sumin Lee's decision-support proposal into
 a clearer playable loop: find a delivery shortage, inspect its records, change an

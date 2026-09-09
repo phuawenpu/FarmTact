@@ -1,3 +1,9 @@
+Current checkout note (v6, 9 September 2026): the initial implementation below
+has been delivered. Start from README.md, docs/execution-plan.md and the current
+release manifests; extend the working application instead of recreating it.
+The catalogue now has twelve profiles and the synthetic fixture still has four
+recipes. Hosting uses one shared Machine and volume; follow the editions runbook.
+
 Start implementing FarmTact in this repository.
 
 Read CODEX_START_PROMPT.md as my latest kickoff instructions, together
@@ -32,7 +38,7 @@ Validate the crop catalogue, scientific evidence, private-data schemas,
 and synthetic fixtures. Build actual public-data connectors with
 provenance, coverage, units, freshness, and explicit failure states.
 
-Cover all ten crop knowledge profiles, while initially exercising
+Cover all twelve crop knowledge profiles, while initially exercising
 caixin, pak choi, kailan, and lettuce in the synthetic farm.
 
 Schedule the DeepSeek gateway tests early, alongside dataset work.

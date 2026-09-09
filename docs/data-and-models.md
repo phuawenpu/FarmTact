@@ -4,6 +4,11 @@ The current game combines a deterministic fictional farm, simple statistical
 baselines, constrained optimisation and pretrained DeepSeek models. There is no
 model trained or fine-tuned on real FarmTact farm/customer records.
 
+The v6 crop catalogue has twelve evidence-linked knowledge profiles. Garlic chives
+and sawtooth coriander add research and original illustrations, not additional
+simulation recipes. See [their evidence review](research/v6_crop_evidence.md).
+Each published edition retains its own database/cache subtree on the shared host.
+
 ## Synthesized data
 
 `packages/fixtures.py` creates the same versioned fictional farm from its cutoff:
@@ -39,9 +44,10 @@ and availability gaps remain visible; the recorded row count is not a claim that
 all values remain current. SingStat trade is not individual-buyer demand and NASA
 grid values are not on-farm sensor measurements.
 
-The ten-crop catalogue and twenty publication records are curated reference
-metadata. The larger 23-dataset registry includes sources that are merely
-discovered; only the seven above were integrated in the recorded build. These
+The twelve-crop catalogue and twenty-four publication records are curated reference
+metadata. The broader source registry includes sources that are merely discovered; the
+seven above describe the original recorded public-data build. V5 added a separate
+bounded News cache with explicit source dates and missing community feeds. These
 registries do not create crop-specific training labels or validate demo yields.
 
 Public context is displayed to users/advisors but is **not currently a numerical

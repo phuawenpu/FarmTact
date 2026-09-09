@@ -1,12 +1,34 @@
 # FarmTact · Command & Cultivate
 
-A mobile tactical planning board for a fictional Singapore vegetable farm. Ten crop knowledge profiles connect to a versioned evidence register; caixin, pak choi, kailan and lettuce are exercised in the synthetic farm. Python calculates Lean, Balanced and Resilient plans; actual DeepSeek roles review frozen results. Development plans are automatically accepted for simulation after validation.
+A mobile tactical planning board for a fictional Singapore vegetable farm. Twelve crop knowledge profiles connect to a versioned evidence register; caixin, pak choi, kailan and lettuce are exercised in the synthetic farm. Python calculates Lean, Balanced and Resilient plans; actual DeepSeek roles review frozen results. Development plans are automatically accepted for simulation after validation.
 
 **This is a working development demonstration.** Farm orders, recipes, outcomes and financial results are synthetic. Public weather/trade/climate sources are separate, with observed/retrieved time, freshness, units, licence and source lineage. No planting, purchase or operational approval is sent to a real farm.
 
 ## Deployed app
 
-**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. The latest edition is [v4: seven advisors with usable mobile dialogue](https://farmtact.fly.dev/v4/); v1, v2 and v3 retain independent saved state and frozen deployments. See the [edition runbook](docs/deployment/editions.md) and [seven-agent verification](reports/seven_agents/implementation.md).
+Play [v6: More crops, one shared home](https://farmtact.fly.dev/v6/), or use the
+[edition chooser](https://farmtact.fly.dev/) to revisit v1–v5. Each edition keeps
+its frozen source/image and independent farm, settings and saved progress.
+
+- Explore synthetic records, linked charts, adjustable demand/forecast assumptions
+  and reproducible sandbox strategies in the Data Explorer.
+- Compare Lean, Balanced and Resilient outcomes, inspect shortages and trace
+  explanations to frozen evidence. Numerical experiments make no inference calls.
+- Browse twelve crop profiles, including garlic chives and sawtooth coriander,
+  with original illustrations and research references. These two additions are
+  knowledge profiles; the simulated farm still uses four declared recipes.
+- Consult seven advisors: Demand, Weather, Market, Production, Supply Chain,
+  Profit and Planner. The supporting News scout supplies cached evidence;
+  community feeds remain explicitly unconnected.
+- Enable optional music/effects in the interface. Text fields support device
+  keyboard dictation where available; there is no custom transcription service.
+
+The Singapore deployment uses **one shared 4-vCPU/4-GB Fly Machine and one
+3-GB persistent volume**, with isolated containers and databases for the gateway
+and six editions. Superseded FarmTact Machines and volumes have been removed.
+See the [release evidence](reports/v6/implementation.md),
+[deployment runbook](docs/deployment/editions.md) and
+[hosting assessment](docs/deployment/consolidation-assessment.md).
 
 ## Running in this Sprite
 
@@ -48,7 +70,13 @@ node tests/browser/run.mjs
 .venv/bin/python scripts/generate_web_contracts.py --check
 ```
 
-Original development verification: **191 Python tests and 44 browser checks passed**, plus an isolated clean-checkout build and numerical workflow. See [the completion audit](reports/completion_audit.md) and [clean-checkout report](reports/clean_checkout.json).
+V6 verification: **458 backend tests**, **36 focused deployment/publisher tests**,
+**45 public crop-browser checks** and **7 edition-selector checks** passed.
+Two concurrent public numerical runs completed without provider calls or main-farm
+changes. Counts cover different suites and are not additive. See
+[the v6 report](reports/v6/implementation.md) for evidence and test limitations.
+The [initial completion audit](reports/completion_audit.md) and
+[clean-checkout report](reports/clean_checkout.json) retain their original scope.
 
 The PostgreSQL concurrency tests use isolated test tenants and clean their own rows. Browser checks use Chromium against the running app at widths 360, 390, 430 and 1280; they select numerical-only planning to avoid paid calls. Install the browser once with `cd apps/web && npx playwright install chromium`.
 
@@ -65,7 +93,8 @@ The trial is bounded to sixteen requests and an 8,192-output-token reservation. 
 
 - [Autonomous-development build specification](FarmTact_Build_Specification.md)
 - [DeepSeek runtime specification](FarmTact_DeepSeek_Runtime_Specification.md)
-- [Completion audit](reports/completion_audit.md)
+- [Current release evidence](reports/v6/implementation.md)
+- [Initial completion audit](reports/completion_audit.md)
 - [Execution plan and ownership](docs/execution-plan.md)
 - [Dataset coverage and quality](data/reports/data_quality.json)
 - [Dataset manifest](data/manifests/dataset_manifest.json)

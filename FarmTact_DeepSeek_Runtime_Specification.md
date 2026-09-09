@@ -30,7 +30,7 @@ a speech endpoint or change the current DeepSeek-only application runtime.
 
 **Version 1.2 · Autonomous development phase · Provider documentation review date retained: 8 September 2026 · Applies to all application LLM execution**
 
-This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master prompt, all specialist briefs and deployment acceptance criteria. On runtime-provider questions, this amendment takes precedence over earlier versions. Section 0 of the build specification controls the current autonomous-development phase: no human approval is required for implementation, testing, independent agent review or development acceptance. Agricultural evidence, ten-crop scope, data provenance, forecasting, optimization and security requirements remain in force.
+This is a mandatory amendment to `FarmTact_Build_Specification.md`, the master prompt, all specialist briefs and deployment acceptance criteria. On runtime-provider questions, this amendment takes precedence over earlier versions. Section 0 of the build specification controls the current autonomous-development phase: no human approval is required for implementation, testing, independent agent review or development acceptance. Agricultural evidence, twelve-profile/four-recipe scope, data provenance, forecasting, optimization and security requirements remain in force.
 
 ## 0. Autonomous development execution
 
@@ -193,7 +193,7 @@ Meter input, output, cached-input and reasoning usage where returned. For develo
 
 A09 and A12 inspect the existing repo for provider SDK defaults, hosted tracing, third-party OCR/vision, cloud embeddings, LLM evaluation services and runtime GPT settings. Build the shared gateway, remove runtime alternate-provider credentials and publish a route/capability manifest. A11 runs negative tests against endpoint overrides, missing keys, unknown roles/models and prompt-selected providers.
 
-**Required implementation:** `runtime/deepseek_gateway.py`, synthetic image fixture, and `tests/deepseek/test_gateway.py`. These files are absent from the current documentation-only checkout; create them autonomously before executing the trial. The offline tests must use `httpx.MockTransport` and exercise wire-format/error handling only; they do not test DeepSeek's actual service or model quality.
+**Required implementation:** `runtime/deepseek_gateway.py`, synthetic image fixture, and `tests/deepseek/test_gateway.py`. These artifacts are implemented; inspect the existing gateway, fixture and tests before extending them. The offline tests must use `httpx.MockTransport` and exercise wire-format/error handling only; they do not test DeepSeek's actual service or model quality.
 
 ### DS-G1 — Authenticated capability trial
 
@@ -248,13 +248,28 @@ Development rollback is automatic under a versioned policy to a previously teste
 
 A09 owns gateway and council implementation; A12 owns isolated environments, network policy, trial execution and release evidence; A11 independently verifies the policy and tests. A04 adds audit/mode fields to shared contracts. A05/A06 route any LLM-assisted ingestion interpretation through the gateway. A02/A03 separate initial GPT-assisted research provenance from later DeepSeek runtime extraction. A07/A08 keep calculations local and send only their validated results to agents. A10 displays model/mode/vision availability and blocked states honestly. A01 records new runtime extraction lineage.
 
-## 8. Handoff implementation status and remaining work
+## 8. Implementation status and remaining operational work
 
-The current repository has **specifications only**: no gateway, trial seed, offline tests or authenticated report is present. Earlier handoff text described an external seed and a blocked trial; that is not evidence of code or tests in this checkout. Implement the missing artifacts and record newly executed results. A missing credential produces a genuine `BLOCKED` capability report while independent development continues; never manufacture a passing report.
+V6 is deployed. The server-only gateway, capability routes, offline tests,
+bounded authenticated trial, tenant authorization, reservations, idempotent jobs
+and replay are implemented. See `runtime/deepseek_gateway.py`, `tests/deepseek/`,
+`reports/deepseek/authenticated_trial_summary.md` and `reports/v6/implementation.md`.
+Historical trial reports establish only the capabilities and settings actually
+exercised; v6's hosting and crop verification requested zero inference calls.
+Missing credentials or unavailable capabilities must still produce a visible
+blocked state, never fabricated success or another-provider fallback.
 
-A09/A12 must still integrate tenant authorization and secret delivery; implement production async cancellation, bounded streaming tool-argument assembly, cost reservation, idempotent jobs, concurrency management and safe retry policy; connect real farm tools; and enforce deployment egress. The seed's per-request timeouts and buffered-response size checks are not a complete resource-exhaustion defense. Optional beta strict schemas and Files API are documented but not implemented/tested in the seed.
+The gateway and six editions share one Fly Machine and volume while retaining
+separate application databases/workers. Authenticated operational controls retain
+the shared 48-call daily ceiling and abuse limits. This hosting change adds no
+provider route, speech service or background inference. The News scout remains
+a deterministic supporter of the seven-role council.
 
-The gateway specification gives the master a concrete implementation and testing target. It preserves agricultural, data-quality and security requirements. The autonomous-development policy replaces human-approval requirements for this phase; future operational approval is not a development gate.
+Real farm execution remains disabled. Infrastructure-level egress enforcement
+and farm-specific operational validation remain requirements for future production.
+Optional beta strict schemas and the Files API are not adopted merely because
+the provider documents them. This specification is a requirements contract;
+implementation and release reports are the evidence of tested behavior.
 
 ## 9. Primary documentation
 

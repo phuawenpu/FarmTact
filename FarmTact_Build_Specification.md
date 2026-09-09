@@ -1,29 +1,28 @@
-### V6 work in progress — 9 September 2026
-
-The user authorized downsizing to one shared 4-vCPU/4-GB Fly host under low
-simultaneous usage, and adding two researched, originally illustrated crop
-species to the available knowledge catalogue. Existing immutable editions and
-the four-crop reference generator must remain preserved. Crop research separates
-primary scientific evidence, practical background, missing data and synthetic
-assumptions. Root owns the migration and tests; see docs/execution-plan.md.
-Production is unchanged until candidate capacity and preservation checks pass.
-
 # FarmTact
 
-### V5 release amendment — 9 September 2026
+### Current implementation — v6, 9 September 2026
 
-V5 is the current published release. Its engagement work follows
-`docs/v5-engagement-plan.md`, using Sumin's business proposal and the original
-briefing's page-13 rubric. News supports the seven-member decision council with
-bounded, dated and frozen public evidence. Crop recognition, audio audibility and
-the full decision journey require independent browser/research review. Shared
-Fly hosting may replace separate Machines only after lower total cost, capacity,
-immutable runtime and saved-state isolation are verified; this is a conditional
-amendment to the separate-deployment topology below, not permission to merge game
-state. The 9 September assessment retains the existing topology: lower-cost
-shared sizes require unverified capacity reductions, while equal-capacity prices
-are essentially unchanged. See `docs/deployment/consolidation-assessment.md` for
-evidence and future reconsideration gates.
+V6 is published at https://farmtact.fly.dev/v6/. This current-state amendment
+supersedes earlier hosting and crop-count descriptions; the v1.2 development
+policy remains in force. The catalogue contains twelve researched knowledge
+profiles, adding garlic chives and sawtooth coriander. Both have original SVG
+illustrations and primary-paper evidence; neither adds an unvalidated numerical
+recipe. The deterministic caixin/pak choi/kailan/lettuce fixture remains unchanged.
+
+One Singapore Fly Machine (4 shared vCPUs, 4096 MB) runs the gateway and v1–v6
+as isolated containers with their exact registered OCI images. One encrypted
+3-GB volume contains separate database/cache subtrees. Settings, sessions and
+saved game state remain independent; operational abuse/inference limits are
+shared. Data fingerprints and public capacity checks passed. Six old Machines
+and seven old volumes were deleted; unrelated Fly resources were untouched.
+Future editions reuse this host through the immutable publisher. A shared restart
+can interrupt all editions; capacity must be reassessed as editions accumulate.
+See [release evidence](reports/v6/implementation.md),
+[execution status](docs/execution-plan.md) and [publication](docs/deployment/editions.md).
+
+V5 introduced the engagement loop based on Sumin's proposal and the briefing's
+page-13 rubric. Its News, audio and gameplay behavior below remains in v6.
+Historical release reports retain the dataset, role and model settings actually tested.
 
 ### V5 News and decision evidence implementation
 
@@ -69,11 +68,11 @@ their source/image and recorded state. Test/release evidence belongs in reports/
 
 ### Release amendment — 9 September 2026
 
-The public root is an edition chooser. The current mobile/data-explorer/review
-release becomes `/v1/`; `/v2/` adds edition navigation, feedback/change/verification
+The public root is an edition chooser. The initial mobile/data-explorer/review
+release was preserved as `/v1/`; `/v2/` added edition navigation, feedback/change/verification
 notes, and optional original gentle music/effects. Each published application
-iteration receives a new immutable numbered edition with a separate private
-deployment, database, worker, cached sources, browser storage and session cookie.
+iteration receives a new immutable numbered edition with an isolated
+container, database, worker, cached sources, browser storage and session cookie.
 Returning to an edition resumes its own farm; new editions start with fresh
 reference fixtures. The v1 compatibility adaptation preserves existing gameplay
 and recorded data. Operational abuse counters and inference spending ceilings
@@ -96,7 +95,7 @@ at least every 20 minutes during active development.
 
 **Version:** 1.2 — Autonomous development phase · **Research cut-off:** 8 September 2026 · **Market:** Singapore · **Product:** SME farm production planning web application
 
-**Status of this handoff:** researched specification, curated source/crop/evidence registries, coding-agent instructions, contract seeds, and synthetic-fixture tooling. This is not a deployed application, trained agronomic model, downloaded collection of the referenced datasets, or evidence of achieved farm savings.
+**Implementation status:** a deployed synthetic development demonstration with curated evidence, bounded public-data ingestion, numerical planning and DeepSeek advisor integration. Requirements below include future operational capabilities; release reports establish what was actually verified. No model is trained on real farm outcomes, and no achieved farm savings are claimed.
 
 **Mandatory runtime amendment:** Read `FarmTact_DeepSeek_Runtime_Specification.md`. GPT/Codex may build and research; every actual FarmTact LLM call in development, platform test, demo, staging or live use must use the official DeepSeek API. No alternative-provider fallback. The amended environment template supersedes the old GPT runtime defaults.
 
@@ -136,7 +135,7 @@ Primary user: an owner-manager or production planner of a Singapore vegetable SM
 
 Near-term decisions concern current crops, harvest timing within safe maturity windows, labour and buyer allocation. Medium-term decisions concern sowing, transplanting, crop mix, staggered batches and optional partner supply. Long-term capital investment is scenario analysis, not automatically available capacity.
 
-Default demo: one fictional Singapore SME growing four crops from the researched ten-crop portfolio. All ten must appear in the crop knowledge base; only crops with a technically validated, explicitly synthetic recipe are selectable for simulated commitments in this phase. Real production commitments require future farm-specific validation. A farm can activate more crops by supplying the missing parameters. This prevents a demo from pretending that ten experimentally validated local models already exist.
+Default demo: one fictional Singapore SME growing four crops from the researched twelve-crop portfolio. All twelve must appear in the crop knowledge base; only crops with a technically validated, explicitly synthetic recipe are selectable for simulated commitments in this phase. Real production commitments require future farm-specific validation. A farm can activate more crops by supplying the missing parameters. This prevents a demo from pretending that twelve experimentally validated local models already exist.
 
 ### 1.2 Non-goals
 
@@ -158,7 +157,7 @@ No crop-level commercial sales or production ranking sufficient to establish Sin
 
 Display `popularity_rank = null`. When a tenant has sales data, separately compute that tenant's crop ranking by ordered kilograms, delivered kilograms, revenue and order frequency over a stated period. Never replace that with search popularity or the frequency of a crop in papers.
 
-### 2.2 Ten-crop knowledge portfolio
+### 2.2 Twelve-crop knowledge portfolio
 
 | Crop ID | Singapore-facing label | Important boundary | Initial evidence |
 |---|---|---|---|
@@ -172,6 +171,8 @@ Display `popularity_rank = null`. When a tenant has sales data, separately compu
 | `mustard_greens` | Chinese mustard / mustard greens | Red mustard is not every mustard SKU | P11 |
 | `malabar_spinach` | Ceylon / Malabar spinach | Trellised, potentially repeated harvesting | P14 |
 | `sweet_potato_leaves` | Sweet-potato leaves/shoots | Do not use tuber maturity or tuber yield | P13, P18 |
+| `garlic_chives` | Garlic chives / Chinese chives | Allium tuberosum, not hollow-leaved common chives; knowledge profile only | P21, P22 |
+| `sawtooth_coriander` | Sawtooth coriander / culantro | Eryngium foetidum, not Coriandrum sativum; knowledge profile only | P23, P24 |
 
 Canonical taxon concepts, aliases, ambiguity warnings and evidence links are in `research/crop_catalogue.json`. Local names are convenience labels, not authoritative taxonomic identifiers. Resolve identifiers to an appropriate botanical authority during dataset construction and record the chosen taxonomy/version. Ambiguous invoice descriptions must enter a review queue.
 
@@ -217,7 +218,7 @@ These components can join through identifiers, time and geography. They must nev
 
 ### 3.1 Required phase-one outputs
 
-Produce a crop catalogue for all ten crops; source registry with access/licence states; article evidence register; approved and unresolved crop/HS mappings; machine-readable data contracts; raw-snapshot manifest; normalized tables; quality report; lineage graph; reproducible feature build; and a deterministic synthetic farm used only for integration testing.
+Produce a crop catalogue for all twelve crops; source registry with access/licence states; article evidence register; approved and unresolved crop/HS mappings; machine-readable data contracts; raw-snapshot manifest; normalized tables; quality report; lineage graph; reproducible feature build; and a deterministic synthetic farm used only for integration testing.
 
 For each source, report `discovered`, `metadata_verified`, `licence_reviewed`, `downloaded`, `parsed`, `validated`, `quarantined` or `blocked`. “Publicly available” must not be displayed as “integrated.” Missing credentials, unavailable files and unknown licences are explicit blockers, not reasons to fabricate substitute data.
 
@@ -360,7 +361,7 @@ No runtime LLM writes arbitrary SQL, executes downloaded Python, chooses unrestr
 
 Before modeling, produce coverage by crop, source, date and farm system; completeness; invalid units; duplicates; unresolved aliases/codes; licence blockers; freshness; missing outcomes; and evidence applicability. Assign no fabricated row-count target. Report actual rows fetched versus requested, plus exclusions.
 
-The gate passes when all ten crop records and their caveats exist; the activated development recipes have technically validated parameters with explicit provenance and `demo_only` scope where synthetic; at least one real public connector has successfully produced validated records; the synthetic/private-data boundary is enforceable; and every feature can be traced back to a source snapshot. A source whose endpoint is blocked may remain in the backlog but cannot be displayed as live.
+The gate passes when all twelve crop records and their caveats exist; the activated development recipes have technically validated parameters with explicit provenance and `demo_only` scope where synthetic; at least one real public connector has successfully produced validated records; the synthetic/private-data boundary is enforceable; and every feature can be traced back to a source snapshot. A source whose endpoint is blocked may remain in the backlog but cannot be displayed as live.
 
 ---
 
@@ -583,7 +584,7 @@ Report hard violations as structured records: `constraint_code`, `entity_id`, `p
 | `/api/v1/sources` | GET | Metadata, freshness, licence and integration state |
 | `/api/v1/imports` | POST | Validated upload/import request; returns job ID |
 | `/api/v1/imports/{id}` | GET | Status, row counts, quarantine reasons |
-| `/api/v1/crops` | GET | Ten-crop catalogue and activated recipe coverage |
+| `/api/v1/crops` | GET | Twelve-crop catalogue and activated recipe coverage |
 | `/api/v1/crops/{id}/evidence` | GET | Filtered evidence cards and applicability |
 | `/api/v1/farms/{id}/snapshot` | GET | Tenant-authorized as-of snapshot |
 | `/api/v1/planning-runs` | POST | Idempotent creation; returns 202 and run ID |
@@ -682,7 +683,7 @@ FarmTact is a tactical planning board, not a generic ERP dashboard and not a cas
 
 **Data room:** source cards labelled live/cached/synthetic/blocked; last observation and retrieval times; licence/access status; coverage, quality and unresolved mappings. Let a judge see that public data and fictional farm records are different layers.
 
-**Crop library:** ten crop cards with local aliases, harvested part, system compatibility, research references, stage/time-basis warnings and approved-versus-provisional parameters. Clicking a parameter opens its source and applicability. No fake nationally ranked “top ten” badge.
+**Crop library:** twelve crop cards with local aliases, harvested part, system compatibility, research references, stage/time-basis warnings and approved-versus-provisional parameters. Clicking a parameter opens its source and applicability. No fake nationally ranked “top ten” badge.
 
 **Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs, tool activity and two bounded challenge rounds. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
 
@@ -720,7 +721,7 @@ Distinguish `specified`, `implemented`, `tested`, `integrated` and `validated on
 
 | ID / role | Owned work | Inputs | Required output and acceptance |
 |---|---|---|---|
-| A01 — Evidence/taxonomy steward | Source/licence registry, aliases and crop/HS mapping proposals | C01–C04, D22, curated registries | Ten clean crop concepts, mapping review queue, publication/licence status; no invented popularity ranking |
+| A01 — Evidence/taxonomy steward | Source/licence registry, aliases and crop/HS mapping proposals | C01–C04, D22, curated registries | Twelve clean crop concepts, mapping review queue, publication/licence status; no invented popularity ranking |
 | A02 — Brassica researcher | Caixin, pak choi, kailan, kale, mustard evidence | P01–P07, P11, P15, P20 | Contextual evidence cards; stage/cultivar/system distinctions; independently check critical numbers |
 | A03 — Other-leafy researcher | Bayam, kangkong, lettuce, Basella, sweet-potato leaves | P08–P10, P12–P14, P16–P19 | Fresh/dry, multi-cut and leaf/tuber boundaries; local-transfer gaps stated |
 | A04 — Data contracts/fixtures | Schemas, manifests, synthetic generator, private templates | All schema decisions | Reproducible builds, provenance, temporal fields, mass-balanced labelled fixtures |
@@ -839,7 +840,7 @@ The handoff does not redistribute the referenced third-party papers, imagery or 
 
 ## 15. DeepSeek implementation handoff (mandatory v1.1 amendment)
 
-Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepseek_trial_and_cutover.md` if absent and keep it consistent with this development policy. Implement the referenced server-only gateway seed, fourteen-route DeepSeek role/helper manifest, offline provider contract tests and authenticated trial if absent. These artifacts are not present in the current documentation-only baseline. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
+Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepseek_trial_and_cutover.md` if absent and keep it consistent with this development policy. Implement the referenced server-only gateway seed, fourteen-route DeepSeek role/helper manifest, offline provider contract tests and authenticated trial if absent. These artifacts are implemented; inspect the existing runtime, scripts and tests before extending them. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
 
 Once those artifacts exist, run `python -m pytest tests/deepseek -q`, then automatically within the configured development budget—when the key is available—`python scripts/deepseek_trial.py --live --with-council` in test execution mode. The second command must make real billable calls within recorded request/token limits; no additional human confirmation is required for this development trial. It tests provider compatibility and a toy council, not the completed web app. Its full workflow uses synthetic input and preserves the impossible-lead-time counterexample.
 

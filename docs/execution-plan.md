@@ -1,5 +1,9 @@
 # FarmTact implementation status
 
+Current release: **v6, complete**. See the final v6 section and
+[release evidence](../reports/v6/implementation.md). Earlier dated sections below
+are a historical execution log, not outstanding tasks or current hosting advice.
+
 Kickoff: 2026-09-08. Latest user attachment copied to CODEX_START_PROMPT.md because the separately referenced kickoff file is absent. Initial authoritative tree: README and three specifications only. v1.2 autonomous development changes are preserved. Missing master/brief/runbook artifacts are implementation work, never assumed tested.
 
 ## Milestones and ownership
@@ -15,7 +19,7 @@ At most three specialists plus master run concurrently. No recursive delegation.
 
 Ten crop knowledge profiles; synthetic caixin/pak choi/kailan/lettuce farm; real source snapshots and coverage/quality/units/freshness; authenticated DeepSeek text/tool/vision checks; numerical Lean/Balanced/Resilient strategies on same scenarios; lead times, nursery/bed/labour/cash/commitments/inventory constraints; visual board and concise evidence cards; persistent versioned mission/council/automatic simulation acceptance/disruption/replay; mobile/browser/security tests. Optional broad satellite/ML roadmap remains separate from this vertical slice, with full spec requirements tracked in completion audit.
 
-## Current status
+## Initial build status (historical)
 
 G0–G3 implemented and demonstrated. Ten crop profiles, twenty evidence records and seven real public connectors produced 200 normalized records with eight source snapshots. Private synthetic contracts, point-in-time features, numerical baselines, CP-SAT alternatives, versioned PostgreSQL jobs and the mobile interface are integrated.
 
@@ -30,7 +34,7 @@ The primary development instance is now https://farmtact.fly.dev/ on the existin
 
 Actual Fly vision and six DeepSeek roles completed, but an unsupported critic threshold caused claim validation to withhold acceptance; that composite report remains INCOMPLETE. Numerical mission acceptance and disruption replanning passed separately. Historical Sprite verification above retains its original scope and counts. See [Fly deployment evidence](../reports/fly_deployment.md) and the deployment runbook for current results and limitations.
 
-## Interactive farming world — active implementation, 2026-09-08
+## Interactive farming world — historical implementation, 2026-09-08
 
 User-approved plan: painted isometric tap-to-explore farm; persistent typed six-character dialogue and bounded council; four repeatable numerical quests and isolated frozen scenario branches; ten recognizable crop illustrations and four growth-stage sets; mobile, accessibility, security, inference and persistence verification; deploy to existing farmtact app after passing checks. Actual operations remain disabled.
 
@@ -184,58 +188,21 @@ they do not erase the original network-idle timeout. All release evidence is in
 reports/v5. This engagement and conditional hosting goal is complete.
 
 
-## V6 crops and shared-host downsizing — 2026-09-09
+## V6 crops and shared-host downsizing — complete, 2026-09-09
 
-User authorized one shared 4-vCPU/4-GB Fly host for low concurrent use and two
-additional researched/illustrated crop species. Root owns hosting packaging,
-contracts, migration, publication and preservation. Three bounded real specialist
-agents own crop evidence, crop art/UI, and independent hosting review. New crops
-are garlic chives (Allium tuberosum) and sawtooth coriander (Eryngium foetidum),
-subject to evidence validation. Existing four synthetic farm recipes remain
-versioned and unchanged; two knowledge profiles are added to the next edition.
+V6 is published from frozen source f460622 at /v6/. The catalogue now contains
+twelve profiles, adding researched/illustrated garlic chives and sawtooth
+coriander; the four synthetic recipes remain unchanged. Gateway and v1–v6 use
+one 4-shared-vCPU/4096-MB Fly Machine and one encrypted 3-GB volume, with isolated
+containers, databases, caches and progress. All earlier source/image pins remain.
 
-Sequence: verify exact-image multi-container hosting and persistent isolation;
-exercise one/two numerical jobs with browsing on the 4-GB candidate; independently
-review crops and UI; freeze source for next unused v6; back up and compare all
-prior databases/cache/manifests; migrate with brief controlled write freeze;
-verify production and delete the superseded Machines and old volumes, leaving
-one shared volume (latest user amendment). Never expose backup/config filesystem over HTTP. Preserve
-actual source/image and all edition settings, sessions, runs and spending limits.
-Push specs/progress within each 20-minute active interval. No inference is needed
-for crop browsing or numerical/hosting validation. Stop Sprite HTTP afterward.
+Six source/destination database and cache fingerprints matched before cutover.
+After public verification, six superseded FarmTact Machines and seven old volumes
+were deleted under explicit user authorization. Unrelated resources were untouched.
+The immutable publisher reuses the shared host. Sprite HTTP/tunnel services are
+removed; the local database remains. The release and specs were pushed to GitHub.
 
-
-V6 progress: two profiles, primary-paper/source registries and original SVGs are
-implemented; crop browser checks pass 45/45 at four widths with keyboard/reduced
-motion. Private Fly Machine 2871575b4544d8 is the 4-vCPU/4-GB candidate. Actual
-multi-container bind/unmount isolation succeeded with exact prior OCI images.
-Initial full boot required explicit per-container secret-name projection; no
-secret values enter configuration or reports. Independent adapter review found
-and prompted protected atomic registry writes and proxy HTTPS enforcement.
-Candidate capacity/persistence and final data transfer remain underway; public
-traffic continues using the prior topology. The new 3-GB volume is temporary
-additional storage until cutover; old volumes remain preserved for rollback.
-
-
-User amendment: after validated downsizing, delete obsolete Machines and volumes
-only in farmtact and farmtact-edition-v1..v5. Keep one shared FarmTact volume; do
-not retain old Fly volumes for rollback. Temporary protected operator backups
-support cutover validation; unrelated Fly resources remain untouched. Full
-backend suite passes 458; deployment/publisher focused review passes 28. The
-next source freeze and exact-image candidate validation are underway.
-
-Final data-transfer rehearsal and fresh cutover restore both passed all six
-source/destination fingerprints. Ancestor PID-namespace control is required to
-stop immutable container supervisors; ordinary container SIGSTOP cannot stop
-namespace PID 1. Operator SSH continues working during the verified freeze.
-Public cutover and authorized resource cleanup are the remaining rollout steps.
-
-V6 completed: exact frozen source f460622 is publicly available at /v6/. All
-six public edition identities match the registry. Public atlas 45/45 and selector
-7/7 checks pass; two fresh concurrent numerical jobs pass with zero inference,
-unchanged main farms and cross-edition cookie rejection. Six old FarmTact Machines
-and seven old volumes were deleted after verification. Final inventory: one
-4-shared-vCPU/4096-MB Machine, one 3-GB shared volume, seven isolated containers.
-Unrelated Fly resources untouched. Sprite HTTP/tunnel services removed. Final
-operator/publisher suite passes 36. Specs/runbook, immutable manifest and rollout
-evidence are committed with the release. See reports/v6/implementation.md.
+Verification: 458 backend tests; 36 operator/publisher tests; 45 public atlas and
+7 selector checks; two fresh concurrent public strategy runs with zero inference,
+unchanged main farms and cross-edition cookie rejection. See
+[the v6 report](../reports/v6/implementation.md) for exact scope and limitations.
