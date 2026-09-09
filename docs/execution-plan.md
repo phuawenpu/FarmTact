@@ -103,3 +103,15 @@ now wraps below a usable 44px message row. Original records still match; no extr
 inference for the v4 checks. Sprite HTTP services are removed. Full release
 scope, counts and remaining no-feed/unsupported-citation limits are in
 reports/seven_agents/implementation.md.
+
+
+## V5 engagement and hosting — planning, 2026-09-09
+
+The v4 task is complete; a new active goal covers Sumin's business proposal, the
+page-13 judging rubric, realistic playable decisions, distinctive crops, audible
+optional sound and provenance-aware News support. Three bounded real reviewer
+agents are collecting business/browser, audio and crop/source evidence. Root
+owns integration and the user's conditional Fly consolidation assessment.
+See docs/v5-engagement-plan.md and docs/deployment/consolidation-assessment.md.
+The hosting figures are measured inventory and official-price estimates; no
+consolidation or v5 feature is claimed deployed at this planning milestone.

@@ -1,5 +1,17 @@
 # FarmTact
 
+### V5 planning amendment — 9 September 2026
+
+V4 remains the current published release. The next engagement release follows
+`docs/v5-engagement-plan.md`, using Sumin's business proposal and the original
+briefing's page-13 rubric. News supports the seven-member decision council with
+bounded, dated and frozen public evidence. Crop recognition, audio audibility and
+the full decision journey require independent browser/research review. Shared
+Fly hosting may replace separate Machines only after lower total cost, capacity,
+immutable runtime and saved-state isolation are verified; this is a conditional
+amendment to the separate-deployment topology below, not permission to merge game
+state. See `docs/deployment/consolidation-assessment.md` for evidence and gates.
+
 ### Release amendment — 9 September 2026
 
 The public root is an edition chooser. The current mobile/data-explorer/review

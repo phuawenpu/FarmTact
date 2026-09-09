@@ -1,0 +1,773 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "methodology": "Native Chromium media state and Web Audio decoding; no claim of physical speaker/headphone listening.",
+  "editions": {
+    "v2": {
+      "checks": [
+        {
+          "name": "sound is opt-in",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "no audio fetched before opt-in",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "one visible control group on mobile",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "master control meets 44 px touch target",
+          "pass": true,
+          "detail": {
+            "x": 22.1875,
+            "y": 70.1875,
+            "width": 295.234375,
+            "height": 44
+          }
+        },
+        {
+          "name": "default music setting is 20 percent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "default effects setting is 35 percent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "mobile sliders have usable horizontal travel",
+          "pass": true,
+          "detail": [
+            {
+              "width": 172.046875,
+              "height": 16
+            },
+            {
+              "width": 172.046875,
+              "height": 16
+            }
+          ]
+        },
+        {
+          "name": "music volume is keyboard adjustable",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "native audio element loaded and entered play state",
+          "pass": true,
+          "detail": {
+            "src": "/v2/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.763813,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "playhead advances after activation",
+          "pass": true,
+          "detail": {
+            "src": "/v2/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.763813,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "music element applies 0.20 software gain",
+          "pass": true,
+          "detail": {
+            "src": "/v2/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.763813,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "loop flag is set",
+          "pass": true,
+          "detail": {
+            "src": "/v2/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.763813,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "asset path is edition-pinned",
+          "pass": true,
+          "detail": {
+            "src": "/v2/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.763813,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "master exposes active state",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "all six WAV assets return and decode",
+          "pass": true,
+          "detail": [
+            {
+              "name": "farm-garden-loop",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 705644,
+              "decoded": {
+                "duration": 16,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 705600
+              },
+              "decodeError": null
+            },
+            {
+              "name": "navigate",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 7100,
+              "decoded": {
+                "duration": 0.16,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 7056
+              },
+              "decodeError": null
+            },
+            {
+              "name": "detail",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 9746,
+              "decoded": {
+                "duration": 0.22,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 9702
+              },
+              "decodeError": null
+            },
+            {
+              "name": "confirm",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 13274,
+              "decoded": {
+                "duration": 0.3,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 13230
+              },
+              "decodeError": null
+            },
+            {
+              "name": "complete",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 21212,
+              "decoded": {
+                "duration": 0.48,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 21168
+              },
+              "decodeError": null
+            },
+            {
+              "name": "error",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 14156,
+              "decoded": {
+                "duration": 0.32,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 14112
+              },
+              "decodeError": null
+            }
+          ]
+        },
+        {
+          "name": "navigation creates and starts an effect at 0.35 gain",
+          "pass": true,
+          "detail": {
+            "before": [
+              {
+                "src": "/v2/audio/farm-garden-loop.wav",
+                "paused": false
+              }
+            ],
+            "after": [
+              {
+                "src": "/v2/audio/farm-garden-loop.wav",
+                "paused": false,
+                "currentTime": 1.222581,
+                "volume": 0.2
+              },
+              {
+                "src": "/v2/audio/navigate.wav",
+                "paused": true,
+                "currentTime": 0.16,
+                "volume": 0.35
+              }
+            ]
+          }
+        },
+        {
+          "name": "backgrounding pauses all media",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "returning to a visible page resumes opted-in music",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "preferences persist under this edition only",
+          "pass": true,
+          "detail": {
+            "selected": {
+              "musicEnabled": true,
+              "effectsEnabled": true,
+              "musicVolume": 0.2,
+              "effectsVolume": 0.44
+            },
+            "keys": [
+              "farmtact:v2:audio:preferences"
+            ]
+          }
+        },
+        {
+          "name": "master off pauses all created media",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "reload stays silent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "no uncaught page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "requests": [
+        "/v2/audio/farm-garden-loop.wav",
+        "/v2/audio/farm-garden-loop.wav",
+        "/v2/audio/navigate.wav",
+        "/v2/audio/detail.wav",
+        "/v2/audio/confirm.wav",
+        "/v2/audio/complete.wav",
+        "/v2/audio/error.wav",
+        "/v2/audio/navigate.wav"
+      ],
+      "console_errors": [],
+      "page_errors": [],
+      "decoded_assets": [
+        {
+          "name": "farm-garden-loop",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 705644,
+          "decoded": {
+            "duration": 16,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 705600
+          },
+          "decodeError": null
+        },
+        {
+          "name": "navigate",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 7100,
+          "decoded": {
+            "duration": 0.16,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 7056
+          },
+          "decodeError": null
+        },
+        {
+          "name": "detail",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 9746,
+          "decoded": {
+            "duration": 0.22,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 9702
+          },
+          "decodeError": null
+        },
+        {
+          "name": "confirm",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 13274,
+          "decoded": {
+            "duration": 0.3,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 13230
+          },
+          "decodeError": null
+        },
+        {
+          "name": "complete",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 21212,
+          "decoded": {
+            "duration": 0.48,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 21168
+          },
+          "decodeError": null
+        },
+        {
+          "name": "error",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 14156,
+          "decoded": {
+            "duration": 0.32,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 14112
+          },
+          "decodeError": null
+        }
+      ]
+    },
+    "v4": {
+      "checks": [
+        {
+          "name": "sound is opt-in",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "no audio fetched before opt-in",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "one visible control group on mobile",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "master control meets 44 px touch target",
+          "pass": true,
+          "detail": {
+            "x": 22.1875,
+            "y": 70.1875,
+            "width": 295.234375,
+            "height": 44
+          }
+        },
+        {
+          "name": "default music setting is 20 percent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "default effects setting is 35 percent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "mobile sliders have usable horizontal travel",
+          "pass": true,
+          "detail": [
+            {
+              "width": 172.046875,
+              "height": 16
+            },
+            {
+              "width": 172.046875,
+              "height": 16
+            }
+          ]
+        },
+        {
+          "name": "music volume is keyboard adjustable",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "native audio element loaded and entered play state",
+          "pass": true,
+          "detail": {
+            "src": "/v4/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.820392,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "playhead advances after activation",
+          "pass": true,
+          "detail": {
+            "src": "/v4/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.820392,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "music element applies 0.20 software gain",
+          "pass": true,
+          "detail": {
+            "src": "/v4/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.820392,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "loop flag is set",
+          "pass": true,
+          "detail": {
+            "src": "/v4/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.820392,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "asset path is edition-pinned",
+          "pass": true,
+          "detail": {
+            "src": "/v4/audio/farm-garden-loop.wav",
+            "paused": false,
+            "duration": 16,
+            "currentTime": 0.820392,
+            "volume": 0.2,
+            "loop": true,
+            "readyState": 4,
+            "networkState": 1,
+            "error": null
+          }
+        },
+        {
+          "name": "master exposes active state",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "all six WAV assets return and decode",
+          "pass": true,
+          "detail": [
+            {
+              "name": "farm-garden-loop",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 705644,
+              "decoded": {
+                "duration": 16,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 705600
+              },
+              "decodeError": null
+            },
+            {
+              "name": "navigate",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 7100,
+              "decoded": {
+                "duration": 0.16,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 7056
+              },
+              "decodeError": null
+            },
+            {
+              "name": "detail",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 9746,
+              "decoded": {
+                "duration": 0.22,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 9702
+              },
+              "decodeError": null
+            },
+            {
+              "name": "confirm",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 13274,
+              "decoded": {
+                "duration": 0.3,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 13230
+              },
+              "decodeError": null
+            },
+            {
+              "name": "complete",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 21212,
+              "decoded": {
+                "duration": 0.48,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 21168
+              },
+              "decodeError": null
+            },
+            {
+              "name": "error",
+              "status": 200,
+              "contentType": "audio/x-wav",
+              "bytes": 14156,
+              "decoded": {
+                "duration": 0.32,
+                "sampleRate": 44100,
+                "channels": 1,
+                "frames": 14112
+              },
+              "decodeError": null
+            }
+          ]
+        },
+        {
+          "name": "navigation creates and starts an effect at 0.35 gain",
+          "pass": true,
+          "detail": {
+            "before": [
+              {
+                "src": "/v4/audio/farm-garden-loop.wav",
+                "paused": false
+              }
+            ],
+            "after": [
+              {
+                "src": "/v4/audio/farm-garden-loop.wav",
+                "paused": false,
+                "currentTime": 1.297446,
+                "volume": 0.2
+              },
+              {
+                "src": "/v4/audio/navigate.wav",
+                "paused": false,
+                "currentTime": 0.159702,
+                "volume": 0.35
+              }
+            ]
+          }
+        },
+        {
+          "name": "backgrounding pauses all media",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "returning to a visible page resumes opted-in music",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "preferences persist under this edition only",
+          "pass": true,
+          "detail": {
+            "selected": {
+              "musicEnabled": true,
+              "effectsEnabled": true,
+              "musicVolume": 0.2,
+              "effectsVolume": 0.44
+            },
+            "keys": [
+              "farmtact:v4:audio:preferences"
+            ]
+          }
+        },
+        {
+          "name": "master off pauses all created media",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "reload stays silent",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "one visible control group on desktop",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "name": "no uncaught page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "requests": [
+        "/v4/audio/farm-garden-loop.wav",
+        "/v4/audio/farm-garden-loop.wav",
+        "/v4/audio/navigate.wav",
+        "/v4/audio/detail.wav",
+        "/v4/audio/confirm.wav",
+        "/v4/audio/complete.wav",
+        "/v4/audio/error.wav",
+        "/v4/audio/navigate.wav"
+      ],
+      "console_errors": [],
+      "page_errors": [],
+      "decoded_assets": [
+        {
+          "name": "farm-garden-loop",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 705644,
+          "decoded": {
+            "duration": 16,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 705600
+          },
+          "decodeError": null
+        },
+        {
+          "name": "navigate",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 7100,
+          "decoded": {
+            "duration": 0.16,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 7056
+          },
+          "decodeError": null
+        },
+        {
+          "name": "detail",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 9746,
+          "decoded": {
+            "duration": 0.22,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 9702
+          },
+          "decodeError": null
+        },
+        {
+          "name": "confirm",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 13274,
+          "decoded": {
+            "duration": 0.3,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 13230
+          },
+          "decodeError": null
+        },
+        {
+          "name": "complete",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 21212,
+          "decoded": {
+            "duration": 0.48,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 21168
+          },
+          "decodeError": null
+        },
+        {
+          "name": "error",
+          "status": 200,
+          "contentType": "audio/x-wav",
+          "bytes": 14156,
+          "decoded": {
+            "duration": 0.32,
+            "sampleRate": 44100,
+            "channels": 1,
+            "frames": 14112
+          },
+          "decodeError": null
+        }
+      ]
+    }
+  },
+  "errors": []
+}

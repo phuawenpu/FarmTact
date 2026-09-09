@@ -1,0 +1,432 @@
+{
+  "status": "REVIEW_FINDINGS",
+  "base_url": "https://farmtact.fly.dev/v4",
+  "session_policy": "One assigned returning v4 review tenant, reused across the full review; no new session admitted.",
+  "inference_policy": "No advisor message, invitation or council submission. Numerical experiment only.",
+  "checks": [
+    {
+      "name": "assigned edition session is established",
+      "pass": true,
+      "detail": [
+        {
+          "name": "farmtact_v4_session",
+          "path": "/v4/"
+        }
+      ]
+    },
+    {
+      "name": "opening line states tap-based objective",
+      "pass": true
+    },
+    {
+      "name": "first screen exposes resources and plan count",
+      "pass": true
+    },
+    {
+      "name": "seven business roles are spatially visible",
+      "pass": true,
+      "detail": [
+        "RaviDemand",
+        "HanaWeather",
+        "IdrisMarket",
+        "MeiProduction",
+        "LinaSupply Chain",
+        "BenProfit",
+        "AshaPlanner"
+      ]
+    },
+    {
+      "name": "simulation time is explicitly a preview",
+      "pass": true
+    },
+    {
+      "name": "farm time has a bounded planning horizon",
+      "pass": true,
+      "detail": {
+        "min": "0",
+        "max": "56"
+      }
+    },
+    {
+      "name": "keyboard can inspect the final planning date",
+      "pass": true
+    },
+    {
+      "name": "background music decodes and its playhead advances",
+      "pass": true,
+      "detail": {
+        "path": "/v4/audio/farm-garden-loop.wav",
+        "duration": 16,
+        "currentTime": 1.103837,
+        "paused": false,
+        "volume": 0.2,
+        "readyState": 4
+      }
+    },
+    {
+      "name": "default music level is gentle but nonzero",
+      "pass": true,
+      "detail": 0.2
+    },
+    {
+      "name": "navigation effect is loaded and starts after sound opt-in",
+      "pass": true,
+      "detail": [
+        {
+          "path": "/v4/audio/farm-garden-loop.wav",
+          "currentTime": 1.494929,
+          "volume": 0.2
+        },
+        {
+          "path": "/v4/audio/navigate.wav",
+          "currentTime": 0.16,
+          "volume": 0.35
+        }
+      ]
+    },
+    {
+      "name": "data overview names history and planning horizon",
+      "pass": true
+    },
+    {
+      "name": "planning date and full date coverage are machine-readable",
+      "pass": true,
+      "detail": {
+        "planning_date": "2026-09-08",
+        "date_extent": {
+          "start": "2026-06-16",
+          "end": "2026-11-02"
+        }
+      }
+    },
+    {
+      "name": "novice can find a future demand point without same-day scheduled harvest",
+      "pass": true,
+      "detail": {
+        "id": "forecast:caixin:2026-09-21",
+        "crop_id": "caixin",
+        "date": "2026-09-21",
+        "week": 1,
+        "confirmed_kg": 24,
+        "residual_kg": 7.001,
+        "expected_kg": 31.001,
+        "price_sgd_per_kg": 6,
+        "history_periods": 12,
+        "history_record_ids": [
+          "history:caixin:2026-06-16:0",
+          "history:caixin:2026-06-23:1",
+          "history:caixin:2026-06-30:2",
+          "history:caixin:2026-07-07:3",
+          "history:caixin:2026-07-14:4",
+          "history:caixin:2026-07-21:5",
+          "history:caixin:2026-07-28:6",
+          "history:caixin:2026-08-04:7",
+          "history:caixin:2026-08-11:8",
+          "history:caixin:2026-08-18:9",
+          "history:caixin:2026-08-25:10",
+          "history:caixin:2026-09-01:11"
+        ],
+        "order_record_ids": [
+          "order-0-1"
+        ]
+      }
+    },
+    {
+      "name": "keyboard chart inspection opens contributing records",
+      "pass": true
+    },
+    {
+      "name": "scenario explains frozen branch and unchanged main farm",
+      "pass": true
+    },
+    {
+      "name": "scenario declares numerical operation",
+      "pass": true
+    },
+    {
+      "name": "market demand shock is keyboard-adjustable to an exact value",
+      "pass": true
+    },
+    {
+      "name": "Lean keeps baseline and branch under the same policy",
+      "pass": true
+    },
+    {
+      "name": "Balanced keeps baseline and branch under the same policy",
+      "pass": true
+    },
+    {
+      "name": "Resilient keeps baseline and branch under the same policy",
+      "pass": true
+    },
+    {
+      "name": "comparison exposes six decision outcomes",
+      "pass": true
+    },
+    {
+      "name": "debrief ties changes to the frozen baseline",
+      "pass": true
+    },
+    {
+      "name": "result points back to affected beds and delivery dates",
+      "pass": true,
+      "detail": [
+        "15 affected beds · 32 delivery dates to inspect"
+      ]
+    },
+    {
+      "name": "saved numerical branch survives reload",
+      "pass": false
+    },
+    {
+      "name": "tools page explains replay does not infer again",
+      "pass": true
+    },
+    {
+      "name": "setup makes synthetic status visible",
+      "pass": true
+    },
+    {
+      "name": "360px has no page-level horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 360,
+        "innerWidth": 360
+      }
+    },
+    {
+      "name": "360px primary navigation remains touch-sized",
+      "pass": true,
+      "detail": [
+        {
+          "width": 55.65625,
+          "height": 54
+        },
+        {
+          "width": 55.671875,
+          "height": 54
+        },
+        {
+          "width": 55.65625,
+          "height": 54
+        },
+        {
+          "width": 55.671875,
+          "height": 54
+        },
+        {
+          "width": 55.671875,
+          "height": 54
+        },
+        {
+          "width": 55.671875,
+          "height": 54
+        }
+      ]
+    },
+    {
+      "name": "390px has no page-level horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "innerWidth": 390
+      }
+    },
+    {
+      "name": "390px primary navigation remains touch-sized",
+      "pass": true,
+      "detail": [
+        {
+          "width": 60.65625,
+          "height": 54
+        },
+        {
+          "width": 60.671875,
+          "height": 54
+        },
+        {
+          "width": 60.65625,
+          "height": 54
+        },
+        {
+          "width": 60.671875,
+          "height": 54
+        },
+        {
+          "width": 60.671875,
+          "height": 54
+        },
+        {
+          "width": 60.671875,
+          "height": 54
+        }
+      ]
+    },
+    {
+      "name": "430px has no page-level horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 430,
+        "innerWidth": 430
+      }
+    },
+    {
+      "name": "430px primary navigation remains touch-sized",
+      "pass": true,
+      "detail": [
+        {
+          "width": 66,
+          "height": 54
+        },
+        {
+          "width": 66,
+          "height": 54
+        },
+        {
+          "width": 66,
+          "height": 54
+        },
+        {
+          "width": 66,
+          "height": 54
+        },
+        {
+          "width": 66,
+          "height": 54
+        },
+        {
+          "width": 66,
+          "height": 54
+        }
+      ]
+    },
+    {
+      "name": "1280px has no page-level horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "1280px primary navigation remains touch-sized",
+      "pass": true,
+      "detail": [
+        {
+          "width": 208,
+          "height": 47
+        },
+        {
+          "width": 208,
+          "height": 47
+        },
+        {
+          "width": 208,
+          "height": 47
+        },
+        {
+          "width": 208,
+          "height": 47
+        },
+        {
+          "width": 208,
+          "height": 47
+        },
+        {
+          "width": 208,
+          "height": 47
+        }
+      ]
+    },
+    {
+      "name": "complete review made no inference submission",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "complete review has no uncaught page exception",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "findings": [
+    {
+      "priority": "medium",
+      "id": "BIZ-02",
+      "observation": "A single local numerical response interrupts the game loop for a noticeable interval.",
+      "evidence": {
+        "milliseconds": 22557
+      }
+    },
+    {
+      "priority": "high",
+      "id": "BIZ-03",
+      "observation": "The shortage evidence and the scenario challenge live in separate rooms; the UI does not preserve a visible “this is the shortage I am solving” thread across the transition.",
+      "evidence": {
+        "evidence_room": "Data → Overview/Records",
+        "action_room": "Farm → Quest journal → Scenario lab"
+      }
+    },
+    {
+      "priority": "high",
+      "id": "BIZ-04",
+      "observation": "The seven agents are visible, but the numerical scenario result jumps directly to policy metrics; the specialist disagreements central to Sumin’s business thesis are not visualized in this no-inference game loop.",
+      "evidence": {
+        "result_sections": [
+          "before/after table",
+          "computed debrief",
+          "constraint details"
+        ]
+      }
+    },
+    {
+      "priority": "medium",
+      "id": "BIZ-05",
+      "observation": "Planning time is biologically bounded and honestly labelled as preview-only, but scenario completion is immediate wall-clock computation with no in-world sequence from sowing through maturity and delivery.",
+      "evidence": {
+        "planning_horizon_days": "56",
+        "preview_copy": "does not advance time or create observations"
+      }
+    },
+    {
+      "priority": "medium",
+      "id": "BIZ-06",
+      "observation": "Audio plumbing is functional when the native playhead advances, yet the 20% default loop and navigation cue provide no visible calibration or preview before the user commits to sound.",
+      "evidence": {
+        "music": {
+          "path": "/v4/audio/farm-garden-loop.wav",
+          "duration": 16,
+          "currentTime": 1.103837,
+          "paused": false,
+          "volume": 0.2,
+          "readyState": 4
+        }
+      }
+    },
+    {
+      "priority": "medium",
+      "id": "BIZ-07",
+      "observation": "A first-time player is told to explore rather than given one explicit business objective, success condition, or recommended first quest on the farm screen.",
+      "evidence": {
+        "entry_copy": "Tap a bed or visit an advisor to explore the plan."
+      }
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/v5-business/novice-entry-360.png",
+    "apps/web/screenshots/v5-business/evidence-390.png",
+    "apps/web/screenshots/v5-business/tradeoffs-430.png",
+    "apps/web/screenshots/v5-business/responsive-360.png",
+    "apps/web/screenshots/v5-business/responsive-390.png",
+    "apps/web/screenshots/v5-business/responsive-430.png",
+    "apps/web/screenshots/v5-business/responsive-1280.png"
+  ],
+  "page_errors": [],
+  "inference_requests": [],
+  "timings_ms": {
+    "first_farm_ready": 1064,
+    "numerical_experiment_to_results": 22557
+  },
+  "completed_at": "2026-09-09T15:23:57.583Z"
+}
