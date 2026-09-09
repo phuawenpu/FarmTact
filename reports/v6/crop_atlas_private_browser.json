@@ -1,0 +1,250 @@
+{
+  "started_at": "2026-09-09T22:43:59.577Z",
+  "base_url": "http://127.0.0.1:8088/v6/",
+  "checks": [
+    {
+      "name": "v6 synthetic farm bootstrap is available",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "360px application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "360px shows twelve crop profiles",
+      "pass": true,
+      "detail": "12"
+    },
+    {
+      "name": "360px has no horizontal overflow",
+      "pass": true,
+      "detail": "360/360"
+    },
+    {
+      "name": "360px reduced-motion preference is active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px garlic_chives uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/garlic_chives-ready.svg"
+    },
+    {
+      "name": "360px garlic_chives image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px sawtooth_coriander uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/sawtooth_coriander-ready.svg"
+    },
+    {
+      "name": "360px sawtooth_coriander image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "390px shows twelve crop profiles",
+      "pass": true,
+      "detail": "12"
+    },
+    {
+      "name": "390px has no horizontal overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "390px reduced-motion preference is active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px garlic_chives uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/garlic_chives-ready.svg"
+    },
+    {
+      "name": "390px garlic_chives image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px sawtooth_coriander uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/sawtooth_coriander-ready.svg"
+    },
+    {
+      "name": "390px sawtooth_coriander image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "flat chives search finds one profile",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "garlic_chives search resolves expected label",
+      "pass": true,
+      "detail": "Garlic chives Chinese chives · Chinese leeks · flat chives · oriental garlic Profile Only Harvested part leaves, tender stems, flower stalks Cycle Unreported Evidence 2 references"
+    },
+    {
+      "name": "garlic_chives remains a knowledge profile",
+      "pass": true,
+      "detail": "Close Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty. LEAVES, TENDER STEMS, FLOWER STALKS Garlic chives Chinese chives · Chinese leeks · flat chives · oriental garlic Planning recipe No planning recipe is available. Cautions Flat-leaved garlic chives are distinct from hollow-leaved common chives and bunching onion; repeated leaf cuts require cut-specific regrowth and quality records. Singapore commercial marketable yield local cultivar or accession cut-specific regrowth interval buyer stem-to-leaf and pa"
+    },
+    {
+      "name": "garlic_chives exposes evidence",
+      "pass": true,
+      "detail": "Close Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty. LEAVES, TENDER STEMS, FLOWER STALKS Garlic chives Chinese chives · Chinese leeks · flat chives · oriental garlic Planning recipe No planning recipe is available. Cautions Flat-leaved garlic chives are distinct from hollow-leaved common chives and bunching onion; repeated leaf cuts require cut-specific regrowth and quality records. Singapore commercial marketable yield local cultivar or accession cut-specific regrowth interval buyer stem-to-leaf and pa"
+    },
+    {
+      "name": "garlic_chives exposes two sourced evidence links",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "garlic_chives dialog closes with Escape",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "culantro search finds one profile",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "sawtooth_coriander search resolves expected label",
+      "pass": true,
+      "detail": "Sawtooth coriander culantro · spiny coriander · serrated coriander · long coriander · false coriander Profile Only Harvested part leaves Cycle Unreported Evidence 2 references"
+    },
+    {
+      "name": "sawtooth_coriander remains a knowledge profile",
+      "pass": true,
+      "detail": "Close Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty. LEAVES Sawtooth coriander culantro · spiny coriander · serrated coriander · long coriander · false coriander Planning recipe No planning recipe is available. Cautions Sawtooth coriander is Eryngium foetidum, not true coriander (Coriandrum sativum) or Vietnamese coriander (Persicaria odorata); flowering changes leaf texture and marketability. Singapore commercial marketable yield local cultivar or seed source flowering and cut-specific regrowth observa"
+    },
+    {
+      "name": "sawtooth_coriander exposes evidence",
+      "pass": true,
+      "detail": "Close Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty. LEAVES Sawtooth coriander culantro · spiny coriander · serrated coriander · long coriander · false coriander Planning recipe No planning recipe is available. Cautions Sawtooth coriander is Eryngium foetidum, not true coriander (Coriandrum sativum) or Vietnamese coriander (Persicaria odorata); flowering changes leaf texture and marketability. Singapore commercial marketable yield local cultivar or seed source flowering and cut-specific regrowth observa"
+    },
+    {
+      "name": "sawtooth_coriander exposes two sourced evidence links",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "sawtooth_coriander dialog closes with Escape",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "430px shows twelve crop profiles",
+      "pass": true,
+      "detail": "12"
+    },
+    {
+      "name": "430px has no horizontal overflow",
+      "pass": true,
+      "detail": "430/430"
+    },
+    {
+      "name": "430px reduced-motion preference is active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px garlic_chives uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/garlic_chives-ready.svg"
+    },
+    {
+      "name": "430px garlic_chives image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px sawtooth_coriander uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/sawtooth_coriander-ready.svg"
+    },
+    {
+      "name": "430px sawtooth_coriander image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "1280px shows twelve crop profiles",
+      "pass": true,
+      "detail": "12"
+    },
+    {
+      "name": "1280px has no horizontal overflow",
+      "pass": true,
+      "detail": "1280/1280"
+    },
+    {
+      "name": "1280px reduced-motion preference is active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px garlic_chives uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/garlic_chives-ready.svg"
+    },
+    {
+      "name": "1280px garlic_chives image loaded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px sawtooth_coriander uses mature original art",
+      "pass": true,
+      "detail": "/v6/art/crops/sawtooth_coriander-ready.svg"
+    },
+    {
+      "name": "1280px sawtooth_coriander image loaded",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "screenshots": [
+    "apps/web/screenshots/v6-crop-atlas-private/atlas-360.png",
+    "apps/web/screenshots/v6-crop-atlas-private/atlas-390.png",
+    "apps/web/screenshots/v6-crop-atlas-private/garlic_chives-profile-390.png",
+    "apps/web/screenshots/v6-crop-atlas-private/garlic_chives-evidence-390.png",
+    "apps/web/screenshots/v6-crop-atlas-private/sawtooth_coriander-profile-390.png",
+    "apps/web/screenshots/v6-crop-atlas-private/sawtooth_coriander-evidence-390.png",
+    "apps/web/screenshots/v6-crop-atlas-private/atlas-390-grayscale.png",
+    "apps/web/screenshots/v6-crop-atlas-private/atlas-430.png",
+    "apps/web/screenshots/v6-crop-atlas-private/atlas-1280.png"
+  ],
+  "limitations": [
+    "Responsive checks use headless Chromium emulation, not physical iOS or Android hardware.",
+    "One AI reviewer inspected colour and grayscale captures; the five-human recognition protocol has not been run.",
+    "Illustrations are representative identifiers and do not verify cultivar, crop health, maturity or farm performance."
+  ],
+  "finished_at": "2026-09-09T22:44:08.132Z"
+}

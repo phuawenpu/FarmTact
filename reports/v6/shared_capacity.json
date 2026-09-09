@@ -1,0 +1,673 @@
+{
+  "status": "PASS",
+  "started_at": "2026-09-09T22:38:12Z",
+  "target": "private root-owned local tunnel",
+  "editions": [
+    "v4",
+    "v5"
+  ],
+  "provider_calls_requested": 0,
+  "policy": "Synthetic frozen scenarios only; council and inference disabled; no farm acceptance or operations.",
+  "jobs": [
+    {
+      "scenario_id": "317fc254993cd365dca1b9df1a94ccbe",
+      "status": "COMPLETED",
+      "simulation_status": "ACCEPTED_FOR_SIMULATION",
+      "inference_calls": 0,
+      "elapsed_seconds": 22.339,
+      "terminal_under_180_seconds": true,
+      "strategy_statuses": [
+        "FEASIBLE",
+        "FEASIBLE",
+        "FEASIBLE"
+      ],
+      "edition": "v5",
+      "phase": "sequential"
+    },
+    {
+      "scenario_id": "ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "status": "COMPLETED",
+      "simulation_status": "ACCEPTED_FOR_SIMULATION",
+      "inference_calls": 0,
+      "elapsed_seconds": 21.998,
+      "terminal_under_180_seconds": true,
+      "strategy_statuses": [
+        "FEASIBLE",
+        "FEASIBLE",
+        "FEASIBLE"
+      ],
+      "edition": "v4",
+      "phase": "overlapping"
+    },
+    {
+      "scenario_id": "316a2a01bed4e092a7cb18f3335070e9",
+      "status": "COMPLETED",
+      "simulation_status": "ACCEPTED_FOR_SIMULATION",
+      "inference_calls": 0,
+      "elapsed_seconds": 10.119,
+      "terminal_under_180_seconds": true,
+      "strategy_statuses": [
+        "FEASIBLE",
+        "FEASIBLE",
+        "FEASIBLE"
+      ],
+      "edition": "v5",
+      "phase": "overlapping"
+    }
+  ],
+  "browse_samples": [
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1517
+    },
+    {
+      "edition": "v5",
+      "endpoint": "data-explorer/snapshots",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.187
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.3477
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe/run",
+      "method": "POST",
+      "status_code": 202,
+      "elapsed_seconds": 0.1503
+    },
+    {
+      "edition": "v5",
+      "endpoint": "health",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0402
+    },
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0979
+    },
+    {
+      "edition": "v5",
+      "endpoint": "news",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.3631
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0872
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0656
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0687
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0752
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0673
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0807
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1022
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.069
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0648
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0681
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0725
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0812
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0753
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.085
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.079
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0808
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1035
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0848
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.075
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0732
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/317fc254993cd365dca1b9df1a94ccbe",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1008
+    },
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0636
+    },
+    {
+      "edition": "v4",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1666
+    },
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0662
+    },
+    {
+      "edition": "v4",
+      "endpoint": "data-explorer/snapshots",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.1346
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.1268
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5/run",
+      "method": "POST",
+      "status_code": 202,
+      "elapsed_seconds": 0.112
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0709
+    },
+    {
+      "edition": "v5",
+      "endpoint": "data-explorer/snapshots",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.1392
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios",
+      "method": "POST",
+      "status_code": 201,
+      "elapsed_seconds": 0.2405
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9/run",
+      "method": "POST",
+      "status_code": 202,
+      "elapsed_seconds": 0.1186
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0644
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.075
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0718
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0799
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0726
+    },
+    {
+      "edition": "v4",
+      "endpoint": "health",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0135
+    },
+    {
+      "edition": "v4",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0742
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1009
+    },
+    {
+      "edition": "v4",
+      "endpoint": "news",
+      "method": "GET",
+      "status_code": 404,
+      "elapsed_seconds": 0.0768
+    },
+    {
+      "edition": "v5",
+      "endpoint": "health",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0116
+    },
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0648
+    },
+    {
+      "edition": "v5",
+      "endpoint": "news",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1673
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0822
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.083
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0726
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0712
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.082
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0737
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0697
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0774
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0867
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.3
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.2767
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0704
+    },
+    {
+      "edition": "v5",
+      "endpoint": "scenarios/316a2a01bed4e092a7cb18f3335070e9",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1064
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0646
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.069
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0751
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0693
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0709
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0706
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0624
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.1524
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0656
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0638
+    },
+    {
+      "edition": "v4",
+      "endpoint": "scenarios/ae19ea9cd511b4378ec8fe6f6fdb05a5",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0931
+    },
+    {
+      "edition": "v4",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0654
+    },
+    {
+      "edition": "v5",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.0658
+    }
+  ],
+  "memory_samples": {
+    "before": {
+      "captured_at": "2026-09-09T22:38:18Z",
+      "elapsed_seconds": 5.676,
+      "status": "ok",
+      "MemTotal_kib": 4010180,
+      "MemFree_kib": 2220628,
+      "MemAvailable_kib": 2839312,
+      "Buffers_kib": 27632,
+      "Cached_kib": 870720,
+      "SwapTotal_kib": 0,
+      "SwapFree_kib": 0,
+      "used_excluding_reclaimable_kib": 1170868
+    },
+    "during": {
+      "captured_at": "2026-09-09T22:38:45Z",
+      "elapsed_seconds": 2.209,
+      "status": "ok",
+      "MemTotal_kib": 4010180,
+      "MemFree_kib": 2174084,
+      "MemAvailable_kib": 2811436,
+      "Buffers_kib": 27692,
+      "Cached_kib": 889836,
+      "SwapTotal_kib": 0,
+      "SwapFree_kib": 0,
+      "used_excluding_reclaimable_kib": 1198744
+    },
+    "after": {
+      "captured_at": "2026-09-09T22:39:07Z",
+      "elapsed_seconds": 2.899,
+      "status": "ok",
+      "MemTotal_kib": 4010180,
+      "MemFree_kib": 2162156,
+      "MemAvailable_kib": 2799932,
+      "Buffers_kib": 27724,
+      "Cached_kib": 890260,
+      "SwapTotal_kib": 0,
+      "SwapFree_kib": 0,
+      "used_excluding_reclaimable_kib": 1210248
+    }
+  },
+  "checks": [
+    {
+      "name": "v5 cookie rejected by v4",
+      "pass": true
+    },
+    {
+      "name": "sequential main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "v4 cookie rejected by v5",
+      "pass": true
+    },
+    {
+      "name": "v5 cookie rejected by v4",
+      "pass": true
+    },
+    {
+      "name": "v4 overlapping main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "v5 overlapping main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "browsing p95 under 5 seconds",
+      "pass": true
+    },
+    {
+      "name": "all jobs terminal under 180 seconds",
+      "pass": true
+    },
+    {
+      "name": "zero scenario inference calls",
+      "pass": true
+    }
+  ],
+  "browsing_p95_seconds": 0.3631,
+  "finished_at": "2026-09-09T22:39:07Z"
+}

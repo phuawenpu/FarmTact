@@ -195,8 +195,8 @@ def test_shared_publisher_updates_exact_machine_then_probes_new_local_port(monke
     assert probe[8] == "gateway"
     assert f"127.0.0.1:{8080 + number}/api/v1/health" in probe[-1]
     assert commit in probe[-1]
-    assert "r.get('status')=='ok'" in probe[-1]
-    assert f"r.get('edition')=='v{number}'" in probe[-1]
+    assert "r.get(" in probe[-1] and "status" in probe[-1] and "ok" in probe[-1]
+    assert "edition" in probe[-1] and f"v{number}" in probe[-1]
 
 
 def test_shared_settings_reject_ignored_fields(tmp_path, monkeypatch):

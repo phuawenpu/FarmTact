@@ -1,0 +1,17 @@
+{
+  "status": "DIAGNOSTIC_NOT_ACCEPTANCE_EVIDENCE",
+  "captured_at": "2026-09-09T22:45:15Z",
+  "reason": "The first seven-service invocation reused the baseline V5 idempotency key. V5 therefore returned an already-completed branch instead of performing fresh concurrent numerical work. The runner was corrected to require a unique run label; reports/v6/shared_capacity_v6.json contains the accepted fresh overlap.",
+  "provider_calls_requested": 0,
+  "jobs": [
+    {"edition": "v5", "scenario_id": "316a2a01bed4e092a7cb18f3335070e9", "status": "COMPLETED", "elapsed_seconds": 0.114, "fresh_computation": false},
+    {"edition": "v6", "scenario_id": "3f053f5f76350691b2149717072f1119", "status": "COMPLETED", "elapsed_seconds": 21.921, "fresh_computation": true}
+  ],
+  "browsing_p95_seconds": 0.2447,
+  "memory_kib": {
+    "before": {"MemTotal": 4010180, "MemAvailable": 2687536, "used_excluding_reclaimable": 1322644},
+    "during": {"MemTotal": 4010180, "MemAvailable": 2679260, "used_excluding_reclaimable": 1330920},
+    "after": {"MemTotal": 4010180, "MemAvailable": 2671188, "used_excluding_reclaimable": 1338992}
+  },
+  "limitations": ["Do not count the V5 elapsed time as capacity evidence.", "The fresh corrected two-job result supersedes this attempt for acceptance."]
+}

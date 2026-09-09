@@ -195,11 +195,14 @@ def main() -> int:
     parser.add_argument("--cookie-dir", default="/tmp")
     parser.add_argument("--fly-app", default="farmtact")
     parser.add_argument("--machine", default="2871575b4544d8")
+    parser.add_argument("--sequential-edition", default="v5", help="Edition for the first job; empty skips it")
+    parser.add_argument("--overlap-editions", default="v4,v5", help="Comma-separated pair for overlapping jobs")
+    parser.add_argument("--run-label", default=time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()), help="Unique label used in idempotency keys")
     parser.add_argument("--remove-cookies", action="store_true", help="Delete private /tmp cookie files after the run")
     args = parser.parse_args()
     report: dict[str, Any] = {
         "status": "RUNNING", "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "target": "private root-owned local tunnel", "editions": ["v4", "v5"], "provider_calls_requested": 0,
+        "target": "private root-owned local tunnel", "editions": [], "provider_calls_requested": 0,
         "policy": "Synthetic frozen scenarios only; council and inference disabled; no farm acceptance or operations.",
         "jobs": [], "browse_samples": [], "memory_samples": {}, "checks": [],
     }
@@ -209,40 +212,55 @@ def main() -> int:
     cookie_paths: list[Path] = []
     try:
         report["memory_samples"]["before"] = machine_memory(args.fly_app, args.machine)
-        sequential = EditionSession(args.url, "v5", latency_rows, lock)
-        sessions.append(sequential)
-        sequential_cookie_path = sequential.load_cookie_audit(Path(args.cookie_dir))
-        before, before_hash = sequential.initialize()
-        cookie_paths.append(sequential.save_cookie_audit(sequential_cookie_path))
-        report["checks"].append({"name": "v5 cookie rejected by v4", "pass": sequential.cross_edition_status("v4") == 401})
-        scenario_id, started = create_and_run(sequential, "sequential-v5", {"demand_crop_id": "pak_choi", "demand_percent": 120})
-        sample_browsing([sequential])
-        sequential_result = poll(sequential, scenario_id, started)
-        sequential_result["edition"] = "v5"
-        sequential_result["phase"] = "sequential"
-        report["jobs"].append(sequential_result)
-        report["checks"].append({"name": "sequential main farm unchanged", "pass": digest(sequential.get_json("bootstrap")["farm"]) == before_hash})
+        overlap_editions = [value.strip() for value in args.overlap_editions.split(",") if value.strip()]
+        if len(overlap_editions) != 2 or len(set(overlap_editions)) != 2:
+            raise ValueError("--overlap-editions requires two distinct editions")
+        sequential_edition = args.sequential_edition.strip()
+        report["editions"] = sorted(set(overlap_editions + ([sequential_edition] if sequential_edition else [])))
+        by_edition: dict[str, EditionSession] = {}
+        cookie_by_edition: dict[str, Path] = {}
 
-        overlap_sessions = [EditionSession(args.url, "v4", latency_rows, lock), sequential]
-        sessions.extend(overlap_sessions)
+        if sequential_edition:
+            sequential = EditionSession(args.url, sequential_edition, latency_rows, lock)
+            sessions.append(sequential)
+            by_edition[sequential_edition] = sequential
+            sequential_cookie_path = sequential.load_cookie_audit(Path(args.cookie_dir))
+            cookie_by_edition[sequential_edition] = sequential_cookie_path
+            before, before_hash = sequential.initialize()
+            cookie_paths.append(sequential.save_cookie_audit(sequential_cookie_path))
+            other = next((edition for edition in overlap_editions if edition != sequential_edition), overlap_editions[0])
+            report["checks"].append({"name": f"{sequential_edition} cookie rejected by {other}", "pass": sequential.cross_edition_status(other) == 401})
+            scenario_id, started = create_and_run(sequential, f"{args.run_label}-sequential-{sequential_edition}", {"demand_crop_id": "pak_choi", "demand_percent": 120})
+            sample_browsing([sequential])
+            sequential_result = poll(sequential, scenario_id, started)
+            sequential_result["edition"] = sequential_edition
+            sequential_result["phase"] = "sequential"
+            report["jobs"].append(sequential_result)
+            report["checks"].append({"name": "sequential main farm unchanged", "pass": digest(sequential.get_json("bootstrap")["farm"]) == before_hash})
+
+        overlap_sessions = []
+        for edition in overlap_editions:
+            session = by_edition.get(edition) or EditionSession(args.url, edition, latency_rows, lock)
+            if edition not in by_edition:
+                sessions.append(session)
+                by_edition[edition] = session
+            overlap_sessions.append(session)
         initial = []
         for session in overlap_sessions:
-            if session is not sequential:
-                cookie_path = session.load_cookie_audit(Path(args.cookie_dir))
-            else:
-                cookie_path = sequential_cookie_path
+            cookie_path = cookie_by_edition.get(session.edition) or session.load_cookie_audit(Path(args.cookie_dir))
+            cookie_by_edition[session.edition] = cookie_path
             bootstrap, farm_hash = session.initialize()
             initial.append((session, farm_hash))
-            if session is not sequential:
+            if cookie_path not in cookie_paths:
                 cookie_paths.append(session.save_cookie_audit(cookie_path))
-            other = "v5" if session.edition == "v4" else "v4"
+            other = next(edition for edition in overlap_editions if edition != session.edition)
             report["checks"].append({"name": f"{session.edition} cookie rejected by {other}", "pass": session.cross_edition_status(other) == 401})
 
         with ThreadPoolExecutor(max_workers=2) as pool:
             futures = []
             for session, _ in initial:
                 scenario_id, started = create_and_run(
-                    session, f"overlap-{session.edition}",
+                    session, f"{args.run_label}-overlap-{session.edition}",
                     {"demand_crop_id": "caixin", "demand_percent": 120},
                 )
                 futures.append((session, pool.submit(poll, session, scenario_id, started)))
@@ -260,6 +278,11 @@ def main() -> int:
         report["memory_samples"]["after"] = machine_memory(args.fly_app, args.machine)
 
         report["browse_samples"] = latency_rows
+        report["browse_shortfalls"] = [
+            {"edition": row["edition"], "endpoint": row["endpoint"], "status_code": row["status_code"]}
+            for row in latency_rows
+            if row["method"] == "GET" and row["status_code"] >= 400
+        ]
         browsing = [row["elapsed_seconds"] for row in latency_rows if row["method"] == "GET" and row["endpoint"] in {"health", "bootstrap", "news"}]
         p95 = percentile(browsing, 0.95)
         report["browsing_p95_seconds"] = round(p95, 4) if p95 is not None else None

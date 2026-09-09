@@ -136,6 +136,8 @@ def restore():
                 payload=archive.extractfile(member).read()
                 if hashlib.sha256(payload).hexdigest()!=expected['cache'].get(str(Path(member.name).relative_to('public-data'))):
                     raise RuntimeError('Cache archive digest mismatch')
+    with connect() as c:
+        c.execute('SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid()')
     subprocess.run(['pg_restore' ,'-h','/tmp/farmtact-pg','-U','farmtact','-d',database(),'--clean','--if-exists','--single-transaction','--exit-on-error',str(DIRECTORY/'database.dump')],check=True,timeout=90)
     # Candidate cache is disposable; archive restores source bytes in fixed root.
     import shutil

@@ -364,15 +364,13 @@ unchanged and exactly one appended entry. A failure before the replace leaves th
 new container unreachable through the public chooser and can be retried with the
 reserved identity.
 
-The publisher should additionally require the shared settings object to contain
+The final hardening points were applied: the shared settings object must contain
 exactly `app`, `machine_id`, and `volume_id`, rejecting ignored extra fields. The
-health probe should require `status == "ok"` as well as the source commit, and the
-edition ID if the historical health response exposes it. These are bounded defense
-in depth; the unique new port and source-commit equality already prevent an old
-edition listener from satisfying the principal gate.
+health probe now requires `status == "ok"`, the exact edition ID, and the exact
+source commit on the unique new port.
 
 Independent tests now cover the public/private proxy-trust split, production relay
 exclusion, exact Machine update and image selection, unique localhost source probe,
 seed-only registry behavior, immutable-prefix check, and atomic publication through
 the pinned gateway container. The combined shared-host and existing publisher test
-selection completed with 28 passing tests.
+selection completed with 29 passing tests.
