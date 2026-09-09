@@ -237,6 +237,8 @@ def install_routes(app,tenant):
             if controls['cash_percent']!=100 or controls['labour_percent']!=100:crop_ids.update(r['crop_id'] for r in snapshot['recipes'])
             affected=[b['bed_id'] for b in snapshot['batches'] if next(r['crop_id'] for r in snapshot['recipes'] if r['id']==b['recipe_id']) in crop_ids]
             s=dict(id=secrets.token_hex(16),name=body.name,created_at=now(),status='DRAFT',controls=controls,quest_id=body.quest_id,parent_scenario_id=parent['id'] if parent else None,source_conversation_id=body.source_conversation_id,input_snapshot=snapshot,input_hash=content_hash(snapshot),baseline_snapshot=parent['baseline_snapshot'] if parent else source,baseline=parent.get('baseline') if parent else None,result=None,affected_bed_ids=affected,affected_crop_ids=sorted(crop_ids),affected_deliveries=[],warnings=[],data_mode='synthetic_demo',execution_mode='test',inference_calls=0)
+            from packages.news import freeze_for_farm
+            s['news_context']=deepcopy(parent['news_context']) if parent and parent.get('news_context') else (deepcopy(conversation['_news_context']) if conversation and conversation.get('_news_context') else freeze_for_farm(snapshot,s['created_at']))
             if explorer:
                 from services.api.data_explorer import reference_payload
                 ref=reference_payload()

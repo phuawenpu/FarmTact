@@ -211,6 +211,7 @@ def _tool_results(
     planning: dict[str, Any] | None = None,
     source_context: Any | None = None,
     market_signals: Any | None = None,
+    news_context: Any | None = None,
 ) -> dict[str, Any]:
     refs: dict[str, Any] = {}
     refs["farm:version"] = snapshot.get("version")
@@ -325,6 +326,9 @@ def _tool_results(
             ):
                 if source.get(field) is not None:
                     refs[f"source:{source_id}.{field}"] = source[field]
+    from packages.news import evidence_refs
+    refs.update(evidence_refs(news_context))
+    refs["market:signals.summary"] = refs["market:signals"].get("summary", "No community feed connected.")
     return {key: value for key, value in refs.items() if value is not None}
 
 
@@ -386,6 +390,8 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
     }:
         raise HTTPException(422, "Selected bed is outside the frozen snapshot")
     market_signals = summarize_signals(snapshot)
+    from packages.news import freeze_for_farm
+    news_context = scenario.get("news_context") if scenario is not None else freeze_for_farm(snapshot, now())
     return {
         "snapshot": snapshot,
         "scenario": scenario,
@@ -403,12 +409,14 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
             planning,
             frozen_sources,
             market_signals,
+            news_context,
         ),
         "highlight_refs": sorted(_highlight_refs(snapshot, scenario)),
         "evidence": _evidence_context(snapshot),
         "planning": planning,
         "source_context": frozen_sources,
         "market_signals": market_signals,
+        "news_context": news_context,
     }
 
 
@@ -645,6 +653,7 @@ def build_conversation_router(
             "_planning": frozen["planning"],
             "_source_context": frozen["source_context"],
             "_market_signals": frozen["market_signals"],
+            "_news_context": frozen["news_context"],
         }
         try:
             result, created = persistence.create_conversation(
@@ -1139,6 +1148,7 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                 planning=planning,
                 source_context=conversation.get("_source_context"),
                 market_signals=conversation.get("_market_signals"),
+                news_context=conversation.get("_news_context"),
             )
             conversation["updated_at"] = now()
             persistence.save_conversation(tenant, conversation)

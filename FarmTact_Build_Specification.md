@@ -15,6 +15,29 @@ shared sizes require unverified capacity reductions, while equal-capacity prices
 are essentially unchanged. See `docs/deployment/consolidation-assessment.md` for
 evidence and future reconsideration gates.
 
+### V5 News and decision evidence implementation
+
+The News scout is a deterministic supporting collector outside the seven council
+roles. It refreshes four allowlisted RSS endpoints at most once per six hours in
+a separate credential-free process. The application only reads the bounded cache.
+SFA Newsroom/Circulars, AFSIS and ASEAN Agri-food metadata retain source title,
+publication/retrieval dates, exact record hash, geography and explicit event fields.
+No article bodies or social profiles are fetched. Reddit and unsupported community
+feeds remain visibly unconnected; the CDC calendar is excluded under its reuse terms.
+
+Every new scenario and planning mission freezes News context in its existing
+immutable JSON payload; conversations about a scenario use that same context.
+Continuation inherits the parent's context. Replays never substitute fresh news.
+The synthetic farm's planning date remains distinct from the current decision's
+News cutoff. Historical replay uses the farm cutoff and excludes records published
+or retrieved later. Future events require explicit structured event dates; an empty
+future-events view is valid when none were supplied. News never changes numerical
+inputs automatically. Only explicit advisor actions invoke the existing DeepSeek
+routes, with source text treated as untrusted evidence and exact citation keys.
+
+Implementation and independent acceptance remain in progress; these changes have
+not been published as v5 yet. Test/release evidence belongs in reports/v5.
+
 ### Release amendment — 9 September 2026
 
 The public root is an edition chooser. The current mobile/data-explorer/review

@@ -1,3 +1,15 @@
+### V5 News support amendment — 9 September 2026
+
+News collection, filtering, date interpretation and deterministic context selection
+are conventional local operations with no inference route. The scout supports the
+seven existing decision roles; it does not add an eighth council request. New
+mission/scenario/conversation payloads freeze News evidence, and exact news reference
+keys enter existing advisor tool results. Headlines are untrusted source assertions;
+no automatic demand, price or yield adjustment is permitted. Browsing and numerical
+runs continue to make zero provider calls. Explicit advisor requests use the existing
+allowlisted DeepSeek models and finite shared limits. Older records with no News
+context remain explicitly missing it; replay cannot fetch or invent a replacement.
+
 # FarmTact — DeepSeek-only runtime and test specification
 
 ### Edition and voice-input amendment — 9 September 2026

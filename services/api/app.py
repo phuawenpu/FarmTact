@@ -36,6 +36,8 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
     from services.api.market_signals import summarize_signals
     r['council_version']=COUNCIL_VERSION
     r['market_signals']=summarize_signals(snapshot)
+    from packages.news import freeze_for_farm
+    r['news_context']=freeze_for_farm(snapshot,r['created_at'])
     try:result,created=store.create_run(t,key,fingerprint,r)
     except ValueError as e:raise HTTPException(409,str(e))
     return dict(id=result['id'],status=result['status'],reused=not created)
@@ -102,7 +104,7 @@ class Worker:
                             emit('tool_started',dict(tool='vision_observation',role='visual_observer'))
                             visual=observe_fixture(id,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant));r['visual_observation']=visual
                             emit('tool_completed',dict(tool='vision_observation',role='visual_observer',asset_id=visual['asset_id'],review_status=visual['review_status']))
-                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant),market_signals=r.get('market_signals'))
+                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant),market_signals=r.get('market_signals'),news_context=r.get('news_context'))
                         r['council_status']='completed' if not council_review_issues(claims) else 'claims_rejected'
                     except Exception as exc:
                         # No raw provider/transport message or request may enter public records.
@@ -344,6 +346,8 @@ def create_app(store=None,start_worker=True):
         raise HTTPException(404,'Strategy not found')
     from services.api.market_signals import install_routes as install_market_signals
     install_market_signals(app,tenant)
+    from services.api.news import install_routes as install_news
+    install_news(app,tenant)
     from services.api.data_explorer import install_routes as install_explorer
     install_explorer(app,tenant)
     from services.api.scenarios import install_routes

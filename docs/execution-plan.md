@@ -125,3 +125,13 @@ plus $2.40 provisioned volumes per 30days before other charges. All four publish
 health endpoints match their source pins and the release registry is unchanged.
 No Fly mutation or inference was performed by the hosting assessment. Detailed
 prices, limits and future reconsideration gates are recorded in the assessment.
+
+
+V5 implementation packages are active: crop specialist has delivered 18 original
+SVGs and a rendered morphology sheet; audio specialist has delivered remastered
+assets, sound-test/retry, semantic cues and 44px controls. Game specialist owns the
+quantified buyer mission, persistent evidence/selected scenario, exact controls and
+numerical perspectives. Root implements bounded RSS collection, News API/UI,
+mission/scenario/conversation freezing and credential-free scheduled refresh.
+Nineteen News contract/security tests pass; independent review and complete browser
+journeys are underway. No v5 deployment or physical-device listening is claimed.

@@ -2,6 +2,7 @@ import type { Bootstrap, Crop, EvidenceRecord, Run } from './types'
 import type { Conversation, Quest, Scenario, ScenarioComparison, ScenarioControls } from './game'
 import type { ExplorerDetail, ExplorerSnapshotSummary, ForecastSettings, GeneratorSettings, PublicContext } from './explorer'
 import { editionPath } from './edition'
+import type { NewsContext } from './news'
 
 export interface MarketSignals {
   crop_id?: string | null
@@ -57,6 +58,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  news: (query: URLSearchParams = new URLSearchParams()) => request<NewsContext>(`/news?${query}`),
   bootstrap: () => request<Bootstrap>('/bootstrap'),
   crop: async (id: string) => {
     const response = await request<{ crop: Crop; evidence: EvidenceRecord[] }>(`/crops/${encodeURIComponent(id)}/evidence`)

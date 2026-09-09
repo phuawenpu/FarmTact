@@ -74,7 +74,7 @@ def main():
         raise RuntimeError('Existing PostgreSQL major version requires an explicit migration')
     if stopping:
         return 0
-    database = web = refresh = None
+    database = web = refresh = news = None
     try:
         database = subprocess.Popen(postgres_command(), env=safe_env)
         deadline = time.monotonic() + 30
@@ -115,15 +115,26 @@ def main():
             refresh = subprocess.Popen([sys.executable, str(ROOT / 'scripts/build_dataset.py'),
                                         '--with-power'], cwd=ROOT, env=safe_env)
         refresh_deadline = time.monotonic() + 120
+        next_news_refresh = time.monotonic()
+        news_deadline = 0
         while not stopping:
             if database.poll() is not None or web.poll() is not None:
                 raise RuntimeError('A required Fly service exited')
             if refresh and refresh.poll() is None and time.monotonic() > refresh_deadline:
                 stop_process(refresh, timeout=2)
                 print('Public refresh deadline reached; cached/unavailable provenance retained.', flush=True)
+            if os.environ.get('FARMTACT_EDITION') and os.environ.get('FARMTACT_ROLE') != 'gateway':
+                if news and news.poll() is None and time.monotonic() > news_deadline:
+                    stop_process(news, timeout=2)
+                    print('News refresh deadline reached; cached evidence retained.', flush=True)
+                if time.monotonic() >= next_news_refresh and (news is None or news.poll() is not None):
+                    news = subprocess.Popen([sys.executable, str(ROOT / 'scripts/refresh_news.py')], cwd=ROOT, env=safe_env)
+                    news_deadline = time.monotonic() + 90
+                    next_news_refresh = time.monotonic() + 6 * 3600
             time.sleep(.5)
         return 0
     finally:
+        stop_process(news, timeout=2)
         stop_process(refresh, timeout=2)
         stop_process(web, timeout=20)
         stop_process(database, timeout=15, sig=signal.SIGINT)
