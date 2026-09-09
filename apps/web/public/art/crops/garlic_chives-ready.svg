@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-label="Mature garlic chives illustration">
+ <defs>
+  <linearGradient id="garlicChiveLeaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9bc85c"/><stop offset=".48" stop-color="#4e963f"/><stop offset="1" stop-color="#286d3e"/></linearGradient>
+  <linearGradient id="garlicChiveFlower" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffef2"/><stop offset="1" stop-color="#dce6c7"/></linearGradient>
+ </defs>
+ <ellipse cx="68" cy="107" rx="43" ry="7" fill="#263f2c" opacity=".16"/>
+ <g fill="none" stroke="#568c3b" stroke-width="3.4" stroke-linecap="round">
+  <path d="M67 105C46 84 40 54 47 19"/><path d="M68 105C56 78 57 45 63 9"/><path d="M69 105C68 71 73 38 81 12"/>
+  <path d="M70 105C81 78 90 54 104 35"/><path d="M65 105C45 91 29 71 25 47"/><path d="M72 105C91 91 108 75 119 55"/>
+ </g>
+ <g fill="url(#garlicChiveLeaf)" stroke="#347541" stroke-width="1.5" stroke-linejoin="round">
+  <path d="M65 104C53 78 45 46 48 18l5 8c-1 25 5 52 18 77Z"/>
+  <path d="M67 104C58 75 58 37 63 8l5 8c-3 29-1 61 5 87Z"/>
+  <path d="M69 104C68 72 73 37 82 11l3 9c-7 26-9 57-9 84Z"/>
+  <path d="M70 104C78 77 91 49 105 34l1 10c-13 17-23 39-29 61Z"/>
+  <path d="M65 104C46 90 31 69 25 45l7 7c7 20 19 36 39 50Z"/>
+  <path d="M73 105c17-13 35-30 46-52l1 10c-11 18-24 32-41 44Z"/>
+  <path d="M61 105C48 93 39 76 37 59l6 7c3 14 11 27 24 38Z"/>
+  <path d="M74 105c12-18 19-39 20-61l5 8c-2 19-8 37-19 54Z"/>
+ </g>
+ <g fill="none" stroke="#b9d68a" stroke-width="1" opacity=".72"><path d="M50 25c1 29 7 55 18 77"/><path d="M65 16c-2 29 0 58 6 87"/><path d="M83 20c-6 25-9 53-10 83"/><path d="M103 43c-12 17-21 38-28 60"/></g>
+ <path d="M87 76C91 55 92 35 91 18" fill="none" stroke="#6da14b" stroke-width="2.3" stroke-linecap="round"/>
+ <g transform="translate(91 17)" fill="url(#garlicChiveFlower)" stroke="#87966d" stroke-width=".8">
+  <path d="m0 0-3-8 4 4 3-6 1 7 7-3-5 6 8 2-8 2 5 6-7-3-1 7-3-7-5 5 2-7-8 1 7-5-6-4 8 1Z"/>
+  <circle r="2.4" fill="#d6c978" stroke="none"/>
+ </g>
+ <path d="M68 105c-15-4-28-3-41 2m41-2c15-5 29-4 43 2" fill="none" stroke="#8e613d" stroke-width="4" stroke-linecap="round"/>
+</svg>

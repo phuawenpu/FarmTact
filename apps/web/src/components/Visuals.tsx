@@ -19,6 +19,7 @@ export function CropArt({ cropId, color = '#93c64b', stage = 'growing', compact 
   const illustratedCrops = new Set([
     'caixin', 'pak_choi', 'kailan', 'bayam', 'kangkong',
     'lettuce', 'kale', 'mustard_greens', 'malabar_spinach', 'sweet_potato_leaves',
+    'garlic_chives', 'sawtooth_coriander',
   ])
   const stagedCrops = new Set(['caixin', 'pak_choi', 'kailan', 'lettuce'])
   const normalizedStage = /nursery|seed|sow/.test(stage)

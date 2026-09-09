@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "catalogue_version": "2026-09-08.v1",
-  "research_cutoff": "2026-09-08",
+  "catalogue_version": "2026-09-09.v2",
+  "research_cutoff": "2026-09-09",
   "portfolio_basis": {
     "kind": "unranked_singapore_cultivation_portfolio",
     "source_ids": ["C01", "C02", "C03", "C04"],
@@ -159,12 +159,45 @@
       "evidence_ids": ["P13", "P18"],
       "boundary": "Leaf/shoot production is separate from tuber maturity, tuber yield and forage dry matter.",
       "parameter_gaps": ["fresh-market saleable leaf yield", "Singapore regrowth schedule", "cultivar", "packout"]
+    },
+    {
+      "crop_id": "garlic_chives",
+      "display_name": "Garlic chives",
+      "aliases": ["Chinese chives", "Chinese leeks", "flat chives", "oriental garlic"],
+      "ambiguous_aliases": ["chives", "Chinese leek"],
+      "taxon_concept": "Allium tuberosum Rottler ex Spreng.",
+      "taxon_source_id": "C05",
+      "taxonomy_status": "accepted_name_reported_by_singapore_government_source",
+      "family": "Amaryllidaceae",
+      "harvested_parts": ["leaves", "tender stems", "flower stalks"],
+      "popularity_rank": null,
+      "evidence_ids": ["P21", "P22"],
+      "boundary": "Flat-leaved garlic chives are distinct from hollow-leaved common chives and bunching onion; repeated leaf cuts require cut-specific regrowth and quality records.",
+      "parameter_gaps": ["Singapore commercial marketable yield", "local cultivar or accession", "cut-specific regrowth interval", "buyer stem-to-leaf and packout specification"]
+    },
+    {
+      "crop_id": "sawtooth_coriander",
+      "display_name": "Sawtooth coriander",
+      "aliases": ["culantro", "spiny coriander", "serrated coriander", "long coriander", "false coriander"],
+      "ambiguous_aliases": ["coriander", "Vietnamese coriander"],
+      "taxon_concept": "Eryngium foetidum L.",
+      "taxon_source_id": "C06",
+      "taxonomy_status": "accepted_name_reported_by_singapore_government_source",
+      "family": "Apiaceae",
+      "harvested_parts": ["leaves"],
+      "popularity_rank": null,
+      "evidence_ids": ["P23", "P24"],
+      "boundary": "Sawtooth coriander is Eryngium foetidum, not true coriander (Coriandrum sativum) or Vietnamese coriander (Persicaria odorata); flowering changes leaf texture and marketability.",
+      "parameter_gaps": ["Singapore commercial marketable yield", "local cultivar or seed source", "flowering and cut-specific regrowth observations", "buyer leaf-quality and packout specification"]
     }
   ],
   "alias_review_queue": [
     {"input": "spinach", "status": "unresolved", "candidate_crop_ids": ["bayam", "kangkong", "malabar_spinach"], "note": "True spinach is outside the ten-crop portfolio and must also remain possible."},
     {"input": "kale", "status": "unresolved", "candidate_crop_ids": ["kale", "kailan"], "note": "Chinese kale may mean kailan; curly kale is a different concept."},
     {"input": "mustard", "status": "unresolved", "candidate_crop_ids": ["mustard_greens"], "note": "Cultivar and saleable product specification are required."},
-    {"input": "sweet potato", "status": "unresolved", "candidate_crop_ids": ["sweet_potato_leaves"], "note": "Confirm that the ordered product is leaves/shoots rather than tubers."}
+    {"input": "sweet potato", "status": "unresolved", "candidate_crop_ids": ["sweet_potato_leaves"], "note": "Confirm that the ordered product is leaves/shoots rather than tubers."},
+    {"input": "chives", "status": "unresolved", "candidate_crop_ids": ["garlic_chives"], "note": "Confirm flat-leaved Allium tuberosum rather than common chives or another Allium product."},
+    {"input": "coriander", "status": "unresolved", "candidate_crop_ids": ["sawtooth_coriander"], "note": "Confirm Eryngium foetidum rather than Coriandrum sativum."},
+    {"input": "Vietnamese coriander", "status": "unresolved", "candidate_crop_ids": ["sawtooth_coriander"], "note": "This name is also widely applied to Persicaria odorata; require the scientific name or product code."}
   ]
 }

@@ -1,6 +1,6 @@
 # Crop and advisor art provenance
 
-Last reviewed: 2026-09-08
+Last reviewed: 2026-09-09
 
 ## Scope and provenance
 
@@ -20,6 +20,8 @@ The external pages and photographs were used as visual references only. Their in
 | [GardeningSG: Kang Kong](https://gardeningsg.nparks.gov.sg/gardening-resource-library/kang-kong/) | kangkong | Sprawling vine, narrow arrow-like leaves, long hollow stems and visible nodes | Reference-only; no source photograph shipped |
 | [GardeningSG: Ceylon Spinach](https://gardeningsg.nparks.gov.sg/gardening-resource-library/ceylon-spinach/) | malabar spinach | Trellised climbing habit, thick heart-like leaves, red/white stem cultivar distinction, dark berries | Reference-only; no source photograph shipped |
 | [GardeningSG: Sweet Potato](https://gardeningsg.nparks.gov.sg/gardening-resource-library/sweet-potato/) | sweet-potato leaves/shoots | Sprawling vine, lobed/heart-like leaves, green-to-purple foliage variation | Reference-only; no source photograph shipped |
+| [NParks Flora & Fauna Web: Garlic Chives](https://www.nparks.gov.sg/florafaunaweb/flora/4/9/4947) and [Allium comparison sheet](https://www.nparks.gov.sg/florafaunaweb/resource/-/media/ffw/general/comparison-of-similar-plants/allium_tuberosum_vs_allium_fistulosum_pdf.pdf) | garlic chives | Loose clump of flat, parallel-veined linear leaves; arching tips and a white flower umbel distinguish it from the cylindrical leaves of spring onion | Reference-only; no source photograph or comparison-sheet artwork shipped |
+| [NParks Flora & Fauna Web: Sawtooth Coriander](https://www.nparks.gov.sg/florafaunaweb/flora/4/8/4850) | sawtooth coriander | Low basal rosette of long, narrow glossy leaves with conspicuous sawtooth margins; pale flower heads have radiating spiny bracts | Reference-only; no source photograph shipped |
 
 Lettuce and curly kale use widely recognizable representative market forms solely to keep the almanac readable: a green butterhead-like lettuce and a blue-green curly kale. The catalogue currently leaves lettuce product type/cultivar unresolved and blocks kale taxon/cultivar confirmation. The artwork must not be read as resolving those records.
 
@@ -37,8 +39,10 @@ Lettuce and curly kale use widely recognizable representative market forms solel
 | `mustard_greens` | Green/red mustard representative | Broad toothed leaves with burgundy shading and an open upright crown | `mustard_greens-ready.svg` |
 | `malabar_spinach` | Red-stemmed `Basella` representative | Magenta twining vines on a trellis, fleshy heart-like leaves and dark berries | `malabar_spinach-ready.svg` |
 | `sweet_potato_leaves` | Green/purple leaf-crop representative | Ground-running purple vine and repeated lobed leaves; no tuber is shown | `sweet_potato_leaves-ready.svg` |
+| `garlic_chives` | Flowering `Allium tuberosum` representative | Fountain-like clump of flat strap leaves with parallel veins, arching tips and one white starry umbel | `garlic_chives-ready.svg` |
+| `sawtooth_coriander` | Flowering `Eryngium foetidum` representative | Low radial rosette, long leaves with exaggerated serrated margins, and pale heads held inside spiny bracts | `sawtooth_coriander-ready.svg` |
 
-The four crops used by the current synthetic numerical model have three hand-authored stages. `seedling` means the visual nursery/early form, `growing` is an intermediate canopy, and `ready` is a visual harvest-ready state. The images do not calculate or certify crop maturity. All six other catalogue crops have mature almanac art only and intentionally resolve to the `ready` asset in `CropArt`.
+The four crops used by the current synthetic numerical model have three hand-authored stages. `seedling` means the visual nursery/early form, `growing` is an intermediate canopy, and `ready` is a visual harvest-ready state. The images do not calculate or certify crop maturity. All eight other catalogue crops have mature almanac art only and intentionally resolve to the `ready` asset in `CropArt`.
 
 Cultivar, SKU, production system, taxonomic status, and saleable product specification remain those of `research/crop_catalogue.json`. Each illustration is a representative visual form, not botanical evidence, a farm observation, a diagnosis, or an agronomic recommendation.
 

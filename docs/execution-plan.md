@@ -182,3 +182,36 @@ Final sequential deployed probes returned HTTP 200 in 0.027–0.187 seconds. New
 live assertions use documented DOM readiness/time bounds and clean route disposal;
 they do not erase the original network-idle timeout. All release evidence is in
 reports/v5. This engagement and conditional hosting goal is complete.
+
+
+## V6 crops and shared-host downsizing — 2026-09-09
+
+User authorized one shared 4-vCPU/4-GB Fly host for low concurrent use and two
+additional researched/illustrated crop species. Root owns hosting packaging,
+contracts, migration, publication and preservation. Three bounded real specialist
+agents own crop evidence, crop art/UI, and independent hosting review. New crops
+are garlic chives (Allium tuberosum) and sawtooth coriander (Eryngium foetidum),
+subject to evidence validation. Existing four synthetic farm recipes remain
+versioned and unchanged; two knowledge profiles are added to the next edition.
+
+Sequence: verify exact-image multi-container hosting and persistent isolation;
+exercise one/two numerical jobs with browsing on the 4-GB candidate; independently
+review crops and UI; freeze source for next unused v6; back up and compare all
+prior databases/cache/manifests; migrate with brief controlled write freeze;
+verify production and disable old Machine autostart/compute while retaining
+rollback volumes. Never expose backup/config filesystem over HTTP. Preserve
+actual source/image and all edition settings, sessions, runs and spending limits.
+Push specs/progress within each 20-minute active interval. No inference is needed
+for crop browsing or numerical/hosting validation. Stop Sprite HTTP afterward.
+
+
+V6 progress: two profiles, primary-paper/source registries and original SVGs are
+implemented; crop browser checks pass 45/45 at four widths with keyboard/reduced
+motion. Private Fly Machine 2871575b4544d8 is the 4-vCPU/4-GB candidate. Actual
+multi-container bind/unmount isolation succeeded with exact prior OCI images.
+Initial full boot required explicit per-container secret-name projection; no
+secret values enter configuration or reports. Independent adapter review found
+and prompted protected atomic registry writes and proxy HTTPS enforcement.
+Candidate capacity/persistence and final data transfer remain underway; public
+traffic continues using the prior topology. The new 3-GB volume is temporary
+additional storage until cutover; old volumes remain preserved for rollback.

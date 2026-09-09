@@ -93,15 +93,46 @@ class RegistryTests(unittest.TestCase):
         evidence = json.loads(Path("research/evidence_register.json").read_text())
         datasets = json.loads(Path("research/dataset_registry.json").read_text())
         sources = json.loads(Path("research/source_registry.json").read_text())
-        self.assertEqual(10, len(catalogue["profiles"]))
+        self.assertEqual(12, len(catalogue["profiles"]))
         self.assertTrue(all(profile["popularity_rank"] is None for profile in catalogue["profiles"]))
-        self.assertEqual(20, len(evidence["documents"]))
+        self.assertEqual(24, len(evidence["documents"]))
         self.assertEqual(23, len(datasets["datasets"]))
-        self.assertEqual(56, len(sources["sources"]))
+        self.assertEqual(63, len(sources["sources"]))
         evidence_ids = {row["evidence_id"] for row in evidence["documents"]}
         self.assertTrue(all(set(profile["evidence_ids"]) <= evidence_ids for profile in catalogue["profiles"]))
         kale = next(profile for profile in catalogue["profiles"] if profile["crop_id"] == "kale")
         self.assertIsNone(kale["taxon_concept"])
+
+    def test_new_tropical_herbs_have_distinct_taxa_and_contextual_evidence(self) -> None:
+        catalogue = json.loads(Path("research/crop_catalogue.json").read_text())
+        evidence = json.loads(Path("research/evidence_register.json").read_text())
+        profiles = {row["crop_id"]: row for row in catalogue["profiles"]}
+        existing_ids = {
+            "caixin", "pak_choi", "kailan", "bayam", "kangkong", "lettuce",
+            "kale", "mustard_greens", "malabar_spinach", "sweet_potato_leaves",
+        }
+        self.assertTrue(existing_ids <= profiles.keys())
+        self.assertEqual("Allium tuberosum Rottler ex Spreng.", profiles["garlic_chives"]["taxon_concept"])
+        self.assertEqual("Eryngium foetidum L.", profiles["sawtooth_coriander"]["taxon_concept"])
+        self.assertEqual({"Amaryllidaceae", "Apiaceae"}, {
+            profiles["garlic_chives"]["family"], profiles["sawtooth_coriander"]["family"],
+        })
+        documents = {row["evidence_id"]: row for row in evidence["documents"]}
+        for crop_id in ("garlic_chives", "sawtooth_coriander"):
+            rows = [documents[evidence_id] for evidence_id in profiles[crop_id]["evidence_ids"]]
+            self.assertGreaterEqual(len(rows), 2)
+            self.assertTrue(all(crop_id in row["crop_ids"] for row in rows))
+            self.assertTrue(all(row["doi"] and row["finding"] and row["limit"] for row in rows))
+            self.assertTrue(all("local_validation" in row["parameter_use"] or "no_autonomous" in row["parameter_use"] for row in rows))
+
+    def test_specific_sawtooth_product_code_does_not_make_broad_hs_series_crop_specific(self) -> None:
+        mappings = json.loads(Path("research/crop_hs_mappings.json").read_text())["mappings"]
+        specific = next(row for row in mappings if row.get("product_code") == "HVL0PSC")
+        broad = next(row for row in mappings if row["code"] == "07099990" and row.get("crop_id") is None)
+        self.assertEqual("sawtooth_coriander", specific["crop_id"])
+        self.assertEqual("approved_product_description_match", specific["status"])
+        self.assertEqual("unresolved", broad["status"])
+        self.assertIn("sawtooth_coriander", broad["candidate_crop_ids"])
 
     def test_ambiguous_spinach_and_kale_stay_unresolved(self) -> None:
         catalogue = json.loads(Path("research/crop_catalogue.json").read_text())
@@ -109,7 +140,7 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual("unresolved", queue["spinach"]["status"])
         self.assertEqual("unresolved", queue["kale"]["status"])
         mappings = json.loads(Path("research/crop_hs_mappings.json").read_text())["mappings"]
-        broad = [row for row in mappings if row["code"] in {"07097000", "07049030", "07099990"}]
+        broad = [row for row in mappings if row["code"] in {"07097000", "07049030", "07099990"} and row.get("crop_id") is None]
         self.assertTrue(all(row["status"] == "unresolved" and row.get("crop_id") is None for row in broad))
 
 

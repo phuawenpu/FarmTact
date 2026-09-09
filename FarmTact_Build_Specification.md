@@ -1,3 +1,13 @@
+### V6 work in progress — 9 September 2026
+
+The user authorized downsizing to one shared 4-vCPU/4-GB Fly host under low
+simultaneous usage, and adding two researched, originally illustrated crop
+species to the available knowledge catalogue. Existing immutable editions and
+the four-crop reference generator must remain preserved. Crop research separates
+primary scientific evidence, practical background, missing data and synthetic
+assumptions. Root owns the migration and tests; see docs/execution-plan.md.
+Production is unchanged until candidate capacity and preservation checks pass.
+
 # FarmTact
 
 ### V5 release amendment — 9 September 2026

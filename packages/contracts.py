@@ -7,7 +7,7 @@ import hashlib, json
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-CROPS = ('caixin','pak_choi','kailan','bayam','kangkong','lettuce','kale','mustard_greens','malabar_spinach','sweet_potato_leaves')
+CROPS = ('caixin','pak_choi','kailan','bayam','kangkong','lettuce','kale','mustard_greens','malabar_spinach','sweet_potato_leaves','garlic_chives','sawtooth_coriander')
 class Strict(BaseModel):
     model_config = ConfigDict(extra='forbid', allow_inf_nan=False, validate_default=True)
 class Recipe(Strict):
