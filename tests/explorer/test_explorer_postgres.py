@@ -1,5 +1,6 @@
 """Additive snapshot persistence on real PostgreSQL, including numerical restart."""
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from fastapi.testclient import TestClient
 from sqlalchemy import delete,select
 from services.api.app import create_app
@@ -27,7 +28,7 @@ def test_snapshot_concurrency_reload_and_interrupted_worker(monkeypatch):
             id=results[0]['id']
             r=client.post('/api/v1/scenarios',json={'explorer_snapshot_id':id},headers={'Idempotency-Key':'scenario'})
             assert r.status_code==201,r.text
-            branch=r.json();branch['status']='RUNNING';branch['run_key']='run'
+            branch=r.json();frozen_news=deepcopy(branch['news_context']);branch['status']='RUNNING';branch['run_key']='run'
             save_scenario(store,tenant,branch)
         restarted=Store()
         try:
@@ -38,6 +39,13 @@ def test_snapshot_concurrency_reload_and_interrupted_worker(monkeypatch):
             execute_scenario(restarted,tenant,branch['id'])
             result=get_scenario(restarted,tenant,branch['id'])
             assert result['status']=='COMPLETED'
+            assert result['news_context']==frozen_news
+            # Restarting/recomputing a numerical job must not refresh its public context.
+            from packages import news
+            monkeypatch.setattr(news,'load_cache',lambda: (_ for _ in ()).throw(AssertionError('Continuation must reuse frozen News')))
+            child=client.post('/api/v1/scenarios',json={'parent_scenario_id':branch['id'],'controls':{'labour_percent':90}},headers={'Idempotency-Key':'news-continuation'})
+            assert child.status_code==201,child.text
+            assert child.json()['news_context']==frozen_news
             assert result['result']['forecast']['forecast_settings']=={'alpha':.7}
             assert restarted.latest_farm(tenant)==original
             assert restarted.latest_run(tenant) is None

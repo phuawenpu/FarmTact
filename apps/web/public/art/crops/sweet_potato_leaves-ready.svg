@@ -1,13 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Mature sweet-potato shoots illustration">
-  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#91bd4d"/><stop offset=".55" stop-color="#4c8943"/><stop offset="1" stop-color="#58315d"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".045" numOctaves="2" seed="31" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".9"/></filter></defs>
-  <ellipse cx="60" cy="90" rx="46" ry="7" fill="#173a2b" opacity=".17"/>
-  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 83c19-15 35-8 47-22s32-11 61-31M35 74c-5-18-3-34 8-48M64 54c2-17 11-31 25-41M78 47c10 7 18 18 21 32" fill="none" stroke="#704a63" stroke-width="4"/>
-    <path d="M42 31c-11 1-19-6-19-16 6 1 10 1 15-2 2-5 4-8 7-12 4 5 6 8 7 13 4 4 9 4 15 4-2 10-11 16-22 14Z" fill="url(#leaf)" stroke="#47653f"/>
-    <path d="M88 18c-11 2-20-5-21-15 6 1 11 0 15-3 1-5 3-9 6-13 5 4 7 8 9 13 4 3 9 3 15 3-1 10-10 17-21 16Z" fill="url(#leaf)" stroke="#47653f"/>
-    <path d="M31 74c-11 3-21-3-23-13 6 0 11-1 14-5 1-5 2-9 5-14 5 4 8 7 10 12 5 3 10 2 16 2 0 10-8 18-20 19Z" fill="url(#leaf)" stroke="#47653f"/>
-    <path d="M63 59c-11 2-20-5-21-15 6 1 11 0 15-3 1-5 3-9 6-13 5 4 7 8 9 13 4 3 9 3 15 3-1 10-10 17-21 16Z" fill="url(#leaf)" stroke="#47653f"/>
-    <path d="M99 79c-11 2-20-5-21-15 6 1 11 0 15-3 1-5 3-9 6-13 5 4 7 8 9 13 4 3 9 3 15 3-1 10-10 17-21 16Z" fill="url(#leaf)" stroke="#47653f"/>
-    <path d="M10 88c27-6 72-6 100 0" fill="none" stroke="#916743" stroke-width="5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-label="Mature sweet-potato shoots illustration">
+ <defs><linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#74b957"/><stop offset="1" stop-color="#3c713c"/></linearGradient></defs><ellipse cx="70" cy="101" rx="58" ry="8" fill="#263f2c" opacity=".15"/><path d="M8 95c22-10 38 2 59-9 24-13 36-5 66-17" fill="none" stroke="#7b3f6f" stroke-width="7" stroke-linecap="round"/><g fill="none" stroke="#8a4b79" stroke-width="4"><path d="m31 90-5-40"/><path d="m65 86 3-47"/><path d="m99 78 11-42"/></g>
+ <g fill="url(#l)" stroke="#3f703d" stroke-width="1.7"><path d="M26 57 15 39l12 4 6-17 5 17 13-6-10 19Z"/><path d="m67 47-12-19 13 5 7-18 4 19 14-6-12 20Z"/><path d="m107 44-10-18 12 4 7-17 4 18 14-5-13 19Z"/><path d="M46 90 33 73l13 3 5-16 6 16 13-7-10 20Z"/><path d="m88 82-11-18 12 4 7-17 4 18 14-6-12 20Z"/></g>
+ <g fill="none" stroke="#b3d286" stroke-width="1.5"><path d="M33 50 33 32m42 10V22m41 16V20M52 84V67m44 10V58"/></g><path d="M10 102c26-4 51-2 72 2 19 3 35 2 49-1" fill="none" stroke="#8e613d" stroke-width="4" stroke-linecap="round"/>
 </svg>

@@ -143,3 +143,13 @@ observation and ongoing-event semantics. Focused verification passed 37 checks;
 broader backend regression passed 113. The local cache contains 346 public feed
 metadata records and no structured future events. Browser and complete release
 acceptance are still underway; production remains v4.
+
+
+V5 candidate review milestone: 18 revised crop SVGs passed independent compact-size
+and grayscale review; remastered audio passed 4 signal tests and 22 browser checks.
+The decision journey passed 29 browser, 6 semantic and 8 sound-classification checks
+before the final cross-root/reload refinement. News browser passed 22 checks with
+zero provider submissions. Full backend run: 442 passed, one stale registry fixture
+failed; the fixture now isolates its two editions and all six gateway checks pass.
+PostgreSQL interrupted-job/child-branch checks retain frozen News without a refresh.
+Final mixed-root UI and broad explorer acceptance remain underway.

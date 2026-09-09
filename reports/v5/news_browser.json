@@ -1,0 +1,157 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "edition": "v5",
+  "checks": [
+    {
+      "name": "real cached records appear",
+      "pass": true
+    },
+    {
+      "name": "separate News and farm clocks",
+      "pass": true
+    },
+    {
+      "name": "no automatic numerical effect is claimed",
+      "pass": true
+    },
+    {
+      "name": "region filter updates records",
+      "pass": true
+    },
+    {
+      "name": "recent means publication freshness",
+      "pass": true
+    },
+    {
+      "name": "missing future observations are explicit",
+      "pass": true
+    },
+    {
+      "name": "ongoing date filter is available",
+      "pass": true
+    },
+    {
+      "name": "missing crop coverage is explicit",
+      "pass": true
+    },
+    {
+      "name": "Reddit access is gated",
+      "pass": true
+    },
+    {
+      "name": "restricted event calendar is not copied",
+      "pass": true
+    },
+    {
+      "name": "stale response cannot replace newer region results",
+      "pass": true
+    },
+    {
+      "name": "no document overflow at 360",
+      "pass": true
+    },
+    {
+      "name": "comfortable filter controls at 360",
+      "pass": true,
+      "detail": [
+        {
+          "height": 44,
+          "width": 310.40625
+        },
+        {
+          "height": 44,
+          "width": 310.40625
+        },
+        {
+          "height": 44,
+          "width": 310.40625
+        }
+      ]
+    },
+    {
+      "name": "no document overflow at 390",
+      "pass": true
+    },
+    {
+      "name": "comfortable filter controls at 390",
+      "pass": true,
+      "detail": [
+        {
+          "height": 44,
+          "width": 340.40625
+        },
+        {
+          "height": 44,
+          "width": 340.40625
+        },
+        {
+          "height": 44,
+          "width": 340.40625
+        }
+      ]
+    },
+    {
+      "name": "no document overflow at 430",
+      "pass": true
+    },
+    {
+      "name": "comfortable filter controls at 430",
+      "pass": true,
+      "detail": [
+        {
+          "height": 44,
+          "width": 374.40625
+        },
+        {
+          "height": 44,
+          "width": 374.40625
+        },
+        {
+          "height": 44,
+          "width": 374.40625
+        }
+      ]
+    },
+    {
+      "name": "no document overflow at 1280",
+      "pass": true
+    },
+    {
+      "name": "comfortable filter controls at 1280",
+      "pass": true,
+      "detail": [
+        {
+          "height": 44,
+          "width": 395.0625
+        },
+        {
+          "height": 44,
+          "width": 395.078125
+        },
+        {
+          "height": 44,
+          "width": 395.0625
+        }
+      ]
+    },
+    {
+      "name": "keyboard focus is retained",
+      "pass": true
+    },
+    {
+      "name": "no provider submissions",
+      "pass": true
+    },
+    {
+      "name": "no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "page_errors": [],
+  "provider_submissions": 0,
+  "fixtures": [
+    "delayed obsolete region response; no fabricated source records"
+  ]
+}

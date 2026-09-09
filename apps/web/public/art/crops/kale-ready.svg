@@ -1,13 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Mature curly kale illustration">
-  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5f9c64"/><stop offset=".55" stop-color="#2d7352"/><stop offset="1" stop-color="#154a3b"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".055" numOctaves="2" seed="25" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.5"/></filter></defs>
-  <ellipse cx="60" cy="91" rx="43" ry="7" fill="#173a2b" opacity=".18"/>
-  <g filter="url(#paint)" stroke="#245b43" stroke-linejoin="round">
-    <path d="M59 87C57 65 57 43 59 20M58 71 27 49M60 65l32-25M59 51 38 24M60 45 79 18" fill="none" stroke="#91b784" stroke-width="5" stroke-linecap="round"/>
-    <path d="M29 54c-5 6-15 4-16-4-9 0-12-10-5-15-5-8 2-16 10-13 2-8 13-9 17-2 8-4 16 3 13 11 8 3 8 14 0 17-3 8-13 10-19 6Z" fill="url(#leaf)"/>
-    <path d="M91 45c6 6 15 3 16-5 9-1 11-11 4-15 4-9-4-16-12-12-3-8-14-8-17-1-8-3-16 5-12 13-8 3-7 14 1 17 4 7 14 9 20 3Z" fill="url(#leaf)"/>
-    <path d="M38 29c-6 2-11-5-8-11-7-4-4-13 4-14 1-8 11-11 17-5 7-4 15 3 12 11 6 6 1 15-7 15-3 8-13 10-18 4Z" fill="url(#leaf)"/>
-    <path d="M78 23c5 3 11-2 10-9 8-2 7-12 0-14-1-8-11-10-16-4-7-3-14 5-10 12-5 6 1 14 9 13 3 7 12 8 17 3Z" fill="url(#leaf)"/>
-    <path d="M59 35c-10 1-16-7-12-15-6-7 1-16 10-13 5-8 16-4 16 6 8 5 5 16-4 18-1 4-5 5-10 4Z" fill="#417f59"/>
-  </g>
-  <path d="M19 88c24-7 58-7 82 0" fill="none" stroke="#936843" stroke-width="5" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-label="Mature curly kale illustration"><defs><linearGradient id="k" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#58a17b"/><stop offset=".55" stop-color="#297264"/><stop offset="1" stop-color="#124b46"/></linearGradient></defs><ellipse cx="70" cy="108" rx="44" ry="7" fill="#263f2c" opacity=".17"/><path d="M69 104C70 82 70 59 69 37" stroke="#719a70" stroke-width="9" stroke-linecap="round"/>
+<g fill="url(#k)" stroke="#174f46" stroke-width="1.7" stroke-linejoin="round"><path d="M66 94C52 99 35 94 31 84c-2-5 3-6 1-10 0-4 6-3 5-8 2-4 7-1 8-6 5 1 9 5 11 10 5 8 8 16 10 24Z"/><path d="M73 96c15 2 30-5 34-16 2-5-4-6-1-10-1-4-6-3-5-8-3-3-7 0-9-5-5 2-8 6-10 12-4 9-7 18-9 27Z"/><path d="M64 79C51 78 40 69 40 59c0-5 5-5 4-9 2-4 6-1 7-6 3-3 7 2 10-2 8 7 10 22 3 37Z"/><path d="M76 80c12-4 20-15 18-25-1-5-6-4-5-9-3-3-6 1-8-4-4-2-6 3-10 0-6 9-5 24 5 38Z"/><path d="M67 63C57 57 54 46 59 38c2-4 6-1 7-6 3-3 6 2 9-1 5 9 2 22-8 32Z"/><path d="M73 65c9-7 13-18 9-26-2-4-6-1-7-6-4-2-6 3-9 0-5 10-2 23 7 32Z"/></g>
+<g fill="#9bc39c" opacity=".18"><path d="M43 67c10 5 16 13 20 24-10-7-16-15-20-24Z"/><path d="M96 65c-9 7-15 16-20 27 9-6 16-15 20-27Z"/><path d="M51 48c8 8 11 17 12 27-7-8-11-17-12-27Z"/></g><g fill="none" stroke="#9bc39c" stroke-width="2" stroke-linecap="round"><path d="M69 99 43 68M70 99 96 65M68 85 51 48M71 85 84 46M69 67 67 35"/><path d="m51 78-10-1m14 7-8 4m37-10 11-4m-15 11 9 3M60 58l-8-3m28 3 8-5"/></g><path d="M70 105c-14-4-28-3-41 2m41-2c14-5 28-4 42 2" fill="none" stroke="#8e613d" stroke-width="4" stroke-linecap="round"/></svg>

@@ -6,8 +6,14 @@ from services.api.store import Store
 
 
 @pytest.fixture
-def gateway(monkeypatch):
+def gateway(monkeypatch, tmp_path):
     from services.api.edition_gateway import create_gateway
+    # Keep this two-edition proxy fixture independent of future publications.
+    from services.api.release_registry import ROOT
+    releases=json.loads((ROOT/'config/releases/registry.json').read_text())
+    fixture=tmp_path/'registry.json'
+    fixture.write_text(json.dumps({'latest':'v2','editions':releases['editions'][:2]}))
+    monkeypatch.setenv('FARMTACT_RELEASE_REGISTRY',str(fixture))
     monkeypatch.setenv('FARMTACT_CONTROL_SECRET', 'test-control-secret-long-enough')
     monkeypatch.delenv('FARMTACT_TRUST_FLY_PROXY', raising=False)
     seen = []

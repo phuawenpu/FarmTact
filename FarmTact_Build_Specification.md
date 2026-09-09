@@ -35,6 +35,25 @@ future-events view is valid when none were supplied. News never changes numerica
 inputs automatically. Only explicit advisor actions invoke the existing DeepSeek
 routes, with source text treated as untrusted evidence and exact citation keys.
 
+The entry mission groups actual booked orders by crop and due date, subtracts
+harvest within its declared shelf life and usable inventory, and labels the gap as
+provisional because earlier orders have not been allocated. A weekly EWMA estimate
+is context, not a same-day delivery quantity. New sowing matures after nursery plus
+grow days; sanitation is post-harvest turnaround. Main-farm missions derive from the
+current owned import; saved experiments retain their own selected snapshot/root.
+Calculation waiting does not advance the biological calendar. Exact scenario
+inputs accompany sliders; result comparisons retain signed changes and expose
+frozen numerical evidence. Seven role perspectives are deterministic templates,
+explicitly distinct from paid advisor interpretations.
+
+The revised original SVG set distinguishes ten crop forms and four crop stage
+sequences through leaves, stems and growth habit. V5 sound starts silent, defaults
+to 55% music/70% effects after activation, and offers channel toggles, test and retry.
+Remastered PCM assets retain sample headroom; failure/withheld/shortfall cues follow
+actual result status. Digital signal and browser tests do not establish physical
+speaker audibility or human preference. Independent AI reviews and these limits
+must remain visible in release evidence.
+
 Implementation and independent acceptance remain in progress; these changes have
 not been published as v5 yet. Test/release evidence belongs in reports/v5.
 

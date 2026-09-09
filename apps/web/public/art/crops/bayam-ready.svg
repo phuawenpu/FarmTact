@@ -1,15 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Mature bayam illustration">
-  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#80bd55"/><stop offset=".55" stop-color="#3c9149"/><stop offset="1" stop-color="#a03e64"/></linearGradient><linearGradient id="stem"><stop stop-color="#94b44c"/><stop offset="1" stop-color="#923950"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".045" numOctaves="2" seed="21" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".9"/></filter></defs>
-  <ellipse cx="60" cy="91" rx="39" ry="7" fill="#173a2b" opacity=".17"/>
-  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M59 87C59 64 58 39 60 11M59 68C44 60 33 50 23 39M60 59c13-9 24-19 33-31M59 43C48 35 42 25 39 14M60 35c10-8 16-16 19-25" fill="none" stroke="url(#stem)" stroke-width="4"/>
-    <path d="M24 43C9 46 0 37 5 24c15-3 27 5 29 17Z" fill="url(#leaf)" stroke="#306a40"/>
-    <path d="M92 32c1-15 11-23 24-18 0 15-9 23-23 21Z" fill="url(#leaf)" stroke="#306a40"/>
-    <path d="M40 18C27 19 19 10 23 0c14-1 23 7 24 17Z" fill="url(#leaf)" stroke="#306a40"/>
-    <path d="M78 14C82 2 92-3 102 3c-2 13-12 19-23 17Z" fill="url(#leaf)" stroke="#306a40"/>
-    <path d="M58 18c-7-8-4-17 4-20 9 7 9 15 2 21Z" fill="url(#leaf)" stroke="#306a40"/>
-    <path d="M61 19c5-9 5-17 2-25M61 15l-6-5m7 1 6-5" fill="none" stroke="#9e5061" stroke-width="3"/>
-    <g fill="#bd6871"><circle cx="61" cy="2" r="2"/><circle cx="55" cy="9" r="1.7"/><circle cx="67" cy="5" r="1.7"/></g>
-    <path d="M25 88c21-6 48-6 70 0" fill="none" stroke="#956a45" stroke-width="5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-label="Mature bayam illustration">
+ <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#78bd56"/><stop offset="1" stop-color="#286f3e"/></linearGradient><linearGradient id="r"><stop stop-color="#d15b83"/><stop offset="1" stop-color="#79284f"/></linearGradient></defs><ellipse cx="70" cy="107" rx="43" ry="7" fill="#263f2c" opacity=".16"/>
+ <g fill="none" stroke="#a13a64" stroke-width="5" stroke-linecap="round"><path d="M51 103 48 34"/><path d="M70 104 72 18"/><path d="M90 103 94 39"/><path d="m49 67-17-15"/><path d="m72 56 18-18"/><path d="m94 71 17-15"/></g>
+ <g stroke-width="1.5"><g fill="url(#g)" stroke="#316d3c"><path d="M36 57C20 57 12 45 16 32c16 1 24 11 20 25Z"/><path d="M55 48C39 43 34 30 41 18c15 5 21 17 14 30Z"/><path d="M87 43c-3-15 7-25 22-25 4 14-5 24-22 25Z"/><path d="M106 62c2-15 13-23 27-18 0 14-11 22-27 18Z"/></g><g fill="url(#r)" stroke="#7f3150"><path d="M69 37C55 31 52 18 59 8c14 5 18 17 10 29Z"/><path d="M82 70c-13-8-14-21-5-30 13 7 15 20 5 30Z"/><path d="M58 82C43 79 37 67 43 55c15 3 22 15 15 27Z"/></g></g>
+ <path d="M72 18c-6-6-7-12-1-16 7 4 7 10 1 16Z" fill="#b83e6d"/><path d="M70 104c-15-4-30-3-44 2m44-2c15-5 30-4 44 2" fill="none" stroke="#8e613d" stroke-width="4" stroke-linecap="round"/>
 </svg>

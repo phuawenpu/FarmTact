@@ -1,12 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -20 155 130" role="img" aria-label="Growing kailan illustration">
-  <defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#79ad91"/><stop offset=".48" stop-color="#3f7661"/><stop offset="1" stop-color="#194f43"/></linearGradient><filter id="paint"><feTurbulence baseFrequency=".04" numOctaves="2" seed="13" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale=".8"/></filter></defs>
-  <ellipse cx="59" cy="90" rx="38" ry="6" fill="#173a2b" opacity=".16"/>
-  <g filter="url(#paint)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M58 86C58 64 59 43 59 21M59 70C45 59 35 48 26 38M60 62c13-11 23-21 31-32M59 47C49 39 43 28 40 17" fill="none" stroke="#9bc291" stroke-width="6"/>
-    <path d="M27 43C12 47 2 37 6 23c16-3 29 5 31 18Z" fill="url(#leaf)" stroke="#25584a"/>
-    <path d="M90 34c1-16 12-25 25-19 0 16-10 25-24 23Z" fill="url(#leaf)" stroke="#25584a"/>
-    <path d="M41 21C28 21 20 11 25 1c14 0 23 8 23 19Z" fill="url(#leaf)" stroke="#25584a"/>
-    <path d="M58 24c-8-8-7-18 1-23 10 6 12 15 5 23Z" fill="url(#leaf)" stroke="#25584a"/>
-    <path d="M26 87c20-6 46-6 67 0" fill="none" stroke="#956b47" stroke-width="5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-label="Growing kailan illustration">
+ <defs><linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5c9d80"/><stop offset="1" stop-color="#1c594f"/></linearGradient></defs><ellipse cx="70" cy="106" rx="35" ry="6" fill="#263f2c" opacity=".16"/><path d="M70 103C71 79 70 50 69 19" fill="none" stroke="#80af87" stroke-width="11" stroke-linecap="round"/><g fill="none" stroke="#80af87" stroke-width="5" stroke-linecap="round"><path d="m69 72-25-19"/><path d="m70 57 26-20"/></g><g fill="url(#l)" stroke="#245f53" stroke-width="1.7"><path d="M47 57C27 61 15 50 16 34c19-5 33 5 31 23Z"/><path d="M92 42c2-19 16-29 35-24 0 18-15 28-35 24Z"/><path d="M70 35C53 35 42 23 45 9c17 0 27 11 25 26Z"/></g><g fill="none" stroke="#a7cbb0" stroke-width="1.6"><path d="M21 37 42 53"/><path d="m122 22-25 16"/><path d="M49 13 67 31"/></g><path d="M70 103c-12-4-24-3-35 1m35-1c12-5 24-4 35 1" fill="none" stroke="#8e613d" stroke-width="4" stroke-linecap="round"/>
 </svg>

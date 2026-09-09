@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>FarmTact v5 crop art review</title>
+<style>
+body{margin:24px;background:#f5f0df;color:#173f32;font:14px system-ui}h1,h2{margin:8px 0 12px}.grid{display:grid;grid-template-columns:repeat(6,132px);gap:10px;margin-bottom:25px}.card{background:#fffaf0;border:1px solid #cfc8b6;border-radius:12px;padding:8px;text-align:center}.card img{width:64px;height:64px;object-fit:contain;display:block;margin:auto}.small img{width:54px;height:54px}.gray img{filter:grayscale(1)}.stages{grid-template-columns:repeat(3,132px)}small{display:block;margin-top:5px;font-size:11px}
+</style>
+<h1>FarmTact v5 original crop art</h1><h2>Ready forms · 64 px</h2><div class="grid" id="ready"></div>
+<h2>Ready forms · grayscale 54 px</h2><div class="grid gray small" id="gray"></div>
+<h2>Simulated crop stages · 64 px</h2><div class="grid stages" id="stages"></div>
+<script>
+const root='../../apps/web/public/art/crops/', ready=[['caixin','Caixin'],['pak_choi','Pak choi'],['kailan','Kailan'],['lettuce','Lettuce'],['bayam','Bayam'],['kangkong','Kangkong'],['kale','Curly kale'],['mustard_greens','Mustard greens'],['malabar_spinach','Malabar spinach'],['sweet_potato_leaves','Sweet-potato shoots']];
+const add=(host,file,label)=>host.insertAdjacentHTML('beforeend',`<div class="card"><img src="${root+file}.svg"><small>${label}</small></div>`);
+ready.forEach(([id,label])=>{add(document.querySelector('#ready'),id+'-ready',label);add(document.querySelector('#gray'),id+'-ready',label)});
+for(const [id,label] of ready.slice(0,4))for(const stage of ['seedling','growing','ready'])add(document.querySelector('#stages'),id+'-'+stage,label+' · '+stage);
+</script>

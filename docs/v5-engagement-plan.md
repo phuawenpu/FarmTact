@@ -1,6 +1,6 @@
 # V5 engagement and hosting plan
 
-Status: planned; v4 is the current published application. Updated 2026-09-09.
+Status: implemented candidate undergoing final acceptance; v4 remains published. Updated 2026-09-09.
 
 The next unused immutable edition turns Sumin Lee's decision-support proposal into
 a clearer playable loop: find a delivery shortage, inspect its records, change an
