@@ -1,0 +1,175 @@
+{
+  "id": "review08",
+  "persona": "Keyboard user with low vision and a reduced-motion preference",
+  "reviewer_type": "end_user",
+  "disclosure": "Independent AI end-user review using Playwright Chromium emulation. I used a legitimate returning demo session assigned by the root reviewer because new-session quota was reached. I did not create or save a scenario, contact an advisor, or alter main farm records.",
+  "reviewed_at": "2026-09-09T06:32:13Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "index-ByLNQWi-.js",
+    "css_asset": "index-C1IwVELs.css",
+    "stage": "live-first mobile fix; final polish pending"
+  },
+  "rubric_status": "read",
+  "rubric_source": {
+    "document": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf",
+    "page": 13,
+    "git_blob": "b5a05dc8e0b849d9f8b1566cbd865151984a1730"
+  },
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "The farm board immediately communicates a tactical planning purpose, current resources, synthetic mode, and a clear bed-inspection task.",
+      "evidence_ids": ["mobile-farm", "desktop-farm"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": null,
+      "rationale": "The end-user journey did not expose enough architecture or reasoning-loop evidence to score this criterion.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 3,
+      "rationale": "The visible farm map, accessible bed controls, date preview, and advisor/scenario entry points appear purpose-fit; integrations beyond these controls were not exercised.",
+      "evidence_ids": ["mobile-bed-dialog", "date-preview", "desktop-keyboard-dialog"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 3,
+      "rationale": "The UI distinguishes inspection and preview from consequential changes and presents explicit action entry points, but no approval workflow was exercised.",
+      "evidence_ids": ["mobile-bed-dialog", "date-preview"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 4,
+      "rationale": "The interface prominently labels synthetic simulation and says date and growth information are previews rather than observations. This score covers visible guardrails only.",
+      "evidence_ids": ["mobile-farm", "mobile-bed-dialog"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 3,
+      "rationale": "The bed detail exposes preview date, next action, system, area, and the boundary between recorded dates and observed growth; logging and evaluation internals were untested.",
+      "evidence_ids": ["mobile-bed-dialog", "desktop-keyboard-dialog"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": null,
+      "rationale": "Platform implementation and orchestration are not observable from this end-user browser journey.",
+      "evidence_ids": []
+    }
+  ],
+  "usability_score": 8,
+  "summary": "FarmTact is unusually operable for a visual farm map: all 16 beds have descriptive controls, keyboard focus is strongly visible, Enter opens a focused bed, the dialog moves focus to Close, Escape dismisses it, and date preview works with arrow keys. The main low-vision weakness is typography: several map and status labels render around 8.5–11 px, and three mobile controls fall below a 44 px target in at least one dimension.",
+  "strengths": [
+    "The 360 px page has no horizontal overflow, keeps primary navigation fixed at the bottom, and supports ordinary vertical scrolling without requiring map dragging.",
+    "All 16 beds expose descriptive accessible names including crop, state, and next action; A1 was operable through touch and keyboard.",
+    "Focus indicators are thick and visually obvious across navigation, map controls, the selected bed, and the dialog close button.",
+    "The bed dialog manages focus well: focus lands on Close, Escape dismisses it, and the underlying page is visually obscured.",
+    "Reduced-motion emulation was recognized, with computed animation and transition durations reduced to 0.00001 seconds in the sampled page elements.",
+    "Preview language is candid: synthetic mode is visible and changing the date explicitly does not advance time or create observations."
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "title": "Core map and status text is too small for a low-vision user",
+      "observation": "Computed control fonts include 8.48 px, 9.28 px, 10.88 px, and 11.2 px. In the 360 px screenshot, bed crop names, metric captions, and map helper labels require close inspection even though the overall layout is clean.",
+      "impact": "Users who magnify text or have reduced acuity may struggle to distinguish crops and status without opening each bed, slowing a common scan-and-decide task.",
+      "recommendation": "Raise essential map/status text to a readable minimum, allow browser text scaling without clipping, and provide a persistent high-contrast large-text list mode alongside the visual map.",
+      "evidence_ids": ["mobile-farm", "target-audit"]
+    },
+    {
+      "severity": "medium",
+      "title": "Some frequently used controls miss a 44 px touch target",
+      "observation": "At 360 px, Add or import farm measured 39×39 px, Today measured 39×38 px, and the date range track measured 191×16 px. Most other interactive controls met or exceeded 44 px.",
+      "impact": "These compact targets are harder to acquire for users with reduced vision or motor precision, particularly the narrow date slider.",
+      "recommendation": "Expand the clickable area to at least 44×44 px while preserving the visual size, and add larger previous/next date buttons next to the range input.",
+      "evidence_ids": ["mobile-farm", "date-preview", "target-audit"]
+    },
+    {
+      "severity": "low",
+      "title": "Keyboard users traverse many map landmarks before the first bed",
+      "observation": "A1 was the 24th Tab stop after sidebar, header, task shortcuts, metrics, map mode, map container, and landmark controls.",
+      "impact": "Repeated bed inspection can require substantial tabbing even though the controls themselves are accessible and focus-visible.",
+      "recommendation": "Add a skip link to the accessible farm list or place the list before decorative and landmark controls in keyboard order.",
+      "evidence_ids": ["focus-audit", "desktop-keyboard-dialog"]
+    },
+    {
+      "severity": "low",
+      "title": "Mobile farm map begins below a dense block of actions and metrics",
+      "observation": "At 360×800, the initial viewport shows the map only from roughly mid-screen downward after title, four shortcuts, four metrics, and the Move farm control.",
+      "impact": "The visual farm remains discoverable, but low-vision users may need extra scrolling or magnification to connect headline status with specific beds.",
+      "recommendation": "Offer a compact header mode after entry or a prominent jump-to-beds control that lands on the accessible list.",
+      "evidence_ids": ["mobile-farm", "mobile-scroll"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "mobile-touch-bed-and-date",
+      "device": "Playwright Chromium touch emulation with reduced motion",
+      "viewport": "360x800",
+      "steps": [
+        "Loaded the live returning synthetic farm session and verified the page had no horizontal overflow.",
+        "Tapped the descriptively named A1 Caixin bed control.",
+        "Read its growth state, preview date, next action, system, area, and preview disclaimer.",
+        "Dismissed the detail dialog with Escape.",
+        "Focused the simulation-date range and pressed ArrowRight, changing the preview from 8 Sept to 9 Sept without creating an observation.",
+        "Scrolled the page vertically while leaving the farm map in its non-drag mode."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "Sixteen named bed buttons were available.",
+        "The bed dialog opened and focused its Close button; Escape closed it.",
+        "The range value changed from 0 to 1 and the visible date changed by one day.",
+        "The page width stayed at 360 px and scrolled to 407 px vertically.",
+        "No page or console errors were observed."
+      ]
+    },
+    {
+      "id": "desktop-keyboard-bed-inspection",
+      "device": "Playwright Chromium desktop emulation with reduced motion",
+      "viewport": "1280x800",
+      "steps": [
+        "Reloaded the same returning farm session at desktop width.",
+        "Tabbed through the visible navigation, shortcuts, metrics, map mode, and landmarks to A1.",
+        "Verified the focused A1 control had a 3 px solid outline.",
+        "Pressed Enter to open A1, verified focus moved to Close, then pressed Escape."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "A1 was reached on the 24th Tab stop.",
+        "Focus remained visually strong against both light and dark regions.",
+        "Enter opened one dialog, focus landed on Close, and Escape returned the dialog count to zero.",
+        "There was no desktop horizontal overflow and no page or console error."
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "mobile-farm", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/01-mobile-farm-360.png", "description": "Initial authenticated farm at 360 px with mobile actions, metrics, map, and bottom navigation." },
+    { "id": "mobile-bed-dialog", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/02-mobile-bed-detail-360.png", "description": "A1 Caixin detail opened by touch, showing readable primary values and smaller secondary details." },
+    { "id": "date-preview", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/03-mobile-date-preview-360.png", "description": "Mobile farm after keyboard increment of the simulation preview date." },
+    { "id": "mobile-scroll", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/04-mobile-scrolled-360.png", "description": "Vertically scrolled mobile farm without horizontal overflow." },
+    { "id": "desktop-farm", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/05-desktop-farm-1280.png", "description": "Desktop farm overview at 1280 px." },
+    { "id": "focus-audit", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/06-desktop-keyboard-focus-1280.png", "description": "A1 reached by Tab with a visible focus outline." },
+    { "id": "desktop-keyboard-dialog", "type": "screenshot", "path": "apps/web/screenshots/panel/review08/07-desktop-keyboard-bed-dialog-1280.png", "description": "A1 dialog opened with Enter and Close visibly focused." },
+    { "id": "target-audit", "type": "browser_check", "path": "apps/web/screenshots/panel/review08/observations.json", "description": "Private browser observations covering assets, viewport overflow, target geometry, font sizes, reduced motion, focus order, dialog state, and errors; contains no credentials." }
+  ],
+  "limitations": [
+    "This was Chromium emulation, not a physical phone or tablet.",
+    "I did not have a screen reader, OS magnifier, color-vision simulator, or physical keyboard device available, so I do not claim those forms of testing.",
+    "The review used a returning synthetic demo session because new-session quota was reached; prior run and farm records were preserved.",
+    "I did not create a numerical scenario or contact an advisor, so numerical correctness, provider behavior, and conversation accessibility are untested.",
+    "The journey covered the farm board, one bed detail, and date preview; other application sections were outside this bounded persona review.",
+    "Rubric scores are unofficial independent 0–5 assessments, not official hackathon grades."
+  ],
+  "priority_improvements": [
+    "Increase essential map, metric, and helper text sizes and verify browser zoom/text scaling at 200%.",
+    "Expand the Add, Today, and date-slider hit areas and add large discrete date-step buttons.",
+    "Add a keyboard skip link to the accessible bed list so users can bypass map landmarks.",
+    "Retest this exact touch and keyboard journey after final polish, using the new asset hashes as release identity."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review08.mjs"
+  ]
+}

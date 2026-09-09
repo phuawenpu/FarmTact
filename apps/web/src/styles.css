@@ -567,3 +567,52 @@ a.source-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
   .explorer-page { gap: 12px; }.explorer-hero { min-height: 280px; margin-inline: -14px; padding: 22px 15px; border-radius: 0 0 24px 24px; flex-direction: column; align-items: stretch; }.explorer-hero h1 { font-size: 2rem; }.explorer-tabs { margin-inline: -10px; flex-wrap: wrap; }.explorer-tabs button { flex: 1 1 30%; min-width: 95px; }.explorer-grid, .generator-layout { grid-template-columns: 1fr; }.generator-controls { position: static; }.formula-grid { grid-template-columns: 1fr; }.relationship-map { grid-template-columns: 1fr auto 1fr; }.relationship-map span:nth-of-type(4) { grid-column: 1; }.records-toolbar { align-items: stretch; }.records-toolbar label { min-width: calc(50% - 8px); }.record-search { min-width: 100%!important; }.explorer-card { padding: 14px; border-radius: 16px; }.explorer-section-title { align-items: flex-start; flex-wrap: wrap; }.observed-key { margin-left: 0; }.public-sources { grid-template-columns: 1fr; }.chart-filters { grid-template-columns: 1fr; }.generator-actions { grid-template-columns: 1fr; }
 }
 @media (max-width: 390px) { .explorer-hero { margin-inline: -11px; }.explorer-card { padding: 12px; }.explorer-stats { grid-template-columns: repeat(2,1fr); }.records-toolbar .button { flex: 1; }.formula-grid code { font-size: .62rem; } }
+
+/* Explicit touch navigation keeps the page scrollable and separates a tap from a drag. */
+.map-navigation { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--paper); }
+.map-navigation p { margin: 0; font-size: .76rem; line-height: 1.45; color: var(--ink-soft); }
+.map-navigation button { flex-shrink: 0; }
+.map-navigation button[aria-pressed=true] { background: var(--forest); color: white; }
+.farm-world-viewport { touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; }
+.farm-world-viewport.is-move-mode { touch-action: pinch-zoom; }
+.farm-world-viewport.is-dragging, .farm-world-viewport.is-dragging * { cursor: grabbing; user-select: none; }
+.farm-world-viewport.is-dragging .farm-world-canvas { transition: none; }
+.farm-world-shell .world-controls { display: grid; grid-template-columns: repeat(2,44px); gap: 2px; top: auto; right: 8px; bottom: 38px; }
+.farm-world-shell .world-controls button { width: 44px; height: 44px; }
+.farm-world-shell .world-controls button:last-child { grid-column: 1/-1; justify-self: center; }
+.world-pan-hint { font-size: .65rem; }
+.world-pan-hint::after { content: none; }
+@media (max-width:700px) {
+  .map-navigation { flex-direction: column; align-items: stretch; gap: 8px; }
+  .map-navigation .world-chip { width: auto; justify-content: center; }
+  .farm-world-shell .resource-hud { position: static; border-radius: 0; width: 100%; }
+  .world-pan-hint { left: 12px; font-size: .65rem; }
+}
+.farm-world-shell .resource-hud { position: static; border-radius: 0; width: 100%; }
+.farm-world-shell .world-controls { width: max-content; top: 12px; bottom: auto; padding: 6px; }
+
+.review-page { max-width: 1160px; margin: 0 auto; padding: 24px; color: var(--ink); }
+.review-page a { color: #28533a; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.review-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 14px; }
+.review-hero { padding: clamp(24px,5vw,60px); border-radius: 28px; background: #193e2d; color: #fff8e9; }
+.review-hero .kicker { color: #cadba5; }.review-hero h1 { font-size: clamp(2rem,5vw,3.6rem); line-height: 1.05; margin: 14px 0; }.review-hero p { max-width: 700px; line-height: 1.6; }
+.review-disclosure { margin-top: 24px; max-width: 760px; padding: 14px; border: 1px solid #648370; border-radius: 12px; font-size: .9rem; line-height: 1.5; }
+.review-intro,.review-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }.review-intro { margin: 24px 0; align-items: start; }.review-intro svg { vertical-align: middle; }.review-intro p,.review-card p,.review-page li { line-height: 1.6; }
+.review-page details { border-top: 1px solid #d8d0bf; margin-top: 14px; padding-top: 6px; }.review-page summary { min-height: 48px; padding: 12px 0; cursor: pointer; font-weight: 700; }.review-page details:has(:target) { border-color: #668151; }
+.review-scorecard,.review-card { padding: 26px; border: 1px solid #d9d0be; background: #fffaf0; border-radius: 20px; }
+.review-table-scroll { overflow-x: auto; }.review-page table { width: 100%; font-size: .9rem; }.review-page th { text-transform: none; letter-spacing: normal; }.review-page caption { text-align: left; padding: 12px 0; font-size: .85rem; }
+.review-filters { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; margin-top: 28px; }.review-filters label { display: grid; gap: 7px; font-size: .85rem; }.review-filters input,.review-filters select { min-width: 0; width: 100%; min-height: 48px; padding: 10px; border: 1px solid #cabea6; border-radius: 10px; font: inherit; background: white; }
+.review-list { display: grid; gap: 24px; }.review-card { scroll-margin-top: 12px; }.review-card header { display: flex; align-items: start; justify-content: space-between; gap: 20px; }.review-card h2 { font-size: 1.5rem; line-height: 1.3; margin-top: 5px; }.review-rating { flex-shrink: 0; display: grid; gap: 4px; font-size: .7rem; padding: 10px; border-radius: 12px; background: #e7eed7; }.review-rating strong { font-size: 1.3rem; }.review-summary { font-size: 1.05rem; }.review-build { overflow-wrap: anywhere; font-size: .78rem; }
+.review-finding { border-left: 3px solid #bdb798; padding: 4px 16px; margin: 18px 0; }.review-finding h4 { line-height: 1.6; }.review-priority { display: inline-block; border-radius: 5px; padding: 2px 7px; margin-right: 8px; background: #e5e9d8; font-size: .73rem; text-transform: uppercase; }.review-priority--high { background: #ffe0d2; color: #843d2e; }.review-priority--medium { background: #f5e8b9; color: #735b1a; }
+.review-evidence-links { display: flex; flex-wrap: wrap; gap: 12px; font-size: .82rem; }.review-evidence-links a { min-height: 44px; display: inline-flex; align-items: center; }.review-rubric-row h4 span { float: right; margin-left: 12px; }.review-limitations,.review-retest { background: #eeedde; padding: 14px 20px; border-radius: 12px; margin-top: 20px; }
+.review-gallery { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }.review-gallery figure { margin: 0; border: 1px solid #ddd4c0; padding: 10px; border-radius: 10px; scroll-margin-top: 20px; }.review-gallery img { width: 100%; max-height: 440px; object-fit: contain; object-position: top; background: #eee8d7; }.review-gallery figcaption { font-size: .8rem; line-height: 1.5; margin-top: 8px; }.review-page footer { margin: 32px 0; font-size: .85rem; line-height: 1.6; }
+@media(max-width:700px){.review-page { padding: 12px; }.review-hero { padding: 24px 18px; border-radius: 20px; }.review-intro,.review-columns,.review-filters,.review-gallery { grid-template-columns: 1fr; gap: 14px; }.review-scorecard,.review-card { padding: 18px 14px; }.review-card header { flex-direction: column; gap: 6px; }.review-rating { display: flex; align-items: center; gap: 12px; }.review-page table { font-size: .78rem; }.review-page th,.review-page td { padding: 10px 6px; }.review-finding { padding-left: 12px; }}
+.date-preview .preview-day-controls { display: flex; min-width: 0; gap: 6px; }
+.date-preview .preview-day-controls input { min-width: 40px; min-height: 44px; flex: 1; }
+.date-preview .preview-day-controls button { width: 44px; min-width: 44px; min-height: 44px; justify-content: center; padding: 0; }
+@media(max-width:700px){.date-preview { grid-template-columns: 1fr auto; }.date-preview .preview-day-controls { grid-column: 1/-1; grid-row: 2; }.date-preview > p { margin: 0; }.date-preview > button { min-width: 44px; min-height: 44px; }}
+.farm-world-shell .world-controls { left: auto; right: 8px; }
+.public-review-link { display: inline-flex; align-items: center; min-height: 44px; color: #dbeaac; font-size: .8rem; text-underline-offset: 3px; }
+.world-bed__label b, .world-advisor__name b { font-size: .75rem; }
+.world-bed__label small, .world-advisor__name small { font-size: .6875rem; line-height: 1.25; }
+.icon-button { min-width: 44px; min-height: 44px; }

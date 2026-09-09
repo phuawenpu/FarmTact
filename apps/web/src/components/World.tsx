@@ -1,4 +1,4 @@
-import { BookOpen, CalendarDays, ClipboardList, Crosshair, FlaskConical, List, Minus, Plus, RotateCcw, SlidersHorizontal, Users, Wrench } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Hand, BookOpen, CalendarDays, ClipboardList, Crosshair, FlaskConical, List, Minus, Plus, RotateCcw, SlidersHorizontal, Users, Wrench } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Allocation, Bed, Crop, Farm, Run } from '../lib/types'
 import { ADVISORS, type Advisor, type AdvisorId, type ProposedAction, type Scenario } from '../lib/game'
@@ -28,12 +28,15 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
   const [previewDay, setPreviewDay] = useState(0)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [moveMode, setMoveMode] = useState(false)
+  const [dragging, setDragging] = useState(false)
+  const suppressClick = useRef(false)
   const [scenarioAffected, setScenarioAffected] = useState<string[]>([])
   const [advisorReferenced, setAdvisorReferenced] = useState<string[]>([])
   const [scenarioContext, setScenarioContext] = useState<Scenario | null>(null)
   const [proposedAction, setProposedAction] = useState<{ action: ProposedAction; conversationId: string } | null>(null)
   const [questContext, setQuestContext] = useState<string | null>(null)
-  const pointer = useRef<{ id: number; x: number; y: number; originX: number; originY: number } | null>(null)
+  const pointer = useRef<{ id: number; x: number; y: number; originX: number; originY: number; moved: boolean } | null>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
   const cropMap = useMemo(() => new Map(crops.map(crop => [crop.id, crop])), [crops])
   const selectedBed = farm.beds.find(bed => bed.id === selectedBedId) || null
@@ -62,13 +65,16 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
     }
     setPanel(null)
   }
-  useEffect(() => {
-    const viewport = viewportRef.current
-    if (!viewport) return
-    const wheel = (event: WheelEvent) => { event.preventDefault(); setZoom(value => clamp(value - event.deltaY * .001, .7, 1.55)) }
-    viewport.addEventListener('wheel', wheel, { passive: false })
-    return () => viewport.removeEventListener('wheel', wheel)
-  }, [])
+  const boundedPan = (x: number, y: number) => {
+    const rect = viewportRef.current?.getBoundingClientRect()
+    const maxX = Math.max(0, (1040 * zoom - (rect?.width || 360)) / 2 + 48)
+    const maxY = Math.max(0, (720 * zoom - (rect?.height || 430)) / 2 + 48)
+    return { x: clamp(x, -maxX, maxX), y: clamp(y, -maxY, maxY) }
+  }
+  const nudge = (x: number, y: number) => setPan(old => boundedPan(old.x + x, old.y + y))
+  const finishDrag = () => { pointer.current = null; setDragging(false) }
+  useEffect(() => { setPan(old => boundedPan(old.x, old.y)) }, [zoom])
+
 
   return (
     <div className="world-page">
@@ -90,19 +96,42 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
           <button onClick={onOpenOutcomes}><b>{run?.strategies.length || 0}</b><small>plan options</small></button>
         </div>
 
+        <div className="map-navigation">
+          <button className="world-chip" aria-pressed={moveMode} onClick={() => { finishDrag(); setMoveMode(value => !value) }}><Hand size={18}/>{moveMode ? 'Done moving · scroll page' : 'Move farm'}</button>
+          <p id="map-instructions">{moveMode ? 'Drag anywhere on the farm. Tap a bed to inspect. Choose Done moving to scroll the page.' : 'Swipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.'}</p>
+        </div>
         <div
           ref={viewportRef}
-          className="farm-world-viewport"
+          className={`farm-world-viewport ${moveMode ? 'is-move-mode' : ''} ${dragging ? 'is-dragging' : ''}`}
+          tabIndex={0} role="group" aria-label="Farm map" aria-describedby="map-instructions"
+          onKeyDown={event => {
+            if (event.target !== event.currentTarget) return
+            const directions: Record<string, [number, number]> = { ArrowLeft: [90, 0], ArrowRight: [-90, 0], ArrowUp: [0, 90], ArrowDown: [0, -90] }
+            if (directions[event.key]) { event.preventDefault(); nudge(...directions[event.key]) }
+            if (event.key === 'Home') { event.preventDefault(); recenter() }
+            if (event.key === 'Escape') { finishDrag(); setMoveMode(false) }
+          }}
+          onClickCapture={event => { if (suppressClick.current && event.detail > 0) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false } }}
           onPointerDown={event => {
-            if ((event.target as HTMLElement).closest('button')) return
-            pointer.current = { id: event.pointerId, x: event.clientX, y: event.clientY, originX: pan.x, originY: pan.y }
-            event.currentTarget.setPointerCapture(event.pointerId)
+            if (!event.isPrimary || event.button !== 0) return
+            suppressClick.current = false
+            if ((event.target as Element).closest('.world-controls')) return
+            if (event.pointerType !== 'mouse' && !moveMode) return
+            pointer.current = { id: event.pointerId, x: event.clientX, y: event.clientY, originX: pan.x, originY: pan.y, moved: false }
           }}
           onPointerMove={event => {
-            if (!pointer.current || pointer.current.id !== event.pointerId) return
-            setPan({ x: pointer.current.originX + event.clientX - pointer.current.x, y: pointer.current.originY + event.clientY - pointer.current.y })
+            const gesture = pointer.current
+            if (!gesture || gesture.id !== event.pointerId) return
+            const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y
+            if (!gesture.moved && Math.hypot(dx, dy) < 8) return
+            if (!gesture.moved) { gesture.moved = true; setDragging(true); event.currentTarget.setPointerCapture(event.pointerId) }
+            suppressClick.current = true
+            setPan(boundedPan(gesture.originX + dx, gesture.originY + dy))
           }}
-          onPointerUp={event => { if (pointer.current?.id === event.pointerId) pointer.current = null }}
+          onPointerUp={event => { if (pointer.current?.id === event.pointerId) { finishDrag(); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId) } }}
+          onPointerCancel={finishDrag}
+          onDragStart={event => event.preventDefault()}
+          onLostPointerCapture={finishDrag}
         >
           <div className="farm-world-canvas" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}>
             <FarmLandscape />
@@ -149,16 +178,21 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
           </div>
 
           <div className="world-controls" aria-label="Map controls">
+            <button onClick={() => nudge(90, 0)} aria-label="View farm left"><ArrowLeft size={18}/></button>
+            <button onClick={() => nudge(-90, 0)} aria-label="View farm right"><ArrowRight size={18}/></button>
+            <button onClick={() => nudge(0, 90)} aria-label="View farm up"><ArrowUp size={18}/></button>
+            <button onClick={() => nudge(0, -90)} aria-label="View farm down"><ArrowDown size={18}/></button>
             <button onClick={() => setZoom(value => clamp(value + .15, .7, 1.55))} aria-label="Zoom in"><Plus size={18}/></button>
             <button onClick={() => setZoom(value => clamp(value - .15, .7, 1.55))} aria-label="Zoom out"><Minus size={18}/></button>
             <button onClick={recenter} aria-label="Recenter farm"><Crosshair size={18}/></button>
+            {moveMode&&<button onClick={()=>{finishDrag();setMoveMode(false)}} aria-label="Exit map movement">Done</button>}
           </div>
-          <p className="world-pan-hint"><SlidersHorizontal size={14}/> Drag to pan · scroll or use controls to zoom</p>
+          <p className="world-pan-hint"><SlidersHorizontal size={14}/> Tap to inspect · arrows to explore</p>
         </div>
 
         <div className="date-preview">
           <div><CalendarDays size={18}/><span><small>Plan preview</small><strong>{formatPreviewDate(previewDate)}</strong></span></div>
-          <input aria-label="Preview simulation date" type="range" min="0" max={farm.horizon_days} value={previewDay} onChange={event => setPreviewDay(Number(event.target.value))}/>
+          <div className="preview-day-controls"><button aria-label="Previous preview day" disabled={previewDay===0} onClick={()=>setPreviewDay(day=>Math.max(0,day-1))}><Minus size={17}/></button><input aria-label="Preview simulation date" type="range" min="0" max={farm.horizon_days} value={previewDay} onChange={event => setPreviewDay(Number(event.target.value))}/><button aria-label="Next preview day" disabled={previewDay===farm.horizon_days} onClick={()=>setPreviewDay(day=>Math.min(farm.horizon_days,day+1))}><Plus size={17}/></button></div>
           <button onClick={() => setPreviewDay(0)} disabled={previewDay === 0}><RotateCcw size={15}/> Today</button>
           <p>Preview only — this does not advance time or create observations.</p>
         </div>

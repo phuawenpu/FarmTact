@@ -1,0 +1,171 @@
+{
+  "id": "review10",
+  "persona": "Skeptical produce buyer and commercial manager evaluating whether delivery promises and financial value are supportable",
+  "reviewer_type": "end_user",
+  "disclosure": "AI end-user persona review using a prepared returning-demo session supplied by reviewer04. I loaded one stored replay, made no advisor call, created no scenario, and did not change the farm's main records. Browser emulation is not a physical-device test.",
+  "reviewed_at": "2026-09-09T06:35:00Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "/assets/index-ByLNQWi-.js",
+    "javascript_sha256": "7f79112a25d13bff0aa344569ffbc87fa403c0410bb43cce48c43255acf5f0f9",
+    "css_asset": "/assets/index-C1IwVELs.css",
+    "css_sha256": "507d5a2d41ec3bd3a6e07ae48b13d4146b76d67128bdff076b4161548a7ce849"
+  },
+  "rubric_status": "read",
+  "rubric_source": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf, page 13, git blob b5a05dc8e0b849d9f8b1566cbd865151984a1730",
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 3,
+      "rationale": "The 32-commitment, 56-day planning purpose and resource limits are clear, and the replay quantifies fill, shortfall and margin. It does not expose buyer-level promises or enough financial inputs to support a commercial commitment.",
+      "evidence_ids": ["e-mobile-plan", "e-mobile-outcomes"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": null,
+      "rationale": "Not tested from this end-user browser journey.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 3,
+      "rationale": "The stored plan joins strategy metrics, farm resources, harvest allocations and weekly demand. The visible presentation does not connect each commitment to an allocation or price assumption.",
+      "evidence_ids": ["e-mobile-timeline", "e-desktop-outcomes"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 2,
+      "rationale": "Automatic simulation acceptance is clearly labelled, but Balanced remains accepted while the visible critic calls out a possible inventory artefact and substantial shortfalls remain. No commercial escalation gate is visible.",
+      "evidence_ids": ["e-mobile-plan", "e-browser-replay"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 4,
+      "rationale": "Synthetic data, replay mode, preview-only time movement and simulation-only acceptance are conspicuous on both devices. Broader security controls were not tested.",
+      "evidence_ids": ["e-mobile-farm", "e-mobile-plan", "e-desktop-outcomes"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 3,
+      "rationale": "The UI preserves a stored replay, weekly shortages, strategy comparisons and validated council findings, including a candid critic warning. It lacks a visible reconciliation of that warning before acceptance.",
+      "evidence_ids": ["e-mobile-plan", "e-mobile-outcomes"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": null,
+      "rationale": "Not tested from this end-user browser journey.",
+      "evidence_ids": []
+    }
+  ],
+  "usability_score": 6,
+  "summary": "The replay quickly shows that the current plan cannot support all promises: Balanced fills 54% and leaves 505.01 kg short. Harvest dates and weekly gaps are readable, but a buyer cannot trace those figures to named commitments, SKUs, contractual dates or unit prices. The displayed margin is therefore directional rather than approval-ready, and automatic acceptance is hard to trust while an inventory artefact remains visibly unresolved.",
+  "strengths": [
+    "Replay, synthetic data and simulation acceptance are labelled prominently and consistently.",
+    "Strategy cards put fill, margin and waste side by side, making the broad trade-off legible.",
+    "The harvest timeline gives crop, bed, sow date, harvest date and expected kilograms in a touch-friendly sheet.",
+    "The weekly outcome chart makes periods with severe shortfall visually obvious."
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Delivery promises cannot be traced to commitments",
+      "observation": "The mission says there are 32 buyer commitments, but Outcomes aggregates demand by week and the timeline lists harvest batches without buyer, SKU, promised quantity or due-date matching.",
+      "impact": "A commercial manager cannot identify which customers are exposed or decide which promises need renegotiation.",
+      "recommendation": "Add a commitment coverage table linking every buyer/SKU/date/quantity to allocated harvest, confidence and residual shortfall, with filters for exposed deliveries.",
+      "evidence_ids": ["e-mobile-timeline", "e-desktop-outcomes"]
+    },
+    {
+      "severity": "high",
+      "title": "Accepted plan retains an unresolved numerical warning",
+      "observation": "Balanced is automatically accepted for simulation while the visible crop-scientist finding says identical opening and closing inventory across materially different strategies may be a simulation artefact.",
+      "impact": "The accepted fill, shortfall and margin figures may rest on a mass-balance issue that the decision banner does not resolve.",
+      "recommendation": "Block acceptance or mark it provisional when a validated critic flags a possible numerical artefact; show the reconciliation or failed invariant beside the acceptance rationale.",
+      "evidence_ids": ["e-mobile-plan", "e-browser-replay"]
+    },
+    {
+      "severity": "medium",
+      "title": "Margin lacks auditable commercial inputs",
+      "observation": "The UI shows strategy margin and total plan cash use, but no selling price by crop, expected revenue, variable-cost breakdown, buyer terms or margin formula.",
+      "impact": "The apparent $2,957 value cannot be checked or compared with actual contract economics.",
+      "recommendation": "Expose a compact financial bridge from quantities and unit prices through revenue, input and labour costs to margin, with source and effective date for each assumption.",
+      "evidence_ids": ["e-mobile-plan", "e-mobile-outcomes"]
+    },
+    {
+      "severity": "medium",
+      "title": "Automatic choice is not commercially reconciled",
+      "observation": "Balanced is selected at 54% fill and $2,957 margin, while Resilient displays 62% fill and $3,193 margin; the visible rationale mentions balance and greater waste but no explicit objective weights or service-level threshold.",
+      "impact": "A buyer cannot tell why the selected plan is preferable when the alternative appears stronger on both service and displayed margin.",
+      "recommendation": "Show the selection rule, thresholds and weighted score, and call out which commercial constraint caused Balanced to win.",
+      "evidence_ids": ["e-mobile-plan"]
+    },
+    {
+      "severity": "low",
+      "title": "Mobile timeline requires long scrolling",
+      "observation": "The 430px sheet presents allocations as large cards, so later harvests require substantial vertical scrolling despite an accessible-table toggle.",
+      "impact": "Comparing dates and quantities across the full horizon is slow on a phone.",
+      "recommendation": "Add crop/date filters and a compact grouped weekly view that keeps totals and shortages visible.",
+      "evidence_ids": ["e-mobile-timeline"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "commercial-support-mobile",
+      "device": "touch-emulated mobile Chromium",
+      "viewport": "430x932",
+      "steps": [
+        "Opened the prepared returning-demo farm and confirmed synthetic simulation labels.",
+        "Opened Farm tools; the initial session had zero plan options and no allocations.",
+        "Loaded the single stored recorded demo through the normal Replay control.",
+        "Compared Lean, Balanced and Resilient fill, margin and waste; inspected resources and critic findings.",
+        "Opened Harvest timeline and Outcomes to compare expected batches against weekly demand and shortfall."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "Balanced reports 814 kg expected harvest, 54% demand filled, $2,957 margin and 505.01 kg shortfall.",
+        "Weekly outcomes show 136 kg shortages in W1, W3 and W4, followed by 66 kg and 31 kg shortages.",
+        "Harvest allocations include dates and kilograms, but are not mapped to individual commitments.",
+        "No new scenario or advisor message was created."
+      ]
+    },
+    {
+      "id": "commercial-support-desktop",
+      "device": "desktop Chromium",
+      "viewport": "1280x900",
+      "steps": [
+        "Reused the same browser session after the recorded replay loaded.",
+        "Reviewed the full weekly demand-versus-harvest chart in Outcomes.",
+        "Returned to the farm and opened the desktop Harvest timeline."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The desktop chart makes uncovered weeks easy to scan across the full horizon.",
+        "The timeline fits more allocation detail, but still does not identify covered buyers or contractual deliveries."
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "e-mobile-farm", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/01-mobile-farm.png", "description": "430px touch-emulated synthetic farm before loading the stored plan." },
+    { "id": "e-mobile-plan", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/02-mobile-plan.png", "description": "Mobile stored-replay and automatic simulation acceptance labels." },
+    { "id": "e-mobile-timeline", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/03-mobile-timeline.png", "description": "Mobile harvest allocations with dates and expected kilograms." },
+    { "id": "e-mobile-outcomes", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/04-mobile-outcomes.png", "description": "Mobile commercial outcomes and weekly shortfall chart." },
+    { "id": "e-desktop-outcomes", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/05-desktop-outcomes.png", "description": "Desktop full-horizon demand and harvest view." },
+    { "id": "e-desktop-farm", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/06-desktop-farm.png", "description": "Desktop farm state after recorded replay." },
+    { "id": "e-desktop-timeline", "type": "screenshot", "path": "apps/web/screenshots/panel/review10/07-desktop-timeline.png", "description": "Desktop harvest timeline with allocations." },
+    { "id": "e-browser-replay", "type": "browser_check", "path": "tests/browser/panel/review10.mjs", "description": "Live browser assertions for 430px touch, stored replay, commercial metrics, timeline and 1280px desktop." }
+  ],
+  "limitations": [
+    "This was an AI persona assessment using Chromium emulation, not a human buyer study or physical-device test.",
+    "The prepared returning-demo session initially had no plan; I loaded one curated stored replay with no current-time inference.",
+    "I did not create a numerical scenario, send an advisor message, test actual farm operations or inspect hidden implementation details.",
+    "Architecture, platform internals and broad security controls remain untested."
+  ],
+  "priority_improvements": [
+    "Add commitment-level coverage and exposure tracing.",
+    "Resolve or gate acceptance on the visible inventory artefact warning.",
+    "Expose auditable price, revenue and cost assumptions behind margin.",
+    "Explain the automatic strategy selection rule and service-level threshold."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review10.mjs"
+  ]
+}

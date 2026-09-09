@@ -1,0 +1,116 @@
+{
+  "reviewed_at": "2026-09-09T06:10:44.656Z",
+  "baseURL": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "mobile touch context is active",
+      "pass": true,
+      "detail": {
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    {
+      "name": "farm is clearly labelled synthetic simulation",
+      "pass": true
+    },
+    {
+      "name": "mobile room navigation exposes six destinations",
+      "pass": true
+    },
+    {
+      "name": "mobile page has no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "innerWidth": 390
+      }
+    },
+    {
+      "name": "one numerical scenario reached comparison",
+      "pass": true
+    },
+    {
+      "name": "branch remains explicitly simulation only or infeasible",
+      "pass": true
+    },
+    {
+      "name": "result identifies frozen snapshot and baseline",
+      "pass": true
+    },
+    {
+      "name": "advisor produced one visible grounded response",
+      "pass": true,
+      "detail": "replies to Farmer: “For this 35% caixin demand increase, what should…”\nAsha\nUnsupported\nanswer\n\nA qualitative finding is that raised caixin demand without extra harvest volume will deepen shortfall and leave available capacity unused. A concise next step is to test whether slightly delaying or adjusting the selected batch improves the balance, then review the simulated constraints before committing.\n\nFacts from this frozen snapshot\nLean · Experiment · Unfilled demand\n651.42 kg\nDemand assumption\n135%\ndemand crop id\ncaixin\n\nFarm and experiment figures are synthetic. Public-source values retain their source context.\n\nP01 · Light-Time-Biomass Response Model for Predicting the Growth of Choy Sum (Brassica rapa var. parachinensis) in Soil-Based LED-Constructed Indoor Plant Factory for Efficient Seedling Production\nShow referenced plots\nUnsupported suggestion · blocked\nDemand Percent = 100%\n\nUnsupported advice cannot authorize a change.\n\nReply to this point"
+    },
+    {
+      "name": "desktop side rail exposes six destinations",
+      "pass": true
+    },
+    {
+      "name": "desktop page has no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "exactly one numerical run was sent",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "exactly one advisor message was sent",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "observations": {
+    "assets": [
+      "/assets/index-BOC7Xm0h.js",
+      "/assets/index-DeG2i5lx.css"
+    ],
+    "mobile_title": "Little Plot Collective",
+    "mobile_resource_text": "8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n0\nPLAN OPTIONS",
+    "mobile_nav_labels": [
+      "Farm",
+      "Tools",
+      "Crops",
+      "Data",
+      "Outcomes",
+      "Setup"
+    ],
+    "scenario_inputs": {
+      "challenge": "busy_market",
+      "demand_percent": "135",
+      "batch": "batch-01",
+      "crop": "caixin"
+    },
+    "balanced_comparison": "Balanced policy · baseline, branch outcome and computed change\nOUTCOME\tBASELINE\tBUSY MARKET · 09/09/2026\noutcome · Δ\n\nDEMAND FILLED\t53.58%\t54.49%\nΔ +0.91 percentage points\n\nCONTRIBUTION MARGIN\t$2,957\t$3,210\nΔ +$252\n\nWASTE\t181.99 kg\t115.73 kg\nΔ -66.26 kg\n\nUNFILLED DEMAND\t505.01 kg\t534.72 kg\nΔ +29.71 kg\n\nLABOUR NEEDED\t71.38 hr\t69.98 hr\nΔ -1.4 hr\n\nTOTAL COST\t$1,541\t$1,495\nΔ $-46",
+    "debrief": "Computed debrief · Balanced\nDemand filled rises by 0.91 percentage points; contribution margin rises by $252; labour needed falls by 1.4 hr; total cost falls by $46. These changes compare the same policy with the frozen baseline.",
+    "scenario_status": "FEASIBLE BRANCH · SIMULATION ONLY\n\nBusy market · 09/09/2026\n\n0d delay · 100% yield · 135% demand · 100% labour · 100% cash\n\nComputed debrief · Balanced\nDemand filled rises by 0.91 percentage points; contribution margin rises by $252; labour needed falls by 1.4 hr; total cost falls by $46. These changes compare the same policy with the frozen baseline.\n\nSnapshot e92ae9022b · baseline 0028677954\n15 affected beds · 32 delivery dates to inspect\nDeliveries to inspect\n No Balanced constraint issues\nMark trade-offs inspected\nAsk an advisor about this branch",
+    "advisor_reply": "replies to Farmer: “For this 35% caixin demand increase, what should…”\nAsha\nUnsupported\nanswer\n\nA qualitative finding is that raised caixin demand without extra harvest volume will deepen shortfall and leave available capacity unused. A concise next step is to test whether slightly delaying or adjusting the selected batch improves the balance, then review the simulated constraints before committing.\n\nFacts from this frozen snapshot\nLean · Experiment · Unfilled demand\n651.42 kg\nDemand assumption\n135%\ndemand crop id\ncaixin\n\nFarm and experiment figures are synthetic. Public-source values retain their source context.\n\nP01 · Light-Time-Biomass Response Model for Predicting the Growth of Choy Sum (Brassica rapa var. parachinensis) in Soil-Based LED-Constructed Indoor Plant Factory for Efficient Seedling Production\nShow referenced plots\nUnsupported suggestion · blocked\nDemand Percent = 100%\n\nUnsupported advice cannot authorize a change.\n\nReply to this point",
+    "desktop_tools_heading": "Turn today’s beds into the next good harvest."
+  },
+  "screenshots": [
+    "apps/web/screenshots/panel/review01/baseline-farm-mobile-390.png",
+    "apps/web/screenshots/panel/review01/busy-market-assumptions-mobile-390.png",
+    "apps/web/screenshots/panel/review01/busy-market-result-mobile-390.png",
+    "apps/web/screenshots/panel/review01/advisor-response-mobile-390.png",
+    "apps/web/screenshots/panel/review01/baseline-farm-desktop-1280.png",
+    "apps/web/screenshots/panel/review01/planning-tools-desktop-1280.png"
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "numerical_runs": 1,
+  "advisor_messages": 1,
+  "status": "PASS"
+}

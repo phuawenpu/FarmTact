@@ -1,0 +1,167 @@
+{
+  "id": "review01",
+  "persona": "Singapore SME vegetable farm owner",
+  "reviewer_type": "end_user",
+  "disclosure": "Independent AI persona review based on Chromium play, not a real farmer, official judge, or human user study.",
+  "reviewed_at": "2026-09-09T06:10:44.656Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "index-BOC7Xm0h.js",
+    "css_asset": "index-DeG2i5lx.css",
+    "stage": "baseline before final mobile-navigation retest"
+  },
+  "rubric_status": "read",
+  "rubric_source": {
+    "document": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf",
+    "page": 13,
+    "git_blob": "b5a05dc8e0b849d9f8b1566cbd865151984a1730"
+  },
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "The farm board, buyer-commitment mission, synthetic labels, and scenario workflow make the planning purpose and operating boundary clear.",
+      "evidence_ids": ["e01", "e03", "e05"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": null,
+      "rationale": "Not assessable from this end-user browser journey.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": null,
+      "rationale": "The UI exposed numerical and advisor outputs, but this end-user review did not inspect implementation or schemas.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 4,
+      "rationale": "The app calculated a branch autonomously while keeping it visibly simulation-only and left trade-off inspection and further changes to the user.",
+      "evidence_ids": ["e03", "e07"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 4,
+      "rationale": "Synthetic status is prominent and the unsupported advisor suggestion was visibly blocked from authorizing a change.",
+      "evidence_ids": ["e01", "e04", "e07"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": null,
+      "rationale": "Internal logging, tracing, and evaluation coverage were outside this end-user play session.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": null,
+      "rationale": "Platform implementation was not observable from the user interface.",
+      "evidence_ids": []
+    }
+  ],
+  "usability_score": 7,
+  "summary": "FarmTact makes a synthetic farm decision approachable and keeps simulated changes separate from the farm. The busy-market comparison surfaced useful margin, waste, shortfall, labour, and cost effects, but the mobile map and wide comparison demand more scanning than I would want during a working day. The advisor guardrail worked, although the response did not answer the requested weekly preparation and stop-limit question.",
+  "strengths": [
+    "The home view gives immediate operational context: 8 active beds, 32 labour hours per week, S$2,200 cash, and plan count.",
+    "The scenario preserves a frozen baseline and shows six exact Balanced-policy deltas instead of presenting a vague recommendation.",
+    "Simulation-only and synthetic labels are visible at the points where a farm owner could otherwise mistake output for an operating instruction.",
+    "The same session worked at touch-emulated 390px and desktop 1280px without document-level horizontal overflow or browser exceptions.",
+    "Unsupported advisor advice is visibly blocked from authorizing a change."
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Advisor does not answer the requested stop limit",
+      "observation": "I asked what to prepare this week and which limit should make me stop. Asha returned a general suggestion to test a delay, cited Lean unfilled demand, marked the answer unsupported, and blocked its proposed demand reset. No concrete weekly checklist or stop threshold was provided.",
+      "impact": "A time-poor owner still has to translate the response into an operating decision, and the policy mismatch between the selected Balanced result and cited Lean fact adds doubt.",
+      "recommendation": "Answer in the selected policy context with a short prepare/check/stop structure. If evidence cannot support a stop threshold, state that directly and point to the exact constraint or delivery dates the owner should inspect.",
+      "evidence_ids": ["e04", "e07"]
+    },
+    {
+      "severity": "medium",
+      "title": "Busy-market result needs a clearer business interpretation",
+      "observation": "At 135% caixin demand, Balanced demand filled rose 0.91 percentage points and margin rose S$252, while unfilled demand also rose 29.71 kg. The debrief highlighted the percentage and margin gains but omitted the larger absolute shortage.",
+      "impact": "An owner could read the positive headline as permission to accept more demand even though more kilograms remain unfilled.",
+      "recommendation": "Lead with the decision tension: extra margin versus 29.71 kg more unmet demand. Show fulfilled kilograms and identify which deliveries or customers carry the additional shortfall before suggesting acceptance.",
+      "evidence_ids": ["e03", "e07"]
+    },
+    {
+      "severity": "medium",
+      "title": "Mobile comparison hides part of the branch column",
+      "observation": "At 390px the baseline column is readable, but the branch heading and right side of delta text are clipped at the viewport edge in the captured result. The screen gives no strong visual cue that the table can be moved sideways.",
+      "impact": "The most important changed values take extra effort to discover and compare on a phone.",
+      "recommendation": "Use stacked before/after metric cards on narrow screens, or keep the changed column fully visible and add an explicit horizontal-scroll cue.",
+      "evidence_ids": ["e03"]
+    },
+    {
+      "severity": "low",
+      "title": "Mobile farm map is visually crowded",
+      "observation": "The 390px farm view shows clipped crop and facility labels, overlapping map objects, and the fixed bottom navigation over the lower scene. Core navigation remains usable, but reading individual plots is slower than on desktop.",
+      "impact": "A farm owner must pan or use the accessible list to confirm plot identity, reducing the map's at-a-glance value.",
+      "recommendation": "Reduce nonselected labels at the default mobile zoom, keep the selected bed and alerts prominent, and make the accessible list shortcut easier to reach above the fixed navigation.",
+      "evidence_ids": ["e01", "e05"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "j01",
+      "device": "Chromium touch-emulated mobile",
+      "viewport": "390x844",
+      "steps": [
+        "Opened the live farm and reviewed the farm resources and simulation status.",
+        "Opened Scenario lab and selected Busy market.",
+        "Raised caixin demand to 135% for batch-01 and ran one numerical experiment.",
+        "Reviewed the Balanced baseline-versus-branch table and simulation-only branch card.",
+        "Asked Asha one explicit question about weekly preparation and a stop limit."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The numerical branch completed and showed exact deltas against a frozen baseline.",
+        "The mobile comparison required horizontal interpretation because the changed column was clipped.",
+        "The advisor reply was visibly unsupported and safely blocked, but did not resolve the operational question."
+      ]
+    },
+    {
+      "id": "j02",
+      "device": "Chromium desktop",
+      "viewport": "1280x900",
+      "steps": [
+        "Reopened the same session at desktop size.",
+        "Reviewed the whole farm map, advisors, beds, and resource HUD.",
+        "Opened Farm tools and reviewed the planning mission and crop board."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "The full farm geography and advisor locations were substantially easier to scan than on mobile.",
+        "The planning mission clearly framed 32 buyer commitments within space, labour, and cash limits.",
+        "No document-level horizontal overflow or page exceptions were observed."
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "e01", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/baseline-farm-mobile-390.png", "description": "390px touch-emulated baseline farm, resource HUD, synthetic label, map, and fixed navigation." },
+    { "id": "e02", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/busy-market-assumptions-mobile-390.png", "description": "Busy-market assumptions with caixin demand set to 135%." },
+    { "id": "e03", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/busy-market-result-mobile-390.png", "description": "Balanced baseline-versus-branch metrics and simulation-only result at 390px." },
+    { "id": "e04", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/advisor-response-mobile-390.png", "description": "Asha response with frozen facts, unsupported status, and blocked suggested change." },
+    { "id": "e05", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/baseline-farm-desktop-1280.png", "description": "1280px desktop farm map with complete layout and resource HUD." },
+    { "id": "e06", "type": "screenshot", "path": "apps/web/screenshots/panel/review01/planning-tools-desktop-1280.png", "description": "Desktop planning mission and crop board." },
+    { "id": "e07", "type": "browser_check", "path": "apps/web/screenshots/panel/review01/browser-observations.json", "description": "Public-safe interaction log with build assets, numerical deltas, advisor outcome, request counters, and browser checks." }
+  ],
+  "limitations": [
+    "Chromium touch emulation is not physical-device evidence.",
+    "This baseline review used one tenant/session, one numerical run, and one explicit advisor message; no council was convened.",
+    "The review did not test imports, crop details, data explorer, replay, disruption replan, persistence across deployment, or actual farm operations.",
+    "Technical architecture, internal security, observability, and platform implementation were not inferred from the interface.",
+    "The root was actively improving mobile navigation; these findings remain baseline observations until a new build is retested."
+  ],
+  "priority_improvements": [
+    "Make advisor answers follow the user's requested prepare/check/stop structure and remain in the selected policy context.",
+    "Present both positive headline metrics and worsening absolute shortfall in the scenario debrief.",
+    "Replace the wide mobile comparison table with a fully visible narrow-screen comparison.",
+    "Simplify default mobile map labels and preserve clear space above the fixed navigation."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review01.mjs"
+  ]
+}

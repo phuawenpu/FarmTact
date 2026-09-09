@@ -187,7 +187,7 @@ class AbuseMiddleware:
         request = Request(scope)
         path = request.url.path
         # Fixed read-only health and static artwork need neither DB admission nor sessions.
-        if request.method in {"GET", "HEAD"} and (path == "/api/v1/health" or path.startswith(("/assets/", "/art/"))):
+        if request.method in {"GET", "HEAD"} and (path == "/api/v1/health" or path.startswith(("/assets/", "/art/", "/review-evidence/"))):
             return await self.app(scope, receive, send)
         limits = scope["app"].state.abuse_limits
         headers = {"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"}

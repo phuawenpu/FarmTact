@@ -1,0 +1,165 @@
+{
+  "id": "review03",
+  "persona": "Production planner balancing deliveries, labour and cash",
+  "reviewer_type": "end_user",
+  "disclosure": "Unofficial independent AI end-user assessment based on Chromium touch emulation and desktop browser play. This is not an official hackathon grade, a physical-device test, or a human user study.",
+  "reviewed_at": "2026-09-09T06:16:46Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "/assets/index-BOC7Xm0h.js",
+    "css_asset": "/assets/index-DeG2i5lx.css"
+  },
+  "rubric_status": "read",
+  "rubric_source": {
+    "document": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf",
+    "page": 13,
+    "git_blob": "b5a05dc8e0b849d9f8b1566cbd865151984a1730"
+  },
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "The planning mission names buyer commitments, a 56-day horizon, and space, labour and cash limits; synthetic and simulation modes remain conspicuous.",
+      "evidence_ids": ["e01", "e02"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": null,
+      "rationale": "Not scored from end-user browser play; the internal planning loop and memory architecture were not inspected.",
+      "evidence_ids": []
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 3,
+      "rationale": "The normal UI created one frozen-input numerical branch and returned policy-specific computed deltas, but this review did not inspect tool schemas or external integrations.",
+      "evidence_ids": ["e03", "e04"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 3,
+      "rationale": "The interface cleanly separates numerical experiments from inference and describes branches as non-mutating, but operational escalation behavior was not exercised.",
+      "evidence_ids": ["e03", "e06"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": null,
+      "rationale": "Synthetic and simulation labels were visible, but browser play cannot support a broader security score and cross-tenant authorization was not tested.",
+      "evidence_ids": ["e01", "e02"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 3,
+      "rationale": "The result includes baseline/branch deltas and short snapshot identifiers, while delivery and bed evidence remained below the visible decision area in this journey.",
+      "evidence_ids": ["e04", "e05"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": null,
+      "rationale": "Not scored from end-user browser play; framework and orchestration implementation were not inspected.",
+      "evidence_ids": []
+    }
+  ],
+  "usability_score": 7,
+  "summary": "FarmTact gives a production planner a legible, tactile way to alter a labour assumption and compare numerical policy outcomes. The branch made the cost of a short-handed week concrete, especially under Resilient policy. Decision follow-through is weaker: affected deliveries and beds are summarized rather than brought into the visible comparison, and this pass did not prove that a saved branch can be reopened after reload. The main farm still showed zero plan options before and after the experiment, consistent with branch isolation, but no accepted main plan existed in this fresh session.",
+  "strengths": [
+    "The mobile farm map presents active beds, weekly labour, available cash and plan count together before the planner opens a tool.",
+    "Assumption controls are large, labelled and keyboard-operable; changing labour from 70% to 60% was straightforward at 430px.",
+    "Lean, Balanced and Resilient use the same six outcome rows, making policy consequences directly comparable.",
+    "Synthetic, numerical, no-inference and simulation-only labels reduce the chance of treating the exercise as live farm execution."
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Shortage evidence is separated from the policy decision",
+      "observation": "The computed debrief reports 15 affected beds and 12 delivery dates, but the visible comparison shows only aggregate outcome rows and a summary count.",
+      "impact": "A production planner cannot quickly identify which buyer delivery or crop batch drives the 507.01 kg shortfall before choosing a policy.",
+      "recommendation": "Place the top affected deliveries and contributing batches directly below the policy deltas, with due date, crop, required kg, available kg and evidence source; keep the full list expandable.",
+      "evidence_ids": ["e04", "e05"]
+    },
+    {
+      "severity": "medium",
+      "title": "The short-handed result lacks an explicit labour feasibility threshold",
+      "observation": "At 60% available labour, Balanced needs 70.82 hours and remains labelled feasible, but the comparison does not show the branch's available-hours denominator beside labour needed.",
+      "impact": "The planner must infer why the branch is feasible and cannot see remaining labour headroom for packing or disruptions.",
+      "recommendation": "Show needed versus available labour for the same 56-day horizon, plus headroom and the binding interval, in every policy table.",
+      "evidence_ids": ["e03", "e04"]
+    },
+    {
+      "severity": "medium",
+      "title": "Saved-scenario retrieval was not demonstrated after reload",
+      "observation": "After switching to desktop and reloading, Scenario Lab reopened on Open sandbox; the initial review harness did not navigate to and verify the prior branch card.",
+      "impact": "A planner cannot rely on this evidence to confirm that a scenario can be resumed later or shared across a planning shift.",
+      "recommendation": "Open Scenario Lab on the most recent saved branch or show a prominent Recent scenarios list with date, changed assumptions and policy outcome.",
+      "evidence_ids": ["e06"]
+    },
+    {
+      "severity": "low",
+      "title": "Mobile result tables require substantial vertical scanning",
+      "observation": "At 430px, only part of the six-row Resilient comparison fits in the viewport and the debrief is below it.",
+      "impact": "Cross-policy comparison becomes memory-heavy on a phone, particularly while coordinating labour and deliveries.",
+      "recommendation": "Add a compact sticky summary for fill rate, shortfall, labour headroom and margin while the detailed table scrolls.",
+      "evidence_ids": ["e04"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "j01-mobile-short-handed",
+      "device": "Chromium touch emulation",
+      "viewport": "430x932",
+      "steps": [
+        "Opened the live farm map and reviewed active beds, labour, cash and plan count.",
+        "Opened Farm tools and reviewed the 56-day planning mission and synthetic growing board.",
+        "Opened Scenario Lab, selected Short-handed week and changed available labour from 70% to 60%.",
+        "Ran the single permitted numerical experiment and compared Lean, Balanced and Resilient outcomes."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The branch completed as feasible and simulation-only without an advisor call.",
+        "Resilient demand filled fell from 62.13% to 53.4%, unfilled demand rose from 412.01 kg to 507.01 kg, and margin fell by $263.",
+        "The screen named affected-bed and delivery counts but did not expose their detailed evidence in the captured decision area."
+      ]
+    },
+    {
+      "id": "j02-desktop-isolation",
+      "device": "Chromium desktop",
+      "viewport": "1280x900",
+      "steps": [
+        "Changed the same browser context to desktop size and reloaded the live farm.",
+        "Confirmed the main farm still showed zero plan options after the branch.",
+        "Reopened Scenario Lab and observed its explicit statement that experiments leave the main farm and latest run unchanged."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The before/after plan count was consistent with main-farm isolation.",
+        "No accepted main plan existed, so isolation of a real accepted worklist was not testable.",
+        "The initial persistence assertion was invalid because Short-handed week also appears as a challenge option; saved-branch reopening remains unproven in this baseline report."
+      ]
+    }
+  ],
+  "evidence": [
+    {"id": "e01", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/mobile-430-board.png", "description": "430px farm map with synthetic label, eight active beds, 32 labour hours per week, $2,200 cash and zero plan options."},
+    {"id": "e02", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/mobile-430-tools.png", "description": "430px planning mission and growing board with 56-day horizon and simulation labels."},
+    {"id": "e03", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/mobile-430-assumption.png", "description": "Short-handed week assumption sheet with available labour set to 60% and numerical/no-inference label."},
+    {"id": "e04", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/mobile-430-scenario-result.png", "description": "Resilient policy baseline-versus-branch table in the completed mobile scenario."},
+    {"id": "e05", "type": "browser_check", "path": "tests/browser/panel/review03.mjs", "description": "Live UI check recorded three visible policy tables and exact computed deltas; no advisor message was sent."},
+    {"id": "e06", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/desktop-1280-saved-scenario.png", "description": "Desktop Scenario Lab after reload, reopened on Open sandbox with explicit frozen-branch isolation copy."},
+    {"id": "e07", "type": "screenshot", "path": "apps/web/screenshots/panel/review03/desktop-1280-board.png", "description": "Desktop farm map after the numerical branch, still showing zero main-farm plan options."}
+  ],
+  "limitations": [
+    "Chromium touch emulation is not physical-device evidence.",
+    "Exactly one numerical scenario was run; no advisor message or DeepSeek inference was requested.",
+    "The fresh session had no accepted main plan, so accepted-worklist isolation could not be exercised.",
+    "Cross-tenant authorization, uploads, external source retrieval, operational approval and adverse network states were untested.",
+    "Saved-branch persistence was not established by the baseline run because the first reload assertion matched a challenge option rather than a saved branch.",
+    "A first pre-scenario browser attempt timed out while expecting Farm tools to open a dialog; no numerical action occurred in that failed attempt."
+  ],
+  "priority_improvements": [
+    "Join shortage totals to the affected delivery and batch evidence in the same comparison view.",
+    "Show labour needed, available labour and headroom on one horizon-consistent row.",
+    "Make recent saved scenarios obvious and resumable after reload.",
+    "Keep a compact policy summary visible while mobile users inspect detailed rows."
+  ],
+  "test_commands": [
+    "FARMTACT_BASE_URL=https://farmtact.fly.dev node tests/browser/panel/review03.mjs"
+  ]
+}

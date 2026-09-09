@@ -336,10 +336,15 @@ def create_app(store=None,start_worker=True):
     install_routes(app,tenant)
     from services.api.conversations import install_routes as install_conversations
     install_conversations(app,tenant)
+    from services.api.reviews import install_routes as install_reviews
+    install_reviews(app)
     dist=ROOT/'apps/web/dist'
     if dist.exists():
         app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
         if (dist/'art').exists():app.mount('/art',StaticFiles(directory=dist/'art'),name='art')
+        if (dist/'review-evidence').exists():app.mount('/review-evidence',StaticFiles(directory=dist/'review-evidence'),name='review-evidence')
+        @app.get('/review')
+        @app.get('/review/')
         @app.get('/')
         def index():return FileResponse(dist/'index.html')
     return app

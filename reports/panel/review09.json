@@ -1,0 +1,179 @@
+{
+  "id": "review09",
+  "persona": "First-time learner/student trying to understand farming strategy through play",
+  "reviewer_type": "end_user",
+  "disclosure": "Independent AI persona review using a prepared returning-demo session because the new-session quota was reached. I preserved the session's main records, created no numerical scenario, sent no advisor message, and performed no actual farm operation. Chromium touch emulation is not a physical-device test.",
+  "reviewed_at": "2026-09-09T06:38:14Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "/assets/index-ByLNQWi-.js",
+    "stylesheet_asset": "/assets/index-C1IwVELs.css"
+  },
+  "rubric_status": "read",
+  "rubric_source": {
+    "document": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf",
+    "page": 13,
+    "git_blob": "b5a05dc8e0b849d9f8b1566cbd865151984a1730"
+  },
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "The farm board, quests and scenario lab make the purpose clear: understand how crop timing, demand, labour and cash alter a plan. The simulation boundary is repeatedly visible.",
+      "evidence_ids": ["e01", "e03", "e05"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": null,
+      "rationale": "The learner journey showed a three-step briefing-assumptions-compare flow, but did not establish the underlying architecture or memory management.",
+      "evidence_ids": ["e03"]
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 4,
+      "rationale": "The crop atlas connects planning parameters to named sources and limitations, while the data explorer links recipes, batches, beds, demand and planning records. This score covers observable product integration only.",
+      "evidence_ids": ["e07", "e08"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 3,
+      "rationale": "The interface asks the learner to review assumptions before a clearly labelled Run experiment action, and bed changes are offered as an explicit choice. I did not run or accept a plan.",
+      "evidence_ids": ["e04", "e06"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 4,
+      "rationale": "Visible labels consistently distinguish synthetic simulation, previewed growth, numerical/no-inference experiments and demo-only crop parameters. Security internals were not tested.",
+      "evidence_ids": ["e01", "e03", "e06", "e07", "e08"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 4,
+      "rationale": "A learner can inspect record relationships, provenance, dates, forecast rules, worked examples and scientific cautions. The review did not inspect tracing or adversarial evaluation internals.",
+      "evidence_ids": ["e07", "e08"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": null,
+      "rationale": "A browser-only learner journey cannot verify framework quality or multi-agent orchestration.",
+      "evidence_ids": []
+    }
+  ],
+  "usability_score": 7.6,
+  "summary": "FarmTact succeeds as a visual teaching environment more often than it feels like a dashboard. The illustrated map makes beds, roles and facilities memorable; quests turn abstract constraints into experiments; and the strongest lesson is epistemic: previews, synthetic data, numerical calculations and scientific uncertainty are labelled distinctly. A first-time learner can still lose the thread between the playful farm, the tall mobile scenario sheet and the much denser data explorer. The interface would teach more effectively if each journey carried one plain-language question, prediction and interpretation across those views.",
+  "strengths": [
+    "The first screen immediately grounds strategy in a concrete farm with beds, facilities, advisors, labour, cash and plan options.",
+    "The quest journal offers four approachable what-if prompts and explicitly says infeasible outcomes still count when trade-offs are inspected.",
+    "The late-harvest quest exposes editable assumptions and labels the branch as numerical with no inference.",
+    "Bed A1 gives a clear next action and states that 79% growth is a schedule preview rather than an observation.",
+    "The crop atlas pairs practical recipe numbers with specific cautions and source summaries, including why a paper may not validate mature marketable yield.",
+    "The data explorer makes synthetic origin, cutoff, coverage, generator and forecast version visible and explains how records connect."
+  ],
+  "findings": [
+    {
+      "severity": "medium",
+      "title": "Quest setup teaches inputs before asking for a prediction",
+      "observation": "Starting Late harvest opens sliders and selectors immediately. The briefing says what to vary, but does not ask what the learner expects to happen or highlight which outcome should be watched.",
+      "impact": "A novice can operate the experiment without practising causal reasoning, reducing the game-like learning value to parameter adjustment.",
+      "recommendation": "Add a one-sentence prediction prompt and a named watch metric before Run experiment, then compare the learner's prediction with the result.",
+      "evidence_ids": ["e03", "e04"]
+    },
+    {
+      "severity": "medium",
+      "title": "Mobile scenario lab is a long control sheet",
+      "observation": "At 390px, five sliders and three selectors fill multiple screens; the action buttons sit at the bottom and the step labels remain visually small. Review assumptions primarily scrolls to the action area rather than presenting a compact learner summary.",
+      "impact": "The relationship between the quest question, changed assumption and eventual comparison is easy to forget while scrolling.",
+      "recommendation": "Keep a sticky quest question and changed-values summary above a single next-step button, with less-used assumptions collapsed.",
+      "evidence_ids": ["e03", "e04"]
+    },
+    {
+      "severity": "medium",
+      "title": "Evidence depth lacks a return path to the decision",
+      "observation": "The Caixin atlas entry gives unusually good cautions and source summaries, while the data explorer gives dense provenance and relationship detail. Neither view states which current bed, plan choice or quest conclusion this evidence should affect.",
+      "impact": "A learner can understand individual facts but may struggle to transfer them into farming strategy.",
+      "recommendation": "Add a 'Why this matters now' card linking the evidence to affected beds, constraints and the active decision.",
+      "evidence_ids": ["e06", "e07", "e08"]
+    },
+    {
+      "severity": "low",
+      "title": "Two mobile controls miss the 44px touch target baseline",
+      "observation": "Automated geometry measured Add or import farm at 39x39px and Today at 39x38px in the 390px touch viewport.",
+      "impact": "These compact controls are harder to acquire reliably, especially for users with limited dexterity.",
+      "recommendation": "Increase their interactive boxes to at least 44x44px without necessarily enlarging the visible icons.",
+      "evidence_ids": ["e02"]
+    },
+    {
+      "severity": "low",
+      "title": "Desktop farm guidance uses mobile wording",
+      "observation": "The 1280px farm board still says 'Swipe to scroll the page' before mentioning mouse dragging.",
+      "impact": "The wording briefly makes the desktop interaction feel less polished and adds instruction noise.",
+      "recommendation": "Adapt the primary instruction to the active pointer mode and keep keyboard controls available in secondary help.",
+      "evidence_ids": ["e05"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "mobile-quest-learning",
+      "device": "touch-emulated mobile Chromium",
+      "viewport": "390x844",
+      "steps": [
+        "Opened the prepared returning-demo farm and scanned resources, beds, advisors and bottom navigation.",
+        "Opened Quest journal and compared the four available challenges.",
+        "Started Late harvest and inspected the default delay, yield, demand, labour, cash, batch and branch assumptions.",
+        "Used Review assumptions and inspected the action area without running the experiment."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The quest is discoverable and has a clear farming premise.",
+        "The sheet explicitly labels the exercise numerical and no-inference.",
+        "The long mobile sheet separates the briefing from its final action and offers no prediction prompt.",
+        "No horizontal document overflow occurred; two visible controls were smaller than 44px."
+      ]
+    },
+    {
+      "id": "desktop-bed-to-evidence",
+      "device": "desktop Chromium",
+      "viewport": "1280x900",
+      "steps": [
+        "Inspected bed A1 from the illustrated farm board.",
+        "Read its preview date, next action, system, area and observation disclaimer.",
+        "Opened Crop almanac, compared crop coverage and opened Caixin.",
+        "Read Caixin recipe assumptions, cautions and both source summaries.",
+        "Opened Data and inspected provenance, record relationships, dated supply/demand and deterministic generation rules."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "The path from a visible bed to biological context is memorable and clear.",
+        "Scientific uncertainty is written in plain, specific language rather than hidden in a generic disclaimer.",
+        "The data explorer is transparent but much denser than the playful farm and does not close the loop back to A1."
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "e01", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/mobile-390-home.png", "description": "390px farm landing view with synthetic label, quick actions, resources, map and bottom navigation." },
+    { "id": "e02", "type": "browser_check", "path": "apps/web/screenshots/panel/review09/observations.json", "description": "Live response, build assets, no-overflow checks, exact small-target geometry and zero scenario/advisor POST counts." },
+    { "id": "e03", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/mobile-390-late-harvest-quest.png", "description": "Late harvest scenario sheet showing briefing, step labels, numerical/no-inference badge and assumptions." },
+    { "id": "e04", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/mobile-390-review-assumptions.png", "description": "Lower mobile scenario sheet with sliders, selectors, Review assumptions and Run experiment actions." },
+    { "id": "e05", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/desktop-1280-home.png", "description": "Desktop illustrated farm board with facilities, beds, advisors and navigation." },
+    { "id": "e06", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/desktop-1280-bed-a1.png", "description": "A1 bed inspector with 79% schedule preview, next action and observation disclaimer." },
+    { "id": "e07", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/desktop-1280-caixin-evidence.png", "description": "Caixin atlas detail with planning recipe, demo-only validation and specific cautions." },
+    { "id": "e08", "type": "screenshot", "path": "apps/web/screenshots/panel/review09/desktop-1280-data-overview.png", "description": "Data overview showing frozen snapshot controls, provenance and record relationships." }
+  ],
+  "limitations": [
+    "This was an AI persona review, not a farmer interview, classroom study or official judging result.",
+    "The mobile journey used Chromium touch emulation rather than a physical phone.",
+    "A prepared returning-demo storage state was used because the session quota was reached.",
+    "No numerical experiment was run, no advisor message was sent and no plan was accepted, so result interpretation and conversational teaching were not tested.",
+    "Architecture, security implementation and platform orchestration were not inferred from the interface."
+  ],
+  "priority_improvements": [
+    "Turn each quest into predict-run-explain: ask for a prediction, name the watch metric, and explain the result against that prediction.",
+    "Keep the mobile quest question and changed assumptions visible while the learner scrolls to the action.",
+    "Add decision links from crop/data evidence back to affected beds, constraints and the active quest.",
+    "Increase the Add/import and Today interactive areas to at least 44x44px."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review09.mjs",
+    "jq '{checks,errors,build_assets,small:.facts.mobile_small_targets,requests}' apps/web/screenshots/panel/review09/observations.json"
+  ]
+}

@@ -57,3 +57,9 @@ build/contracts pass. Complete browser journey passed 72 checks locally and
 Pre-existing farm, run, branch, conversation and quests survived. Sprite web
 registration removed and port 8080 closed; PostgreSQL retained. Evidence and
 limitations: `reports/data_explorer.md`.
+
+## Mobile navigation and ten-persona public review — complete, 2026-09-09
+
+Root owns gesture implementation, shared public review schema/page/API, integration and preserving Fly deployment. Ten independent reviewer agents ran in batches of at most three specialists concurrently, using the installed gpt-5.6-sol as requested by AGENTS.md. They own separate persona reports/browser scripts/screenshots only. All completed mobile and desktop journeys and read the supplied rubric page 13, retrieved through its GitHub git blob; other briefing instructions were excluded. Reviews are labelled AI personas, never real users or official judging results. All ten reports were curated with 94 evidence references, including 68 mobile/desktop screenshots. Local final verification: 58 navigation checks, 93 public-page checks, 28 panel/security tests, production build and generated contracts passed. Live release verification is recorded in reports/mobile_and_panel.md.
+
+Released `farmtact:deployment-01M22EM68AXASMMMMZB6V715BR` on the existing Fly machine and volume. Live 58 navigation and 93 public-review checks passed; saved farm/run/branch/conversation/quest preservation passed. `/review` publishes all ten reports. Sprite web registration removed, port 8080 closed and PostgreSQL retained; hosting checks passed.

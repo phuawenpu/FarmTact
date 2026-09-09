@@ -1,0 +1,389 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "expected": 10,
+  "checks": [
+    {
+      "name": "Public API responds without sign-in",
+      "pass": true
+    },
+    {
+      "name": "10 independently authored reports present",
+      "pass": true
+    },
+    {
+      "name": "All reviewers read source rubric",
+      "pass": true
+    },
+    {
+      "name": "Seven source rubric criteria rendered",
+      "pass": true
+    },
+    {
+      "name": "Page explicitly identifies AI personas and unofficial scoring",
+      "pass": true
+    },
+    {
+      "name": "No farm session is created",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Goal & Scope Definition",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Architecture & Reasoning Loop",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Tool Use & Integration",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Autonomy & Human-in-the-Loop",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Safety, Security & Guardrails",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Observability & Evaluation",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Platform & Tooling Usage",
+      "pass": true
+    },
+    {
+      "name": "Judge filter is accurate",
+      "pass": true
+    },
+    {
+      "name": "End-user filter is accurate",
+      "pass": true
+    },
+    {
+      "name": "Priority filter hides other priorities",
+      "pass": true
+    },
+    {
+      "name": "Empty search has clear feedback",
+      "pass": true
+    },
+    {
+      "name": "Evidence link expands its actual gallery",
+      "pass": true
+    },
+    {
+      "name": "review01/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_home: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_tap: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_drag: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_bed_detail: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_date_preview: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_plan: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_running: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_desktop_accepted: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_mobile_default: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_mobile_move: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_mobile_done: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_mobile_bed: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_mobile_date: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_retest_desktop_move: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e07: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review04/s06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review05/E01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review05/E02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review05/E03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review05/E04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review05/E05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review06/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review06/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review06/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review06/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review06/e05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review07/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review07/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review07/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review07/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review07/e05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/mobile-farm: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/mobile-bed-dialog: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/date-preview: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/mobile-scroll: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/desktop-farm: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/focus-audit: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review08/desktop-keyboard-dialog: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e07: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review09/e08: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-mobile-farm: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-mobile-plan: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-mobile-timeline: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-mobile-outcomes: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-desktop-outcomes: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-desktop-farm: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review10/e-desktop-timeline: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "360: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "390: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "430: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "1280: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "Filters work with keyboard",
+      "pass": true
+    },
+    {
+      "name": "No bootstrap or provider calls during review browsing",
+      "pass": true
+    },
+    {
+      "name": "No page errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    "http://127.0.0.1:8080/api/v1/reviews"
+  ],
+  "screenshots": [
+    "apps/web/screenshots/public-reviews/360.png",
+    "apps/web/screenshots/public-reviews/390.png",
+    "apps/web/screenshots/public-reviews/430.png",
+    "apps/web/screenshots/public-reviews/1280.png"
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "id": "review04",
+  "persona": "Judging-panel agent architecture and reasoning-loop specialist",
+  "reviewer_type": "judge",
+  "disclosure": "Independent Codex AI reviewer persona using Chromium touch emulation and bounded source inspection; not a farmer, human user study, official judge, or official hackathon grade.",
+  "reviewed_at": "2026-09-09T06:22:35Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "git_head_inspected": "8fbcf9759b92a1bf7c9c28b8dee389362e1228a2",
+    "javascript_asset": "/assets/index-ByLNQWi-.js",
+    "javascript_sha256": "7f79112a25d13bff0aa344569ffbc87fa403c0410bb43cce48c43255acf5f0f9",
+    "css_asset": "/assets/index-C1IwVELs.css",
+    "css_sha256": "507d5a2d41ec3bd3a6e07ae48b13d4146b76d67128bdff076b4161548a7ce849"
+  },
+  "rubric_status": "read",
+  "rubric_source": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf, page 13, git blob b5a05dc8e0b849d9f8b1566cbd865151984a1730",
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. The live UI consistently frames the business purpose as tactical planning and labels synthetic simulation, preview, frozen branches, and simulation-only outcomes. The labour quest's all-zero result weakens the learning objective because it does not explain why the changed assumption had no consequence.",
+      "evidence_ids": ["b01", "s01", "s02", "s03"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. Browser play demonstrated problem selection, editable frozen assumptions, local numerical comparison, advisor interpretation, reference validation, and blocked action. Source inspection shows separate deterministic planning, persisted state, bounded model interpretation, and an independent critic role. The UI does not close the loop when a changed resource remains non-binding.",
+      "evidence_ids": ["b02", "b03", "b04", "c03", "c04", "c06"]
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. Typed controls and advisor reply schemas constrain model output, calculations remain local, and displayed facts originate from frozen references. The live advisor cited weekly labour allowance and its unsupported control suggestion was blocked. The interface does not name the binding constraint or slack calculation behind a zero-delta run.",
+      "evidence_ids": ["b03", "b04", "c03", "c05"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. A feasible branch was automatically accepted only for simulation, while unsupported advice could not authorize even a sandbox change. Users can inspect assumptions, choose policies, and explicitly initiate advisor work. The result lacks a clear escalation or suggested next experiment when the selected assumption has no numerical effect.",
+      "evidence_ids": ["b03", "b04", "c03", "c05"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. Live labels prevent synthetic results from masquerading as operations; the advisor's unsupported proposal was visibly blocked. Source and focused tests support tenant-scoped persistence, cross-origin/session admission, fixed provider routing, strict output fields, reference membership, and bounded inference. This was a focused review rather than a penetration test.",
+      "evidence_ids": ["b01", "b04", "c04", "c05", "c07"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. Frozen snapshot hashes, baseline hashes, same-policy deltas, request events, model usage audits, persisted partial state, and adversarial tests provide strong traceability. The user-facing record explains unsupported status but does not surface the exact validation error or constraint slack that would make the decision reproducible from the UI alone.",
+      "evidence_ids": ["b03", "b04", "c04", "c05", "c06", "c07"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": 4,
+      "rationale": "Unofficial 0–5 evidence score. Source inspection shows clean separation among deterministic planner, scenario service, conversation worker, gateway policy, and six role orchestration. The product supports replayable persistent workflows across mobile and desktop. Full deployment topology and production operations were outside this bounded review.",
+      "evidence_ids": ["b05", "b06", "c03", "c04", "c05", "c06"]
+    }
+  ],
+  "usability_score": 7.5,
+  "summary": "A coherent agent system is visible behind the playful farm: deterministic state transitions and calculations precede bounded DeepSeek interpretation, references are checked locally, and unsupported actions fail closed. The principal gap is explanatory closure. The chosen short-handed quest changed labour to 70% yet every displayed outcome stayed identical; neither the result nor advisor showed the available-versus-required constraint calculation. Mobile presentation also clips the comparison table and places the decision evidence below a long sheet.",
+  "strengths": [
+    "Browser: synthetic, preview, frozen-input, no-inference, and simulation-only labels are repeated at the exact decision points.",
+    "Browser: the journey connects an editable assumption to same-policy baseline and delta rows, then attaches an advisor discussion to the frozen branch.",
+    "Browser: unsupported advisor advice is visibly blocked and cannot authorize a change.",
+    "Source: strict contracts, tenant ownership, idempotency, fixed provider/model routing, bounded budgets, persisted events, and local reference validation form a credible reasoning architecture.",
+    "Source: the six-role council includes an independent critic and records validated or rejected claims rather than treating all model prose as fact."
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "A changed labour assumption can complete as a learning quest without explaining its zero effect",
+      "observation": "Browser: selecting Short-handed week set available labour to 70%, then Balanced showed zero change for all six outcomes, no constraint issues, and 16 affected beds. The advisor cited 22.4 hr weekly allowance, while the comparison displayed 71.38 hr labour needed without reconciling units or horizon. Source: the control is applied to weekly capacity and the planner is rerun, so this may be valid slack rather than a failed control, but no binding/slack proof is exposed.",
+      "impact": "A judge or operator cannot tell whether the control worked, remained above the binding threshold, or compares unlike time periods. The reasoning loop ends with an unexplained no-op.",
+      "recommendation": "For every changed resource, display baseline capacity, branch capacity, peak or binding requirement in the same unit and period, minimum slack, and a plain-language conclusion. If all deltas are zero, suggest the nearest threshold or a stronger bounded experiment and avoid marking all beds affected unless their schedules changed.",
+      "evidence_ids": ["b02", "b03", "b04", "s03", "c03"]
+    },
+    {
+      "severity": "medium",
+      "title": "Mobile comparison hides part of the decision table",
+      "observation": "Browser screenshot at 390×844 shows the branch heading and values clipped at the right edge. No visible scroll affordance indicates that the table can be moved horizontally.",
+      "impact": "Touch users can miss the scenario side of the before-and-after decision, which is the central evidence for the quest.",
+      "recommendation": "Use stacked baseline/result/delta cards at narrow widths, or add a persistent horizontal-scroll cue and sticky row labels. Keep the complete active branch name and delta visible at 390 px.",
+      "evidence_ids": ["s03"]
+    },
+    {
+      "severity": "medium",
+      "title": "Unsupported advisor status lacks a user-visible reason",
+      "observation": "Browser: the response is labelled Unsupported answer and blocks the proposed labour control, but the visible card does not say which reference, relationship, or supported-control check failed. Source: validation errors are persisted and status is derived from local checks.",
+      "impact": "Fail-closed behavior is good, but users cannot repair their question or distinguish an ungrounded narrative from a malformed proposed action.",
+      "recommendation": "Show a concise expandable validation reason beside the unsupported label, such as unknown reference, unsupported numeric claim, or invalid action target/value, while keeping internal details private.",
+      "evidence_ids": ["b04", "s04", "c04", "c05"]
+    },
+    {
+      "severity": "low",
+      "title": "Scenario effects remain visible after leaving the branch",
+      "observation": "Browser: after closing the branch advisor and returning to the desktop farm, all 16 beds carried alert markers even though the scenario result reported no allocation or outcome delta.",
+      "impact": "The main farm looks broadly disrupted and can blur the distinction between an isolated scenario and current state.",
+      "recommendation": "Label the active overlay with the branch name, provide a clear reset, and highlight only beds whose allocations or referenced evidence changed; use a separate farm-wide resource overlay for labour-only assumptions.",
+      "evidence_ids": ["s05", "b03"]
+    },
+    {
+      "severity": "low",
+      "title": "Outcomes route is empty after a completed scenario",
+      "observation": "Browser: the scenario comparison completed, but the desktop Outcomes route still said No plan outcome yet because it only reflects a planning mission.",
+      "impact": "A user can reasonably expect a completed decision experiment to appear in the product's outcome history and may think work was lost.",
+      "recommendation": "Add recent scenario outcomes to Outcome Lab or rename the route and empty state to clarify that it contains main planning missions only.",
+      "evidence_ids": ["s03", "s06"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "j-mobile-reasoning-loop",
+      "device": "mobile touch emulation",
+      "viewport": "390x844",
+      "steps": [
+        "Opened the live farm and verified synthetic-simulation and preview-only scope labels.",
+        "Opened Scenario lab, selected Short-handed week, and reviewed the default 70% labour assumption.",
+        "Ran exactly one numerical experiment and inspected the Balanced baseline, result, deltas, status, hashes, and debrief.",
+        "Opened the branch advisor, sent exactly one explicit message asking for the first hard constraint and its recorded support, and inspected the returned blocked unsupported answer."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "The numerical run completed as a feasible simulation-only branch with exact same-policy deltas.",
+        "Every displayed delta was zero despite the 70% labour input, with no explanation of slack or binding threshold.",
+        "The advisor response cited a frozen labour value and its unsupported proposed control was blocked.",
+        "The mobile result table clipped its rightmost branch content."
+      ]
+    },
+    {
+      "id": "j-desktop-continuity",
+      "device": "desktop browser, same tenant session",
+      "viewport": "1280x900",
+      "steps": [
+        "Resized the same authenticated browser context to desktop and revisited the farm world.",
+        "Verified persistent farm navigation, resource HUD, map controls, advisors, and scenario alert overlay.",
+        "Opened Outcomes and checked whether the completed scenario appeared in the decision record."
+      ],
+      "outcome": "partial",
+      "observations": [
+        "Desktop layout exposes the farm hierarchy and navigation clearly.",
+        "All 16 beds showed scenario alert markers even though computed outcomes and allocations were unchanged.",
+        "Outcomes remained empty because no main planning mission existed; the completed scenario was not surfaced there."
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "s01", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/01-mobile-farm.png", "description": "Browser screenshot: live farm at 390×844 with simulation scope, resources, touch navigation, and map." },
+    { "id": "s02", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/02-mobile-scenario-assumptions.png", "description": "Browser screenshot: Short-handed week frozen-input controls showing 70% available labour and numerical/no-inference label." },
+    { "id": "s03", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/03-mobile-scenario-result.png", "description": "Browser screenshot: mobile Balanced comparison with all-zero deltas and clipped branch column." },
+    { "id": "s04", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/04-mobile-advisor.png", "description": "Browser screenshot: branch advisor evidence and visibly blocked unsupported labour proposal." },
+    { "id": "s05", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/05-desktop-farm.png", "description": "Browser screenshot: live desktop farm after the scenario, showing all-bed alert overlay." },
+    { "id": "s06", "type": "screenshot", "path": "apps/web/screenshots/panel/review04/06-desktop-outcomes.png", "description": "Browser screenshot: desktop Outcome Lab empty state after a completed scenario branch." },
+    { "id": "b01", "type": "browser_check", "path": "", "description": "Browser evidence: one live tenant session passed touch viewport and repeated simulation/preview scope checks; asset hashes were recorded in build metadata." },
+    { "id": "b02", "type": "browser_check", "path": "", "description": "Browser evidence: one numerical Short-handed week run used frozen inputs and local inference-free planning." },
+    { "id": "b03", "type": "browser_check", "path": "", "description": "Browser evidence: the run returned a feasible simulation-only Balanced comparison with baseline and computed delta columns; all six deltas were zero." },
+    { "id": "b04", "type": "browser_check", "path": "", "description": "Browser evidence: one explicit advisor message returned a frozen weekly-labour reference and an unsupported action that the UI blocked." },
+    { "id": "b05", "type": "browser_check", "path": "", "description": "Browser evidence: same session was reused at 1280×900 and exposed desktop room navigation and farm controls." },
+    { "id": "b06", "type": "browser_check", "path": "", "description": "Browser evidence: Outcomes route persisted but did not include the completed isolated scenario." },
+    { "id": "c03", "type": "browser_check", "path": "", "description": "Source evidence: scenarios.py defines strict typed controls, applies them to deep-copied frozen farms, reruns the deterministic planner, computes same-policy deltas, validates allocations, and limits acceptance to simulation." },
+    { "id": "c04", "type": "browser_check", "path": "", "description": "Source evidence: store.py and conversation_store.py enforce tenant-scoped records, composite ownership, idempotency, serialized active requests, and preserved partial state." },
+    { "id": "c05", "type": "browser_check", "path": "", "description": "Source evidence: conversations.py validates structured replies against frozen allowed references/actions, budgets requests, records safe audits, and marks unsupported responses/actions without operational authority." },
+    { "id": "c06", "type": "browser_check", "path": "", "description": "Source evidence: council.py orchestrates six roles including an independent critic over fixed numerical references, rejects unknown citations and uncited numeric literals, and emits claim/tool events." },
+    { "id": "c07", "type": "browser_check", "path": "", "description": "Source/test evidence: focused injection, tenant-boundary, scenario, and conversation tests produced 70 passes; one additional test setup errored because local apps/web/dist/assets was absent." }
+  ],
+  "limitations": [
+    "Chromium touch emulation is not physical-device evidence.",
+    "I ran one numerical scenario and one explicit advisor message only; I did not start a main planning mission, council, replan, import, download, or actual farm operation.",
+    "The advisor response was unsupported, so this journey does not establish successful grounded-answer quality.",
+    "Source inspection was bounded to scenario, state, conversation, gateway, council, security, and focused adversarial contracts; it was not a full code or penetration audit.",
+    "The live deployment was changing during review; findings apply only to the recorded JavaScript and CSS hashes.",
+    "Focused tests passed 70 cases, but one conversation test could not initialize because the local built frontend assets directory was absent. I did not build or modify application assets because this reviewer owns no app files."
+  ],
+  "priority_improvements": [
+    "Explain non-binding scenario controls with same-period capacity, requirement, slack, and nearest threshold.",
+    "Replace or repair the horizontally clipped mobile comparison table.",
+    "Expose concise validation reasons for unsupported advisor answers and actions.",
+    "Separate farm-wide resource overlays from bed-specific changed-allocation highlights and provide a branch reset.",
+    "Surface completed scenario branches in Outcome Lab or clarify its narrower mission-only scope."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review04.mjs",
+    ".venv/bin/pytest -q tests/review/test_ai_injection_boundaries.py tests/review/test_backend_adversarial.py tests/gameplay/test_scenarios.py tests/gameplay/test_conversations.py"
+  ]
+}

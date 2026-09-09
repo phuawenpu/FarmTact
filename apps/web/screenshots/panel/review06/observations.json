@@ -1,0 +1,93 @@
+{
+  "checks": [
+    {
+      "name": "live app responds",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "mobile has no horizontal document overflow",
+      "pass": true
+    },
+    {
+      "name": "reference snapshot starts selected",
+      "pass": true,
+      "detail": "reference"
+    },
+    {
+      "name": "provenance exposes cutoff and forecast version",
+      "pass": true,
+      "detail": "PROVENANCE Original generated dataset Origin synthetic Cutoff 2026-09-08T00:00:00Z Date coverage 2026-06-16 to 2026-11-02 Generator synthetic-farm-v1 Forecast recipe-ewma-v1 · α 0.35 Versioned reference fixture. Engineering assumptions, not measured farm outcomes."
+    },
+    {
+      "name": "forecast point opens contributing records",
+      "pass": true,
+      "detail": "Selected record · forecast:caixin:2026-09-14 { \"id\": \"forecast:caixin:2026-09-14\", \"crop_id\": \"caixin\", \"date\": \"2026-09-14\", \"week\": 0, \"confirmed_kg\": 22, \"residual_kg\": 9.001, \"expected_kg\": 31.001, \"price_sgd_per_kg\": 6, \"history_periods\": 12, \"history_record_ids\": [ \"history:caixin:2026-06-16:0\", \"history:caixin:2026-06-23:1\", \"history:caixin:2026-06-30:2\", \"history:caixin:2026-07-07:3\", \"history:caixin:2026-07-14:4\", \"history:caixin:2026-07-21:5\", \"history:caixin:2026-07-28:6\", \"history:caixin:2026-08-04:7\", \"history:caixin:2026-08-11:8\", \"history:caixin:2026-08-18:9\", \"history:caixin:2026-08-25:10\", \"history:caixin:2026-09-01:11\" ], \"order_record_ids\": [ \"order-0-0\" ] }"
+    },
+    {
+      "name": "resumed previously saved numerical scenario",
+      "pass": true,
+      "detail": "Review06 evidence mttpr3cw baseline · scenario"
+    },
+    {
+      "name": "saved frozen dataset reloads on desktop",
+      "pass": true
+    },
+    {
+      "name": "desktop comparison exposes six outcome rows",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "comparison includes constraints and economics",
+      "pass": true,
+      "detail": "Balanced · baseline and 1 branch MEASURE ORIGINAL BASELINE REVIEW06 EVIDENCE MTTPR3CW BASELINE DELIVERY SHORTFALL (KG) 505.01 624.81 +119.8 from baseline WASTE (KG) 181.99 76.3 -105.69 from baseline LABOUR USED (HOURS) 71.38 71.38 0 from baseline CASH SPENT (SGD) 1,540.76 1,566.28 +25.52 from baseline CONTRIBUTION MARGIN (SGD) 2,957.37 3,994.34 +1,036.97 from baseline CONSTRAINT VIOLATIONS 0 0 · Feasible"
+    },
+    {
+      "name": "result has inspectable numerical trace",
+      "pass": true,
+      "detail": "Frozen evidence · 7f858998 Input e103d819310acee38ecff255316650873dfaf2be1c08a9a3e2c0c1bf3cdccb2c; baseline 00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76. Strategy 4f217a6f0bf40508b6fb, daily-bed-cpsat-v1. Numeric metric fields below are the exact values used by the explanation. { \"baseline\": { \"fill_rate\": 0.5358, \"margin_sgd\": 2957.37, \"waste_kg\": 181.99, \"harvest_kg\": 814, \"shortfall_kg\": 505.01, \"cost_sgd\": 1540.76, \"labour_hours\": 71.38, \"area_m2\": 180, \"closing_stock_kg\": 54, \"opening_stock_kg\": 5, \"revenue_sgd\": 4498.13 }, \"scenario\": { \"fill_rate\": 0.5357, \"margin_sgd\": 3994.34, \"waste_kg\": 76.3, \"harvest_kg\": 814, \"shortfall_kg\": 624.81, \"cost_sgd\": 1566.28, \"labour_hours\": 71.38, \"area_m2\": 180, \"closing_stock_kg\": 21.78, \"opening_stock_kg\": 5, \"revenue_sgd\": 5560.62 }, \"violations\": [] } Inspect 48 cumulative input differences"
+    },
+    {
+      "name": "resume added no numerical run",
+      "pass": true,
+      "detail": {
+        "scenarios": 0,
+        "advisor": 0
+      }
+    },
+    {
+      "name": "no advisor message sent",
+      "pass": true,
+      "detail": {
+        "scenarios": 0,
+        "advisor": 0
+      }
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "apps/web/screenshots/panel/review06/mobile-430-forecast-overview.png",
+    "apps/web/screenshots/panel/review06/mobile-430-forecast-record.png",
+    "apps/web/screenshots/panel/review06/mobile-430-strategy-result.png",
+    "apps/web/screenshots/panel/review06/desktop-1280-frozen-overview.png",
+    "apps/web/screenshots/panel/review06/desktop-1280-baseline-comparison.png"
+  ],
+  "build_assets": [
+    "/assets/index-ByLNQWi-.js",
+    "/assets/index-C1IwVELs.css"
+  ],
+  "facts": {
+    "mobile_overview": "DATA EXPLORER See every number behind the plan. Trace demand, harvest and resources from source records through forecasts and planning results. Dataset snapshot Original generated dataset · reference Main farm · version 2 · farm Main farm · version 1 · farm Review06 evidence mttpr3cw · playground Review06 evidence mttpr3cw baseline · scenario Loading provenance… Planning policy Lean Balanced Resilient Overview Generator Records Public context Experiments Loading linked records…",
+    "provenance": "PROVENANCE Original generated dataset Origin synthetic Cutoff 2026-09-08T00:00:00Z Date coverage 2026-06-16 to 2026-11-02 Generator synthetic-farm-v1 Forecast recipe-ewma-v1 · α 0.35 Versioned reference fixture. Engineering assumptions, not measured farm outcomes.",
+    "forecast_record": "Selected record · forecast:caixin:2026-09-14 { \"id\": \"forecast:caixin:2026-09-14\", \"crop_id\": \"caixin\", \"date\": \"2026-09-14\", \"week\": 0, \"confirmed_kg\": 22, \"residual_kg\": 9.001, \"expected_kg\": 31.001, \"price_sgd_per_kg\": 6, \"history_periods\": 12, \"history_record_ids\": [ \"history:caixin:2026-06-16:0\", \"history:caixin:2026-06-23:1\", \"history:caixin:2026-06-30:2\", \"history:caixin:2026-07-07:3\", \"history:caixin:2026-07-14:4\", \"history:caixin:2026-07-21:5\", \"history:caixin:2026-07-28:6\", \"history:caixin:2026-08-04:7\", \"history:caixin:2026-08-11:8\", \"history:caixin:2026-08-18:9\", \"history:caixin:2026-08-25:10\", \"history:caixin:2026-09-01:11\" ], \"order_record_ids\": [ \"order-0-0\" ] }",
+    "mobile_result": "DATA EXPLORER See every number behind the plan. Trace demand, harvest and resources from source records through forecasts and planning results. Dataset snapshot Original generated dataset · reference Main farm · version 2 · farm Main farm · version 1 · farm Review06 evidence mttpr3cw · playground Review06 evidence mttpr3cw baseline · scenario Frozen 4ead023caf Planning policy Lean Balanced Resilient Overview Generator Records Public context Experiments FROZEN DATASET Review06 evidence mttpr3cw baseline Ready for a numerical scenario. Snapshot 4ead023cafbb · no inference Lean Balanced Resilient PLANNING EXPERIMENT Test resource and market changes Target batch batch-01 · caixin batch-02 · pak_choi batch-03 · kailan batch-04 · lettuce batch-05 · caixin batch-06 · pak_choi batch-07 · kailan batch-08 · lettuce Demand crop Caixin Pak Choi Kailan Lettuce Harvest delay days 0 days default 0 days 14 days Expected yield % 50% default 100% 100% Demand % 50% default 100% 150% Labour % 50% default 100% 150% Cash % 50% default 100% 150% Run frozen scenario BALANCED · COMPUTED EVIDENCE Saved result Ask advisor 0.54 Fill Rate 3,994.34 Margin Sgd 76.3 Waste Kg 814 Harvest Kg 624.81 Shortfall Kg 1,566.28 Cost Sgd 71.38 Labour Hours 180 Area M2 This explanation reads the selected policy’s deterministic metrics, linked constraints and frozen snapshot hash. Advisor inference begins only after you send a message.",
+    "desktop_overview": "DATA EXPLORER See every number behind the plan. Trace demand, harvest and resources from source records through forecasts and planning results. Dataset snapshot Original generated dataset · reference Main farm · version 2 · farm Main farm · version 1 · farm Review06 evidence mttpr3cw · playground Review06 evidence mttpr3cw baseline · scenario Frozen 4ead023caf Planning policy Lean Balanced Resilient Overview Generator Records Public context Experiments 16 Beds 4 Recipes 8 Batches 48 History 32 Orders 1 Inventory 1 Resources 32 Forecast 17 Allocations 56 Ledger 8 Weekly PROVENANCE Review06 evidence mttpr3cw baseline Origin synthetic Cutoff 2026-09-08T00:00:00Z Date coverage 2026-06-16 to 2026-11-02 Generator synthetic-farm-v1 Forecast recipe-ewma-v1 · α 0.65 Frozen numerical experiment. Results are simulated, never actual farm outcomes. RELATIONSHIPS How records connect Recipe → crop ID → Batch → bed ID → Bed History → forecast → Demand → plan → Allocation Crop IDs join biological recipes, observed history and orders. Batch and bed IDs tie scheduled harvests to capacity. HISTORY → PLANNING HORIZON Demand, harvest and forecast ● historical ○ forecast / planned Crop filter All crops caixin pak_choi kailan lettuce Start date End date 46.8 kg 32.4 kg 16 Jun 2026 2 Nov 2026 Planning date Caixin · Ordered Kg Pak Choi · Ordered Kg Kailan · Ordered Kg Lettuce · Ordered Kg Caixin · Expected Kg Pak Choi · Expected Kg Kailan · Expected Kg Lettuce · Expected Kg 16 Jun 2026 · 32.4 kg · Caixin · Ordered Kg · historical View chart as a table DECLARED CROP SCHEDULE Scheduled harvest arrivals Expected fresh marketable kilograms become available only on each recorded harvest date. 52 kg 44 kg 14 Sept 2026 28 Sept 2026 Caixin scheduled harvest Pak Choi scheduled harvest Kailan scheduled harvest Lettuce scheduled harvest 14 Sept 2026 · 44 kg · Caixin scheduled harvest · future / planned View chart as a table DUE DEMAND AND DATED SUPPLY Supply arrivals versus demand due Each quantity stays on its own arrival or due date. This comparison does not claim that later supply fulfils earlier demand. Demand due 45.654 kg 22 kg 14 Sept 2026 2 Nov 2026 Caixin total demand due Caixin confirmed demand due Pak Choi total demand due Pak Choi confirmed demand due Kailan total demand due Kailan confirmed demand due Lettuce total demand due Lettuce confirmed demand due 14 Sept 2026 · 38.454 kg · Caixin total demand due · future / planned View chart as a table Scheduled supply arrivals 52 kg 44 kg 14 Sept 2026 2 Nov 2026 Caixin supply arrival Pak Choi supply arrival Kailan supply arrival Lettuce supply arrival 14 Sept 2026 · 44 kg · Caixin supply arrival · future / planned View chart as a table WHOLE-FARM RESOURCE MODEL Reserved capacity by week Reservations and declared limits for this frozen snapshot. These are planning quantities, not measured use. Labour 32 hours 0 hours 8 Sept 2026 27 Oct 2026 Planning date Reserved labour Weekly labour capacity 8 Sept 2026 · 19.467 hours · Reserved labour · future / planned View chart as a table Nursery 2,560 sites 0 sites 8 Sept 2026 27 Oct 2026 Planning date Peak reserved nursery sites Nursery site capacity 8 Sept 2026 · 960 sites · Peak re",
+    "comparison": "Balanced · baseline and 1 branch MEASURE ORIGINAL BASELINE REVIEW06 EVIDENCE MTTPR3CW BASELINE DELIVERY SHORTFALL (KG) 505.01 624.81 +119.8 from baseline WASTE (KG) 181.99 76.3 -105.69 from baseline LABOUR USED (HOURS) 71.38 71.38 0 from baseline CASH SPENT (SGD) 1,540.76 1,566.28 +25.52 from baseline CONTRIBUTION MARGIN (SGD) 2,957.37 3,994.34 +1,036.97 from baseline CONSTRAINT VIOLATIONS 0 0 · Feasible",
+    "trace": "Frozen evidence · 7f858998 Input e103d819310acee38ecff255316650873dfaf2be1c08a9a3e2c0c1bf3cdccb2c; baseline 00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76. Strategy 4f217a6f0bf40508b6fb, daily-bed-cpsat-v1. Numeric metric fields below are the exact values used by the explanation. { \"baseline\": { \"fill_rate\": 0.5358, \"margin_sgd\": 2957.37, \"waste_kg\": 181.99, \"harvest_kg\": 814, \"shortfall_kg\": 505.01, \"cost_sgd\": 1540.76, \"labour_hours\": 71.38, \"area_m2\": 180, \"closing_stock_kg\": 54, \"opening_stock_kg\": 5, \"revenue_sgd\": 4498.13 }, \"scenario\": { \"fill_rate\": 0.5357, \"margin_sgd\": 3994.34, \"waste_kg\": 76.3, \"harvest_kg\": 814, \"shortfall_kg\": 624.81, \"cost_sgd\": 1566.28, \"labour_hours\": 71.38, \"area_m2\": 180, \"closing_stock_kg\": 21.78, \"opening_stock_kg\": 5, \"revenue_sgd\": 5560.62 }, \"violations\": [] } Inspect 48 cumulative input differences"
+  },
+  "requests": {
+    "scenarios": 0,
+    "advisor": 0
+  }
+}

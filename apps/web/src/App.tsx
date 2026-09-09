@@ -157,7 +157,7 @@ export default function App() {
         <nav aria-label="FarmTact rooms">
           {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => setView(id)}><Icon size={20}/><span>{label}</span></button>)}
         </nav>
-        <div className="side-rail__mode"><span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong></div>
+        <div className="side-rail__mode"><a className="public-review-link" href="/review">Independent reviews</a><span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong></div>
       </aside>
 
       <div className="app-content">
@@ -172,7 +172,7 @@ export default function App() {
             <button className="icon-button" onClick={() => setView('setup')} aria-label="Add or import farm"><Plus size={20}/></button>
             <button className="icon-button topbar__more" onClick={() => setMoreOpen(value => !value)} aria-label="Workspace status"><MoreHorizontal size={20}/></button>
           </div>
-          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
+          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><a className="public-review-link" href="/review">Independent reviews</a><span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
         </header>
 
         <main>

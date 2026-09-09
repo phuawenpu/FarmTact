@@ -1,0 +1,15 @@
+Judging Rubric
+1. Goal & Scope Definition 
+• e.g., business value, clear purpose
+2. Architecture & Reasoning Loop 
+• e.g., appropriate planning pattern, explicit state/memory management
+3. Tool Use & Integration 
+• e.g., purpose-fit tools, well-typed schemas
+4. Autonomy & Human-in-the-Loop 
+• e.g., risk-calibrated autonomy, escalation checkpoints, etc.
+5. Safety, Security & Guardrails 
+• e.g., prompt-injection resistance, least-privilege access
+6. Observability & Evaluation 
+• e.g., logging/tracing of decisions, golden-path + adversarial eval cases, etc.
+7. Platform & Tooling Usage 
+• e.g., idiomatic framework use, clean multi-agent orchestration, etc.

@@ -1,0 +1,197 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "expected": 3,
+  "checks": [
+    {
+      "name": "Public API responds without sign-in",
+      "pass": true
+    },
+    {
+      "name": "3 independently authored reports present in local draft",
+      "pass": true
+    },
+    {
+      "name": "All reviewers read source rubric",
+      "pass": true
+    },
+    {
+      "name": "Seven source rubric criteria rendered",
+      "pass": true
+    },
+    {
+      "name": "Page explicitly identifies AI personas and unofficial scoring",
+      "pass": true
+    },
+    {
+      "name": "No farm session is created",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Goal & Scope Definition",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Architecture & Reasoning Loop",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Tool Use & Integration",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Autonomy & Human-in-the-Loop",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Safety, Security & Guardrails",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Observability & Evaluation",
+      "pass": true
+    },
+    {
+      "name": "Mean excludes untested: Platform & Tooling Usage",
+      "pass": true
+    },
+    {
+      "name": "Judge filter is accurate",
+      "pass": true
+    },
+    {
+      "name": "End-user filter is accurate",
+      "pass": true
+    },
+    {
+      "name": "Priority filter hides other priorities",
+      "pass": true
+    },
+    {
+      "name": "Empty search has clear feedback",
+      "pass": true
+    },
+    {
+      "name": "Evidence link expands its actual gallery",
+      "pass": true
+    },
+    {
+      "name": "review01/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e05: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review01/e06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_home: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_tap: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_drag: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_bed_detail: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_date_preview: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_plan: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_mobile_running: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review02/e_desktop_accepted: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e01: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e02: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e03: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e04: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e06: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "review03/e07: public evidence image resolves",
+      "pass": true
+    },
+    {
+      "name": "360: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "390: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "430: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "1280: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "Filters work with keyboard",
+      "pass": true
+    },
+    {
+      "name": "No bootstrap or provider calls during review browsing",
+      "pass": true
+    },
+    {
+      "name": "No page errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    "http://127.0.0.1:8080/api/v1/reviews"
+  ],
+  "screenshots": [
+    "apps/web/screenshots/public-reviews/360.png",
+    "apps/web/screenshots/public-reviews/390.png",
+    "apps/web/screenshots/public-reviews/430.png",
+    "apps/web/screenshots/public-reviews/1280.png"
+  ]
+}

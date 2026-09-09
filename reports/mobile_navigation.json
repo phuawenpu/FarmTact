@@ -1,0 +1,248 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "360: ordinary swipe scrolls page",
+      "pass": true
+    },
+    {
+      "name": "360: ordinary swipe does not move map",
+      "pass": true
+    },
+    {
+      "name": "360: direct drag starting on a bed pans map",
+      "pass": true
+    },
+    {
+      "name": "360: dragging does not open bed or advisor",
+      "pass": true
+    },
+    {
+      "name": "360: drag state clears on release",
+      "pass": true
+    },
+    {
+      "name": "360: map dragging does not select page text",
+      "pass": true
+    },
+    {
+      "name": "360: next deliberate tap opens details",
+      "pass": true
+    },
+    {
+      "name": "360: visible arrow pans map",
+      "pass": true
+    },
+    {
+      "name": "360: keyboard pans map",
+      "pass": true
+    },
+    {
+      "name": "360: keyboard Home recenters",
+      "pass": true
+    },
+    {
+      "name": "360: cancelled touch clears dragging",
+      "pass": true
+    },
+    {
+      "name": "360: explicit exit restores scroll mode",
+      "pass": true
+    },
+    {
+      "name": "360: next-day tap advances preview",
+      "pass": true
+    },
+    {
+      "name": "360: previous-day tap restores preview",
+      "pass": true
+    },
+    {
+      "name": "360: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "390: ordinary swipe scrolls page",
+      "pass": true
+    },
+    {
+      "name": "390: ordinary swipe does not move map",
+      "pass": true
+    },
+    {
+      "name": "390: direct drag starting on a bed pans map",
+      "pass": true
+    },
+    {
+      "name": "390: dragging does not open bed or advisor",
+      "pass": true
+    },
+    {
+      "name": "390: drag state clears on release",
+      "pass": true
+    },
+    {
+      "name": "390: map dragging does not select page text",
+      "pass": true
+    },
+    {
+      "name": "390: next deliberate tap opens details",
+      "pass": true
+    },
+    {
+      "name": "390: visible arrow pans map",
+      "pass": true
+    },
+    {
+      "name": "390: keyboard pans map",
+      "pass": true
+    },
+    {
+      "name": "390: keyboard Home recenters",
+      "pass": true
+    },
+    {
+      "name": "390: cancelled touch clears dragging",
+      "pass": true
+    },
+    {
+      "name": "390: explicit exit restores scroll mode",
+      "pass": true
+    },
+    {
+      "name": "390: next-day tap advances preview",
+      "pass": true
+    },
+    {
+      "name": "390: previous-day tap restores preview",
+      "pass": true
+    },
+    {
+      "name": "390: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "430: ordinary swipe scrolls page",
+      "pass": true
+    },
+    {
+      "name": "430: ordinary swipe does not move map",
+      "pass": true
+    },
+    {
+      "name": "430: direct drag starting on a bed pans map",
+      "pass": true
+    },
+    {
+      "name": "430: dragging does not open bed or advisor",
+      "pass": true
+    },
+    {
+      "name": "430: drag state clears on release",
+      "pass": true
+    },
+    {
+      "name": "430: map dragging does not select page text",
+      "pass": true
+    },
+    {
+      "name": "430: next deliberate tap opens details",
+      "pass": true
+    },
+    {
+      "name": "430: visible arrow pans map",
+      "pass": true
+    },
+    {
+      "name": "430: keyboard pans map",
+      "pass": true
+    },
+    {
+      "name": "430: keyboard Home recenters",
+      "pass": true
+    },
+    {
+      "name": "430: cancelled touch clears dragging",
+      "pass": true
+    },
+    {
+      "name": "430: explicit exit restores scroll mode",
+      "pass": true
+    },
+    {
+      "name": "430: next-day tap advances preview",
+      "pass": true
+    },
+    {
+      "name": "430: previous-day tap restores preview",
+      "pass": true
+    },
+    {
+      "name": "430: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "1280: direct drag starting on a bed pans map",
+      "pass": true
+    },
+    {
+      "name": "1280: dragging does not open bed or advisor",
+      "pass": true
+    },
+    {
+      "name": "1280: drag state clears on release",
+      "pass": true
+    },
+    {
+      "name": "1280: map dragging does not select page text",
+      "pass": true
+    },
+    {
+      "name": "1280: next deliberate tap opens details",
+      "pass": true
+    },
+    {
+      "name": "1280: visible arrow pans map",
+      "pass": true
+    },
+    {
+      "name": "1280: keyboard pans map",
+      "pass": true
+    },
+    {
+      "name": "1280: keyboard Home recenters",
+      "pass": true
+    },
+    {
+      "name": "Desktop wheel scrolls page instead of trapping zoom",
+      "pass": true
+    },
+    {
+      "name": "1280: next-day tap advances preview",
+      "pass": true
+    },
+    {
+      "name": "1280: previous-day tap restores preview",
+      "pass": true
+    },
+    {
+      "name": "1280: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "No browser runtime errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "apps/web/screenshots/mobile-navigation/360.png",
+    "apps/web/screenshots/mobile-navigation/390.png",
+    "apps/web/screenshots/mobile-navigation/430.png",
+    "apps/web/screenshots/mobile-navigation/1280.png"
+  ],
+  "limitations": [
+    "Chromium touch emulation, not physical iOS/Android hardware."
+  ]
+}

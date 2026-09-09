@@ -1,0 +1,1550 @@
+{
+  "build": {
+    "scripts": [
+      "/assets/index-ByLNQWi-.js"
+    ],
+    "styles": [
+      "/assets/index-C1IwVELs.css"
+    ]
+  },
+  "mobile": {
+    "authenticated": true,
+    "reducedMotion": true,
+    "motionAudit": [
+      {
+        "tag": "DIV",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "DIV",
+        "className": "app-shell",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "ASIDE",
+        "className": "side-rail",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "DIV",
+        "className": "brand",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "brand__mark",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "STRONG",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SMALL",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "NAV",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "is-active",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "ellipse",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "BUTTON",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "svg",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "path",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "circle",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "circle",
+        "className": "[object SVGAnimatedString]",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "DIV",
+        "className": "side-rail__mode",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      },
+      {
+        "tag": "STRONG",
+        "className": "",
+        "animation": "1e-05s",
+        "transition": "1e-05s"
+      }
+    ],
+    "initialText": "Little Plot Collective\n\nLIM CHU KANG, SINGAPORE · SYNTHETIC SIMULATION\n\nLittle Plot Collective\n\nTap a bed or visit an advisor to explore the plan.\n\nTalk to advisors\nQuest journal\nScenario lab\nCrop almanac\n8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n3\nPLAN OPTIONS\nMove farm\n\nSwipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.\n\nGREENHOUSE\nMARKET\nNURSERY\nTOOL SHED\nCOUNCIL\nPACKING SHED\nEVIDENCE DESK\nWEATHER\nVisit greenhouse\nView nursery schedule\nVisit market stall\nVisit tool shed\nEnter council pavilion\nOpen packing schedule\nOpen evidence desk\nCheck weather station\nA1\nCaixin\nA2\nXiao bai cai / pak choi\nA3\nKailan\nA4\nLettuce\nB1\nCaixin\nB2\nXiao bai cai / pak choi\nB3\nKailan\nB4\nLettuce\nC1\nKailan\nC2\nOpen bed\nC3\nOpen bed\nC4\nKailan\nD1\nCaixin\nD2\nLettuce\nD3\nOpen bed\nD4\nXiao bai cai / pak choi\nMei\nCrop scientist\nRavi\nDemand analyst\nHana\nWeather scout\nBen\nResource analyst\nAsha\nPlanning chair\nIdris\nIndependent critic\n\nTap to inspect · arrows to explore\n\nPLAN PREVIEW\n8 Sept\nToday\n\nPreview only — this does not advance time or create observations.\n\nAccessible farm list\nAll 16 beds and next actions\nAdvisor shortcuts\nTalk, invite or convene council\nPlanning tools\nStrategies, timeline and resources\nFarm\nTools\nCrops\nData\nOutcomes\nSetup",
+    "targets": [
+      {
+        "label": "Add or import farm",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 39,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Talk to advisors",
+        "tag": "BUTTON",
+        "w": 167,
+        "h": 44,
+        "font": "9.28px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Quest journal",
+        "tag": "BUTTON",
+        "w": 167,
+        "h": 44,
+        "font": "9.28px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Scenario lab",
+        "tag": "BUTTON",
+        "w": 167,
+        "h": 44,
+        "font": "9.28px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Crop almanac",
+        "tag": "BUTTON",
+        "w": 167,
+        "h": 44,
+        "font": "9.28px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "3plan options",
+        "tag": "BUTTON",
+        "w": 85,
+        "h": 57,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Move farm",
+        "tag": "BUTTON",
+        "w": 336,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Visit greenhouse",
+        "tag": "BUTTON",
+        "w": 82,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "View nursery schedule",
+        "tag": "BUTTON",
+        "w": 102,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Visit market stall",
+        "tag": "BUTTON",
+        "w": 82,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Visit tool shed",
+        "tag": "BUTTON",
+        "w": 73,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Enter council pavilion",
+        "tag": "BUTTON",
+        "w": 98,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Open packing schedule",
+        "tag": "BUTTON",
+        "w": 106,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Open evidence desk",
+        "tag": "BUTTON",
+        "w": 95,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Check weather station",
+        "tag": "BUTTON",
+        "w": 103,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A1, Caixin, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 134,
+        "h": 97,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A2, Xiao bai cai / pak choi, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A3, Kailan, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A4, Lettuce, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B1, Caixin, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B2, Xiao bai cai / pak choi, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B3, Kailan, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B4, Lettuce, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C1, Kailan, empty, Sow kailan on 21 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C2, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C3, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C4, Kailan, empty, Sow kailan on 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D1, Caixin, empty, Sow caixin on 5 Oct",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D2, Lettuce, empty, Sow lettuce on 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D3, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D4, Xiao bai cai / pak choi, empty, Sow pak choi on 14 Sept",
+        "tag": "BUTTON",
+        "w": 122,
+        "h": 88,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Mei, Crop scientist at Greenhouse",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Ravi, Demand analyst at Market stall",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Hana, Weather scout at Weather station",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Ben, Resource analyst at Tool shed",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Asha, Planning chair at Council pavilion",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Idris, Independent critic at Evidence desk",
+        "tag": "BUTTON",
+        "w": 100,
+        "h": 140,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "View farm left",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm right",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm up",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm down",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Zoom in",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Zoom out",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Recenter farm",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Preview simulation date",
+        "tag": "INPUT",
+        "w": 191,
+        "h": 16,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Today",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 38,
+        "font": "10.88px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Accessible farm listAll 16 beds and next actions",
+        "tag": "BUTTON",
+        "w": 264,
+        "h": 62,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Advisor shortcutsTalk, invite or convene council",
+        "tag": "BUTTON",
+        "w": 264,
+        "h": 62,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Planning toolsStrategies, timeline and resources",
+        "tag": "BUTTON",
+        "w": 264,
+        "h": 62,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Farm",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Tools",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Crops",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Data",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Outcomes",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Setup",
+        "tag": "BUTTON",
+        "w": 56,
+        "h": 54,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      }
+    ],
+    "overflow": {
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "innerHeight": 800,
+      "scrollHeight": 1207
+    },
+    "bedCount": 16,
+    "bedName": "A1, Caixin, growing, Inspect growth · harvest 14 Sept",
+    "dialogAfterBedTap": 1,
+    "activeAfterBedTap": {
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Close"
+    },
+    "bedDetailText": "Little Plot Collective\n\nLIM CHU KANG, SINGAPORE · SYNTHETIC SIMULATION\n\nLittle Plot Collective\n\nTap a bed or visit an advisor to explore the plan.\n\nTalk to advisors\nQuest journal\nScenario lab\nCrop almanac\n8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n3\nPLAN OPTIONS\nMove farm\n\nSwipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.\n\nGREENHOUSE\nMARKET\nNURSERY\nTOOL SHED\nCOUNCIL\nPACKING SHED\nEVIDENCE DESK\nWEATHER\nVisit greenhouse\nView nursery schedule\nVisit market stall\nVisit tool shed\nEnter council pavilion\nOpen packing schedule\nOpen evidence desk\nCheck weather station\nA1\nCaixin\nA2\nXiao bai cai / pak choi\nA3\nKailan\nA4\nLettuce\nB1\nCaixin\nB2\nXiao bai cai / pak choi\nB3\nKailan\nB4\nLettuce\nC1\nKailan\nC2\nOpen bed\nC3\nOpen bed\nC4\nKailan\nD1\nCaixin\nD2\nLettuce\nD3\nOpen bed\nD4\nXiao bai cai / pak choi\nMei\nCrop scientist\nRavi\nDemand analyst\nHana\nWeather scout\nBen\nResource analyst\nAsha\nPlanning chair\nIdris\nIndependent critic\n\nTap to inspect · arrows to explore\n\nPLAN PREVIEW\n8 Sept\nToday\n\nPreview only — this does not advance time or create observations.\n\nAccessible farm list\nAll 16 beds and next actions\nAdvisor shortcuts\nTalk, invite or convene council\nPlanning tools\nStrategies, timeline and resources\n\nGROWING BED\n\nA1\n\nGROWING\n\nCaixin\n79%\nPreview date\n8 Sept\nNext action\nInspect growth · harvest 14 Sept\nSystem\nsheltered hydroponic\nArea\n20 m²\n\nThis is a schedule preview from recorded dates. It does not claim that growth was observed.\n\nAsk Mei\nTry a change\nFarm\nTools\nCrops\nData\nOutcomes\nSetup",
+    "dialogAfterEscape": 0,
+    "dateBefore": "0",
+    "dateAfterKeyboard": "1",
+    "dateContext": "Little Plot Collective\n\nLIM CHU KANG, SINGAPORE · SYNTHETIC SIMULATION\n\nLittle Plot Collective\n\nTap a bed or visit an advisor to explore the plan.\n\nTalk to advisors\nQuest journal\nScenario lab\nCrop almanac\n8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n3\nPLAN OPTIONS\nMove farm\n\nSwipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.\n\nGREENHOUSE\nMARKET\nNURSERY\nTOOL SHED\nCOUNCIL\nPACKING SHED\nEVIDENCE DESK\nWEATHER\nVisit greenhouse\nView nursery schedule\nVisit market stall\nVisit tool shed\nEnter council pavilion\nOpen packing schedule\nOpen evidence desk\nCheck weather station\nA1\nCaixin\nA2\nXiao bai cai / pak choi\nA3\nKailan\nA4\nLettuce\nB1\nCaixin\nB2\nXiao bai cai / pak choi\nB3\nKailan\nB4\nLettuce\nC1\nKailan\nC2\nOpen bed\nC3\nOpen bed\nC4\nKailan\nD1\nCaixin\nD2\nLettuce\nD3\nOpen bed\nD4\nXiao bai cai / pak choi\nMei\nCrop scientist\nRavi\nDemand analyst\nHana\nWeather scout\nBen\nResource analyst\nAsha\nPlanning chair\nIdris\nIndependent critic\n\nTap to inspect · arrows to explore\n\nPLAN PREVIEW\n9 Sept\nToday\n\nPreview only — this does not advance time or create observations.\n\nAccessible farm list\nAll 16 beds and next actions\nAdvisor shortcuts\nTalk, invite or convene council\nPlanning tools\nStrategies, timeline and resources\nFarm\nTools\nCrops\nData\nOutcomes\nSetup",
+    "scrollY": 407
+  },
+  "desktop": {
+    "initialText": "FarmTact\nSTRATEGY ROOM\nFarm\nFarm tools\nCrops\nData\nOutcomes\nSetup\nWORKSPACE\nSynthetic Demo\nACTIVE FARM\nLittle Plot Collective\nACCEPTED FOR SIMULATION\n\nLIM CHU KANG, SINGAPORE · SYNTHETIC SIMULATION\n\nLittle Plot Collective\n\nTap a bed or visit an advisor to explore the plan.\n\nTalk to advisors\nQuest journal\nScenario lab\nCrop almanac\n8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n3\nPLAN OPTIONS\nMove farm\n\nSwipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.\n\nGREENHOUSE\nMARKET\nNURSERY\nTOOL SHED\nCOUNCIL\nPACKING SHED\nEVIDENCE DESK\nWEATHER\nVisit greenhouse\nView nursery schedule\nVisit market stall\nVisit tool shed\nEnter council pavilion\nOpen packing schedule\nOpen evidence desk\nCheck weather station\nA1\nCaixin\nA2\nXiao bai cai / pak choi\nA3\nKailan\nA4\nLettuce\nB1\nCaixin\nB2\nXiao bai cai / pak choi\nB3\nKailan\nB4\nLettuce\nC1\nKailan\nC2\nOpen bed\nC3\nOpen bed\nC4\nKailan\nD1\nCaixin\nD2\nLettuce\nD3\nOpen bed\nD4\nXiao bai cai / pak choi\nWhy is this bed delayed?\nMei\nCrop scientist\nWhich delivery is most exposed?\nRavi\nDemand analyst\nWhat conditions should we watch?\nHana\nWeather scout\nWhere is the tightest resource?\nBen\nResource analyst\nCompare our best alternatives.\nAsha\nPlanning chair\nShow me the evidence.\nIdris\nIndependent critic\n\nTap to inspect · arrows to explore\n\nPLAN PREVIEW\n8 Sept\nToday\n\nPreview only — this does not advance time or create observations.\n\nAccessible farm list\nAll 16 beds and next actions\nAdvisor shortcuts\nTalk, invite or convene council\nPlanning tools\nStrategies, timeline and resources",
+    "targets": [
+      {
+        "label": "Farm",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Farm tools",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Crops",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Data",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Outcomes",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Setup",
+        "tag": "BUTTON",
+        "w": 208,
+        "h": 47,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Add or import farm",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 39,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Workspace status",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 39,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Talk to advisors",
+        "tag": "BUTTON",
+        "w": 127,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Quest journal",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Scenario lab",
+        "tag": "BUTTON",
+        "w": 111,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Crop almanac",
+        "tag": "BUTTON",
+        "w": 117,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "3plan options",
+        "tag": "BUTTON",
+        "w": 85,
+        "h": 45,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Move farm",
+        "tag": "BUTTON",
+        "w": 103,
+        "h": 44,
+        "font": "11.2px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Visit greenhouse",
+        "tag": "BUTTON",
+        "w": 82,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "View nursery schedule",
+        "tag": "BUTTON",
+        "w": 102,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Visit market stall",
+        "tag": "BUTTON",
+        "w": 82,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Visit tool shed",
+        "tag": "BUTTON",
+        "w": 73,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Enter council pavilion",
+        "tag": "BUTTON",
+        "w": 98,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Open packing schedule",
+        "tag": "BUTTON",
+        "w": 106,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Open evidence desk",
+        "tag": "BUTTON",
+        "w": 95,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Check weather station",
+        "tag": "BUTTON",
+        "w": 103,
+        "h": 44,
+        "font": "8.48px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A1, Caixin, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 128,
+        "h": 90,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A2, Xiao bai cai / pak choi, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A3, Kailan, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "A4, Lettuce, growing, Inspect growth · harvest 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B1, Caixin, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B2, Xiao bai cai / pak choi, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B3, Kailan, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "B4, Lettuce, growing, Inspect growth · harvest 28 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C1, Kailan, empty, Sow kailan on 21 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C2, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C3, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "C4, Kailan, empty, Sow kailan on 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D1, Caixin, empty, Sow caixin on 5 Oct",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D2, Lettuce, empty, Sow lettuce on 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D3, empty, empty, Choose a crop",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "D4, Xiao bai cai / pak choi, empty, Sow pak choi on 14 Sept",
+        "tag": "BUTTON",
+        "w": 116,
+        "h": 82,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Mei, Crop scientist at Greenhouse",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Ravi, Demand analyst at Market stall",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Hana, Weather scout at Weather station",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Ben, Resource analyst at Tool shed",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Asha, Planning chair at Council pavilion",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Talk to Idris, Independent critic at Evidence desk",
+        "tag": "BUTTON",
+        "w": 94,
+        "h": 132,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "View farm left",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm right",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm up",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "View farm down",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Zoom in",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Zoom out",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Recenter farm",
+        "tag": "BUTTON",
+        "w": 44,
+        "h": 44,
+        "font": "16px",
+        "display": "grid",
+        "visible": true
+      },
+      {
+        "label": "Preview simulation date",
+        "tag": "INPUT",
+        "w": 692,
+        "h": 16,
+        "font": "16px",
+        "display": "block",
+        "visible": true
+      },
+      {
+        "label": "Today",
+        "tag": "BUTTON",
+        "w": 70,
+        "h": 38,
+        "font": "10.88px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Accessible farm listAll 16 beds and next actions",
+        "tag": "BUTTON",
+        "w": 317,
+        "h": 64,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Advisor shortcutsTalk, invite or convene council",
+        "tag": "BUTTON",
+        "w": 317,
+        "h": 64,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      },
+      {
+        "label": "Planning toolsStrategies, timeline and resources",
+        "tag": "BUTTON",
+        "w": 317,
+        "h": 64,
+        "font": "16px",
+        "display": "flex",
+        "visible": true
+      }
+    ],
+    "overflow": {
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "innerHeight": 800,
+      "scrollHeight": 1061
+    },
+    "focusTrail": [
+      {
+        "tag": "BUTTON",
+        "label": "Farm",
+        "x": 18,
+        "y": 102,
+        "outline": "rgb(24, 57, 43) solid 3px",
+        "boxShadow": "rgba(63, 91, 16, 0.24) 0px -3px 0px 0px inset"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Farm tools",
+        "x": 18,
+        "y": 155,
+        "outline": "rgb(188, 201, 191) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Crops",
+        "x": 18,
+        "y": 208,
+        "outline": "rgb(188, 201, 191) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Data",
+        "x": 18,
+        "y": 261,
+        "outline": "rgb(188, 201, 191) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Outcomes",
+        "x": 18,
+        "y": 314,
+        "outline": "rgb(188, 201, 191) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Setup",
+        "x": 18,
+        "y": 367,
+        "outline": "rgb(188, 201, 191) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Add or import farm",
+        "x": 1159,
+        "y": 18,
+        "outline": "rgb(24, 57, 43) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Workspace status",
+        "x": 1207,
+        "y": 18,
+        "outline": "rgb(24, 57, 43) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Talk to advisors",
+        "x": 755,
+        "y": 159,
+        "outline": "rgb(48, 75, 54) solid 3px",
+        "boxShadow": "rgba(62, 71, 44, 0.07) 0px 4px 11px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Quest journal",
+        "x": 889,
+        "y": 159,
+        "outline": "rgb(48, 75, 54) solid 3px",
+        "boxShadow": "rgba(62, 71, 44, 0.07) 0px 4px 11px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Scenario lab",
+        "x": 1011,
+        "y": 159,
+        "outline": "rgb(48, 75, 54) solid 3px",
+        "boxShadow": "rgba(62, 71, 44, 0.07) 0px 4px 11px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Crop almanac",
+        "x": 1129,
+        "y": 159,
+        "outline": "rgb(48, 75, 54) solid 3px",
+        "boxShadow": "rgba(62, 71, 44, 0.07) 0px 4px 11px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "3plan options",
+        "x": 573,
+        "y": 238,
+        "outline": "rgb(248, 241, 220) solid 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Move farm",
+        "x": 291,
+        "y": 231,
+        "outline": "rgb(48, 75, 54) solid 3px",
+        "boxShadow": "rgba(62, 71, 44, 0.07) 0px 4px 11px 0px"
+      },
+      {
+        "tag": "DIV",
+        "label": "Farm map",
+        "x": 279,
+        "y": 248,
+        "outline": "rgb(24, 57, 43) auto 3px",
+        "boxShadow": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Visit greenhouse",
+        "x": 943,
+        "y": 290,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "View nursery schedule",
+        "x": 621,
+        "y": 254,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Visit market stall",
+        "x": 1056,
+        "y": 549,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Visit tool shed",
+        "x": 380,
+        "y": 528,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Enter council pavilion",
+        "x": 861,
+        "y": 586,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Open packing schedule",
+        "x": 1058,
+        "y": 727,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Open evidence desk",
+        "x": 928,
+        "y": 756,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Check weather station",
+        "x": 346,
+        "y": 243,
+        "outline": "rgb(49, 69, 50) solid 3px",
+        "boxShadow": "rgba(50, 55, 34, 0.18) 0px 4px 9px 0px"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "A1, Caixin, growing, Inspect growth · harvest 14 Sept",
+        "x": 506,
+        "y": 354,
+        "outline": "rgb(24, 57, 43) solid 3px",
+        "boxShadow": "none"
+      }
+    ],
+    "dialogAfterKeyboardBed": 1,
+    "activeInDialog": {
+      "tag": "BUTTON",
+      "label": "Close"
+    },
+    "dialogAfterEscape": 0
+  },
+  "errors": []
+}

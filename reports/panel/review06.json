@@ -1,0 +1,67 @@
+{
+  "id":"review06",
+  "persona":"Judging-panel observability, evaluation and numerical-evidence specialist",
+  "reviewer_type":"judge",
+  "disclosure":"Unofficial independent AI judging assessment using Chromium touch emulation and desktop browser play. This is not an official grade, physical-device test or human study. Completed play used an authorized returning isolated demo session after fresh-session admission was limited.",
+  "reviewed_at":"2026-09-09T07:24:00Z",
+  "build":{"url":"https://farmtact.fly.dev","javascript_asset":"/assets/index-ByLNQWi-.js","css_asset":"/assets/index-C1IwVELs.css"},
+  "rubric_status":"read",
+  "rubric_source":{"document":"ShowMeYourAgent_Hackathon_Briefing_release-1.pdf","page":13,"git_blob":"b5a05dc8e0b849d9f8b1566cbd865151984a1730"},
+  "rubric_scores":[
+    {"criterion":"Goal & Scope Definition","score":4,"rationale":"Data Explorer clearly frames tracing demand, harvest and resources through forecasts and planning results. Synthetic, simulated and no-inference labels constrain interpretation.","evidence_ids":["e01","e04"]},
+    {"criterion":"Architecture & Reasoning Loop","score":4,"rationale":"The live loop proceeds from source record to changed forecast assumptions, frozen numerical result, same-baseline comparison and exact metric trace. Source checks show distinct input, baseline and numerical hashes.","evidence_ids":["e02","e05","e06"]},
+    {"criterion":"Tool Use & Integration","score":4,"rationale":"A forecast links twelve history IDs and one order ID, the playground exposes EWMA alpha, and the result names its CP-SAT calculation version. The run persisted without advisor inference.","evidence_ids":["e02","e03","e06"]},
+    {"criterion":"Autonomy & Human-in-the-Loop","score":3,"rationale":"Numerical calculation is deliberately separate from Ask advisor and experiments remain simulated. The reviewer controlled assumptions and policy; escalation and operational approval were not exercised.","evidence_ids":["e04","e05"]},
+    {"criterion":"Safety, Security & Guardrails","score":4,"rationale":"The UI labels data synthetic, outcomes simulated and calculation no-inference. Focused tests separately passed integrity rejection, tenant isolation and replay-without-inference; no broader deployment-security claim is made.","evidence_ids":["e01","e04","e07"]},
+    {"criterion":"Observability & Evaluation","score":4,"rationale":"The live trace exposes input and baseline hashes, strategy ID, calculation version, exact metrics, violations and 48 input differences. Evaluation remains pinned to the original alpha-0.35 reference, so selected-sandbox accuracy is absent.","evidence_ids":["e05","e06","e07"]},
+    {"criterion":"Platform & Tooling Usage","score":3,"rationale":"The deployed responsive interface, persisted state and numerical workflow operated on both viewports. Initial fresh-session bootstrap was unavailable for 3,015 seconds, weakening public-demo resilience.","evidence_ids":["e01","e05","e08"]}
+  ],
+  "usability_score":7,
+  "summary":"FarmTact provides unusually inspectable numerical lineage: expected demand links to its history and order records, forecast assumptions are editable, and a frozen scenario compares against the original baseline with exact metrics. In Balanced, margin rose SGD 1,036.97 while shortfall rose 119.8 kg, exposing the economic-service trade-off. The trace is technically credible but dense, and evaluation does not show whether alpha 0.65 improved accuracy. Initial fresh-session bootstrap was rate-limited for 3,015 seconds; completed play used a disclosed authorized returning demo tenant.",
+  "strengths":[
+    "Forecast records expose expected, confirmed and residual kilograms plus contributing history and order IDs.",
+    "The result separates deterministic numerical evidence from optional advisor inference.",
+    "The desktop comparison reports delivery, waste, labour, cash, margin and violations together on one policy.",
+    "Frozen evidence names input hash, baseline hash, strategy ID and calculation version, then shows exact metrics and input differences.",
+    "The scenario reopened after reload and viewport change without another scenario or advisor message."
+  ],
+  "findings":[
+    {"severity":"high","title":"Fresh-session admission can block the public demonstration","observation":"The initial fresh mobile session loaded the shell but bootstrap returned HTTP 429 with a 3,015-second retry interval. Completion required an authorized existing isolated demo tenant.","impact":"A judge or first-time user may be unable to inspect any farm evidence for roughly 50 minutes despite making no numerical or advisor request.","recommendation":"Keep low-cost read-only bootstrap and a recorded evidence journey available when session creation or inference quotas are exhausted.","evidence_ids":["e08"]},
+    {"severity":"medium","title":"Selected forecast settings lack comparable holdout evaluation","observation":"The saved branch uses demand multiplier 120% and EWMA alpha 0.65, while evaluation is explicitly fixed to the original alpha-0.35 reference.","impact":"Users can see changed planning outcomes but cannot judge whether the changed forecast is more accurate on historical data.","recommendation":"Compute deterministic holdout MAE, bias and interval coverage for each selected saved dataset against the same dates.","evidence_ids":["e03","e07"]},
+    {"severity":"medium","title":"The strongest provenance reads like a developer trace","observation":"Evidence leads with full hashes and raw JSON; 48 cumulative input differences are nested beneath it.","impact":"A planner may struggle to connect assumptions to the 119.8 kg added shortfall and SGD 1,036.97 margin increase.","recommendation":"Lead with a human-readable lineage chain and highest-impact changed records, with hashes and JSON under technical details.","evidence_ids":["e05","e06"]},
+    {"severity":"low","title":"Mobile result discovery requires scrolling past experiment controls","observation":"At 430px the frozen-dataset header and experiment controls dominate the first result viewport; computed values sit farther down.","impact":"Users may not immediately notice that the selected branch already has computed evidence.","recommendation":"Place a compact result summary directly below the frozen-dataset card or add a jump link.","evidence_ids":["e04"]}
+  ],
+  "journeys":[
+    {"id":"j01-mobile-forecast-to-result","device":"Chromium touch emulation","viewport":"430x932","steps":["Opened Data in the assigned returning demo session and confirmed original-reference provenance, cutoff, generator and alpha 0.35.","Opened Caixin expected demand for 14 September and inspected twelve history IDs and order-0-0.","Changed historical demand to 120% and EWMA alpha to 0.65, then used the single Save and run strategies action.","Opened the saved Balanced result with numerical, simulated and no-inference framing."],"outcome":"passed","observations":["The page had no horizontal document overflow.","Result: 0.54 fill rate, SGD 3,994.34 margin, 76.3 kg waste, 814 kg harvest, 624.81 kg shortfall, SGD 1,566.28 cost and 71.38 labour hours.","Exactly one scenario was created across the review and no advisor message was sent."]},
+    {"id":"j02-desktop-reload-and-trace","device":"Chromium desktop","viewport":"1280x900","steps":["Reloaded the same tenant at desktop size and selected the saved Review06 scenario.","Compared Balanced outcomes against the original frozen baseline.","Expanded numerical evidence and inspected hashes, calculation version, metrics, violations and input-difference count."],"outcome":"passed","observations":["The branch persisted without another numerical POST.","Shortfall rose 119.8 kg, waste fell 105.69 kg, cash rose SGD 25.52 and margin rose SGD 1,036.97; labour stayed 71.38 hours and both plans had zero violations.","The trace identified daily-bed-cpsat-v1 and 48 cumulative input differences."]}
+  ],
+  "evidence":[
+    {"id":"e01","type":"screenshot","path":"apps/web/screenshots/panel/review06/mobile-430-forecast-overview.png","description":"Actual 430px reference overview with synthetic provenance and linked forecast context."},
+    {"id":"e02","type":"screenshot","path":"apps/web/screenshots/panel/review06/mobile-430-forecast-record.png","description":"Actual mobile forecast record linking expected demand to history and order IDs."},
+    {"id":"e03","type":"screenshot","path":"apps/web/screenshots/panel/review06/mobile-430-forecast-assumptions.png","description":"Actual mobile assumptions for the sole run: historical demand 120% and alpha 0.65."},
+    {"id":"e04","type":"screenshot","path":"apps/web/screenshots/panel/review06/mobile-430-strategy-result.png","description":"Actual mobile saved-scenario Experiments view with simulation/no-inference framing."},
+    {"id":"e05","type":"screenshot","path":"apps/web/screenshots/panel/review06/desktop-1280-baseline-comparison.png","description":"Actual desktop baseline comparison and expanded exact numerical evidence."},
+    {"id":"e06","type":"browser_check","path":"apps/web/screenshots/panel/review06/observations.json","description":"Actual live checks and extracted public-safe facts for provenance, forecast inputs, persistence, comparison and trace."},
+    {"id":"e07","type":"browser_check","path":"tests/explorer/test_explorer_review.py","description":"Additional source/test evidence, separate from browser play: five focused integrity, replay, evaluation and tenant/event tests passed."},
+    {"id":"e08","type":"browser_check","path":"apps/web/screenshots/panel/review06/onboarding-429-observation.json","description":"Historical fresh-session outcome: shell 200, bootstrap 429, 3,015-second retry, zero scenarios and zero advisor messages."}
+  ],
+  "limitations":[
+    "Chromium touch emulation is not physical-device evidence.",
+    "Completed play used an authorized returning isolated demo session; fresh-session onboarding was rate-limited.",
+    "Exactly one numerical scenario was run and no advisor message was sent.",
+    "Only Balanced was traced in depth; Lean and Resilient were visible but not numerically reviewed.",
+    "Source tests supplement browser play but do not establish deployment configuration, performance or broad security.",
+    "External refresh, main-plan mutation, operational approval, cross-tenant browser attacks and adverse networks were untested."
+  ],
+  "priority_improvements":[
+    "Preserve read-only demo and recorded evidence access when fresh-session admission is exhausted.",
+    "Evaluate selected forecast settings on the same historical holdout as the reference.",
+    "Translate hashes and raw JSON into a plain-language lineage chain with highest-impact changes first.",
+    "Surface the existing computed-result summary earlier on mobile."
+  ],
+  "test_commands":[
+    "FARMTACT_BASE_URL=https://farmtact.fly.dev FARMTACT_ASSIGNED_SESSION=/tmp/farmtact-fly-persistence.json node tests/browser/panel/review06.mjs",
+    "FARMTACT_BASE_URL=https://farmtact.fly.dev FARMTACT_ASSIGNED_SESSION=/tmp/farmtact-fly-persistence.json FARMTACT_RESUME_SAVED=1 FARMTACT_RESUME_SCENARIO_ID=<saved-id> node tests/browser/panel/review06.mjs",
+    ".venv/bin/pytest -q tests/explorer/test_explorer_review.py tests/explorer/test_data_explorer.py tests/gameplay/test_conversations.py -k 'saved_forecast_replay_does_not_recompute or saved_snapshot_rejects_forecast_that_no_longer_matches_forecast_hash or direct_message_persists_validated_reply_and_replay_makes_no_call or tenant_isolation_and_last_event_id_resume or public_export_enforces_reuse_and_evaluation_is_original'"
+  ]
+}

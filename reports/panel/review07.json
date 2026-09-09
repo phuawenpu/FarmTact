@@ -1,0 +1,202 @@
+{
+  "id": "review07",
+  "persona": "Judging-panel business value, product coherence and hackathon demonstration judge",
+  "reviewer_type": "judge",
+  "disclosure": "Unofficial independent AI judging assessment using an assigned returning-demo session. Browser evidence uses Chromium touch emulation, not a physical device; rubric scores use the panel's unofficial 0–5 scale and are not official hackathon grades.",
+  "reviewed_at": "2026-09-09T06:30:07Z",
+  "build": {
+    "url": "https://farmtact.fly.dev",
+    "javascript_asset": "/assets/index-ByLNQWi-.js",
+    "css_asset": "/assets/index-C1IwVELs.css"
+  },
+  "rubric_status": "read",
+  "rubric_source": {
+    "document": "ShowMeYourAgent_Hackathon_Briefing_release-1.pdf",
+    "page": 13,
+    "git_blob": "b5a05dc8e0b849d9f8b1566cbd865151984a1730"
+  },
+  "rubric_scores": [
+    {
+      "criterion": "Goal & Scope Definition",
+      "score": 4,
+      "rationale": "The live demo ties a 56-day vegetable plan to delivery fill, shortfall, margin, waste and specific bed actions. Synthetic simulation is labelled consistently, though the opening farm scene does not immediately state the urgent business decision or explain why a 54% fill plan is acceptable.",
+      "evidence_ids": ["e01", "e03", "e05"]
+    },
+    {
+      "criterion": "Architecture & Reasoning Loop",
+      "score": 4,
+      "rationale": "The visible loop connects a frozen snapshot and forecast to three same-baseline strategies, numerical validation, automatic simulation selection, a worklist, stored outcomes, replay and disruption replanning. The council was visibly waiting on an evidence-grounded run, so no inference was misrepresented as part of this returning session.",
+      "evidence_ids": ["e03", "e04", "e05"]
+    },
+    {
+      "criterion": "Tool Use & Integration",
+      "score": 4,
+      "rationale": "Planning tools expose beds, crop cycles, demand forecasts, labour, cash, scenario controls, comparison and downloadable work. The browser did not execute an external public-data refresh or advisor call, limiting claims about live integrations.",
+      "evidence_ids": ["e02", "e04", "e05"]
+    },
+    {
+      "criterion": "Autonomy & Human-in-the-Loop",
+      "score": 4,
+      "rationale": "The UI clearly states that Balanced was selected automatically after numerical validation and restricts acceptance to simulation. Users retain comparison, replay and simulated-delay controls, although the acceptance explanation is too terse for a materially underfilled plan.",
+      "evidence_ids": ["e03", "e05"]
+    },
+    {
+      "criterion": "Safety, Security & Guardrails",
+      "score": 3,
+      "rationale": "The live product repeatedly distinguishes synthetic demo, test, simulation-only, preview and replay states, and says replay creates zero new model calls. This bounded UI review did not run prompt-injection, permission or least-privilege checks.",
+      "evidence_ids": ["e01", "e03", "e05"]
+    },
+    {
+      "criterion": "Observability & Evaluation",
+      "score": 4,
+      "rationale": "The Data Explorer shows provenance, cutoff, coverage, generator and forecast version, while planning exposes validation status and Outcomes shows week-by-week demand and harvest plus stored replay. A judge still has to move between separate rooms to reconstruct the complete decision trace.",
+      "evidence_ids": ["e03", "e04", "e05"]
+    },
+    {
+      "criterion": "Platform & Tooling Usage",
+      "score": 4,
+      "rationale": "The deployed responsive application rendered without horizontal overflow at 390 and 1280 pixels, offered touch-oriented farm exploration plus an accessible list, and preserved a substantial returning-demo state. Framework internals and multi-agent orchestration were not inferred from the UI.",
+      "evidence_ids": ["e01", "e02", "e05"]
+    }
+  ],
+  "usability_score": 8,
+  "summary": "FarmTact presents a memorable, coherent simulation product rather than a themed chat screen. The live returning demo connected a visual farm, frozen inputs, three quantified strategies, automatic Balanced selection, bed-level work, business outcomes, replay and replanning controls. Its strongest hackathon quality is honest specificity: synthetic, test, preview, simulation-only and zero-new-inference replay labels are visible where they matter. The clearest improvement is to lead with the decision problem and explain why the selected plan is valid despite filling only 54% of demand, so a judge can understand the value before exploring the world.",
+  "strengths": [
+    "The farm world turns abstract planning into recognizable beds, crop stages, harvest dates, resources and advisor roles without making chat the primary interface.",
+    "Lean, Balanced and Resilient appear together with demand fill, margin and waste, making the trade-off legible in business terms.",
+    "The Data Explorer makes the synthetic origin, cutoff, coverage, generator, forecast model and alpha visible rather than hiding demo assumptions.",
+    "Automatic acceptance is explicitly limited to simulation and linked to numerical validation.",
+    "Replay and preview labels are unusually honest about zero new model calls and the absence of real observations.",
+    "The 390-pixel touch journey had no document overflow and retained a practical keyboard-friendly farm-list alternative."
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "The selected plan needs an executive explanation for its 54% fill rate",
+      "observation": "Balanced is marked accepted for simulation after numerical validation, while Outcomes reports 54% demand filled and a 505.01 kg shortfall. The strategy card gives a one-line objective but does not immediately explain which constraints make the remaining gap unavoidable or why Balanced beats the 62% Resilient option.",
+      "impact": "A judge or farm manager can mistake a constrained optimum for weak planning, or assume margin was favored over important delivery commitments without seeing the governing constraint and trade-off.",
+      "recommendation": "Place a short decision brief beside acceptance: the binding constraints, the best feasible fill rate, why the selected strategy won, the cost of switching to Resilient and the specific unmet deliveries requiring escalation.",
+      "evidence_ids": ["e03", "e05"]
+    },
+    {
+      "severity": "medium",
+      "title": "The opening scene delays the product's core business question",
+      "observation": "The mobile landing view leads with 'Tap a bed or visit an advisor to explore the plan,' map controls and many destinations. The 56-day planning mission and quantified delivery problem appear only after opening Planning tools or Outcomes.",
+      "impact": "A hackathon judge can appreciate the art before understanding the problem solved, target user or immediate decision, weakening the first-minute value story.",
+      "recommendation": "Add a compact mission banner above the map with today's decision, largest exposed delivery, selected response and a single 'Review decision' action.",
+      "evidence_ids": ["e01", "e03"]
+    },
+    {
+      "severity": "medium",
+      "title": "Decision evidence is coherent but spread across rooms",
+      "observation": "Provenance and forecast details live in Data, alternatives and resources in Planning tools, and shortfall plus replay in Outcomes. Each is clear, but no single view summarizes the complete input-to-decision-to-result chain.",
+      "impact": "A reviewer must remember values while navigating, and a manager cannot capture one concise audit view for a planning meeting.",
+      "recommendation": "Provide a one-page decision brief linking snapshot, forecast, binding constraints, alternatives, selection rule, worklist, expected outcome and evidence drill-downs.",
+      "evidence_ids": ["e03", "e04", "e05"]
+    },
+    {
+      "severity": "low",
+      "title": "The experiment call to action is semantically confusing",
+      "observation": "The selected reference is labelled a frozen dataset, while the Experiments panel says 'Save this dataset before running an experiment' and also presents an enabled-looking 'Run frozen scenario' action.",
+      "impact": "A user may not know whether the reference is already saved, whether the action will mutate the main farm, or what must happen before the run.",
+      "recommendation": "State the exact state and consequence, such as 'Reference snapshot is read-only; save a named sandbox copy to run' and disable or relabel the run action until that prerequisite is met.",
+      "evidence_ids": ["e04"]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "j01-mobile-farm-to-evidence",
+      "device": "Chromium touch emulation",
+      "viewport": "390x844",
+      "steps": [
+        "Opened the live deployment with the assigned returning-demo session and recorded current asset identity.",
+        "Reviewed the interactive farm, resource counters, advisors and explicit synthetic-simulation label.",
+        "Opened the nursery schedule and inspected all 16 beds, crop stages, harvest dates and next actions.",
+        "Opened Outcomes and reviewed expected harvest, demand fill, margin, shortfall and week-by-week gaps.",
+        "Opened Data and inspected synthetic provenance, cutoff, coverage, generator and forecast settings.",
+        "Opened Experiments and reviewed bounded scenario controls without creating a run."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "The page had no horizontal document overflow at 390 pixels.",
+        "The farm scene is distinctive and operationally grounded, with an accessible list alternative.",
+        "The core commercial problem is concrete but appears after exploration rather than at first glance.",
+        "No numerical scenario and no advisor message were sent."
+      ]
+    },
+    {
+      "id": "j02-desktop-decision-loop",
+      "device": "Chromium desktop viewport in the same browser session",
+      "viewport": "1280x900",
+      "steps": [
+        "Reloaded the same returning-demo session at desktop width.",
+        "Opened Planning tools from the farm scene.",
+        "Reviewed the 56-day mission, simulation acceptance, crop timeline and bed state.",
+        "Compared Lean, Balanced and Resilient on demand fill, margin and waste.",
+        "Reviewed planned sowing area, labour, cash, council status, replay and simulated-delay controls."
+      ],
+      "outcome": "passed",
+      "observations": [
+        "The page had no horizontal document overflow at 1280 pixels.",
+        "Balanced was visibly auto-selected after numerical validation and accepted only for simulation.",
+        "The three alternatives were meaningfully different and shared comparable business metrics.",
+        "The reason for accepting 54% demand fill was not summarized in executive language."
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e01",
+      "type": "screenshot",
+      "path": "apps/web/screenshots/panel/review07/mobile-390-home.png",
+      "description": "Actual 390px returning-demo farm showing synthetic-simulation identity, beds, resources, destinations and bottom navigation."
+    },
+    {
+      "id": "e02",
+      "type": "screenshot",
+      "path": "apps/web/screenshots/panel/review07/mobile-390-zone-detail.png",
+      "description": "Actual 390px nursery schedule with crop stages, progress, harvest dates and next actions."
+    },
+    {
+      "id": "e03",
+      "type": "screenshot",
+      "path": "apps/web/screenshots/panel/review07/mobile-390-outcomes.png",
+      "description": "Actual mobile outcome lab showing expected harvest, fill, margin, shortfall, weekly gaps and stored replay."
+    },
+    {
+      "id": "e04",
+      "type": "screenshot",
+      "path": "apps/web/screenshots/panel/review07/mobile-390-data-evidence.png",
+      "description": "Actual mobile Data Explorer provenance and input-to-planning relationship view; experiment state is separately captured in the browser observations."
+    },
+    {
+      "id": "e05",
+      "type": "screenshot",
+      "path": "apps/web/screenshots/panel/review07/desktop-1280-decision.png",
+      "description": "Actual desktop planning mission showing simulation acceptance, bed timeline, three strategy trade-offs, plan scope and scenario tools."
+    },
+    {
+      "id": "e06",
+      "type": "browser_check",
+      "path": "apps/web/screenshots/panel/review07/observations.json",
+      "description": "Browser checks and public-safe UI text for both viewports, current asset hashes, zero scenario mutations and zero advisor messages."
+    }
+  ],
+  "limitations": [
+    "Chromium touch emulation is not physical-device evidence.",
+    "The assigned returning-demo session contained existing farm and run records; no claim is made about first-run onboarding.",
+    "No new numerical scenario was created because the existing saved decision was adequate for the bounded judging journey and preserving main records was required.",
+    "No advisor message was sent, so live DeepSeek response quality, latency and conversational grounding were not tested.",
+    "Public-data refresh, image input, export contents, replanning execution and adversarial security behavior were not exercised.",
+    "Rubric scores are subjective, unofficial and based primarily on visible deployed behavior; unseen architecture and security were not inferred."
+  ],
+  "priority_improvements": [
+    "Explain why the accepted 54% fill plan is the best feasible choice and name the deliveries that still need escalation.",
+    "Lead the farm scene with a concise mission and business-risk banner.",
+    "Create one linked decision brief spanning inputs, alternatives, selection, work and outcomes.",
+    "Clarify the frozen-reference versus saved-sandbox prerequisite in Experiments."
+  ],
+  "test_commands": [
+    "node tests/browser/panel/review07.mjs"
+  ]
+}
