@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "edition": "v1",
+      "http_status": 200,
+      "source_matches_pin": true
+    },
+    {
+      "edition": "v2",
+      "http_status": 200,
+      "source_matches_pin": true
+    },
+    {
+      "edition": "v3",
+      "http_status": 200,
+      "source_matches_pin": true
+    },
+    {
+      "edition": "v4",
+      "http_status": 200,
+      "source_matches_pin": true
+    },
+    {
+      "registry_unchanged": true
+    }
+  ],
+  "sessions_created": 0,
+  "provider_calls": 0,
+  "production_mutations": 0
+}

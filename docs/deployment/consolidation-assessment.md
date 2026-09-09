@@ -1,7 +1,9 @@
 # Fly consolidation assessment
 
-Measured 2026-09-09 in Singapore (`sin`). Decision pending workload and runtime
-isolation verification; production remains unchanged during assessment.
+Measured 2026-09-09 in Singapore (`sin`). Decision: **retain the existing topology**.
+The assessment does not establish a safe net saving from consolidation. A smaller
+shared host is a possible future downsizing experiment, not an approved sizing
+result. No Machine, volume, routing, image or production state was changed.
 
 ## Current resource run rate
 
@@ -21,6 +23,7 @@ rates, not an invoice or a claim about credits, taxes or existing reservations.
 | Current five × shared 1 vCPU / 2 GB | $67.90 | $2.40 | $70.30 | — |
 | One shared 2 vCPU / 4 GB, if workload fits | $27.16 | $2.40 | $29.56* | $40.74 / 60% |
 | One shared 4 vCPU / 8 GB | $54.32 | $2.40 | $56.72* | $13.58 / 20% |
+| One shared 6 vCPU / 12 GB | $81.47 | $2.40 | $83.87* | −$13.57 |
 | Current pattern plus separate v5 | $81.48 | At least $2.40 | At least $83.88 | — |
 
 *Comparison retains current volumes for rollback. New consolidated storage and
@@ -29,6 +32,21 @@ Volumes cost $0.15/GB/month whether attached or detached; stopped rootfs costs
 $0.15/GB/month. Snapshot storage is $0.08/GB/month after the first 10 GB. Network,
 inference, support, taxes and credits are excluded. Same-region internal traffic
 is already free under granular rates, so do not count an invented network saving.
+
+The lower-priced hosts also allocate fewer resources. Two vCPUs / 4 GB costs
+exactly the same as two of today's Machines, and four vCPUs / 8 GB costs exactly
+the same as four. Six separate 2 GB Machines cost $81.48 versus $81.47 for the
+6-vCPU / 12-GB host, a rounding difference. There is no material consolidation
+discount at those equal-capacity configurations. The $13.58 apparent saving
+reduces aggregate allocation from five vCPUs / 10 GB to four vCPUs / 8 GB.
+
+The 12 GB preset provides more capacity than today's allocation. A custom
+6-vCPU / 10-GB size would be approximately $68.77 by interpolation between the
+official 6-GB and 12-GB prices, still slightly above $67.90; this is an estimate,
+not a separately quoted preset. Five independent 1-GB Machines would cost
+$36.15, showing that downsizing can also save money without changing topology.
+Neither that size nor the 4-GB shared candidate has been workload-validated, and
+neither was applied.
 
 Sources: [Fly resource pricing](https://fly.io/docs/about/pricing/),
 [billing](https://fly.io/docs/about/billing/),
@@ -43,7 +61,7 @@ RSS double-counts shared PostgreSQL pages and is not peak memory. A 4 GB host is
 a candidate, not a verified sizing recommendation. Shared vCPU quotas mean the
 number of vCPUs is not equivalent to dedicated CPU capacity.
 
-Consolidate only when the total retained-resource cost is lower and a bounded
+For any later reconsideration, consolidate only when the total retained-resource cost is lower and a bounded
 benchmark shows capacity for concurrent numerical jobs plus normal browsing,
 with memory headroom, no OOM/restarts and acceptable latency. Preserve exact old
 code and dependencies, private data/cache directories, sessions, settings and
@@ -57,3 +75,38 @@ verify all endpoints and budgets; retain a rollback path. A shared host has one
 failure/restart domain. Merely reducing the Machine count is not sufficient proof
 that the change is more cost-effective. If the gates fail, retain the existing
 layout and record why.
+
+## Why retain the current layout
+
+The shared host would require a new supervisor, exact pinned runtime packaging,
+per-edition operating-system/database permissions, a consistent migration of all
+databases and cache directories, and a recovery procedure for the combined host.
+Identical dependency locks do not prove identical underlying image layers.
+Separate Fly process groups would still create separate Machines and do not
+implement the requested design. See the independent
+[architecture assessment](../../reports/v5/consolidation_architecture.md).
+
+Today's light-load memory evidence is insufficient to promise that reducing CPU
+quotas and memory preserves simultaneous strategy-run performance. No concurrent
+capacity benchmark or prototype has passed. We therefore preserve the current
+working separation rather than assert that the cheapest hypothetical size is
+sufficient. This is an evidence-limited decision, not a claim that consolidation
+or right-sizing could never become worthwhile. Reassess when workload evidence
+or the number of active editions materially changes.
+
+The independent [capacity review](../../reports/v5/consolidation_capacity_review.md)
+found one serial worker per edition and one solver thread per policy. Four
+editions can therefore run four CPU-bound numerical jobs at once. A changed
+scenario can perform six policy solves with four-second wall-time limits; the
+browser baseline observed 22.6 seconds for one scenario. Moving those workers to
+two shared vCPUs could reduce responsiveness or solution quality within the same
+time limits. An 8-GB / four-vCPU host is a plausible benchmark candidate, but its
+nominal $13.58/month saving has not been shown to cover the migration and ongoing
+isolation complexity. No financial value has been invented for engineering time.
+
+Read-only final checks: all four published health endpoints returned 200 and
+their exact registered source commits; the public registry matched the repository.
+No sessions or inference calls were created by the hosting assessment. Curated
+inventory/prices/memory are in
+[fly_cost_evidence.json](../../reports/v5/fly_cost_evidence.json), with checks in
+[fly_readonly_checks.json](../../reports/v5/fly_readonly_checks.json).

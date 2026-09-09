@@ -10,7 +10,10 @@ the full decision journey require independent browser/research review. Shared
 Fly hosting may replace separate Machines only after lower total cost, capacity,
 immutable runtime and saved-state isolation are verified; this is a conditional
 amendment to the separate-deployment topology below, not permission to merge game
-state. See `docs/deployment/consolidation-assessment.md` for evidence and gates.
+state. The 9 September assessment retains the existing topology: lower-cost
+shared sizes require unverified capacity reductions, while equal-capacity prices
+are essentially unchanged. See `docs/deployment/consolidation-assessment.md` for
+evidence and future reconsideration gates.
 
 ### Release amendment — 9 September 2026
 

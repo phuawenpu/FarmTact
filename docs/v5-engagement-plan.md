@@ -47,7 +47,9 @@ separate read-only hosting assessment, and `v5_crop_review` owns crop research
 and then source-viability research. No recursive delegation or overlapping app
 edits. Implementation packages receive explicit ownership after these baselines.
 
-First resolve hosting feasibility and source contracts. Then implement the
+Hosting assessment completed: retain the existing topology; safe net savings
+from a shared host were not established (see the linked assessment). Resolve
+source contracts next. Then implement the
 decision, art and sound improvements and review them independently. Run backend,
 security and browser checks serially where build artifacts conflict. Exercise
 360, 390, 430 and 1280 pixel layouts, keyboard/touch, reduced motion, empty and

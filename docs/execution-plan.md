@@ -115,3 +115,13 @@ owns integration and the user's conditional Fly consolidation assessment.
 See docs/v5-engagement-plan.md and docs/deployment/consolidation-assessment.md.
 The hosting figures are measured inventory and official-price estimates; no
 consolidation or v5 feature is claimed deployed at this planning milestone.
+
+
+Fly assessment decision: retain the separate-Machine topology. Equal-capacity
+shared presets offer essentially no compute discount; the cheaper 4/8GB proposals
+reduce allocated capacity and have not passed concurrent-workload or immutable
+runtime/data migration checks. Current resources are estimated at $67.90 compute
+plus $2.40 provisioned volumes per 30days before other charges. All four published
+health endpoints match their source pins and the release registry is unchanged.
+No Fly mutation or inference was performed by the hosting assessment. Detailed
+prices, limits and future reconsideration gates are recorded in the assessment.
