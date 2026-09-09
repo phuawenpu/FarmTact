@@ -1,0 +1,75 @@
+{
+  "captured_at": "2026-09-09T23:04:23.833942+00:00",
+  "target_machine": "2871575b4544d8",
+  "shared_volume": "vol_vdejexpzm8ydn5x4",
+  "status": "PASS",
+  "editions": {
+    "gateway": {
+      "identity": {
+        "container": "gateway",
+        "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+      },
+      "table_count": 16,
+      "row_count": 63,
+      "dump_sha256": "b6b20b70e693b90167027735de91d8c66e8f7038867133abca3b3301ca363c33",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 56
+    },
+    "v1": {
+      "identity": {
+        "container": "v1",
+        "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+      },
+      "table_count": 16,
+      "row_count": 490,
+      "dump_sha256": "3ffd21201f549086704af3c4e793fc5244feeaad6eb5f3444643038a755c2a35",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 56
+    },
+    "v2": {
+      "identity": {
+        "container": "v2",
+        "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+      },
+      "table_count": 16,
+      "row_count": 18,
+      "dump_sha256": "e4387cc9b41ffdc13b4c298890a1d347c2ceccf757a3956d38ac28de4638eaa7",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 56
+    },
+    "v3": {
+      "identity": {
+        "container": "v3",
+        "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607"
+      },
+      "table_count": 16,
+      "row_count": 28,
+      "dump_sha256": "f8c444757f01d163236d8e80489761a68eec2445854424ec0993e4736c1f56d0",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 9
+    },
+    "v4": {
+      "identity": {
+        "container": "v4",
+        "source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d"
+      },
+      "table_count": 16,
+      "row_count": 31,
+      "dump_sha256": "1f90167b0a633a82683265b48acb0612f05725a0c684548965734f4f17903fba",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 9
+    },
+    "v5": {
+      "identity": {
+        "container": "v5",
+        "source_commit": "0f54565d23f5387fc751eeac4f329372e0460018"
+      },
+      "table_count": 16,
+      "row_count": 31,
+      "dump_sha256": "f81a7b44137d1c017a771dcb09bfdb06d346c18d4f2ad8fff6f437a928f82d87",
+      "metadata_sha256": "87409a6c5a1f6225cb54f9e72ec1cada3e6b591c2cb6fe8683141634effc82f6",
+      "cache_file_count": 10
+    }
+  },
+  "verification": "All six frozen source/destination database table rows, ownership/ACL metadata, source identities and cached bytes matched before candidate resumed."
+}

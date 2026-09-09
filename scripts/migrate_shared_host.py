@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT=Path(__file__).resolve().parents[1]
 PRIVATE=Path('/tmp/farmtact-v6-transfer')
@@ -67,6 +68,14 @@ def transfer(name):
     print('Copied private artifacts',name,flush=True)
 
 
+def namespace_control(operation):
+    import shlex
+    if operation not in ('STOP','CONT'):raise ValueError('Unknown namespace operation')
+    script=(ROOT/'scripts/shared_namespace_control.sh').read_text()
+    output=run(['fly','ssh','console','--app','farmtact','--machine',CANDIDATE,'--no-container','--command','sh -c '+shlex.quote(script)+' namespace-control '+operation])
+    print(output.strip(),flush=True)
+
+
 def parallel(function,names):
     with ThreadPoolExecutor(max_workers=3) as pool:
         for result in pool.map(function,names):pass
@@ -79,15 +88,29 @@ if __name__=='__main__':
     if a.operation=='prepare':parallel(lambda name:prepare(name,a.target),names)
     elif a.operation=='copy':parallel(transfer,names)
     elif a.operation=='freeze-export':
-        # Freeze editions before the gateway so active-job recovery can still
-        # finish its operational requests if a preflight finds unfinished work.
-        editions=[name for name in names if name!='gateway']
-        parallel(lambda name:action(name,'original','freeze'),editions)
-        if 'gateway' in names:
-            action('gateway','original','freeze')
-            run(['fly','machine','cordon',ORIGINAL['gateway'][1],'--app','farmtact'])
-        parallel(lambda name:action(name,'original','export'),names)
+        try:
+            # Freeze editions before the gateway so active-job recovery can still
+            # finish its operational requests if a preflight finds unfinished work.
+            editions=[name for name in names if name!='gateway']
+            parallel(lambda name:action(name,'original','freeze'),editions)
+            if 'gateway' in names:
+                action('gateway','original','freeze')
+                run(['fly','machine','cordon',ORIGINAL['gateway'][1],'--app','farmtact'])
+            parallel(lambda name:action(name,'original','export'),names)
+        except BaseException:
+            print('RECOVERY REQUIRED: resume each selected original edition that froze, then run: fly machine uncordon d8d2060c074438 --app farmtact',file=sys.stderr,flush=True)
+            for name in names:
+                print('python scripts/migrate_shared_host.py resume --target original --edition '+name,file=sys.stderr,flush=True)
+            raise
     elif a.operation=='freeze-restore':
-        for name in sorted(names,key=lambda n:n=='gateway'):action(name,'candidate','freeze')
-        parallel(lambda name:action(name,'candidate','restore'),names)
-    else:parallel(lambda name:action(name,a.target,a.operation),names)
+        try:
+            namespace_control('STOP')
+            for name in sorted(names,key=lambda n:n=='gateway'):action(name,'candidate','freeze')
+            parallel(lambda name:action(name,'candidate','restore'),names)
+        except BaseException:
+            print('PARTIAL RESTORE MAY HAVE OCCURRED; candidate remains frozen for inspection.',file=sys.stderr,flush=True)
+            print('After inspection run once: python scripts/migrate_shared_host.py resume --target candidate',file=sys.stderr,flush=True)
+            raise
+    else:
+        if a.operation=='resume' and a.target=='candidate':namespace_control('CONT')
+        parallel(lambda name:action(name,a.target,a.operation),names)

@@ -374,3 +374,66 @@ exclusion, exact Machine update and image selection, unique localhost source pro
 seed-only registry behavior, immutable-prefix check, and atomic publication through
 the pinned gateway container. The combined shared-host and existing publisher test
 selection completed with 29 passing tests.
+
+### PID-namespace freeze correction
+
+The first real migration rehearsal exposed one additional platform boundary. The
+source exports completed, but inside the candidate the transfer helper recorded
+`fly_boot.py` as PID 1 and its API child, then correctly refused restore because
+PID 1 remained in state `S` while the child was stopped. No destination database
+mutation occurred. The old sources were resumed and the gateway was uncordoned.
+
+This is standard Linux PID-namespace behavior. A namespace's init process receives
+special signal treatment; Linux documents that SIGSTOP and SIGKILL are forcibly
+delivered to it when sent from an **ancestor PID namespace**. Use a fixed,
+operator-only ancestor helper through authenticated Machine SSH without a container
+selection. Keep the historical images unchanged.
+
+The ancestor helper should:
+
+1. Find only exact `python /app/scripts/fly_boot.py` command lines. Require the
+   final `NSpid` component to be 1 and a distinct `/proc/<pid>/ns/pid` inode for
+   each container.
+2. Identify the container from that process's `/proc/<pid>/mountinfo` `/data` bind
+   root (`/gateway` or a fixed `/vN`), avoiding `/proc/<pid>/environ`, which contains
+   secrets. Require exactly one expected gateway and edition set before signaling.
+3. Record ancestor PID, process start time, PID-namespace inode, fixed data-root
+   identity, Machine ID/config version, and action in a protected manifest.
+4. Send SIGSTOP to each namespace init first, then stop only exact writer command
+   lines in the same namespace (`fly_boot.py`, `serve.py`, `refresh_news.py`, and
+   `build_dataset.py`). Leave PostgreSQL running for logical dump/restore.
+5. Revalidate identity/start time and require every target state `T`. On any
+   mismatch, SIGCONT every process already stopped and remove the incomplete
+   manifest.
+6. Resume from the ancestor helper as well, after revalidating every recorded
+   process. Never use broad name matching, transferred source PIDs, or environment
+   dumps.
+
+Before migration, prove whether ordinary container-targeted SSH can still create an
+exec process while its namespace init is stopped. If it cannot, use the ancestor
+session to enter the target PID/mount/network namespaces and run the fixed transfer
+helper as `farmtact`. In either case the candidate's existing `require_frozen()`
+remains a useful second guard and must pass before restore.
+
+Source: [Linux `pid_namespaces(7)`](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html).
+
+The implemented `shared_namespace_control.sh` follows this boundary. It uses the
+host ancestor namespace, a protected `/run` record, fixed `/gateway` and `/v1`-`/v5`
+mount roots, `NSpid == 1`, exact `fly_boot.py` command identity, distinct namespace
+inodes, start-time revalidation, and verified stop/continue states. It never reads
+process environments. A failed STOP discovery now removes its exclusive `.next`
+record, so a mismatch before signaling does not block a corrected retry. Its EXIT
+trap resumes already-stopped supervisors if signaling or post-stop verification
+fails.
+
+`migrate_shared_host.py` targets only enumerated original Machines or the pinned
+candidate and invokes the namespace controller through no-container SSH. The six-
+container private rehearsal passed. Failure reporting now distinguishes the two
+safe responses: source freeze/export errors print explicit per-edition resume and
+gateway-uncordon recovery; candidate freeze/restore errors warn that partial restore
+may have occurred and deliberately leave the candidate frozen for inspection, with
+one explicit resume command afterward. It does not automatically resume a partially
+restored candidate.
+
+The operator-boundary, shared-host, and publisher selections now total 36 passing
+tests; the namespace script also passes `sh -n` validation.

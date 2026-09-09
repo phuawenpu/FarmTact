@@ -198,8 +198,8 @@ Sequence: verify exact-image multi-container hosting and persistent isolation;
 exercise one/two numerical jobs with browsing on the 4-GB candidate; independently
 review crops and UI; freeze source for next unused v6; back up and compare all
 prior databases/cache/manifests; migrate with brief controlled write freeze;
-verify production and disable old Machine autostart/compute while retaining
-rollback volumes. Never expose backup/config filesystem over HTTP. Preserve
+verify production and delete the superseded Machines and old volumes, leaving
+one shared volume (latest user amendment). Never expose backup/config filesystem over HTTP. Preserve
 actual source/image and all edition settings, sessions, runs and spending limits.
 Push specs/progress within each 20-minute active interval. No inference is needed
 for crop browsing or numerical/hosting validation. Stop Sprite HTTP afterward.
@@ -223,3 +223,9 @@ not retain old Fly volumes for rollback. Temporary protected operator backups
 support cutover validation; unrelated Fly resources remain untouched. Full
 backend suite passes 458; deployment/publisher focused review passes 28. The
 next source freeze and exact-image candidate validation are underway.
+
+Final data-transfer rehearsal and fresh cutover restore both passed all six
+source/destination fingerprints. Ancestor PID-namespace control is required to
+stop immutable container supervisors; ordinary container SIGSTOP cannot stop
+namespace PID 1. Operator SSH continues working during the verified freeze.
+Public cutover and authorized resource cleanup are the remaining rollout steps.
