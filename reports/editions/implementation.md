@@ -45,3 +45,49 @@ Specifications and AGENTS.md record the active-development requirement to push
 meaningful progress to GitHub at least every 20 minutes. Progress pushes at
 approximately 07:02 and 07:12 UTC preserved the baseline, remote briefing upload,
 and edition-control/specification work.
+
+
+## Live rollout — 9 September 2026
+
+Published chooser https://farmtact.fly.dev/ and independent `/v1/`, `/v2/`.
+Both edition applications report source `e9c3edfe10da162e4f50fd5a69df5a4394aa0812`
+and use the digest recorded in `config/releases/v1.json` and `v2.json`.
+The compatibility image is shared, while immutable edition configuration and
+private deployments/databases/volumes are separate. The original source/image
+remain recorded separately; v1 is not claimed to be byte-identical old code.
+
+The cutover paused writes after verifying no active jobs. Database restore
+matched every game-table count and hash. Cached observations were copied into
+each edition's own volume; v2 received no user game data. Original game data
+remains on the gateway's retained volume as a recovery backup. Operational
+counters moved to the separate control database without resetting usage.
+
+Live verification passed: 21 API isolation/preservation checks, 41 edition
+browser checks with native audio playback, 16 simulated audio-state/failure
+checks, 58 touch/keyboard navigation checks, and 94 public-review/evidence
+checks. All browser suites covered the requested four widths where applicable.
+A stale preservation-test assumption compared a full snapshot against a farm
+summary; the test now compares the same API representation. Preserved farm,
+run, branch, conversation and quest checks all pass. Reports are alongside this
+file. These are targeted release checks, not another ten-persona review panel.
+
+All Sprite web/test service registrations were removed, ports 8080–8082 closed,
+and PostgreSQL retained. Public Fly chooser and health pass hosting verification.
+Meaningful Git progress was pushed at approximately 07:02, 07:12 and 07:25 UTC;
+release manifests, live evidence and final source tags follow in the release push.
+
+
+The final live worker probe also passed seven checks: a saved v2 dataset runs all
+three strategies, the planner forecast equals its saved alpha 0.45 preview, no
+inference is invoked, the main farm stays unchanged, repeat submission is
+idempotent, and v1 cannot read the v2 result. Final edition/deployment/panel
+regression: 40 passing tests. See `live_numerical.json` and
+`final_release_checks.xml`.
+
+Reproduce the live suites with `scripts/verify_editions.py`,
+`tests/browser/editions.mjs`, `tests/browser/edition_audio.mjs`,
+`tests/browser/mobile_navigation.mjs`, and `tests/browser/public_reviews.mjs`.
+The API verifier accepts a private legacy state file and produces private
+Playwright state for authenticated browser checks. Never commit those files.
+Browser reports record the live URL and viewport/evidence details. Run the
+backend gate with `.venv/bin/pytest -q tests/editions tests/deployment tests/panel`.

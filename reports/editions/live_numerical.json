@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Saved v2 dataset runs through private numerical worker",
+      "pass": true
+    },
+    {
+      "name": "All three strategies available",
+      "pass": true
+    },
+    {
+      "name": "Planner forecast equals saved alpha 0.45 preview",
+      "pass": true
+    },
+    {
+      "name": "No inference calls",
+      "pass": true
+    },
+    {
+      "name": "Sandbox run leaves main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "Completed run is idempotent",
+      "pass": true
+    },
+    {
+      "name": "V1 cannot read v2 numerical result",
+      "pass": true
+    }
+  ]
+}

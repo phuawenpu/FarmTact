@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "public_url": "https://farmtact.fly.dev",
+  "sprite_web_registration_removed": true,
+  "development_database_preserved": true,
+  "development_http_port_closed": true,
+  "fly_http_status": 200,
+  "fly_application_served": true,
+  "fly_health_status": 200,
+  "sprite_http_status": 302,
+  "sprite_application_not_served": true
+}

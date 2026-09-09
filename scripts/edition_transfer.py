@@ -36,7 +36,7 @@ def fingerprint():
 def freeze():
     with psycopg.connect(DATABASE) as connection:
         tables = {row[0] for row in connection.execute("SELECT tablename FROM pg_tables WHERE schemaname='public'")}
-        for table in ('planning_runs', 'scenarios', 'conversation_jobs'):
+        for table in ('planning_runs', 'scenario_branches', 'conversation_requests'):
             if table not in tables: continue
             columns = {row[0] for row in connection.execute('SELECT column_name FROM information_schema.columns WHERE table_name=%s', (table,))}
             if 'status' in columns:

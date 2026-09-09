@@ -7,10 +7,10 @@
       "published_at": "2026-09-09",
       "summary": "The current farm, data explorer and independent review baseline, preserved as an edition.",
       "status": "published",
-      "source_commit": "705b640",
-      "source_url": "https://github.com/phuawenpu/FarmTact/commit/705b640",
-      "compare_url": "",
-      "image_digest": "",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/705b640...e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "image_digest": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
       "review_url": "/v1/review",
       "play_url": "/v1/",
       "changes": [
@@ -18,11 +18,26 @@
           "title": "Preserved gameplay",
           "description": "The deployed reference gameplay and prior progress. Edition routing and navigation are compatibility adaptations; no new audio is added to v1.",
           "feedback_ids": [],
-          "status": "implemented",
-          "evidence": []
+          "status": "verified",
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/isolation.json"
+          ]
         }
       ],
-      "original_image": "registry.fly.io/farmtact:deployment-01M22EM68AXASMMMMZB6V715BR"
+      "original_image": "registry.fly.io/farmtact:deployment-01M22EM68AXASMMMMZB6V715BR",
+      "generator_version": "synthetic-farm-v1",
+      "forecast_version": "recipe-ewma-v1",
+      "planner_version": "daily-bed-cpsat-v1",
+      "dataset_cutoff": "2026-09-08T00:00:00+00:00",
+      "runtime_configuration": {
+        "edition": "v1",
+        "audio": false,
+        "game_database": "independent",
+        "reference_fixture": "synthetic_farm.json"
+      },
+      "original_source_commit": "705b640",
+      "compatibility_source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
     },
     {
       "id": "v2",
@@ -30,10 +45,10 @@
       "published_at": "2026-09-09",
       "summary": "Choose independent editions, follow feedback into changes, and optionally add gentle music and sound effects.",
       "status": "published",
-      "source_commit": "pending",
-      "source_url": "https://github.com/phuawenpu/FarmTact/commit/705b640",
-      "compare_url": "",
-      "image_digest": "",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/705b640...e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "image_digest": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
       "review_url": "/v2/review",
       "play_url": "/v2/",
       "changes": [
@@ -41,24 +56,63 @@
           "title": "Independent editions",
           "description": "Each edition has its own saved farm, assumptions, branches, conversations and settings.",
           "feedback_ids": [],
-          "status": "implemented",
-          "evidence": []
+          "status": "verified",
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/isolation.json"
+          ]
         },
         {
           "title": "Feedback to evolution",
           "description": "Original reviews retain their tested builds. New changes link to evidence without claiming unrelated findings are fixed.",
           "feedback_ids": [],
-          "status": "implemented",
-          "evidence": []
+          "status": "verified",
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/isolation.json"
+          ]
         },
         {
           "title": "Optional gentle audio",
           "description": "Original quiet music and soft effects start muted, with separate controls and per-edition preferences.",
           "feedback_ids": [],
-          "status": "implemented",
+          "status": "verified",
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/isolation.json"
+          ]
+        },
+        {
+          "title": "Keyboard voice typing",
+          "description": "The main message field includes a hint for device-keyboard dictation where available. FarmTact does not record or upload speech.",
+          "feedback_ids": [],
+          "status": "verified",
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/reports/editions/browser.json"
+          ]
+        },
+        {
+          "title": "Open feedback: delivery and margin explanations",
+          "description": "Buyer allocation, policy selection and margin explanations remain areas for improvement. These original reviews are retained; this edition does not claim those gameplay findings are resolved.",
+          "feedback_ids": [
+            "review01",
+            "review03",
+            "review10"
+          ],
+          "status": "open",
           "evidence": []
         }
-      ]
+      ],
+      "generator_version": "synthetic-farm-v1",
+      "forecast_version": "recipe-ewma-v1",
+      "planner_version": "daily-bed-cpsat-v1",
+      "dataset_cutoff": "2026-09-08T00:00:00+00:00",
+      "runtime_configuration": {
+        "edition": "v2",
+        "audio": true,
+        "game_database": "independent",
+        "reference_fixture": "synthetic_farm.json"
+      }
     }
   ]
 }

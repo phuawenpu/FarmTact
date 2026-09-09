@@ -3,15 +3,15 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises'
 const base=process.env.FARMTACT_BASE_URL||'http://127.0.0.1:8080'
 const out=process.env.FARMTACT_NAV_REPORT||'reports/mobile_navigation.json'
 const dir=process.env.FARMTACT_NAV_SHOTS||'apps/web/screenshots/mobile-navigation'
+const editionState=process.env.FARMTACT_EDITION_STATE
 const report={status:'RUNNING',base,checks:[],errors:[],screenshots:[],limitations:['Chromium touch emulation, not physical iOS/Android hardware.']}
 const browser=await chromium.launch();await mkdir(dir,{recursive:true})
 function check(name,pass){report.checks.push({name,pass});if(!pass)throw Error(name)}
 let page
 try{
  for(const width of [360,390,430,1280]){
-  const mobile=width<700,context=await browser.newContext({viewport:{width,height:900},hasTouch:mobile,isMobile:mobile,reducedMotion:'reduce'})
-  const state=JSON.parse(await readFile(process.env.FARMTACT_BROWSER_SESSION_STATE||'/tmp/farmtact-explorer-saved-release.json','utf8'))
-  await context.addCookies([{name:'farmtact_session',value:state.cookie,url:base}])
+  const mobile=width<700,context=await browser.newContext({viewport:{width,height:900},hasTouch:mobile,isMobile:mobile,reducedMotion:'reduce',...(editionState?{storageState:editionState}:{})})
+  if(!editionState){const state=JSON.parse(await readFile(process.env.FARMTACT_BROWSER_SESSION_STATE||'/tmp/farmtact-explorer-saved-release.json','utf8'));await context.addCookies([{name:'farmtact_session',value:state.cookie,url:base}])}
   page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));await page.goto(base,{waitUntil:'networkidle'})
   const map=page.getByRole('group',{name:'Farm map',exact:true}),canvas=page.locator('.farm-world-canvas')
   await map.waitFor();await map.scrollIntoViewIfNeeded()

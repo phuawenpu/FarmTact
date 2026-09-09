@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Root chooser creates no farm session",
+      "pass": true
+    },
+    {
+      "name": "Published registry contains v1 and v2",
+      "pass": true
+    },
+    {
+      "name": "Private controls are not publicly accessible",
+      "pass": true
+    },
+    {
+      "name": "Unknown edition never falls back",
+      "pass": true
+    },
+    {
+      "name": "v1 bootstrap succeeds",
+      "pass": true
+    },
+    {
+      "name": "v1 uses its own named session",
+      "pass": true
+    },
+    {
+      "name": "v2 bootstrap succeeds",
+      "pass": true
+    },
+    {
+      "name": "v2 uses its own named session",
+      "pass": true
+    },
+    {
+      "name": "Edition session tokens differ",
+      "pass": true
+    },
+    {
+      "name": "Legacy farm preserved in v1",
+      "pass": true
+    },
+    {
+      "name": "Legacy numerical run preserved",
+      "pass": true
+    },
+    {
+      "name": "Legacy branch result preserved",
+      "pass": true
+    },
+    {
+      "name": "Legacy conversation preserved",
+      "pass": true
+    },
+    {
+      "name": "Legacy quest progress preserved",
+      "pass": true
+    },
+    {
+      "name": "V2 cannot read legacy run",
+      "pass": true
+    },
+    {
+      "name": "V2 saves its own reproducible dataset",
+      "pass": true
+    },
+    {
+      "name": "Saved dataset survives reloading v2",
+      "pass": true
+    },
+    {
+      "name": "V1 cannot read v2 dataset",
+      "pass": true
+    },
+    {
+      "name": "V1 remains unchanged by v2 save",
+      "pass": true
+    },
+    {
+      "name": "V2 sandbox save leaves its main farm unchanged",
+      "pass": true
+    },
+    {
+      "name": "Manually swapped edition credential is rejected",
+      "pass": true
+    }
+  ]
+}

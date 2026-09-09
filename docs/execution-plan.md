@@ -64,8 +64,17 @@ Root owns gesture implementation, shared public review schema/page/API, integrat
 
 Released `farmtact:deployment-01M22EM68AXASMMMMZB6V715BR` on the existing Fly machine and volume. Live 58 navigation and 93 public-review checks passed; saved farm/run/branch/conversation/quest preservation passed. `/review` publishes all ten reports. Sprite web registration removed, port 8080 closed and PostgreSQL retained; hosting checks passed.
 
-## Independent editions and optional audio — active, 2026-09-09
+## Independent editions and optional audio — deployed, 2026-09-09
 
 User-approved plan: root edition chooser, preserved v1, fresh v2, independent private Fly deployments/databases, immutable numbered releases, edition navigation, feedback/change/verification links, optional original gentle audio. Root owns gateway, release registry contract, shared-file hooks, migrations, publishing and acceptance. Three bounded gpt-5.6-sol specialists: edition_ui owns frontend routing/storage/menu/changes/reviews; edition_audio owns new audio subsystem/assets/provenance/tests; edition_control owns new private shared-budget/admission service and its tests. No recursive delegation. Baseline commit 705b640 and original image retained; compatibility changes are explicitly distinguished from original gameplay. New inference calls are not needed for implementation verification.
 
 Goal additions: update the build/runtime specifications and push meaningful progress to GitHub at least once every 20 minutes during active work. The initial custom microphone scaffold request was superseded by the user's simpler choice: retain native free-text fields and explain device-keyboard voice typing where available. No browser audio capture, transcription upload, new provider, or custom microphone integration is included in this iteration.
+
+
+Edition rollout passed: original game tables match restored v1 counts/hashes;
+fresh v2 uses a separate private application/database/volume. Public chooser and
+`/v1/`, `/v2/` are live. Live checks: 21 API preservation/isolation, 41 edition
+browser, 16 audio state/failure, 58 mobile navigation and 94 archived public
+review checks. Sprite web/test registrations removed, ports 8080–8082 closed,
+PostgreSQL retained. See `reports/editions/implementation.md` and release manifests
+for source/image pins, evidence and physical-device testing limitations.

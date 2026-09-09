@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "source_game_tables": 11,
+  "source_game_rows": 441,
+  "v1_all_game_table_counts_and_hashes_match": true,
+  "original_database_retained": true,
+  "original_operational_counters_copied_to_separate_control_database": true,
+  "v2_received_public_cache_only": true,
+  "private_backup_paths_not_public": true,
+  "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+  "image_digest": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+}

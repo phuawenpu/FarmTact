@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "v2 starts silent without fetching audio",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "master sound control is initially off",
+      "pass": true
+    },
+    {
+      "name": "mobile controls begin compact",
+      "pass": true
+    },
+    {
+      "name": "music defaults to enabled at 20 percent",
+      "pass": true
+    },
+    {
+      "name": "effects default to enabled at 35 percent",
+      "pass": true
+    },
+    {
+      "name": "all sound buttons meet the 44px touch target",
+      "pass": true,
+      "detail": [
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "name": "a rejected play is nonblocking and offers retry",
+      "pass": true
+    },
+    {
+      "name": "explicit retry activates music",
+      "pass": true
+    },
+    {
+      "name": "music is fetched only after deliberate activation from the frozen v2 path",
+      "pass": true,
+      "detail": [
+        "/v2/audio/farm-garden-loop.wav"
+      ]
+    },
+    {
+      "name": "v2 preferences use edition-scoped storage",
+      "pass": true,
+      "detail": {
+        "musicEnabled": true,
+        "effectsEnabled": false,
+        "musicVolume": 0.27,
+        "effectsVolume": 0.35
+      }
+    },
+    {
+      "name": "reload restores preferences but stays silent",
+      "pass": true
+    },
+    {
+      "name": "reload does not autoplay",
+      "pass": true
+    },
+    {
+      "name": "rapid duplicate navigation effects are throttled",
+      "pass": true,
+      "detail": [
+        "/v2/audio/navigate.wav"
+      ]
+    },
+    {
+      "name": "hidden pages pause audio",
+      "pass": true
+    },
+    {
+      "name": "a missing effect asset reports a nonblocking audio error",
+      "pass": true
+    },
+    {
+      "name": "browser run has no uncaught page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "audio_requests": [
+    "/v2/audio/farm-garden-loop.wav",
+    "/v2/audio/farm-garden-loop.wav",
+    "/v2/audio/navigate.wav",
+    "/v2/audio/farm-garden-loop.wav",
+    "/v2/audio/navigate.wav"
+  ]
+}

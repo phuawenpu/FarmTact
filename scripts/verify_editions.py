@@ -33,18 +33,20 @@ try:
         check('Private controls are not publicly accessible', client.post('/_control/reserve', json={}).status_code in (401, 404))
         check('Unknown edition never falls back', client.get('/v999/').status_code == 404)
         tokens = {}
+        workspaces = {}
         old = json.loads(Path(args.legacy_state).read_text()) if args.legacy_state else None
         for edition in ('v1', 'v2'):
             headers = {'Cookie': f'farmtact_session={old["cookie"]}'} if old and edition == 'v1' else {}
             response = client.get(f'/{edition}/api/v1/bootstrap', headers=headers)
             check(edition + ' bootstrap succeeds', response.status_code == 200)
+            workspaces[edition] = response.json()
             tokens[edition] = client.cookies.get(f'farmtact_{edition}_session')
             check(edition + ' uses its own named session', bool(tokens[edition]))
         check('Edition session tokens differ', tokens['v1'] != tokens['v2'])
         def get(edition, path): return client.get(f'/{edition}/api/v1/{path}', headers={'Cookie': f'farmtact_{edition}_session={tokens[edition]}'})
         before = {e: get(e, 'farms/demo-farm/snapshot').json() for e in tokens}
         if old:
-            check('Legacy farm preserved in v1', before['v1'] == old['farm'])
+            check('Legacy farm preserved in v1', workspaces['v1']['farm'] == old['farm'])
             run = get('v1', 'planning-runs/' + old['run_id']).json()
             check('Legacy numerical run preserved', digest(run['strategies']) == old['strategies_hash'])
             scenario = get('v1', 'scenarios/' + old['scenario_id']).json()

@@ -22,6 +22,7 @@ try{
  await page.getByLabel('Perspective',{exact:true}).selectOption('judge');check('Judge filter is accurate',await page.locator('.review-card').count()===panel.reviews.filter(r=>r.reviewer_type==='judge').length)
  await page.getByLabel('Perspective',{exact:true}).selectOption('end_user');check('End-user filter is accurate',await page.locator('.review-card').count()===panel.reviews.filter(r=>r.reviewer_type==='end_user').length)
  await page.getByLabel('Perspective',{exact:true}).selectOption('all');await page.getByLabel('Findings',{exact:true}).selectOption('high');check('Priority filter hides other priorities',await page.locator('.review-priority').evaluateAll(ns=>ns.every(n=>n.textContent==='high')))
+ const builds=[...new Set(panel.reviews.map(r=>typeof r.build==='string'?r.build:JSON.stringify(r.build)))],selectedBuild=builds[0];await page.getByLabel('Tested build',{exact:true}).selectOption(selectedBuild);check('Tested-build filter preserves exact historical provenance',await page.locator('.review-card').count()===panel.reviews.filter(r=>(typeof r.build==='string'?r.build:JSON.stringify(r.build))===selectedBuild).length);await page.getByLabel('Tested build',{exact:true}).selectOption('all')
  await page.getByLabel('Findings',{exact:true}).selectOption('all');await page.getByLabel('Search reviews',{exact:true}).fill('no-such-review-zz99');check('Empty search has clear feedback',await page.getByText('No reviewers match these filters.',{exact:true}).isVisible());await page.getByLabel('Search reviews',{exact:true}).fill('')
  const card=page.locator('.review-card').first(),e=card.locator('.review-evidence-links a').first();await e.click();const id=(await e.getAttribute('href')).slice(1)
  check('Evidence link expands its actual gallery',await page.locator(`[id="${id}"]`).isVisible())
@@ -29,8 +30,8 @@ try{
  for(const width of [360,390,430,1280]){
   await page.setViewportSize({width,height:width<700?844:900});await page.evaluate(()=>scrollTo(0,0));check(`${width}: no horizontal overflow`,await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));const path=`${dir}/${width}.png`;await page.screenshot({path,animations:'disabled'});report.screenshots.push(path)
  }
- await page.getByLabel('Perspective',{exact:true}).focus();await page.keyboard.press('j');await page.keyboard.press('Tab');check('Filters work with keyboard',await page.getByLabel('Findings',{exact:true}).evaluate(n=>n===document.activeElement))
- check('No bootstrap or provider calls during review browsing',report.requests.every(x=>x.endsWith('/api/v1/reviews')))
+ await page.getByLabel('Perspective',{exact:true}).focus();await page.keyboard.press('j');await page.keyboard.press('Tab');check('Filters work with keyboard',await page.getByLabel('Tested build',{exact:true}).evaluate(n=>n===document.activeElement))
+ check('No bootstrap or provider calls during review browsing',report.requests.every(x=>x.endsWith('/api/v1/reviews')||x.endsWith('/api/releases')))
  check('No page errors',report.errors.length===0);report.status='PASS'
 }catch(e){report.status='FAIL';report.errors.push(String(e));if(page)await page.screenshot({path:`${dir}/failure.png`}).catch(()=>{});process.exitCode=1}
 finally{await browser.close();await writeFile(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:report.checks.length,errors:report.errors}))}
