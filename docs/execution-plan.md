@@ -153,3 +153,13 @@ zero provider submissions. Full backend run: 442 passed, one stale registry fixt
 failed; the fixture now isolates its two editions and all six gateway checks pass.
 PostgreSQL interrupted-job/child-branch checks retain frozen News without a refresh.
 Final mixed-root UI and broad explorer acceptance remain underway.
+
+
+V5 candidate acceptance complete: full backend443 passed; contracts/build pass;
+game30, snapshot race3, decision6, sound semantics8, broad explorer73 (five real
+numerical jobs), News24, explicit-fixture infeasible60, isolated real import12,
+audio browser22 and PCM4 all pass. One bounded actual local DeepSeek Market call
+cited frozen News; replay made no additional call. Final review repaired same-hash
+but different-root mission association and enlarged constraint detail targets.
+Publication and deployed smoke/preservation checks are next. No old edition has
+been changed; next release remains the unused v5.

@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Allocation, Bed, Crop, Farm, Run } from '../lib/types'
 import { ADVISORS, type Advisor, type AdvisorId, type ProposedAction, type Scenario } from '../lib/game'
 import { AccessibleFarmView, BedDetailPanel, ConversationPanel, QuestJournal, ScenarioLab } from './GamePanels'
+import { DecisionMissionCard, type DecisionMission } from './DecisionJourney'
+import { NewsPanel } from './NewsPanel'
 import { editionPath } from '../lib/edition'
 
 type Panel = 'bed' | 'conversation' | 'quests' | 'scenarios' | 'list' | null
@@ -11,6 +13,7 @@ interface WorldProps {
   farm: Farm
   crops: Crop[]
   run: Run | null
+  mission?: DecisionMission | null
   executionMode: string
   onOpenTools: () => void
   onOpenCrops: () => void
@@ -23,7 +26,7 @@ const advisorPositions: Record<AdvisorId, { x: number; y: number }> = {
 }
 const advisorById = (id: AdvisorId) => ADVISORS.find(advisor => advisor.id === id)!
 
-export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrops, onOpenOutcomes }: WorldProps) {
+export function World({ farm, crops, run, mission, executionMode, onOpenTools, onOpenCrops, onOpenOutcomes }: WorldProps) {
   const [panel, setPanel] = useState<Panel>(null)
   const [selectedBedId, setSelectedBedId] = useState<string | null>(farm.beds[0]?.id || null)
   const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor>(advisorById('mei'))
@@ -89,6 +92,9 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
           <button className="world-chip" onClick={onOpenCrops}><BookOpen size={17}/><span>Crop almanac</span></button>
         </div>
       </section>
+
+      {mission&&<DecisionMissionCard mission={mission} action={()=>{setQuestContext('busy_market');setProposedAction(null);setPanel('scenarios')}}/>}
+      <NewsPanel/>
 
       <section className="farm-world-shell" aria-label="Interactive farm world">
         <div className="resource-hud" aria-label="Farm resources">
@@ -210,7 +216,7 @@ export function World({ farm, crops, run, executionMode, onOpenTools, onOpenCrop
       <BedDetailPanel open={panel === 'bed'} bed={selectedBed} crop={selectedBed?.crop_id ? cropMap.get(selectedBed.crop_id) : undefined} farm={farm} run={run} previewDate={previewDate} allocations={selectedBed ? allocationsByBed.get(selectedBed.id) : undefined} onClose={() => setPanel(null)} onExperiment={() => { setQuestContext(null); setProposedAction(null); setPanel('scenarios') }} onAsk={() => { setSelectedAdvisor(advisorById('mei')); setScenarioContext(null); setPanel('conversation') }}/>
       <ConversationPanel open={panel === 'conversation'} advisor={selectedAdvisor} advisors={ADVISORS} farm={farm} run={run} selectedBed={selectedBed} scenario={scenarioContext} onHighlight={highlightReferences} onSelectAdvisor={setSelectedAdvisor} onClose={() => setPanel(null)} onOpenScenario={(action, conversationId) => { setProposedAction(action && conversationId ? { action, conversationId } : null); setPanel('scenarios') }}/>
       <QuestJournal open={panel === 'quests'} farm={farm} onClose={() => setPanel(null)} onStartQuest={quest => { setQuestContext(quest.id); setPanel('scenarios') }}/>
-      <ScenarioLab open={panel === 'scenarios'} farm={farm} crops={crops} selectedBed={selectedBed} initialQuestId={questContext} proposedAction={proposedAction} onClose={() => setPanel(null)} onHighlight={ids => { setScenarioAffected(ids); if (ids[0]) setSelectedBedId(ids[0]) }} onInterpret={scenario => { setScenarioContext(scenario); setSelectedAdvisor(advisorById('asha')); setPanel('conversation') }}/>
+      <ScenarioLab open={panel === 'scenarios'} farm={farm} crops={crops} selectedBed={selectedBed} mission={mission} initialQuestId={questContext} proposedAction={proposedAction} onClose={() => setPanel(null)} onHighlight={ids => { setScenarioAffected(ids); if (ids[0]) setSelectedBedId(ids[0]) }} onInterpret={scenario => { setScenarioContext(scenario); setSelectedAdvisor(advisorById('asha')); setPanel('conversation') }}/>
       <AccessibleFarmView open={panel === 'list'} farm={farm} crops={cropMap} previewDate={previewDate} allocations={allocationsByBed} onSelect={bed => { setSelectedBedId(bed.id); setPanel('bed') }} onClose={() => setPanel(null)}/>
     </div>
   )

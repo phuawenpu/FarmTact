@@ -48,6 +48,14 @@
       "pass": true
     },
     {
+      "name": "failed filter explicitly identifies retained previous results",
+      "pass": true
+    },
+    {
+      "name": "retry applies selected filter",
+      "pass": true
+    },
+    {
       "name": "no document overflow at 360",
       "pass": true
     },
@@ -101,15 +109,15 @@
       "detail": [
         {
           "height": 44,
-          "width": 374.40625
+          "width": 380.40625
         },
         {
           "height": 44,
-          "width": 374.40625
+          "width": 380.40625
         },
         {
           "height": 44,
-          "width": 374.40625
+          "width": 380.40625
         }
       ]
     },
@@ -123,15 +131,15 @@
       "detail": [
         {
           "height": 44,
-          "width": 395.0625
+          "width": 397.0625
         },
         {
           "height": 44,
-          "width": 395.078125
+          "width": 397.078125
         },
         {
           "height": 44,
-          "width": 395.0625
+          "width": 397.0625
         }
       ]
     },
@@ -152,6 +160,7 @@
   "page_errors": [],
   "provider_submissions": 0,
   "fixtures": [
-    "delayed obsolete region response; no fabricated source records"
+    "delayed obsolete region response; no fabricated source records",
+    "one failed filter request to verify retained-results disclosure"
   ]
 }

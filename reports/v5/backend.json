@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "command": ".venv/bin/pytest -q --import-mode=importlib",
+  "passed": 443,
+  "failed": 0,
+  "duration_seconds": 243.77,
+  "warnings": 2,
+  "warning_scope": "Existing FastAPI/Starlette deprecations",
+  "contracts_command": ".venv/bin/python scripts/generate_web_contracts.py --check",
+  "contracts_status": "PASS",
+  "provider_calls": 0
+}

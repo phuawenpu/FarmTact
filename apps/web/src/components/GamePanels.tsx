@@ -1,13 +1,15 @@
-import { ArrowRight, Award, BadgeCheck, Bot, Check, ChevronRight, CircleAlert, FlaskConical, GitBranch, LoaderCircle, MessageCircle, Play, RotateCcw, Send, Sparkles, Users, X } from 'lucide-react'
+import { ArrowRight, Award, BadgeCheck, Bot, Check, ChevronRight, CircleAlert, Database, FlaskConical, GitBranch, LoaderCircle, MessageCircle, Play, RotateCcw, Send, Sparkles, Users, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Advisor, Conversation, ConversationMessage, ProposedAction, Quest, Scenario, ScenarioComparison, ScenarioControls } from '../lib/game'
-import { QUEST_FALLBACKS } from '../lib/game'
+import { QUEST_FALLBACKS, scenarioSoundOutcome } from '../lib/game'
 import { api, type MarketSignals } from '../lib/api'
-import { editionFromPath, editionPath } from '../lib/edition'
+import { editionFromPath, editionPath, editionStorageKey } from '../lib/edition'
 import { playAudioEffect, playSimulationResult } from '../lib/audio'
 import type { Bed, Crop, Farm, Run, StrategyMetrics } from '../lib/types'
 import { formatPreviewDate, previewBed } from './World'
 import { AdvisorEvidence } from './AdvisorEvidence'
+import { DecisionMissionCard, NumericalPerspectives, type DecisionMission } from './DecisionJourney'
+import { NewsPanel } from './NewsPanel'
 
 interface PanelShellProps { open: boolean; title: string; eyebrow?: string; wide?: boolean; onClose: () => void; children: React.ReactNode }
 
@@ -284,7 +286,7 @@ export function QuestJournal({ open, farm, onClose, onStartQuest }: { open: bool
   </PanelShell>
 }
 
-export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, proposedAction, onClose, onHighlight, onInterpret }: { open: boolean; farm: Farm; crops: Crop[]; selectedBed: Bed | null; initialQuestId: string | null; proposedAction: { action: ProposedAction; conversationId: string } | null; onClose: () => void; onHighlight: (bedIds: string[]) => void; onInterpret: (scenario: Scenario) => void }) {
+export function ScenarioLab({ open, farm, crops, selectedBed, mission, initialQuestId, proposedAction, onClose, onHighlight, onInterpret }: { open: boolean; farm: Farm; crops: Crop[]; selectedBed: Bed | null; mission?: DecisionMission | null; initialQuestId: string | null; proposedAction: { action: ProposedAction; conversationId: string } | null; onClose: () => void; onHighlight: (bedIds: string[]) => void; onInterpret: (scenario: Scenario) => void }) {
   const [scenarios, setScenarios] = useState<Scenario[]>([])
   const [quests, setQuests] = useState<Quest[]>(QUEST_FALLBACKS)
   const [questId, setQuestId] = useState('sandbox')
@@ -295,19 +297,25 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [phase, setPhase] = useState<'brief' | 'assumptions' | 'result'>('brief')
+  const rememberScenario=(id:string)=>{try{sessionStorage.setItem(editionStorageKey('selected-scenario'),id)}catch{/* optional */}}
 
   const load = useCallback(async () => {
     const [savedScenarios, savedQuests] = await Promise.all([api.scenarios(), api.quests()])
     setScenarios(savedScenarios); setQuests(mergeQuests(savedQuests))
     return savedScenarios
   }, [])
-  useEffect(() => { if (editionFromPath() !== 'v1') for (const scenario of scenarios) { if (scenarioTerminal(scenario.status)) playSimulationResult(scenario.id, scenario.status === 'COMPLETED' ? 'complete' : 'error') } }, [scenarios])
   useEffect(() => {
     if (!open) return
     let cancelled = false
     void load().then(async saved => {
       const pending = saved.find(item => requestActive(item.status))
-      if (!pending || cancelled) return
+      if (!pending || cancelled) {
+        if(cancelled)return
+        let remembered='';try{remembered=sessionStorage.getItem(editionStorageKey('selected-scenario'))||''}catch{/* optional */}
+        const chosen=saved.find(item=>item.id===remembered&&scenarioTerminal(item.status)&&(!mission||scenarioMatchesMission(item,mission)))||saved.find(item=>scenarioTerminal(item.status)&&(!mission||scenarioMatchesMission(item,mission)))
+        if(chosen){setSelectedIds([chosen.id]);rememberScenario(chosen.id)}
+        return
+      }
       setBusy(true); setSelectedIds([pending.id])
       let resumed = pending
       for (let attempt = 0; !scenarioTerminal(resumed.status) && attempt < 300 && !cancelled; attempt += 1) { await new Promise(resolve => window.setTimeout(resolve, 500)); resumed = await api.scenario(resumed.id) }
@@ -318,9 +326,9 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
   useEffect(() => { setControls(questId === 'sandbox' ? sandboxControls(selectedBed, farm) : questControls(questId, selectedBed, farm)) }, [selectedBed?.id])
   useEffect(() => {
     if (!open) return
-    if (initialQuestId) { setQuestId(initialQuestId); setControls(questControls(initialQuestId, selectedBed, farm)); setPhase('brief') }
+    if (initialQuestId) { const next=questControls(initialQuestId, selectedBed, farm);if(mission?.cropId)next.demand_crop_id=mission.cropId;setQuestId(initialQuestId);setControls(next);setPhase('brief') }
     else if (!proposedAction) { setQuestId('sandbox'); setControls(sandboxControls(selectedBed, farm)); setPhase('brief') }
-  }, [open, initialQuestId])
+  }, [open, initialQuestId, mission?.cropId])
   useEffect(() => {
     if (!open || !proposedAction) return
     const { action } = proposedAction
@@ -337,8 +345,9 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
       scenario = await api.runScenario(scenario.id)
       for (let attempt = 0; !scenarioTerminal(scenario.status) && attempt < 300; attempt += 1) { await new Promise(resolve => window.setTimeout(resolve, 500)); scenario = await api.scenario(scenario.id) }
       setScenarios(values => [scenario, ...values.filter(item => item.id !== scenario.id)])
-      setSelectedIds([scenario.id])
+      setSelectedIds([scenario.id]); rememberScenario(scenario.id)
       if (!scenarioTerminal(scenario.status)) throw new Error('The numerical job is still running. It remains saved and will resume when this lab reopens.')
+      if (editionFromPath() !== 'v1') playSimulationResult(scenario.id,scenarioSoundOutcome(scenario))
       setPhase('result'); onHighlight(scenario.affected_bed_ids || [])
     } catch (caught) { setError(messageFor(caught, 'The experiment could not run.')) }
     finally { setBusy(false) }
@@ -366,7 +375,9 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
         <div className="scenario-steps" aria-label="Experiment steps"><button className={phase === 'brief' ? 'is-active' : ''} onClick={() => setPhase('brief')}>1 <span>Briefing</span></button><button className={phase === 'assumptions' ? 'is-active' : ''} onClick={() => setPhase('assumptions')}>2 <span>Assumptions</span></button><button className={phase === 'result' ? 'is-active' : ''} onClick={() => setPhase('result')}>3 <span>Compare</span></button></div>
         <label>Challenge<select value={questId} onChange={event => { setQuestId(event.target.value); setControls(event.target.value === 'sandbox' ? sandboxControls(selectedBed, farm) : questControls(event.target.value, selectedBed, farm)); setPhase('brief') }}><option value="sandbox">Open sandbox</option>{quests.map(item => <option key={item.id} value={item.id}>{item.name || item.title}</option>)}</select></label>
         <div className="brief-card"><img src={editionPath(`/art/advisors/${quest.advisor_id || 'asha'}.svg`)} alt=""/><div><p className="kicker">Advisor briefing</p><h3>{quest.name || quest.title}</h3><p>{quest.description}</p></div></div>
+        {mission&&<DecisionMissionCard mission={mission} compact/>}
         <p className="preview-note">Every experiment creates a branch from frozen farm inputs. The main farm and its latest run remain unchanged.{proposedAction ? ' This branch is linked to the exact conversation snapshot.' : ''}</p>
+        {resumeScenario(scenarios,selectedIds,mission)&&<button className="button button--cream resume-result" onClick={()=>{const chosen=resumeScenario(scenarios,selectedIds,mission)!;setSelectedIds([chosen.id]);rememberScenario(chosen.id);setPhase('result')}}><RotateCcw size={16}/> Resume saved result · {resumeScenario(scenarios,selectedIds,mission)!.name}</button>}
       </aside>
       <div className="scenario-workbench">
         {phase !== 'result' ? <>
@@ -380,34 +391,42 @@ export function ScenarioLab({ open, farm, crops, selectedBed, initialQuestId, pr
           </div>
           <div className="scenario-targets"><label>Selected batch<select value={controls.batch_id || ''} onChange={event => setControls(current => ({ ...current, batch_id: event.target.value }))}>{farm.beds.filter(hasActualBatch).map(bed => <option key={bed.id} value={bed.batch_id}>{bed.name} · {bed.crop_id?.replaceAll('_', ' ')}</option>)}</select></label><label>Demand crop<select value={controls.demand_crop_id || ''} onChange={event => setControls(current => ({ ...current, demand_crop_id: event.target.value }))}>{crops.filter(crop => farm.orders.some(order => order.crop_id === crop.id)).map(crop => <option key={crop.id} value={crop.id}>{crop.label}</option>)}</select></label><label>Continue branch<select value={parentId} onChange={event => setParentId(event.target.value)}><option value="">Main farm baseline</option>{scenarios.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
           {parentId && <p className="panel-note">Assumptions are relative to this branch; comparison retains the original farm baseline.</p>}
+          {busy&&<p className="calculation-wait" role="status"><LoaderCircle className="spinner-icon"/><span><strong>Calculation time · waiting for the numerical worker and solver</strong>Farm time is not advancing. This branch remains saved if you close the panel.</span></p>}
           {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
           <div className="panel-actions"><button className="button button--forest" onClick={() => setPhase('assumptions')}>Review assumptions</button><button className="button button--coral" onClick={() => void run()} disabled={busy}>{busy ? <LoaderCircle className="spinner-icon"/> : <Play size={17}/>} Run experiment</button></div>
-        </> : <ScenarioResults scenarios={scenarios} quests={quests} selectedIds={selectedIds} setSelectedIds={setSelectedIds} comparison={comparison} onCompare={() => void compare()} onInspect={scenario => void inspect(scenario)} onInterpret={onInterpret} busy={busy} error={error}/>} 
+        </> : <ScenarioResults scenarios={scenarios} quests={quests} selectedIds={selectedIds} setSelectedIds={setSelectedIds} comparison={comparison} mission={mission} onCompare={() => void compare()} onInspect={scenario => void inspect(scenario)} onInterpret={onInterpret} busy={busy} error={error}/>}
       </div>
     </div>
   </PanelShell>
 }
 
-function ScenarioResults({ scenarios, quests, selectedIds, setSelectedIds, comparison, onCompare, onInspect, onInterpret, busy, error }: { scenarios: Scenario[]; quests: Quest[]; selectedIds: string[]; setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>; comparison: ScenarioComparison | null; onCompare: () => void; onInspect: (scenario: Scenario) => void; onInterpret: (scenario: Scenario) => void; busy: boolean; error: string | null }) {
-  const displayed = comparison?.scenarios || scenarios.filter(item => selectedIds.includes(item.id))
+function ScenarioResults({ scenarios, quests, selectedIds, setSelectedIds, comparison, mission, onCompare, onInspect, onInterpret, busy, error }: { scenarios: Scenario[]; quests: Quest[]; selectedIds: string[]; setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>; comparison: ScenarioComparison | null; mission?: DecisionMission | null; onCompare: () => void; onInspect: (scenario: Scenario) => void; onInterpret: (scenario: Scenario) => void; busy: boolean; error: string | null }) {
+  const selected=scenarios.filter(item=>selectedIds.includes(item.id)),anchor=selected[0],compatible=selected.filter(item=>!anchor||sameComparisonRoot(anchor,item)),compared=comparison?.scenarios?.every(item=>!anchor||sameComparisonRoot(anchor,item))?comparison.scenarios:null
+  const displayed = compared || compatible
   const [policy, setPolicy] = useState('Balanced')
   return <div className="scenario-results"><div className="scenario-heading"><div><p className="kicker">Before and after</p><h3>Inspect the trade-offs</h3></div><span><BadgeCheck size={14}/> Learning counts even when infeasible</span></div>
-    {!scenarios.length ? <div className="conversation-empty"><GitBranch size={28}/><strong>No branches yet</strong><p>Run an experiment to create one.</p></div> : <div className="branch-picker"><p>Select up to three branches</p>{scenarios.map(item => { const selected = selectedIds.includes(item.id); return <label key={item.id}><input type="checkbox" checked={selected} disabled={!selected && selectedIds.length >= 3} onChange={() => setSelectedIds(ids => selected ? ids.filter(id => id !== item.id) : [...ids, item.id])}/><span><b>{item.name}</b><small>{scenarioStatusLabel(item)}</small></span></label>})}</div>}
+    {!scenarios.length ? <div className="conversation-empty"><GitBranch size={28}/><strong>No branches yet</strong><p>Run an experiment to create one.</p></div> : <div className="branch-picker"><p>Select up to three branches from the same frozen baseline</p>{scenarios.map(item => { const isSelected=selectedIds.includes(item.id),incompatible=Boolean(anchor&&!isSelected&&!sameComparisonRoot(anchor,item)); return <label key={item.id}><input type="checkbox" checked={isSelected} disabled={!isSelected&&(selectedIds.length>=3||incompatible)} onChange={() => {const ids=isSelected?selectedIds.filter(id=>id!==item.id):[...selectedIds,item.id];setSelectedIds(ids);try{if(ids.length)sessionStorage.setItem(editionStorageKey('selected-scenario'),ids[0])}catch{/* optional */}}}/><span><b>{item.name}</b><small>{scenarioStatusLabel(item)}{incompatible?' · different frozen baseline':''}</small></span></label>})}</div>}
     <button className="button button--forest compare-button" onClick={onCompare} disabled={busy || !selectedIds.length}>{busy ? <LoaderCircle className="spinner-icon"/> : <GitBranch size={17}/>} Compare selected</button>
     {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
     {!!displayed.length && <div className="policy-picker" aria-label="Planning policy"><span>Compare the same policy</span>{['Lean','Balanced','Resilient'].map(name => <button key={name} className={policy === name ? 'is-active' : ''} onClick={() => setPolicy(name)}>{name}</button>)}</div>}
     {!!displayed.length && <div className="comparison-table-wrap"><table className="comparison-table"><caption>{policy} policy · baseline, branch outcome and computed change</caption><thead><tr><th>Outcome</th><th>Baseline</th>{displayed.map(item => <th key={item.id}>{item.name}<small> outcome · Δ</small></th>)}</tr></thead><tbody>{['fill_rate','margin_sgd','waste_kg','shortfall_kg','labour_hours','cost_sgd'].map(metric => <tr key={metric}><th>{({ fill_rate: 'Demand filled', margin_sgd: 'Contribution margin', waste_kg: 'Waste', shortfall_kg: 'Unfilled demand', labour_hours: 'Labour needed', cost_sgd: 'Total cost' } as Record<string,string>)[metric]}</th><td>{policyMetric(displayed[0], policy, metric, 'baseline')}</td>{displayed.map(item => <td key={item.id} className={item.simulation_status === 'NO_FEASIBLE_PLAN' ? 'is-warning' : ''}>{policyMetric(item, policy, metric, 'scenario')} <small className="metric-delta">{formatDelta(item.policy_comparisons?.find(row => row.policy === policy)?.deltas?.[metric as keyof StrategyMetrics], metric)}</small></td>)}</tr>)}</tbody></table></div>}
-    {!!displayed.length && <div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p>{completed && row && <p className="computed-debrief"><strong>Computed debrief · {policy}</strong><br/>{scenarioDebrief(item, policy)}</p>}<small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} delivery dates to inspect</span> : null}{item.affected_deliveries?.length ? <details><summary>Deliveries to inspect</summary><p>Dates with changed planned totals or changed order inputs; not per-order fulfilment.</p>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Ask an advisor about this branch</button>}</article>})}</div>}
+    {!!displayed.length && <>{displayed.map(item=><NumericalPerspectives key={`perspectives-${item.id}`} scenario={item} policy={policy} mission={scenarioMatchesMission(item,mission)?mission:null}/>) }<NewsPanel scenarioId={displayed[0].id}/><div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; const attachedMission=scenarioMatchesMission(item,mission)?mission:null; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p>{attachedMission&&<p className="mission-result-link"><Database size={14}/> Mission {attachedMission.cropId.replaceAll('_',' ')} · {attachedMission.date} · evidence {attachedMission.forecastId}</p>}{completed && row && <p className="computed-debrief"><strong>Computed debrief · {policy}</strong><br/>{scenarioDebrief(item, policy)}</p>}<small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} deliveries to inspect</span> : null}{item.affected_deliveries?.length ? <details><summary>Deliveries to inspect</summary><p>Dates with changed planned totals or changed order inputs; not per-order fulfilment.</p>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Open Asha · paid council only after you send</button>}</article>})}</div></>}
   </div>
 }
 
 function RangeControl({ label, value, min, max, suffix, onChange }: { label: string; value: number; min: number; max: number; suffix: string; onChange: (value: number) => void }) {
-  return <label className="range-control"><span><b>{label}</b><output>{value}{suffix === 'days' ? ` ${value === 1 ? 'day' : 'days'}` : suffix}</output></span><input aria-label={label} type="range" min={min} max={max} value={value} onChange={event => onChange(Number(event.target.value))}/><small>{min}{suffix === '%' ? '%' : ''}<i/>{max}{suffix === '%' ? '%' : ''}</small></label>
+  const update=(next:number)=>Number.isFinite(next)&&onChange(Math.max(min,Math.min(max,next)))
+  return <label className="range-control"><span><b>{label}</b><span className="range-control__exact"><input aria-label={`${label} numeric value`} type="number" min={min} max={max} value={value} onChange={event=>update(Number(event.target.value))}/><output>{suffix === 'days' ? (value === 1 ? 'day' : 'days') : suffix}</output></span></span><input aria-label={label} type="range" min={min} max={max} value={value} onChange={event => update(Number(event.target.value))}/><small>{min}{suffix === '%' ? '%' : ''}<i/>{max}{suffix === '%' ? '%' : ''}</small></label>
 }
 
 export function AccessibleFarmView({ open, farm, crops, previewDate, allocations, onSelect, onClose }: { open: boolean; farm: Farm; crops: Map<string, Crop>; previewDate: Date; allocations: Map<string, import('../lib/types').Allocation[]>; onSelect: (bed: Bed) => void; onClose: () => void }) {
   return <PanelShell open={open} title="Farm list" eyebrow={`Schedule preview · ${formatPreviewDate(previewDate)}`} wide onClose={onClose}><div className="accessible-world-table"><p className="preview-note">Keyboard-friendly alternative to the farm scene. Previewed stages use scheduled dates and do not create observations.</p><table><caption>All {farm.beds.length} growing beds</caption><thead><tr><th>Bed</th><th>Crop</th><th>Stage</th><th>Progress</th><th>Next action</th><th/></tr></thead><tbody>{farm.beds.map(bed => { const state = previewBed(bed, previewDate, allocations.get(bed.id)); return <tr key={bed.id}><th>{bed.name}</th><td>{state.cropId ? crops.get(state.cropId)?.label || state.cropId : 'Open bed'}</td><td>{state.stage}</td><td>{Math.round(state.progress)}%</td><td>{state.nextAction}</td><td><button onClick={() => onSelect(bed)}>Inspect</button></td></tr> })}</tbody></table></div></PanelShell>
 }
+
+function comparisonRoot(scenario:Scenario){return String(scenario.comparison_root||scenario.baseline_hash||'')}
+function sameComparisonRoot(left:Scenario,right:Scenario){const a=comparisonRoot(left),b=comparisonRoot(right);return Boolean(a&&b&&a===b)}
+function scenarioMatchesMission(scenario:Scenario,mission?:DecisionMission|null){if(!mission||scenario.baseline_hash!==mission.snapshotHash)return false;return mission.snapshotKind!=='farm'||scenario.comparison_root===`farm:${mission.snapshotHash}`}
+function resumeScenario(scenarios:Scenario[],selectedIds:string[],mission?:DecisionMission|null){return scenarios.find(item=>selectedIds.includes(item.id)&&scenarioTerminal(item.status)&&(!mission||scenarioMatchesMission(item,mission)))||scenarios.find(item=>scenarioTerminal(item.status)&&(!mission||scenarioMatchesMission(item,mission)))}
 
 function hasActualBatch(bed: Bed): bed is Bed & { batch_id: string } { return Boolean(bed.crop_id && typeof bed.batch_id === 'string' && bed.batch_id) }
 function scenarioTargetBed(selectedBed: Bed | null, farm: Farm) { return selectedBed && hasActualBatch(selectedBed) ? selectedBed : farm.beds.find(hasActualBatch) || null }

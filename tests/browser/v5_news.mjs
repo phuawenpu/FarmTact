@@ -54,6 +54,15 @@ try{
   await page.waitForTimeout(1000)
   check('stale response cannot replace newer region results',await panel.locator('.news-records article>.kicker').evaluateAll(nodes=>nodes.length>0&&nodes.every(n=>n.textContent.includes('regional'))))
   await page.unroute('**/api/v1/news?**')
+  report.fixtures.push('one failed filter request to verify retained-results disclosure')
+  await page.route('**/api/v1/news?**',route=>route.fulfill({status:503,contentType:'application/json',body:'{"detail":"fixture unavailable"}'}))
+  await panel.getByLabel('Region',{exact:true}).selectOption('singapore')
+  await panel.getByText(/Showing the previous successful results/).waitFor()
+  check('failed filter explicitly identifies retained previous results',await panel.getByText(/selected filters have not been applied/).isVisible())
+  await page.unroute('**/api/v1/news?**')
+  await panel.getByRole('button',{name:'Try again',exact:true}).click()
+  await page.waitForFunction(()=>document.querySelector('.news-panel')?.getAttribute('aria-busy')==='false')
+  check('retry applies selected filter',await panel.locator('.news-records article>.kicker').evaluateAll(nodes=>nodes.length>0&&nodes.every(n=>n.textContent.includes('singapore'))))
 
   for(const width of [360,390,430,1280]){
     await page.setViewportSize({width,height:900})

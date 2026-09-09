@@ -31,6 +31,7 @@ export function NewsPanel({ scenarioId, runId }: { scenarioId?: string; runId?: 
     {loading && <p role="status">Reading cached headlines…</p>}
     {error && <p role="alert">{error} <button onClick={() => setRetry(value => value + 1)}>Try again</button></p>}
     {data && <>
+      {error && !frozen && <p className="news-empty">Showing the previous successful results. The selected filters have not been applied.</p>}
       <p className="news-clock">{frozen ? 'Evidence frozen' : 'News available'}: {date(data.cutoff)} SGT.<br/>Farm planning date: {date(data.farm_cutoff)} SGT. These are separate clocks.</p>
       <details className="news-browser">
         <summary><strong>{frozen ? 'Inspect frozen sources' : 'Browse headlines and sources'}</strong><span>{data.total} matching record{data.total === 1 ? '' : 's'}</span></summary>

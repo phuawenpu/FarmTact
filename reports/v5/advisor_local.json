@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "scenario_id": "3a39dd58b6ac2bfbc593ae85a21c92d3",
+  "provider_request_ceiling": 2,
+  "scope": "One explicit local Market advisor request against a real frozen numerical result",
+  "request_status": "COMPLETED",
+  "provider_calls": 1,
+  "conversation_id": "6bee5185a7c56bb09007349a7b254dd1",
+  "news_context_hash": "27847a8af0232a2f221deb6e56058bcfe527484b9b90c7717b9b7662da1bebd5",
+  "same_frozen_context": true,
+  "replay_no_inference": true,
+  "advisor_messages": [
+    {
+      "id": "722b2b2b3b3174d3647b3924c14ae4cf",
+      "request_id": "f89e69b7decb52a207670e5287d4012f",
+      "speaker": "advisor",
+      "request_mode": "direct",
+      "speaker_id": "idris",
+      "speaker_name": "Idris",
+      "advisor_role": "market_analyst",
+      "advisor_title": "Market agent",
+      "advisor_location": "Market desk",
+      "content": "The frozen earthquake headline is general context and not a demand signal for your crops. News cannot change measured demand, so no numerical adjustments are proposed.",
+      "reply_to": "3136ca5e36bb3b550c9a933d7edd558a",
+      "snapshot_ref": {
+        "kind": "scenario",
+        "id": "3a39dd58b6ac2bfbc593ae85a21c92d3",
+        "hash": "cdbfccbf67641d5dbeab91968f7cf3bb51dfa331df3d822991cc3d5c8d80cf65",
+        "version": 1,
+        "data_mode": "synthetic_demo",
+        "frozen_at": "2026-09-09T16:24:33.702251+00:00"
+      },
+      "evidence_refs": [],
+      "tool_refs": [
+        "news:news_86bd617e66792562e295d1f5.title",
+        "news:context_hash"
+      ],
+      "highlight_refs": [],
+      "validation_status": "references_verified",
+      "validation_errors": [],
+      "validation_scope": "reference_membership_and_supported_controls",
+      "interpretation_status": "unverified_advisor_interpretation",
+      "proposed_actions": [],
+      "relationship": "answer",
+      "planner_conclusion": false,
+      "created_at": "2026-09-09T16:25:02.417951+00:00",
+      "model": "deepseek-v4-flash",
+      "usage": {
+        "prompt_tokens": 18257,
+        "completion_tokens": 86,
+        "total_tokens": 18343,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 18257,
+        "reasoning_tokens": null
+      },
+      "conversation_id": "6bee5185a7c56bb09007349a7b254dd1",
+      "sequence": 2
+    }
+  ]
+}

@@ -10,6 +10,8 @@ import { AudioControls } from './components/AudioControls'
 import { EditionSwitcher } from './components/EditionChooser'
 import { playAudioEffect, playSimulationResult } from './lib/audio'
 import type { AppView, Bootstrap, Crop, Run } from './lib/types'
+import { deriveDecisionMission, loadDecisionMission, saveDecisionMission, type DecisionMission } from './components/DecisionJourney'
+import { runSoundOutcome } from './lib/game'
 
 const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
   { id: 'world', label: 'Farm', icon: Map },
@@ -21,7 +23,10 @@ const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
 ]
 
 export default function App({ editionId = 'v1' }: { editionId?: string }) {
-  const [view, setView] = useState<AppView>('world')
+  const initialMission=useRef<DecisionMission|null>(loadDecisionMission())
+  const [mission, setMission] = useState<DecisionMission | null>(initialMission.current)
+  const [mainMission,setMainMission]=useState<DecisionMission|null>(initialMission.current?.snapshotKind==='farm'?initialMission.current:null)
+  const [view, setView] = useState<AppView>(initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world')
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
   const [loading, setLoading] = useState(true)
@@ -30,10 +35,13 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
   const [transientEvent, setTransientEvent] = useState<string | null>(null)
   const [moreOpen, setMoreOpen] = useState(false)
   const eventTimer = useRef<number | undefined>(undefined)
+  const audibleRunIds = useRef(new Set<string>())
 
   const loadBootstrap = useCallback(async () => {
     setLoading(true)
     setError(null)
+    setMainMission(null)
+    setMission(current=>current?.snapshotKind==='farm'?null:current)
     try {
       const data = await api.bootstrap()
       setBootstrap(data)
@@ -47,7 +55,11 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
 
   useEffect(() => { void loadBootstrap() }, [loadBootstrap])
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }) }, [view])
-  useEffect(() => { if (editionId === 'v1' || !run) return; const status=run.status.toLowerCase(); if (['completed','accepted_for_simulation'].includes(status)) playSimulationResult(run.id,'complete'); else if (['failed','cancelled','no_feasible_plan','stale_input'].includes(status)) playSimulationResult(run.id,'error') }, [editionId,run?.id,run?.status])
+  useEffect(() => {
+    if(editionId==='v1'||!run||!audibleRunIds.current.has(run.id))return
+    if(!['completed','accepted_for_simulation','review_withheld','no_feasible_plan','failed','cancelled','stale_input'].includes(run.status.toLowerCase()))return
+    audibleRunIds.current.delete(run.id);playSimulationResult(run.id,runSoundOutcome(run))
+  },[editionId,run])
 
   const fetchRun = useCallback(async (id: string) => {
     try {
@@ -100,6 +112,7 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
     setBusy(council ? 'start-council' : 'start-numerical'); setError(null)
     try {
       const created = await api.createRun(council)
+      audibleRunIds.current.add(created.id)
       setRun(current => current?.id === created.id ? current : {
         id: created.id, status: created.status, input_version: '', created_at: new Date().toISOString(),
         execution_mode: bootstrap?.capabilities.execution_mode || 'test', data_mode: bootstrap?.capabilities.data_mode || '',
@@ -122,6 +135,7 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
     setBusy('replan'); setError(null)
     try {
       const result = await api.replan(run.id)
+      audibleRunIds.current.add(result.id)
       const workspace = await api.bootstrap()
       setBootstrap(workspace)
       if ('strategies' in result) setRun(result)
@@ -153,6 +167,24 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
   }
 
   const loadCrop = (id: string): Promise<Crop> => api.crop(id)
+  useEffect(() => {
+    if (!bootstrap) return
+    let cancelled = false
+    void (async()=>{
+      const snapshots=await api.explorerSnapshots(),farms=snapshots.filter(item=>item.kind==='farm')
+      for(const snapshot of farms){
+        const detail=await api.explorerSnapshot(snapshot.id,'Balanced')
+        if(JSON.stringify(detail.farm)!==JSON.stringify(bootstrap.farm))continue
+        if(cancelled)return
+        const next=deriveDecisionMission(detail);setMainMission(next)
+        if(next&&(!mission||(mission.snapshotKind==='farm'&&(mission.snapshotId!==next.snapshotId||mission.snapshotHash!==next.snapshotHash)))){setMission(next);saveDecisionMission(next)}
+        return
+      }
+      if(!cancelled)setMainMission(null)
+    })().catch(() => { /* The farm remains playable when explorer data is unavailable. */ })
+    return () => { cancelled = true }
+  }, [bootstrap, mission])
+  const continueMission = (next: DecisionMission) => { setMission(next); saveDecisionMission(next); if(next.snapshotKind==='farm')setMainMission(next);setView(next.snapshotKind === 'farm' ? 'world' : 'data'); window.scrollTo({ top: 0, behavior: 'auto' }) }
   const navigate = (next: AppView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
 
   return (
@@ -187,10 +219,10 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
-              {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
+              {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
-              {view === 'data' && <DataExplorer bootstrap={bootstrap} />}
+              {view === 'data' && <DataExplorer bootstrap={bootstrap} onContinueMission={continueMission} />}
               {view === 'outcomes' && <Outcomes run={run} busy={busy} onReplay={replay} />}
               {view === 'setup' && <Setup farm={bootstrap.farm} busy={busy} onSeed={seed} onImport={importFarm} />}
             </>

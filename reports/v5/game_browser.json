@@ -1,0 +1,178 @@
+{
+  "status": "PASS",
+  "base_url": "http://127.0.0.1:8080/v5",
+  "checks": [
+    {
+      "name": "entry presents a dated quantified booked-order mission",
+      "pass": true,
+      "detail": "RECOMMENDED MISSION · PROVISIONAL SUPPLY GAP\n\nCan we cover Pak Choi due 21 Sept 2026?\n28 kg\nbooked for this date\n0 kg\nharvest eligible by shelf life\n0 kg\ninventory valid on due date\n28 kg\ngap to investigate\n\nThis screening comparison uses dated booked orders. It does not allocate an eligible harvest or inventory lot across earlier orders; the numerical planner decides actual shortfall. The containing week’s statistical forecast is 33 kg and remains context, not this order’s due quantity.\n\nA new sowing using the declared 35-day recipe would mature around 13 Oct 2026—after this delivery.\n\nInspect 14 linked input records\nSnapshot 0028677954\nTest this mission"
+    },
+    {
+      "name": "mission labels gap as provisional and discloses allocation limit",
+      "pass": true
+    },
+    {
+      "name": "reference mission uses dated order, weekly forecast context and biological stages correctly",
+      "pass": true,
+      "detail": "RECOMMENDED MISSION · PROVISIONAL SUPPLY GAP\n\nCan we cover Pak Choi due 21 Sept 2026?\n28 kg\nbooked for this date\n0 kg\nharvest eligible by shelf life\n0 kg\ninventory valid on due date\n28 kg\ngap to investigate\n\nThis screening comparison uses dated booked orders. It does not allocate an eligible harvest or inventory lot across earlier orders; the numerical planner decides actual shortfall. The containing week’s statistical forecast is 33 kg and remains context, not this order’s due quantity.\n\nA new sowing using the declared 35-day recipe would mature around 13 Oct 2026—after this delivery.\n\nInspect 14 linked input records\nSnapshot 0028677954\nTest this mission"
+    },
+    {
+      "name": "mission exposes snapshot and linked record count",
+      "pass": true
+    },
+    {
+      "name": "mission reveals actual contributing records before assumptions change",
+      "pass": true
+    },
+    {
+      "name": "mission survives into Scenario Lab",
+      "pass": true
+    },
+    {
+      "name": "scenario distinguishes calculation time from farm time",
+      "pass": true
+    },
+    {
+      "name": "exact numeric input synchronizes with range",
+      "pass": true
+    },
+    {
+      "name": "waiting state says farm time is not advancing",
+      "pass": true
+    },
+    {
+      "name": "all seven computed role perspectives are visible",
+      "pass": true,
+      "detail": [
+        "Ravi · Demand",
+        "Hana · Weather",
+        "Idris · Market",
+        "Mei · Production",
+        "Lina · Supply Chain",
+        "Ben · Profit",
+        "Asha · Planner"
+      ]
+    },
+    {
+      "name": "computed cards explicitly deny inference and agent-message status",
+      "pass": true
+    },
+    {
+      "name": "weather honestly reports an unchanged input",
+      "pass": true
+    },
+    {
+      "name": "market assumption is not presented as observed sentiment",
+      "pass": true
+    },
+    {
+      "name": "numerical deltas retain their direction",
+      "pass": true,
+      "detail": "COMPUTED PERSPECTIVES · NUMERICAL, NO INFERENCE\n\nSeven views of the trade-off\nThese are deterministic templates over frozen results, not agent messages. They may agree, disagree or lack an input.\nWARNS\nRavi · Demand\n\nDemand is 137% of the frozen baseline; unfilled demand increases by 36.6 kg.\n\nEvidence used\nUNKNOWN\nHana · Weather\n\nNo weather control changed in this numerical branch, so no weather or yield adjustment is claimed.\n\nEvidence used\nWARNS\nIdris · Market\n\nThe 137% demand value is a player assumption, not observed market sentiment or a connected social feed.\n\nEvidence used\nBLOCKS\nMei · Production\n\nThis specific new-sowing option matures after the selected delivery under the declared 35-day recipe; the recorded solver result remains separately inspectable.\n\nEvidence used\nWARNS\nLina · Supply Chain\n\n32 deliveries and 15 beds need inspection in the computed branch.\n\nEvidence used\nSUPPORTS\nBen · Profit\n\nContribution margin increases by 416.4 SGD; total cost increases by 11 SGD.\n\nEvidence used\nSUPPORTS\nAsha · Planner\n\nBalanced passes the recorded numerical constraints; compare service, waste, labour and margin before using this simulation.\n\nEvidence used\n\nFor an actual paid council interpretation, open Asha and deliberately send a question or choose Convene council."
+    },
+    {
+      "name": "paid council remains a deliberate later action",
+      "pass": true
+    },
+    {
+      "name": "mission context survives reload",
+      "pass": true
+    },
+    {
+      "name": "saved result has an obvious recovery action after reload",
+      "pass": true
+    },
+    {
+      "name": "360px has no document overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 360,
+        "innerWidth": 360
+      }
+    },
+    {
+      "name": "360px visible scenario controls remain usable",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390px has no document overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "innerWidth": 390
+      }
+    },
+    {
+      "name": "390px visible scenario controls remain usable",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430px has no document overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 430,
+        "innerWidth": 430
+      }
+    },
+    {
+      "name": "430px visible scenario controls remain usable",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280px has no document overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "1280px visible scenario controls remain usable",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "malformed or old mission cache is discarded and rederived",
+      "pass": true,
+      "detail": "RECOMMENDED MISSION · PROVISIONAL SUPPLY GAP\n\nCan we cover Pak Choi due 21 Sept 2026?\n28 kg\nbooked for this date\n0 kg\nharvest eligible by shelf life\n0 kg\ninventory valid on due date\n28 kg\ngap to investigate\n\nThis screening comparison uses dated booked orders. It does not allocate an eligible harvest or inventory lot across earlier orders; the numerical planner decides actual shortfall. The containing week’s statistical forecast is 33 kg and remains context, not this order’s due quantity.\n\nA new sowing using the declared 35-day recipe would mature around 13 Oct 2026—after this delivery.\n\nInspect 14 linked input records\nSnapshot 0028677954\nTest this mission"
+    },
+    {
+      "name": "saved-snapshot mission stays on its owned Experiments path",
+      "pass": true,
+      "detail": {
+        "value": "saved:204c356459eefea34c005a869a2f7df9",
+        "text": "Explorer acceptance mtubdeq0 1280px · playground"
+      }
+    },
+    {
+      "name": "saved snapshot and Data destination survive reload",
+      "pass": true
+    },
+    {
+      "name": "numerical journey makes no inference submission",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "journey raises no page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "page_errors": [],
+  "inference_requests": [],
+  "screenshots": [
+    "apps/web/screenshots/v5-game/mission-360.png",
+    "apps/web/screenshots/v5-game/perspectives-360.png",
+    "apps/web/screenshots/v5-game/result-360.png",
+    "apps/web/screenshots/v5-game/result-390.png",
+    "apps/web/screenshots/v5-game/result-430.png",
+    "apps/web/screenshots/v5-game/result-1280.png"
+  ],
+  "scenario_id": "3a892987c4ad6f872d1deeaa4449fa9b",
+  "completed_at": "2026-09-09T16:35:38.767Z"
+}

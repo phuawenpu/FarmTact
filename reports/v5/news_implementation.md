@@ -30,6 +30,8 @@ valid. No production records were changed.
 Verification: 37 focused News/review/Fly-boot checks pass, including the separate
 collector's stripped credential environment. A wider backend regression passed
 113 checks before the final date-parser additions; the 37-check run covers those
-changed paths. Browser filters, stale-response handling and final release
-acceptance remain in progress. These are local candidate results, not deployment
-or actual provider-call evidence.
+changed paths. The initial News browser run passed 22 checks; a final failed-filter/retry disclosure
+check is being added. A real local explicit Market advisor request completed in one
+DeepSeek call, cited the frozen title and context hash, and replayed without
+inference (reports/v5/advisor_local.json). These remain local candidate results;
+publication and deployed verification are pending.
