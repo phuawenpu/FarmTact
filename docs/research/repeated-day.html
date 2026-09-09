@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The same harvest, another day — FarmTact design study</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#173a2b;background:#fff;line-height:1.55;color-scheme:light}*{box-sizing:border-box}body{max-width:820px;margin:auto;padding:24px}h1{font-family:Georgia,serif;font-size:clamp(2rem,6vw,3rem);line-height:1.15}p{max-width:68ch}button{font:inherit;min-height:46px;padding:10px 16px;border:1px solid #173a2b;border-radius:4px;background:#fff;color:inherit;cursor:pointer}button:hover,button[aria-pressed=true]{background:#173a2b;color:#fff}button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #a16b12;outline-offset:3px}.choices{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}.note{font-size:.9rem;color:#4d5d55}.scene{border-block:1px solid #a4b4aa;padding:20px 0;margin:28px 0}.scene p{margin:6px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{text-align:left;border-bottom:1px solid #ccd5cf;padding:10px 8px;vertical-align:top}th:first-child{width:40%}.result{padding:12px 0;border-top:3px solid #173a2b;min-height:120px}summary{cursor:pointer;padding:12px 0;min-height:44px}footer{margin-top:30px;border-top:1px solid #ccd5cf;font-size:.9rem}a{color:#215a3e}label{display:block;font-weight:600}select{font:inherit;min-height:46px;width:100%;max-width:380px;padding:8px;border:1px solid #607369;background:#fff;color:inherit}small{display:block}button:disabled{opacity:.6;cursor:default}@media(max-width:400px){body{padding:16px}th,td{padding:8px 4px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+<main>
+<h1>The same harvest, another day</h1>
+<p>A tiny playable design study inspired by repetition and difference in Hong Sang-soo's films. Look at the same crop twice. Notice which detail changes what it can do.</p>
+<p class="note">Offline storyboard, not a released game feature or a full planner run. It uses one booked order and one batch from FarmTact's synthetic fixture, with a hypothetical three-day delay. No data is sent or saved.</p>
+<div class="choices" aria-label="Select the situation">
+<button id="original" aria-pressed="true">First pass: scheduled harvest</button>
+<button id="delayed" aria-pressed="false">Second pass: three days later</button>
+</div>
+<div class="scene">
+<p><strong>Bed A1 · Caixin · 44 kg</strong></p>
+<p id="scene-description">The crop is scheduled to be ready on 14 September.</p>
+<p>The customer needs 22 kg on 14 September.</p>
+<p class="note">Planning date: 8 September 2026. For this small timing exercise, consider this batch alone and assume its yield is usable as scheduled, with no competing allocation.</p>
+</div>
+<label for="prediction">Can this batch arrive in time for this order?</label>
+<select id="prediction"><option value="unsure">I'm not sure yet</option><option value="yes">Yes, it is available by the deadline</option><option value="no">No, it arrives after the deadline</option></select>
+<div class="choices"><button id="reveal">Check the two dates</button></div>
+<div id="evidence" hidden>
+<table><caption>Same quantity and order; only the harvest date changes</caption><thead><tr><th scope="col">Record</th><th scope="col">First pass</th><th scope="col">Second pass</th></tr></thead><tbody><tr><th scope="row">Batch quantity</th><td>44 kg</td><td>44 kg</td></tr><tr><th scope="row">Harvest date</th><td>14 Sep</td><td>17 Sep</td></tr><tr><th scope="row">Order quantity</th><td>22 kg</td><td>22 kg</td></tr><tr><th scope="row">Delivery deadline</th><td>14 Sep</td><td>14 Sep</td></tr></tbody></table>
+<div class="result" role="status" aria-live="polite" tabindex="-1"><strong id="result-title"></strong><p id="result-body"></p><p id="reflection"></p></div>
+<details><summary>Could planting today rescue this delivery?</summary><p>In the declared demo recipe, caixin needs 7 nursery days plus 21 growing days. Sowing on 8 September puts maturity on 6 October. That cannot rescue a 14 September deadline. The opening 5 kg inventory also expires on 10 September.</p><p>This establishes a timing limit in the fixture. It does not calculate whole-farm fulfilment, competing orders, waste or margin. The complete planner must calculate those separately.</p></details>
+<p><strong>Try another look:</strong> switch passes, predict again, and check whether the unchanged 44 kg leads you to overlook the changed date.</p>
+</div>
+<footer><p>The design question: did the second encounter change what you noticed? The harvest stayed the same size. Its usefulness to this order changed with time.</p><p><a href="https://github.com/phuawenpu/FarmTact/blob/e9c3edfe10da162e4f50fd5a69df5a4394aa0812/packages/fixtures.py">Inspect the fixture</a> · <a href="https://mubi.com/en/notebook/posts/an-interview-with-hong-sang-soo">Read Hong's interview</a></p></footer>
+</main>
+<script>
+let delayed=false;
+const $=id=>document.getElementById(id);
+function choose(value){delayed=value;$('original').setAttribute('aria-pressed',String(!value));$('delayed').setAttribute('aria-pressed',String(value));$('scene-description').textContent=value?'The same crop is now scheduled to be ready on 17 September.':'The crop is scheduled to be ready on 14 September.';$('prediction').value='unsure';$('evidence').hidden=true;}
+$('original').addEventListener('click',()=>choose(false));$('delayed').addEventListener('click',()=>choose(true));
+$('reveal').addEventListener('click',()=>{const prediction=$('prediction').value;const correct=prediction===(delayed?'no':'yes');$('evidence').hidden=false;$('result-title').textContent=delayed?'The batch is three days too late.':'The batch is available on the deadline.';$('result-body').textContent=delayed?'There are still 44 kg, but none of this batch is available on 14 September. More crop arriving on 17 September would not change that timing limit.':'For this simplified check, 44 kg is available for a 22 kg order on the required day. The full planner would also consider competing demand and resource constraints.';$('reflection').textContent=prediction==='unsure'?'The evidence gives you a way to decide: compare availability with the deadline.':correct?'Your prediction fits the dates. Could you recognize the same problem with another crop?':'Your prediction and the dates differ. That is useful: what did you pay attention to first?';document.querySelector('.result').focus();});
+</script>
+</html>

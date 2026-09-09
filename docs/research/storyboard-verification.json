@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "360 viewport fits",
+      "pass": true
+    },
+    {
+      "name": "360 first pass result",
+      "pass": true
+    },
+    {
+      "name": "360 replay resets evidence",
+      "pass": true
+    },
+    {
+      "name": "360 delay result",
+      "pass": true
+    },
+    {
+      "name": "360 prediction gets relevant feedback",
+      "pass": true
+    },
+    {
+      "name": "390 viewport fits",
+      "pass": true
+    },
+    {
+      "name": "390 first pass result",
+      "pass": true
+    },
+    {
+      "name": "390 replay resets evidence",
+      "pass": true
+    },
+    {
+      "name": "390 delay result",
+      "pass": true
+    },
+    {
+      "name": "390 prediction gets relevant feedback",
+      "pass": true
+    },
+    {
+      "name": "430 viewport fits",
+      "pass": true
+    },
+    {
+      "name": "430 first pass result",
+      "pass": true
+    },
+    {
+      "name": "430 replay resets evidence",
+      "pass": true
+    },
+    {
+      "name": "430 delay result",
+      "pass": true
+    },
+    {
+      "name": "430 prediction gets relevant feedback",
+      "pass": true
+    },
+    {
+      "name": "1280 viewport fits",
+      "pass": true
+    },
+    {
+      "name": "1280 first pass result",
+      "pass": true
+    },
+    {
+      "name": "1280 replay resets evidence",
+      "pass": true
+    },
+    {
+      "name": "1280 delay result",
+      "pass": true
+    },
+    {
+      "name": "1280 prediction gets relevant feedback",
+      "pass": true
+    },
+    {
+      "name": "Keyboard reveal works",
+      "pass": true
+    },
+    {
+      "name": "No network calls",
+      "pass": true
+    },
+    {
+      "name": "No browser errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "scope": "Offline HTML storyboard; Chromium emulation, not learning efficacy"
+}
