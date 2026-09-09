@@ -1,5 +1,5 @@
 {
-  "latest": "v4",
+  "latest": "v5",
   "editions": [
     {
       "id": "v1",
@@ -184,6 +184,73 @@
           "feedback_ids": [],
           "evidence": [
             "https://github.com/phuawenpu/FarmTact/blob/f1510825ab60ea0c70d0144d859bdf6266c1ac9d/reports/seven_agents/implementation.md"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v5",
+      "title": "Follow a delivery decision",
+      "published_at": "2026-09-09",
+      "summary": "Trace a dated supply gap into frozen strategies, distinctive crops, clearer optional sound and sourced News context.",
+      "status": "published",
+      "source_commit": "0f54565d23f5387fc751eeac4f329372e0460018",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/0f54565d23f5387fc751eeac4f329372e0460018",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/f1510825ab60ea0c70d0144d859bdf6266c1ac9d...0f54565d23f5387fc751eeac4f329372e0460018",
+      "image_digest": "registry.fly.io/farmtact@sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103",
+      "review_url": "/v5/review",
+      "play_url": "/v5/",
+      "changes": [
+        {
+          "title": "A playable decision with traceable evidence",
+          "description": "Inspect the actual booked-order records, edit exact assumptions, run three numerical strategies and compare one policy at a time. Biological maturity and calculation waiting use separate clocks. Saved results retain their own baseline and mission.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/game_implementation.md",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/game_browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/import_mission.json"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Recognizable original crops",
+          "description": "Eighteen revised illustrations distinguish leaf shapes, stems and growth habits across ten crop profiles and four stage sequences. Independent compact-size and grayscale reviews prompted specific mustard, kale and pak choi revisions.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/crop_independent_review.md",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/crop-art-review-sheet.png"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Optional sound with test and retry",
+          "description": "A stronger original mix, separate channels and a test tone address the previously quiet audio. Completion, shortfall, withheld acceptance and failure have distinct cues. Every visit starts silent. Signal/browser review is recorded; physical-device listening remains untested.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/audio_implementation.md",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/audio_independent_review.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "News supports the seven-agent council",
+          "description": "Browse cached SFA and regional headline metadata with separate source dates and explicit missing future-event coverage. A supporting News scout freezes evidence for decisions and paid advisor interpretation; headlines never change farm quantities automatically. Reddit and restricted community sources remain visibly unavailable.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/news_implementation.md",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/news_browser.json",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/advisor_local.json"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Earlier editions preserved after hosting review",
+          "description": "Retain separate Fly instances: equal-capacity configurations offer essentially no price saving, and cheaper shared sizes require unverified capacity reductions. Earlier images, sessions and saved records remain independent.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/docs/deployment/consolidation-assessment.md",
+            "https://github.com/phuawenpu/FarmTact/blob/0f54565d23f5387fc751eeac4f329372e0460018/reports/v5/implementation.md"
           ],
           "status": "implemented"
         }
