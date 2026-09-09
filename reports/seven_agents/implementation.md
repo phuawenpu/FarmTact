@@ -60,3 +60,20 @@ height. A regression now requires at least 180 pixels of input width and tests d
 entry without submission at all four widths. This is a new immutable v4 release;
 v3 remains inspectable. The candidate stylesheet is tested by an explicitly
 labelled browser-only CSS override against v3; the live v3 app is never modified.
+
+
+V4 is now live at https://farmtact.fly.dev/v4/, from source
+`f151082` (full source and pinned digest in `config/releases/v4.json`). The
+candidate CSS regression passed 36 checks; the final live v4 journey also passed
+36 checks at all four widths with no stylesheet interception. Seven live API
+checks passed, including the numerical worker, copied public context, and v3/v4
+credential/dataset isolation; no extra provider calls were made. V1–V3 registry
+entries remained exactly unchanged, and original v1/v2 saved-record hashes were
+rechecked. Both local HTTP service registrations remain removed; PostgreSQL remains.
+
+Progress pushes: 14:46, 14:55, v3 publication around 15:00, 15:07, and v4
+publication around 15:11 UTC, followed by the final evidence push. The next
+user-requested engagement goal will start with planning for v5, rubric alignment,
+reviewer coverage, crop art, audio and news/community sources; it is separate from
+this completed release. A subsequent user request adds a measured Fly shared-host
+cost comparison and conditional consolidation while preserving edition isolation.

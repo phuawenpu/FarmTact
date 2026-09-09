@@ -80,7 +80,7 @@ PostgreSQL retained. See `reports/editions/implementation.md` and release manife
 for source/image pins, evidence and physical-device testing limitations.
 
 
-## Seven-agent council — v3 deployed; v4 usability correction, 2026-09-09
+## Seven-agent council and mobile dialogue — deployed as v3/v4, 2026-09-09
 
 User-approved scope: Sumin's Demand, Weather, Market, Production, Supply Chain, Profit and Planner roles; remove the independent critic persona and repurpose Idris as Market, with Lina joining Supply Chain. Keep deterministic evidence and numerical acceptance checks. No community feed is connected: expose a truthful read-only scaffold with provenance, bounds and cutoff checks, never fake reactions or automatic demand changes. Publish as fresh v3, preserving earlier editions.
 
@@ -94,3 +94,12 @@ and saved-state hashes are unchanged. Live manual inspection additionally found
 that the native voice-typing hint crowded the message field to four pixels at 360px.
 Root owns the small flex-wrap correction, explicit usable-width/draft-entry tests,
 and its immutable v4 publication. This is not an in-place patch to v3.
+
+
+V4 completed: 36 candidate CSS checks, 36 live responsive checks and seven live
+API/worker/isolation checks. V1–V3 remain immutable. The v4 source is f151082;
+release manifests pin its complete commit and image. Native keyboard guidance
+now wraps below a usable 44px message row. Original records still match; no extra
+inference for the v4 checks. Sprite HTTP services are removed. Full release
+scope, counts and remaining no-feed/unsupported-citation limits are in
+reports/seven_agents/implementation.md.

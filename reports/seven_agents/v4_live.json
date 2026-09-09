@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "v4 exact source",
+      "pass": true
+    },
+    {
+      "name": "Independent v4 starts at farm version one",
+      "pass": true
+    },
+    {
+      "name": "Seven advisors retained",
+      "pass": true
+    },
+    {
+      "name": "Public records copied independently",
+      "pass": true
+    },
+    {
+      "name": "v4 cannot read v3 saved dataset",
+      "pass": true
+    },
+    {
+      "name": "v3 credentials rejected in v4",
+      "pass": true
+    },
+    {
+      "name": "v4 numerical worker succeeds without inference",
+      "pass": true
+    }
+  ],
+  "mission_id": "5f4251d308806b4a2a9e971a9c08f47d",
+  "provider_requests": 0
+}

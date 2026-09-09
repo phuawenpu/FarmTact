@@ -1,0 +1,265 @@
+{
+  "url": "https://farmtact.fly.dev/v4/",
+  "candidate_css_override": false,
+  "checks": [
+    {
+      "name": "360px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "360px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "360px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nLoading\n\nNo connected social feeds. No community posts or sentiment observations are available.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand."
+    },
+    {
+      "name": "360px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "360px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 415.96875,
+        "width": 334,
+        "height": 60
+      }
+    },
+    {
+      "name": "360px message field remains readable beside voice hint",
+      "pass": true,
+      "detail": {
+        "x": 25,
+        "y": 744.4375,
+        "width": 268,
+        "height": 44
+      }
+    },
+    {
+      "name": "360px message field accepts a draft without sending",
+      "pass": true,
+      "detail": "No send action"
+    },
+    {
+      "name": "360px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "360px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "390px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "390px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "390px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nLoading\n\nNo connected social feeds. No community posts or sentiment observations are available.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand."
+    },
+    {
+      "name": "390px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "390px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 415.96875,
+        "width": 364,
+        "height": 60
+      }
+    },
+    {
+      "name": "390px message field remains readable beside voice hint",
+      "pass": true,
+      "detail": {
+        "x": 25,
+        "y": 793.4375,
+        "width": 298,
+        "height": 44
+      }
+    },
+    {
+      "name": "390px message field accepts a draft without sending",
+      "pass": true,
+      "detail": "No send action"
+    },
+    {
+      "name": "390px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "390px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "430px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "430px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "430px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nLoading\n\nNo connected social feeds. No community posts or sentiment observations are available.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand."
+    },
+    {
+      "name": "430px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "430px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 13,
+        "y": 403.4375,
+        "width": 404,
+        "height": 60
+      }
+    },
+    {
+      "name": "430px message field remains readable beside voice hint",
+      "pass": true,
+      "detail": {
+        "x": 25,
+        "y": 793.4375,
+        "width": 338,
+        "height": 44
+      }
+    },
+    {
+      "name": "430px message field accepts a draft without sending",
+      "pass": true,
+      "detail": "No send action"
+    },
+    {
+      "name": "430px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "430px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "1280px map shows seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "1280px roster has exact seven names",
+      "pass": true,
+      "detail": [
+        "Ravi",
+        "Hana",
+        "Idris",
+        "Mei",
+        "Lina",
+        "Ben",
+        "Asha"
+      ]
+    },
+    {
+      "name": "1280px market panel states feed status and count",
+      "pass": true,
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nLoading\n\nNo connected social feeds. No community posts or sentiment observations are available.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand."
+    },
+    {
+      "name": "1280px selector contains seven advisors",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "1280px selector stays usable",
+      "pass": true,
+      "detail": {
+        "x": 816,
+        "y": 334.59375,
+        "width": 434,
+        "height": 60
+      }
+    },
+    {
+      "name": "1280px message field remains readable beside voice hint",
+      "pass": true,
+      "detail": {
+        "x": 828,
+        "y": 724.59375,
+        "width": 368,
+        "height": 44
+      }
+    },
+    {
+      "name": "1280px message field accepts a draft without sending",
+      "pass": true,
+      "detail": "No send action"
+    },
+    {
+      "name": "1280px keyboard activates the seventh advisor",
+      "pass": true,
+      "detail": "Lina opened with Enter"
+    },
+    {
+      "name": "1280px browsing advisors sends no inference request",
+      "pass": true,
+      "detail": 0
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/v4-live/seven-agents-360.png",
+    "apps/web/screenshots/v4-live/seven-agents-390.png",
+    "apps/web/screenshots/v4-live/seven-agents-430.png",
+    "apps/web/screenshots/v4-live/seven-agents-1280.png"
+  ]
+}

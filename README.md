@@ -6,7 +6,7 @@ A mobile tactical planning board for a fictional Singapore vegetable farm. Ten c
 
 ## Deployed app
 
-**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. The latest edition is [v3: seven perspectives, one farm](https://farmtact.fly.dev/v3/); v1 and v2 retain independent saved state and frozen deployments. See the [edition runbook](docs/deployment/editions.md) and [seven-agent verification](reports/seven_agents/implementation.md).
+**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. The latest edition is [v4: seven advisors with usable mobile dialogue](https://farmtact.fly.dev/v4/); v1, v2 and v3 retain independent saved state and frozen deployments. See the [edition runbook](docs/deployment/editions.md) and [seven-agent verification](reports/seven_agents/implementation.md).
 
 ## Running in this Sprite
 
