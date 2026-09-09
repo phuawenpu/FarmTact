@@ -208,8 +208,9 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
       {!!savedConversations.length && <label className="saved-discussions"><span>Saved discussions</span><select value={conversation?.id || ''} onChange={event => { stopStream.current?.(); const generation = ++conversationGeneration.current; setLoading(true); setBusy(false); setReplyTo(null); void refresh(event.target.value, generation).then(async value => { if (generation === conversationGeneration.current && requestActive(value.last_request_status)) { setBusy(true); await pollForMessages(value.id, value.messages.length, generation) } }).catch(caught => { if (generation === conversationGeneration.current) setError(messageFor(caught, 'Saved discussion could not be opened.')) }).finally(() => { if (generation === conversationGeneration.current) { setLoading(false); setBusy(false) } }) }}><option value="" disabled>Select a frozen record</option>{savedConversations.map(item => <option key={item.id} value={item.id}>{item.advisor_id || 'advisor'} · {snapshotId(item) || 'frozen snapshot'}{item.selected_bed_id ? ` · ${item.selected_bed_id}` : ''}</option>)}</select></label>}
       {conversation && snapshotId(conversation) !== (scenario?.id || `${farm.id}:v${farm.version}`) && <div className="replay-label"><RotateCcw size={15}/><span>Saved frozen discussion · {snapshotId(conversation)}. This is not the current farm snapshot.</span></div>}
       {conversation?.transcript_mode === 'replay' && <div className="replay-label"><RotateCcw size={15}/><span>Recorded replay · opening and replaying use no new inference.</span></div>}
+      {conversation?.advisor_role?.toLowerCase().includes('critic') && <div className="replay-label"><RotateCcw size={15}/><span>Archived advisor role · {conversation.advisor_role}. Current councils use the seven-agent model.</span></div>}
       {conversation?.last_request_status && ['INTERRUPTED','PARTIAL','FAILED','BLOCKED'].includes(conversation.last_request_status.toUpperCase()) && <div className="partial-conversation" role="status"><CircleAlert size={15}/><span><strong>Saved partial discussion · {conversation.last_request_status.toLowerCase()}</strong>Your existing messages are preserved. You can retry the question safely from this snapshot.</span></div>}
-      {conversation?.messages.some(message => message.request_mode === 'council' || message.planner_conclusion === true || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><small>{item.name}</small></span>)}<b>Recorded council · expand messages below</b></div>}
+      {conversation?.messages.some(message => message.request_mode === 'council' || message.planner_conclusion === true || message.critic_conclusion === true) && <div className="council-stage" aria-label="Council speakers">{advisors.map(item => <span key={item.id}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><small>{item.name}</small></span>)}<b>Current council roster · recorded messages below</b></div>}
       <div className="prompt-row" aria-label="Suggested questions">
         {[advisor.prompt, 'Show me the evidence.', 'What could I change?'].map(prompt => <button key={prompt} onClick={() => void send(prompt)} disabled={!conversation || busy || loading}>{prompt}</button>)}
       </div>
@@ -258,12 +259,13 @@ function MarketCommunitySignals({ data, failed }: { data: MarketSignals | null; 
   const source = typeof firstSource === 'string' ? firstSource : firstSource?.name || firstSource?.id
   const count = data?.observation_count ?? data?.observations?.length ?? 0
   const connected = data?.connected_social_feeds ?? Boolean(data?.feeds?.length)
+  const publicLimits = data?.limitations?.filter(limit => !/untrusted|instructions?|prompt|render|classification/i.test(limit)) || []
   return <section className="market-signals" aria-label="Market community signals">
     <div><p className="kicker">Community signals · read only</p><strong>{source || 'No connected social feeds'}</strong><span className={`validation-chip ${failed || !connected ? 'validation-chip--bad' : ''}`}>{failed ? 'unavailable' : data?.status?.replaceAll('_', ' ') || 'loading'}</span></div>
     <p>{failed ? 'The market-signals status could not be loaded.' : data?.summary || 'No connected social feeds. No community posts or sentiment observations are available.'}</p>
     <dl><div><dt>Connected feeds</dt><dd>{connected ? String(data?.feeds?.length || 'yes') : '0'}</dd></div><div><dt>Observations</dt><dd>{count}</dd></div></dl>
-    {data?.provenance && <small>Provenance: {Array.isArray(data.provenance) ? data.provenance.join(' · ') : data.provenance}</small>}
-    {!!data?.limitations?.length && <small>Limits: {data.limitations.join(' · ')}</small>}
+    <small>Reported reactions are context, not orders or measured demand.</small>
+    {(data?.provenance || publicLimits.length > 0) && <details><summary>Source, provenance and limits</summary>{data?.provenance && <p>Provenance: {Array.isArray(data.provenance) ? data.provenance.join(' · ') : data.provenance}</p>}{publicLimits.map(limit => <p key={limit}>{limit}</p>)}</details>}
   </section>
 }
 

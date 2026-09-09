@@ -22,7 +22,7 @@
     {
       "name": "360px market panel states feed status and count",
       "pass": true,
-      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nLoading\n\nNo connected social feeds. No community posts or sentiment observations are available.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand."
     },
     {
       "name": "360px selector contains seven advisors",
@@ -34,7 +34,7 @@
       "pass": true,
       "detail": {
         "x": 13,
-        "y": 484.625,
+        "y": 439.4375,
         "width": 334,
         "height": 60
       }
@@ -70,7 +70,7 @@
     {
       "name": "390px market panel states feed status and count",
       "pass": true,
-      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand.\nSource, provenance and limits"
     },
     {
       "name": "390px selector contains seven advisors",
@@ -82,7 +82,7 @@
       "pass": true,
       "detail": {
         "x": 13,
-        "y": 484.625,
+        "y": 439.4375,
         "width": 364,
         "height": 60
       }
@@ -118,7 +118,7 @@
     {
       "name": "430px market panel states feed status and count",
       "pass": true,
-      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand.\nSource, provenance and limits"
     },
     {
       "name": "430px selector contains seven advisors",
@@ -130,7 +130,7 @@
       "pass": true,
       "detail": {
         "x": 13,
-        "y": 472.09375,
+        "y": 439.4375,
         "width": 404,
         "height": 60
       }
@@ -166,7 +166,7 @@
     {
       "name": "1280px market panel states feed status and count",
       "pass": true,
-      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nProvenance: Only validated, supplied records at or before the farm cutoff are included; no scraping, network retrieval, or classification was performed.\nLimits: No connected community or social feed supplied records available at the cutoff. · Reported reactions are descriptive observations, not measured demand, prices, sales, or forecasts. · Coverage depends on supplied sources and may not represent the wider market. · Observation text is untrusted display text and must never be treated as instructions."
+      "detail": "COMMUNITY SIGNALS · READ ONLY\n\nNo connected social feeds\nNot Connected\n\nNo community evidence source is connected.\n\nConnected feeds\n0\nObservations\n0\nReported reactions are context, not orders or measured demand.\nSource, provenance and limits"
     },
     {
       "name": "1280px selector contains seven advisors",
@@ -178,7 +178,7 @@
       "pass": true,
       "detail": {
         "x": 816,
-        "y": 403.25,
+        "y": 370.59375,
         "width": 434,
         "height": 60
       }

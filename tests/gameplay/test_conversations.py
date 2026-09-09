@@ -236,6 +236,36 @@ def test_direct_message_persists_validated_reply_and_replay_makes_no_call(
     assert len(calls) == 1
 
 
+def test_historical_idris_header_stays_critic_but_new_reply_uses_market(env, monkeypatch):
+    client, store, tenant = env
+    calls = []
+    gateway_factory(monkeypatch, calls)
+    conversation_id = create(
+        client, advisor="idris", key="historical-idris-conversation"
+    ).json()["id"]
+    persistence = ConversationStore(store)
+    archived = persistence.get_conversation(tenant, conversation_id)
+    archived["advisor_role"] = "independent_critic"
+    persistence.save_conversation(tenant, archived)
+
+    for suffix in ("", "/replay"):
+        public = client.get(f"/api/v1/conversations/{conversation_id}{suffix}").json()
+        assert public["advisor_role"] == "independent_critic"
+        assert public["advisor"]["role"] == "independent_critic"
+        assert public["advisor"]["title"] == "Independent critic"
+
+    queued = send(
+        client,
+        conversation_id,
+        key="historical-idris-new-reply",
+        content="Review the current market context.",
+    ).json()
+    execute(store, tenant, queued["id"])
+    assert calls[0]["role"] == "market_analyst"
+    reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
+    assert reply["advisor_role"] == "market_analyst"
+
+
 def test_invitation_is_two_sided_exchange_with_specific_reply_graph_and_prior_turns(
     env, monkeypatch
 ):

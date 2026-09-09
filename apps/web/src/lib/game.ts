@@ -52,6 +52,7 @@ export interface Conversation {
   title?: string
   advisor_ids?: string[]
   advisor_id?: string
+  advisor_role?: string | null
   farm_id?: string
   scenario_id?: string | null
   snapshot_ref?: string | { kind?: string; id?: string; hash?: string; version?: string | number; frozen_at?: string } | null

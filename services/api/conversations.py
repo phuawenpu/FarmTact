@@ -51,6 +51,28 @@ DIRECT_MAX_TURNS = 4
 DIRECT_MAX_REPAIRS = 1
 COUNCIL_MAX_TURNS = 7
 COUNCIL_MAX_REPAIRS = 2
+ARCHIVED_ADVISOR_ROLES: dict[str, dict[str, str]] = {
+    "crop_scientist": {
+        "title": "Crop scientist",
+        "location": "Greenhouse",
+        "expertise": "Crop development and biological constraints",
+    },
+    "supply_weather_scout": {
+        "title": "Weather scout",
+        "location": "Weather station",
+        "expertise": "Public conditions and uncertainty",
+    },
+    "resources_margin_analyst": {
+        "title": "Resource analyst",
+        "location": "Tool shed",
+        "expertise": "Labour, cash, capacity, and margin",
+    },
+    "independent_critic": {
+        "title": "Independent critic",
+        "location": "Evidence desk",
+        "expertise": "Challenging unsupported conclusions",
+    },
+}
 TERMINAL_REQUEST_STATUSES = {
     "COMPLETED",
     "PARTIAL",
@@ -143,6 +165,17 @@ def _key(request: Request) -> str:
 
 def _advisor_from_role(role: str) -> dict[str, str]:
     return ADVISORS[ROLE_TO_ADVISOR[role]]
+
+
+def _conversation_advisor(conversation: dict[str, Any]) -> dict[str, str]:
+    canonical = ADVISORS[conversation["advisor_id"]]
+    stored_role = conversation.get("advisor_role", canonical["role"])
+    if stored_role == canonical["role"]:
+        return canonical
+    archived = ARCHIVED_ADVISOR_ROLES.get(stored_role)
+    if archived is None:
+        return {**canonical, "role": stored_role, "title": "Archived advisor"}
+    return {**canonical, "role": stored_role, **archived}
 
 
 def _evidence_context(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
@@ -388,7 +421,7 @@ def _public_conversation(
     include_messages: bool = True,
 ) -> dict[str, Any]:
     public = {key: value for key, value in conversation.items() if not key.startswith("_")}
-    public["advisor"] = ADVISORS[conversation["advisor_id"]]
+    public["advisor"] = _conversation_advisor(conversation)
     public["validation_policy"] = {
         "validation_status": "references_verified",
         "validation_scope": "reference_membership_and_supported_controls",
@@ -650,7 +683,7 @@ def build_conversation_router(
         replied_message = _resolve_reply(
             persistence, tenant, conversation_id, body.reply_to
         )
-        target_role = conversation["advisor_role"]
+        target_role = ADVISORS[conversation["advisor_id"]]["role"]
         if replied_message and replied_message.get("speaker") == "advisor":
             current_advisor = ADVISORS.get(str(replied_message.get("speaker_id")))
             if current_advisor is None:

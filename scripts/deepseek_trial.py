@@ -29,6 +29,8 @@ from runtime.deepseek_gateway import (  # noqa: E402
 )
 
 
+from packages.agents import ROLES, ROLE_EXPERTISE
+
 CONFIG = ROOT / "config/deepseek_runtime.json"
 REPORT_DIR = ROOT / "reports/deepseek"
 
@@ -230,7 +232,7 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
     prior, prior_requests, prior_tokens = _load_resume(resume_path)
     report: dict = {
         "schema_version": "1.0",
-        "trial_version": "4-explicit-council-schema",
+        "trial_version": "5-seven-agent-council",
         "trial": "DS-G1+DS-G2" if with_council else "DS-G1",
         "started_at": datetime.now(timezone.utc).isoformat(),
         "development_phase": "autonomous_development",
@@ -241,7 +243,7 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
         "origin": "https://api.deepseek.com",
         "retry_policy": "none",
         "request_ceiling": 16,
-        "planned_request_count": 13 if with_council else 7,
+        "planned_request_count": 7 + len(ROLES) if with_council else 7,
         "reserved_output_token_ceiling": 8192,
         "wall_clock_ceiling_seconds": 300,
         "capabilities": {},
@@ -267,7 +269,7 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
             if prior["capabilities"].get(name, {}).get("status") == "PASS"
         ]
         report["capabilities"].update({key: prior["capabilities"][key] for key in reused})
-        remaining = 6 if with_council else 0
+        remaining = len(ROLES) if with_council else 0
         if "thinking_tool_continuation" not in reused:
             remaining += 2
         if "vision_json" not in reused:
@@ -283,6 +285,8 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
         reserved_output_tokens=prior_tokens,
     )
     try:
+        if report["planned_request_count"] > report["request_ceiling"]:
+            raise RuntimeError("The requested trial does not fit the existing request ceiling; no calls started")
         with DeepSeekGateway.from_config(CONFIG, budget=budget) as gateway:
             if prior is None:
                 models = gateway.list_models()
@@ -416,7 +420,6 @@ def run_trial(with_council: bool, resume_path: Path | None = None) -> tuple[dict
 
             if with_council:
                 snapshot, plans = _frozen_snapshot_and_plans()
-                from packages.agents import ROLES, ROLE_EXPERTISE
                 role_prompts = [(role, ROLE_EXPERTISE[role]) for role in ROLES]
                 known_refs = set(snapshot["evidence_refs"])
                 council_results: list[dict] = []

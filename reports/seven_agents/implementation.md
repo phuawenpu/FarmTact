@@ -27,3 +27,14 @@ or fully grounded model output. No new inference ran on replay. See deepseek.jso
 
 Full regression and deployment verification are in progress. These results do
 not yet claim a published v3 or physical-device speech/audio verification.
+
+Pre-publication review fixed archived advisor headers on read/replay while new
+replies use current roles. The old six-role shared demo is explicitly archived.
+Market provenance details now expand rather than crowding mobile dialogue.
+Final responsive journey again passed 28 checks; the intercepted conversation
+journey passed 58 checks with zero provider requests or browser errors. Repeated
+fresh-session browser tests hit the intended admission cap; final tests reuse
+an existing authenticated session without changing limits. The initial full
+sweep overlapped a frontend rebuild/type generation and had transient asset/type
+failures; all affected cases passed after the build, and a serialized full sweep
+is running before deployment.

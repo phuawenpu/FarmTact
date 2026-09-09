@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs'
@@ -7,6 +7,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const baseURL = process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:8080'
 const screenshotDir = resolve(root, process.env.FARMTACT_CONVERSATION_SCREENSHOT_DIR || 'apps/web/screenshots/conversations')
 const reportPath = resolve(root, process.env.FARMTACT_CONVERSATION_REPORT || 'reports/conversations_browser.json')
+const browserState = process.env.FARMTACT_BROWSER_STATE
+const savedState = browserState ? JSON.parse(await readFile(browserState, 'utf8')) : null
+const edition = new URL(baseURL).pathname.split('/').find(part => /^v\d+$/.test(part))
+const storageState = savedState?.cookies ? savedState : savedState?.cookie ? { cookies: [{ name: edition ? `farmtact_${edition}_session` : 'farmtact_session', value: savedState.cookie, domain: new URL(baseURL).hostname, path: edition ? `/${edition}/` : '/', httpOnly: true, secure: new URL(baseURL).protocol === 'https:', sameSite: 'Strict' }], origins: [] } : undefined
 const fixtureLabel = '[INTERCEPTED FIXTURE]'
 const advisors = [
   { id: 'ravi', name: 'Ravi', role: 'Demand' },
@@ -317,7 +321,7 @@ let browser
 try {
   const fixtures = fixtureApi()
   browser = await chromium.launch({ headless: true })
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' })
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', ...(storageState ? { storageState } : {}) })
   await context.route('**://api.deepseek.com/**', route => {
     report.intercepted.provider_requests.push(route.request().url())
     return route.abort('blockedbyclient')
@@ -340,7 +344,7 @@ try {
   for (const advisor of advisors) {
     await safely(`${advisor.name} opens from advisor navigation`, async () => {
       let advisorDialog = page.getByRole('dialog', { name: `${advisor.name} · ${advisor.role}` })
-      if (advisor.id !== 'mei') {
+      if (!await advisorDialog.isVisible().catch(() => false)) {
         const currentDialog = page.getByRole('dialog')
         await currentDialog.getByRole('button', { name: `Talk to ${advisor.name}`, exact: true }).click()
         advisorDialog = page.getByRole('dialog', { name: `${advisor.name} · ${advisor.role}` })
@@ -386,7 +390,7 @@ try {
   await delayedMeiDialog.getByLabel('Message Mei').fill('fixture-delayed-switch')
   await delayedMeiDialog.getByRole('button', { name: 'Send message' }).click()
   await delayedMeiDialog.getByRole('button', { name: 'Talk to Ravi', exact: true }).click()
-  const switchedRaviDialog = page.getByRole('dialog', { name: 'Ravi · Demand analyst' })
+  const switchedRaviDialog = page.getByRole('dialog', { name: 'Ravi · Demand' })
   await switchedRaviDialog.waitFor()
   await page.waitForTimeout(1_500)
   check('delayed response cannot overwrite a newly selected advisor', await switchedRaviDialog.getByText(`${fixtureLabel} Delayed Mei response stayed with Mei.`).count() === 0 && await switchedRaviDialog.getByLabel('Message Ravi').isVisible())

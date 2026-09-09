@@ -71,7 +71,7 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
 
       {run?.shared_demo && (
         <section className="shared-replay-banner">
-          <RotateCcw size={19}/><div><strong>Shared recorded demo</strong><p>This is a stored DeepSeek council result in replay mode. It is not current-time agent activity.</p></div><StatusPill status="replay" />
+          <RotateCcw size={19}/><div><strong>Shared recorded demo</strong><p>This is a stored DeepSeek council result in replay mode. It is not current-time agent activity.</p>{run.claims.length === 6 && <small>Archived six-role council from the reference edition.</small>}</div><StatusPill status="replay" />
         </section>
       )}
 

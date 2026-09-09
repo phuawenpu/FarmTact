@@ -44,15 +44,18 @@ Cultivar, SKU, production system, taxonomic status, and saleable product specifi
 
 ## Advisor portraits
 
-The six portraits share a circular painted treatment and bust scale while retaining recognizable clothing, silhouettes, and work props:
+The seven portraits share a circular painted treatment and bust scale while retaining recognizable clothing, silhouettes, and work props:
 
 | File | Character cues |
 |---|---|
-| `advisors/mei.svg` | Greenhouse crop scientist in a light field coat, glasses, seedling sample |
-| `advisors/ravi.svg` | Market demand analyst in an orange shirt with order clipboard |
-| `advisors/hana.svg` | Weather scout in a blue rain jacket and yellow field cap with anemometer |
-| `advisors/ben.svg` | Resource analyst in work shirt, glasses and tool belt |
-| `advisors/asha.svg` | Planning chair in plum blazer with pavilion table diagram |
-| `advisors/idris.svg` | Independent critic in slate vest with evidence stack and magnifier |
+| `advisors/mei.svg` | Production advisor in a light field coat, glasses, seedling sample |
+| `advisors/ravi.svg` | Demand advisor in an orange shirt with order clipboard |
+| `advisors/hana.svg` | Weather advisor in a blue rain jacket and yellow field cap with anemometer |
+| `advisors/ben.svg` | Profit advisor in work shirt, glasses and tool belt |
+| `advisors/asha.svg` | Planner in plum blazer with pavilion table diagram |
+| `advisors/idris.svg` | Market advisor in slate vest with evidence stack and magnifier |
+| `advisors/lina.svg` | Supply Chain advisor with a packing clipboard; original hand-authored SVG added for v3 |
 
 These files are presentation assets. Character expertise, current task, notification state, dialogue, evidence status, and conclusions must come from application data rather than from the illustration.
+
+The original six-portrait contact sheet and PNG document the first artwork release. V3 reuses those portraits with updated role descriptions and adds Lina; older editions retain their original labels. No third-party imagery was used for Lina.
