@@ -29,7 +29,7 @@ def machine_config(registry, volume, *, public=False, origin='https://farmtact.f
         gateway = name == 'gateway'; port = 8080 if gateway else 8080+int(name[1:])
         env = dict(FARMTACT_CONTAINER=name, FARMTACT_PORT=str(port),
                    FARMTACT_EXECUTION_MODE='test', FARMTACT_SECURE_COOKIES='true',
-                   FARMTACT_PUBLIC_ORIGIN=origin, FARMTACT_TRUST_FLY_PROXY='true',
+                   FARMTACT_PUBLIC_ORIGIN=origin, FARMTACT_TRUST_FLY_PROXY='true' if public else 'false',
                    FARMTACT_DATA_MODE='synthetic_demo', FARMTACT_LOCAL_EDITIONS='true',
                    FARMTACT_DATABASE_URL='postgresql+psycopg://farmtact@/'+('farmtact_control' if gateway else 'farmtact')+'?host=/tmp/farmtact-pg',
                    PYTHONUNBUFFERED='1')
@@ -43,6 +43,9 @@ def machine_config(registry, volume, *, public=False, origin='https://farmtact.f
             stop=dict(signal='SIGTERM',timeout='30s'),
             healthchecks=[dict(name=name+'-ready',http=dict(port=port,method='GET',path='/api/v1/health'),interval=15,timeout=5,grace_period=60,success_threshold=1,failure_threshold=3)],
             **({} if gateway else {'depends_on':[dict(name='gateway',condition='healthy')]})))
+    if not public:
+        relay=base64.b64encode((ROOT/'scripts/shared_probe_relay.py').read_bytes()).decode()
+        containers.append(dict(name='private-relay',image=GATEWAY_IMAGE,entrypoint=['python','/opt/farmtact-probe-relay.py'],files=[dict(guest_path='/opt/farmtact-probe-relay.py',raw_value=relay)],restart=dict(policy='on-failure',max_retries=3),depends_on=[dict(name='gateway',condition='healthy')]))
     config=dict(guest=dict(cpu_kind='shared',cpus=4,memory_mb=4096),containers=containers,
                 mounts=[dict(volume=volume,path='/persist')],
                 restart=dict(policy='on-failure',max_retries=5),

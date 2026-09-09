@@ -31,3 +31,29 @@ Long release work must still follow the project’s 20-minute Git push cadence: 
 If a step fails, inspect the reported Fly command and rerun with the same edition, source commit, and digest after repairing the external state. Do not delete the `.git/farmtact-publications.json` reservation or choose a different build under the same number. If failure occurs after remote registry replacement, verify `/api/releases` before retrying; published history remains authoritative. A registry rollback may only restore the exact previous complete file when the new edition was never made public. Never edit or reorder earlier entries.
 
 The gateway refreshes its validated registry-derived Flycast destinations and control edition allowlist after atomic publication, so a numbered edition does not require a gateway redeploy.
+
+
+## Shared-host rollout (v6 work in progress)
+
+The authorized target is one 4-shared-vCPU/4-GB Machine with one persistent volume.
+The public chooser and every immutable edition run in separate Pilot containers,
+each with its registered exact OCI image. A deployment adapter binds only the
+edition's fixed volume subtree to /data, removes the common parent, and hands off
+to the original image entrypoint. Application code and source/image pins are not
+rewritten. Each image keeps its own PostgreSQL cluster, cache, worker and session
+state; the gateway retains the existing shared operational budgets.
+
+Once config/hosting/shared.json records the verified host, publish_edition.py
+updates that Machine instead of creating another app/Machine/volume. It starts
+the next exact-image container, checks health/source/edition over operator SSH,
+then atomically appends the public registry. Restarts preserve the last published
+registry; they do not expose a pending edition. A new container uses another
+subtree of the same volume. This may require a brief shared-host restart.
+
+The private capacity relay uses no Fly public service, hides storage and drops
+privileges. It is excluded from production configurations. Private tests use the
+actual local peer address; production keeps Fly's trusted client-address checks.
+After successful migration, the user requests deletion of the superseded
+FarmTact Machines AND volumes. Only the exact FarmTact app allowlist is eligible;
+unrelated Fly resources must not be altered. Final evidence must show one active
+FarmTact Machine and one shared volume, and preserved migrated edition data.

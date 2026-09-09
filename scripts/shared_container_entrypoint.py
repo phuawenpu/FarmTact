@@ -54,18 +54,19 @@ def prepare(name: str):
         previous = json.loads(manifest.read_text())
         if incoming['editions'][:len(previous['editions'])] != previous['editions']:
             raise RuntimeError('Published edition history cannot be replaced')
-    pending = manifest.with_suffix('.next')
-    fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
-    with os.fdopen(fd, 'w') as output:
-        output.write(json.dumps(incoming, indent=2) + '\n')
-        output.flush()
-        os.fsync(output.fileno())
-    pending.replace(manifest)
-    fd = os.open(releases, os.O_DIRECTORY)
-    try:
-        os.fsync(fd)
-    finally:
-        os.close(fd)
+    if not manifest.exists():
+        pending = manifest.with_suffix('.next')
+        fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+        with os.fdopen(fd, 'w') as output:
+            output.write(json.dumps(incoming, indent=2) + '\n')
+            output.flush()
+            os.fsync(output.fileno())
+        pending.replace(manifest)
+        fd = os.open(releases, os.O_DIRECTORY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
     # Deployment aliases preserve old images' private-host allowlists and keep
     # edition/control traffic on localhost. Names and ports are not user input.
     aliases = ['farmtact-local-control.flycast'] + [f'farmtact-local-v{i}.flycast' for i in range(1, 100)]

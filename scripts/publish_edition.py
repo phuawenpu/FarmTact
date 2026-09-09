@@ -281,17 +281,49 @@ def build_image(edition: str, source_commit: str) -> str:
     return "registry.fly.io/farmtact@" + matches[0]
 
 
+def shared_settings():
+    path = ROOT / 'config/hosting/shared.json'
+    if not path.exists(): return None
+    settings = load_json(path)
+    if set(settings) != {'app','machine_id','volume_id'} or settings.get('app') != 'farmtact' or not re.fullmatch(r'[0-9a-f]{14}', settings.get('machine_id','')) or not re.fullmatch(r'vol_[a-z0-9]+', settings.get('volume_id','')):
+        raise PublicationError('Invalid deployment-owned shared host configuration')
+    return settings
+
+
+def shared_ssh_args():
+    settings = shared_settings()
+    return ['--machine', settings['machine_id'], '--container', 'gateway'] if settings else []
+
+
+def deploy_shared(updated):
+    from scripts.shared_host_config import machine_config
+    settings = shared_settings()
+    if not settings: raise PublicationError('Shared host is not configured')
+    config = machine_config(updated, settings['volume_id'], public=True)
+    with tempfile.TemporaryDirectory(prefix='farmtact-shared-publish-') as directory:
+        path = Path(directory) / 'machine.json'
+        path.write_text(json.dumps(config))
+        command(['fly','machine','update',settings['machine_id'],'--app','farmtact','--machine-config',str(path),'--yes'])
+    entry = updated['editions'][-1]
+    # The public registry is still the previous edition until this probe passes.
+    # Pinned server health is read via authenticated operator SSH on localhost.
+    port = 8080 + int(entry['id'][1:])
+    probe = "import json,time,urllib.request; deadline=time.monotonic()+150\nwhile True:\n try:\n  r=json.load(urllib.request.urlopen('http://127.0.0.1:"+str(port)+"/api/v1/health',timeout=5)); assert r.get('status')=='ok' and r.get('edition')=='"+entry['id']+"' and r.get('source_commit')=='"+entry['source_commit']+"'; break\n except Exception:\n  assert time.monotonic()<deadline; time.sleep(2)"
+    import shlex
+    command(['fly','ssh','console','--app','farmtact','--machine',settings['machine_id'],'--container','gateway','--command','python -c '+shlex.quote(probe)])
+
+
 def publish_remote(registry: dict, temporary: Path) -> None:
     temporary.write_text(json.dumps(registry, sort_keys=False, indent=2) + "\n")
     remote_tmp = "/data/releases/registry.json.next"
-    command(["fly", "ssh", "sftp", "shell", "--app", "farmtact"], input_text=f"put {temporary} {remote_tmp}\nquit\n")
+    command(["fly", "ssh", "sftp", "shell", "--app", "farmtact", *shared_ssh_args()], input_text=f"put {temporary} {remote_tmp}\nquit\n")
     code = (
         "import json,os,shutil; p='/data/releases/registry.json'; n=p+'.next'; "
         "a=json.load(open(p)); b=json.load(open(n)); "
         "assert b['editions'][:-1]==a['editions'] and len(b['editions'])==len(a['editions'])+1; "
         "assert b['latest']==b['editions'][-1]['id']; shutil.copy2(p,p+'.previous'); os.replace(n,p)"
     )
-    command(["fly", "ssh", "console", "--app", "farmtact", "--command", f"python -c \"{code}\""])
+    command(["fly", "ssh", "console", "--app", "farmtact", *shared_ssh_args(), "--command", f"python -c \"{code}\""])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -326,13 +358,16 @@ def main(argv: list[str] | None = None) -> int:
         entry = make_entry(args.edition, notes, image, args.source_commit, remote)
         updated = {"latest": args.edition, "editions": [*remote["editions"], entry]}
         append_only(remote, updated)
-        config = ROOT / f"config/releases/fly-{args.edition}.toml"
-        expected_config = fly_config(args.edition)
-        if config.exists() and config.read_text() != expected_config:
-            raise PublicationError("Edition Fly manifest exists with different contents")
-        if not config.exists(): config.write_text(expected_config)
+        shared = shared_settings()
+        config = ROOT / ('config/hosting/shared.json' if shared else f'config/releases/fly-{args.edition}.toml')
+        if not shared:
+            expected_config = fly_config(args.edition)
+            if config.exists() and config.read_text() != expected_config:
+                raise PublicationError("Edition Fly manifest exists with different contents")
+            if not config.exists(): config.write_text(expected_config)
         try:
-            deploy(args.edition, image, config)
+            if shared: deploy_shared(updated)
+            else: deploy(args.edition, image, config)
             with tempfile.TemporaryDirectory(prefix="farmtact-publish-") as directory:
                 publish_remote(updated, Path(directory) / "registry.json")
             REGISTRY.write_text(json.dumps(updated, indent=2) + "\n")

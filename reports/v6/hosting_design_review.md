@@ -270,8 +270,109 @@ Two corrections are required before public use:
    middleware and forwarded headers.
 
 Independent bounded tests are in
-`tests/deployment/test_shared_host_review.py`; all 13 passed. They cover exact
+`tests/deployment/test_shared_host_review.py`; the initial 13 passed. They cover exact
 registry-image retention, the 4-shared-CPU/4096-MB bound, one persistent mount,
 bounded namespaces, fixed ports/aliases/control URLs, rejection of tags and foreign
 images, per-container secret-name projection, no secret values in ordinary env,
 and the absolute no-shell handoff to the historical entrypoint.
+
+### Fix verification and transfer-helper review
+
+Both required corrections were subsequently verified. Port 80 now has
+`force_https: true`. Registry installation now requires a protected root-owned
+release directory and manifest, rejects symlinks, creates the pending file with
+`O_EXCL|O_NOFOLLOW`, fsyncs file content, atomically replaces the manifest, and
+fsyncs the directory. Before migrating the gateway tree, ensure its existing
+`/data/releases` directory and registry are root-owned and not group/world writable;
+the adapter correctly fails closed otherwise.
+
+The operator-only `scripts/shared_host_transfer.py` uses the local PostgreSQL Unix
+socket, fixed `/data/shared-transfer` paths, no HTTP endpoint, and refuses root.
+Restore additionally requires the private candidate origin
+`http://127.0.0.1:8088` and a deployment container identity. Keep the candidate
+service-less and invoke the helper as `farmtact` through authenticated container
+SSH. Official Fly networking documentation explains the failed external private
+probe: direct 6PN needs the process bound to `fly-local-6pn`, while FarmTact binds
+IPv4 `0.0.0.0`; Fly Proxy would require a service definition. An empty-ports
+service is not a documented safe bridge, and adding a routable service inside the
+existing public `farmtact` app can expose or load-balance the candidate prematurely.
+
+For capacity browsing only, the private config now adds a fixed temporary relay
+bound to `fly-local-6pn:8080`, forwarding bytes only to `127.0.0.1:8080`. It has no
+Fly `services`, dynamic destination, file route, or configuration endpoint. Its
+bootstrap unmounts `/persist`, verifies the common volume is hidden, clears its
+environment, drops supplementary groups/GID/UID to `farmtact`, and only then opens
+the IPv6-only listener. The public config omits the relay entirely. This provides
+private 6PN access without registering the candidate with the public Fly Proxy;
+it remains organization-network reachable and must remain temporary and excluded
+from the production config.
+
+The helper now verifies that its recorded database matches and every recorded
+service PID is still an expected stopped process before export or restore. Database
+connections and dump/restore operations have bounded timeouts. It hashes the dump,
+preflights every cache member and file payload before `pg_restore` or cache deletion,
+rejects traversal and all non-file/non-directory members, extracts with Python's
+`data` filter, and compares every public-table row fingerprint and cache byte after
+restore. These controls address stale freeze markers, partial destructive restore,
+and archive confinement.
+
+PostgreSQL source and destination are initialized by the same exact image as the
+same `farmtact` database superuser, so archived ownership and ACL restoration should
+resolve to that role. Before cutover, explicitly query `pg_class`, `pg_proc`, and
+schemas after restore to confirm all application tables, sequences, functions and
+the public schema have the expected owner and no unexpected grants. Cache extraction
+runs as `farmtact`, so restored regular files receive the runtime owner; confirm no
+special files, symlinks, hardlinks, unexpected paths, or group/world-writable modes.
+The post-restore fingerprints cover public table rows and cache bytes, while this
+ownership/privilege check covers metadata those hashes intentionally omit.
+
+The independent deployment test file now has 15 passing tests, including the two
+fixes, transfer preflight-before-destruction ordering, archive constraints, current
+stopped-process validation, and bounded database operations.
+
+The final transfer identity issue was corrected: evidence now includes the fixed
+container identity and `/app/config/build-source.txt` commit, and restore/verify
+requires exact equality. This distinguishes v1 and v2 even though their source and
+image are intentionally identical, and prevents a valid `farmtact` dump from being
+restored into the wrong edition. Database metadata hashing now covers table/sequence
+owners and ACLs, public-schema ownership/ACLs, public function definitions/owners/
+ACLs, and database owner/ACLs in addition to row fingerprints. Transfer only
+`database.dump`, `fingerprint.json`, and `cache.tar.gz`; never copy the source
+`frozen.json`, because the candidate must create and validate its own stopped PID
+record. The latest test expansion has 16 passing checks and verifies that the relay
+exists only in the service-less private config, unmounts shared storage, drops
+privilege, uses an IPv6-only fixed listener, and is absent from public production.
+
+### Shared publication workflow review
+
+The shared-host publisher preserves the publication boundary. When the deployment-
+owned shared settings file exists, it generates a complete public Machine config
+from the previous public registry plus exactly one new immutable entry and updates
+only the pinned Machine ID. Production generation omits the private relay, restores
+proxy trust, retains exact image digests, and adds the new container on its unique
+loopback port.
+
+The adapter validates that every existing on-volume registry edition is an immutable
+prefix of the incoming registry, but seeds the incoming registry only when a
+container's manifest is missing. Thus existing gateway state remains on the old
+public registry across the Machine update, while the new edition's private subtree
+can initialize. The publisher then uses authenticated SSH into the pinned gateway
+container to probe the new unique localhost port and require its registered source
+commit. Only after this succeeds does it upload a pending registry and atomically
+replace the gateway registry with a validator that requires the previous editions
+unchanged and exactly one appended entry. A failure before the replace leaves the
+new container unreachable through the public chooser and can be retried with the
+reserved identity.
+
+The publisher should additionally require the shared settings object to contain
+exactly `app`, `machine_id`, and `volume_id`, rejecting ignored extra fields. The
+health probe should require `status == "ok"` as well as the source commit, and the
+edition ID if the historical health response exposes it. These are bounded defense
+in depth; the unique new port and source-commit equality already prevent an old
+edition listener from satisfying the principal gate.
+
+Independent tests now cover the public/private proxy-trust split, production relay
+exclusion, exact Machine update and image selection, unique localhost source probe,
+seed-only registry behavior, immutable-prefix check, and atomic publication through
+the pinned gateway container. The combined shared-host and existing publisher test
+selection completed with 28 passing tests.

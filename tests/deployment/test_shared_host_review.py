@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+import scripts.publish_edition as publication
 from scripts.shared_host_config import GATEWAY_IMAGE, machine_config
 
 
@@ -17,12 +18,12 @@ def registry():
 
 def test_config_retains_registry_images_and_bounds_one_machine():
     source = registry()
-    config = machine_config(source, "vol_review123")
+    config = machine_config(source, "vol_review123", public=True)
     containers = {row["name"]: row for row in config["containers"]}
 
     assert config["guest"] == {"cpu_kind": "shared", "cpus": 4, "memory_mb": 4096}
     assert config["mounts"] == [{"volume": "vol_review123", "path": "/persist"}]
-    assert "services" not in config
+    assert config["services"][0]["internal_port"] == 8080
     assert containers["gateway"]["image"] == GATEWAY_IMAGE
     assert {name: row["image"] for name, row in containers.items() if name != "gateway"} == {
         row["id"]: row["image_digest"] for row in source["editions"]
@@ -30,6 +31,28 @@ def test_config_retains_registry_images_and_bounds_one_machine():
     assert len(containers) == len(source["editions"]) + 1
     assert all(row["entrypoint"] == ["python", "/opt/farmtact-shared-entrypoint.py"] for row in containers.values())
     assert all(row["files"][0]["guest_path"] == "/opt/farmtact-shared-entrypoint.py" for row in containers.values())
+
+
+def test_private_probe_relay_is_service_less_and_never_enters_public_config():
+    private = machine_config(registry(), "vol_review123", public=False, origin="http://127.0.0.1:8088")
+    public = machine_config(registry(), "vol_review123", public=True)
+    private_rows = {row["name"]: row for row in private["containers"]}
+
+    assert "services" not in private
+    assert "private-relay" in private_rows
+    assert all(row.get("env", {}).get("FARMTACT_TRUST_FLY_PROXY") == "false" for name, row in private_rows.items() if name != "private-relay")
+    assert private_rows["private-relay"]["entrypoint"] == ["python", "/opt/farmtact-probe-relay.py"]
+    assert private_rows["private-relay"]["depends_on"] == [{"name": "gateway", "condition": "healthy"}]
+    assert "private-relay" not in {row["name"] for row in public["containers"]}
+    assert len(public["containers"]) == len(registry()["editions"]) + 1
+    assert all(row["env"]["FARMTACT_TRUST_FLY_PROXY"] == "true" for row in public["containers"])
+
+    relay_source = (ROOT / "scripts/shared_probe_relay.py").read_text()
+    assert "subprocess.run(['umount','/persist'],check=True)" in relay_source
+    assert "any(Path('/persist').iterdir())" in relay_source
+    assert "os.setgroups([]);os.setgid(account.pw_gid);os.setuid(account.pw_uid)" in relay_source
+    assert "Server(('fly-local-6pn',8080), Handler)" in relay_source
+    assert "socket.IPV6_V6ONLY" in relay_source
 
 
 def test_ports_aliases_and_local_control_are_fixed_by_edition():
@@ -74,6 +97,9 @@ def test_public_service_exposes_only_gateway_port_and_config_contains_no_secret_
     config = machine_config(registry(), "vol_review123", public=True)
     assert len(config["services"]) == 1
     assert config["services"][0]["internal_port"] == 8080
+    assert config["services"][0]["ports"][0] == {
+        "port": 80, "handlers": ["http"], "force_https": True,
+    }
     containers = {row["name"]: row for row in config["containers"]}
     assert containers["gateway"]["secrets"] == [
         {"env_var": "FARMTACT_CONTROL_SECRET", "name": "FARMTACT_CONTROL_SECRET"}
@@ -94,3 +120,122 @@ def test_adapter_uses_fixed_absolute_handoff_and_hides_common_parent():
     assert "subprocess.run(['umount', '/persist'], check=True)" in source
     assert "os.execv('/app/scripts/fly_entrypoint.sh', ['/app/scripts/fly_entrypoint.sh'])" in source
     assert "shell=True" not in source
+    assert "os.O_EXCL | os.O_NOFOLLOW" in source
+    assert "os.fsync(output.fileno())" in source
+    assert "os.fsync(fd)" in source
+
+
+def test_transfer_preflights_candidate_artifacts_before_destructive_restore():
+    source = (ROOT / "scripts/shared_host_transfer.py").read_text()
+    restore = source[source.index("def restore():"):source.index("\ndef verify():")]
+    preflight = restore.index("with tarfile.open(DIRECTORY/'cache.tar.gz') as archive:")
+    database_restore = restore.index("subprocess.run(['pg_restore'")
+    cache_delete = restore.index("for child in Path('/data/public-data').iterdir():")
+
+    assert preflight < database_restore < cache_delete
+    assert "expected['dump_sha256']" in restore
+    assert "'..' in Path(m.name).parts" in restore
+    assert "not (m.isfile() or m.isdir())" in restore
+    assert "filter='data'" in restore
+
+
+def test_transfer_requires_current_stopped_owned_processes_and_has_timeouts():
+    source = (ROOT / "scripts/shared_host_transfer.py").read_text()
+    assert "def require_frozen():" in source
+    assert "state.split()[1]!='T'" in source
+    assert "record['database']!=database()" in source
+    assert "connect_timeout=5" in source
+    assert "statement_timeout=15000" in source
+    assert "lock_timeout=3000" in source
+    assert "timeout=60" in source
+    assert "timeout=90" in source
+    assert "expected['identity']!=identity()" in source
+    assert "expected['metadata_sha256']!=metadata_hash()" in source
+    assert "source_commit=Path('/app/config/build-source.txt').read_text().strip()" in source
+    assert "pg_get_userbyid(c.relowner)" in source
+    assert "pg_get_functiondef(oid)" in source
+
+
+def test_shared_publisher_updates_exact_machine_then_probes_new_local_port(monkeypatch):
+    source = registry()
+    new = copy.deepcopy(source)
+    number = len(new["editions"]) + 1
+    commit = "c" * 40
+    image = "registry.fly.io/farmtact@sha256:" + "d" * 64
+    new["editions"].append({
+        "id": f"v{number}", "source_commit": commit, "image_digest": image,
+        "title": "Next", "status": "published",
+    })
+    new["latest"] = f"v{number}"
+    calls = []
+
+    monkeypatch.setattr(publication, "shared_settings", lambda: {
+        "app": "farmtact", "machine_id": "1234567890abcd", "volume_id": "vol_review123",
+    })
+
+    def fake_command(args, **kwargs):
+        if args[:3] == ["fly", "machine", "update"]:
+            generated = json.loads(Path(args[args.index("--machine-config") + 1]).read_text())
+            rows = {row["name"]: row for row in generated["containers"]}
+            assert generated["services"][0]["internal_port"] == 8080
+            assert "private-relay" not in rows
+            assert rows[f"v{number}"]["image"] == image
+        calls.append(args)
+        return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(publication, "command", fake_command)
+    publication.deploy_shared(new)
+
+    assert calls[0][:5] == ["fly", "machine", "update", "1234567890abcd", "--app"]
+    assert calls[0][5] == "farmtact"
+    probe = calls[1]
+    assert probe[:8] == [
+        "fly", "ssh", "console", "--app", "farmtact", "--machine", "1234567890abcd", "--container",
+    ]
+    assert probe[8] == "gateway"
+    assert f"127.0.0.1:{8080 + number}/api/v1/health" in probe[-1]
+    assert commit in probe[-1]
+    assert "r.get('status')=='ok'" in probe[-1]
+    assert f"r.get('edition')=='v{number}'" in probe[-1]
+
+
+def test_shared_settings_reject_ignored_fields(tmp_path, monkeypatch):
+    hosting = tmp_path / "config" / "hosting"
+    hosting.mkdir(parents=True)
+    path = hosting / "shared.json"
+    base = {"app": "farmtact", "machine_id": "1234567890abcd", "volume_id": "vol_review123"}
+    path.write_text(json.dumps(base))
+    monkeypatch.setattr(publication, "ROOT", tmp_path)
+    assert publication.shared_settings() == base
+    path.write_text(json.dumps({**base, "unexpected": "ignored"}))
+    with pytest.raises(publication.PublicationError, match="Invalid deployment-owned"):
+        publication.shared_settings()
+
+
+def test_shared_registry_is_seeded_only_when_missing_and_existing_history_is_checked():
+    source = (ROOT / "scripts/shared_container_entrypoint.py").read_text()
+    assert "incoming['editions'][:len(previous['editions'])] != previous['editions']" in source
+    assert "if not manifest.exists():" in source
+    assert source.index("if manifest.exists():") < source.index("if not manifest.exists():")
+    seed = source[source.index("if not manifest.exists():"):source.index("# Deployment aliases")]
+    assert "pending.replace(manifest)" in seed
+
+
+def test_shared_atomic_publish_targets_pinned_gateway_container(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(publication, "shared_settings", lambda: {
+        "app": "farmtact", "machine_id": "1234567890abcd", "volume_id": "vol_review123",
+    })
+    monkeypatch.setattr(
+        publication, "command",
+        lambda args, **kwargs: calls.append((args, kwargs)) or type("Result", (), {"returncode": 0})(),
+    )
+    publication.publish_remote(registry(), tmp_path / "registry.json")
+
+    pinned = ["--machine", "1234567890abcd", "--container", "gateway"]
+    assert all(all(item in args for item in pinned) for args, _ in calls)
+    assert "/data/releases/registry.json.next" in calls[0][1]["input_text"]
+    validator = calls[1][0][-1]
+    assert "b['editions'][:-1]==a['editions']" in validator
+    assert "len(b['editions'])==len(a['editions'])+1" in validator
+    assert "os.replace(n,p)" in validator

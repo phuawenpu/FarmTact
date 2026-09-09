@@ -215,3 +215,11 @@ and prompted protected atomic registry writes and proxy HTTPS enforcement.
 Candidate capacity/persistence and final data transfer remain underway; public
 traffic continues using the prior topology. The new 3-GB volume is temporary
 additional storage until cutover; old volumes remain preserved for rollback.
+
+
+User amendment: after validated downsizing, delete obsolete Machines and volumes
+only in farmtact and farmtact-edition-v1..v5. Keep one shared FarmTact volume; do
+not retain old Fly volumes for rollback. Temporary protected operator backups
+support cutover validation; unrelated Fly resources remain untouched. Full
+backend suite passes 458; deployment/publisher focused review passes 28. The
+next source freeze and exact-image candidate validation are underway.

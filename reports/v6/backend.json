@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "command": ".venv/bin/pytest -q --import-mode=importlib",
+  "passed": 458,
+  "failed": 0,
+  "warnings": 2,
+  "seconds": 233.18,
+  "scope": "Full suite after crop catalogue/contract changes and initial hosting review tests; later deployment-only repairs receive focused tests."
+}
