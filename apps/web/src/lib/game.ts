@@ -1,4 +1,4 @@
-import type { Strategy, StrategyMetrics } from './types'
+import type { Run, Strategy, StrategyMetrics } from './types'
 
 export type AdvisorId = 'ravi' | 'hana' | 'idris' | 'mei' | 'lina' | 'ben' | 'asha'
 
@@ -162,3 +162,24 @@ export const QUEST_FALLBACKS: Quest[] = [
   { id: 'short_handed_week', title: 'Short-handed week', description: 'Explore what happens when labour changes.', advisor_id: 'ben', status: 'available' },
   { id: 'tight_budget', title: 'Tight budget', description: 'Vary available cash and inspect the trade-offs.', advisor_id: 'asha', status: 'available' },
 ]
+
+export type SimulationSoundOutcome = 'complete' | 'shortfall' | 'withheld' | 'error'
+
+export function runSoundOutcome(run: Run): SimulationSoundOutcome {
+  const status=run.status.toLowerCase()
+  if(['failed','cancelled','stale_input'].includes(status))return 'error'
+  if(['review_withheld','no_feasible_plan'].includes(status))return 'withheld'
+  if(!['completed','accepted_for_simulation'].includes(status))return 'error'
+  const strategy=run.strategies.find(item=>item.id===run.accepted_strategy_id)||run.strategies.find(item=>item.name==='Balanced')||run.strategies[0]
+  if(Number(strategy?.metrics.shortfall_kg||0)>0)return 'shortfall'
+  return 'complete'
+}
+
+export function scenarioSoundOutcome(scenario: Scenario): SimulationSoundOutcome {
+  if(scenario.status.toLowerCase()!=='completed')return 'error'
+  if(String(scenario.simulation_status||'').toLowerCase()==='no_feasible_plan')return 'withheld'
+  const strategies=scenario.result?.strategies||[]
+  const selected=strategies.find(item=>item.id===scenario.accepted_strategy_id)||strategies.find(item=>item.name==='Balanced')||strategies[0]
+  if(Number(selected?.metrics.shortfall_kg||0)>0)return 'shortfall'
+  return 'complete'
+}
