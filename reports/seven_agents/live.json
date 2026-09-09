@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "v3 reports exact frozen source",
+      "pass": true
+    },
+    {
+      "name": "Fresh v3 farm starts from reference",
+      "pass": true
+    },
+    {
+      "name": "Exact seven ordered runtime roles",
+      "pass": true
+    },
+    {
+      "name": "Market clearly reports no connected feed",
+      "pass": true
+    },
+    {
+      "name": "Unknown crop rejected",
+      "pass": true
+    },
+    {
+      "name": "Cached public sources retained",
+      "pass": true
+    },
+    {
+      "name": "Saved dataset reloads immutably",
+      "pass": true
+    },
+    {
+      "name": "Numerical worker accepts a feasible strategy",
+      "pass": true
+    },
+    {
+      "name": "No council/provider calls for numerical run",
+      "pass": true
+    },
+    {
+      "name": "Versioned local evidence gate recorded",
+      "pass": true
+    },
+    {
+      "name": "Replay preserves frozen Market context",
+      "pass": true
+    },
+    {
+      "name": "Sandbox and planning leave farm inputs unchanged",
+      "pass": true
+    },
+    {
+      "name": "Frozen conversation retains missing-feed evidence",
+      "pass": true
+    },
+    {
+      "name": "Explicit deployed Market exchange completes",
+      "pass": true
+    },
+    {
+      "name": "Deployed reply uses Market role",
+      "pass": true
+    },
+    {
+      "name": "Combined trial stays within sixteen calls",
+      "pass": true
+    },
+    {
+      "name": "Deployed conversation replay is read only",
+      "pass": true
+    },
+    {
+      "name": "v2 cannot read v3 sandbox",
+      "pass": true
+    },
+    {
+      "name": "v2 credential cannot authenticate v3",
+      "pass": true
+    }
+  ],
+  "edition": "v3",
+  "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607",
+  "live_provider_requests": 1,
+  "combined_provider_requests": 11,
+  "validation_statuses": [
+    "unsupported"
+  ],
+  "snapshot_id": "saved:0f4c4385cc0fee47688aad12e0754e3c",
+  "mission_id": "764e1ce62377ef6e6838e01a5f8a89e6",
+  "conversation_id": "175e14622f4c2ee4f61a10e2fb4b5913"
+}

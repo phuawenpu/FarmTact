@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "earlier_editions": {
+    "v1": {
+      "farms/demo-farm/snapshot": "0feceb1aed8919baaed711230c361f9136f99c4e1a3d04f5c23d963084f686d0",
+      "planning-runs/01fdb5fce7fcad2e78ad41281ce04f99": "e3421a3543b72bc7fbe09199b2bef60af1ef817e08454c8660ea02ad1d6dfb66",
+      "scenarios/4bed943390a0a37b2969703908d0d748": "501257ed9c011409c6e162417959b1867a92074a9d0ab5c291402167abb539df",
+      "conversations/563bc09a3efa7a80af198813e0edad6f": "6ed1eb74fd7c0950bcc5f4f50b6ace2283245b2ed9bb78ed964ba37f484cd046",
+      "quests": "0d391a3ef15964bbdb707f55aab4f91c83c50bc44087c60c58a027efadc48f3e"
+    },
+    "v2": {
+      "farms/demo-farm/snapshot": "0feceb1aed8919baaed711230c361f9136f99c4e1a3d04f5c23d963084f686d0"
+    }
+  },
+  "note": "Same owned records and farm snapshots before and after v3 publication; no old edition mutations."
+}

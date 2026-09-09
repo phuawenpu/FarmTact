@@ -1,0 +1,8 @@
+{
+  "edition": "v3",
+  "viewport_width": 360,
+  "input_width": 4,
+  "input_height": 19,
+  "finding": "Native-keyboard hint consumes a non-wrapping flex row, leaving the input unusably narrow.",
+  "resolution": "Separate hint row and 44px controls in immutable v4."
+}

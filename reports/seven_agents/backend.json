@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "command": ".venv/bin/pytest -q --import-mode=importlib",
+  "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607",
+  "passed": 412,
+  "warnings": 2,
+  "elapsed_seconds": 220.75,
+  "scope": "Serialized full regression after generated types and production frontend build completed."
+}

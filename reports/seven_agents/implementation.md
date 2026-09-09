@@ -38,3 +38,25 @@ an existing authenticated session without changing limits. The initial full
 sweep overlapped a frontend rebuild/type generation and had transient asset/type
 failures; all affected cases passed after the build, and a serialized full sweep
 is running before deployment.
+
+## V3 deployment and follow-up correction
+
+V3 was published from `f8e04999fba5a82dcb1435c7a4c920e004e76607`, image
+`sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6`.
+Final serialized backend regression: **412 passed**. Live v3 checks: **19 API
+checks** and **28 responsive browser checks**. One actual deployed Market reply
+completed (11 total provider requests including the local trial); its unsupported
+nested citation was correctly flagged. Completion is not evidence that all model
+wording was supported. Earlier v1/v2 images and recorded game data stayed unchanged.
+Nine validated public-cache artifacts (200 records) were copied to v3's own volume;
+no game/session data was copied. Local HTTP services were retired, ports 8080–8083
+closed, and PostgreSQL retained.
+
+Manual live screenshot inspection then found an existing voice-hint flex-layout
+issue: at 360 pixels the message input was only four pixels wide. Earlier browser
+checks did not assert usable field width. The correction wraps the native keyboard
+hint onto its own row and gives the message field and send control 44-pixel touch
+height. A regression now requires at least 180 pixels of input width and tests draft
+entry without submission at all four widths. This is a new immutable v4 release;
+v3 remains inspectable. The candidate stylesheet is tested by an explicitly
+labelled browser-only CSS override against v3; the live v3 app is never modified.

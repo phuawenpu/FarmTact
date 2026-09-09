@@ -6,15 +6,15 @@ A mobile tactical planning board for a fictional Singapore vegetable farm. Ten c
 
 ## Deployed app
 
-**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. See the [Fly deployment runbook](docs/deployment/fly.md) and [deployment verification](reports/fly_deployment.md).
+**https://farmtact.fly.dev/** is the primary development deployment, running in Singapore with persistent PostgreSQL and DeepSeek configured through encrypted runtime secrets. The latest edition is [v3: seven perspectives, one farm](https://farmtact.fly.dev/v3/); v1 and v2 retain independent saved state and frozen deployments. See the [edition runbook](docs/deployment/editions.md) and [seven-agent verification](reports/seven_agents/implementation.md).
 
 ## Running in this Sprite
 
-The app is served at https://farm001-bqddl.sprites.app/ and locally at http://127.0.0.1:8080/. It uses PostgreSQL over a private Unix socket. The Sprite gateway retains its existing access policy.
+The Sprite HTTP services are retired after release verification. PostgreSQL remains available over a private Unix socket. Use the Sprite skill to register a temporary local service when developing; the public playable app is on Fly.
 
 ```bash
 sprite-env services list
-sprite-env services restart farmtact-web
+# Register a development service before trying to restart it.
 ```
 
 The service command is `.venv/bin/python scripts/serve.py`, with `farmtact-db` as its dependency. The server reads `DEEPSEEK_API_KEY` from its process environment or the owner-only local secret-delivery file outside this repository. Never put keys in frontend variables, commands, logs or committed files. Missing provider access leaves numerical planning and explicit recorded replay available.

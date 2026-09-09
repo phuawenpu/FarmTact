@@ -8,16 +8,20 @@ const origin = (process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:8080').replac
 const edition = (process.env.FARMTACT_EDITION || '').replace(/^\/+|\/+$/g, '')
 const url = `${origin}${edition ? `/${edition}/` : '/'}`
 const reportPath = resolve(root, process.env.FARMTACT_SEVEN_AGENT_REPORT || 'reports/seven_agents_browser.json')
+const screenshotDir = resolve(root, process.env.FARMTACT_SEVEN_AGENT_SHOTS || 'apps/web/screenshots')
+await mkdir(screenshotDir, { recursive: true })
 const browserState = process.env.FARMTACT_BROWSER_STATE
 const savedState = browserState ? JSON.parse(await readFile(browserState, 'utf8')) : null
 const storageState = savedState?.cookies ? savedState : savedState?.cookie ? { cookies: [{ name: edition ? `farmtact_${edition}_session` : 'farmtact_session', value: savedState.cookie, domain: new URL(url).hostname, path: edition ? `/${edition}/` : '/', httpOnly: true, secure: new URL(url).protocol === 'https:', sameSite: 'Strict' }], origins: [] } : undefined
-const report = { url, checks: [], failures: [], screenshots: [] }
+const candidateCss = process.env.FARMTACT_CANDIDATE_CSS ? await readFile(process.env.FARMTACT_CANDIDATE_CSS, 'utf8') : null
+const report = { url, candidate_css_override: Boolean(candidateCss), checks: [], failures: [], screenshots: [] }
 const check = (name, pass, detail) => { report.checks.push({ name, pass, detail }); if (!pass) report.failures.push({ name, detail }) }
 const browser = await chromium.launch({ headless: true })
 
 try {
   for (const width of [360, 390, 430, 1280]) {
     const page = await browser.newPage({ viewport: { width, height: width < 700 ? 844 : 900 }, reducedMotion: 'reduce', ...(storageState ? { storageState } : {}) })
+    if (candidateCss) await page.route('**/*.css', route => route.fulfill({status:200,contentType:'text/css',body:candidateCss}))
     let inferencePosts = 0
     page.on('request', request => { if (request.method() === 'POST' && /\/conversations\/[^/]+\/(messages|invite|council)$/.test(new URL(request.url()).pathname)) inferencePosts++ })
     await page.goto(url, { waitUntil: 'networkidle' })
@@ -38,8 +42,15 @@ try {
     const box = await switcher.boundingBox()
     check(`${width}px selector stays usable`, Boolean(box && box.height >= 58), box)
     await panel.locator('.panel-loading').waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {})
-    const shot = resolve(root, `apps/web/screenshots/seven-agents-${width}.png`)
+    const shot = resolve(screenshotDir, `seven-agents-${width}.png`)
     await page.screenshot({ path: shot, animations: 'disabled' }); report.screenshots.push(shot.slice(root.length + 1))
+    const input = panel.locator('#advisor-message')
+    await input.scrollIntoViewIfNeeded()
+    const inputBox = await input.boundingBox()
+    check(`${width}px message field remains readable beside voice hint`, Boolean(inputBox && inputBox.width >= 180 && inputBox.height >= 44), inputBox)
+    await input.fill('Draft question about this crop')
+    check(`${width}px message field accepts a draft without sending`, await input.inputValue() === 'Draft question about this crop', 'No send action')
+    await input.fill('')
     const lina = switcher.getByRole('button', { name: 'Talk to Lina' })
     await lina.focus(); await page.keyboard.press('Enter')
     await page.getByRole('dialog', { name: 'Lina · Supply Chain' }).waitFor()

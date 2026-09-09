@@ -772,7 +772,7 @@ The handoff does not redistribute the referenced third-party papers, imagery or 
 
 ## 15. DeepSeek implementation handoff (mandatory v1.1 amendment)
 
-Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepseek_trial_and_cutover.md` if absent and keep it consistent with this development policy. Implement the referenced server-only gateway seed, thirteen-role DeepSeek route manifest, offline provider contract tests and authenticated trial if absent. These artifacts are not present in the current documentation-only baseline. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
+Read `FarmTact_DeepSeek_Runtime_Specification.md`; create `docs/runbooks/deepseek_trial_and_cutover.md` if absent and keep it consistent with this development policy. Implement the referenced server-only gateway seed, fourteen-route DeepSeek role/helper manifest, offline provider contract tests and authenticated trial if absent. These artifacts are not present in the current documentation-only baseline. The original data-first objective remains: run the API capability work early and in parallel, not as an excuse to replace data engineering with chat.
 
 Once those artifacts exist, run `python -m pytest tests/deepseek -q`, then automatically within the configured development budget—when the key is available—`python scripts/deepseek_trial.py --live --with-council` in test execution mode. The second command must make real billable calls within recorded request/token limits; no additional human confirmation is required for this development trial. It tests provider compatibility and a toy council, not the completed web app. Its full workflow uses synthetic input and preserves the impossible-lead-time counterexample.
 
@@ -784,3 +784,13 @@ A09 owns `runtime/` and `config/deepseek_runtime.json` until these are integrate
 Publish this change as a fresh `/v3/` instance; preserve `/v1/` and `/v2/` images and game state. `packages/agents.py` defines the canonical roles. Acceptance policy `automatic-development-v2` records `council-evidence-gate-v1`, with its issues and either seven-agent findings or numerical-baseline basis.
 
 Market is distinct from Demand: it describes prices and commercial/community context; Demand computes required quantities and dates. `GET /api/v1/market-signals?crop=...` is tenant scoped, read only and makes no inference/network calls. No social or field-reaction source is connected in this release. Show an explicit empty state, never generated reactions presented as observations. Future supplied observations must have crop/source IDs, UTC observation/retrieval times, reuse permissions and point-in-time eligibility. Aggregate reported directions deterministically; preserve provenance and source restrictions. No reaction changes demand, price or yield automatically. Frozen mission/conversation context retains the selected evidence on replay.
+
+
+### V4 dialogue usability correction
+
+Native device-keyboard voice typing remains the simplest supported speech-entry
+path. Keep its explanatory hint below the editable message row, never competing
+for the same horizontal flex space. Message fields must remain at least 180 pixels
+wide at 360-pixel viewport width; field and send touch targets are at least 44 pixels
+high. V4 corrects this presentation issue without changing seven-agent roles,
+numerical calculations or source connections. V3 and earlier instances stay frozen.

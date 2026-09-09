@@ -1,0 +1,36 @@
+{
+  "v1": {
+    "unchanged": true,
+    "machines": [
+      [
+        "2873455c446528",
+        "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+        {
+          "registry": "registry.fly.io",
+          "repository": "farmtact",
+          "digest": "sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+          "labels": {
+            "org.opencontainers.image.revision": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+          }
+        }
+      ]
+    ]
+  },
+  "v2": {
+    "unchanged": true,
+    "machines": [
+      [
+        "683e037ad33908",
+        "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+        {
+          "registry": "registry.fly.io",
+          "repository": "farmtact",
+          "digest": "sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+          "labels": {
+            "org.opencontainers.image.revision": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+          }
+        }
+      ]
+    ]
+  }
+}
