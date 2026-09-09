@@ -1,0 +1,63 @@
+{
+  "started_at": "2026-09-09T23:08:48.859Z",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "public chooser responds",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "public chooser exposes exactly v1 through v6",
+      "pass": true,
+      "detail": [
+        "Play V1 ",
+        "Play V2 ",
+        "Play V3 ",
+        "Play V4 ",
+        "Play V5 ",
+        "Play V6 "
+      ]
+    },
+    {
+      "name": "public v6 responds",
+      "pass": true,
+      "detail": 200
+    },
+    {
+      "name": "v6 selector exposes exactly v1 through v6",
+      "pass": true,
+      "detail": [
+        "V1 · The reference farm",
+        "V2 · Editions and a quieter farm",
+        "V3 · Seven perspectives, one farm",
+        "V4 · Room to ask a question",
+        "V5 · Follow a delivery decision",
+        "V6 · More crops, one shared home"
+      ]
+    },
+    {
+      "name": "v6 selector selects v6",
+      "pass": true,
+      "detail": "v6"
+    },
+    {
+      "name": "edition state-isolation note visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "selector smoke made no write or provider request",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "requests": [],
+  "screenshots": [
+    "apps/web/screenshots/v6-release-selector-public/chooser-1280.png",
+    "apps/web/screenshots/v6-release-selector-public/v6-selector-1280.png"
+  ],
+  "finished_at": "2026-09-09T23:08:51.629Z"
+}

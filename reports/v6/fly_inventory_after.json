@@ -1,0 +1,58 @@
+[
+  {
+    "app": "farmtact",
+    "machines": [
+      {
+        "id": "2871575b4544d8",
+        "state": "started",
+        "guest": {
+          "cpu_kind": "shared",
+          "cpus": 4,
+          "memory_mb": 4096
+        },
+        "container_images": {
+          "gateway": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+          "v1": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+          "v2": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+          "v3": "registry.fly.io/farmtact@sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6",
+          "v4": "registry.fly.io/farmtact@sha256:a676954e2958dbc289c909bbe18289d84aa58ae20af0917d0ae31dff5c6b92b0",
+          "v5": "registry.fly.io/farmtact@sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103",
+          "v6": "registry.fly.io/farmtact@sha256:2415d2a861c83dfda71e13fb25c3187d3082c2f49a987ef3e68751208f63d334"
+        }
+      }
+    ],
+    "volumes": [
+      {
+        "id": "vol_vdejexpzm8ydn5x4",
+        "name": "farmtact_shared_data",
+        "size_gb": 3,
+        "attached_machine_id": "2871575b4544d8"
+      }
+    ]
+  },
+  {
+    "app": "farmtact-edition-v1",
+    "machines": [],
+    "volumes": []
+  },
+  {
+    "app": "farmtact-edition-v2",
+    "machines": [],
+    "volumes": []
+  },
+  {
+    "app": "farmtact-edition-v3",
+    "machines": [],
+    "volumes": []
+  },
+  {
+    "app": "farmtact-edition-v4",
+    "machines": [],
+    "volumes": []
+  },
+  {
+    "app": "farmtact-edition-v5",
+    "machines": [],
+    "volumes": []
+  }
+]

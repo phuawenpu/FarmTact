@@ -1,10 +1,14 @@
 # FarmTact on Fly.io
 
 The active topology is now defined in [the editions runbook](editions.md).
-`fly.toml` configures the public chooser/control gateway. Published game images
-live in separate private edition apps and must not be overwritten by a generic
-redeploy. The single-app description below records the pre-edition deployment
-and its retained recovery database.
+`config/hosting/shared.json` identifies the active 4-vCPU/4-GB Machine and
+single 3-GB shared volume. The immutable publisher updates that Machine with
+separate, pinned gateway/edition containers. `fly.toml` remains an image-build and
+historical bootstrap input: a generic `fly deploy` would replace the shared
+container configuration and must not be used for current publication.
+
+The sections below document the historical single-app deployment. Follow the
+editions runbook for current deployment, resource sizes and verification.
 
 Target: `farmtact`, https://farmtact.fly.dev, Singapore (`sin`). Deployment preserves the autonomous-development/synthetic-simulation policy. This is a development instance, not operational farm promotion.
 

@@ -58,6 +58,12 @@ try {
     check(`${width}px has no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), await page.evaluate(() => `${document.documentElement.scrollWidth}/${innerWidth}`))
     check(`${width}px reduced-motion preference is active`, await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches))
 
+    for (const image of await cards.locator('img').all()) {
+      await image.scrollIntoViewIfNeeded()
+      await image.evaluate(node => node.decode?.()).catch(() => {})
+    }
+    await page.evaluate(() => scrollTo(0, 0))
+
     for (const cropId of expected) {
       const image = page.locator(`.crop-profile-card img[src*="/${cropId}-ready.svg"]`)
       check(`${width}px ${cropId} uses mature original art`, await image.count() === 1, await image.getAttribute('src').catch(() => 'missing'))

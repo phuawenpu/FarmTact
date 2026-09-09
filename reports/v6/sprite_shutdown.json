@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "closed_ports": {
+    "8080": true,
+    "8086": true,
+    "8088": true
+  },
+  "database_service_retained": true,
+  "temporary_tunnel_credential_removed": true
+}

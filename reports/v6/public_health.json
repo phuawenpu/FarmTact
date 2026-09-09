@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "registry_exact_match": true,
+  "editions": [
+    {
+      "edition": "v1",
+      "status": "ok",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+    },
+    {
+      "edition": "v2",
+      "status": "ok",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+    },
+    {
+      "edition": "v3",
+      "status": "ok",
+      "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607"
+    },
+    {
+      "edition": "v4",
+      "status": "ok",
+      "source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d"
+    },
+    {
+      "edition": "v5",
+      "status": "ok",
+      "source_commit": "0f54565d23f5387fc751eeac4f329372e0460018"
+    },
+    {
+      "edition": "v6",
+      "status": "ok",
+      "source_commit": "f4606222af6658986b491250de66cb12f6422f32"
+    }
+  ],
+  "provider_calls": 0
+}

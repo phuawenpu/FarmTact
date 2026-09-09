@@ -202,7 +202,8 @@ def main() -> int:
     args = parser.parse_args()
     report: dict[str, Any] = {
         "status": "RUNNING", "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "target": "private root-owned local tunnel", "editions": [], "provider_calls_requested": 0,
+        "target": "public Fly application" if args.url.startswith("https://") else "private root-owned local tunnel",
+        "target_url": args.url, "editions": [], "provider_calls_requested": 0,
         "policy": "Synthetic frozen scenarios only; council and inference disabled; no farm acceptance or operations.",
         "jobs": [], "browse_samples": [], "memory_samples": {}, "checks": [],
     }

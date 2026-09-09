@@ -229,3 +229,13 @@ source/destination fingerprints. Ancestor PID-namespace control is required to
 stop immutable container supervisors; ordinary container SIGSTOP cannot stop
 namespace PID 1. Operator SSH continues working during the verified freeze.
 Public cutover and authorized resource cleanup are the remaining rollout steps.
+
+V6 completed: exact frozen source f460622 is publicly available at /v6/. All
+six public edition identities match the registry. Public atlas 45/45 and selector
+7/7 checks pass; two fresh concurrent numerical jobs pass with zero inference,
+unchanged main farms and cross-edition cookie rejection. Six old FarmTact Machines
+and seven old volumes were deleted after verification. Final inventory: one
+4-shared-vCPU/4096-MB Machine, one 3-GB shared volume, seven isolated containers.
+Unrelated Fly resources untouched. Sprite HTTP/tunnel services removed. Final
+operator/publisher suite passes 36. Specs/runbook, immutable manifest and rollout
+evidence are committed with the release. See reports/v6/implementation.md.

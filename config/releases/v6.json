@@ -1,0 +1,45 @@
+{
+  "id": "v6",
+  "title": "More crops, one shared home",
+  "published_at": "2026-09-09",
+  "summary": "Explore garlic chives and sawtooth coriander with primary research and original illustrations. Independent editions share one smaller Fly host while retaining their own farms and progress.",
+  "status": "published",
+  "source_commit": "f4606222af6658986b491250de66cb12f6422f32",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/f4606222af6658986b491250de66cb12f6422f32",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/0f54565d23f5387fc751eeac4f329372e0460018...f4606222af6658986b491250de66cb12f6422f32",
+  "image_digest": "registry.fly.io/farmtact@sha256:2415d2a861c83dfda71e13fb25c3187d3082c2f49a987ef3e68751208f63d334",
+  "review_url": "/v6/review",
+  "play_url": "/v6/",
+  "changes": [
+    {
+      "title": "Two researched crop species",
+      "description": "Garlic chives and sawtooth coriander join the twelve-profile crop atlas, with local NParks background, four primary research papers, careful name matching and explicit evidence gaps. They are knowledge profiles; the four-crop synthetic planning fixture is unchanged.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/docs/research/v6_crop_evidence.md",
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/reports/v6/crop_evidence.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Distinctive original botanical illustrations",
+      "description": "Flat, upright garlic-chive leaves and the toothed sawtooth-coriander rosette have original SVG illustrations. Responsive, keyboard, alias-search and evidence-link checks cover all twelve profiles.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/reports/v6/crop_atlas_browser.json",
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/docs/crop-art-provenance.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Independent editions on one smaller host",
+      "description": "Pinned edition images run in isolated containers on one shared 4-vCPU/4-GB Fly Machine with one persistent volume. Each edition keeps its own database, cache and progress. New releases reuse the shared host. Shared operational limits remain enforced.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/reports/v6/hosting_design_review.md",
+        "https://github.com/phuawenpu/FarmTact/blob/f4606222af6658986b491250de66cb12f6422f32/docs/deployment/editions.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
