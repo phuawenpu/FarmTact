@@ -1,0 +1,33 @@
+{
+  "id": "v4",
+  "title": "Room to ask a question",
+  "published_at": "2026-09-09",
+  "summary": "The seven-agent farm with a usable mobile message field and device-keyboard voice guidance on its own row.",
+  "status": "published",
+  "source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/f1510825ab60ea0c70d0144d859bdf6266c1ac9d",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/f8e04999fba5a82dcb1435c7a4c920e004e76607...f1510825ab60ea0c70d0144d859bdf6266c1ac9d",
+  "image_digest": "registry.fly.io/farmtact@sha256:a676954e2958dbc289c909bbe18289d84aa58ae20af0917d0ae31dff5c6b92b0",
+  "review_url": "/v4/review",
+  "play_url": "/v4/",
+  "changes": [
+    {
+      "title": "Readable mobile dialogue controls",
+      "description": "Corrects the narrow message field caused by the voice-typing hint. The hint now wraps below the field, with 44-pixel input and send controls. Verified at 360, 390, 430 and 1280 pixels.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/f1510825ab60ea0c70d0144d859bdf6266c1ac9d/reports/seven_agents/composer_candidate.json"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Seven-agent experience retained",
+      "description": "Demand, Weather, Market, Production, Supply Chain, Profit and Planner keep distinct responsibilities. Community feeds remain explicitly unconnected. Earlier editions retain their saved state and images.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/f1510825ab60ea0c70d0144d859bdf6266c1ac9d/reports/seven_agents/implementation.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
