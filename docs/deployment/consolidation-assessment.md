@@ -1,6 +1,9 @@
 # Fly consolidation assessment
 
-Measured 2026-09-09 in Singapore (`sin`). Decision: **retain the existing topology**.
+Measured 2026-09-09 in Singapore (`sin`). Production remains unchanged.
+After the user clarified low simultaneous usage, **4 shared vCPUs / 4 GB is the
+preferred consolidation trial target**; see the final amendment below.
+The original equal-capacity assessment follows.
 The assessment does not establish a safe net saving from consolidation. A smaller
 shared host is a possible future downsizing experiment, not an approved sizing
 result. No Machine, volume, routing, image or production state was changed.
@@ -121,3 +124,42 @@ other charges above. A single 6-vCPU / 12-GB shared host is quoted at $81.47 com
 a one-cent rounding difference at equal allocated capacity, before migration,
 new storage or retained rollback resources. The original comparison table remains
 the inventory measured when only v1-v4 were published. No consolidation was made.
+
+
+## Low-concurrency amendment — 2026-09-09
+
+The user clarified that simultaneous usage will be low and proposed 4 shared
+vCPUs / 4 GB. This changes the appropriate sizing target: it need not retain the
+six-Machine aggregate allocation or support five numerical runs at once without
+queueing. A 4-vCPU / 4-GB shared host is supported by Fly and is a reasonable
+cost-reduction candidate for this workload. The earlier equal-capacity comparison
+alone is not a sufficient reason to reject downsizing.
+
+The official Singapore pricing table was re-read: shared-cpu-4x at 4 GB is
+**$28.92 per 30 days**, versus $81.48 current compute, saving **$52.56 / 64.5%**.
+Storage, retained rollback resources, network and other charges remain separate;
+$28.92 is not a promised all-in bill. The existing 19 GB of volumes costs $2.85
+per month and a consolidated data volume would add storage during migration.
+
+A new read-only light-load v5 sample reported 541,372 KiB summed process RSS and
+1,585,764 KiB available memory on its 2-GB Machine. Combined with the earlier
+five-Machine sample this is approximately 2.6 GiB of summed RSS, measured at
+different times. RSS double-counts shared pages and is not peak usage. It makes
+4 GB plausible; it does not establish working-set headroom under numerical jobs.
+
+For this clarified workload, validate the consolidated packaging with normal
+browsing plus one numerical job, then two overlapping jobs and repeated-job
+memory retention. Additional numerical work may queue; there is no requirement
+to preserve six Machines' maximum parallel throughput. Preserve responsive
+browsing, inspectable results, edition state isolation and recovery. Measure peak
+memory before cutover; if 4 GB is tight, 6 GB is within Fly's supported memory
+range for four shared CPUs and can be considered without adding a Machine.
+
+This is a shared-host migration, not an in-place size change of an existing
+single host: each edition currently has its own runtime and database volume.
+Pinned application code, per-edition settings/sessions/data, existing recorded
+runs and rollback must survive that migration. No production configuration or
+state was changed during this revised sizing assessment.
+
+Sources: [Singapore resource pricing](https://fly.io/docs/about/pricing/) and
+[custom Machine sizing](https://fly.io/docs/machines/guides-examples/machine-sizing/).
