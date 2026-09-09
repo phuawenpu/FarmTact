@@ -51,6 +51,8 @@ class Worker:
         self.store.interrupt_abandoned()
         from services.api.scenarios import interrupt_scenarios
         interrupt_scenarios(self.store)
+        from services.api.council_research import recover
+        recover(self.store)
         from services.api.conversation_store import ConversationStore
         ConversationStore(self.store).interrupt_abandoned()
         self.thread=threading.Thread(target=self.loop,daemon=True);self.thread.start()
@@ -62,6 +64,10 @@ class Worker:
             for tenant,id in pending_scenarios(self.store):
                 if self.stop.is_set():break
                 execute_scenario(self.store,tenant,id)
+            from services.api.council_research import pending as research_pending, execute as research_execute
+            for tenant,id in research_pending(self.store):
+                if self.stop.is_set():break
+                research_execute(self.store,tenant,id)
             from services.api.conversation_store import ConversationStore
             from services.api.conversations import execute_conversation_job
             conversations=ConversationStore(self.store)
@@ -357,6 +363,8 @@ def create_app(store=None,start_worker=True):
     install_routes(app,tenant)
     from services.api.conversations import install_routes as install_conversations
     install_conversations(app,tenant)
+    from services.api.council_research import install_routes as install_research
+    install_research(app,tenant)
     from services.api.reviews import install_routes as install_reviews
     install_reviews(app)
     dist=ROOT/'apps/web/dist'

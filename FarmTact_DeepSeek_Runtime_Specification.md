@@ -1,3 +1,14 @@
+### V7 research context amendment — implementation underway
+
+Scripted council concepts make no provider calls. Explicit actual advisor requests
+may freeze a completed tenant-owned research result using snapshot_kind=research,
+snapshot_id and research_version. The conversation retains the exact result hash,
+reservation/order/labour controls and existing numerical evidence references.
+An explanation never applies a proposal or changes research/main-farm inputs.
+No provider fallback or new model route is added. The implementation experiment
+ceiling is 16 requests including repairs, subordinate to shared admission/budgets;
+unavailable or interrupted actual responses remain visibly distinct from scripts.
+
 ### V5 News support amendment — 9 September 2026
 
 News collection, filtering, date interpretation and deterministic context selection

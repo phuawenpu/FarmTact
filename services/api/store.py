@@ -35,6 +35,7 @@ class Store:
         import services.api.conversation_store
         import services.api.security
         import services.api.data_explorer
+        import services.api.council_research
         metadata.create_all(self.engine)
         if self.engine.dialect.name=='postgresql':
             from sqlalchemy import inspect,text

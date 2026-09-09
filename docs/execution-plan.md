@@ -206,3 +206,16 @@ Verification: 458 backend tests; 36 operator/publisher tests; 45 public atlas an
 7 selector checks; two fresh concurrent public strategy runs with zero inference,
 unchanged main farms and cross-edition cookie rejection. See
 [the v6 report](../reports/v6/implementation.md) for exact scope and limitations.
+
+## V7 playable council research — active
+
+Approved goal: evolve the latest release through a documented audit, primary-paper
+review and three controlled playable council concepts in the next immutable
+edition. Preserve main-farm behavior, real numerical quantities and disabled
+operations. Root owns research-session state, additive tables, API integration,
+frontend integration and release. Bounded specialists: v7_literature owns cited
+research synthesis; v7_audit owns latest-release screenshots/observations;
+v7_numerics owns optional numerical bed reservations and research wrapper/tests.
+No recursive delegation. Subsequent UI/reviewer work reuses available slots.
+Research dialogue is labelled deterministic by default; at most 16 actual
+DeepSeek experiment requests including repairs within the existing shared cap.

@@ -23,8 +23,40 @@ def allocations_existing(farm):
     recipes={r.id:r for r in farm.recipes}; beds={b.id:b for b in farm.beds}
     return [dict(id=b.id,bed_id=b.bed_id,crop_id=recipes[b.recipe_id].crop_id,recipe_id=b.recipe_id,sow_date=str(b.sow_date),transplant_date=str(b.transplant_date),harvest_date=str(b.harvest_date),area_m2=float(beds[b.bed_id].area_m2),expected_kg=float(b.expected_marketable_kg),executed=True) for b in farm.batches]
 
-def candidates(farm):
+def _reservation_windows(farm,reservations=()):
+    """Return validated inclusive reservation windows as horizon-relative days."""
+    day=farm.planning_date; last=day+timedelta(days=farm.horizon_days-1); bed_ids={b.id for b in farm.beds}; result=[]
+    for reservation in reservations:
+        try:
+            bed_id=reservation['bed_id']; start=reservation['start_date']; end=reservation['end_date']
+        except (KeyError,TypeError) as exc:
+            raise ValueError('reservation requires bed_id, start_date and end_date') from exc
+        start=date.fromisoformat(start) if isinstance(start,str) else start
+        end=date.fromisoformat(end) if isinstance(end,str) else end
+        if bed_id not in bed_ids: raise ValueError(f'unknown reservation bed: {bed_id}')
+        if type(start) is not date or type(end) is not date: raise ValueError('reservation dates must be ISO dates')
+        if start>end: raise ValueError('reservation start_date must not follow end_date')
+        if start<day or end>last: raise ValueError('reservation must be within the planning horizon')
+        result.append(dict(bed_id=bed_id,start_date=str(start),end_date=str(end),start=(start-day).days,end=(end-day).days))
+    ordered=sorted(result,key=lambda x:(x['bed_id'],x['start'],x['end']))
+    for previous,current in zip(ordered,ordered[1:]):
+        if previous['bed_id']==current['bed_id'] and current['start']<=previous['end']:
+            raise ValueError(f'overlapping reservations for {current["bed_id"]}')
+    return ordered
+
+def _allocation_occupancy(farm,allocation):
+    recipe=next(r for r in farm.recipes if r.id==allocation['recipe_id']); day=farm.planning_date
+    start=(date.fromisoformat(allocation['transplant_date'])-day).days
+    end=(date.fromisoformat(allocation['harvest_date'])-day).days+recipe.sanitation_days
+    return start,end
+
+def _reservation_conflicts(farm,allocation,windows):
+    start,end=_allocation_occupancy(farm,allocation)
+    return [r for r in windows if r['bed_id']==allocation['bed_id'] and start<=r['end'] and r['start']<=end]
+
+def candidates(farm,*,reservations=()):
     day=farm.planning_date; result=[]
+    windows=_reservation_windows(farm,reservations)
     busy={b.bed_id:(b.harvest_date-day).days+next(r.sanitation_days for r in farm.recipes if r.id==b.recipe_id)+1 for b in farm.batches}
     # Sow backwards from actual weekly delivery dates: no late production allocated to earlier demand.
     for bed in farm.beds:
@@ -33,7 +65,8 @@ def candidates(farm):
             for harvest in sorted(set(range(6,farm.horizon_days,7)) | {(o.due_date-day).days for o in farm.orders if o.crop_id==r.crop_id and 0<=(o.due_date-day).days<farm.horizon_days}):
                 sow=harvest-r.cycle_days; transplant=sow+r.nursery_days
                 if sow<0 or transplant<busy.get(bed.id,0): continue
-                result.append(dict(id=f'{bed.id}-{r.crop_id}-{sow}',bed_id=bed.id,crop_id=r.crop_id,recipe_id=r.id,sow_date=str(day+timedelta(days=sow)),transplant_date=str(day+timedelta(days=transplant)),harvest_date=str(day+timedelta(days=harvest)),area_m2=float(bed.area_m2),expected_kg=float(bed.area_m2*r.marketable_kg_per_m2),executed=False))
+                candidate=dict(id=f'{bed.id}-{r.crop_id}-{sow}',bed_id=bed.id,crop_id=r.crop_id,recipe_id=r.id,sow_date=str(day+timedelta(days=sow)),transplant_date=str(day+timedelta(days=transplant)),harvest_date=str(day+timedelta(days=harvest)),area_m2=float(bed.area_m2),expected_kg=float(bed.area_m2*r.marketable_kg_per_m2),executed=False)
+                if not _reservation_conflicts(farm,candidate,windows): result.append(candidate)
     return result
 
 def resource_usage(farm,allocations):
@@ -50,8 +83,9 @@ def resource_usage(farm,allocations):
             labour[harvest//7]+=ceil(a['expected_kg']*1.1*float(r.harvest_labour_hours_per_kg)*60)/60
     return nursery,labour,bed_days,costs
 
-def validate_allocations(farm,allocations):
+def validate_allocations(farm,allocations,*,reservations=()):
     violations=[]; recipes={r.id:r for r in farm.recipes}; beds={b.id:b for b in farm.beds}; day=farm.planning_date
+    windows=_reservation_windows(farm,reservations)
     def bad(code,entity,required,available,unit,period=None):
         violations.append(dict(constraint_code=code,entity_id=entity,period=period,required=required,available=available,unit=unit,severity='hard',repair_options=['Rebuild candidates from the frozen input']))
     ids=[a['id'] for a in allocations]
@@ -69,6 +103,9 @@ def validate_allocations(farm,allocations):
         if (transplant-sow).days<r.nursery_days or (harvest-transplant).days<r.grow_days: bad('BIOLOGICAL_LEAD_TIME',a['id'],r.cycle_days,(harvest-sow).days,'days')
         if not a.get('executed') and sow<day: bad('SOW_IN_PAST',a['id'],0,(sow-day).days,'days')
         if not a.get('executed') and abs(a['expected_kg']-float(b.area_m2*r.marketable_kg_per_m2))>1e-6: bad('YIELD_ENDPOINT',a['id'],a['expected_kg'],float(b.area_m2*r.marketable_kg_per_m2),'marketable kg')
+        for reservation in _reservation_conflicts(farm,a,windows):
+            code='RESERVATION_EXECUTED_CONFLICT' if a.get('executed') else 'BED_RESERVATION'
+            bad(code,a['id'],1,0,'available bed',f'{reservation["start_date"]}/{reservation["end_date"]}')
     if any(v['constraint_code']=='UNKNOWN_DEPENDENCY' for v in violations): return violations
     nursery,labour,occupancy,cost=resource_usage(farm,allocations)
     for d,v in nursery.items():
@@ -121,10 +158,13 @@ def simulate(farm,allocations,demand,scenario):
     total_cost=cost+labour_cost+packing_cost+disposal_cost
     return dict(scenario_id=scenario['id'],weekly=weekly,ledger=ledger,metrics=dict(fill_rate=round(total_delivered/total_demand,4) if total_demand else 1,margin_sgd=round(total_revenue-total_cost,2),waste_kg=round(total_waste,2),harvest_kg=round(total_harvest,2),shortfall_kg=round(total_demand-total_delivered,2),cost_sgd=round(total_cost,2),labour_hours=round(actual_labour,2),area_m2=sum(a['area_m2'] for a in allocations if not a.get('executed')),closing_stock_kg=round(sum(l['kg'] for l in lots),2),opening_stock_kg=opening,revenue_sgd=round(total_revenue,2)),cost_breakdown=dict(inputs_sgd=cost,labour_sgd=round(labour_cost,2),packing_sgd=round(packing_cost,2),disposal_sgd=round(disposal_cost,2)))
 
-def _solve(farm,cands,existing,demand,scenario_set,policy,time_limit=4):
+def _solve(farm,cands,existing,demand,scenario_set,policy,time_limit=4,*,reservations=()):
     m=cp_model.CpModel(); x=[m.new_bool_var(a['id']) for a in cands]; day=farm.planning_date; recipes={r.id:r for r in farm.recipes}; p=POLICIES[policy]
     fixed_n,fixed_l,fixed_o,fixed_cost=resource_usage(farm,existing)
     usages=[resource_usage(farm,[a]) for a in cands]
+    windows=_reservation_windows(farm,reservations)
+    for i,a in enumerate(cands):
+        if _reservation_conflicts(farm,a,windows): m.add(x[i]==0)
     for bed in farm.beds:
         for d in range(farm.horizon_days):
             terms=[x[i] for i,u in enumerate(usages) if (bed.id,d) in u[2]]
@@ -175,7 +215,7 @@ def _solve(farm,cands,existing,demand,scenario_set,policy,time_limit=4):
     chosen=[cands[i] for i,v in enumerate(x) if solver.value(v)] if status in (cp_model.FEASIBLE,cp_model.OPTIMAL) else None
     return chosen,meta
 
-def baseline(farm,cands,existing,demand):
+def baseline(farm,cands,existing,demand,*,reservations=()):
     chosen=list(existing)
     # Auditable backward-scheduling fallback: largest uncovered confirmed requirements first.
     for d in sorted(demand,key=lambda x:(x['week'],-x['confirmed_kg'],x['crop_id'])):
@@ -184,17 +224,18 @@ def baseline(farm,cands,existing,demand):
             if available>=d['confirmed_kg']: break
             if a['crop_id']!=d['crop_id'] or a['harvest_date']!=d['date'] or any(a['id']==b['id'] for b in chosen): continue
             trial=chosen+[a]
-            if not validate_allocations(farm,trial) and simulate(farm,trial,demand,scenarios()[2])['metrics']['cost_sgd']<=float(farm.resources.cash_sgd): chosen=trial; available+=a['expected_kg']
+            if not validate_allocations(farm,trial,reservations=reservations) and simulate(farm,trial,demand,scenarios()[2])['metrics']['cost_sgd']<=float(farm.resources.cash_sgd): chosen=trial; available+=a['expected_kg']
     return chosen
 
-def plan(farm:Farm,time_limit=4,*,alpha=.35):
-    f=forecast(farm,alpha=alpha); ss=scenarios(farm.fixture_seed); existing=allocations_existing(farm); cands=candidates(farm); result=[]
+def plan(farm:Farm,time_limit=4,*,alpha=.35,reservations=()):
+    windows=_reservation_windows(farm,reservations)
+    f=forecast(farm,alpha=alpha); ss=scenarios(farm.fixture_seed); existing=allocations_existing(farm); cands=candidates(farm,reservations=windows); result=[]
     for name,p in POLICIES.items():
-        chosen,solver=_solve(farm,cands,existing,f['demand'],ss,name,time_limit)
+        chosen,solver=_solve(farm,cands,existing,f['demand'],ss,name,time_limit,reservations=windows)
         allocations=existing+(chosen or [])
         if chosen is None:
-            allocations=baseline(farm,cands,existing,f['demand']); solver['fallback']='backward-scheduling-v1'
-        violations=validate_allocations(farm,allocations)
+            allocations=baseline(farm,cands,existing,f['demand'],reservations=windows); solver['fallback']='backward-scheduling-v1'
+        violations=validate_allocations(farm,allocations,reservations=windows)
         sims=[simulate(farm,allocations,f['demand'],s) for s in ss]
         if any(s['metrics']['cost_sgd']>float(farm.resources.cash_sgd)+.01 for s in sims): violations.append(dict(constraint_code='TOTAL_CASH_BUDGET',entity_id=farm.id,period=None,required=max(s['metrics']['cost_sgd'] for s in sims),available=float(farm.resources.cash_sgd),unit='SGD',severity='hard',repair_options=['Reduce planting or increase the declared fixture budget']))
         central=sims[1]; sid=content_hash(dict(name=name,input=f['numerical_input_hash'],allocations=allocations))[:20]

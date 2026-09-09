@@ -84,13 +84,14 @@ TERMINAL_REQUEST_STATUSES = {
 
 class CreateConversation(Strict):
     advisor: AdvisorId = "asha"
-    snapshot_kind: Literal["farm", "scenario"] = "farm"
+    snapshot_kind: Literal["farm", "scenario", "research"] = "farm"
+    research_version: int | None = Field(default=None, ge=1)
     snapshot_id: str | None = Field(default=None, max_length=100)
     selected_bed_id: str | None = Field(default=None, max_length=100)
 
     @model_validator(mode="after")
     def scenario_requires_id(self) -> "CreateConversation":
-        if self.snapshot_kind == "scenario" and not self.snapshot_id:
+        if self.snapshot_kind in {"scenario", "research"} and not self.snapshot_id:
             raise ValueError("Scenario conversations require a snapshot_id")
         return self
 
@@ -353,7 +354,23 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         frozen_sources: Any = source_views()
     except Exception:
         frozen_sources = None
-    if body.snapshot_kind == "scenario":
+    research = None
+    research_result = None
+    if body.snapshot_kind == "research":
+        from services.api.council_research import get_session, result_current
+        research = get_session(store, tenant, body.snapshot_id)
+        if not research:
+            raise HTTPException(404, "Research session not found")
+        research_result = result_current(research)
+        if not research_result or body.research_version != research['input_version']:
+            raise HTTPException(409, "Complete and select the current research version before requesting an advisor")
+        from copy import deepcopy
+        snapshot = deepcopy(research['farm'])
+        snapshot['orders'] = [o for o in snapshot['orders'] if o['id'] not in research_result['inputs']['unconfirmed_order_ids']]
+        snapshot['resources']['labour_hours_per_week'] = str(float(snapshot['resources']['labour_hours_per_week']) * research_result['inputs']['labour_percent'] / 100)
+        snapshot_id = research['id'] + ':v' + str(research_result['version'])
+        snapshot_hash = research_result['input_hash']
+    elif body.snapshot_kind == "scenario":
         from services.api.scenarios import get_scenario
 
         scenario = get_scenario(store, tenant, body.snapshot_id)
@@ -373,7 +390,9 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         snapshot_id = f"{snapshot.get('id', 'farm')}:v{snapshot.get('version', 1)}"
         snapshot_hash = content_hash(snapshot)
     planning: dict[str, Any] | None = None
-    if scenario is None:
+    if research_result is not None:
+        planning = research_result["calculation"]
+    elif scenario is None:
         latest_run = store.latest_run(tenant)
         if (
             latest_run
@@ -403,14 +422,14 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
             "data_mode": snapshot.get("data_mode", "synthetic_demo"),
             "frozen_at": now(),
         },
-        "tool_results": _tool_results(
+        "tool_results": {**_tool_results(
             snapshot,
             scenario,
             planning,
             frozen_sources,
             market_signals,
             news_context,
-        ),
+        ), **({"research:inputs": research_result["inputs"], "research:version": research_result["version"], "research:input_hash": research_result["input_hash"], "research:dialogue_mode": "Explicit paid interpretation of a frozen numerical research result; earlier scripted turns were not AI output"} if research_result else {})},
         "highlight_refs": sorted(_highlight_refs(snapshot, scenario)),
         "evidence": _evidence_context(snapshot),
         "planning": planning,

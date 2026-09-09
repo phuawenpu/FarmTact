@@ -1,5 +1,27 @@
 # FarmTact
 
+### V7 council research — implementation underway
+
+The next edition adds an isolated Council research area, not a replacement farm
+interface. Three presentation concepts share the same scripted dialogue and real
+CP-SAT task: inline council, expandable sheet, contextual cards. Selection chips
+and contextual replies, continuous/checkpoint steering, and static/optional
+transitions are controlled comparison factors. Free text proposes bounded edits;
+explicit apply creates a new research input version. Bed reservations protect
+executed batches including sanitation; unconfirmed orders remain visible outside
+booked commitments, with EWMA residual demand labelled separately.
+
+Tenant-owned research sessions/jobs/events are additive. Main-farm acceptance
+remains automatic simulation only; a research participant may explicitly choose
+a feasible current result after resolving known evidence challenges. Unknown
+challenges remain unresolved. Actual farm operations remain disabled.
+
+The literature and latest-release audit inform at most three recommendations.
+Agent walkthroughs are labelled, not human-study results. Actual advisor tests
+use the existing DeepSeek gateway, at most 16 requests including repairs within
+the shared cap. Scripted dialogue, browsing and numerical runs use no inference.
+See docs/research/council-participation.md and reports/v7.
+
 ### Current implementation — v6, 9 September 2026
 
 V6 is published at https://farmtact.fly.dev/v6/. This current-state amendment
