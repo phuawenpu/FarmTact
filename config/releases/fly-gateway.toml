@@ -4,7 +4,7 @@ kill_signal = "SIGTERM"
 kill_timeout = 90
 
 [build]
-  dockerfile = "Dockerfile.fly"
+  dockerfile = "../../Dockerfile.fly"
 
 [env]
   FARMTACT_ROLE = "gateway"
