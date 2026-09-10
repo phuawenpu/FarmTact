@@ -1,0 +1,45 @@
+{
+  "id": "v7",
+  "title": "V7 \u00b7 Playable farm council",
+  "published_at": "2026-09-10",
+  "summary": "A guided farm council study: ask for a plan, reserve a bed, test an order and inspect the numerical consequences. Compare three optional discussion layouts in an isolated saved study.",
+  "status": "published",
+  "source_commit": "6efbbfd5a57cb557683e636d1fe20ae63b6b9eda",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/f4606222af6658986b491250de66cb12f6422f32...6efbbfd5a57cb557683e636d1fe20ae63b6b9eda",
+  "image_digest": "registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc",
+  "review_url": "/v7/review",
+  "play_url": "/v7/",
+  "changes": [
+    {
+      "title": "One clear starting action",
+      "description": "Start a guided synthetic decision with one numerical planning action. Plain labels, visible units, saved progress and optional research controls support first-time exploration. Try /v7/research.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/implementation.md",
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/recommendations.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Conversation produces reviewable scenario changes",
+      "description": "Scripted dialogue proposes dated bed reservations, order confirmation and labour ceilings. Explicit edits create frozen versions; local numerical tools calculate comparisons. Main-farm progress is separate and real operations remain disabled.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/persistence.md",
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/research_backend_review.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Evidence, challenges and optional actual advisers",
+      "description": "Inspect assumptions, keep challenges unresolved or reject recommendations, and choose only a feasible current simulation. Optional explicit DeepSeek interpretation uses the frozen result and shows validation status. Three research layouts are available for comparison.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/docs/research/council-participation.md",
+        "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/advisor_local.json"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
