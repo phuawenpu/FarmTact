@@ -219,3 +219,12 @@ v7_numerics owns optional numerical bed reservations and research wrapper/tests.
 No recursive delegation. Subsequent UI/reviewer work reuses available slots.
 Research dialogue is labelled deterministic by default; at most 16 actual
 DeepSeek experiment requests including repairs within the existing shared cap.
+
+V7 integration milestone (10 September UTC): isolated PostgreSQL studies and real
+reservation/order/labour calculations pass 16 focused tests. Primary-paper synthesis
+and sixteen baseline screenshots are recorded. One actual DeepSeek request verified
+frozen-context/replay/main-farm boundaries; its unsupported interpretation remains
+flagged and is not accepted as planning evidence. Three UI concepts are undergoing
+independent browser review with first-time usability as the main criterion. No v7
+publication is claimed yet. Root retains release, shared-host preservation and
+integration ownership; specialists now own UI, novice review and planning review.

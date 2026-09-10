@@ -418,7 +418,7 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
             "kind": body.snapshot_kind,
             "id": snapshot_id,
             "hash": snapshot_hash,
-            "version": snapshot.get("version"),
+            "version": research_result["version"] if research_result is not None else snapshot.get("version"),
             "data_mode": snapshot.get("data_mode", "synthetic_demo"),
             "frozen_at": now(),
         },

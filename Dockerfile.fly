@@ -24,6 +24,8 @@ COPY services/ services/
 COPY runtime/ runtime/
 COPY config/ config/
 COPY research/ research/
+COPY docs/research/council-participation.md docs/research/council-participation.md
+COPY reports/v7/ reports/v7/
 COPY scripts/ scripts/
 COPY data/fixtures/ data/fixtures/
 COPY reports/deepseek/latest.json reports/deepseek/latest.json

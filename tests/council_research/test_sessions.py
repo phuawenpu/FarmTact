@@ -87,7 +87,9 @@ def test_checkpoint_stop_and_queued_job_recovery(env):
     r.recover(store);assert len(r.pending(store))==1
 
 def test_tenant_isolation_and_frozen_actual_advisor_context(env):
-    c,store,t=env;s=create(c);s=calculate(c,store,t,s)
+    c,store,t=env;s=create(c)
+    s=action(c,s,'propose',operation='order_status',order_id='research-extra-order',confirmed=False)
+    s=action(c,s,'apply');s=calculate(c,store,t,s)
     payload=dict(advisor='asha',snapshot_kind='research',snapshot_id=s['id'],research_version=s['input_version'])
     response=c.post('/api/v1/conversations',json=payload,headers={'Idempotency-Key':'research-advisor'})
     assert response.status_code==201,response.text
@@ -95,7 +97,9 @@ def test_tenant_isolation_and_frozen_actual_advisor_context(env):
     cv=ConversationStore(store).get_conversation(t,response.json()['id'])
     assert cv['snapshot_ref']['hash']==s['results'][-1]['input_hash']
     assert cv['_planning']['strategies']==s['results'][-1]['calculation']['strategies']
-    assert cv['_tool_results']['research:version']==1
+    assert cv['_tool_results']['research:version']==2
+    assert cv['snapshot_ref']['version']==2
+    assert s['results'][0]['version']==1 and s['results'][0]['origin']=='unchanged study reference'
     _,other=store.new_session();c.cookies.set('farmtact_session',other)
     assert c.get(f"/api/v1/council-research/{s['id']}").status_code==404
     assert c.post('/api/v1/conversations',json=payload,headers={'Idempotency-Key':'foreign'}).status_code==404

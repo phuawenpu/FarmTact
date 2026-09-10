@@ -1,0 +1,151 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8080/v7",
+  "actual_provider_calls": 1,
+  "maximum_provider_calls_this_attempt": 5,
+  "research_session_id": "b298fc8f4afc86710bfdf34d660ba3fb",
+  "research_version": 3,
+  "input_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+  "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+  "request_id": "b0a433664d815869d67688a6a59cd6ff",
+  "frozen_context_match": true,
+  "main_farm_unchanged": true,
+  "replay_inference_triggered": false,
+  "advisor_messages": [
+    {
+      "id": "72102d55feead5fe010a6e5c47eb3150",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "speaker": "advisor",
+      "request_mode": "direct",
+      "speaker_id": "asha",
+      "speaker_name": "Asha",
+      "advisor_role": "planning_chair",
+      "advisor_title": "Planner agent",
+      "advisor_location": "Council pavilion",
+      "content": "The frozen research result reserves bed four for a continuous window through early November and adds an unconfirmed extra order, which primarily protects harvest timing for later weeks without authorizing real operations. The next step is to test a modest delay on the reserved bed to see whether it improves alignment with the unconfirmed commitment.",
+      "reply_to": "c53d429757febf1b3cfe37e844c552bc",
+      "snapshot_ref": {
+        "kind": "research",
+        "id": "b298fc8f4afc86710bfdf34d660ba3fb:v3",
+        "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+        "version": 1,
+        "data_mode": "synthetic_demo",
+        "frozen_at": "2026-09-09T23:55:38.927189+00:00"
+      },
+      "evidence_refs": [],
+      "tool_refs": [],
+      "highlight_refs": [],
+      "validation_status": "unsupported",
+      "validation_errors": [
+        "Advisor reply has no supplied evidence or tool reference",
+        "Advisor prose contains a quantitative or temporal claim; exact values render only from tool references"
+      ],
+      "validation_scope": "reference_membership_and_supported_controls",
+      "interpretation_status": "unverified_advisor_interpretation",
+      "proposed_actions": [],
+      "relationship": "answer",
+      "planner_conclusion": false,
+      "created_at": "2026-09-09T23:55:42.750752+00:00",
+      "model": "deepseek-v4-pro",
+      "usage": {
+        "prompt_tokens": 16795,
+        "completion_tokens": 104,
+        "total_tokens": 16899,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 16795,
+        "reasoning_tokens": null
+      },
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "sequence": 2
+    }
+  ],
+  "events": [
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": null,
+      "sequence": 1,
+      "occurred_at": "2026-09-09T23:55:38.944244+00:00",
+      "event_type": "conversation_created",
+      "schema_version": "1.0",
+      "body": {
+        "advisor_id": "asha",
+        "snapshot_ref": {
+          "kind": "research",
+          "id": "b298fc8f4afc86710bfdf34d660ba3fb:v3",
+          "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "version": 1,
+          "data_mode": "synthetic_demo",
+          "frozen_at": "2026-09-09T23:55:38.927189+00:00"
+        }
+      }
+    },
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "sequence": 2,
+      "occurred_at": "2026-09-09T23:55:39.074017+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "c53d429757febf1b3cfe37e844c552bc",
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "sequence": 3,
+      "occurred_at": "2026-09-09T23:55:39.301696+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "sequence": 4,
+      "occurred_at": "2026-09-09T23:55:39.347853+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "sequence": 5,
+      "occurred_at": "2026-09-09T23:55:42.761370+00:00",
+      "event_type": "advisor_message_unsupported",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "72102d55feead5fe010a6e5c47eb3150",
+        "speaker_id": "asha",
+        "reply_to": "c53d429757febf1b3cfe37e844c552bc",
+        "validation_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "21fb8427dccb86a77e5f8b70c8e3701d",
+      "request_id": "b0a433664d815869d67688a6a59cd6ff",
+      "sequence": 6,
+      "occurred_at": "2026-09-09T23:55:42.779156+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "completed_turns": 1,
+        "repair_attempts": 0
+      }
+    }
+  ],
+  "report_recovery": "Trial completed and verified replay/main-farm preservation before a reporting-only request_id KeyError. Rebuilt from persisted actual conversation/events with no additional inference; trial script corrected.",
+  "references_verified": false,
+  "pass_scope": "Provider boundary, frozen context, main-farm preservation and replay only. Actual reply was flagged unsupported and is not planning evidence.",
+  "known_metadata_issue": "Initial snapshot_ref.version used farm version 1 while research result was version 3; corrected in candidate and regression tested before publication."
+}

@@ -22,6 +22,13 @@ use the existing DeepSeek gateway, at most 16 requests including repairs within
 the shared cap. Scripted dialogue, browsing and numerical runs use no inference.
 See docs/research/council-participation.md and reports/v7.
 
+First-time usability is the primary interaction acceptance criterion: one obvious
+starting action, progressive next-step guidance, readable mobile units, preserved
+drafts and selected context beside the composer. Layout and research controls are
+optional disclosure. Reaching the first planning choice within 30 seconds is a
+future human-test target, not an observed human result. No artificial timers or
+farm-time advancement accompany tool execution.
+
 ### Current implementation — v6, 9 September 2026
 
 V6 is published at https://farmtact.fly.dev/v6/. This current-state amendment

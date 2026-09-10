@@ -105,15 +105,21 @@ def say(s,a):
     append(s,'Farmer',text,s['selected_refs'],'user')
     lower=text.lower()
     if re.search(r'\b(reserve|keep|free)\b',lower) and ('bed' in lower or any(r.startswith('bed:') for r in s['selected_refs'])):
-        match=re.search(r'\bbed\s*0?(\d{1,2})\b',lower)
-        ids=[f'bed-{int(match[1]):02d}'] if match else [r[4:] for r in s['selected_refs'] if r.startswith('bed:')]
+        if re.search(r"\b(do not|don't|don’t|never|not)\b",lower):
+            append(s,'Planner','I have not proposed a reservation. Please clarify whether you want to discard a pending proposal or describe a different reservation.');event(s,'clarification',reason='negated_reservation');return
+        matches=re.findall(r'\bbed\s*0?(\d{1,2})\b',lower)
+        if len(matches)>1 or re.search(r'\b(?:and|or)\s+\d',lower):
+            append(s,'Planner','Several beds were named. Select one bed and its interval for each proposal; no bed has been chosen automatically.');event(s,'clarification',reason='multiple_beds');return
+        ids=[f'bed-{int(matches[0]):02d}'] if matches else [r[4:] for r in s['selected_refs'] if r.startswith('bed:')]
         if len(ids)!=1:append(s,'Planner','Which bed do you mean? Select one bed, then specify a start and end date.');event(s,'clarification',reason='bed_reference');return
         propose(s,Action(action='propose',revision=a.revision,operation='reserve_bed',bed_id=ids[0]));return
     if any(w in lower for w in ['unconfirmed','confirms','confirmed']):
+        if re.search(r"\b(do not|don't|don’t|never)\b",lower):
+            append(s,'Planner','Please choose the intended order confirmation state explicitly. I will not infer it from a negated instruction.');event(s,'clarification',reason='negated_order_action');return
         ids=[r[6:] for r in s['selected_refs'] if r.startswith('order:')]
         if 'additional' in lower:ids=['research-extra-order']
         if len(ids)!=1:append(s,'Planner','Which order do you mean? Select one order; confirmation changes its booked commitment.');event(s,'clarification',reason='order_reference');return
-        propose(s,Action(action='propose',revision=a.revision,operation='order_status',order_id=ids[0],confirmed='unconfirmed' not in lower));return
+        propose(s,Action(action='propose',revision=a.revision,operation='order_status',order_id=ids[0],confirmed=not bool(re.search(r"unconfirmed|not\s+(?:yet\s+)?confirmed|hasn['’]?t\s+confirmed",lower))));return
     if 'labour' in lower or 'labor' in lower:
         if 'without extra' in lower or 'no extra' in lower:
             propose(s,Action(action='propose',revision=a.revision,operation='labour',labour_percent=100));return
@@ -135,6 +141,8 @@ def challenge(s,a):
     category='rainfall' if any(word in text.lower() for word in ['rain','indoor','shelter']) else 'other'
     s['challenge']=dict(status='unresolved',category=category,text=text,input_version=s['input_version'])
     s['chosen']=None
+    s['milestones'].pop('chosen',None)
+    s['milestones'].pop('challenge',None)
     if category=='rainfall':
         append(s,'Weather','The declared system is sheltered hydroponic. Outdoor rainfall is public context, not a numerical yield input in this model. A rainfall-based yield claim would be unsupported.',['evidence:weather-boundary'])
     else:
@@ -159,6 +167,7 @@ def apply(s,a):
     try:validate_research_inputs(Farm.model_validate(s['farm']),inputs['reservations'],inputs['unconfirmed_order_ids'],inputs['labour_percent'])
     except ValueError as exc:raise HTTPException(422,str(exc))
     s['inputs']=inputs;s['input_version']+=1;s['proposal']=None;s['chosen']=None;s['pending_turns']=[]
+    s['milestones'].pop('chosen',None)
     append(s,'Planner','The edit is applied to a new research version. Earlier results remain inspectable but cannot be selected as the current plan.')
     event(s,'inputs_changed',operation=p['operation']);s['milestones'][p['operation']]=True
 
@@ -180,15 +189,25 @@ def execute(store,tenant,id):
     with store.connection(write=True) as c:
         if not c.execute(update(JOBS).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant,JOBS.c.status=='QUEUED').values(status='RUNNING')).rowcount:return
         j=c.execute(select(JOBS.c.payload).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant)).scalar_one()
+    baseline_record=None
     try:
         from packages.planner.research import calculate_research
+        from packages.models import MODEL_VERSION
+        from packages.planner.engine import VERSION as PLANNER_VERSION
+        if j.get('schema_version')!=VERSION or j.get('forecast_version')!=MODEL_VERSION or j.get('planner_version')!=PLANNER_VERSION:raise ValueError('Unsupported frozen numerical version')
+        if content_hash(dict(farm=j['farm'],inputs=j['inputs'],version=VERSION))!=j['input_hash']:raise ValueError('Frozen research input hash mismatch')
+        existing=get_session(store,tenant,j['session_id'])
+        if j['version']>1 and not any(r['version']==1 and r['status']=='COMPLETED' for r in existing['results']):
+            original=dict(reservations=[],unconfirmed_order_ids=[],labour_percent=100)
+            baseline_record=dict(version=1,status='COMPLETED',input_hash=content_hash(dict(farm=j['farm'],inputs=original,version=VERSION)),inputs=original,calculation=calculate_research(Farm.model_validate(j['farm']),**original),completed_at=now(),origin='unchanged study reference')
         result=calculate_research(Farm.model_validate(j['farm']),**j['inputs'])
         record=dict(version=j['version'],status='COMPLETED',input_hash=j['input_hash'],inputs=j['inputs'],calculation=result,completed_at=now())
     except Exception as exc:
         record=dict(version=j['version'],status='FAILED',input_hash=j['input_hash'],inputs=j['inputs'],error=f'Numerical calculation failed ({type(exc).__name__}); frozen inputs are preserved.')
     with store.transaction(tenant) as c:
         s=get_session(store,tenant,j['session_id'])
-        s['results']=[r for r in s['results'] if r['version']!=j['version']]+[record]
+        if baseline_record:s['results']=[r for r in s['results'] if r['version']!=1]+[baseline_record]
+        s['results']=sorted([r for r in s['results'] if r['version']!=j['version']]+[record],key=lambda r:r['version'])
         s['revision']+=1
         if j['version']==s['input_version']:
             if record['status']=='COMPLETED':
@@ -250,11 +269,11 @@ def install_routes(app,tenant):
             ('DataBreeze · Srinivasan et al., 2020','https://arxiv.org/abs/2004.10428'),
             ('TalkToModel · Slack et al., 2023','https://arxiv.org/abs/2207.04154'),
             ('Grounded explanation · Madumal et al., 2019','https://arxiv.org/abs/1903.02409'),
-            ('Mixed initiative · Horvitz, 1999','https://www.microsoft.com/en-us/research/publication/principles-mixed-initiative-user-interfaces/'),
+            ('Mixed initiative · Horvitz, 1999','https://erichorvitz.com/chi99horvitz.pdf'),
             ('Animated transitions · Heer and Robertson, 2007','https://www.microsoft.com/en-us/research/publication/animated-transitions-in-statistical-data-graphics/'),
             ('W3C · Animation from interactions','https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html'),
         ]
-        return dict(title='Playable council research',documents=documents,sources=[dict(title=t,url=u) for t,u in sources],screenshots=[])
+        return dict(title='Playable council research',documents=documents,sources=[dict(title=t,url=u) for t,u in sources],screenshots=[dict(title='Baseline '+name.replace('.png','').replace('-',' '),url='/research-evidence/'+name) for name in ['farm-board-390.png','bed-conversation-390.png','scenario-lab-390.png','bed-conversation-1280.png']])
     @app.get('/api/v1/council-research/{id}')
     def detail(id:str,request:Request):return owned(tenant(request),id)
     @app.post('/api/v1/council-research/{id}/actions')
@@ -284,6 +303,7 @@ def install_routes(app,tenant):
                 if body.resolution=='corrected' and s['challenge'].get('category')!='rainfall':raise HTTPException(409,'This challenge has no verified resolution in the scripted study')
                 if body.resolution!='evidence':s['challenge']['status']=body.resolution
                 s['chosen']=None
+                s['milestones'].pop('chosen',None)
                 append(s,'Planner','Challenge status recorded. Unresolved or rejected recommendations cannot be chosen; evidence inspection alone does not resolve a challenge.')
                 event(s,'challenge_reviewed',resolution=body.resolution);s['milestones']['challenge']=True
             elif a=='configure':
@@ -299,7 +319,9 @@ def install_routes(app,tenant):
                 if c.execute(select(JOBS.c.id).where(JOBS.c.session_id==id,JOBS.c.version==s['input_version'])).first():return s
                 if c.execute(select(JOBS.c.id).where(JOBS.c.tenant_id==t,JOBS.c.status.in_(['QUEUED','RUNNING']))).first():raise HTTPException(409,'One research calculation may run per workspace; wait for completion')
                 if len(s['results'])>=12:raise HTTPException(429,'Twelve numerical versions per study; start a fresh study')
-                j=dict(id=secrets.token_hex(16),session_id=id,version=s['input_version'],farm=s['farm'],inputs=deepcopy(s['inputs']),input_hash=content_hash(dict(farm=s['farm'],inputs=s['inputs'],version=VERSION)))
+                from packages.models import MODEL_VERSION
+                from packages.planner.engine import VERSION as PLANNER_VERSION
+                j=dict(schema_version=VERSION,forecast_version=MODEL_VERSION,planner_version=PLANNER_VERSION,id=secrets.token_hex(16),session_id=id,version=s['input_version'],farm=s['farm'],inputs=deepcopy(s['inputs']),input_hash=content_hash(dict(farm=s['farm'],inputs=s['inputs'],version=VERSION)))
                 c.execute(JOBS.insert().values(id=j['id'],tenant_id=t,session_id=id,version=j['version'],status='QUEUED',payload=j));s['results'].append(dict(version=j['version'],status='QUEUED',input_hash=j['input_hash'],inputs=j['inputs']));append(s,'Tool','Numerical work queued. Farm time does not advance while the worker calculates.',kind='tool');event(s,'tool_queued',result_version=j['version'])
             elif a=='choose':
                 r=result_current(s)

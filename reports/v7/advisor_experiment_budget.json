@@ -1,0 +1,18 @@
+{
+  "maximum": 16,
+  "attempts": [
+    {
+      "id": "2b8a86dd213f407e82c0564caf37878c",
+      "charged": 0,
+      "status": "FAILED_BEFORE_PROVIDER_SUBMISSION",
+      "started_at": "2026-09-09T23:55:00.898559+00:00",
+      "reason": "Local HTTP client did not return secure cookie; study create rejected401 before conversation orproviderrequest"
+    },
+    {
+      "id": "dd174eb8b4c6472eaa385eff050af284",
+      "charged": 1,
+      "status": "COMPLETED",
+      "started_at": "2026-09-09T23:55:25.760426+00:00"
+    }
+  ]
+}
