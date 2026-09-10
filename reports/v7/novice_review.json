@@ -1,0 +1,368 @@
+{
+  "started_at": "2026-09-10T00:35:52.006Z",
+  "origin": "http://127.0.0.1:8080",
+  "url": "http://127.0.0.1:8080/v7/research",
+  "checks": [
+    {
+      "name": "360px one clear starting action is visible",
+      "pass": true,
+      "detail": "26,454 308x48"
+    },
+    {
+      "name": "360px starting action is in initial viewport",
+      "pass": true,
+      "detail": "453.890625"
+    },
+    {
+      "name": "360px advanced concept controls start closed",
+      "pass": true,
+      "detail": "Compare research layouts is progressively disclosed"
+    },
+    {
+      "name": "360px task language names farm actions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px CSS viewport preserves requested width",
+      "pass": true,
+      "detail": "360/360"
+    },
+    {
+      "name": "360px no horizontal overflow",
+      "pass": true,
+      "detail": "360/360"
+    },
+    {
+      "name": "360px reduced-motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px one clear starting action is visible",
+      "pass": true,
+      "detail": "26,414 338x48"
+    },
+    {
+      "name": "390px starting action is in initial viewport",
+      "pass": true,
+      "detail": "413.921875"
+    },
+    {
+      "name": "390px advanced concept controls start closed",
+      "pass": true,
+      "detail": "Compare research layouts is progressively disclosed"
+    },
+    {
+      "name": "390px task language names farm actions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px CSS viewport preserves requested width",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "390px no horizontal overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "390px reduced-motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "first result exposes three plain policy choices",
+      "pass": true,
+      "detail": "Lean Balanced Resilient"
+    },
+    {
+      "name": "Bed 4 can be selected with an ordinary touch click",
+      "pass": true,
+      "detail": "Keyboard Enter was used only to continue the accessibility review after the failed click."
+    },
+    {
+      "name": "selected context is repeated beside the composer",
+      "pass": true,
+      "detail": "Talking about Bed 4 · A4"
+    },
+    {
+      "name": "selected context has a labelled removal control",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "composer and selected context remain in the same council region",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal scrolls below the fixed mobile header",
+      "pass": true,
+      "detail": "246.921875/157.765625"
+    },
+    {
+      "name": "reservation proposal exposes dates and recorded occupancy before apply",
+      "pass": true,
+      "detail": "Proposed edit · review before applying Start End A4 is Bed 4. Existing bed occupancy and recorded harvest 2026-09-14 remain protected. Apply to new version Discard"
+    },
+    {
+      "name": "apply and discard are both keyboard buttons",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order remains visible while confirmation change is previewed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "challenge is visibly unresolved and blocks silent choice",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "evidence dialog has an accessible name and close control",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Escape returns focus to the evidence action",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "comparison retains six plain labels, units, and deltas",
+      "pass": true,
+      "detail": "Delivery covered 53.6 % -0.3 % vs v1 Delivery shortfall 505.0 kg +0.0 kg vs v1 Waste 182.0 kg +7.0 kg vs v1 Labour 71.4 hours +0.0 hours vs v1 Cost 1540.8 SGD -1.0 SGD vs v1 Margin 2957.4 SGD -61.9 SGD vs v1"
+    },
+    {
+      "name": "feasible current version exposes an explicit choice",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "choice states that no operation occurred",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "concept controls are keyboard-reachable after optional disclosure",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "inline retains context, council, and consequence regions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "sheet retains context, council, and consequence regions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "cards retains context, council, and consequence regions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px one clear starting action is visible",
+      "pass": true,
+      "detail": "29,414 372x48"
+    },
+    {
+      "name": "430px starting action is in initial viewport",
+      "pass": true,
+      "detail": "413.921875"
+    },
+    {
+      "name": "430px advanced concept controls start closed",
+      "pass": true,
+      "detail": "Compare research layouts is progressively disclosed"
+    },
+    {
+      "name": "430px task language names farm actions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px CSS viewport preserves requested width",
+      "pass": true,
+      "detail": "430/430"
+    },
+    {
+      "name": "430px no horizontal overflow",
+      "pass": true,
+      "detail": "430/430"
+    },
+    {
+      "name": "430px reduced-motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px one clear starting action is visible",
+      "pass": true,
+      "detail": "1019,326 208x48"
+    },
+    {
+      "name": "1280px starting action is in initial viewport",
+      "pass": true,
+      "detail": "326.21875"
+    },
+    {
+      "name": "1280px advanced concept controls start closed",
+      "pass": true,
+      "detail": "Compare research layouts is progressively disclosed"
+    },
+    {
+      "name": "1280px task language names farm actions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px CSS viewport preserves requested width",
+      "pass": true,
+      "detail": "1280/1280"
+    },
+    {
+      "name": "1280px no horizontal overflow",
+      "pass": true,
+      "detail": "1280/1280"
+    },
+    {
+      "name": "1280px reduced-motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "write pacing stays at or below one request per second",
+      "pass": true,
+      "detail": "3213,1097,14702,1084,1099,1103,14467,1097,1103,14452,2212,1102,1077,1098,1101,3428,3277"
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "screenshots": [
+    "apps/web/screenshots/v7-novice/first-view-360.png",
+    "apps/web/screenshots/v7-novice/first-view-390.png",
+    "apps/web/screenshots/v7-novice/initial-plan-390.png",
+    "apps/web/screenshots/v7-novice/reservation-review-390.png",
+    "apps/web/screenshots/v7-novice/completed-task-390.png",
+    "apps/web/screenshots/v7-novice/completed-inline-390.png",
+    "apps/web/screenshots/v7-novice/completed-sheet-390.png",
+    "apps/web/screenshots/v7-novice/completed-cards-390.png",
+    "apps/web/screenshots/v7-novice/first-view-430.png",
+    "apps/web/screenshots/v7-novice/first-view-1280.png"
+  ],
+  "writes": [
+    {
+      "width": 360,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:35:54.299Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:35:57.512Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:35:58.609Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:13.311Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:14.395Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:15.494Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:16.597Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:31.064Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:32.161Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:33.264Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:47.716Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:49.928Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:51.030Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:52.107Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:53.205Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/200c5170f3c29231056eb3817f8a0ea2/actions",
+      "at": "2026-09-10T00:36:54.306Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:36:57.734Z"
+    },
+    {
+      "width": 1280,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:37:01.011Z"
+    }
+  ],
+  "timings": {
+    "first_meaningful_plan_choice_ms": 15319,
+    "complete_task_ms": 53475
+  },
+  "observations": [
+    "The single Start here action led directly to three calculated policy choices without opening instructions or research settings.",
+    "The default sheet keeps selected context beside the composer; advanced layout/pacing controls stay behind an optional disclosure.",
+    "The six-value comparison is legible but uses planning terms such as fill rate and shortfall; units appear in labels, while novice comprehension still requires human testing."
+  ],
+  "limitations": [
+    "This is an independent Codex walkthrough using a novice heuristic, not a human participant study or evidence of enjoyment.",
+    "Widths use headless Chromium emulation. Physical touch, screen readers, software-keyboard occlusion, native dictation, and device performance were not tested.",
+    "The 30-second time-to-first-choice value is a future human-study target. This automated timing is diagnostic and includes local numerical-worker latency."
+  ],
+  "finished_at": "2026-09-10T00:37:01.346Z"
+}

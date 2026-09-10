@@ -1,6 +1,6 @@
 # V7 playable council — implementation record
 
-Status: candidate under verification, 10 September 2026 UTC. Public latest remains
+Status: candidate verified; publication pending, 10 September 2026 UTC. Public latest remains
 v6 until immutable publication succeeds. The intended entry point is `/v7/research`.
 
 The council study extends the existing application with a guided synthetic task:
@@ -17,7 +17,7 @@ operations.
 - [Primary-paper synthesis](../../docs/research/council-participation.md) separates
   the official page-13 rubric from Sumin's conversational product proposal.
 - [Baseline audit](baseline_audit.md) records observed v6 desktop/mobile behavior.
-- [Recommendations](recommendations.md) will rank at most three improvements after
+- [Recommendations](recommendations.md) rank three improvements following
   independent browser review. These are agent walkthroughs, not human trials.
 - [Persistence](persistence.md) and [independent backend review](research_backend_review.md)
   cover isolation, idempotency, interrupted jobs, constraints and clarification.
@@ -26,19 +26,31 @@ operations.
   This is not evidence of a correct farming recommendation. The experiment ledger
   counts attempts and repairs under a maximum of sixteen calls.
 
-## Verification underway
+## Candidate verification
 
-The focused API, numerical and persistence milestone passed 16 tests. The final
-contracts/research group passed 32 tests. A full regression initially found generated
-AppView drift; the generator now owns the council view and its drift check passes.
-Browser review exposed a mobile overlay intercepting bed selection, a competing
-research action, overly small labels and stale/reload handling. These findings are
-being repaired and retested before publication.
+The final contracts/research group passes **33 tests**. The full regression ran
+492 passing tests and exposed one generated AppView drift failure; the generator
+was corrected and its contract check passes in the final focused group. Web
+build, TypeScript and generated-contract checks pass.
 
-Reproduce backend checks with `.venv/bin/python -m pytest -q`, generated contracts
-with `.venv/bin/python scripts/generate_web_contracts.py --check`, and the web build
-with `npm run build --prefix apps/web`. Browser commands and exact result counts
-will be recorded after the final candidate run.
+Independent browser reviews pass **111 planning/UI checks** and **48 novice
+checks** across 360, 390, 430 and 1280 pixels, all three layouts and reduced motion.
+See [planning review](browser_review.md) and [novice review](novice_review.md).
+The novice automated run reached initial calculated choices in 15.319 seconds;
+its complete guided three-calculation task took 53.475 seconds. These are local
+machine timings, not measurements from first-time human players.
+
+Review found and repaired mobile control overlap, proposal scroll clearance,
+pending draft preservation, study reload and stale response handling. Browser
+checks use labelled authentication fixtures and an intercepted adviser fixture;
+only the separately reported advisor probe calls the actual provider.
+
+Reproduce with `.venv/bin/python -m pytest -q`,
+`.venv/bin/python scripts/generate_web_contracts.py --check`, and
+`npm run build --prefix apps/web`. PostgreSQL research tests require a dedicated
+`farmtact_research_test` database on `/tmp/farmtact-pg`; never point job-recovery
+tests at a running application database. Browser commands are recorded in their
+reports. Public verification follows immutable publication.
 
 ## Limits
 

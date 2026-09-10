@@ -228,3 +228,9 @@ flagged and is not accepted as planning evidence. Three UI concepts are undergoi
 independent browser review with first-time usability as the main criterion. No v7
 publication is claimed yet. Root retains release, shared-host preservation and
 integration ownership; specialists now own UI, novice review and planning review.
+
+V7 candidate verified (10 September UTC): 33 final contracts/research tests,
+111 independent planning/UI checks, and 48 novice checks pass. Mobile control
+clearance, stale responses and pending drafts are corrected. First-time flow
+starts with one clear action; research controls are optional. Publication and
+public shared-host preservation checks remain root-owned and pending.

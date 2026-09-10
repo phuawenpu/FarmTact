@@ -5,7 +5,7 @@ Date: 9 September 2026 (UTC)
 ## Result
 
 The isolated council-research persistence checks passed on the real local
-PostgreSQL database `farmtact_edition_v7` through its Unix socket. Tests created
+dedicated PostgreSQL database `farmtact_research_test` through its Unix socket. Tests created
 opaque temporary tenants and removed only records belonging to those tenants.
 The schema and database were not dropped.
 
@@ -45,3 +45,9 @@ layer and do not affect these persistence assertions. The tests use concurrent
 HTTP requests from threads and PostgreSQL transactions; they do not model
 multi-region latency or a process killed midway through a database commit.
 Actual provider calls: **0**.
+
+Final integration rerun: contracts and council research **33 passed** in 16.47s.
+The final tests use a separate database because a running application worker can
+claim test jobs and recovery tests can reset application jobs. Create the empty
+test database with `createdb -h /tmp/farmtact-pg -U sprite farmtact_research_test`
+before running this suite. It is never used by the browser or managed API service.

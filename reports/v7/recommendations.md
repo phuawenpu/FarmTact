@@ -1,6 +1,6 @@
 # V7 playable-council recommendations
 
-Evaluation date: pending playable-concept walkthrough. Evidence baseline: published v6 audit on 9 September 2026 UTC. These recommendations are provisional until the same synthetic task has been completed in each v7 concept.
+Evaluation date: 10 September 2026 UTC. Evidence baseline: published v6 audit on 9 September 2026 UTC, primary-paper synthesis, a 48-check independent novice/accessibility walkthrough, and a 111-check professional-planning walkthrough. Both browser reviews completed without final failures or errors.
 
 ## Decision method
 
@@ -17,19 +17,21 @@ The release decision uses observable task outcomes rather than message count or 
 
 The default journey must use progressive disclosure: start the farm task before exposing layout/research controls, use plain words and visible units, keep selected context beside the composer, and reserve the three-concept comparison for an optional **Compare research layouts** action. The 30-second value is a design target for the upcoming human test, not an observed human result.
 
-The walkthrough reviewers are Codex agents, not representative human participants. They can expose interaction defects and compare deterministic task paths; they cannot measure enjoyment, trust, learning, physical touch comfort, device-keyboard occlusion, or farming usefulness. Enjoyment and real-world usefulness remain future human-study measures.
+The walkthrough reviewers are Codex agents, not representative human participants. They can expose interaction defects and compare deterministic task paths; they cannot measure enjoyment, trust, learning, physical touch comfort, device-keyboard occlusion, or farming usefulness. Enjoyment and real-world usefulness remain future human-study measures. The novice run reached its first calculated policy choice in 15.319 seconds and completed its three-calculation guided task in 53.475 seconds; these are local automated diagnostics. The professional run's 22.574-second initial calculation includes a deliberate seven-second stale-poll wait and is not comparable as natural latency.
 
 The bounded v7 prototype implements scripted generic explanations, a dated Bed 4 reservation, and one additional-order confirmation control. It does not yet compute an exact selected-bed contribution to a selected order, automatically resolve “later,” or refocus the full board from a context chip. Those literature-derived mechanisms remain experiments. V7 also blocks selection for every unresolved challenge; narrowing that rule to material challenges is a later policy target.
 
 ## Concept comparison
 
-| Concept | Immediate pickup | Understanding | Correction success | Feasible-current-version selection | Completion time | Accessibility and continuity | Result |
+| Concept | Immediate pickup | Understanding and correction | Selection | Accessibility and continuity | Result |
 |---|---|---|---|---|---|---|
-| Inline council | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
-| Expandable conversation sheet | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
-| Contextual adviser cards with persistent composer | Pending | Pending | Pending | Pending | Pending | Pending | Pending |
+| Inline council | Same guided start; controls remain optional | Context, discussion, and deltas remain simultaneously inspectable, strongest on desktop | Current feasible simulated version remained selectable | All three core regions persisted; less phone emphasis on conversation | Retain as an optional comparison layout. |
+| Expandable conversation sheet | Default guided start succeeded without opening research controls | Full Bed 4/order/challenge task succeeded; selected context stayed beside the composer | Feasible version chosen with explicit simulation-only result | Strongest narrow-width continuity in the agent reviews; keyboard collapse/expand and reduced motion preserved | Use as the bounded prototype default, pending human testing. |
+| Contextual adviser cards with persistent composer | Same guided start | Cards made speaker turns scannable; task state remained correct | Current result and choice persisted | More vertical travel between messages and numerical comparison | Retain as an optional research alternative, not the default. |
 
-Rankings will be filled only after the controlled browser walkthrough. The presentation order must rotate across independent reviews so the first concept does not gain a practice advantage.
+The full numerical task was completed once in the default sheet and the same completed state was rendered in all three concepts. Therefore, the evidence supports state preservation and qualitative layout observations; it does not support a causal completion-time comparison between layouts. Future human tests must rotate presentation order.
+
+The optional layout controls remain operable and start collapsed, although some labels truncate when that advanced section is opened on narrow screens. This does not block the default task, but it should be checked with human participants before treating the research comparison itself as polished.
 
 ## Candidate 1 — Context-bound conversational operations
 
@@ -47,7 +49,7 @@ Rankings will be filled only after the controlled browser walkthrough. The prese
 
 **Limitation.** Automated and agent review cannot establish that free-form users will phrase constraints within the bounded grammar, or that the interaction works on a physical phone. Unsupported operations still require clear recovery.
 
-**Walkthrough result and priority.** Pending.
+**Walkthrough result and priority.** **Priority 1.** The novice path successfully selected Bed 4, kept the exact context beside the composer, reviewed dated reservation and order-status proposals, applied new versions, and inspected six labelled same-policy deltas. Earlier candidate pointer interception and width defects were found and corrected before the 48-check final pass. Promote this interaction pattern carefully from the research area, while keeping unsupported phrases in clarification rather than expanding the grammar speculatively.
 
 ## Candidate 2 — Selective, steerable council with shared outstanding issues
 
@@ -65,7 +67,7 @@ Rankings will be filled only after the controlled browser walkthrough. The prese
 
 **Limitation.** Short scripted trials may favor selective routing and cannot reveal whether unexpected human questions benefit from broader council exploration. Co-STORM's learning results do not establish farm-decision accuracy.
 
-**Walkthrough result and priority.** Pending.
+**Walkthrough result and priority.** **Priority 3.** The professional review verified that only relevant scripted contributions were queued, stop/checkpoint controls preserved numerical work, and all concepts retained the discussion state. This is valuable, but the current scripted task cannot establish whether selective routing preserves unexpected issues in real conversation. Keep it as a bounded next experiment behind the clearer operation and challenge flows.
 
 ## Candidate 3 — Challenge-to-evidence lifecycle
 
@@ -83,8 +85,10 @@ Rankings will be filled only after the controlled browser walkthrough. The prese
 
 **Limitation.** The scripted rainfall case has a known answer and may overstate success on genuinely uncertain or conflicting evidence. Domain policy still determines which unresolved facts block selection.
 
-**Walkthrough result and priority.** Pending.
+**Walkthrough result and priority.** **Priority 2.** The challenge remained visibly unresolved, prevented silent selection, exposed inline model-boundary evidence, opened curated sources without losing the conversation, restored focus on Escape, and required explicit correction before a current feasible version could be chosen. This is the clearest reinforcement of human control and rubric observability after the operation flow.
 
 ## Recommendation boundary
 
-At most these three candidates will be recommended. Final ordering will cite the browser reports and distinguish observed v7 behavior from literature-derived rationale. A presentation concept may perform best without becoming a fourth recommendation: layout is the delivery mechanism for the three interaction changes. Concept controls belong in optional research comparison, not the first-time farm journey.
+Recommend these three improvements in the ranked order above: context-bound operations, challenge-to-evidence lifecycle, then selective council state. The council sheet is the prototype default, not a fourth product recommendation. Concept controls belong in optional research comparison rather than the first-time farm journey.
+
+The paper-supported findings concern component mechanisms: selection can complement language, constrained operations can ground replies, explanation can include challenge/clarification, moderation can reduce repetitive discourse, and restrained transitions can aid change tracking. The observed FarmTact result is narrower: the bounded synthetic task, scripted interpreter, local numerical versions, and three presentation modes passed the recorded agent browser checks. General human understanding, enjoyment, real-farm usefulness, and benefit from a multi-agent council remain untested hypotheses.

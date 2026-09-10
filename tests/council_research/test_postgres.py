@@ -25,7 +25,7 @@ from services.api.store import Store,farms,tenants
 def postgres_research(monkeypatch):
     import packages.planner.research as numerical
     monkeypatch.setattr(numerical,'plan',lambda farm,**kwargs:plan(farm,time_limit=0,**kwargs))
-    store=Store('postgresql+psycopg://sprite@/farmtact_edition_v7?host=/tmp/farmtact-pg')
+    store=Store('postgresql+psycopg://sprite@/farmtact_research_test?host=/tmp/farmtact-pg')
     assert store.engine.dialect.name=='postgresql'
     owned=[]
     def new_tenant():
@@ -103,7 +103,7 @@ def test_restart_retains_frozen_job_and_late_result_is_archived(postgres_researc
             frozen=deepcopy(job['payload'])
             c.execute(update(JOBS).where(JOBS.c.id==job['id']).values(status='RUNNING'))
 
-        restarted=Store('postgresql+psycopg://sprite@/farmtact_edition_v7?host=/tmp/farmtact-pg')
+        restarted=Store('postgresql+psycopg://sprite@/farmtact_research_test?host=/tmp/farmtact-pg')
         try:
             research.recover(restarted)
             with restarted.engine.connect() as c:
