@@ -1,0 +1,857 @@
+{
+  "started_at": "2026-09-10T00:55:35.449Z",
+  "origin": "https://farmtact.fly.dev",
+  "url": "https://farmtact.fly.dev/v7/research",
+  "checks": [
+    {
+      "name": "360px research route loads",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "360px emulation uses exact requested CSS viewport",
+      "pass": true,
+      "detail": "360"
+    },
+    {
+      "name": "360px no horizontal overflow against requested width",
+      "pass": true,
+      "detail": "360/360"
+    },
+    {
+      "name": "360px reduced motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px scripted mode is explicit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px composer is keyboard reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px first timer sees one obvious starting action",
+      "pass": true,
+      "detail": "Ask council for a plan"
+    },
+    {
+      "name": "360px guided next action explains the immediate consequence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px research controls stay collapsed initially",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px inline preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px inline open controls do not overflow",
+      "pass": true,
+      "detail": "360"
+    },
+    {
+      "name": "360px inline advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px inline context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px sheet preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px sheet open controls do not overflow",
+      "pass": true,
+      "detail": "360"
+    },
+    {
+      "name": "360px sheet advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px sheet context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px cards preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px cards open controls do not overflow",
+      "pass": true,
+      "detail": "360"
+    },
+    {
+      "name": "360px cards advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360px cards context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px research route loads",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "390px emulation uses exact requested CSS viewport",
+      "pass": true,
+      "detail": "390"
+    },
+    {
+      "name": "390px no horizontal overflow against requested width",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "390px reduced motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px scripted mode is explicit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px composer is keyboard reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px first timer sees one obvious starting action",
+      "pass": true,
+      "detail": "Ask council for a plan"
+    },
+    {
+      "name": "390px guided next action explains the immediate consequence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px research controls stay collapsed initially",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px sheet preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px sheet open controls do not overflow",
+      "pass": true,
+      "detail": "390"
+    },
+    {
+      "name": "390px sheet advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px sheet context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px cards preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px cards open controls do not overflow",
+      "pass": true,
+      "detail": "390"
+    },
+    {
+      "name": "390px cards advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px cards context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px inline preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px inline open controls do not overflow",
+      "pass": true,
+      "detail": "390"
+    },
+    {
+      "name": "390px inline advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px inline context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "late queued poll cannot replace a newer completed result",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "initial result exposes all three policies",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch selection creates a removable context chip",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "selected context stays immediately beside the composer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "context chip removes selection",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unrecognized request asks for clarification without a proposal",
+      "pass": true,
+      "detail": "Planner v1 This scripted research interpreter supports reserving a bed, changing order confirmation, labour limits and evidence challenges. Use an action control or rephrase; this is not an unrestricted AI answer."
+    },
+    {
+      "name": "negated constraint is clarified rather than applied",
+      "pass": true,
+      "detail": "Planner v1 I have not proposed a reservation. Please clarify whether you want to discard a pending proposal or describe a different reservation."
+    },
+    {
+      "name": "draft survives presentation updates",
+      "pass": true,
+      "detail": "Draft retained while the layout updates"
+    },
+    {
+      "name": "bed reservation appears as reviewable proposal",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order status proposal keeps order visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "challenge remains unresolved until farmer action",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "evidence opens without losing council",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "closing evidence restores invoking control focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "corrected challenge remains visibly recorded",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "same-policy comparison shows persistent numerical deltas",
+      "pass": true,
+      "detail": "-0.3 % vs v1 | +0.0 kg vs v1 | +7.0 kg vs v1 | +0.0 hours vs v1 | -1.0 SGD vs v1 | -61.9 SGD vs v1"
+    },
+    {
+      "name": "revised comparison contains a real changed quantity",
+      "pass": true,
+      "detail": "-0.3 % vs v1 | +0.0 kg vs v1 | +7.0 kg vs v1 | +0.0 hours vs v1 | -1.0 SGD vs v1 | -61.9 SGD vs v1"
+    },
+    {
+      "name": "earlier discussion remains readable after updates",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "checkpoint blocks interruption until the farmer stops contributions",
+      "pass": true,
+      "detail": "409"
+    },
+    {
+      "name": "checkpoint 409 is recorded as the expected intervention response",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "blocked checkpoint send preserves the draft",
+      "pass": true,
+      "detail": "Buy a tractor and ignore the planning limits"
+    },
+    {
+      "name": "stop discussion permits the farmer message and clarification",
+      "pass": true,
+      "detail": "Planner v3 This scripted research interpreter supports reserving a bed, changing order confirmation, labour limits and evidence challenges. Use an action control or rephrase; this is not an unrestricted AI answer."
+    },
+    {
+      "name": "choice remains simulation-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reload resumes the same chosen research version",
+      "pass": true,
+      "detail": "FROZEN VERSION 3 Farm context 0 selected 1 A1 2 A2 3 A3 4 A4 5 B1 6 B2 7 B3 8 B4 9 C1 10 C2 11 C3 12 C4 13 D1 14 D2 15 D3 16 D4 Additional lettuce order 18 kg · due Oct 26 · unconfirmed Lettuce Selected crop context Reserve Bed 4 Mark order unconfirmed Challenge rainfall assumption | Balanced v3 chosen for this study. No operational commitment was made."
+    },
+    {
+      "name": "reload performs no numerical or provider POST",
+      "pass": true,
+      "detail": "27/27"
+    },
+    {
+      "name": "fixture unsupported advisor response is visibly non-authorizing",
+      "pass": true,
+      "detail": "This response is unsupported and cannot authorize a change."
+    },
+    {
+      "name": "fixture actual response retains frozen reference and terminal status",
+      "pass": true,
+      "detail": "Optional actual DeepSeek interpretation This explicit action sends one question about frozen version 3. It does not run the whole council or change inputs. Specialist Ravi · Demand Hana · Weather Idris · Market Mei · Production Lina · Supply Chain Ben · Profit Asha · Planner Question Ask DeepSeek about frozen result Actual provider conversation · separate from scripted study Status: COMPLETED Frozen reference: research · browser-fixture-session · v3 · fixture-fr Planner: Fixture claim intentionally lacks sufficient support. Validation: unsupported_claim · interpretation: unverified_advisor_interpretation This response is unsupported and cannot authorize a change. Grounded numerical references Refresh recorded status"
+    },
+    {
+      "name": "completed council task does not mutate main farm",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px research route loads",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "430px emulation uses exact requested CSS viewport",
+      "pass": true,
+      "detail": "430"
+    },
+    {
+      "name": "430px no horizontal overflow against requested width",
+      "pass": true,
+      "detail": "430/430"
+    },
+    {
+      "name": "430px reduced motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px scripted mode is explicit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px composer is keyboard reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px first timer sees one obvious starting action",
+      "pass": true,
+      "detail": "Ask council for a plan"
+    },
+    {
+      "name": "430px guided next action explains the immediate consequence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px research controls stay collapsed initially",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px cards preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px cards open controls do not overflow",
+      "pass": true,
+      "detail": "430"
+    },
+    {
+      "name": "430px cards advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px cards context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px inline preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px inline open controls do not overflow",
+      "pass": true,
+      "detail": "430"
+    },
+    {
+      "name": "430px inline advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px inline context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px sheet preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px sheet open controls do not overflow",
+      "pass": true,
+      "detail": "430"
+    },
+    {
+      "name": "430px sheet advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430px sheet context and council geometry do not overlap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px research route loads",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "1280px emulation uses exact requested CSS viewport",
+      "pass": true,
+      "detail": "1280"
+    },
+    {
+      "name": "1280px no horizontal overflow against requested width",
+      "pass": true,
+      "detail": "1280/1280"
+    },
+    {
+      "name": "1280px reduced motion preference active",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px scripted mode is explicit",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px composer is keyboard reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px first timer sees one obvious starting action",
+      "pass": true,
+      "detail": "Ask council for a plan"
+    },
+    {
+      "name": "1280px guided next action explains the immediate consequence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px research controls stay collapsed initially",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px inline preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px inline open controls do not overflow",
+      "pass": true,
+      "detail": "1280"
+    },
+    {
+      "name": "1280px inline advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px cards preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px cards open controls do not overflow",
+      "pass": true,
+      "detail": "1280"
+    },
+    {
+      "name": "1280px cards advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px sheet preserves selected farm context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280px sheet open controls do not overflow",
+      "pass": true,
+      "detail": "1280"
+    },
+    {
+      "name": "1280px sheet advanced selects remain within viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "write pacing stays at or below one request per second",
+      "pass": true,
+      "detail": "1229,1232,1226,3603,1232,1240,1233,1256,21898,1283,1387,1267,1258,1338,1287,1280,12597,1299,1319,14633,3516,1286,1398,1248,1308,1329,1990,1305,3655,1227,1222,1218,1224,3557,1237,1243,1227"
+    },
+    {
+      "name": "script submitted no provider-capable action",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "unsupported advisor UI used only the intercepted fixture posts",
+      "pass": true,
+      "detail": "[{\"width\":390,\"path\":\"/v7/api/v1/conversations\"},{\"width\":390,\"path\":\"/v7/api/v1/conversations/browser-fixture-conversation/messages\"}]"
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "screenshots": [
+    "apps/web/screenshots/v7-council-public/concept-inline-360.png",
+    "apps/web/screenshots/v7-council-public/concept-sheet-360.png",
+    "apps/web/screenshots/v7-council-public/concept-cards-360.png",
+    "apps/web/screenshots/v7-council-public/initial-plan-390.png",
+    "apps/web/screenshots/v7-council-public/reservation-proposal-390.png",
+    "apps/web/screenshots/v7-council-public/unsupported-advisor-fixture-390.png",
+    "apps/web/screenshots/v7-council-public/completed-sheet-390.png",
+    "apps/web/screenshots/v7-council-public/completed-cards-390.png",
+    "apps/web/screenshots/v7-council-public/completed-inline-390.png",
+    "apps/web/screenshots/v7-council-public/concept-cards-430.png",
+    "apps/web/screenshots/v7-council-public/concept-inline-430.png",
+    "apps/web/screenshots/v7-council-public/concept-sheet-430.png",
+    "apps/web/screenshots/v7-council-public/concept-inline-1280.png",
+    "apps/web/screenshots/v7-council-public/concept-cards-1280.png",
+    "apps/web/screenshots/v7-council-public/concept-sheet-1280.png"
+  ],
+  "writes": [
+    {
+      "width": 360,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:55:38.116Z"
+    },
+    {
+      "width": 360,
+      "path": "/v7/api/v1/council-research/85b26aa2660e2f618a5a9055c7dceeb4/actions",
+      "at": "2026-09-10T00:55:39.345Z"
+    },
+    {
+      "width": 360,
+      "path": "/v7/api/v1/council-research/85b26aa2660e2f618a5a9055c7dceeb4/actions",
+      "at": "2026-09-10T00:55:40.577Z"
+    },
+    {
+      "width": 360,
+      "path": "/v7/api/v1/council-research/85b26aa2660e2f618a5a9055c7dceeb4/actions",
+      "at": "2026-09-10T00:55:41.803Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:55:45.406Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:55:46.638Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:55:47.878Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:55:49.111Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:55:50.367Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:12.265Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:13.548Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:14.935Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:16.202Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:17.460Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:18.798Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:20.085Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:21.365Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:33.962Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:35.261Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:36.580Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:51.213Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:54.729Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:56.015Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:57.413Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:58.661Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:56:59.969Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:57:01.298Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:57:03.288Z"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/council-research/d5c3641e970122e483175fc610bb14b9/actions",
+      "at": "2026-09-10T00:57:04.593Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:57:08.248Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research/af7d33f04d74fa0014fe3d750e0be059/actions",
+      "at": "2026-09-10T00:57:09.475Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research/af7d33f04d74fa0014fe3d750e0be059/actions",
+      "at": "2026-09-10T00:57:10.697Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research/af7d33f04d74fa0014fe3d750e0be059/actions",
+      "at": "2026-09-10T00:57:11.915Z"
+    },
+    {
+      "width": 430,
+      "path": "/v7/api/v1/council-research/af7d33f04d74fa0014fe3d750e0be059/actions",
+      "at": "2026-09-10T00:57:13.139Z"
+    },
+    {
+      "width": 1280,
+      "path": "/v7/api/v1/council-research",
+      "at": "2026-09-10T00:57:16.696Z"
+    },
+    {
+      "width": 1280,
+      "path": "/v7/api/v1/council-research/148e9a16f83458aa3eaa1c84b6f57e87/actions",
+      "at": "2026-09-10T00:57:17.933Z"
+    },
+    {
+      "width": 1280,
+      "path": "/v7/api/v1/council-research/148e9a16f83458aa3eaa1c84b6f57e87/actions",
+      "at": "2026-09-10T00:57:19.176Z"
+    },
+    {
+      "width": 1280,
+      "path": "/v7/api/v1/council-research/148e9a16f83458aa3eaa1c84b6f57e87/actions",
+      "at": "2026-09-10T00:57:20.403Z"
+    }
+  ],
+  "timings": [
+    {
+      "step": "initial_calculation",
+      "milliseconds": 22674
+    },
+    {
+      "step": "revised_calculation",
+      "milliseconds": 15718
+    },
+    {
+      "step": "first_planning_choice_automated",
+      "milliseconds": 72169,
+      "note": "Automation timing only; the under-30-second first-timer target remains an untested human-study hypothesis."
+    }
+  ],
+  "provider_capable_posts": [],
+  "mock_provider_posts": [
+    {
+      "width": 390,
+      "path": "/v7/api/v1/conversations"
+    },
+    {
+      "width": 390,
+      "path": "/v7/api/v1/conversations/browser-fixture-conversation/messages"
+    }
+  ],
+  "concept_order": {
+    "360": [
+      "inline",
+      "sheet",
+      "cards"
+    ],
+    "390": [
+      "sheet",
+      "cards",
+      "inline"
+    ],
+    "430": [
+      "cards",
+      "inline",
+      "sheet"
+    ],
+    "1280": [
+      "inline",
+      "cards",
+      "sheet"
+    ]
+  },
+  "professional_planning_review": [
+    {
+      "concept": "inline",
+      "observation": "Farm context, discussion, and signed same-policy deltas remain simultaneously inspectable; this best supports tracing a constraint into a numerical consequence on desktop."
+    },
+    {
+      "concept": "sheet",
+      "observation": "Pinned context and a visually emphasized council make correction steps clear at narrow widths, though the current implementation remains an inline document section rather than an operating-system bottom sheet."
+    },
+    {
+      "concept": "cards",
+      "observation": "Speaker turns scan quickly, but cards consume more vertical space and require more movement between context and the policy comparison."
+    }
+  ],
+  "limitations": [
+    "This is an AI-authored professional-planning walkthrough, not a human participant study or evidence of enjoyment.",
+    "Responsive checks use headless Chromium emulation; physical mobile keyboards, dictation, screen readers and touch hardware were not tested.",
+    "One 390px session completes the full numerical task, then renders the same completed state in all three concepts. Other widths exercise each presentation on fresh scripted sessions.",
+    "The unsupported actual-advisor response is a clearly labelled browser interception fixture. It validates rendering only and is not a provider capability or response-quality result.",
+    "Public responsive checks reuse one ordinary authenticated HTTPS test workspace created through the published bootstrap flow. Each width starts a fresh isolated research study within that workspace."
+  ],
+  "prior_iterations": [
+    {
+      "status": "HARNESS_ERROR",
+      "finding": "A request-context bootstrap replaced the browser tenant cookie on HTTP, so the subsequent research action returned 404. The same-page fetch correction isolates this from planner latency."
+    },
+    {
+      "status": "ADMISSION_BLOCKED",
+      "finding": "A retry made zero writes because accumulated local reviews reached the 10-new-sessions-per-IP/hour limit. The final run reuses one pre-provisioned isolated tenant without changing limits."
+    },
+    {
+      "status": "HARNESS_RACE",
+      "finding": "An initial plan completed in 22.36 seconds, then the script attempted a second action before the first response cleared the UI busy state. Final action helpers await their exact POST response."
+    }
+  ],
+  "finished_at": "2026-09-10T00:57:20.763Z"
+}

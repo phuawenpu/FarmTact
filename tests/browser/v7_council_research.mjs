@@ -15,7 +15,9 @@ const result={started_at:new Date().toISOString(),origin,url,checks:[],failures:
   'Responsive checks use headless Chromium emulation; physical mobile keyboards, dictation, screen readers and touch hardware were not tested.',
   'One 390px session completes the full numerical task, then renders the same completed state in all three concepts. Other widths exercise each presentation on fresh scripted sessions.',
   'The unsupported actual-advisor response is a clearly labelled browser interception fixture. It validates rendering only and is not a provider capability or response-quality result.',
-  'Local responsive reruns use one pre-provisioned, isolated authentication fixture to avoid consuming public new-session limits. Each width starts a fresh research study within that tenant.',
+  new URL(origin).protocol==='https:'
+    ? 'Public responsive checks reuse one ordinary authenticated HTTPS test workspace created through the published bootstrap flow. Each width starts a fresh isolated research study within that workspace.'
+    : 'Local responsive reruns use one pre-provisioned, isolated authentication fixture to avoid consuming public new-session limits. Each width starts a fresh research study within that tenant.',
 ],prior_iterations:[
   {status:'HARNESS_ERROR',finding:'A request-context bootstrap replaced the browser tenant cookie on HTTP, so the subsequent research action returned 404. The same-page fetch correction isolates this from planner latency.'},
   {status:'ADMISSION_BLOCKED',finding:'A retry made zero writes because accumulated local reviews reached the 10-new-sessions-per-IP/hour limit. The final run reuses one pre-provisioned isolated tenant without changing limits.'},
@@ -39,7 +41,7 @@ try{
     const context=await browser.newContext({viewport:{width,height:width===1280?900:844},hasTouch:width<1280,reducedMotion:'reduce',...(storageState?{storageState}:{})})
     contexts.push(context);const page=await context.newPage();let fixtureMode=false,checkpointConflictExpected=false,expectedConflictLogs=0
     page.on('pageerror',error=>result.errors.push(`${width}px page: ${error.message}`))
-    page.on('console',message=>{if(message.type()!=='error')return;if(checkpointConflictExpected&&/status of 409 \(Conflict\)/.test(message.text())){expectedConflictLogs++;return}result.errors.push(`${width}px console: ${message.text()}`)})
+    page.on('console',message=>{if(message.type()!=='error')return;if(checkpointConflictExpected&&/status of 409\b/.test(message.text())){expectedConflictLogs++;return}result.errors.push(`${width}px console: ${message.text()}`)})
     page.on('request',request=>{
       if(request.method()!=='POST')return
       const path=new URL(request.url()).pathname

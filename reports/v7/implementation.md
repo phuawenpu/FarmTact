@@ -1,6 +1,6 @@
 # V7 playable council — implementation record
 
-Status: published; public verification underway, 10 September 2026 UTC.
+Status: complete; published and publicly verified, 10 September 2026 UTC.
 Play https://farmtact.fly.dev/v7/research. Frozen source: `6efbbfd5a57cb557683e636d1fe20ae63b6b9eda`.
 Pinned image: `registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc`.
 
@@ -51,7 +51,7 @@ Reproduce with `.venv/bin/python -m pytest -q`,
 `npm run build --prefix apps/web`. PostgreSQL research tests require a dedicated
 `farmtact_research_test` database on `/tmp/farmtact-pg`; never point job-recovery
 tests at a running application database. Browser commands are recorded in their
-reports. Public verification follows immutable publication.
+reports. Public verification is recorded below.
 
 ## Limits
 
@@ -70,7 +70,7 @@ does not add or claim a new physical-device listening evaluation.
 Publication reused the existing four-shared-vCPU/4-GB Machine and single volume.
 Read-only hashes of recorded games in all six earlier editions were captured before
 deployment. Prior editions must preserve their pinned source/images and captured
-records. Sprite HTTP services will be removed after verification.
+records. Temporary Sprite HTTP services were removed after verification.
 
 ## Publication
 
@@ -81,7 +81,15 @@ completed publication. The runbook now documents module invocation.
 
 [Public route checks](routes_public.json) pass for all seven edition health/source
 pins, the research route, its canonical redirect, the curated research report and
-ordinary HTTPS bootstrap. Public browser, provider and preservation checks follow.
+ordinary HTTPS bootstrap. [Public browser review](browser_public.json) passes **111 checks**, with zero
+failures/runtime errors and fifteen screenshots. The complete guided task uses
+real numerical results. Adviser response rendering uses labelled intercepted
+fixtures and makes zero actual provider calls. The first public attempt passed
+functional assertions but its log matcher expected the local text for an
+intentional HTTP 409; a narrowly scoped harness correction passed the rerun.
+Initial timing of 22.674 seconds includes a deliberate seven-second stale-poll
+wait; the full deliberately paced task took 72.169 seconds. These are automation
+measurements, not a first-time human study. The separate provider check is recorded below.
 
 Post-publication operator correction: both module and file entrypoints now resolve
 the shared-host helper from the repository root. An isolated subprocess regression
@@ -93,3 +101,36 @@ across v1–v6 and all prior source pins. [Hosting inventory](hosting_public.jso
 confirms the same Machine `2871575b4544d8` and volume `vol_vdejexpzm8ydn5x4`.
 [Sprite shutdown](sprite_shutdown.json) confirms local HTTP ports 8080/8087 closed
 and temporary API/gateway registrations removed; the private database remains.
+
+## Shared capacity
+
+[Public capacity check](shared_capacity_public.json): two fresh concurrent v6/v7
+scenario jobs completed in **22.017 / 21.996 seconds**. Across 58 timed requests,
+browsing p95 was **0.2053 seconds** with no browse failures. Available memory was
+at least **2.34 GiB** in the three samples. Both main farms stayed unchanged,
+cross-edition cookies were rejected, and numerical jobs made zero inference calls.
+This is a bounded two-job smoke test, not a saturation or long-duration benchmark.
+No resizing, additional Machine or volume was necessary.
+
+## Explicit actual adviser probe
+
+[Public probe](advisor_public.json) completed with **one actual DeepSeek request**
+against frozen research version 3. Input hash, snapshot version, tool context,
+main-farm preservation and replay-without-inference checks pass. The response
+provided no verified evidence references and is marked **unsupported**. It is
+not accepted as numerical or farming evidence. The local probe also used one
+request and remained unsupported. [The ledger](advisor_experiment_budget.json)
+records **two actual calls across this goal**, below the maximum of sixteen;
+one earlier pre-submission authentication failure consumed zero calls.
+
+## Completion and limits of the claim
+
+The three recommended improvements are implemented as a labelled, isolated
+playable study: context-bound operations, a challenge/evidence lifecycle, and
+selective council participation. See [final recommendations](recommendations.md)
+and [public browser review](browser_public_review.md). The default starts with one
+clear action and guides the next decision; optional comparison layouts remain
+available. This is an implemented interaction experiment, not proof of improved
+human learning/enjoyment or production-valid farm advice. Unsupported provider
+interpretation remains a visible limitation. V1–v6 remain frozen and preserved;
+main-farm behavior and operational prohibitions remain in force.

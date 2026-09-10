@@ -1,0 +1,155 @@
+{
+  "status": "PASS",
+  "url": "https://farmtact.fly.dev/v7",
+  "maximum_provider_calls_this_attempt": 5,
+  "purpose": "Explicit interpretation of a frozen numerical research result; no farm mutation.",
+  "references_verified": false,
+  "pass_scope": "Provider boundary, frozen context, main-farm preservation and replay; interpretation quality is reported separately.",
+  "actual_provider_calls": 1,
+  "research_session_id": "bff4db5e24931f19df005adf783e086e",
+  "research_version": 3,
+  "input_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+  "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+  "request_id": "ddbc2dd9ac53003626196703982c823e",
+  "frozen_context_match": true,
+  "main_farm_unchanged": true,
+  "replay_inference_triggered": false,
+  "advisor_messages": [
+    {
+      "id": "4f8f09d1fc7e6c24797a7b9ae6f4e344",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "speaker": "advisor",
+      "request_mode": "direct",
+      "speaker_id": "asha",
+      "speaker_name": "Asha",
+      "advisor_role": "planning_chair",
+      "advisor_title": "Planner agent",
+      "advisor_location": "Council pavilion",
+      "content": "The frozen research inputs reserve bed-04 after its current batch and add a provisional research-extra-order, while labour is held at full baseline. The numerical strategy metrics remain those of the frozen lean, balanced, and resilient scenarios, so next you should review the input hash before treating the unconfirmed order as demand.",
+      "reply_to": "c44609f2758f97c081b9d75a6b5110c9",
+      "snapshot_ref": {
+        "kind": "research",
+        "id": "bff4db5e24931f19df005adf783e086e:v3",
+        "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+        "version": 3,
+        "data_mode": "synthetic_demo",
+        "frozen_at": "2026-09-10T00:58:45.825294+00:00"
+      },
+      "evidence_refs": [],
+      "tool_refs": [
+        "research:inputs",
+        "research:input_hash",
+        "strategy:lean.metrics",
+        "strategy:balanced.metrics",
+        "strategy:resilient.metrics"
+      ],
+      "highlight_refs": [],
+      "validation_status": "unsupported",
+      "validation_errors": [
+        "Unknown frozen tool reference"
+      ],
+      "validation_scope": "reference_membership_and_supported_controls",
+      "interpretation_status": "unverified_advisor_interpretation",
+      "proposed_actions": [],
+      "relationship": "answer",
+      "planner_conclusion": false,
+      "created_at": "2026-09-10T00:58:50.038341+00:00",
+      "model": "deepseek-v4-pro",
+      "usage": {
+        "prompt_tokens": 13411,
+        "completion_tokens": 142,
+        "total_tokens": 13553,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 13411,
+        "reasoning_tokens": null
+      },
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "sequence": 2
+    }
+  ],
+  "events": [
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": null,
+      "sequence": 1,
+      "occurred_at": "2026-09-10T00:58:45.843027+00:00",
+      "event_type": "conversation_created",
+      "schema_version": "1.0",
+      "body": {
+        "advisor_id": "asha",
+        "snapshot_ref": {
+          "kind": "research",
+          "id": "bff4db5e24931f19df005adf783e086e:v3",
+          "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "version": 3,
+          "data_mode": "synthetic_demo",
+          "frozen_at": "2026-09-10T00:58:45.825294+00:00"
+        }
+      }
+    },
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "sequence": 2,
+      "occurred_at": "2026-09-10T00:58:46.097331+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "c44609f2758f97c081b9d75a6b5110c9",
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "sequence": 3,
+      "occurred_at": "2026-09-10T00:58:46.232628+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "sequence": 4,
+      "occurred_at": "2026-09-10T00:58:46.338971+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "sequence": 5,
+      "occurred_at": "2026-09-10T00:58:50.044909+00:00",
+      "event_type": "advisor_message_unsupported",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "4f8f09d1fc7e6c24797a7b9ae6f4e344",
+        "speaker_id": "asha",
+        "reply_to": "c44609f2758f97c081b9d75a6b5110c9",
+        "validation_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "c1cec39884820bb3baf47d5d6e5a5ffe",
+      "request_id": "ddbc2dd9ac53003626196703982c823e",
+      "sequence": 6,
+      "occurred_at": "2026-09-10T00:58:50.056326+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "completed_turns": 1,
+        "repair_attempts": 0
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # FarmTact implementation status
 
-Current release: **v7, published; public verification underway**. See the final v7 section and
+Current release: **v7, complete**. See the final v7 section and
 [release evidence](../reports/v7/implementation.md). Earlier dated sections below
 are a historical execution log, not outstanding tasks or current hosting advice.
 
@@ -207,7 +207,7 @@ Verification: 458 backend tests; 36 operator/publisher tests; 45 public atlas an
 unchanged main farms and cross-edition cookie rejection. See
 [the v6 report](../reports/v6/implementation.md) for exact scope and limitations.
 
-## V7 playable council research — active
+## V7 playable council research — complete
 
 Approved goal: evolve the latest release through a documented audit, primary-paper
 review and three controlled playable council concepts in the next immutable
@@ -234,3 +234,16 @@ V7 candidate verified (10 September UTC): 33 final contracts/research tests,
 clearance, stale responses and pending drafts are corrected. First-time flow
 starts with one clear action; research controls are optional. Publication and
 public shared-host preservation checks remain root-owned and pending.
+
+V7 completion (10 September UTC): published source `6efbbfd5a57cb557683e636d1fe20ae63b6b9eda`
+at https://farmtact.fly.dev/v7/research on the existing 4-vCPU/4-GB shared host and
+single volume. Final candidate: 33 contracts/research tests, 111 planning/UI and
+48 novice checks. Public review: 111 checks, zero errors. Post-release publisher
+regression: 48 tests. Public health/source checks pass for all seven editions;
+196 captured prior game rows remain unchanged. Two concurrent v6/v7 simulations
+completed in about 22 seconds with zero inference, unchanged farms and cookie
+isolation. Actual DeepSeek probes used two calls total; both replies remain
+unsupported, while frozen context/replay/main-farm boundaries pass. Research,
+specifications, recommendations and release evidence are updated. Temporary
+Sprite API/gateway services are removed and HTTP ports closed. No human usability,
+physical-device or commercial farm validation is claimed.

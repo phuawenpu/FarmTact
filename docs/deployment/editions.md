@@ -102,3 +102,10 @@ The post-publication operator correction also makes file-style execution resolve
 the same helper module. An isolated subprocess regression and the deployment /
 publisher suite pass 48 tests. This changes development tooling only; the v7
 application retains its frozen source and image.
+
+V7 public capacity verification: overlapping fresh v6/v7 numerical jobs completed
+in about 22 seconds each, browsing p95 0.2053 seconds, at least 2.34 GiB available
+memory in sampled readings, no inference or main-farm changes, and cross-edition
+cookie rejection. This bounded smoke test supports retaining the current size;
+it does not establish capacity under sustained load. See
+[the v7 capacity report](../../reports/v7/shared_capacity_public.json).

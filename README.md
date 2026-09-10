@@ -78,7 +78,10 @@ V7 candidate verification: **33 final contracts/research tests**, **111 planning
 browser checks** and **48 novice checks** passed. The broader regression recorded
 492 passes and one generated-contract drift failure; the generator was corrected
 and passes the final contract group. Build and TypeScript checks pass. Browser
-checks are agent walkthroughs, not human usability studies. See the
+checks are agent walkthroughs, not human usability studies. The public browser
+review also passes 111 checks; both concurrent public numerical jobs completed
+with no inference or farm changes. Actual adviser probes retained unsupported
+response warnings. See the
 [v7 report](reports/v7/implementation.md) for public evidence and limitations.
 Historical v6 verification remains in [its release report](reports/v6/implementation.md).
 The [initial completion audit](reports/completion_audit.md) and
