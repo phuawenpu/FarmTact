@@ -281,4 +281,4 @@ export interface Bootstrap {
   [key: string]: unknown
 }
 
-export type AppView = 'world' | 'board' | 'crops' | 'data' | 'outcomes' | 'setup'
+export type AppView = 'world' | 'board' | 'crops' | 'data' | 'outcomes' | 'setup' | 'council'

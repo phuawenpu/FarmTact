@@ -11,6 +11,7 @@ const edition = editionFromPath()
 const content = path === '/' ? <EditionChooser />
   : path === '/review' || !!path.match(/^\/v[1-9][0-9]*\/review$/) ? <ReviewPage editionId={edition} />
   : edition && path === `/${edition}/changes` ? <ChangesPage editionId={edition} />
+  : edition && path === `/${edition}/research` ? <App editionId={edition} initialView="council" />
   : edition && path === `/${edition}` ? <App editionId={edition} />
   : <EditionChooser />
 

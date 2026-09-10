@@ -64,6 +64,8 @@ FarmTact hypothesis: motion can direct attention from the speaking agent to affe
 
 ## Annotated council flow
 
+The flow below is an **aspirational experiment specification**, not a description of all behavior implemented in the bounded v7 study. In particular, v7 uses scripted generic explanations and one added-order control; it does not calculate an exact selected-bed contribution to one order, automatically disambiguate “later,” or make a context chip refocus the full farm board.
+
 ```text
 Farmer selects Bed 4 + order 17
   → UI stores visible context chips [farmer/direct manipulation]
@@ -89,6 +91,8 @@ Repetition control should use structured discourse state: covered question, cite
 
 ## A 45-second interaction storyboard
 
+This is a target storyboard for testing the interaction model. Any step not observed in the v7 browser walkthrough remains a future hypothesis.
+
 | Time | Farmer and council | Board and state consequence |
 |---:|---|---|
 | 0–5s | Farmer taps Bed 4 and an order, then asks, “Could these cover the later delivery?” | Two removable chips appear; linked objects receive a static focus outline. |
@@ -102,6 +106,8 @@ Repetition control should use structured discourse state: covered question, cite
 The timings are interface pacing targets, not a promise about provider or solver latency. A slow operation leaves the episode resumable and clearly says that farm time is not advancing.
 
 ## Two lightweight selection alternatives
+
+These are design alternatives to compare, not claims that the cited papers or current v7 prototype implement every behavior described.
 
 ### Alternative A: removable context chips
 
@@ -137,8 +143,8 @@ Context that persists: tenant and edition, research session, frozen baseline/roo
 | Missing value that changes constraint, quantity, comparison root, or target | Ask a bounded question | No mutation | No |
 | Farmer corrects an assumption | Preview typed change; create N+1 only after apply | After apply | Yes if checks pass |
 | Farmer challenges an evidence claim | Show evidence, source state, and agent response; preserve counterargument | Lookup yes | Yes unless the challenged claim is required for feasibility/safety |
-| Evidence absent or stale | Mark unsupported/stale; do not turn consensus into support | Deterministic what-if may run with labelled assumption | Block only when required input or safeguard depends on it |
-| Specialists disagree | Planner identifies exact conflicting claims and requests evidence/tool resolution or farmer preference | Yes when a tool can adjudicate | No if material conflict remains unresolved |
+| Evidence absent or stale | Mark unsupported/stale; do not turn consensus into support | Deterministic what-if may run with labelled assumption | Product target: block when a required input or safeguard depends on it. Bounded v7 study: conservatively blocks every unresolved challenge. |
+| Specialists disagree | Planner identifies exact conflicting claims and requests evidence/tool resolution or farmer preference | Yes when a tool can adjudicate | Product target: block material unresolved conflict. Bounded v7 study conservatively blocks all unresolved challenges. |
 | Plan infeasible | Preserve result and violations for inspection | Comparison yes | No under existing acceptance policy |
 | Recommendation rejected | Record rejection and rationale; do not re-offer unchanged | Yes for a materially changed branch | No for rejected version |
 | No response or farmer silence | Keep pending state | Existing computation may finish | Never counts as approval |

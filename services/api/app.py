@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal
 from fastapi import FastAPI,Request,HTTPException,Response
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse,StreamingResponse,FileResponse
+from fastapi.responses import JSONResponse,StreamingResponse,FileResponse,RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import Field
 from packages.contracts import Farm,Strict,content_hash
@@ -374,8 +374,9 @@ def create_app(store=None,start_worker=True):
         if (dist/'review-evidence').exists():app.mount('/review-evidence',StaticFiles(directory=dist/'review-evidence'),name='review-evidence')
         if (dist/'research-evidence').exists():app.mount('/research-evidence',StaticFiles(directory=dist/'research-evidence'),name='research-evidence')
         if (dist/'audio').exists():app.mount('/audio',StaticFiles(directory=dist/'audio'),name='audio')
-        @app.get('/research')
         @app.get('/research/')
+        def research_canonical():return RedirectResponse('/research',status_code=307)
+        @app.get('/research')
         @app.get('/changes')
         @app.get('/changes/')
         @app.get('/review')

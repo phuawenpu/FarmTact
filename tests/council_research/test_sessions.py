@@ -110,3 +110,11 @@ def test_evidence_only_or_rejected_challenge_cannot_be_chosen(env):
         s=action(c,s,'resolve',resolution=resolution);action(c,s,'choose',code=409,result_version=1)
     s=action(c,s,'resolve',resolution='corrected');s=action(c,s,'choose',result_version=1)
     assert s['chosen']['version']==1
+
+def test_labour_language_proposes_a_ceiling_and_clarifies_reductions(env):
+    c,_,_=env;s=create(c)
+    s=action(c,s,'say',text='Reduce labour by 75%')
+    assert s['proposal'] is None and s['inputs']['labour_percent']==100
+    s=action(c,s,'say',text='Use 75% labour')
+    assert s['proposal']['labour_percent']==75 and s['inputs']['labour_percent']==100
+    s=action(c,s,'apply');assert s['inputs']['labour_percent']==75

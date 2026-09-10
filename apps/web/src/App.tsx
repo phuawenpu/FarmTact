@@ -1,8 +1,9 @@
-import { Activity, Database, FlaskConical, Leaf, Map, Menu, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
+import { Activity, MessagesSquare, Database, FlaskConical, Leaf, Map, Menu, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
 import { CropLibrary, Outcomes, Setup } from './components/Rooms'
 import { DataExplorer } from './components/DataExplorer'
+import { CouncilResearch } from './components/CouncilResearch'
 import { StatePanel, StatusPill } from './components/Visuals'
 import { World } from './components/World'
 import { api } from './lib/api'
@@ -15,6 +16,7 @@ import { runSoundOutcome } from './lib/game'
 
 const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
   { id: 'world', label: 'Farm', icon: Map },
+  { id: 'council', label: 'Council research', icon: MessagesSquare },
   { id: 'board', label: 'Farm tools', icon: Wrench },
   { id: 'crops', label: 'Crops', icon: Leaf },
   { id: 'data', label: 'Data', icon: Database },
@@ -22,11 +24,11 @@ const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
   { id: 'setup', label: 'Setup', icon: Settings2 },
 ]
 
-export default function App({ editionId = 'v1' }: { editionId?: string }) {
+export default function App({ editionId = 'v1', initialView }: { editionId?: string; initialView?: AppView }) {
   const initialMission=useRef<DecisionMission|null>(loadDecisionMission())
   const [mission, setMission] = useState<DecisionMission | null>(initialMission.current)
   const [mainMission,setMainMission]=useState<DecisionMission|null>(initialMission.current?.snapshotKind==='farm'?initialMission.current:null)
-  const [view, setView] = useState<AppView>(initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world')
+  const [view, setView] = useState<AppView>(initialView || (initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world'))
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
   const [loading, setLoading] = useState(true)
@@ -219,6 +221,7 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
+              {view === 'council' && <CouncilResearch />}
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
@@ -231,7 +234,7 @@ export default function App({ editionId = 'v1' }: { editionId?: string }) {
       </div>
 
       <nav className="thumb-nav" aria-label="FarmTact rooms">
-        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => navigate(id)}><span><Icon size={19}/></span><small>{id === 'board' ? 'Tools' : label}</small></button>)}
+        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => navigate(id)}><span><Icon size={19}/></span><small>{id === 'board' ? 'Tools' : id === 'council' ? 'Council' : label}</small></button>)}
       </nav>
     </div>
   )

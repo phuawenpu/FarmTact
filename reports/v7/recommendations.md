@@ -19,6 +19,8 @@ The default journey must use progressive disclosure: start the farm task before 
 
 The walkthrough reviewers are Codex agents, not representative human participants. They can expose interaction defects and compare deterministic task paths; they cannot measure enjoyment, trust, learning, physical touch comfort, device-keyboard occlusion, or farming usefulness. Enjoyment and real-world usefulness remain future human-study measures.
 
+The bounded v7 prototype implements scripted generic explanations, a dated Bed 4 reservation, and one additional-order confirmation control. It does not yet compute an exact selected-bed contribution to a selected order, automatically resolve “later,” or refocus the full board from a context chip. Those literature-derived mechanisms remain experiments. V7 also blocks selection for every unresolved challenge; narrowing that rule to material challenges is a later policy target.
+
 ## Concept comparison
 
 | Concept | Immediate pickup | Understanding | Correction success | Feasible-current-version selection | Completion time | Accessibility and continuity | Result |

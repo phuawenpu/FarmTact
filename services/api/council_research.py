@@ -123,7 +123,10 @@ def say(s,a):
     if 'labour' in lower or 'labor' in lower:
         if 'without extra' in lower or 'no extra' in lower:
             propose(s,Action(action='propose',revision=a.revision,operation='labour',labour_percent=100));return
-        append(s,'Profit','Which labour ceiling should the research scenario use? Choose 50–100 percent of the declared allowance.');event(s,'clarification',reason='labour_value');return
+        amounts=re.findall(r'\b(\d{1,3})\s*(?:%|percent)',lower)
+        if len(amounts)==1 and 50<=int(amounts[0])<=100 and not re.search(r"\b(by|not|don't|don’t|never)\b",lower):
+            propose(s,Action(action='propose',revision=a.revision,operation='labour',labour_percent=int(amounts[0])));return
+        append(s,'Profit','Which labour ceiling should the research scenario use? Say, for example, “Use 75% labour”, from 50–100 percent of the declared allowance. This sets a ceiling, not a percentage reduction.');event(s,'clarification',reason='labour_value');return
     if any(w in lower for w in ['rain','indoors','indoor','assumption','challenge']):
         challenge(s,a);return
     if any(w in lower for w in ['these','this batch','that delivery','later delivery']) and not s['selected_refs']:
