@@ -1,0 +1,53 @@
+{
+  "status": "PASS_WITH_LIMITATIONS",
+  "origin": "https://farmtact.fly.dev",
+  "release": "v6",
+  "method": "Live headless Chromium observation plus source inspection",
+  "widths": [360, 390, 430, 1280],
+  "observations": {
+    "already_present": [
+      "Seven distinct specialist and Planner roles",
+      "Frozen farm or scenario conversation state with optional selected bed",
+      "Specific-message replies, advisor invitation, full-council action and recorded replay",
+      "Evidence and interpretation-status labels",
+      "Supported scalar proposed-action handoff into Scenario Lab",
+      "Three-stage local numerical experiment and strategy comparison",
+      "44px composer controls, device-keyboard voice hint and reduced-motion support"
+    ],
+    "needs_reinforcement": [
+      "Selected context is a single plain-text bed reference and disappears behind the modal sheet",
+      "Every message-count change smoothly scrolls the transcript to its end",
+      "Farmer steering actions are disabled while a response is active",
+      "Full council presentation does not explain why each contribution is necessary",
+      "Message evidence, board highlights and persistent before/after quantities are weakly connected"
+    ],
+    "missing": [
+      "Removable multi-object context for beds, crops, orders and harvest windows",
+      "Bed-reservation interval and order-confirmation operations",
+      "Explicit ambiguity clarification before interpreting contextual references",
+      "Contextual Show evidence, Correct assumption and Consider another option actions",
+      "Unresolved or rejected recommendation state attached to a visible plan version"
+    ]
+  },
+  "request_observation": {
+    "provider_capable_posts": 0,
+    "numerical_mutation_posts": 0,
+    "empty_frozen_conversation_records_created": 4
+  },
+  "screenshots": [
+    "apps/web/screenshots/v7-baseline/farm-board-360.png", "apps/web/screenshots/v7-baseline/selected-bed-360.png",
+    "apps/web/screenshots/v7-baseline/bed-conversation-360.png", "apps/web/screenshots/v7-baseline/scenario-lab-360.png",
+    "apps/web/screenshots/v7-baseline/farm-board-390.png", "apps/web/screenshots/v7-baseline/selected-bed-390.png",
+    "apps/web/screenshots/v7-baseline/bed-conversation-390.png", "apps/web/screenshots/v7-baseline/scenario-lab-390.png",
+    "apps/web/screenshots/v7-baseline/farm-board-430.png", "apps/web/screenshots/v7-baseline/selected-bed-430.png",
+    "apps/web/screenshots/v7-baseline/bed-conversation-430.png", "apps/web/screenshots/v7-baseline/scenario-lab-430.png",
+    "apps/web/screenshots/v7-baseline/farm-board-1280.png", "apps/web/screenshots/v7-baseline/selected-bed-1280.png",
+    "apps/web/screenshots/v7-baseline/bed-conversation-1280.png", "apps/web/screenshots/v7-baseline/scenario-lab-1280.png"
+  ],
+  "limitations": [
+    "Responsive checks use headless Chromium emulation, not physical mobile hardware.",
+    "The software keyboard, native dictation, audio, and real touch accuracy were not observed.",
+    "Provider response pacing and active-request interruption were inspected in source and prior recorded evidence; no paid behavior was invoked.",
+    "A repeat run was stopped when the production admission limit returned HTTP 429; no attempt was made to bypass the limit."
+  ]
+}
