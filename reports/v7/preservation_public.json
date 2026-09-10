@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "editions": {
+    "v1": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 131
+    },
+    "v2": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 9
+    },
+    "v3": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 7
+    },
+    "v4": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 13
+    },
+    "v5": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 17
+    },
+    "v6": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true
+      },
+      "captured_rows": 19
+    }
+  },
+  "scope": "Captured game records preserved; additional records allowed. No cookies or raw rows exported."
+}

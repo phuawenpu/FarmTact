@@ -1,7 +1,8 @@
 # V7 playable council — implementation record
 
-Status: candidate verified; publication pending, 10 September 2026 UTC. Public latest remains
-v6 until immutable publication succeeds. The intended entry point is `/v7/research`.
+Status: published; public verification underway, 10 September 2026 UTC.
+Play https://farmtact.fly.dev/v7/research. Frozen source: `6efbbfd5a57cb557683e636d1fe20ae63b6b9eda`.
+Pinned image: `registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc`.
 
 The council study extends the existing application with a guided synthetic task:
 calculate a plan, reserve Bed 4 after its protected harvest/sanitation period, mark
@@ -66,7 +67,29 @@ enjoyment, learning, physical touch comfort, software-keyboard behavior or acces
 with an actual screen reader. Existing optional audio is preserved; this study
 does not add or claim a new physical-device listening evaluation.
 
-Publication will reuse the existing four-shared-vCPU/4-GB Machine and single volume.
+Publication reused the existing four-shared-vCPU/4-GB Machine and single volume.
 Read-only hashes of recorded games in all six earlier editions were captured before
 deployment. Prior editions must preserve their pinned source/images and captured
 records. Sprite HTTP services will be removed after verification.
+
+## Publication
+
+The registry/source tag was pushed in `4ef9ff3`. The first file-style publisher
+invocation stopped on a Python module-path error after image reservation, before
+any host update. Module invocation reused that exact source and image and
+completed publication. The runbook now documents module invocation.
+
+[Public route checks](routes_public.json) pass for all seven edition health/source
+pins, the research route, its canonical redirect, the curated research report and
+ordinary HTTPS bootstrap. Public browser, provider and preservation checks follow.
+
+Post-publication operator correction: both module and file entrypoints now resolve
+the shared-host helper from the repository root. An isolated subprocess regression
+and the deployment/publisher suites pass **48 tests**; v7's immutable application
+source/image remain unchanged.
+
+[Preservation](preservation_public.json) verifies all **196 captured game rows**
+across v1–v6 and all prior source pins. [Hosting inventory](hosting_public.json)
+confirms the same Machine `2871575b4544d8` and volume `vol_vdejexpzm8ydn5x4`.
+[Sprite shutdown](sprite_shutdown.json) confirms local HTTP ports 8080/8087 closed
+and temporary API/gateway registrations removed; the private database remains.

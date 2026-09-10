@@ -1,8 +1,12 @@
-Current checkout note (v6, 9 September 2026): the initial implementation below
+Current checkout note (v7, 10 September 2026): the initial implementation below
 has been delivered. Start from README.md, docs/execution-plan.md and the current
 release manifests; extend the working application instead of recreating it.
 The catalogue now has twelve profiles and the synthetic fixture still has four
-recipes. Hosting uses one shared Machine and volume; follow the editions runbook.
+recipes. V7 adds a guided, isolated playable council at /v7/research, with labelled
+scripted dialogue and real numerical comparisons. Prioritize immediate first-time
+usability. Hosting uses one shared Machine and volume for seven editions; follow
+the editions runbook. The historical kickoff below is already delivered; current
+user intent is conversation connected to tangible farm consequences.
 
 Start implementing FarmTact in this repository.
 

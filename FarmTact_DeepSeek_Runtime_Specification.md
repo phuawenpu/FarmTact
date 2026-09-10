@@ -1,4 +1,4 @@
-### V7 research context amendment — implementation underway
+### V7 research context amendment — published 10 September 2026
 
 Scripted council concepts make no provider calls. Explicit actual advisor requests
 may freeze a completed tenant-owned research result using snapshot_kind=research,

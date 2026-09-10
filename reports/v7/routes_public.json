@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-10T00:51:28Z",
+  "checks": [
+    {
+      "edition": "v1",
+      "status": "PASS",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+    },
+    {
+      "edition": "v2",
+      "status": "PASS",
+      "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+    },
+    {
+      "edition": "v3",
+      "status": "PASS",
+      "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607"
+    },
+    {
+      "edition": "v4",
+      "status": "PASS",
+      "source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d"
+    },
+    {
+      "edition": "v5",
+      "status": "PASS",
+      "source_commit": "0f54565d23f5387fc751eeac4f329372e0460018"
+    },
+    {
+      "edition": "v6",
+      "status": "PASS",
+      "source_commit": "f4606222af6658986b491250de66cb12f6422f32"
+    },
+    {
+      "edition": "v7",
+      "status": "PASS",
+      "source_commit": "6efbbfd5a57cb557683e636d1fe20ae63b6b9eda"
+    },
+    {
+      "path": "/v7/research",
+      "status": 200
+    },
+    {
+      "path": "/v7/api/v1/council-research/report",
+      "status": 200
+    },
+    {
+      "path": "/v7/research/",
+      "status": 307,
+      "location": "/v7/research"
+    }
+  ],
+  "browser_auth": "Ordinary public HTTPS bootstrap; opaque session stored only in owner-readable /tmp state file."
+}

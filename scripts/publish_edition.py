@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Publish one immutable FarmTact edition.
 
-The command deliberately accepts an already-built digest.  Builds and release
-verification happen before this command; publication never resolves a mutable
-tag while deploying.
+Accept a pinned digest or build the committed candidate before publication.
+Publication never resolves a mutable tag while deploying.
 """
 from __future__ import annotations
 
@@ -21,6 +20,10 @@ from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
+# File-style execution puts scripts/, rather than the repository, on sys.path.
+# Shared-host helpers must resolve identically for both supported entrypoints.
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 REGISTRY = ROOT / "config/releases/registry.json"
 STATE_NAME = "farmtact-publications.json"
 EDITION = re.compile(r"v([1-9][0-9]*)\Z")

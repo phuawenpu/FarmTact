@@ -1,7 +1,7 @@
 # FarmTact implementation status
 
-Current release: **v6, complete**. See the final v6 section and
-[release evidence](../reports/v6/implementation.md). Earlier dated sections below
+Current release: **v7, published; public verification underway**. See the final v7 section and
+[release evidence](../reports/v7/implementation.md). Earlier dated sections below
 are a historical execution log, not outstanding tasks or current hosting advice.
 
 Kickoff: 2026-09-08. Latest user attachment copied to CODEX_START_PROMPT.md because the separately referenced kickoff file is absent. Initial authoritative tree: README and three specifications only. v1.2 autonomous development changes are preserved. Missing master/brief/runbook artifacts are implementation work, never assumed tested.

@@ -1,9 +1,9 @@
 # FarmTact
 
-### V7 council research — implementation underway
+### V7 council research — published 10 September 2026
 
-The next edition adds an isolated Council research area, not a replacement farm
-interface. Three presentation concepts share the same scripted dialogue and real
+V7 adds an isolated Council research area at `/v7/research`. The existing farm
+interface remains available. Three presentation concepts share the same scripted dialogue and real
 CP-SAT task: inline council, expandable sheet, contextual cards. Selection chips
 and contextual replies, continuous/checkpoint steering, and static/optional
 transitions are controlled comparison factors. Free text proposes bounded edits;

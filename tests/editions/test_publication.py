@@ -1,9 +1,21 @@
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
 import scripts.publish_edition as publication
+
+
+def test_file_entrypoint_resolves_shared_host_helper_outside_repo(tmp_path):
+    script = str(publication.ROOT / "scripts/publish_edition.py")
+    code = (
+        "import runpy; runpy.run_path(" + repr(script) + "); "
+        "from scripts.shared_host_config import machine_config; "
+        "assert callable(machine_config)"
+    )
+    subprocess.run([sys.executable, "-I", "-c", code], cwd=tmp_path, check=True)
 
 
 def registry(count=2):

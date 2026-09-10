@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "http_ports_closed": {
+    "8080": true,
+    "8087": true
+  },
+  "removed_services": [
+    "farmtact-v7-gateway",
+    "farmtact-v7"
+  ],
+  "retained": "Private PostgreSQL and pre-existing keepalive"
+}

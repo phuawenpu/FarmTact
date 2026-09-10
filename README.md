@@ -6,10 +6,14 @@ A mobile tactical planning board for a fictional Singapore vegetable farm. Twelv
 
 ## Deployed app
 
-Play [v6: More crops, one shared home](https://farmtact.fly.dev/v6/), or use the
-[edition chooser](https://farmtact.fly.dev/) to revisit v1–v5. Each edition keeps
+Start with [v7: the playable farm council](https://farmtact.fly.dev/v7/research), or use the
+[edition chooser](https://farmtact.fly.dev/) to revisit v1–v6. Each edition keeps
 its frozen source/image and independent farm, settings and saved progress.
 
+- Tap **Ask council for a plan**, then follow the guided steps: reserve Bed 4,
+  test an unconfirmed order, challenge an assumption and compare the consequences.
+  The study saves separately from your main farm. Default dialogue is labelled
+  scripted; local numerical tools calculate the plans.
 - Explore synthetic records, linked charts, adjustable demand/forecast assumptions
   and reproducible sandbox strategies in the Data Explorer.
 - Compare Lean, Balanced and Resilient outcomes, inspect shortages and trace
@@ -25,8 +29,8 @@ its frozen source/image and independent farm, settings and saved progress.
 
 The Singapore deployment uses **one shared 4-vCPU/4-GB Fly Machine and one
 3-GB persistent volume**, with isolated containers and databases for the gateway
-and six editions. Superseded FarmTact Machines and volumes have been removed.
-See the [release evidence](reports/v6/implementation.md),
+and seven editions. Superseded FarmTact Machines and volumes have been removed.
+See the [release evidence](reports/v7/implementation.md),
 [deployment runbook](docs/deployment/editions.md) and
 [hosting assessment](docs/deployment/consolidation-assessment.md).
 
@@ -70,15 +74,17 @@ node tests/browser/run.mjs
 .venv/bin/python scripts/generate_web_contracts.py --check
 ```
 
-V6 verification: **458 backend tests**, **36 focused deployment/publisher tests**,
-**45 public crop-browser checks** and **7 edition-selector checks** passed.
-Two concurrent public numerical runs completed without provider calls or main-farm
-changes. Counts cover different suites and are not additive. See
-[the v6 report](reports/v6/implementation.md) for evidence and test limitations.
+V7 candidate verification: **33 final contracts/research tests**, **111 planning/UI
+browser checks** and **48 novice checks** passed. The broader regression recorded
+492 passes and one generated-contract drift failure; the generator was corrected
+and passes the final contract group. Build and TypeScript checks pass. Browser
+checks are agent walkthroughs, not human usability studies. See the
+[v7 report](reports/v7/implementation.md) for public evidence and limitations.
+Historical v6 verification remains in [its release report](reports/v6/implementation.md).
 The [initial completion audit](reports/completion_audit.md) and
 [clean-checkout report](reports/clean_checkout.json) retain their original scope.
 
-The PostgreSQL concurrency tests use isolated test tenants and clean their own rows. Browser checks use Chromium against the running app at widths 360, 390, 430 and 1280; they select numerical-only planning to avoid paid calls. Install the browser once with `cd apps/web && npx playwright install chromium`.
+The council PostgreSQL concurrency tests require a dedicated `farmtact_research_test` database on `/tmp/farmtact-pg`; create it before running the suite. Never run recovery tests against a live application database. They use isolated test tenants and clean their own rows. Browser checks use Chromium against the running app at widths 360, 390, 430 and 1280; they select numerical-only planning to avoid paid calls. Install the browser once with `cd apps/web && npx playwright install chromium`.
 
 Authenticated checks make real, metered calls:
 
@@ -93,7 +99,7 @@ The trial is bounded to sixteen requests and an 8,192-output-token reservation. 
 
 - [Autonomous-development build specification](FarmTact_Build_Specification.md)
 - [DeepSeek runtime specification](FarmTact_DeepSeek_Runtime_Specification.md)
-- [Current release evidence](reports/v6/implementation.md)
+- [Current release evidence](reports/v7/implementation.md)
 - [Initial completion audit](reports/completion_audit.md)
 - [Execution plan and ownership](docs/execution-plan.md)
 - [Dataset coverage and quality](data/reports/data_quality.json)

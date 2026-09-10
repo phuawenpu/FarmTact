@@ -1,15 +1,15 @@
 # Publishing immutable editions
 
-Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v6 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
+Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v7 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
 
 The publisher never resolves an image tag. You may supply a previously verified `sha256` digest. When `--image` is omitted, it runs the fixed gateway Fly build with `--build-only --push --remote-only`, labels it from the edition and short source hash, passes the full source commit as a build argument, and accepts only the pinned registry digest reported by Fly. Commit the complete candidate source first. The publisher rejects dirty worktrees, abbreviated commits, non-HEAD commits, mutable image references, skipped edition numbers, changes to existing registry entries, and reuse of a locally reserved number with different inputs.
 
 Prepare a notes file containing exactly `title`, `summary`, and `changes`. Each change contains `title`, `description`, `feedback_ids`, and `evidence`. Then validate without Fly mutations:
 
 ```bash
-.venv/bin/python scripts/publish_edition.py \
-  --edition v7 \
-  --notes /absolute/private/path/v7-notes.json \
+.venv/bin/python -m scripts.publish_edition \
+  --edition v8 \
+  --notes /absolute/private/path/v8-notes.json \
   --image registry.fly.io/farmtact@sha256:<64-hex-digest> \
   --source-commit "$(git rev-parse HEAD)" \
   --dry-run
@@ -29,7 +29,7 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
 
-The current next unused number is v7; always check the registry before publishing.
+The current next unused number is v8; always check the registry before publishing.
 The legacy separate-app provisioning path remains for environments without a
 shared-host record. Do not remove that record to publish on this deployment.
 No credential values enter generated configuration, command output or manifests.
@@ -42,7 +42,7 @@ If a step fails, inspect the reported Fly command and rerun with the same editio
 The gateway refreshes its validated destinations and control edition allowlist after atomic publication. Updating the shared Machine can restart the gateway and all edition containers.
 
 
-## Active shared-host deployment (v6)
+## Active shared-host deployment (v7)
 
 The verified deployment uses one 4-shared-vCPU/4-GB Machine with one persistent volume.
 The public chooser and every immutable edition run in separate Pilot containers,
@@ -90,3 +90,15 @@ fly machine update 2871575b4544d8 -a farmtact \
 The one-time migration tools preserve full database rows/owners/ACLs and cached
 bytes; their source Machine allowlist becomes historical after cleanup. They
 are not a routine deployment step. Never run their restore action on production.
+
+V7 publication used the same Machine and volume, adding its isolated subtree and
+pinned container. Invoke the publisher as a module (`python -m scripts.publish_edition`)
+from the repository root so its shared-host helper imports resolve. The first v7
+file-style invocation built and reserved the image, then stopped before deployment
+on a module-path error. Retrying as a module reused the same reserved source and
+digest; it did not rebuild or reuse a number for different contents.
+
+The post-publication operator correction also makes file-style execution resolve
+the same helper module. An isolated subprocess regression and the deployment /
+publisher suite pass 48 tests. This changes development tooling only; the v7
+application retains its frozen source and image.

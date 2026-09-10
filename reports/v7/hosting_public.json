@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "app": "farmtact",
+  "machines": [
+    {
+      "id": "2871575b4544d8",
+      "state": "started",
+      "region": "sin",
+      "guest": {
+        "cpu_kind": "shared",
+        "cpus": 4,
+        "memory_mb": 4096
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "id": "vol_vdejexpzm8ydn5x4",
+      "name": "farmtact_shared_data",
+      "size_gb": 3,
+      "region": "sin"
+    }
+  ],
+  "scope": "Only FarmTact app queried; no machines or volumes created or deleted for v7."
+}
