@@ -96,8 +96,8 @@ with `nosniff`, same-origin referrers and no-store API responses.
 
 The existing hard **48 provider-call UTC daily ceiling** remains shared by all
 sessions. Each run also limits request count, output-token reservations, duration,
-response bytes and concurrency. Direct exchanges have one repair at most; councils
-have eight advisor turns plus two repairs. Unused reservations reconcile against
+response bytes and concurrency. Direct exchanges have one repair at most; conversation councils
+have seven advisor turns plus two repairs. Unused reservations reconcile against
 the original reservation day, including jobs crossing midnight. Recorded replay
 and reconnect never authorize another provider call. HTTP quotas count requests;
 one accepted council HTTP request can make multiple bounded provider calls.
@@ -111,7 +111,7 @@ access would require verified accounts or an access allowlist, plus edge bot/WAF
 controls. Fly notes that its proxy does not itself act as a WAF in its
 [deployment troubleshooting guide](https://fly.io/docs/getting-started/troubleshooting/).
 
-Prompt injection can still influence qualitative advice or a simulated critic's
+Prompt injection can still influence qualitative advice or an adviser's
 recommendation. Reference membership does not prove factual entailment. Restricting
 model capabilities, validating results and retaining numerical authority limit
 the consequences; a system prompt alone is not a security boundary. This follows
@@ -121,3 +121,14 @@ Rate-limit logs contain bounded rule names, not prompts, credentials or raw IPs,
 and repeated notices are suppressed for a minute. Expired rate-counter rows are
 periodically removed. The detailed code audit is in `reports/ai_boundary_audit.md`;
 release-specific test and live-probe evidence is in `reports/security_hardening.md`.
+
+
+## Audit clarification — 11 September 2026
+
+This security inventory does not establish adviser factual correctness. The
+[provider report](technical/ai-provider-and-council.md) distinguishes schema and
+reference checks from entailment, current caller paths from registered capabilities,
+and archived probes from current availability. [The backend audit](technical/game-backend-and-state-machines.md)
+details job, proposal, challenge and selection state boundaries and their gaps.
+Strict deadline cancellation, monetary reservation and infrastructure egress remain
+separate requirements; the implemented limits must not be described more broadly.

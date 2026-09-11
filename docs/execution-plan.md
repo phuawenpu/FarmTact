@@ -15,7 +15,7 @@ Kickoff: 2026-09-08. Latest user attachment copied to CODEX_START_PROMPT.md beca
 
 At most three specialists plus master run concurrently. No recursive delegation. Specialist file ownership is disjoint; only master changes root locks/shared contracts. Current Codex configuration is gpt-6-astra, high reasoning. Harness explicitly offers gpt-5.6-sol; all three actual specialist spawns requested that model and succeeded. No runtime GPT inference is permitted.
 
-## Acceptance scope
+## Original v1 acceptance scope (historical)
 
 Ten crop knowledge profiles; synthetic caixin/pak choi/kailan/lettuce farm; real source snapshots and coverage/quality/units/freshness; authenticated DeepSeek text/tool/vision checks; numerical Lean/Balanced/Resilient strategies on same scenarios; lead times, nursery/bed/labour/cash/commitments/inventory constraints; visual board and concise evidence cards; persistent versioned mission/council/automatic simulation acceptance/disruption/replay; mobile/browser/security tests. Optional broad satellite/ML roadmap remains separate from this vertical slice, with full spec requirements tracked in completion audit.
 
@@ -36,7 +36,7 @@ Actual Fly vision and six DeepSeek roles completed, but an unsupported critic th
 
 ## Interactive farming world — historical implementation, 2026-09-08
 
-User-approved plan: painted isometric tap-to-explore farm; persistent typed six-character dialogue and bounded council; four repeatable numerical quests and isolated frozen scenario branches; ten recognizable crop illustrations and four growth-stage sets; mobile, accessibility, security, inference and persistence verification; deploy to existing farmtact app after passing checks. Actual operations remain disabled.
+User-approved plan: painted isometric tap-to-explore farm; persistent typed dialogue with a six-adviser cast and bounded council; four repeatable numerical quests and isolated frozen scenario branches; ten recognizable crop illustrations and four growth-stage sets; mobile, accessibility, security, inference and persistence verification; deploy to existing farmtact app after passing checks. Actual operations remain disabled.
 
 Ownership: root (GPT-6-Astra) owns shared API integration, additive schema review, scenario service/quest persistence, numerical and integration tests, release verification and deployment. Three actual GPT-5.6-Sol specialists run without recursive delegation: `world_ui` owns web application/components/styles except Visuals crop renderer and assets; `conversation_backend` owns new conversation service/persistence modules and their tests; `crop_art` owns original crop/advisor SVG assets, Visuals crop renderer and provenance documentation. Root dependency files and main store/app remain root-only. Branches never enter planning_runs or farm_versions, preserving the main worklist. New tables are additive and created through the existing SQLAlchemy schema bootstrap.
 
@@ -247,3 +247,16 @@ unsupported, while frozen context/replay/main-farm boundaries pass. Research,
 specifications, recommendations and release evidence are updated. Temporary
 Sprite API/gateway services are removed and HTTP ports closed. No human usability,
 physical-device or commercial farm validation is claimed.
+
+
+## Documentation and backend audit — 11 September 2026
+
+User scope: thoroughly update README/docs, document every AI/ML/provider mechanism
+and the complete simulation/game backend, add scientific figures, identify Council
+gaps and amend specifications for the next iteration. No application release.
+Root owns README, existing docs, specifications, integrated report, reproducible
+figures and verification. Three bounded gpt-5.6-sol specialists own AI/provider,
+numerical/growth and architecture chapters; the architecture specialist then audits
+game state machines. No recursive delegation. Source baseline is a96025e; current
+published edition remains v7. See docs/technical/README.md and the final audit
+record reports/documentation/2026-09-11.md for findings and executed checks.

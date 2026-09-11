@@ -1,3 +1,46 @@
+# Runtime implementation audit — 11 September 2026
+
+The current application edition is **v7**; the shared host runs the gateway and
+seven independent editions. This documentation-only amendment supersedes stale
+current-state wording below. Frozen earlier source/images and historical probe
+results are unchanged. See the [AI/provider report](docs/technical/ai-provider-and-council.md),
+[game backend report](docs/technical/game-backend-and-state-machines.md) and
+[gap register](docs/technical/gaps-and-next-iteration.md).
+
+**Implemented call semantics:** planning findings, conversation turns and optional
+research adviser interpretations call the server-only gateway against frozen data.
+Default research dialogue, numerical scenarios, News collection, artwork, audio and
+recorded replay make no inference calls. The registered helper/evaluator/vision
+roles are capability allowlists, not proof of integrated feature callers. The
+main council consumes precomputed tool results; the gateway's tool round trip is
+separately implemented/tested and is not an open-ended application agent loop.
+
+**Evidence semantics:** local JSON/reference/numeric checks constrain output, but
+reference membership is not factual entailment. Both v7 recorded actual adviser
+responses were unsupported. Transport, replay, frozen context and tenant-isolation
+passes do not override that result or establish agricultural answer quality.
+
+**Required next-iteration work:** AI-01 through AI-07 and the Council GAME- gaps
+are part of the acceptance contract. In particular:
+
+- Distinguish archived capability evidence, configured credentials and recent
+  execution; current `capabilities()` uses archived JSON/key presence, not fresh
+  account verification. Do not label that mechanism as a current capability probe.
+- Add adversarial reference/entity/unit/period tests and a bounded grounded-answer
+  benchmark with explicit abstention, contradiction and unsupported-claim reporting.
+- Repair the forecast harvest mass reference key mismatch and use shared typed
+  context contracts. Preserve unsupported replies as visibly unverified evidence.
+- Keep route-to-caller/prompt/schema/budget inventory current. Prompts cannot select
+  a provider, register tools, spend without reservations or authorize farm operations.
+- Treat output-token and request ceilings as the limits actually implemented, not
+  a guaranteed USD cap. Strict end-to-end cancellation and monetary reservation
+  require their own implementation and failure tests before such claims are made.
+
+The original provider-documentation review date below is historical. Configured
+aliases and archived successful calls do not imply continuing account availability.
+Any fresh provider-documentation review in the technical chapter is documentary
+verification only; this audit performs no new authenticated inference trial.
+
 ### V7 research context amendment — published 10 September 2026
 
 Scripted council concepts make no provider calls. Explicit actual advisor requests
@@ -139,7 +182,7 @@ For the stable endpoint, use `response_format={"type":"json_object"}` plus an ex
 
 Strict function schemas are a separate beta feature. They require the beta URL and supported schema subset. The development gateway must reject `strict=true` rather than silently claiming enforcement on the standard URL. An optional later adapter needs its own allowlisted route, schema normalization and authenticated compatibility tests; it must never weaken business validation. [DS06]
 
-Set thinking mode explicitly rather than relying on provider defaults. Begin with disabled thinking for short extraction and image transport tests; use enabled thinking with a declared effort for deeper council work. The current API lists `low`, `high` and `max` effort values. These are provider controls, not forecast confidence scores. [DS04]
+Set thinking mode explicitly rather than relying on provider defaults. Begin with disabled thinking for short extraction and image transport tests; enabled thinking with a declared effort is a future option for deeper council work. Current application councils explicitly disable thinking; the authenticated tool-continuation probe exercises thinking separately. The current API lists `low`, `high` and `max` effort values. These are provider controls, not forecast confidence scores. [DS04]
 
 Maintain the original assistant tool-call message—including provider-returned `reasoning_content` when present—in **private, in-memory continuation state** for that same tool workflow. This is a conservative interoperability requirement to be verified by the authenticated round-trip test. Do not discard fields inadvertently in a framework conversion, synthesize missing private reasoning, or publish it in the strategy-room transcript. The full thinking guide was not retrievable in this review; its indexed text and the tool/API references were reviewed, and the live continuation test remains required. [DS04, DS05, DS06]
 
@@ -261,16 +304,17 @@ A09 owns gateway and council implementation; A12 owns isolated environments, net
 
 ## 8. Implementation status and remaining operational work
 
-V6 is deployed. The server-only gateway, capability routes, offline tests,
+V7 is deployed. The server-only gateway, capability routes, offline tests,
 bounded authenticated trial, tenant authorization, reservations, idempotent jobs
 and replay are implemented. See `runtime/deepseek_gateway.py`, `tests/deepseek/`,
-`reports/deepseek/authenticated_trial_summary.md` and `reports/v6/implementation.md`.
+`reports/deepseek/authenticated_trial_summary.md` and `reports/v7/implementation.md`.
 Historical trial reports establish only the capabilities and settings actually
-exercised; v6's hosting and crop verification requested zero inference calls.
+exercised; v6's hosting and crop verification requested zero inference calls, while
+v7 records two actual adviser calls whose interpretations remain unsupported.
 Missing credentials or unavailable capabilities must still produce a visible
 blocked state, never fabricated success or another-provider fallback.
 
-The gateway and six editions share one Fly Machine and volume while retaining
+The gateway and seven editions share one Fly Machine and volume while retaining
 separate application databases/workers. Authenticated operational controls retain
 the shared 48-call daily ceiling and abuse limits. This hosting change adds no
 provider route, speech service or background inference. The News scout remains

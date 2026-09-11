@@ -1,10 +1,13 @@
 # FarmTact data and model inventory
 
+Updated 11 September 2026. For equations, call paths, backend state machines and
+known implementation gaps, read the [scientific report](technical/README.md).
+
 The current game combines a deterministic fictional farm, simple statistical
 baselines, constrained optimisation and pretrained DeepSeek models. There is no
 model trained or fine-tuned on real FarmTact farm/customer records.
 
-The v6 crop catalogue has twelve evidence-linked knowledge profiles. Garlic chives
+The current v7 crop catalogue has twelve evidence-linked knowledge profiles. Garlic chives
 and sawtooth coriander add research and original illustrations, not additional
 simulation recipes. See [their evidence review](research/v6_crop_evidence.md).
 Each published edition retains its own database/cache subtree on the shared host.

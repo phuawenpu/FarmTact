@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="665" viewBox="0 0 1360 665" role="img" aria-labelledby="title desc">
+<title id="title">Synthetic demand: observed fixture values and one-step EWMA</title><desc id="desc">Caixin fictional weekly demand versus the EWMA one-step prediction using only previous observations. Held-out weeks 7 through 12 match the historical evaluation design. A constant latest level is used for future weekly residual demand.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#526b67"/></marker></defs>
+<rect width="1360" height="665" fill="#fff"/>
+<text x="40" y="44" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#18332f" text-anchor="start">Synthetic demand: observed fixture values and one-step EWMA</text>
+<text x="40" y="80" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#526b67" text-anchor="start">Caixin · alpha = 0.35 · fabricated repeating history · no public/weather features</text>
+<rect x="653.5" y="130" width="533.5" height="360" rx="0" fill="#f6f0e5" stroke="none"/>
+<line x1="120" y1="490" x2="1187" y2="490" stroke="#dce5e0" stroke-width="2"/>
+<text x="105" y="496" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="end">26</text>
+<line x1="120" y1="410" x2="1187" y2="410" stroke="#dce5e0" stroke-width="2"/>
+<text x="105" y="416" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="end">28</text>
+<line x1="120" y1="330" x2="1187" y2="330" stroke="#dce5e0" stroke-width="2"/>
+<text x="105" y="336" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="end">30</text>
+<line x1="120" y1="250" x2="1187" y2="250" stroke="#dce5e0" stroke-width="2"/>
+<text x="105" y="256" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="end">32</text>
+<line x1="120" y1="170" x2="1187" y2="170" stroke="#dce5e0" stroke-width="2"/>
+<text x="105" y="176" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="end">34</text>
+<text x="120" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">1</text>
+<text x="217" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">2</text>
+<text x="314" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">3</text>
+<text x="411" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">4</text>
+<text x="508" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">5</text>
+<text x="605" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">6</text>
+<text x="702" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">7</text>
+<text x="799" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">8</text>
+<text x="896" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">9</text>
+<text x="993" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">10</text>
+<text x="1090" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">11</text>
+<text x="1187" y="520" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="middle">12</text>
+<polyline points="120,450.0 217,370.0 314,290.0 411,210.0 508,450.0 605,370.0 702,290.0 799,210.0 896,450.0 993,370.0 1090,290.0 1187,210.0" fill="none" stroke="#166956" stroke-width="3"/>
+<circle cx="120" cy="450.0" r="5" fill="#166956"/>
+<circle cx="217" cy="370.0" r="5" fill="#166956"/>
+<circle cx="314" cy="290.0" r="5" fill="#166956"/>
+<circle cx="411" cy="210.0" r="5" fill="#166956"/>
+<circle cx="508" cy="450.0" r="5" fill="#166956"/>
+<circle cx="605" cy="370.0" r="5" fill="#166956"/>
+<circle cx="702" cy="290.0" r="5" fill="#166956"/>
+<circle cx="799" cy="210.0" r="5" fill="#166956"/>
+<circle cx="896" cy="450.0" r="5" fill="#166956"/>
+<circle cx="993" cy="370.0" r="5" fill="#166956"/>
+<circle cx="1090" cy="290.0" r="5" fill="#166956"/>
+<circle cx="1187" cy="210.0" r="5" fill="#166956"/>
+<polyline points="217,450.0 314,422.0 411,375.8000000000001 508,317.77000000000015 605,364.05050000000017 702,366.13282500000014 799,339.48633625000014 896,294.1661185625 993,348.70797706562496 1090,356.1601850926563 1187,333.0041203102266" fill="none" stroke="#315f98" stroke-width="3"/>
+<circle cx="217" cy="450.0" r="5" fill="#315f98"/>
+<circle cx="314" cy="422.0" r="5" fill="#315f98"/>
+<circle cx="411" cy="375.8000000000001" r="5" fill="#315f98"/>
+<circle cx="508" cy="317.77000000000015" r="5" fill="#315f98"/>
+<circle cx="605" cy="364.05050000000017" r="5" fill="#315f98"/>
+<circle cx="702" cy="366.13282500000014" r="5" fill="#315f98"/>
+<circle cx="799" cy="339.48633625000014" r="5" fill="#315f98"/>
+<circle cx="896" cy="294.1661185625" r="5" fill="#315f98"/>
+<circle cx="993" cy="348.70797706562496" r="5" fill="#315f98"/>
+<circle cx="1090" cy="356.1601850926563" r="5" fill="#315f98"/>
+<circle cx="1187" cy="333.0041203102266" r="5" fill="#315f98"/>
+<text x="120" y="113" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">kg / week</text>
+<text x="660" y="552" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#18332f" text-anchor="middle">Historical observation index</text>
+<line x1="120" y1="587" x2="160" y2="587" stroke="#166956" stroke-width="2"/>
+<text x="174" y="593" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Synthetic observations</text>
+<line x1="455" y1="587" x2="495" y2="587" stroke="#315f98" stroke-width="2"/>
+<text x="509" y="593" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">One-step prediction</text>
+<text x="880" y="593" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#b67120" text-anchor="start">Shading: held-out weeks 7–12</text>
+<text x="40" y="632" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">Figure 3. Latest EWMA level = 31.001183 kg/week. Future expected demand = bookings + max(0, level − weekly bookings).</text>
+</svg>

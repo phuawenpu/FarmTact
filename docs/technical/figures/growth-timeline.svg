@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="610" viewBox="0 0 1360 610" role="img" aria-labelledby="title desc">
+<title id="title">Plant development is a recipe calendar</title><desc id="desc">Four synthetic crop recipes show nursery duration, grow-out, harvest instant, sanitation interval and stock shelf-life. These are engineering assumptions, not measured growth curves.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#526b67"/></marker></defs>
+<rect width="1360" height="610" fill="#fff"/>
+<text x="40" y="44" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#18332f" text-anchor="start">Plant development is a recipe calendar</text>
+<text x="40" y="78" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#526b67" text-anchor="start">Illustrative common sow date = day 0. Existing batches retain their recorded dates.</text>
+<line x1="255" y1="115" x2="255" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="255" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">0</text>
+<line x1="355" y1="115" x2="355" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="355" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">5</text>
+<line x1="455" y1="115" x2="455" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="455" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">10</text>
+<line x1="555" y1="115" x2="555" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="555" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">15</text>
+<line x1="655" y1="115" x2="655" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="655" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">20</text>
+<line x1="755" y1="115" x2="755" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="755" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">25</text>
+<line x1="855" y1="115" x2="855" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="855" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">30</text>
+<line x1="955" y1="115" x2="955" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="955" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">35</text>
+<line x1="1055" y1="115" x2="1055" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="1055" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">40</text>
+<line x1="1155" y1="115" x2="1155" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="1155" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">45</text>
+<line x1="1255" y1="115" x2="1255" y2="440" stroke="#e0e8e4" stroke-width="2"/>
+<text x="1255" y="465" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#18332f" text-anchor="middle">50</text>
+<text x="40" y="160" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#18332f" text-anchor="start">Caixin</text>
+<text x="40" y="184" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">2.2 kg/m² assumed</text>
+<rect x="255" y="140" width="140" height="27" rx="0" fill="#bcdac7" stroke="#cadbd4"/>
+<rect x="395" y="140" width="420" height="27" rx="0" fill="#377968" stroke="#cadbd4"/>
+<text x="325.0" y="160" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">7 d</text>
+<text x="605.0" y="160" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#fff" text-anchor="middle">21 d grow-out</text>
+<rect x="815" y="140" width="40" height="27" rx="0" fill="#e6bc76" stroke="#cadbd4"/>
+<rect x="815" y="174" width="80" height="12" rx="0" fill="#a8c5e7" stroke="#cadbd4"/>
+<line x1="815" y1="132" x2="815" y2="188" stroke="#18332f" stroke-width="2"/>
+<text x="815" y="126" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">Harvest d28</text>
+<text x="40" y="238" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#18332f" text-anchor="start">Pak Choi</text>
+<text x="40" y="262" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">2.6 kg/m² assumed</text>
+<rect x="255" y="218" width="140" height="27" rx="0" fill="#bcdac7" stroke="#cadbd4"/>
+<rect x="395" y="218" width="560" height="27" rx="0" fill="#377968" stroke="#cadbd4"/>
+<text x="325.0" y="238" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">7 d</text>
+<text x="675.0" y="238" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#fff" text-anchor="middle">28 d grow-out</text>
+<rect x="955" y="218" width="40" height="27" rx="0" fill="#e6bc76" stroke="#cadbd4"/>
+<rect x="955" y="252" width="80" height="12" rx="0" fill="#a8c5e7" stroke="#cadbd4"/>
+<line x1="955" y1="210" x2="955" y2="266" stroke="#18332f" stroke-width="2"/>
+<text x="955" y="204" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">Harvest d35</text>
+<text x="40" y="316" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#18332f" text-anchor="start">Kailan</text>
+<text x="40" y="340" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">2.4 kg/m² assumed</text>
+<rect x="255" y="296" width="200" height="27" rx="0" fill="#bcdac7" stroke="#cadbd4"/>
+<rect x="455" y="296" width="640" height="27" rx="0" fill="#377968" stroke="#cadbd4"/>
+<text x="355.0" y="316" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">10 d</text>
+<text x="775.0" y="316" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#fff" text-anchor="middle">32 d grow-out</text>
+<rect x="1095" y="296" width="40" height="27" rx="0" fill="#e6bc76" stroke="#cadbd4"/>
+<rect x="1095" y="330" width="80" height="12" rx="0" fill="#a8c5e7" stroke="#cadbd4"/>
+<line x1="1095" y1="288" x2="1095" y2="344" stroke="#18332f" stroke-width="2"/>
+<text x="1095" y="282" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">Harvest d42</text>
+<text x="40" y="394" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#18332f" text-anchor="start">Lettuce</text>
+<text x="40" y="418" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">2.3 kg/m² assumed</text>
+<rect x="255" y="374" width="200" height="27" rx="0" fill="#bcdac7" stroke="#cadbd4"/>
+<rect x="455" y="374" width="500" height="27" rx="0" fill="#377968" stroke="#cadbd4"/>
+<text x="355.0" y="394" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">10 d</text>
+<text x="705.0" y="394" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#fff" text-anchor="middle">25 d grow-out</text>
+<rect x="955" y="374" width="40" height="27" rx="0" fill="#e6bc76" stroke="#cadbd4"/>
+<rect x="955" y="408" width="80" height="12" rx="0" fill="#a8c5e7" stroke="#cadbd4"/>
+<line x1="955" y1="366" x2="955" y2="422" stroke="#18332f" stroke-width="2"/>
+<text x="955" y="360" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="normal" fill="#18332f" text-anchor="middle">Harvest d35</text>
+<text x="750" y="495" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#18332f" text-anchor="middle">Days after sowing (calendar days)</text>
+<rect x="40" y="518" width="25" height="15" rx="0" fill="#bcdac7" stroke="#cadbd4"/>
+<text x="76" y="531" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Nursery</text>
+<rect x="225" y="518" width="25" height="15" rx="0" fill="#377968" stroke="#cadbd4"/>
+<text x="261" y="531" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Grow-out</text>
+<rect x="430" y="518" width="25" height="15" rx="0" fill="#e6bc76" stroke="#cadbd4"/>
+<text x="466" y="531" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Sanitation</text>
+<rect x="650" y="518" width="25" height="15" rx="0" fill="#a8c5e7" stroke="#cadbd4"/>
+<text x="686" y="531" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Stock shelf life</text>
+<text x="40" y="566" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">Figure 2. Continuous spans illustrate durations. Daily bed occupancy includes harvest + sanitation through that day.</text>
+<text x="40" y="590" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">The earliest next transplant is harvest + sanitation + 1 day. Shelf-life expiration is a separate inventory rule.</text>
+</svg>

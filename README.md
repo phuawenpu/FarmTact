@@ -1,119 +1,183 @@
 # FarmTact · Command & Cultivate
 
-A mobile tactical planning board for a fictional Singapore vegetable farm. Twelve crop knowledge profiles connect to a versioned evidence register; caixin, pak choi, kailan and lettuce are exercised in the synthetic farm. Python calculates Lean, Balanced and Resilient plans; actual DeepSeek roles review frozen results. Development plans are automatically accepted for simulation after validation.
+FarmTact is a mobile farm-planning game and research demonstration for a fictional
+Singapore vegetable farm. Explore a visual farm, inspect orders and evidence,
+compare planting strategies, and discuss the consequences with a council of advisers.
+Local Python calculations produce quantities and schedules; optional DeepSeek calls
+interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**This is a working development demonstration.** Farm orders, recipes, outcomes and financial results are synthetic. Public weather/trade/climate sources are separate, with observed/retrieved time, freshness, units, licence and source lineage. No planting, purchase or operational approval is sent to a real farm.
+**Play:** [guided v7 council](https://farmtact.fly.dev/v7/research) ·
+[main v7 farm](https://farmtact.fly.dev/v7/) ·
+[edition chooser, v1–v7](https://farmtact.fly.dev/)
 
-## Deployed app
+**Read:** [documentation index](docs/README.md) ·
+[scientific implementation report](docs/technical/README.md) ·
+[known gaps and next iteration](docs/technical/gaps-and-next-iteration.md)
 
-Start with [v7: the playable farm council](https://farmtact.fly.dev/v7/research), or use the
-[edition chooser](https://farmtact.fly.dev/) to revisit v1–v6. Each edition keeps
-its frozen source/image and independent farm, settings and saved progress.
+## What you can do
 
-- Tap **Ask council for a plan**, then follow the guided steps: reserve Bed 4,
-  test an unconfirmed order, challenge an assumption and compare the consequences.
-  The study saves separately from your main farm. Default dialogue is labelled
-  scripted; local numerical tools calculate the plans.
-- Explore synthetic records, linked charts, adjustable demand/forecast assumptions
-  and reproducible sandbox strategies in the Data Explorer.
-- Compare Lean, Balanced and Resilient outcomes, inspect shortages and trace
-  explanations to frozen evidence. Numerical experiments make no inference calls.
-- Browse twelve crop profiles, including garlic chives and sawtooth coriander,
-  with original illustrations and research references. These two additions are
-  knowledge profiles; the simulated farm still uses four declared recipes.
-- Consult seven advisors: Demand, Weather, Market, Production, Supply Chain,
-  Profit and Planner. The supporting News scout supplies cached evidence;
-  community feeds remain explicitly unconnected.
-- Enable optional music/effects in the interface. Text fields support device
-  keyboard dictation where available; there is no custom transcription service.
+- Start the guided council study, calculate a plan, reserve a bed, test an
+  unconfirmed order, challenge an assumption and compare frozen versions.
+- Explore the main farm board, active batches, deliveries, constraints and worklists.
+- Compare **Lean**, **Balanced** and **Resilient** schedules under the same declared
+  scenarios. Inspect uncovered demand, costs, resource use, waste and closing stock.
+- Use the Data Explorer to inspect records, vary synthetic-generation assumptions,
+  adjust the demand baseline and save independent numerical experiments.
+- Browse twelve evidence-linked crop profiles and original illustrations. Four
+  profiles—caixin, pak choi, kailan and lettuce—have numerical demo recipes.
+- Ask Demand, Weather, Market, Production, Supply Chain, Profit and Planner
+  advisers for optional interpretations. Reopen saved responses without new inference.
+- Inspect weather, trade, climate and News context with dates and provenance.
+  Community feeds remain unconnected.
+- Enable optional locally bundled music/effects. Text fields support device-keyboard
+  dictation where the device offers it; custom recording/transcription is not integrated.
 
-The Singapore deployment uses **one shared 4-vCPU/4-GB Fly Machine and one
-3-GB persistent volume**, with isolated containers and databases for the gateway
-and seven editions. Superseded FarmTact Machines and volumes have been removed.
-See the [release evidence](reports/v7/implementation.md),
-[deployment runbook](docs/deployment/editions.md) and
-[hosting assessment](docs/deployment/consolidation-assessment.md).
+The v7 research study stores its own inputs, jobs, proposals and selected simulation.
+It does not change the main farm. Its default dialogue is **scripted**; calculation
+jobs run the real numerical planner. Actual adviser interpretation is a separate action.
 
-## Running in this Sprite
+## How the intelligence works
 
-The Sprite HTTP services are retired after release verification. PostgreSQL remains available over a private Unix socket. Use the Sprite skill to register a temporary local service when developing; the public playable app is on Fly.
+![FarmTact separates inputs, numerical authority and optional AI interpretation](docs/technical/figures/system-overview.svg)
 
-```bash
-sprite-env services list
-# Register a development service before trying to restart it.
-```
+| Component | Implemented method | Interpretation boundary |
+| --- | --- | --- |
+| Farm records | Deterministic versioned fixture; validated imports and saved snapshots | Orders, recipes and farm outcomes in the demonstration are synthetic |
+| Demand | EWMA over available weekly order history; confirmed bookings plus positive residual demand | Statistical baseline; no trained demand regressor or real-farm accuracy claim |
+| Plant development | Recipe nursery/grow dates, fixed marketable yield per area, calendar-based visual progress | Scheduling simulation; no physiological growth, disease or biomass model |
+| Strategies | OR-Tools CP-SAT whole-bed selection plus local simulation and validation | Feasibility within declared constraints does not imply full delivery coverage or proven optimality |
+| Risk | Three fixed yield/demand stress cases with equal declared weights | Scenario comparisons, not calibrated probabilities or confidence intervals |
+| Council | Separate planning, conversation and scripted research workflows | Seven roles do not establish seven independent sources of truth |
+| DeepSeek | Server-only allowlisted text/vision routes with bounded calls and local validation | An allowed route is not proof that a feature uses it or that a response is correct |
+| Public sources / News | Cached, provenance-aware context | No automatic numerical effect on demand, yield or maturity |
+| Vision | Synthetic batch-label reading probe | No deployed crop-health, disease, satellite or biomass inference |
 
-The service command is `.venv/bin/python scripts/serve.py`, with `farmtact-db` as its dependency. The server reads `DEEPSEEK_API_KEY` from its process environment or the owner-only local secret-delivery file outside this repository. Never put keys in frontend variables, commands, logs or committed files. Missing provider access leaves numerical planning and explicit recorded replay available.
+No model is trained or fine-tuned on FarmTact farm/customer records. There is no
+embedding/vector-search or model-retraining pipeline. GPT/Codex builds and reviews
+the software; application LLM inference uses the DeepSeek gateway.
+The [technical report](docs/technical/README.md) documents equations, prompts,
+call triggers, budgets, persistence, evidence and limitations with source links.
 
-## Reproduce locally
+## Reference farm and evidence
 
-Requirements: Python 3.13, Node 24, PostgreSQL 18. Create an empty PostgreSQL database, then set `FARMTACT_DATABASE_URL` to its connection string. In this Sprite the default is `postgresql+psycopg://sprite@/farmtact?host=/tmp/farmtact-pg`.
+The default fixture represents 16 beds of 20 m², eight existing batches, 32 future
+orders and 48 weekly historical observations across four crops. The planning
+horizon is 56 days from the fixture's September 2026 cutoff; waiting for a job
+does not advance the farm calendar. Nursery, labour, cash and inventory are explicit
+constraints. Twelve crop knowledge profiles do not imply twelve validated recipes.
+
+The original public ingestion report contains 200 normalized rows across seven
+weather/trade/climate sources. These are recorded snapshots with bounded coverage,
+not a promise of current availability or a complete historical warehouse. News is
+a separate bounded RSS metadata cache. Research citations do not validate fixture
+yields, financial assumptions or achieved farm benefits.
+
+See [data inventory](docs/data-and-models.md),
+[data lineage](docs/technical/system-data-and-evidence.md) and
+[growth mathematics](docs/technical/numerical-models-and-growth.md).
+
+## Repository map
+
+| Path | Responsibility |
+| --- | --- |
+| `apps/web/` | React/TypeScript/Vite interface, farm artwork, council study, explorer and audio |
+| `services/api/app.py` | FastAPI application, planning worker, simulation acceptance and routes |
+| `services/api/` | Tenant persistence, scenarios, conversations, research, security and edition gateway |
+| `runtime/deepseek_gateway.py` | Provider policy, transport, JSON/tool/vision/stream handling and safe audit |
+| `config/deepseek_runtime.json` | Registered roles, model aliases and transport/budget limits |
+| `packages/contracts.py` | Validated farm inputs, recipes and hashes |
+| `packages/fixtures.py`, `packages/models/` | Synthetic generation and EWMA/harvest baselines |
+| `packages/planner/` | Whole-bed scheduling, scenario simulation and research constraints |
+| `packages/ingestion/`, `packages/news.py` | Public-source normalization and bounded News collection |
+| `research/`, `data/manifests/` | Curated knowledge and source/feature provenance |
+| `tests/`, `reports/` | Executable checks and dated evidence with scoped claims |
+| `config/releases/`, `config/hosting/` | Immutable release registry and shared Fly topology |
+| `docs/` | Technical report, requirements gaps, research and operational runbooks |
+
+## Local setup
+
+The locked application targets Python 3.13+, Node 24 and PostgreSQL 18.
+Use the committed dependency files; the optional Docker Compose path remains
+historically unverified. The separate Fly image was built and deployed.
 
 ```bash
 python -m venv .venv
 .venv/bin/pip install -r requirements.lock.txt
 npm ci --prefix apps/web
 npm run build --prefix apps/web
+```
+
+Provide an empty development PostgreSQL database through `FARMTACT_DATABASE_URL`.
+The Sprite default is `postgresql+psycopg://sprite@/farmtact?host=/tmp/farmtact-pg`;
+it works only when that local server/database has been provisioned. The checkout
+does not contain a virtual environment, running database or generated frontend build.
+`.env.example` documents names; it is not automatically loaded by `serve.py`.
+
+```bash
 .venv/bin/python scripts/initialize_database.py
 .venv/bin/python -m packages.fixtures
 .venv/bin/python scripts/build_dataset.py --with-power
 .venv/bin/python scripts/build_features.py
-.venv/bin/python scripts/serve.py
 ```
 
-In Sprite, use `sprite-env services create` for the final server command, rather than launching an unmanaged background process. Public ingestion has bounded timeouts and explicit failure/cache states. For offline normalization from already fetched bytes, use `scripts/build_dataset.py --offline`; raw snapshots are deliberately not committed. A fresh checkout needs the bounded live fetch to obtain them.
+Dataset building makes bounded public-source requests and writes explicit
+failure/cache states. `--offline` requires previously fetched raw files, which
+are not committed. See the [reproduction guide](docs/technical/reproducibility.md)
+for offline checks, generated artifacts and service prerequisites.
 
-A Docker/Compose definition is also included. Generate the ignored local database secret with `python scripts/bootstrap_env.py`, build the public context with the command above, then run `docker compose up --build`. This optional Compose definition remains unverified. The separate `Dockerfile.fly` has been built and deployed successfully on Fly.io.
+Outside Sprite, run `.venv/bin/python scripts/serve.py` to serve the application
+on port 8080. **Inside Sprite**, register that command using `sprite-env services
+create`; follow the Sprite skill for service management. Numerical-only exploration
+does not require a DeepSeek key. Actual adviser calls require `DEEPSEEK_API_KEY`
+in the server environment (or the protected local delivery file supported by
+`serve.py`). Keep credentials out of source, frontend variables, command arguments
+and logs. Key presence does not establish current model availability.
 
-## Verify
+## Verification and current limits
 
 ```bash
 .venv/bin/python -m pytest -q
-.venv/bin/python scripts/evaluate_numerical.py
-node tests/browser/run.mjs
 .venv/bin/python scripts/generate_web_contracts.py --check
+npm run build --prefix apps/web
 ```
 
-V7 candidate verification: **33 final contracts/research tests**, **111 planning/UI
-browser checks** and **48 novice checks** passed. The broader regression recorded
-492 passes and one generated-contract drift failure; the generator was corrected
-and passes the final contract group. Build and TypeScript checks pass. Browser
-checks are agent walkthroughs, not human usability studies. The public browser
-review also passes 111 checks; both concurrent public numerical jobs completed
-with no inference or farm changes. Actual adviser probes retained unsupported
-response warnings. See the
-[v7 report](reports/v7/implementation.md) for public evidence and limitations.
-Historical v6 verification remains in [its release report](reports/v6/implementation.md).
-The [initial completion audit](reports/completion_audit.md) and
-[clean-checkout report](reports/clean_checkout.json) retain their original scope.
+The full suite includes PostgreSQL integration tests; use the dedicated test
+databases documented in the [reproduction guide](docs/technical/reproducibility.md).
+Browser checks require a running development service and Playwright Chromium.
+`node tests/browser/run.mjs` covers the original journey; release-specific scripts
+cover later features. The numerical evaluator rewrites its report and may produce
+different feasible schedules under time-limited solving.
 
-The council PostgreSQL concurrency tests require a dedicated `farmtact_research_test` database on `/tmp/farmtact-pg`; create it before running the suite. Never run recovery tests against a live application database. They use isolated test tenants and clean their own rows. Browser checks use Chromium against the running app at widths 360, 390, 430 and 1280; they select numerical-only planning to avoid paid calls. Install the browser once with `cd apps/web && npx playwright install chromium`.
+Archived v7 evidence records 33 final contracts/research tests, 111 planning/UI
+checks and 48 novice checks. The broad candidate run had 492 passes and one contract
+drift failure; that failure was fixed and checked in the focused group. Public
+browser review passed 111 checks. These are historical scopes, not newly rerun
+full-suite results. See [v7 evidence](reports/v7/implementation.md) and the
+[documentation audit record](reports/documentation/2026-09-11.md).
 
-Authenticated checks make real, metered calls:
+Both recorded v7 actual adviser probes were flagged **unsupported**. They verified
+transport/context/replay boundaries, not farming-answer quality. Earlier successful
+provider trials do not erase those results. Future work includes grounded adviser
+quality, capability freshness, clearer model semantics, stronger numerical validation
+and human usability studies; acceptance criteria are in the
+[gap register](docs/technical/gaps-and-next-iteration.md).
 
-```bash
-FARMTACT_EXECUTION_MODE=test .venv/bin/python scripts/deepseek_trial.py --live --with-council
-.venv/bin/python scripts/integrated_demo.py --council --vision --replan --deterministic-replan
-```
+## Hosting and releases
 
-The trial is bounded to sixteen requests and an 8,192-output-token reservation. Application runs have their own finite per-run request/token/time limits and a global daily reservation cap; unused reservations are reconciled. There is no alternate LLM provider. Format repairs are bounded and recorded. Replaying a recorded run makes zero new inference calls.
+The `farmtact` app runs in Singapore on one shared 4-vCPU/4-GB Fly Machine and one
+3-GB persistent volume. The gateway and v1–v7 occupy eight isolated containers with
+separate application databases/caches/progress; abuse and inference spending limits
+are shared. One host is a shared failure boundary. Read-only checks on 11 September
+2026 found the Machine started with 1/1 health checks passing.
 
-## Evidence and limits
+Every newly published application iteration receives a new immutable edition.
+Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
+does not describe the active container topology. The next unallocated edition in
+the inspected registry is v8. This documentation update does not modify v7 or
+publish v8. See [Fly operations](docs/deployment/fly.md).
 
-- [Autonomous-development build specification](FarmTact_Build_Specification.md)
-- [DeepSeek runtime specification](FarmTact_DeepSeek_Runtime_Specification.md)
-- [Current release evidence](reports/v7/implementation.md)
-- [Initial completion audit](reports/completion_audit.md)
-- [Execution plan and ownership](docs/execution-plan.md)
-- [Dataset coverage and quality](data/reports/data_quality.json)
-- [Dataset manifest](data/manifests/dataset_manifest.json)
-- [Numerical evaluation](reports/numerical_evaluation.json)
-- [Authenticated provider trial](reports/deepseek/latest.json)
-- [Integrated application demonstration](reports/integrated_demo.json)
-- [Independent backend review](reports/agents/independent_backend_review.md)
-- [Mobile browser review and screenshots](reports/agents/mobile_ui.md)
-- [Decision log](docs/decision-log.md)
-
-Unsupported claims are rejected visibly. Feasible schedules may still have explicit unmet demand; the planner never moves future harvest into an earlier delivery. The fixture models whole beds, four single-harvest recipes and declared scenario weights. Multi-cut crops are knowledge profiles only. No synthetic model is production-validated, and no claimed savings are measured farm impact.
-
-The demo service combines gateway checks with a Python socket egress policy. Production requires infrastructure-level egress controls, operational authorization and real-farm validation. Current source coverage is bounded: one SingStat page/period and seven NASA climate days supplement the NEA feeds; this is not a complete historical trade warehouse.
+Development scope and provider policy are controlled by the
+[build specification](FarmTact_Build_Specification.md),
+[runtime specification](FarmTact_DeepSeek_Runtime_Specification.md) and
+[repository instructions](AGENTS.md). Their requirements include future work;
+source and dated reports establish what has been implemented and tested.

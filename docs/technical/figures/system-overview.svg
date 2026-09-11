@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="670" viewBox="0 0 1360 670" role="img" aria-labelledby="title desc">
+<title id="title">FarmTact: numerical authority and optional AI interpretation</title><desc id="desc">Synthetic and imported farm snapshots feed local forecast, optimizer and simulation. Public context feeds the interface and optional DeepSeek interpretation. Only backend validation may accept simulation; no actual farm operations.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#526b67"/></marker></defs>
+<rect width="1360" height="670" fill="#fff"/>
+<text x="40" y="44" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#18332f" text-anchor="start">FarmTact: numerical authority and optional AI interpretation</text>
+<rect x="40" y="90" width="355" height="130" rx="10" fill="#eef5f1" stroke="#cadbd4"/>
+<text x="58" y="120" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Versioned farm inputs</text>
+<text x="58" y="149" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Synthetic reference / validated import</text>
+<text x="58" y="174" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Orders · recipes · beds · resources</text>
+<text x="58" y="199" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Cutoff, ownership and input hash</text>
+<rect x="465" y="90" width="400" height="130" rx="10" fill="#eef5f1" stroke="#cadbd4"/>
+<text x="483" y="120" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Local numerical pipeline</text>
+<text x="483" y="149" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">EWMA demand + scheduled harvest</text>
+<text x="483" y="174" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">CP-SAT whole-bed schedules</text>
+<text x="483" y="199" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Scenario simulation + constraint checks</text>
+<rect x="935" y="90" width="385" height="130" rx="10" fill="#eef5f1" stroke="#cadbd4"/>
+<text x="953" y="120" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Frozen results</text>
+<text x="953" y="149" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Lean · Balanced · Resilient</text>
+<text x="953" y="174" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Quantities, ledgers and evidence refs</text>
+<text x="953" y="199" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Persisted for comparison and replay</text>
+<line x1="395" y1="155" x2="465" y2="155" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="865" y1="155" x2="935" y2="155" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="40" y="300" width="355" height="140" rx="10" fill="#eef3fa" stroke="#cadbd4"/>
+<text x="58" y="330" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Public and curated context</text>
+<text x="58" y="359" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Weather · trade · climate · News</text>
+<text x="58" y="384" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Crop knowledge / scientific references</text>
+<text x="58" y="409" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Context only: no automatic forecast</text>
+<text x="58" y="434" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">or crop-growth input</text>
+<rect x="465" y="300" width="400" height="140" rx="10" fill="#eef3fa" stroke="#cadbd4"/>
+<text x="483" y="330" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Explicit adviser action</text>
+<text x="483" y="359" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Server-only DeepSeek gateway</text>
+<text x="483" y="384" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Role-specific interpretation of frozen</text>
+<text x="483" y="409" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">numbers and bounded evidence</text>
+<text x="483" y="434" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Scripted research dialogue: zero calls</text>
+<rect x="935" y="300" width="385" height="140" rx="10" fill="#eef3fa" stroke="#cadbd4"/>
+<text x="953" y="330" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Local evidence validation</text>
+<text x="953" y="359" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Schema + allowed references + values</text>
+<text x="953" y="384" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Supported / unsupported / clarification</text>
+<text x="953" y="409" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">No model power to execute a plan</text>
+<line x1="395" y1="370" x2="465" y2="370" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="865" y1="370" x2="935" y2="370" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="1127" y1="220" x2="1127" y2="260" stroke="#526b67" stroke-width="2"/>
+<line x1="1127" y1="260" x2="665" y2="260" stroke="#526b67" stroke-width="2"/>
+<line x1="665" y1="260" x2="665" y2="300" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="465" y="510" width="855" height="100" rx="10" fill="#fcf4e8" stroke="#cadbd4"/>
+<text x="483" y="540" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Simulation-only decision</text>
+<text x="483" y="569" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Main planning: backend policy. Research: explicit feasible current selection.</text>
+<text x="483" y="594" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Stored work/results and isolated experiments; actual farm integrations disabled.</text>
+<line x1="1127" y1="440" x2="1127" y2="510" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="40" y="640" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">Figure 1. Source audit, 11 September 2026. Solid arrows show implemented information flow; no physiological model is implied.</text>
+</svg>

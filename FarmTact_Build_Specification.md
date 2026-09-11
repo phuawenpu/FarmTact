@@ -1,5 +1,76 @@
 # FarmTact
 
+## Implementation audit amendment — 11 September 2026
+
+This amendment distinguishes **implemented v7 behavior** from the broader v1.2
+requirements below. It supersedes conflicting current-state descriptions without
+removing scientific or future operational requirements. The documentation audit
+changes no application source, immutable edition, numerical coefficient or game state.
+See the [scientific implementation report](docs/technical/README.md), detailed
+[game backend audit](docs/technical/game-backend-and-state-machines.md), and
+[gap register](docs/technical/gaps-and-next-iteration.md).
+
+### Current implementation boundary
+
+- Latest published edition is **v7**. One Singapore Fly Machine and volume host
+  eight isolated containers: the gateway and v1–v7. Twelve crop profiles and
+  twenty-four publication records support **four synthetic single-harvest recipes**.
+- The application uses React/TypeScript/**Vite**, FastAPI, PostgreSQL JSON records,
+  local content-addressed public snapshots, and in-process worker loops. The broad
+  proposed object-store/schema/tool architecture below is a target, not an inventory.
+- Demand uses a **constant-level EWMA**, default alpha 0.35, plus confirmed bookings
+  and positive unbooked residuals. No FarmTact model is trained or fine-tuned.
+  Public/weather/trade/News context is not a numerical forecast feature.
+- Harvest is a schedule projection from recorded batch dates and fixed marketable
+  mass assumptions. Nursery plus grow days determine new-crop maturity; sanitation
+  blocks bed reuse after harvest. Visual progress is linear calendar interpolation,
+  not biomass, physiological maturity, elapsed computation or a probability.
+- Whole-bed CP-SAT decisions optimize **policy-weighted utility** under implemented
+  bed/nursery/labour/cash/timing constraints. Current scenario cases are fixed and
+  equally processed; the stored weight field is not consumed and seed generates no
+  draws. Resilient raises shortage penalties; it is not maximin/CVaR protection or
+  a guaranteed service level. FEASIBLE is not proof of global optimality.
+- Daily simulation reports crop/date fulfilment, expiry, stock, costs and margin.
+  It does not represent individual buyer/grade allocations, observed crop outcomes,
+  water/energy/HVAC/packaging/rotation/multi-cut/partner supply, or real execution.
+- There are separate planning, conversational and research council workflows.
+  Numerical planning precedes interpretation. Default v7 research dialogue is a
+  bounded script proposing edits; applying an edit creates a version and a separate
+  calculation evaluates consequences. Optional DeepSeek interpretation cannot apply
+  a proposal, choose a research result or change the main farm.
+- Main planning acceptance is backend-controlled simulation bookkeeping; research
+  choice is explicit, current-version, feasible and challenge-gated. Neither is
+  evidence of an advancing agronomic world. See the game audit for quests, events,
+  job recovery, branches, locks, worklists and persistence boundaries.
+
+### Required corrections for the next application iteration
+
+The stable AI-/NUM-/DATA-/OPS-/UX- IDs in the gap register and GAME- IDs in the
+backend audit are acceptance work, not completed fixes. Prioritize:
+
+1. **Council evidence and state:** distinguish script/actual/replay/blocked output;
+   validate typed quantities against entity/unit/period, test citation entailment
+   failures, and evaluate useful grounded answers. Both archived v7 actual replies
+   remain unsupported. Preserve those failed quality results.
+2. **Canonical crop state:** unify backend/UI harvest, sanitation and horizon
+   boundaries; repair the `marketable_kg` versus `expected_kg` adviser reference
+   mismatch. Add boundary-day and frozen-context regression cases.
+3. **Numerical semantics:** consume or explicitly constrain scenario weights;
+   reconcile optimizer inventory with FIFO replay, declare terminal-stock treatment,
+   and expose missing prices and objective terms. Add small enumerated acceptance
+   cases before claiming optimal or robust decisions.
+4. **Reproducibility:** derive profile/publication counts from current registries,
+   remove the stale ten-crop integrated-demo assertion, and emit complete versioned
+   numerical-evaluation metadata. Historical report contents remain dated evidence.
+5. **Next scientific steps:** use independent crop-cycle and order observations,
+   grouped temporal validation and a real task-based human study before claiming
+   agronomic accuracy, calibrated uncertainty or improved farmer decisions.
+
+Detailed requirements later in this specification—including learned duration/yield
+distributions, richer tools/APIs, water/energy constraints and multi-cut crops—remain
+future work wherever the report finds no implementation. No requirement sentence
+may be presented as evidence that a feature has shipped.
+
 ### V7 council research — published 10 September 2026
 
 V7 adds an isolated Council research area at `/v7/research`. The existing farm
@@ -29,9 +100,9 @@ optional disclosure. Reaching the first planning choice within 30 seconds is a
 future human-test target, not an observed human result. No artificial timers or
 farm-time advancement accompany tool execution.
 
-### Current implementation — v6, 9 September 2026
+### Historical v6 milestone — 9 September 2026
 
-V6 is published at https://farmtact.fly.dev/v6/. This current-state amendment
+V6 was published at https://farmtact.fly.dev/v6/. This historical amendment
 supersedes earlier hosting and crop-count descriptions; the v1.2 development
 policy remains in force. The catalogue contains twelve researched knowledge
 profiles, adding garlic chives and sawtooth coriander. Both have original SVG
@@ -230,7 +301,7 @@ Use separate dimensions, not a single magical credibility score:
 
 An experiment in Singapore is not automatically a commercial validation. A non-Singapore study may be useful when conditions match, but transfer uncertainty must remain explicit. A review and the original study it cites must not count as two independent trials.
 
-The 20 publication records in `research/evidence_register.json` are a starting research set, not an exhaustive systematic review. Some full texts were inaccessible. Records disclose that; no production coefficient is approved merely because its title is listed.
+The current 24 publication records in `research/evidence_register.json` (20 in the original v1.2 set) are a starting research set, not an exhaustive systematic review. Some full texts were inaccessible. Records disclose that; no production coefficient is approved merely because its title is listed.
 
 ---
 
@@ -400,6 +471,9 @@ There are **38 candidate strategies** in `research/strategy_catalogue.json`. The
 
 ### 5.1 Demand forecast
 
+**Implemented:** constant-level EWMA with booked/residual separation. Seasonal
+models and observed-data validation below are requirements, not current capabilities.
+
 Start with a contract-aware seasonal naive/EWMA baseline by product/week, plus an explicit method for bookings versus residual unbooked demand. Include cancellation status and distinguish actual orders from inferred lost demand. Backtest on rolling time cutoffs. At a given cutoff, forecast the same horizons relevant to the growing cycles.
 
 A quantile gradient-boosting challenger may use demand lags, known promotions, calendar variables and availability-correct public covariates. Train only where there are enough independent periods and events to evaluate. Choose the baseline whenever the challenger fails to beat it. Explain missing data rather than manufacturing an 80% confidence interval from an LLM's verbal confidence.
@@ -407,6 +481,10 @@ A quantile gradient-boosting challenger may use demand lags, known promotions, c
 For cold starts, use confirmed orders, buyer-supplied forecasts and cautious hierarchical pooling. A public-data-only mode can show market context and ask for bookings, but it must not claim a personalized demand forecast.
 
 ### 5.2 Harvest timing and marketable-yield forecast
+
+**Implemented:** fixed synthetic recipe durations and marketable yield, plus recorded
+batch schedules. Observed distributions, partial pooling and physiological/feature
+response described below remain future work (NUM-08).
 
 Start with recipe-specific observed duration and marketable-yield distributions. Model nursery and grow-out time independently where data allows. Current crop observations update the remaining time and yield uncertainty; distinguish initial forecast from revised forecast.
 
@@ -524,7 +602,7 @@ Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILA
 
 The backend validates inputs and freezes the cutoff, numerical strategy results and Market context. Six specialists inspect these results, followed by the Planner. The backend validates every finding and runs the versioned acceptance policy; an advisor cannot accept a plan. Partial, rejected or unresolved findings withhold automatic acceptance while feasible numerical alternatives stay inspectable (`REVIEW_WITHHELD`). A council with no returned findings may expose the explicitly labelled deterministic baseline, never a claimed council success.
 
-Default policy: at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configured in versioned development settings by the coding agents without human confirmation. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
+**Future interaction target (not implemented in v7):** at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configured in versioned development settings by the coding agents without human confirmation. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
 
 ### 7.3 Claim types and discussion rules
 
@@ -553,6 +631,11 @@ The implementation displays actual figures only when returned by tools. This exa
 ## 8. Typed tool and API contracts
 
 ### 8.1 Runtime tools
+
+**Implementation note:** the list below is a target interface. Current application
+councils consume precomputed numerical/reference context through typed JSON calls;
+the gateway tool-continuation facility is separately exercised by capability tests.
+Do not describe the council as dynamically invoking every listed tool.
 
 Implement a typed tool registry with a JSON schema, permission, timeout, retry policy, cost classification and audit policy for each tool. Recommended initial tools:
 
@@ -607,6 +690,10 @@ Report hard violations as structured records: `constraint_code`, `entity_id`, `p
 
 ### 8.5 HTTP interface
 
+**Target contract:** the table below includes unimplemented routes. The current
+route/state inventory is in [the backend audit](docs/technical/game-backend-and-state-machines.md).
+In particular, actual-harvest/work ingestion is not established by this table.
+
 | Route | Method | Contract |
 |---|---|---|
 | `/api/v1/health` | GET | Service state without secrets |
@@ -638,6 +725,10 @@ Events include `run_started`, `input_warning`, `source_state`, `tool_started`, `
 ## 9. Recommended application architecture
 
 ### 9.1 Stack and boundaries
+
+**Implemented:** Vite React, FastAPI, PostgreSQL, local content-addressed files and
+in-process workers. The following architecture recommendations are broader than
+the delivered system; see the 11 September amendment and report.
 
 Use a TypeScript/React frontend, preferably Next.js; a Python FastAPI/Pydantic backend; PostgreSQL for transactional state and tenancy; Parquet/DuckDB for analytical snapshots; and an object-store abstraction for raw assets and model artefacts. Use a small background worker for ingestion and planning runs. Redis or a heavier scheduler is optional until the job workload warrants it.
 
@@ -714,7 +805,7 @@ FarmTact is a tactical planning board, not a generic ERP dashboard and not a cas
 
 **Crop library:** twelve crop cards with local aliases, harvested part, system compatibility, research references, stage/time-basis warnings and approved-versus-provisional parameters. Clicking a parameter opens its source and applicability. No fake nationally ranked “top ten” badge.
 
-**Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs, tool activity and two bounded challenge rounds. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
+**Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs and actual tool activity. Two bounded challenge rounds remain a future interaction requirement; v7 uses independent findings followed by a chair conclusion. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
 
 **Tactical board:** bed/rack occupancy timeline, nursery-to-grow-out transitions, harvest windows and customer due dates. Strategy cards compare service, margin, waste, resources and downside—not just a composite score. The automatically accepted strategy populates the board; selecting another card previews it. No approval click is required. Locked/executed actions remain locked.
 
@@ -830,7 +921,7 @@ P0 does not require satellite processing, deep learning or all optional external
 29. Every numeric recommendation references a validated tool field or approved evidence claim.
 30. A malicious instruction embedded in a paper or CSV cannot trigger tools or reveal secrets.
 31. A runtime council agent cannot mutate recipes, accept its own plan or bypass tenant authorization; only the backend policy may accept a validated plan for simulation in an eligible development tenant. Reject browser/prompt attempts to override phase, modes or service identity, and reject automatic acceptance for operational tenants or `live_advisory`/`live` runs.
-32. Two challenge rounds and budget limits are enforced even when agents disagree.
+32. Current acceptance: seven ordered council findings and bounded repairs respect budgets, with validation before the chair sees previous claims. Future challenge-round support requires explicit round state, termination and disagreement tests; it is not implemented in v7.
 33. Stale acceptance returns a conflict; the backend invalidates it and replans/revalidates automatically without waiting for a human.
 34. Cross-tenant order, evidence-upload, plan and job access is denied.
 35. Source failure shows cached/stale/blocked status instead of a fabricated live response.
