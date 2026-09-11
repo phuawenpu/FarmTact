@@ -96,12 +96,16 @@ def session_cookie(cookies: httpx.Cookies, name: str = "farmtact_session") -> st
     )
 
 
-def run(base_url: str, timeout: float, state_path: Path | None = None, retry_failed: bool = False) -> dict:
+def run(base_url: str, timeout: float, state_path: Path | None = None, retry_failed: bool = False, council_only: bool = False) -> dict:
     state = json.loads(state_path.read_text()) if state_path and state_path.exists() else {}
     if state.get("url"):
         base_url = state["url"]
     edition = urlsplit(base_url).path.strip("/")
     cookie_name = f"farmtact_{edition}_session" if edition.startswith("v") and edition[1:].isdigit() else "farmtact_session"
+    scope = "council_only" if council_only else "direct_invite_council"
+    if state.setdefault("conversation_trial_scope", scope) != scope:
+        raise ValueError("Cannot change the workflow scope of a saved trial")
+    aggregate_ceiling = 9 if council_only else 16
     prefix = state.setdefault("conversation_trial_prefix", f"conversation-trial-{uuid.uuid4().hex}")
 
     def save_state() -> None:
@@ -221,7 +225,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
                     state.pop(request_field, None)
                     save_state()
             used = inference_count()
-            if used + worst_case_requests > 16:
+            if used + worst_case_requests > aggregate_ceiling:
                 raise RuntimeError(
                     f"Insufficient aggregate request allowance for {name}: {used} already consumed"
                 )
@@ -242,38 +246,40 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
                 )
             return transcript_after, completed
 
-        transcript, direct_messages = stage(
-            "direct",
-            f"/api/v1/conversations/{conversation_id}/messages",
-            {
-                "content": "Explain how this experiment changes the same-policy comparison. Cite the frozen assumptions and result, and flag any unsupported conclusion."
-            },
-            expected_messages=1,
-            worst_case_requests=2,
-        )
+        direct_messages, invited_messages = [], []
+        if not council_only:
+            transcript, direct_messages = stage(
+                "direct",
+                f"/api/v1/conversations/{conversation_id}/messages",
+                {
+                    "content": "Explain how this experiment changes the same-policy comparison. Cite the frozen assumptions and result, and flag any unsupported conclusion."
+                },
+                expected_messages=1,
+                worst_case_requests=2,
+            )
 
-        transcript, invited_messages = stage(
-            "invite",
-            f"/api/v1/conversations/{conversation_id}/invite",
-            {
-                "advisor": "ravi",
-                "question": "Challenge Mei's delivery interpretation, using this exact scenario snapshot and replying to her point.",
-                "reply_to": direct_messages[-1]["id"],
-            },
-            expected_messages=2,
-            worst_case_requests=3,
-        )
-        if invited_messages[0]["reply_to"] != direct_messages[-1]["id"]:
-            raise RuntimeError("Invited advisor did not reply to the selected point")
-        if invited_messages[1]["reply_to"] != invited_messages[0]["id"]:
-            raise RuntimeError("Original advisor did not challenge the invited reply")
+            transcript, invited_messages = stage(
+                "invite",
+                f"/api/v1/conversations/{conversation_id}/invite",
+                {
+                    "advisor": "ravi",
+                    "question": "Challenge Mei's delivery interpretation, using this exact scenario snapshot and replying to her point.",
+                    "reply_to": direct_messages[-1]["id"],
+                },
+                expected_messages=2,
+                worst_case_requests=3,
+            )
+            if invited_messages[0]["reply_to"] != direct_messages[-1]["id"]:
+                raise RuntimeError("Invited advisor did not reply to the selected point")
+            if invited_messages[1]["reply_to"] != invited_messages[0]["id"]:
+                raise RuntimeError("Original advisor did not challenge the invited reply")
 
         transcript, council_messages = stage(
             "council",
             f"/api/v1/conversations/{conversation_id}/council",
             {
                 "question": "Convene the council on this frozen experiment. Compare Lean, Balanced, and Resilient consequences, retain evidence-backed disagreements, and let Asha conclude.",
-                "reply_to": invited_messages[-1]["id"],
+                "reply_to": invited_messages[-1]["id"] if invited_messages else None,
             },
             expected_messages=7,
             worst_case_requests=9,
@@ -287,8 +293,8 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
         request_count = sum(
             event["event_type"] == "inference_request_reserved" for event in events
         )
-        if request_count > 16:
-            raise RuntimeError("Conversation trial exceeded the sixteen-request aggregate ceiling")
+        if request_count > aggregate_ceiling:
+            raise RuntimeError("Conversation trial exceeded its predeclared aggregate ceiling")
         replay_response = client.get(f"/api/v1/conversations/{conversation_id}/replay")
         replay_response.raise_for_status()
         replay = replay_response.json()
@@ -322,8 +328,9 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             "conversation_id": conversation_id,
             "snapshot_hash": transcript["snapshot_ref"]["hash"],
             "actual_inference_requests": request_count,
-            "maximum_permitted_requests": 16,
-            "advisor_messages": 10,
+            "maximum_permitted_requests": aggregate_ceiling,
+            "workflow_scope": scope,
+            "advisor_messages": len(all_messages),
             "validation_states": validation_states,
             "references_verified": references_verified,
             "favourable_recommendation_required": False,
@@ -349,10 +356,11 @@ def main() -> None:
         help="Required acknowledgement that the deployed server may make billable DeepSeek calls.",
     )
     parser.add_argument('--retry-failed', action='store_true', help='After a reviewed fix, retry an empty failed stage once while retaining its failures and the aggregate request ceiling.')
+    parser.add_argument("--council-only", action="store_true", help="Exercise only the seven-turn Council, with at most nine requests; direct/invite are excluded explicitly.")
     args = parser.parse_args()
     if not args.live:
         parser.error("Pass --live to run the deployed billable conversation trial")
-    result = run(args.base_url, args.timeout, args.state, args.retry_failed)
+    result = run(args.base_url, args.timeout, args.state, args.retry_failed, args.council_only)
     print(json.dumps(result, indent=2, sort_keys=True))
     raise SystemExit(0 if result["status"] == "PASS" else 1)
 

@@ -674,3 +674,6 @@ V8 remains immutable. The subsequent [V9 follow-up](v9-ai-followup.md) corrects 
 identified context/response-contract defects and has its own source, image and
 live verification. The final-local observations in Section 18 are historical
 checkpoints; this section is the final V8 public outcome.
+
+
+**Later evidence:** V9 was published and failed its final automated quality score despite complete workflows. The [V9 report](v9-ai-followup.md) supersedes earlier pending V9 notes in this historical chapter; the [V10 follow-up](v10-grounding-followup.md) records the next bounded correction.

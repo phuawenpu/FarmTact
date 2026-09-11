@@ -2,6 +2,12 @@
   "tool": "Mermaid CLI",
   "version": "11.17.0",
   "chapters": {
+    "v10-grounding-followup.md": [
+      {
+        "file": "figures/diagrams/v10-grounding-followup-1.svg",
+        "source_sha256": "c764a0aafee216c9c629a3ffcc5125c5a9f2fe37cf4448f88fd40009a020e7a0"
+      }
+    ],
     "v9-ai-followup.md": [
       {
         "file": "figures/diagrams/v9-ai-followup-1.svg",

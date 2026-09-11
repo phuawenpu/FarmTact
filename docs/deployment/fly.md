@@ -1,12 +1,12 @@
 # FarmTact on Fly.io
 
 Live: [edition chooser](https://farmtact.fly.dev/) and
-[v7 council](https://farmtact.fly.dev/v7/research), Singapore (`sin`). This is a synthetic
+[v9 application](https://farmtact.fly.dev/v9/), Singapore (`sin`). This is a synthetic
 development demonstration; actual farm operations remain disabled.
 
 ## Active runtime
 
-One shared 4-vCPU/4096-MB Machine runs the gateway and v1–v7 as eight containers,
+One shared 4-vCPU/4096-MB Machine runs the gateway and v1–v9 as ten containers,
 each pinned to its release image. One encrypted 3-GB volume provides isolated
 subtrees for their PostgreSQL clusters, caches and saved state. The common storage
 parent is unmounted before each app drops privileges. PostgreSQL uses private
@@ -43,6 +43,19 @@ coordination. One host is one failure boundary and shared updates can interrupt
 all editions. Volume snapshots alone are not a verified database restore process.
 
 ## Verification and local development
+
+[V9 deployment evidence](../../reports/v9/deployment-health.json) records nine
+passing edition health/source checks; its
+[preservation audit](../../reports/v9/preservation-after.json) records preserved
+v1–v8 source and state. The deployed V9 source is
+`89d29cc3e071e12373204ff234d0a261ce71b5a1`, pinned to image
+`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+The authenticated public UI replay passed 38 of 38 mobile/desktop checks without
+forwarding mutation or inference requests. These are deployment and isolation
+results. The separate live V9 trial used 21
+actual requests and failed its quality gate: 12 of 18 automated cases passed while
+workflow integrity passed, and a scorer-missed false-fulfilment claim independently
+prevents acceptance. V10 is the next unpublished remediation candidate.
 
 [V7 rollout evidence](../../reports/v7/implementation.md) records public browser,
 strategy, isolation, preservation and health checks. Its two explicit adviser

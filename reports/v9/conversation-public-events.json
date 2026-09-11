@@ -1,0 +1,473 @@
+{
+  "events": [
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": null,
+      "sequence": 1,
+      "occurred_at": "2026-09-11T12:56:32.979883+00:00",
+      "event_type": "conversation_created",
+      "schema_version": "1.0",
+      "body": {
+        "advisor_id": "mei",
+        "snapshot_ref": {
+          "kind": "scenario",
+          "id": "03d08de0856f4415fded2a4e78b4e208",
+          "hash": "5257bbb5bf1af42c8cb124de265bf161f98a5b45f63495ac740baaa018713668",
+          "version": 3,
+          "data_mode": "synthetic_demo",
+          "frozen_at": "2026-09-11T12:56:32.882553+00:00"
+        }
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 2,
+      "occurred_at": "2026-09-11T12:56:33.763419+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "923e992b0d013b9a9894d878536f8109",
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 3,
+      "occurred_at": "2026-09-11T12:56:33.989146+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 4,
+      "occurred_at": "2026-09-11T12:56:34.154089+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 5,
+      "occurred_at": "2026-09-11T12:56:36.196434+00:00",
+      "event_type": "advisor_reply_rejected",
+      "schema_version": "1.0",
+      "body": {
+        "role": "production_analyst",
+        "repair_attempt": 1,
+        "content": "The frozen trial applies a delayed batch at reduced yield; all three policies still simulate as feasible, with fill rate falling and harvest falling under each policy. These are synthetic scenario-minus-baseline deltas, not observed effects; no biological cause is established.",
+        "evidence_refs": [],
+        "tool_refs": [
+          "scenario:simulation_status",
+          "comparison:balanced.baseline_status",
+          "comparison:balanced.scenario_status"
+        ],
+        "fact_refs": [
+          "scenario:controls.delay_days",
+          "scenario:controls.yield_percent",
+          "comparison:balanced.deltas.fill_rate"
+        ],
+        "highlight_refs": [],
+        "relationship": "answer",
+        "proposed_actions": [],
+        "validation_issues": [
+          {
+            "code": "model_authored_quantity",
+            "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 17960,
+          "completion_tokens": 142,
+          "total_tokens": 18102,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 17960,
+          "reasoning_tokens": null
+        },
+        "execution_status": "format_rejected",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 6,
+      "occurred_at": "2026-09-11T12:56:36.202503+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 7,
+      "occurred_at": "2026-09-11T12:56:37.214112+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "d0aa603ccd94345cc997d4bacdd1c71b",
+        "speaker_id": "mei",
+        "reply_to": "923e992b0d013b9a9894d878536f8109",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "129e23b0ba86892c41f9b1bd96c287d0",
+      "sequence": 8,
+      "occurred_at": "2026-09-11T12:56:37.257701+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "completed_turns": 1,
+        "repair_attempts": 1
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 9,
+      "occurred_at": "2026-09-11T12:56:37.950888+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "37d5c9ecbeb17cadda5e7ce2f24b151f",
+        "mode": "invite",
+        "advisor_turns": 2
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 10,
+      "occurred_at": "2026-09-11T12:56:38.070452+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "invite",
+        "advisor_turns": 2
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 11,
+      "occurred_at": "2026-09-11T12:56:38.196283+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 12,
+      "occurred_at": "2026-09-11T12:56:39.764630+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "ef957f00013d408a52f1b69eb3242be5",
+        "speaker_id": "ravi",
+        "reply_to": "d0aa603ccd94345cc997d4bacdd1c71b",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 13,
+      "occurred_at": "2026-09-11T12:56:39.804064+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 14,
+      "occurred_at": "2026-09-11T12:56:41.256191+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "0bf1c308435ce22972b559ecec4f381b",
+        "speaker_id": "mei",
+        "reply_to": "ef957f00013d408a52f1b69eb3242be5",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "6376424466b17b29f0a42375101d0f0d",
+      "sequence": 15,
+      "occurred_at": "2026-09-11T12:56:41.305677+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "invite",
+        "completed_turns": 2,
+        "repair_attempts": 0
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 16,
+      "occurred_at": "2026-09-11T12:56:42.216795+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "c4c8531ff4e3ca31f3fb181a7c14c9db",
+        "mode": "council",
+        "advisor_turns": 7
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 17,
+      "occurred_at": "2026-09-11T12:56:42.324477+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "council",
+        "advisor_turns": 7
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 18,
+      "occurred_at": "2026-09-11T12:56:42.470312+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 19,
+      "occurred_at": "2026-09-11T12:56:44.388061+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "bfc6924b6abe0043366f8d24364f8c71",
+        "speaker_id": "ravi",
+        "reply_to": "c4c8531ff4e3ca31f3fb181a7c14c9db",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 20,
+      "occurred_at": "2026-09-11T12:56:44.407203+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 21,
+      "occurred_at": "2026-09-11T12:56:45.649027+00:00",
+      "event_type": "advisor_message_unsupported",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "72449edd14d8b50933de56ddf51b1820",
+        "speaker_id": "hana",
+        "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+        "validation_status": "unsupported",
+        "execution_status": "completed",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 22,
+      "occurred_at": "2026-09-11T12:56:45.671356+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 3,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 23,
+      "occurred_at": "2026-09-11T12:56:48.021793+00:00",
+      "event_type": "advisor_message_unsupported",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+        "speaker_id": "idris",
+        "reply_to": "72449edd14d8b50933de56ddf51b1820",
+        "validation_status": "unsupported",
+        "execution_status": "completed",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 24,
+      "occurred_at": "2026-09-11T12:56:48.038321+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 4,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 25,
+      "occurred_at": "2026-09-11T12:56:49.917556+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "fc43a1dc689b91c6d631e5e6df8316c1",
+        "speaker_id": "mei",
+        "reply_to": "6deea15b5e291849f8b8bd7f0bef1c2b",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 26,
+      "occurred_at": "2026-09-11T12:56:49.941822+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 5,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 27,
+      "occurred_at": "2026-09-11T12:56:51.671989+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "6a2c5d6faf93c65dfe017131a10702f1",
+        "speaker_id": "lina",
+        "reply_to": "fc43a1dc689b91c6d631e5e6df8316c1",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 28,
+      "occurred_at": "2026-09-11T12:56:51.692714+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 6,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 29,
+      "occurred_at": "2026-09-11T12:56:52.968911+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "82c492454202346e885b717acdc48371",
+        "speaker_id": "ben",
+        "reply_to": "6a2c5d6faf93c65dfe017131a10702f1",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 30,
+      "occurred_at": "2026-09-11T12:56:52.989271+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 7,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 31,
+      "occurred_at": "2026-09-11T12:56:55.163633+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "785e0a2b59515808474b9eb876b15511",
+        "speaker_id": "asha",
+        "reply_to": "82c492454202346e885b717acdc48371",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09",
+      "request_id": "c40632a752290c6b8b2120e1d73c4c8e",
+      "sequence": 32,
+      "occurred_at": "2026-09-11T12:56:55.211471+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "council",
+        "completed_turns": 7,
+        "repair_attempts": 0
+      }
+    }
+  ],
+  "next_cursor": 32
+}

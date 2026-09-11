@@ -94,3 +94,19 @@ evidence, one cache-dependent fresh-test failure and rendered report validation
 are separately recorded in [the audit](../reports/documentation/2026-09-11.md).
 The next release remains the next unallocated immutable edition; no deployment or
 paid inference was needed for this documentation task.
+
+## 11 September 2026 — post-audit implementation and retained failed trials
+
+The user subsequently authorized remediation and deployment. V8 added the
+recorded synthetic execution engine, stronger numerical allocation/accounting,
+point-in-time synthetic evaluation and bounded AI evidence contracts. V9 exposed
+canonical fact meaning in all adviser views and improved role/context admission.
+The original audit's statement that no execution engine exists is historical;
+current mechanics are documented in the V8 remediation chapter.
+
+Actual-provider tests exposed substantive errors after mechanical gates passed.
+Retain each frozen edition and failed output. Do not equate reference membership,
+completed transport, a synthetic regression or an automated topic-word score with
+semantic truth or agronomic validity. V10's fulfillment and absence corrections
+are bounded safeguards, not a proof of arbitrary interpretation. The scientific
+follow-up records final deployment, call accounting, tests and remaining gaps.

@@ -260,3 +260,21 @@ numerical/growth and architecture chapters; the architecture specialist then aud
 game state machines. No recursive delegation. Source baseline is a96025e; current
 published edition remains v7. See docs/technical/README.md and the final audit
 record reports/documentation/2026-09-11.md for findings and executed checks.
+
+## Remediation and actual-provider verification — 11 September 2026
+
+A subsequent user instruction authorized implementing the audited gaps, improving
+synthetic data and ML pipelines, end-to-end testing including actual AI calls,
+updating documentation, publishing and pushing GitHub progress. The preceding
+“documentation only” entry describes the earlier task, not this authorization.
+Root owns shared contracts, integration, regression, publication and evidence.
+Bounded specialist packages covered numerical planning/execution, Council/data
+contracts, UI and final documentation/semantic review; no recursive delegation.
+
+V8 and V9 were published as separate immutable editions. Their complete failure
+history remains in `reports/v8/` and `reports/v9/`; V9's completed five-workflow
+trial did not pass quality. V10 targets its booked-fulfillment contradiction and
+required-abstention context failures. Use `docs/technical/v10-grounding-followup.md`
+and the release registry for the current publication and verification outcome.
+Actual farm operations remain disabled. Human expert and real-farm validation
+remain open requirements, independent of software-test or transport success.

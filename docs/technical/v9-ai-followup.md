@@ -1,7 +1,7 @@
 # V9 AI follow-up: semantic context and bounded answers
 
 **Date:** 11 September 2026 UTC<br>
-**State:** candidate; immutable publication and actual-provider verification pending<br>
+**State:** published; actual-provider workflow completeness passed, automated quality failed<br>
 **Scope:** AI context/validation corrections after the immutable V8 public trial<br>
 **Data:** synthetic demonstration; actual farm operations disabled
 
@@ -141,11 +141,9 @@ actual farm operations.
 
 ## 5. Immutable publication and final results
 
-Publication, preservation, final live output and quality evidence are pending in
-this candidate. The deployed V8 and its failed quality evidence remain available
-and unchanged. The final report must attach the actual V9 source/image identity,
-all-edition health, prior-edition preservation, workflow counts and per-case result
-before describing this candidate as verified.
+V9 is published at [the immutable application](https://farmtact.fly.dev/v9/), from source `89d29cc3e071e12373204ff234d0a261ce71b5a1` and image `registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`. The first machine update returned a nonzero exit; retrying the same source and pinned image succeeded. No alternate V9 image was substituted. The initial CLI did not retain the underlying failure detail, so its cause is unknown.
+
+All nine public [health/source checks](../../reports/v9/deployment-health.json) passed. The [preservation probe](../../reports/v9/preservation-after.json) confirmed unchanged source identities and all captured records across V1–V8; new records are allowed by that check. Actual-provider quality and final numerical concurrency checks are recorded below when complete. V8 and its failed quality evidence remain unchanged.
 
 ## 6. Display verification
 
@@ -156,3 +154,19 @@ The [mobile browser check](../../reports/v9/ui-typed-facts.json) passed 21 asser
 ![Saved conversation explicitly identifies a fact missing from its frozen snapshot](../../reports/v9/ui-typed-facts/saved-conversation-mobile.png)
 
 ![Research adviser displays frozen dates and growing area from server records](../../reports/v9/ui-typed-facts/research-actual-mobile.png)
+
+## 7. Final public V9 findings
+
+The [planning mission](../../reports/v9/planning-public.json) completed all seven roles using **nine actual requests**. The [conversation trial](../../reports/v9/conversation-public.json) completed its direct, two-adviser invite and seven-role Council using **eleven actual requests**. The [research trial](../../reports/v9/research-public.json) completed one adviser response with **one request**. V9 therefore consumed **21 requests**, including repairs; cumulative task usage through V9 is **76**, with every earlier failure retained.
+
+The [stored-output scorer](../../reports/v9/ai-quality-final.json) evaluated **18 cases: 12 passed and six failed**. Exact workflow sequences and counts passed. Weather and Market conversational abstentions attached numerical references and were correctly marked unsupported. Four other failures concern the fixed reference-prefix/topic-word heuristics; they require semantic examination, not automatic dismissal or retroactive score changes. The automated scorer also missed a substantive error: mission Supply described booked orders as fully delivered, although every strategy requested 824 kg and delivered only 370, 446 or 518 kg. A repair removed a forbidden number word but preserved the false assertion. This proves that shape validation and code-rendered facts do not establish free-form entailment.
+
+V10 addresses these observed mechanisms with explicit booked-fulfillment status and a narrow contradiction guard, plus a source-absence-only projection for required conversational abstentions. V9 remains immutable and its failed result is not relabelled as successful. No human expert review or real-farm outcome validation has occurred.
+
+The [public concurrency check](../../reports/v9/shared-capacity-public.json) passed with two numerical jobs across V8/V9 and 58 timed requests. The [56-day recorded execution](../../reports/v9/execution-public.json) passed: 56 day closures, 60 task events, 64 demand-service events, one future replan, exact cash/mass/order-lot reconciliation and historical receipt replay. It made zero provider calls. This public run did not restart the process; the separate V8 local restart trial and edition-preservation probe cover different persistence boundaries.
+
+The [public browser replay](../../reports/v9/ui-live-replay.json) passed **38 checks** at mobile and desktop sizes, with zero public mutations forwarded, zero inference requests and no page or console errors. It read ten saved adviser messages, seven Council speakers, mission findings and the research reply. Its local navigation interception reuses an existing saved conversation; its mission bootstrap display is pinned to the recorded trial run so a later simulation does not select another run. These are explicit harness adaptations, not new production mutations. The initial selector/assertion failure is preserved in the report archive.
+
+![Actual saved V9 conversation replay on mobile](../../reports/v9/ui-live-replay/conversation-replay-390.png)
+
+The [complete AI-assisted semantic audit](../../reports/v9/ai-assisted-semantic-review.md) covers 62 assertions in all 18 final messages: ten sound, five sound with limits, and three materially contradictory messages. In addition to Supply, two Production replies incorrectly inferred unchanged crop composition from unchanged growing area; a sole-cause claim also exceeds the joint delay/yield/replanning comparison. This review is not human expert validation. Those remaining composition and causality gaps are explicit acceptance items in the [V10 follow-up](v10-grounding-followup.md).

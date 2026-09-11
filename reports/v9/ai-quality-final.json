@@ -1,0 +1,776 @@
+{
+  "automated_status": "FAIL",
+  "case_count": 18,
+  "execution_scope": "stored_actual_outputs_no_new_inference",
+  "failed_case_ids": [
+    "conversation:council:1:weather_analyst",
+    "conversation:council:2:market_analyst",
+    "conversation:council:4:supply_chain_analyst",
+    "conversation:council:6:planning_chair",
+    "research:research:0:planning_chair",
+    "planning:planning:0:demand_analyst"
+  ],
+  "human_reviews": {},
+  "observed_workflows": [
+    "council",
+    "direct",
+    "invite",
+    "planning",
+    "research"
+  ],
+  "pass_scope": "Automated status covers exact workflow roles and counts, persisted validation, reference shape, required topic groups, quantitative-prose blocking, and known contradiction phrases. It does not establish that arbitrary prose follows from facts.",
+  "required_workflows": [
+    "council",
+    "direct",
+    "invite",
+    "planning",
+    "research"
+  ],
+  "results": [
+    {
+      "attempts": [],
+      "case_id": "conversation:direct:0:production_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "d0aa603ccd94345cc997d4bacdd1c71b",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 142,
+        "prompt_cache_hit_tokens": 17920,
+        "prompt_cache_miss_tokens": 311,
+        "prompt_tokens": 18231,
+        "reasoning_tokens": null,
+        "total_tokens": 18373
+      },
+      "validation_issues": [],
+      "workflow": "direct"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:invite:0:demand_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "ef957f00013d408a52f1b69eb3242be5",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 142,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 18350,
+        "prompt_tokens": 18350,
+        "reasoning_tokens": null,
+        "total_tokens": 18492
+      },
+      "validation_issues": [],
+      "workflow": "invite"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:invite:1:production_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "0bf1c308435ce22972b559ecec4f381b",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 114,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 18310,
+        "prompt_tokens": 18566,
+        "reasoning_tokens": null,
+        "total_tokens": 18680
+      },
+      "validation_issues": [],
+      "workflow": "invite"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:0:demand_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "bfc6924b6abe0043366f8d24364f8c71",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 142,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 18728,
+        "prompt_tokens": 18984,
+        "reasoning_tokens": null,
+        "total_tokens": 19126
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:1:weather_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": false,
+        "expected_reference": true,
+        "persisted_validation": false,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "72449edd14d8b50933de56ddf51b1820",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 95,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 19763,
+        "prompt_tokens": 19763,
+        "reasoning_tokens": null,
+        "total_tokens": 19858
+      },
+      "validation_issues": [
+        {
+          "code": "abstention_payload",
+          "message": "Abstention cannot attach claims, highlights or proposed actions"
+        }
+      ],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:2:market_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": false,
+        "expected_reference": true,
+        "persisted_validation": false,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 140,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20103,
+        "prompt_tokens": 20103,
+        "reasoning_tokens": null,
+        "total_tokens": 20243
+      },
+      "validation_issues": [
+        {
+          "code": "abstention_payload",
+          "message": "Abstention cannot attach claims, highlights or proposed actions"
+        }
+      ],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:3:production_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "fc43a1dc689b91c6d631e5e6df8316c1",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 145,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 19424,
+        "prompt_tokens": 19680,
+        "reasoning_tokens": null,
+        "total_tokens": 19825
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:4:supply_chain_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": false,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "6a2c5d6faf93c65dfe017131a10702f1",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 133,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20014,
+        "prompt_tokens": 20014,
+        "reasoning_tokens": null,
+        "total_tokens": 20147
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:5:profit_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "82c492454202346e885b717acdc48371",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 133,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20143,
+        "prompt_tokens": 20143,
+        "reasoning_tokens": null,
+        "total_tokens": 20276
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "72449edd14d8b50933de56ddf51b1820",
+            "reply_to": "bfc6924b6abe0043366f8d24364f8c71",
+            "speaker_id": "hana",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        },
+        {
+          "body": {
+            "evidence_status": "unsupported",
+            "execution_status": "completed",
+            "message_id": "6deea15b5e291849f8b8bd7f0bef1c2b",
+            "reply_to": "72449edd14d8b50933de56ddf51b1820",
+            "speaker_id": "idris",
+            "validation_status": "unsupported"
+          },
+          "event_type": "advisor_message_unsupported"
+        }
+      ],
+      "case_id": "conversation:council:6:planning_chair",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": false,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "785e0a2b59515808474b9eb876b15511",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 159,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20347,
+        "prompt_tokens": 20347,
+        "reasoning_tokens": null,
+        "total_tokens": 20506
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "research:research:0:planning_chair",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": false,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "8a0718935bc91c91523f7a0d6f89053c",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 120,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 6708,
+        "prompt_tokens": 6964,
+        "reasoning_tokens": null,
+        "total_tokens": 7084
+      },
+      "validation_issues": [],
+      "workflow": "research"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:0:demand_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": false,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:0",
+      "status": "FAIL",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:1:weather_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:1",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:2:market_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:2",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:3:production_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:3",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:4:supply_chain_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:4",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:5:profit_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:5",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    },
+    {
+      "attempts": [],
+      "case_id": "planning:planning:6:planning_chair",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "98ae5f2661cdf5adc816f10c2153f02b:6",
+      "status": "PASS",
+      "usage": {},
+      "validation_issues": [],
+      "workflow": "planning"
+    }
+  ],
+  "semantic_assurance": "Human review checks whether each conclusion follows from its rendered frozen facts; keyword and reference checks alone do not establish meaning.",
+  "semantic_review_status": "PENDING",
+  "source_artifacts": {
+    "planning_report": "reports/v9/planning-public.json",
+    "research_replay": null
+  },
+  "source_provenance": {
+    "conversation": "base_url_stored_transcript",
+    "planning": "provided_report",
+    "research": "base_url_stored_transcript"
+  },
+  "status": "FAIL",
+  "suite_version": "farmtact-advisor-quality-v2",
+  "workflow_integrity": {
+    "status": "PASS",
+    "workflows": [
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "observed_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "status": "PASS",
+        "workflow": "council"
+      },
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "production_analyst"
+        ],
+        "observed_roles": [
+          "production_analyst"
+        ],
+        "status": "PASS",
+        "workflow": "direct"
+      },
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "demand_analyst",
+          "production_analyst"
+        ],
+        "observed_roles": [
+          "demand_analyst",
+          "production_analyst"
+        ],
+        "status": "PASS",
+        "workflow": "invite"
+      },
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "observed_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "status": "PASS",
+        "workflow": "planning"
+      },
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "planning_chair"
+        ],
+        "observed_roles": [
+          "planning_chair"
+        ],
+        "status": "PASS",
+        "workflow": "research"
+      }
+    ]
+  }
+}

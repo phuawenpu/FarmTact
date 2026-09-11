@@ -2,7 +2,7 @@
   "schema_version": "v8-live-experiment-ledger-1",
   "goal_request_ceiling": 96,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 55,
+  "actual_requests_consumed": 76,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -112,6 +112,41 @@
       "source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13",
       "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
       "failure": "Invited return turn exceeded content schema after shared repair was consumed; Council stage not started."
+    },
+    {
+      "id": "public-v9-planning-v6",
+      "status": "PASS_TRANSPORT_PENDING_QUALITY",
+      "base_url": "https://farmtact.fly.dev/v9",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v9/planning-public.json",
+      "actual_requests": 9,
+      "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "run_id": "98ae5f2661cdf5adc816f10c2153f02b"
+    },
+    {
+      "id": "public-v9-conversation-v5",
+      "status": "FAIL",
+      "base_url": "https://farmtact.fly.dev/v9",
+      "maximum_requests": 14,
+      "expected_requests": 10,
+      "includes_repair_attempts": true,
+      "report": "reports/v9/conversation-public.json",
+      "actual_requests": 11,
+      "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "conversation_id": "c29e16803db2bf77bd263eb6f859cd09"
+    },
+    {
+      "id": "public-v9-research-v5",
+      "status": "PASS",
+      "base_url": "https://farmtact.fly.dev/v9",
+      "maximum_requests": 2,
+      "expected_requests": 1,
+      "includes_repair_attempts": true,
+      "report": "reports/v9/research-public.json",
+      "actual_requests": 1,
+      "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1"
     }
   ],
   "budget_revisions": [

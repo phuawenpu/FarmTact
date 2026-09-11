@@ -1,10 +1,13 @@
 # FarmTact documentation
 
-Documentation audit: **11 September 2026**. Published application: **v8**.
-The working tree contains the **v9 AI follow-up candidate**. V8 publication,
-health and prior-state preservation passed, but public AI quality failed; the
-follow-up report separates those results from V9's pending live verification.
-Earlier edition source, images, state and trial reports remain immutable.
+Documentation audit: **11 September 2026**. Published application: **v9**, frozen
+from source `89d29cc3e071e12373204ff234d0a261ce71b5a1`. All nine health/source
+checks and captured v1–v8 preservation passed. Earlier edition source, images,
+state and trial reports remain immutable. V8 public AI quality failed. V9 is the
+separate published corrective edition, but its live quality gate also failed:
+12 of 18 automated cases passed while workflow integrity passed. The completed
+AI-assisted review classified 10 messages as sound, 5 as sound with limits and 3
+as materially contradictory. V10 is the unpublished grounding-remediation candidate.
 
 ## Start here
 
@@ -16,7 +19,8 @@ Earlier edition source, images, state and trial reports remain immutable.
 | How are demand, plant development and plans calculated? | [Numerical models and growth](technical/numerical-models-and-growth.md) |
 | How do missions, quests, proposals, acceptance, replay and simulated work behave? | [Complete game backend](technical/game-backend-and-state-machines.md) |
 | Where do records, evidence and public context come from? | [System, data and evidence](technical/system-data-and-evidence.md) |
-| What is missing or misleading, and what should v8 address? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
+| What remains missing or misleading after v8/v9? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
+| What does the unpublished V10 candidate correct? | [V10 grounding follow-up](technical/v10-grounding-followup.md) |
 | Which AI defects did the public trial expose, and how are they corrected? | [V9 AI follow-up](technical/v9-ai-followup.md) |
 | What did v8 change, verify and leave unresolved? | [V8 remediation report](technical/v8-remediation-report.md) |
 | What do the bounded v8 work packages report? | [Council](../reports/v8/council.md), [planner](../reports/v8/planner.md), [data/ML](../reports/v8/data-ml.md) |
@@ -48,11 +52,28 @@ historical decisions. Use the current deployment runbook for operations. Existin
 numbered editions retain their frozen source/image and independent progress;
 documentation changes do not publish a new application edition.
 
-V8's isolated PostgreSQL suite passed 589 tests with one skip; its final 56-day
-network trial passed across an actual application restart. It is published and
-all eight edition health endpoints match their source pins. Prior-seven state
-preservation and public numerical concurrency passed. Its public combined AI
-scorer failed (6 of 10 completed cases passed; workflows incomplete). Read the
+V9's final repository regression passed 606 tests with one skip; its mobile
+typed-fact display check passed 21 assertions with fixture-shaped responses and
+zero provider calls. All nine edition health/source checks and captured v1–v8
+state preservation passed. V8's public combined AI scorer remains failed (6 of 10
+completed cases passed; workflows incomplete). Read the
 [V8 postmortem](../reports/v8/public-ai-postmortem.md) and
-[V9 correction report](technical/v9-ai-followup.md) before interpreting current
-AI quality. The final V9 provider result is a separate required evidence item.
+[V9 correction report](technical/v9-ai-followup.md) together. V9's automated
+quality result is FAIL (12 of 18 passed; workflow integrity passed) after 21 new
+actual requests, bringing the cumulative ledger to 76. The
+[AI-assisted semantic review](../reports/v9/ai-assisted-semantic-review.md) found
+10 sound messages, 5 sound with limits and 3 materially contradictory. The narrow
+unpublished [V10 remediation candidate](technical/v10-grounding-followup.md)
+addresses the Supply and absence-context mechanisms. Its full suite passed 611
+tests with one skip in 441.23 seconds; publication and provider-backed verification
+remain pending, and general prose/crop-mix entailment remains unresolved.
+
+The [authenticated public V9 UI replay](../reports/v9/ui-live-replay.json) passed 38 of 38 checks across mobile and
+desktop widths. It used saved mission, conversation and research state; mutation
+attempts and direct provider traffic were intercepted before network dispatch.
+
+V9's public capacity check passed two overlapping numerical jobs and 58 browse
+samples with zero provider calls. Its 56-day synthetic execution run passed mass,
+cash and lot-receipt checks with 60 task events, 64 demand-service events, one
+future replan and zero provider calls; an actual application restart was not
+exercised.

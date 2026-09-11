@@ -362,7 +362,7 @@ def test_invitation_is_two_sided_exchange_with_specific_reply_graph_and_prior_tu
     assert same_author.json()["detail"] == "Invite a different advisor into this exchange"
 
 
-def test_council_has_seven_bounded_turns_all_with_prior_claims_and_planner_conclusion(
+def test_council_has_seven_turns_relevant_prior_claims_and_planner_conclusion(
     env, monkeypatch
 ):
     client, store, tenant = env
@@ -392,7 +392,11 @@ def test_council_has_seven_bounded_turns_all_with_prior_claims_and_planner_concl
     for index, call in enumerate(calls[1:], start=1):
         context = json.loads(call["messages"][1]["content"])
         earlier = [turn for turn in context["prior_turns"] if turn["speaker"] == "advisor"]
-        assert len(earlier) == index
+        if context["response_requirements"]["required_relationship"] == "abstention":
+            assert earlier == []
+            assert context["typed_facts"] == {}
+        else:
+            assert len(earlier) == index
     assert advisor_messages[-1]["planner_conclusion"] is True
     assert all(message["request_mode"] == "council" for message in advisor_messages)
     assert advisor_messages[-1]["relationship"] == "conclusion"
@@ -1450,3 +1454,40 @@ def test_abstention_cannot_smuggle_a_claim_or_proposed_action():
     errors, actions = _validate_reply(reply, conversation, required_relationship="abstention")
     assert "Abstention cannot attach claims, highlights or proposed actions" in errors
     assert actions[0]["status"] == "blocked_unsupported"
+
+
+@pytest.mark.parametrize("role", ["weather_analyst", "market_analyst"])
+def test_required_source_abstention_removes_conflicting_numerical_projection(env, role):
+    from copy import deepcopy
+    from packages.ai_contracts import typed_reference_catalog
+    client, store, tenant = env
+    conversation_id = create(client, key="v10-absence-" + role).json()["id"]
+    persistence = ConversationStore(store)
+    conversation = persistence.get_conversation(tenant, conversation_id)
+    conversation["snapshot_ref"]["kind"] = "scenario"
+    conversation["_tool_results"].update({
+        "weather:source_context": {"status": "unavailable"},
+        "market:signals": {"status": "not_connected"},
+        "comparison:balanced.deltas.margin_sgd": -120,
+        "comparison:balanced.deltas.fill_rate": -0.2,
+    })
+    conversation["_typed_facts"] = typed_reference_catalog(conversation["_tool_results"], snapshot_hash="frozen")
+    original = deepcopy(conversation)
+    request = {"mode": "council", "question": "Compare frozen policy consequences.", "reply_to": None}
+    messages = _provider_messages(persistence, tenant, conversation, request, role, "question", False)
+    context = json.loads(messages[1]["content"])
+    assert context["response_requirements"]["required_relationship"] == "abstention"
+    assert context["response_requirements"]["typed_fact_required"] is False
+    assert set(context["response_requirements"]["empty_output_arrays"]) == {
+        "fact_refs", "tool_refs", "evidence_refs", "highlight_refs", "proposed_actions"
+    }
+    assert all(not context[field] for field in (
+        "typed_facts", "tool_results", "evidence_context", "highlight_refs", "prior_turns", "scenario_summary"
+    ))
+    assert "required external-source abstention" in messages[0]["content"]
+    assert conversation == original  # No deletion from the frozen audit record.
+    request["mode"] = "direct"
+    direct = json.loads(_provider_messages(persistence, tenant, conversation, request, role, "question", False)[1]["content"])
+    assert direct["typed_facts"]
+    assert direct["response_requirements"]["required_relationship"] is None
+    assert direct["response_requirements"]["typed_fact_required"] is True

@@ -1,6 +1,6 @@
 # Publishing immutable editions
 
-Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v8 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
+Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v9 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
 
 The publisher never resolves an image tag. You may supply a previously verified `sha256` digest. When `--image` is omitted, it runs the fixed gateway Fly build with `--build-only --push --remote-only`, labels it from the edition and short source hash, passes the full source commit as a build argument, and accepts only the pinned registry digest reported by Fly. Commit the complete candidate source first. The publisher rejects dirty worktrees, abbreviated commits, non-HEAD commits, mutable image references, skipped edition numbers, changes to existing registry entries, and reuse of a locally reserved number with different inputs.
 
@@ -8,8 +8,8 @@ Prepare a notes file containing exactly `title`, `summary`, and `changes`. Each 
 
 ```bash
 .venv/bin/python -m scripts.publish_edition \
-  --edition v9 \
-  --notes /absolute/private/path/v9-notes.json \
+  --edition v10 \
+  --notes /absolute/private/path/v10-notes.json \
   --image registry.fly.io/farmtact@sha256:<64-hex-digest> \
   --source-commit "$(git rev-parse HEAD)" \
   --dry-run
@@ -29,7 +29,7 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
 
-The current next unused number is v9; always check the registry before publishing.
+The current next unused number is v10; always check the registry before publishing.
 The legacy separate-app provisioning path remains for environments without a
 shared-host record. Do not remove that record to publish on this deployment.
 No credential values enter generated configuration, command output or manifests.
@@ -42,7 +42,7 @@ If a step fails, inspect the reported Fly command and rerun with the same editio
 The gateway refreshes its validated destinations and control edition allowlist after atomic publication. Updating the shared Machine can restart the gateway and all edition containers.
 
 
-## Active shared-host deployment (v8)
+## Active shared-host deployment (v9)
 
 The verified deployment uses one 4-shared-vCPU/4-GB Machine with one persistent volume.
 The public chooser and every immutable edition run in separate Pilot containers,
@@ -126,3 +126,22 @@ existing tables in the expanded state/event/research snapshot allowlist. It
 passed before new capacity-test sessions were created. See
 [health evidence](../../reports/v8/deployment-health.json) and
 [preservation evidence](../../reports/v8/preservation-after.json).
+
+## V9 publication evidence — 11 September 2026
+
+V9 is published at [the immutable v9 application](https://farmtact.fly.dev/v9/),
+from source `89d29cc3e071e12373204ff234d0a261ce71b5a1` and image
+`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+The append-only registry publication commit is
+`6731992757ffb0dd219696b219ca3e7f304a238b`.
+
+All nine public edition health endpoints matched their registered edition and
+full source commit, and the live registry matched the Git registry. The v1–v8
+source and state preservation audit passed. See
+[health evidence](../../reports/v9/deployment-health.json) and
+[preservation evidence](../../reports/v9/preservation-after.json). Publication
+made no inference calls. These checks establish source identity, availability and
+edition isolation. The separate V9 provider-backed trial used 21 actual requests
+and failed its quality gate: 12 of 18 automated cases passed while workflow
+integrity passed, and a scorer-missed false-fulfilment claim independently prevents
+acceptance. V10 is the next unpublished remediation candidate.

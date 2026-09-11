@@ -2,21 +2,22 @@
 
 ## Implementation audit amendment — 11 September 2026
 
-This amendment records published **v8** separately from the broader v1.2
-requirements below. V8 was published from source
-`a00e546b1270a5c532e8eae6b8b64e568c344c13` and immutable image digest
-`8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+This amendment records published **v9** separately from the broader v1.2
+requirements below. V9 was published from source
+`89d29cc3e071e12373204ff234d0a261ce71b5a1` and immutable image
+`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
 It supersedes conflicting current-state descriptions without changing immutable
-v1–v7 source, images or game state. See the [v8 remediation report](docs/technical/v8-remediation-report.md)
-and [package evidence](reports/v8/).
+v1–v8 source, images or game state. See the [V9 AI follow-up](docs/technical/v9-ai-followup.md),
+[V9 evidence](reports/v9/), [V8 remediation report](docs/technical/v8-remediation-report.md)
+and [V8 evidence](reports/v8/).
 See the [scientific implementation report](docs/technical/README.md), detailed
 [game backend audit](docs/technical/game-backend-and-state-machines.md), and
 [gap register](docs/technical/gaps-and-next-iteration.md).
 
 ### Current implementation boundary
 
-- Latest published edition is **v8**. One Singapore Fly Machine and volume host
-  nine isolated containers: the gateway and v1–v8. Twelve crop profiles and
+- Latest published edition is **v9**. One Singapore Fly Machine and volume host
+  ten isolated containers: the gateway and v1–v9. Twelve crop profiles and
   twenty-four publication records support **four synthetic single-harvest recipes**.
 - The application uses React/TypeScript/**Vite**, FastAPI, PostgreSQL JSON records,
   local content-addressed public snapshots, and in-process worker loops. The broad
@@ -54,7 +55,7 @@ See the [scientific implementation report](docs/technical/README.md), detailed
   ledgers, and can replan remaining days while locking started work. The farm-map
   slider remains a static projection. No real farm action is enabled.
 
-### V8 remediation status and remaining requirements
+### V8 remediation, V9 follow-up and remaining requirements
 
 Published V8 source implements the typed Council facts/status/policy work, canonical
 harvest contract, weighted-scenario and FEFO planner corrections, explicit terminal
@@ -64,31 +65,45 @@ synthetic execution clock. The dated remediation report maps these changes to th
 stable gap IDs. Publication and health checks establish deployment of that source;
 they do not establish live answer quality.
 
-Conversation prompts/projection are V4. Mission prompts/projection are V5: short
+V9 conversation prompts/projection are V5. Mission prompts/projection are V6 and
+validation is V4: short
 per-role `F001`/`C001` aliases resolve by exact server lookup to canonical frozen
 facts and qualitative references, and unknown aliases fail closed. Role-ranked
 context is bounded to 48 typed facts, 24 qualitative references, 16 prior turns,
 six evidence records and 120,000 serialized characters, while exact frozen research
 inputs are retained. Unanswerable questions must abstain. Format-repair attempts
-preserve the rejected attempt and its lexical meaning. The retained pre-fix quality
-score is 8 PASS and 10 FAIL across 18 cases despite exact workflow counts passing;
-quality is not yet established.
+preserve the rejected attempt and its lexical meaning. V8's completed public trial
+remains a failure: 6 of 10 completed quality cases passed, and invited return and
+conversational Council were incomplete. V9 used 21 actual requests (nine mission,
+eleven conversation and one research), bringing the cumulative ledger to 76. Its
+automated quality result is FAIL: 12 of 18 cases passed while workflow integrity
+passed. Two Council abstentions persisted unsupported; the scorer also missed a
+false full-fulfilment claim for an 824 kg booked request against 370/446/518 kg
+scenario deliveries. The completed AI-assisted review of 18 messages and 62 atomic
+assertions found 10 sound, 5 sound with limits and 3 materially contradictory:
+Planning Supply and two Production replies. Publication and transport evidence do
+not establish answer quality.
 
-The isolated PostgreSQL regression passed 589 tests with one skip before the narrow
-V5 alias change; a subsequent focused AI suite passed 250 tests with one skip and
-one PostgreSQL case deselected. The final 56-day HTTP trial passed across an actual
-application restart with 56 task and 64 demand-service events. All eight edition
-health checks and preservation checks for v1–v7 passed. The local provider-call
-ledger totals 44; the public mission was running and public conversation remained
-unstarted at documentation freeze, so public requests and quality remain separate
-pending evidence.
+V9's frozen offline suite passed 606 tests with one skip, and its mobile typed-fact
+check passed 21 of 21 assertions using intercepted server-shaped fixtures with zero
+provider calls. All nine edition health/source checks passed, and the preservation
+audit passed for v1–v8. The authenticated public UI replay passed 38 of 38 checks
+across mobile and desktop widths without forwarding mutation or inference requests.
+These checks establish the deployed source, offline behavior
+and immutable-edition isolation; they do not repair the live quality failure.
+
+V9's public capacity check passed two overlapping numerical jobs and 58 browse
+samples with zero provider calls. Its 56-day synthetic execution run passed mass,
+cash and lot-receipt checks with 60 task events, 64 demand-service events, one
+future replan and zero provider calls. It did not exercise an actual application
+restart.
 
 Anonymous-tenant pruning is an explicit operator-only command. It is dry-run by
 default, retains 30 days by default with a seven-day minimum, examines at most 500
 tenants per invocation, skips queued/running work and preserves shared budget and
 security records. It has no automatic worker or production schedule.
 
-Both archived v7 actual replies and every rejected v8 attempt remain evidence.
+Archived v7 actual replies and every rejected V8/V9 attempt remain evidence.
 Continue meaningful frozen-case Council quality evaluation. Before any real-farm,
 agronomic-accuracy, calibrated-uncertainty or improved-decision claim, obtain
 independent crop-cycle and order observations, grouped temporal and external-cohort
@@ -786,7 +801,7 @@ Use a TypeScript/React frontend, preferably Next.js; a Python FastAPI/Pydantic b
 
 These are design choices, not a claim that a particular version is currently best. The master agent verifies current compatible versions and locks dependencies at implementation time. Do not guess future package versions. Use containers for reproducible local execution and separate real integration tests from fixture-only CI.
 
-Run numerical models and optimization in Python. Generate frontend types from the authoritative Pydantic view models with `scripts/generate_web_contracts.py`; the generated TypeScript file is not hand-maintained. Use the DeepSeek-only server adapter and its documented Chat Completions JSON contract; schema conformance still requires local validation and semantic checks. The v8 manifest requests exact canonical `deepseek-flash` for every current text and native-vision route and rejects a returned identifier that differs from the request. It uses `https://api.deepseek.com/chat/completions`. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
+Run numerical models and optimization in Python. Generate frontend types from the authoritative Pydantic view models with `scripts/generate_web_contracts.py`; the generated TypeScript file is not hand-maintained. Use the DeepSeek-only server adapter and its documented Chat Completions JSON contract; schema conformance still requires local validation and semantic checks. The v9 manifest requests exact canonical `deepseek-flash` for every current text and native-vision route and rejects a returned identifier that differs from the request. It uses `https://api.deepseek.com/chat/completions`. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
 
 ### 9.2 Repository layout
 
@@ -1035,16 +1050,43 @@ wide at 360-pixel viewport width; field and send touch targets are at least 44 p
 high. V4 corrects this presentation issue without changing seven-agent roles,
 numerical calculations or source connections. V3 and earlier instances stay frozen.
 
-## V9 AI follow-up candidate — 11 September 2026
+## V9 AI follow-up — published 11 September 2026
 
 The public V8 quality trial failed despite mission transport/reference success:
 6 of 10 completed quality cases passed, and the invited return and conversational
-Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
-V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. V9 uses mission
+prompt/context V6, conversation prompt/context V5 and
 validator V4. It preserves semantic names alongside exact aliases, passes the
 actual required/advisory policy, bounds role-specific facts, balances comparison
 segments, requires typed numerical evidence and enforces absent-source abstention
 for Council source specialists. Direct/invited numerical questions remain
 answerable from their frozen facts. Conversation prose targets 220 characters
-under the unchanged 400-character hard limit. Actual-provider verification and
-immutable V9 publication are pending. V8 stays unchanged.
+under the unchanged 400-character hard limit. V9 is published from source
+`89d29cc3e071e12373204ff234d0a261ce71b5a1` and the immutable image recorded above;
+all nine edition health/source checks and preservation of v1-v8 passed. The frozen
+offline suite passed 606 tests with one skip and the mobile typed-fact fixture check
+passed 21 of 21 assertions. The actual-provider run used 21 requests: nine mission
+requests for seven roles, eleven conversation requests for ten messages and one
+research request. Mission and research transport passed; all conversation workflows
+completed, but Weather and Market abstentions persisted `unsupported` with
+`abstention_payload`. The combined automated result is FAIL: 12 of 18 cases passed
+with workflow integrity PASS. The completed AI-assisted semantic review determined
+that four automated failures were conservative prefix/word false negatives and two
+were real abstention-contract failures. Separately, the scorer passed Supply's false claim that
+an 824 kg booked request was fully delivered despite scenario deliveries of 370,
+446 and 518 kg. The cumulative actual-request ledger is 76.
+
+## V10 grounding-remediation candidate — unpublished
+
+V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
+validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
+status and applies a bounded phrase guard without semantic repair. Required-absence
+conversation context strips numerical and prior-conversation prose and supplies
+explicit empty arrays with `typed_required=false`. The absence-only projection
+applies only to Weather/Market in conversational Council mode when their source is
+absent; numerical direct/invite and research retain their existing projections. See
+the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md). The V10
+full suite passed 611 tests with one skip in 441.23 seconds. Candidate checks do not
+establish publication or provider-backed quality. The narrow fix does not establish
+general prose or crop-mix entailment; the two V9 Production contradictions remain
+unresolved evidence. V8 and V9 stay unchanged.

@@ -75,6 +75,7 @@ def repair_computed():
             "id": "balanced", "name": "Balanced", "status": "FEASIBLE",
             "metrics": {
                 "margin_sgd": 10.0, "booked_requested_kg": 4.0,
+                "booked_delivered_kg": 3.0,
                 "fill_rate": 0.8, "harvest_kg": 5.0, "shortfall_kg": 1.0,
                 "waste_kg": 0.0, "closing_stock_kg": 0.0,
                 "revenue_sgd": 11.0, "cost_sgd": 1.0, "labour_hours": 1.0,
@@ -308,6 +309,141 @@ def test_role_gates_reject_generic_or_semantically_wrong_supported_shapes():
     assert [issue["code"] for issue in issues] == ["role_relevant_fact_required"]
 
 
+def test_supply_context_exposes_code_derived_booked_fulfillment_per_strategy():
+    computed = repair_computed()
+    computed["strategies"].append({
+        **computed["strategies"][0],
+        "id": "resilient",
+        "name": "Resilient",
+        "metrics": {
+            **computed["strategies"][0]["metrics"],
+            "booked_requested_kg": 5.0,
+            "booked_delivered_kg": 5.0,
+        },
+    })
+    qualitative, typed = council_module._mission_context(
+        computed, None, None, None
+    )
+    supply_qualitative, supply_typed = council_module._role_context(
+        "supply_chain_analyst", qualitative, typed
+    )
+
+    assert supply_qualitative["strategy:balanced.booked_fulfillment"] == {
+        "strategy_name": "Balanced",
+        "status": "partial_delivery",
+        "all_booked_demand_fully_delivered": False,
+        "meaning": (
+            "This frozen plan has a positive booked-demand shortfall; "
+            "booked demand is not fully delivered."
+        ),
+    }
+    assert supply_qualitative["strategy:resilient.booked_fulfillment"][
+        "all_booked_demand_fully_delivered"
+    ] is True
+    values = {
+        reference: record["value"] for reference, record in supply_typed.items()
+    }
+    assert values["strategy:balanced.metrics.booked_requested_kg"] == 4.0
+    assert values["strategy:balanced.metrics.booked_delivered_kg"] == 3.0
+    assert values["strategy:balanced.metrics.booked_shortfall_kg"] == 1.0
+    assert values["strategy:resilient.metrics.booked_shortfall_kg"] == 0.0
+
+
+def test_supply_booked_fulfillment_guard_rejects_false_totals_but_accepts_negatives():
+    refs = {
+        "strategy:balanced.booked_fulfillment": {
+            "strategy_name": "Balanced",
+            "status": "partial_delivery",
+            "all_booked_demand_fully_delivered": False,
+        },
+        "strategy:resilient.booked_fulfillment": {
+            "strategy_name": "Resilient",
+            "status": "fully_delivered",
+            "all_booked_demand_fully_delivered": True,
+        },
+    }
+    typed_ref = "strategy:balanced.metrics.booked_shortfall_kg"
+    typed = {typed_ref: {"reference": typed_ref}}
+
+    def issue_codes(statement):
+        return {
+            issue["code"] for issue in council_module._claim_issues(
+                {
+                    "role": "supply_chain_analyst",
+                    "claim_type": "observation",
+                    "statement": statement,
+                    "evidence_ids": [],
+                    "tool_result_refs": [
+                        "strategy:balanced.booked_fulfillment"
+                    ],
+                    "fact_refs": [typed_ref],
+                    "recommendation": "proceed_simulation",
+                },
+                refs,
+                typed,
+                set(),
+            )
+        }
+
+    assert issue_codes("Booked order routing is fully delivered.") == {
+        "booked_fulfillment_contradiction"
+    }
+    assert issue_codes("Each booked order is delivered.") == {
+        "booked_fulfillment_contradiction"
+    }
+    assert issue_codes("Balanced booked demand is completely covered.") == {
+        "booked_fulfillment_contradiction"
+    }
+    assert issue_codes("Booked order routing is not fully delivered.") == set()
+    assert issue_codes("Not all booked orders are delivered.") == set()
+    assert issue_codes("Resilient booked demand is fully delivered.") == set()
+    assert issue_codes(
+        "Some booked quantities are delivered, while total demand remains unfilled."
+    ) == set()
+
+
+def test_supply_semantic_failure_does_not_spend_format_repair(monkeypatch):
+    calls = []
+
+    class ContradictingGateway(FakeGateway):
+        def chat_json(self, role, messages, output_model, **kwargs):
+            result = super().chat_json(role, messages, output_model, **kwargs)
+            if role == "supply_chain_analyst":
+                result.data.statement = "Booked order routing is fully delivered."
+            return result
+
+    monkeypatch.setattr(
+        council_module.DeepSeekGateway,
+        "from_config",
+        lambda *_, **__: ContradictingGateway(calls),
+    )
+    events = []
+    claims, audits = council_module.council(
+        repair_computed(),
+        "semantic-rejection-run",
+        lambda kind, body: events.append((kind, body)),
+    )
+
+    supply = next(
+        claim for claim in claims if claim["role"] == "supply_chain_analyst"
+    )
+    assert len(calls) == len(ROLES)
+    assert len(audits) == len(ROLES)
+    assert supply["status"] == "rejected"
+    assert [issue["code"] for issue in supply["validation_issues"]] == [
+        "booked_fulfillment_contradiction"
+    ]
+    assert all(
+        "format_correction_only" not in message["content"]
+        for _, messages, _ in calls for message in messages
+    )
+    assert any(
+        kind == "claim_rejected"
+        and body.get("role") == "supply_chain_analyst"
+        for kind, body in events
+    )
+
+
 def test_role_relevance_failures_reject_without_spending_format_repairs(monkeypatch):
     calls = []
 
@@ -446,6 +582,7 @@ def test_actual_failure_patterns_remain_rejected_and_prompt_explains_repairs():
     }
     prompt = council_module._prompt("weather_analyst")
     assert "number words" in prompt and "role_context.output_requirement" in prompt
+    assert "booked_fulfillment records are code-derived totals" in prompt
     assert '"recommendation":"proceed_simulation"' in prompt
 
 

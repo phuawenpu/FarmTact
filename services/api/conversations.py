@@ -1399,7 +1399,7 @@ def _provider_messages(
     )
     numerical_context = conversation.get("snapshot_ref", {}).get("kind") in {"scenario", "research"}
     response_requirements = {
-        "typed_fact_required": bool(typed_facts) and (numerical_context or role not in {"weather_analyst", "market_analyst"}),
+        "typed_fact_required": not optional_absent and bool(typed_facts) and (numerical_context or role not in {"weather_analyst", "market_analyst"}),
         "required_relationship": "abstention" if optional_absent else None,
         "external_weather_context_available": weather_available,
         "community_market_context_available": market_available,
@@ -1442,6 +1442,22 @@ def _provider_messages(
         "question": request_payload["question"],
         "expected_reply_to": expected_reply_to,
     }
+    if optional_absent:
+        # An external-source abstention is not a numerical interpretation. Do not
+        # provide unrelated facts or earlier numerical prose that encourages the
+        # model to append a finding to the required absence statement. The full
+        # frozen snapshot and dialogue remain durable; only this projection is
+        # reduced, with the reason and required empty output fields made explicit.
+        context.update(
+            scenario_summary=None, tool_results={}, typed_facts={},
+            evidence_context=[], highlight_refs=[], prior_turns=[],
+        )
+        response_requirements.update(
+            abstention_reason=("No frozen public weather observation is available."
+                               if role == "weather_analyst" else
+                               "No connected frozen community-market observation is available."),
+            empty_output_arrays=["fact_refs", "tool_refs", "evidence_refs", "highlight_refs", "proposed_actions"],
+        )
     rendered_context = json.dumps(context, default=str)
     if len(rendered_context) > MAX_PROVIDER_CONTEXT_CHARACTERS:
         raise ValueError("Bounded advisor context exceeds the serialized character ceiling")
@@ -1453,6 +1469,11 @@ def _provider_messages(
                 request_payload["mode"],
                 expected_reply_to,
                 final_turn,
+            ) + (
+                " This turn is a required external-source abstention. Override the normal relationship with abstention. "
+                "State only the supplied source absence and its assessment limit. Do not discuss any numerical comparison or earlier finding. "
+                "Return every reference array and proposed_actions as an empty array."
+                if optional_absent else ""
             ),
         },
         {"role": "user", "content": rendered_context},

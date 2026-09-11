@@ -2,7 +2,7 @@
 
 FarmTact runtime inference uses the direct official DeepSeek Chat Completions API. The browser never receives the credential. The server route manifest is `config/deepseek_runtime.json`; callers select a registered role and cannot supply a provider, origin, or model.
 
-The published v8 manifest version 1.2 allowlists exact canonical
+The published v9 manifest version 1.2 allowlists exact canonical
 `deepseek-flash` for every current text and native-vision route. This follows the
 10 September 2026 provider migration and authenticated 11 September discovery in
 `reports/v8/model-discovery.json`. The gateway still requires returned model ID to
@@ -113,9 +113,11 @@ actual application restart with 56 task and 64 demand-service events. V8 was the
 published from source `a00e546b1270a5c532e8eae6b8b64e568c344c13` and image digest
 `8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
 All eight edition health checks and preservation of v1–v7 passed. Public mission
-and conversation calls must be added separately from the 44 local calls. At this
-documentation freeze, the public mission was running, the public conversation had
-not started, and public answer quality remained pending. There is no
+and conversation calls were added separately from the 44 local calls. The final V8
+ledger records 55 actual requests. Its public quality trial failed: 6 of 10 completed
+quality cases passed, while invited return and conversational Council remained
+incomplete. Preserve the [postmortem](../../reports/v8/public-ai-postmortem.md) as
+the superseding V8 quality verdict. There is no
 human release-approval checkpoint in this autonomous development phase: the
 specified technical gates control advancement, while real farm execution remains
 disabled.
@@ -131,16 +133,60 @@ session, stable action receipts and request ID on restart. Finally,
 inference calls. Keep actual failures, repairs and consumed calls in the experiment
 ledger; do not overwrite them with a later successful attempt.
 
-## V9 AI follow-up candidate — 11 September 2026
+## V9 AI follow-up — published 11 September 2026
 
 The public V8 quality trial failed despite mission transport/reference success:
 6 of 10 completed quality cases passed, and the invited return and conversational
-Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
-V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. V9 uses mission
+prompt/context V6, conversation prompt/context V5 and
 validator V4. It preserves semantic names alongside exact aliases, passes the
 actual required/advisory policy, bounds role-specific facts, balances comparison
 segments, requires typed numerical evidence and enforces absent-source abstention
 for Council source specialists. Direct/invited numerical questions remain
 answerable from their frozen facts. Conversation prose targets 220 characters
-under the unchanged 400-character hard limit. Actual-provider verification and
-immutable V9 publication are pending. V8 stays unchanged.
+under the unchanged 400-character hard limit. V9 is published from source
+`89d29cc3e071e12373204ff234d0a261ce71b5a1` and image
+`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+The frozen offline suite passed 606 tests with one skip, the mobile typed-fact
+fixture check passed 21 of 21 assertions, all nine edition health/source checks
+passed, and v1-v8 preservation passed. The authenticated public V9
+[UI replay](../../reports/v9/ui-live-replay.json) passed
+38 of 38 mobile/desktop checks. It read saved state and intercepted mutation attempts
+and direct provider traffic before network dispatch; none was forwarded.
+
+The V9 live run used 21 actual requests: nine mission requests for seven roles,
+eleven conversation requests for ten messages and one research request. Mission
+and research transport passed. All conversation workflows completed, but Weather
+and Market Council abstentions persisted `unsupported` with
+`abstention_payload`. The combined automated result is FAIL: 12 of 18 cases passed
+with workflow integrity PASS. The completed
+[AI-assisted semantic review](../../reports/v9/ai-assisted-semantic-review.md)
+determined that four automated failures were conservative prefix/word false
+negatives and two were real abstention-contract failures. It classified 10 messages
+as sound, 5 as sound with limits and 3 as materially contradictory. Separately, the scorer passed Supply's false claim that
+an 824 kg booked request was fully delivered despite scenario deliveries of 370,
+446 and 518 kg. The cumulative actual-request ledger is 76. Preserve
+[`ai-quality-final.json`](../../reports/v9/ai-quality-final.json) and the source
+mission, conversation and research reports as the V9 verdict.
+
+The public capacity check passed two overlapping jobs and 58 browse samples with
+zero provider calls. The 56-day execution run passed mass, cash and lot-receipt
+checks with 60 task events, 64 demand-service events, one future replan and zero
+provider calls; it did not exercise an actual application restart. See
+[`shared-capacity-public.json`](../../reports/v9/shared-capacity-public.json) and
+[`execution-public.json`](../../reports/v9/execution-public.json).
+
+## V10 grounding-remediation candidate — unpublished
+
+V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
+validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
+status and applies a bounded phrase guard without semantic repair. Required-absence
+conversation context strips numerical and prior-conversation prose and supplies
+explicit empty arrays with `typed_required=false`. The absence-only projection
+applies only to Weather/Market in conversational Council mode when their source is
+absent; numerical direct/invite and research retain their existing projections. See
+the [V10 grounding follow-up](../technical/v10-grounding-followup.md). The V10 full
+suite passed 611 tests with one skip in 441.23 seconds. Candidate checks do not
+establish publication or provider-backed quality. The narrow fix does not establish
+general prose or crop-mix entailment; the two V9 Production contradictions remain
+unresolved evidence. V8 and V9 stay unchanged.

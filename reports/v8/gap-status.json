@@ -60,12 +60,10 @@
     }
   },
   "pending_evidence": {
-    "v9_ai_quality": {
+    "v10_targeted_ai_quality": {
       "status": "pending",
-      "marker": "PENDING_V9_AI_QUALITY",
-      "current_v8_result": "failed_6_of_10_passed_invite_incomplete_council_absent",
-      "followup": "docs/technical/v9-ai-followup.md",
-      "claim_limit": "V9 is a candidate with corrective work in progress; no V9 deployment, complete workflow quality pass, or final full-suite result is established."
+      "followup": "docs/technical/v10-grounding-followup.md",
+      "claim_limit": "V9 published; complete 18-case workflow score: 12 pass, 6 fail; mission Supply false full-fulfillment assertion missed by scorer. V10 narrow correction still requires separate evidence."
     }
   },
   "summary_counts": {
@@ -79,7 +77,7 @@
       "id": "AI-01",
       "status": "partial",
       "current_v8_disposition": "The frozen scorer evaluated retained public V8 mission/conversation output: six of ten cases passed, four failed, the invitation was incomplete, and the Council conversation was absent.",
-      "remaining": "V8 quality failed. V9 corrective work and a new complete public workflow remain pending; human expert agronomic review is absent.",
+      "remaining": "V8 quality failed. V9 completed all workflows but quality failed (12/18 automated cases passed); V10 targets the observed fulfillment and abstention defects. Human expert agronomic review is absent.",
       "evidence": [
         "reports/v8/ai-quality-public-v8.json",
         "reports/v8/public-ai-postmortem.md",
@@ -114,7 +112,7 @@
       "id": "AI-04",
       "status": "partial",
       "current_v8_disposition": "Configured state, dated archived evidence and tenant-scoped last observed execution are separate; V8's public mission completed seven canonical calls and its conversation retained a partial actual execution.",
-      "remaining": "Those dated executions establish only their observed availability. V8 quality failed, and V9 availability/quality requires separate fresh evidence.",
+      "remaining": "Those dated executions establish only their observed availability. V9 availability and complete workflows were observed separately, but quality failed; availability is not continuing reliability.",
       "evidence": [
         "reports/v8/planning-public.json",
         "reports/v8/conversation-public-replay.json",
@@ -350,7 +348,7 @@
       "id": "GAME-07",
       "status": "fixed",
       "current_v8_disposition": "Conversation transport completion and evidence validity are distinct; V8 retained its direct reply, successful invited turn and terminal partial failure without treating reference validation as prose quality.",
-      "remaining": "V8 answer quality failed; the distinct V9 AI follow-up remains pending.",
+      "remaining": "V8 and V9 answer-quality trials failed; the distinct V10 targeted correction requires its own evidence.",
       "evidence": [
         "reports/v8/conversation-public-replay.json",
         "reports/v8/conversation-public-events.json",
@@ -372,7 +370,7 @@
     {
       "id": "GAME-09",
       "status": "partial",
-      "current_v8_disposition": "V8 is published from its pinned source/image; all eight edition health checks, captured v1–v7 preservation and bounded v7/v8 capacity checks passed.",
+      "current_v8_disposition": "V8 is published from its pinned source/image; all eight edition health checks, captured v1\u2013v7 preservation and bounded v7/v8 capacity checks passed.",
       "remaining": "Development upgrades still lack a general per-object runner registry; broader recovery and sustained-capacity evidence remain open.",
       "evidence": [
         "reports/v8/deployment-health.json",
@@ -623,5 +621,24 @@
       "baseline_status": "open"
     }
   ],
-  "historical_register_status": "in_progress_all_48_open"
+  "historical_register_status": "in_progress_all_48_open",
+  "followup_validation": {
+    "v9": {
+      "publication": "published",
+      "full_regression": {
+        "passed": 606,
+        "skipped": 1
+      },
+      "quality": {
+        "status": "FAIL",
+        "cases": 18,
+        "passed": 12,
+        "failed": 6,
+        "workflow_integrity": "PASS",
+        "evidence": "reports/v9/ai-quality-final.json"
+      },
+      "actual_requests": 21,
+      "cumulative_task_requests": 76
+    }
+  }
 }

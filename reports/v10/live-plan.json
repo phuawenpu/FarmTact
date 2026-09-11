@@ -1,0 +1,23 @@
+{
+  "schema_version": "farmtact-v10-live-plan-1",
+  "status": "planned_before_calls",
+  "target": "https://farmtact.fly.dev/v10",
+  "changed_workflows": [
+    "planning",
+    "council"
+  ],
+  "normal_requests": 14,
+  "per_workflow_maximum": 9,
+  "combined_remaining_envelope": 16,
+  "shared_daily_limit_unchanged": 48,
+  "known_public_consumed_through_v9": 32,
+  "known_task_consumed_through_v9": 76,
+  "internal_task_ceiling_unchanged": 96,
+  "no_new_call_claimed_for": [
+    "direct",
+    "invite",
+    "research",
+    "vision"
+  ],
+  "claim_limit": "Targeted verification of changed paths only. Earlier workflows retain original source/fixture scope; shared cap not bypassed ifblocked. No retry for a favorable output."
+}

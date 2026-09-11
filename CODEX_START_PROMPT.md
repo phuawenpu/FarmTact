@@ -1,28 +1,45 @@
-Current checkout note (11 September 2026): v8 is the latest published immutable
-edition, built from source `a00e546b1270a5c532e8eae6b8b64e568c344c13` with
-image digest `8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
-Start from README.md, the v8 remediation report and package reports,
-docs/execution-plan.md and the release manifests; extend the working application
-instead of recreating it.
+Current checkout note (11 September 2026): v9 is the latest published immutable
+edition, built from source `89d29cc3e071e12373204ff234d0a261ce71b5a1` with
+image `registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+Start from README.md, the V9 AI follow-up, the V8 remediation report and package
+reports, docs/execution-plan.md and the release manifests; extend the working
+application instead of recreating it.
 The catalogue now has twelve profiles and the synthetic fixture still has four
 recipes. V7 added a guided, isolated playable council at /v7/research, with labelled
 scripted dialogue and real numerical comparisons. Prioritize immediate first-time
-usability. Hosting uses one shared Machine and volume for eight editions; follow
-the editions runbook. The historical kickoff below is already delivered; current
+usability. Hosting uses one shared gateway Machine and volume for nine editions;
+follow the editions runbook. The historical kickoff below is already delivered; current
 user intent is conversation connected to tangible farm consequences. V8
-source adds explicit required/advisory Council policy, typed server-rendered facts,
+introduced explicit required/advisory Council policy, typed server-rendered facts,
 a durable synthetic simulation clock and future-only replanning. The current
 `daily-bed-cpsat-v3` contract binds cycles to absolute dates, collision-checks
 harvest-lot IDs, preserves lot origins across replans, excludes historical executed
 cycle IDs and reserves resources against the maximum declared yield factor. The
-conversation prompts/projection are V4; mission prompts/projection are V5 and map
-short `F001`/`C001` aliases exactly to canonical frozen references. Both use explicit
-context bounds and abstain when admitted context cannot answer. The retained
-pre-fix actual-provider score is 8/18, so live quality remains unproven. Expired
+V9 conversation prompts/projection are V5; mission prompts/projection are V6, use
+validator V4 and map short `F001`/`C001` aliases exactly to canonical frozen
+references. Both use explicit context bounds and abstain when admitted context
+cannot answer. All three actual-AI views render typed evidence from server-shaped
+responses. The frozen V9 offline evidence is 606 passed and one skipped regression
+test plus 21 of 21 mobile typed-fact assertions. The authenticated public V9 UI
+replay passed 38 of 38 mobile/desktop checks without forwarding mutation or
+inference requests. The V8 public trial remains a
+historical failure: 6 of 10 completed quality cases passed, the invited return and
+conversational Council were incomplete, and the ledger records 55 actual requests.
+The V9 live quality gate failed: 12 of 18 automated cases passed while workflow
+integrity passed. V9 used 21 actual requests (nine mission, eleven conversation and
+one research), bringing the cumulative ledger to 76. Two Council abstentions
+persisted unsupported, and the scorer missed a false full-fulfilment claim for an
+824 kg booked request against 370/446/518 kg scenario deliveries. The completed
+AI-assisted review classified 10 messages as sound, 5 as sound with limits and 3
+as materially contradictory: Planning Supply and two Production replies. V10 is
+the unpublished grounding-remediation candidate. Expired
 anonymous tenant pruning is a bounded explicit dry-run-by-default operator action
-with no automatic schedule. V8 is deployed as a simulation; real operations remain
-disabled. At this documentation freeze, the public mission trial was running and
-the public conversation trial had not started, so public answer quality was pending.
+with no automatic schedule. V9 is deployed as a simulation; real operations remain
+disabled. V9 publication passed all nine edition health/source checks and preserved
+the v1-v8 source and state snapshots. Its capacity check passed two numerical jobs
+and 58 browse samples; its 56-day synthetic execution run passed mass, cash and
+lot-receipt checks with 60 task events, 64 demand-service events and one replan.
+Both used zero provider calls, and the execution run did not exercise a restart.
 
 Start implementing FarmTact in this repository.
 
@@ -134,16 +151,40 @@ source coverage, screenshots where relevant, remaining limitations,
 and exact commands to reproduce the result. Preserve resumable status
 in the repository.
 
-## V9 AI follow-up candidate — 11 September 2026
+## V9 AI follow-up — published 11 September 2026
 
 The public V8 quality trial failed despite mission transport/reference success:
 6 of 10 completed quality cases passed, and the invited return and conversational
-Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
-V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. V9 uses mission
+prompt/context V6, conversation prompt/context V5 and
 validator V4. It preserves semantic names alongside exact aliases, passes the
 actual required/advisory policy, bounds role-specific facts, balances comparison
 segments, requires typed numerical evidence and enforces absent-source abstention
 for Council source specialists. Direct/invited numerical questions remain
 answerable from their frozen facts. Conversation prose targets 220 characters
-under the unchanged 400-character hard limit. Actual-provider verification and
-immutable V9 publication are pending. V8 stays unchanged.
+under the unchanged 400-character hard limit. V9 is published from source
+`89d29cc3e071e12373204ff234d0a261ce71b5a1` with image
+`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+The frozen offline suite passed 606 tests with one skip, the mobile typed-fact
+check passed 21 of 21 assertions, all nine edition health/source checks passed,
+and v1-v8 preservation passed. V9 used 21 actual requests and its automated quality
+result is FAIL: 12 of 18 cases passed while workflow integrity passed. Two Council
+abstentions persisted unsupported. The completed AI-assisted review of 18 messages
+and 62 atomic assertions found 10 sound, 5 sound with limits and 3 materially
+contradictory: Planning Supply and two Production replies.
+
+## V10 grounding-remediation candidate — unpublished
+
+V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
+validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
+status and applies a bounded phrase guard without semantic repair. Required-absence
+conversation context strips numerical and prior-conversation prose and supplies
+explicit empty arrays with `typed_required=false`. The absence-only projection
+applies only to Weather/Market in conversational Council mode when their source is
+absent; numerical direct/invite and research retain their existing projections. See
+`docs/technical/v10-grounding-followup.md`. Treat all V10 checks as candidate
+evidence until the frozen source, live verification and immutable publication are
+recorded. The V10 full suite passed 611 tests with one skip in 441.23 seconds. The
+narrow fix does not establish general prose or crop-mix entailment; AI quality
+remains a partial requirement.
+V8 and V9 stay unchanged.

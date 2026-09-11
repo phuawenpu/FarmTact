@@ -1,0 +1,254 @@
+{
+  "status": "FAIL",
+  "started_at": "2026-09-11T13:03:37.560Z",
+  "base_url": "https://farmtact.fly.dev/v9/",
+  "expected_source_prefix": "89d29cc",
+  "method": "Public V9, authenticated tenant-scoped GET-only browser replay at 390px and 1280px. All public mutations and direct provider traffic are intercepted before network dispatch.",
+  "checks": [
+    {
+      "name": "browser uses only the V9 tenant cookie at the V9 path",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "public runtime identifies immutable V9 source",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "saved public mission is terminal and has seven Council claims",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "mission Council renders all seven persisted roles",
+      "pass": true,
+      "detail": "7"
+    },
+    {
+      "name": "mission Council exposes persisted code-rendered facts",
+      "pass": true,
+      "detail": "14"
+    },
+    {
+      "name": "mission Council typed facts remain within desktop viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "mission replay uses stored events with no inference",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "mission replay sends no mutation",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser uses only the V9 tenant cookie at the V9 path",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "stored public conversation contains exactly ten messages",
+      "pass": false,
+      "detail": "13"
+    },
+    {
+      "name": "stored Council contains all seven specialist speakers",
+      "pass": true,
+      "detail": "asha,ben,hana,idris,lina,mei,ravi"
+    },
+    {
+      "name": "stored Council has exactly one final planner conclusion",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "stored conversation includes code-rendered frozen facts",
+      "pass": true,
+      "detail": "30"
+    },
+    {
+      "name": "stored conversation preserves both unsupported abstentions",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "both unsupported abstentions retain their server-rendered fact records",
+      "pass": true,
+      "detail": "3,3"
+    },
+    {
+      "name": "conversation UI shows the seven-person Council roster",
+      "pass": true,
+      "detail": "7"
+    },
+    {
+      "name": "conversation UI labels the planner conclusion",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "conversation UI visibly preserves both unsupported states",
+      "pass": false,
+      "detail": "2"
+    },
+    {
+      "name": "unsupported frozen values are shown without a validation claim",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "conversation UI renders frozen fact cards",
+      "pass": true,
+      "detail": "30"
+    },
+    {
+      "name": "conversation fact values are presented outside qualitative prose",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "conversation fact cards fit the 390px viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "conversation page has no 390px horizontal overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "conversation replay response records zero inference calls",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "conversation replay sends no inference or mutation request",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "conversation page has no 1280px horizontal overflow",
+      "pass": true,
+      "detail": "1280/1280"
+    },
+    {
+      "name": "conversation fact cards fit the 1280px viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser uses only the V9 tenant cookie at the V9 path",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "stored research response includes rendered facts",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "research UI renders its stored code-authoritative facts",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "research UI labels qualitative interpretation separately",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research fact cards fit the 390px viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research page has no 390px horizontal overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "no mutation reached the public service",
+      "pass": true,
+      "detail": "[object Object]"
+    },
+    {
+      "name": "no inference-capable request was attempted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public reader raised no page exceptions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "public reader raised no console errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [
+    {
+      "name": "stored public conversation contains exactly ten messages",
+      "pass": false,
+      "detail": "13"
+    },
+    {
+      "name": "conversation UI visibly preserves both unsupported states",
+      "pass": false,
+      "detail": "2"
+    }
+  ],
+  "page_errors": [],
+  "console_errors": [],
+  "blocked_requests": [],
+  "local_navigation_shims": [
+    {
+      "method": "POST",
+      "path": "/v9/api/v1/conversations",
+      "purpose": "open_existing_persisted_conversation"
+    }
+  ],
+  "mutation_attempts": [
+    {
+      "method": "POST",
+      "path": "/v9/api/v1/conversations"
+    }
+  ],
+  "public_mutations_forwarded": [],
+  "provider_requests": [],
+  "screenshots": [
+    "reports/v9/ui-live-replay/mission-council-1280.png",
+    "reports/v9/ui-live-replay/conversation-replay-390.png",
+    "reports/v9/ui-live-replay/conversation-replay-1280.png",
+    "reports/v9/ui-live-replay/research-replay-390.png"
+  ],
+  "observed": {
+    "conversation_messages": 13,
+    "council_speakers": [
+      "asha",
+      "ben",
+      "hana",
+      "idris",
+      "lina",
+      "mei",
+      "ravi"
+    ],
+    "conversation_fact_cards": 30,
+    "mission_claims": 7,
+    "mission_fact_cards": 14,
+    "research_fact_cards": 2
+  },
+  "limitations": [
+    "This reads already persisted public records and makes no new inference or numerical calculation.",
+    "When a saved scenario discussion is not the currently selected UI context, the browser may ask to create a matching conversation. The harness answers that request locally with the existing persisted conversation ID; it never forwards the POST.",
+    "Headless Chromium checks rendering and geometry, not provider quality, physical devices, assistive technology, or human usability.",
+    "Mission Council checks prove retrieval and rendering only. A validated status chip is a reference/contract result and is not semantic validation; the recorded Supply Chain semantic score is known to be false.",
+    "The mission bootstrap response is adjusted in-browser to place the actual saved public run from reports/v9/planning-public.json in the existing latest_run slot. This prevents a later zero-inference execution trial from changing which persisted run the UI displays."
+  ],
+  "completed_at": "2026-09-11T13:05:30.213Z"
+}
