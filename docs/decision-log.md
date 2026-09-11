@@ -76,3 +76,21 @@ Final verification passed 257 backend tests, 281 local browser checks, 87 deploy
 ### Public-demo abuse boundaries — 2026-09-08
 
 Added persistent IP/session request limits, trusted Fly address handling, anonymous-session creation throttles, early authentication, strict origin/host checks, server-side expiry, bounded streams and upload deadlines. DeepSeek receives opaque tenant pseudonyms. Reservations crossing midnight reconcile against their original day. Final verification passed 300 backend tests, eleven live negative HTTP checks and twelve browser replay checks; probe accounting remained at 26 calls before/after, with no valid inference jobs submitted. The security deployment preserved existing data and kept Sprite web retired. See [security release evidence](../reports/security_hardening.md) and [the data/model inventory](data-and-models.md).
+
+
+## 11 September 2026 — implementation documentation and game/Council audit
+
+User requested a comprehensive scientific account of all ML/AI/provider calls and
+the entire simulation/gamified backend, plus corrected README/docs/specifications.
+Source audit separates precomputed numerical authority, optional DeepSeek
+interpretation and scripted research interactions. Acceptance is a stored
+projection/worklist; no farm-time/work-event execution engine exists. The report
+records Council quality/versioning, queue/retry/history, crop-state, numerical
+policy and evaluation gaps with acceptance criteria.
+
+Documentation-only changes preserve v7 and earlier source/images/game state.
+Three bounded specialist audits were integrated by root. Offline checks, archived
+evidence, one cache-dependent fresh-test failure and rendered report validation
+are separately recorded in [the audit](../reports/documentation/2026-09-11.md).
+The next release remains the next unallocated immutable edition; no deployment or
+paid inference was needed for this documentation task.

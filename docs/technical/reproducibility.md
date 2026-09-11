@@ -69,7 +69,9 @@ or started during this documentation audit.
 
 ## 3. Offline and numerical verification
 
-These representative groups avoid a running PostgreSQL server and metered calls:
+These representative groups avoid a running PostgreSQL server and metered calls.
+The separate broader conversation test module has a known implicit D04 public-cache
+dependency (DATA-06); its failed fresh-checkout assertion is preserved in the audit:
 
 ```bash
 .venv/bin/python -m pytest -q \
@@ -132,19 +134,42 @@ caixin observations and one-step EWMA values. Architecture arrows are authored
 annotations from source inspection. SVG text includes descriptions for accessibility.
 The figures were visually inspected as PNGs during the documentation audit.
 
-[Render the report](render_report.py) with Python Markdown installed to produce a
-single printable HTML document in a path you choose:
+The committed [diagram manifest](figures/diagrams/manifest.json) records the 20
+rendered Mermaid SVGs and hashes of their chapter source blocks. To regenerate
+those images, use a separate documentation tool directory:
+
+```bash
+npm install --prefix /tmp/farmtact-doc-tools \
+  @mermaid-js/mermaid-cli@11.17.0 mathjax-full@3.2.1
+node /tmp/farmtact-doc-tools/node_modules/puppeteer/install.mjs
+.venv/bin/python docs/technical/render_diagrams.py \
+  --mmdc /tmp/farmtact-doc-tools/node_modules/.bin/mmdc
+```
+
+Chromium requires its native system libraries. A restricted local VM may require
+an explicit Puppeteer launch configuration; `--puppeteer-config` passes that file
+to Mermaid CLI. This audit used a local `--no-sandbox` browser solely for trusted
+authored documentation, with no public HTTP service. Mermaid parsing caught one
+sequence-label semicolon error, which was corrected before all 20 diagrams rendered.
+
+[Render the report](render_report.py) with Python Markdown and the optional local
+MathJax module to produce a single printable HTML document:
 
 ```bash
 .venv/bin/python docs/technical/render_report.py \
+  --mathjax-module /tmp/farmtact-doc-tools/node_modules/mathjax-full \
   --output /tmp/farmtact-technical-report.html
+python docs/technical/check_docs.py
 ```
 
-The renderer embeds figure images and includes all report chapters. Mermaid source
-blocks remain readable source in the offline export; the GitHub Markdown chapters
-render them as diagrams. The offline file deliberately has no external scripts or
-CDN dependency. Source/evidence links point to GitHub. The committed SVG figures
-provide rendered overview/growth/demand diagrams even without Mermaid support.
+The renderer embeds scientific figures, Mermaid SVGs, existing screenshot evidence
+and MathJax-rendered equations. It includes all seven chapters and makes no network
+request. Without `--mathjax-module`, TeX remains source notation; without rendered
+diagram files, Mermaid remains source notation. The committed reading copies use
+both renderers. Source/evidence links point to GitHub; there are no external scripts,
+fonts or CDN dependencies in the HTML. [The PDF exporter](export_pdf.cjs) can print
+that HTML using local Puppeteer and also checks image loading, internal links and
+page overflow. See the audit record for the actual invocation and limits.
 
 ## 5. Authenticated trials and archival discipline
 

@@ -12,9 +12,9 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-from packages.fixtures import synthetic_farm
+from packages.fixtures import synthetic_farm, GENERATOR_VERSION
 from packages.contracts import content_hash
-from packages.models import forecast
+from packages.models import forecast, MODEL_VERSION
 
 OUT = Path(__file__).resolve().parent
 INK = '#18332f'
@@ -59,8 +59,11 @@ def architecture():
     s.box(935,300,385,140,'Local evidence validation',['Schema + allowed references + values','Supported / unsupported / clarification','No model power to execute a plan'],color='#eef3fa')
     s.line(395,370,465,370,arrow=True);s.line(865,370,935,370,arrow=True)
     s.line(1127,220,1127,260);s.line(1127,260,665,260);s.line(665,260,665,300,arrow=True)
-    s.box(465,510,855,100,'Simulation-only decision',['Main planning: backend policy. Research: explicit feasible current selection.','Stored work/results and isolated experiments; actual farm integrations disabled.'],color='#fcf4e8')
+    s.box(465,510,855,100,'Simulation-only decision',['Main planning: backend policy. Research: explicit feasible current selection.','Projected work/results; no farm-time execution engine. Actual operations disabled.'],color='#fcf4e8')
     s.line(1127,440,1127,510,arrow=True)
+    s.line(1320,180,1340,180,dash=True);s.line(1340,180,1340,555,dash=True);s.line(1340,555,1320,555,arrow=True,dash=True)
+    s.text(40,525,'Dashed path: numerical-only',16,MUTED)
+    s.text(40,550,'decisions bypass interpretation.',16,MUTED)
     s.text(40,640,'Figure 1. Source audit, 11 September 2026. Solid arrows show implemented information flow; no physiological model is implied.',15,MUTED)
     return s.save()
 
@@ -124,7 +127,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--png',action='store_true');args=p.parse_args()
     farm=synthetic_farm(); demand_path,stats=demand(farm)
     paths=[architecture(),growth(farm),demand_path]
-    (OUT/'data.json').write_text(json.dumps({'source_baseline':'a96025e','fixture_hash':content_hash(farm),'origin':'synthetic_demo','validation_status':'demo_only','recipes':[r.model_dump(mode='json') for r in farm.recipes],**stats},indent=2)+'\n')
+    (OUT/'data.json').write_text(json.dumps({'source_baseline':'a96025e','generator_version':GENERATOR_VERSION,'forecast_version':MODEL_VERSION,'alpha':0.35,'fixture_hash':content_hash(farm),'origin':'synthetic_demo','validation_status':'demo_only','recipes':[r.model_dump(mode='json') for r in farm.recipes],**stats},indent=2)+'\n')
     if args.png:
         import cairosvg
         for path in paths:cairosvg.svg2png(url=str(path),write_to=str(path.with_suffix('.png')))

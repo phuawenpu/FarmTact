@@ -304,7 +304,7 @@ The public-data commands access changing upstream services, so record retrieval 
 
 ## Material gaps found in this audit
 
-The following discrepancies affect interpretation of the evidence and should be corrected before the documentation set is called internally consistent:
+The following discrepancies were found against the audit baseline. This documentation update corrects stale prose and specifies code fixes; it does not claim the listed code gaps are repaired:
 
 1. [packages/ingestion/validation.py](../../packages/ingestion/validation.py) still hard-codes `catalogue_profiles: 10` and `scientific_evidence_documents: 20`. The current registries contain 12 profiles and 24 documents. Consequently, the committed [data quality report](../../data/reports/data_quality.json) is historically accurate for the 8 September build but stale as a current coverage statement. Coverage should be derived from the registries or clearly versioned as build-time metadata.
 2. [FarmTact_Build_Specification.md](../../FarmTact_Build_Specification.md) labels its v6 section “Current implementation,” says the shared host runs v1–v6, and says the evidence register has 20 publications. V7 is the current published edition and the register now has 24 publications. Historical descriptions should be labelled historical and the current amendment consolidated at the top.
@@ -316,3 +316,7 @@ The following discrepancies affect interpretation of the evidence and should be 
 8. The committed public manifest points to ignored raw and normalized files. The documented offline rebuild is therefore not self-contained in a clean checkout. The docs should say that an authorized raw-snapshot bundle is required for exact historical reproduction.
 
 These gaps do not invalidate the implemented synthetic demonstration. They narrow what can be claimed from its current artifacts and make clear which records are historical evidence, which are active contracts, and which remain future design requirements.
+
+The specification/documentation wording findings above refer to the audit baseline.
+The integrated documentation update corrects current pointers and labels historical
+requirements; numerical, data-generation and runtime gaps remain future work.

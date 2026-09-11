@@ -1,5 +1,8 @@
 # V5 engagement and hosting plan
 
+> Historical v5 planning/research record. Current application: v7. Use the
+> [documentation index](README.md) for current mechanisms and deployment.
+
 Status: completed historical v5 plan. V6 is now current; its hosting and two additional crop profiles are documented in [the v6 report](../reports/v6/implementation.md). V5 evidence below retains its original scope. Updated 2026-09-09.
 
 The published v5 edition turns Sumin Lee's decision-support proposal into

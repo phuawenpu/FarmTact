@@ -45,7 +45,12 @@
 <rect x="465" y="510" width="855" height="100" rx="10" fill="#fcf4e8" stroke="#cadbd4"/>
 <text x="483" y="540" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#18332f" text-anchor="start">Simulation-only decision</text>
 <text x="483" y="569" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Main planning: backend policy. Research: explicit feasible current selection.</text>
-<text x="483" y="594" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Stored work/results and isolated experiments; actual farm integrations disabled.</text>
+<text x="483" y="594" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#18332f" text-anchor="start">Projected work/results; no farm-time execution engine. Actual operations disabled.</text>
 <line x1="1127" y1="440" x2="1127" y2="510" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="1320" y1="180" x2="1340" y2="180" stroke="#526b67" stroke-width="2" stroke-dasharray="7 5"/>
+<line x1="1340" y1="180" x2="1340" y2="555" stroke="#526b67" stroke-width="2" stroke-dasharray="7 5"/>
+<line x1="1340" y1="555" x2="1320" y2="555" stroke="#526b67" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<text x="40" y="525" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#526b67" text-anchor="start">Dashed path: numerical-only</text>
+<text x="40" y="550" font-family="DejaVu Sans, sans-serif" font-size="16" font-weight="normal" fill="#526b67" text-anchor="start">decisions bypass interpretation.</text>
 <text x="40" y="640" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="normal" fill="#526b67" text-anchor="start">Figure 1. Source audit, 11 September 2026. Solid arrows show implemented information flow; no physiological model is implied.</text>
 </svg>

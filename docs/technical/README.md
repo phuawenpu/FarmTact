@@ -6,6 +6,10 @@ Audit date: **11 September 2026** · Source baseline: [`a96025e`](https://github
 · Published v7 source: [`6efbbfd`](https://github.com/phuawenpu/FarmTact/commit/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda)
 · Study type: **source-code and engineering-evidence audit**, not an agronomic trial.
 
+**Reading copies:** [PDF](../../reports/documentation/farmtact-technical-report.pdf) ·
+[offline HTML](../../reports/documentation/farmtact-technical-report.html).
+The Markdown chapters below are the maintained source.
+
 ## Abstract
 
 FarmTact combines a visual synthetic-farm application, local statistical baselines,
@@ -19,7 +23,9 @@ whole-bed planting candidates, and a local inventory simulator evaluates three
 fixed stress scenarios. Public observations, News and crop literature provide
 context without automatically becoming numerical forecast inputs.
 
-The council has distinct planning, conversation and research-study implementations.
+Acceptance stores a projected outcome and worklist; no farm-time or task-execution
+engine advances sowing, harvesting or inventory state. The council has distinct
+planning, conversation and research-study implementations.
 Default v7 research dialogue is scripted; real numerical jobs and optional adviser
 calls are separately triggered. Actual LLM calls use a server-only DeepSeek gateway
 with role/model allowlists, typed output validation, finite reservations and recorded

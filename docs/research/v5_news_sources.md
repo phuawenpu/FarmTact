@@ -1,5 +1,8 @@
 # V5 News-agent source research
 
+> Historical v5 planning/research record. Current application: v7. Use the
+> [documentation index](../README.md) for current mechanisms and deployment.
+
 Reviewed and probed: 2026-09-09 UTC  
 Status: connector plan; no collector, provider call or application behavior implemented
 

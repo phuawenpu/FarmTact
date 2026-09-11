@@ -32,6 +32,11 @@ interpret frozen results. Actual planting, purchases and farm communications are
 - Enable optional locally bundled music/effects. Text fields support device-keyboard
   dictation where the device offers it; custom recording/transcription is not integrated.
 
+Acceptance saves projected outcomes and worklists. The backend does not yet advance
+a simulation clock or mark sowing, harvesting and delivery tasks as executed.
+The [game backend audit](docs/technical/game-backend-and-state-machines.md) traces
+these boundaries and the Council gaps in detail.
+
 The v7 research study stores its own inputs, jobs, proposals and selected simulation.
 It does not change the main farm. Its default dialogue is **scripted**; calculation
 jobs run the real numerical planner. Actual adviser interpretation is a separate action.

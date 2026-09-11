@@ -207,7 +207,7 @@ The coding agents may make implementation decisions, construct and validate data
 
 This phase covers local development, isolated test/staging environments and synthetic demonstrations. Set `development_phase=autonomous_development`, `decision_policy=automatic_development` and `execution_mode=test` by default; replay and contract tests use their explicit execution modes. Use `data_mode=synthetic_demo` by default. Lawfully available public data and already-authorized historical data may be used with their original provenance. Account/API access and source licence failures block only dependent capabilities; continue independent work. Missing farm facts become explicit unresolved fields or separately labelled fixture assumptions, never fabricated real observations.
 
-The application backend automatically selects a feasible strategy under a versioned policy after numerical, provenance, scope and evidence checks pass. Default selection uses the Balanced policy, then a validated deterministic baseline if Balanced has no feasible candidate; rank candidates by the configured numerical objective and use stable strategy IDs to break ties. In an explicitly deterministic baseline run, an independently tested validator supplies the audit report in place of a completed LLM council; record `council_status=not_run` or `failed` as applicable, and do not count this as passing council tests. Never relax constraints to force a selection. Unmet buyer conditions exclude a strategy from automatic selection unless an explicitly synthetic scenario supplies that condition. A deterministic simulation runner records simulated work and outcomes so the full planning/replanning loop runs unattended. A council message alone cannot accept or execute a plan.
+The application backend automatically selects a feasible strategy under a versioned policy after numerical, provenance, scope and evidence checks pass. Default selection uses the Balanced policy, then a validated deterministic baseline if Balanced has no feasible candidate; rank candidates by the configured numerical objective and use stable strategy IDs to break ties. In an explicitly deterministic baseline run, an independently tested validator supplies the audit report in place of a completed LLM council; record `council_status=not_run` or `failed` as applicable, and do not count this as passing council tests. Never relax constraints to force a selection. Unmet buyer conditions exclude a strategy from automatic selection unless an explicitly synthetic scenario supplies that condition. The current backend stores projected work and simulated outcome ledgers on the accepted run. A stateful runner that advances farm time and records completed sow/transplant/harvest events is future work; it is not implemented by acceptance bookkeeping. A council message alone cannot accept or execute a plan.
 
 Automatic acceptance is restricted server-side to isolated development tenants with `synthetic_demo` or `historical_replay` data and `test` or `replay` execution. Historical outcomes remain immutable; simulated counterfactual outcomes are stored separately. Use `ACCEPTED_FOR_SIMULATION`, never a fabricated human approval. Persist policy version, service actor, input/strategy hashes, validation report IDs, modes and timestamp. Changed inputs invalidate acceptance and trigger validation and selection again. No approval button, human-review queue or manual fixture entry may be required for the default development workflow.
 
@@ -596,9 +596,27 @@ The current bounded council runs six specialist findings followed by the Planner
 
 ### 7.2 State machine
 
-`CREATED → VALIDATING_INPUTS → SNAPSHOTTING → ANALYSING → PROPOSING → CHALLENGING → OPTIMIZING → SIMULATING → EVIDENCE_VALIDATION → VALIDATING_ACCEPTANCE → ACCEPTED_FOR_SIMULATION`
+**Current persisted mission states:** `CREATED → RUNNING → ACCEPTED_FOR_SIMULATION`,
+with `STALE_INPUT`, `NO_FEASIBLE_PLAN`, `REVIEW_WITHHELD`, `FAILED` and `CANCELLED`
+as alternate terminal outcomes. Validation, forecast, optimization and evidence
+steps emit events; they are not all separate persisted status values. Source/budget
+problems may be warnings or `council_status`, rather than mission terminal states.
+Conversation and research jobs use different state machines; see the backend report.
 
-Terminal/exception states: `MISSING_INPUT`, `NO_FEASIBLE_PLAN`, `SOURCE_UNAVAILABLE`, `BUDGET_EXCEEDED`, `FAILED`, `CANCELLED`, `REVIEW_WITHHELD`. The backend applies the automatic-development policy after all required checks pass; failure produces the relevant exception state. Simulated execution records come from the deterministic runner with fixture/run provenance. Historical actuals remain separate. The future operational branch `READY_FOR_APPROVAL → APPROVED` is disabled for this phase and cannot block its workflow.
+The backend stores a frozen projected `simulated_outcome` and worklist. No runtime
+farm-time or work-execution state machine currently records completion of sow,
+transplant, harvest or delivery. Such future execution must preserve historical
+actuals and have idempotent versioned events (GAME-01). The operational branch
+`READY_FOR_APPROVAL → APPROVED` remains disabled.
+
+**Next-iteration reliability requirements:** GAME-02 requires numerical work to
+avoid a slow provider job's shared worker queue. GAME-03 requires an explicit
+advisory-versus-required Council policy: zero returned claims currently permits
+a numerical baseline, while partial claims withhold. GAME-05 requires challenge
+resolution to match the current research input version. GAME-06/08/10 require
+retained retry identity, recoverable calculation attempts and durable audit history.
+Acceptance currently prefers Balanced then the first eligible result in output
+order; objective-ranked baseline selection below is a target, not implemented policy.
 
 The backend validates inputs and freezes the cutoff, numerical strategy results and Market context. Six specialists inspect these results, followed by the Planner. The backend validates every finding and runs the versioned acceptance policy; an advisor cannot accept a plan. Partial, rejected or unresolved findings withhold automatic acceptance while feasible numerical alternatives stay inspectable (`REVIEW_WITHHELD`). A council with no returned findings may expose the explicitly labelled deterministic baseline, never a claimed council success.
 

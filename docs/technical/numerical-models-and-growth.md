@@ -73,45 +73,45 @@ These coefficients were declared to exercise scheduling logic. They were not est
 
 ### 3.2 Existing batches and inventory
 
-For zero-based batch index \(i\), the scheduled harvest date is
+For zero-based batch index $i$, the scheduled harvest date is
 
-\[
+$$
 h_i=d_0+14\left\lfloor\frac{i}{4}\right\rfloor+6\text{ days},
-\]
+$$
 
-where \(d_0\) is the planning date. The first four batches therefore harvest on day 6, and the next four on day 20. Sow and transplant dates are obtained by subtracting the recipe's total and grow-out durations. Every batch occupies a whole 20 m² bed and its expected mass is
+where $d_0$ is the planning date. The first four batches therefore harvest on day 6, and the next four on day 20. Sow and transplant dates are obtained by subtracting the recipe's total and grow-out durations. Every batch occupies a whole 20 m² bed and its expected mass is
 
-\[
+$$
 Y_i=20\text{ m}^2\times y_{r(i)}.
-\]
+$$
 
 The opening stock is 5 kg of caixin, harvested one day before the planning date and explicitly expiring two days after it. The lot ledger uses the supplied expiry date; it does not replace it with a recipe-derived date.
 
 ### 3.3 Orders and historical demand
 
-For crop index \(c\in\{0,1,2,3\}\) and future week \(w\in\{0,\ldots,7\}\), the unmodified order fixture is
+For crop index $c\in\{0,1,2,3\}$ and future week $w\in\{0,\ldots,7\}$, the unmodified order fixture is
 
-\[
+$$
 Q^{order}_{c,w}=22+4(c\bmod 2)+2(w\bmod 3)\quad\text{kg},
-\]
+$$
 
 with price
 
-\[
+$$
 P_c=6+c\quad\text{SGD/kg}.
-\]
+$$
 
-Every order is booked seven days before the cutoff and due on day \(7w+6\). There is one order per crop per week in the default fixture.
+Every order is booked seven days before the cutoff and due on day $7w+6$. There is one order per crop per week in the default fixture.
 
-For historical week \(u\in\{0,\ldots,11\}\), the Data Explorer generator uses
+For historical week $u\in\{0,\ldots,11\}$, the Data Explorer generator uses
 
-\[
+$$
 Q^{hist}_{c,u}=
 \left[27+2c+2(u\bmod4)a\right]m_h
 \left(1+\frac{g u}{11}\right),
-\]
+$$
 
-where \(a\) is `pattern_amplitude`, \(m_h\) is `history_multiplier`, and \(g\) is `history_trend`. The multiplication in code is equivalently base × multiplier × trend; the bracket above includes the amplitude-adjusted four-week pattern. With default settings \((a,m_h,g)=(1,1,0)\), the four-week pattern repeats exactly. This periodicity is designed, not discovered seasonality.
+where $a$ is `pattern_amplitude`, $m_h$ is `history_multiplier`, and $g$ is `history_trend`. The multiplication in code is equivalently base × multiplier × trend; the bracket above includes the amplitude-adjusted four-week pattern. With default settings $(a,m_h,g)=(1,1,0)$, the four-week pattern repeats exactly. This periodicity is designed, not discovered seasonality.
 
 The bounded playground controls are:
 
@@ -131,30 +131,30 @@ The default resources are 2,560 simultaneous nursery sites, 32 labour hours per 
 
 For each crop, history is eligible only when both
 
-\[
+$$
 available\_at\le cutoff\quad\text{and}\quad week<planning\_date.
-\]
+$$
 
 Orders are eligible when `booked_at <= cutoff`. The `Farm` contract already rejects future-booked orders, and the forecast repeats this cutoff check. Net booked demand is `quantity_kg - cancelled_kg`.
 
 ### 4.2 EWMA formula
 
-Let \(q_{c,1},\ldots,q_{c,n}\) be the eligible historical weekly kilograms for crop \(c\). The implementation initializes the level with the first value and folds subsequent observations:
+Let $q_{c,1},\ldots,q_{c,n}$ be the eligible historical weekly kilograms for crop $c$. The implementation initializes the level with the first value and folds subsequent observations:
 
-\[
+$$
 e_{c,1}=q_{c,1},\qquad
 e_{c,t}=\alpha q_{c,t}+(1-\alpha)e_{c,t-1}.
-\]
+$$
 
-The same terminal level \(e_{c,n}\) is used for every future week. There is no seasonal index, trend extrapolation, public covariate, buyer model, quantile model, or fitted uncertainty distribution. `ForecastSettings` accepts finite floating-point \(\alpha\in[0.05,0.95]\); the default is 0.35.
+The same terminal level $e_{c,n}$ is used for every future week. There is no seasonal index, trend extrapolation, public covariate, buyer model, quantile model, or fitted uncertainty distribution. `ForecastSettings` accepts finite floating-point $\alpha\in[0.05,0.95]$; the default is 0.35.
 
-For crop \(c\) and planning week \(w\), let \(B_{c,w}\) be all net booked kilograms in that week. Residual forecast demand is
+For crop $c$ and planning week $w$, let $B_{c,w}$ be all net booked kilograms in that week. Residual forecast demand is
 
-\[
+$$
 R_{c,w}=\max(0,e_{c,n}-B_{c,w})
-\]
+$$
 
-when history exists, and zero otherwise. Confirmed lines retain their actual due dates. The entire residual \(R_{c,w}\) is added once, on the final day of the planning week. Thus confirmed bookings are not double-counted, but the weekly residual is given an artificial week-end due date.
+when history exists, and zero otherwise. Confirmed lines retain their actual due dates. The entire residual $R_{c,w}$ is added once, on the final day of the planning week. Thus confirmed bookings are not double-counted, but the weekly residual is given an artificial week-end due date.
 
 When several order lines share a due date, their forecast price is the quantity-weighted mean price. A week-end residual without a same-date booking uses the first order price found elsewhere in that week. A week with residual demand and no booked order line receives a price of zero. This is a defined software behavior, not an economic estimate.
 
@@ -162,11 +162,11 @@ When several order lines share a due date, their forecast price is the quantity-
 
 The harvest baseline simply emits each active batch's recorded `harvest_date` and `expected_marketable_kg`, with endpoint `fresh_marketable_kg`. No inference is made from plant observations. Future planned harvest is similarly
 
-\[
+$$
 Y_j=A_j y_{r(j)},
-\]
+$$
 
-where \(A_j\) is the entire bed area and \(y_r\) is the fixed recipe yield. The marketable endpoint is assumed to include survival and packout once; there is no second reduction.
+where $A_j$ is the entire bed area and $y_r$ is the fixed recipe yield. The marketable endpoint is assumed to include survival and packout once; there is no second reduction.
 
 ### 4.4 Versioning and lineage
 
@@ -197,10 +197,10 @@ The backend and frontend do not implement the entire diagram as a shared state m
 
 The backend farm view computes an existing batch's progress as
 
-\[
+$$
 p(d)=\operatorname{clip}_{[0,1]}
 \left(\frac{d-sow}{harvest-sow}\right),
-\]
+$$
 
 then labels it `nursery` before transplant, `growing` from transplant to the day before harvest, and `ready` on or after harvest. The interactive preview applies the same linear ratio as a percentage to accepted allocations. It displays `nursery`, `growing`, or `ready` while the preview date is within the allocation's sow-to-harvest interval. For an existing bed without an accepted allocation overlay, it displays the bed as empty at or after its scheduled harvest.
 
@@ -212,43 +212,43 @@ The scenario system can alter one existing batch by adding 0–14 days to its ha
 
 ### 6.1 Candidate construction
 
-Each candidate \(j\) is one full-bed planting for a compatible recipe and harvest date. Candidate harvest dates are every week-end day in the horizon plus any exact booked order due dates. The planner schedules backward:
+Each candidate $j$ is one full-bed planting for a compatible recipe and harvest date. Candidate harvest dates are every week-end day in the horizon plus any exact booked order due dates. The planner schedules backward:
 
-\[
+$$
 sow_j=harvest_j-(nursery_r+grow_r),
-\]
+$$
 
-\[
+$$
 transplant_j=sow_j+nursery_r.
-\]
+$$
 
 A candidate is discarded if sowing would precede the planning date, if transplanting would occur before that bed is released by an existing batch and its sanitation period, or if its grow-out/sanitation occupancy intersects a research reservation. New sowing can therefore never be offered as supply for a due date earlier than its recipe lead time.
 
 The decision variable is Boolean:
 
-\[
+$$
 x_j\in\{0,1\}.
-\]
+$$
 
 There is no fractional bed, partial area, or arbitrary planting-site decision in this version.
 
 ### 6.2 Capacity constraints
 
-For day \(d\), candidate nursery usage is the ceiling of bed area times declared density throughout `[sow, transplant)`. With fixed existing usage \(N_d^0\),
+For day $d$, candidate nursery usage is the ceiling of bed area times declared density throughout `[sow, transplant)`. With fixed existing usage $N_d^0$,
 
-\[
+$$
 N_d^0+\sum_j \left\lceil A_j\rho_j\right\rceil I(j\text{ in nursery on }d)x_j\le N^{max}.
-\]
+$$
 
-Grow-out bed occupancy is inclusive from transplant through `harvest + sanitation_days`. For each bed \(b\) and day \(d\), existing and selected occupancy may not exceed one batch.
+Grow-out bed occupancy is inclusive from transplant through `harvest + sanitation_days`. For each bed $b$ and day $d$, existing and selected occupancy may not exceed one batch.
 
-Sow labour is charged on the sow-date week at \(A_j l^{sow}_j\). Harvest labour is reserved on the harvest-date week using the maximum declared yield factor 1.1 and rounded upward to the next minute:
+Sow labour is charged on the sow-date week at $A_j l^{sow}_j$. Harvest labour is reserved on the harvest-date week using the maximum declared yield factor 1.1 and rounded upward to the next minute:
 
-\[
+$$
 L^{harvest}_j=\left\lceil
 1.1Y_jl^{harvest}_j\times60
 \right\rceil/60.
-\]
+$$
 
 Weekly existing plus candidate labour cannot exceed the farm's declared hours/week.
 
@@ -288,39 +288,39 @@ The fixed scenario set is:
 
 Yield factors apply to both existing and newly planned harvest. Demand factors apply only to EWMA residual demand:
 
-\[
+$$
 D_{c,d,s}=B_{c,d}+f_s^D R_{c,d}.
-\]
+$$
 
 Confirmed commitments never shrink in the low-demand scenario. The farm seed is stored as `scenario_seed` and is also used as the CP-SAT random seed. The `scenarios(seed)` function does not use its argument to generate a draw, and `scenario_set_id` hashes the same static three-case list rather than the seed.
 
-The outcome simulator advances a daily accounting clock. At the start of each day, expired lots are disposed; scheduled harvest is then added; due demand is served crop by crop from the earliest-expiring eligible lot; remaining stock carries forward. Harvest-day product can serve harvest-day demand. A newly harvested lot with shelf life \(k\) is eligible on the harvest day and the next \(k-1\) civil dates.
+The outcome simulator evaluates a frozen daily accounting ledger; it does not advance farm time or execute events. For each dated ledger row, expired lots are disposed first, scheduled harvest is then added, due demand is served crop by crop from the earliest-expiring eligible lot, and remaining stock carries to the next calculated row. Harvest-day product can serve harvest-day demand. A newly harvested lot with shelf life $k$ is eligible on the harvest day and the next $k-1$ civil dates.
 
 For each day, the simulator asserts
 
-\[
+$$
 opening+harvest-delivery-disposal-closing=0
-\]
+$$
 
-within \(10^{-6}\) kg. It reports weekly demand, harvest, delivery, and same-date shortfall. Later supply cannot repair an earlier day's shortfall.
+within $10^{-6}$ kg. It reports weekly demand, harvest, delivery, and same-date shortfall. Later supply cannot repair an earlier day's shortfall.
 
 Central-scenario financial metrics use:
 
-\[
+$$
 revenue=\sum delivered_{c,d}\times price_{c,d},
-\]
+$$
 
-\[
+$$
 cost=input+12\times labour+0.30\times delivered+0.15\times disposed,
-\]
+$$
 
-\[
+$$
 margin=revenue-cost.
-\]
+$$
 
 `margin_sgd` is therefore a synthetic contribution-like metric under a partial cost fixture. It excludes fixed overhead, tax, depreciation, financing, customer-specific fulfilment cost, and any unmodelled resource cost. `area_m2` is the sum of the areas of all new allocations, so repeated use of one bed in separate cycles is counted repeatedly; it is planted cycle-area, not unique land footprint or peak occupied area.
 
-The accepted `simulated_outcome` is the selected strategy's **central** ledger and metrics. It is a stored projection. The application does not advance the main farm through those ledger events or create observed biological outcomes.
+The accepted `simulated_outcome` is the selected strategy's **central** ledger, metrics, and proposed future work. Acceptance freezes a projection and bookkeeping record. It does not run a farm-time clock, execute the dated ledger as events, mutate batches as work occurs, or create observed biological or commercial outcomes.
 
 ## 9. Isolated scenarios and council-research wrapper
 
@@ -374,7 +374,7 @@ The command and outcome from this audit should be read separately from the archi
   tests/planner/test_research_constraints.py
 ```
 
-The targeted suite covers fixture determinism and bounds, EWMA setting/hash behavior, planning feasibility and strategy distinction, impossible early sowing, daily mass balance, cost reconciliation, executed-work locks, independent bed/nursery/labour checks, yield semantics, timeout fallback, zero demand, downside aggregation, research reservations, unconfirmed orders, and research determinism. It does not constitute real-world agronomic validation.
+The targeted suite covers fixture determinism and bounds, EWMA setting/hash behavior, planning feasibility and strategy distinction, impossible early sowing, daily mass balance, cost reconciliation, executed-work locks, independent bed/nursery/labour checks, yield semantics, timeout fallback, zero demand, downside aggregation, research reservations, unconfirmed orders, and a same-environment research repeatability check. That repeatability check is not a guarantee that a time-limited solver returns an identical schedule across environments. The suite does not constitute real-world agronomic validation.
 
 ## 11. Limitations and factual gaps
 

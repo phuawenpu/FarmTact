@@ -48,3 +48,20 @@ Before routing an application role through the gateway:
 7. Run the provider-leak and deployment egress checks. The Python allowlist complements network policy; it does not replace it.
 
 Operational `execution_mode=live` remains disabled. Development rollback targets a previously tested DeepSeek configuration, deterministic simulation baseline, or replay, with an audited reason. It never selects another generative provider.
+
+
+## Current-versus-archived scope — 11 September 2026
+
+The current script's normal full trial has seven capability requests and seven
+optional council requests (14 total, within 16). The checked-in `latest.json`
+is historical six-role evidence with 15 cumulative requests, not a fresh seven-role
+trial. Current application councils normally use seven calls plus at most two
+shared schema repairs; optional synthetic-label vision adds one. Thinking is
+disabled for application council JSON; the separate tool-continuation probe tests
+thinking. There is no dynamic model-selected tool loop in the application council.
+
+The two v7 actual adviser probes remain unsupported. Archived success and key
+presence are not current model/account verification. Read the detailed
+[AI report](../technical/ai-provider-and-council.md) for exact call triggers,
+validation, configured-but-unused roles and request/token/deadline limits.
+A documentation reproduction does not require a paid capability trial.

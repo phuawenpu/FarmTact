@@ -1,5 +1,8 @@
 {
   "source_baseline": "a96025e",
+  "generator_version": "synthetic-farm-v1",
+  "forecast_version": "recipe-ewma-v1",
+  "alpha": 0.35,
   "fixture_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
   "origin": "synthetic_demo",
   "validation_status": "demo_only",

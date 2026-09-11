@@ -1,0 +1,94 @@
+{
+  "tool": "Mermaid CLI",
+  "version": "11.17.0",
+  "chapters": {
+    "ai-provider-and-council.md": [
+      {
+        "file": "figures/diagrams/ai-provider-and-council-1.svg",
+        "source_sha256": "92ca364c6a662666c93d6afcb998f8add4c72148db66cd23786c5bf9e3830802"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-2.svg",
+        "source_sha256": "b6d22d0e0231516ae3f2152e7e188a0dd6ea68190fc2e6297eca7b17046cf1ec"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-3.svg",
+        "source_sha256": "f0c6c449c5707fa4311528d84f8885f2e8667117c1d7dd4cf0f6bd064b95c663"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-4.svg",
+        "source_sha256": "ca7ef3f39a093b5bc86fe4d46e3489e8111b43d5569256f5eb50ff230d276ed7"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-5.svg",
+        "source_sha256": "4fce5f90e8e7c264a53d8a74be08fdf9d4f3d6f1491e1ec6f3f69d50f3111eab"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-6.svg",
+        "source_sha256": "e25cf1140317782263a48605f96649386cd4d7d6871969ccbd0b24473d7bdd47"
+      },
+      {
+        "file": "figures/diagrams/ai-provider-and-council-7.svg",
+        "source_sha256": "bccb578b8b1eacd05f0f7fba3b652be0ea673ef5e08e69c0be8bed36bdcefdb3"
+      }
+    ],
+    "numerical-models-and-growth.md": [
+      {
+        "file": "figures/diagrams/numerical-models-and-growth-1.svg",
+        "source_sha256": "3b2ffa230e965b5b66cebfc553767c46428d364647f158561a8cc87f491db1e7"
+      },
+      {
+        "file": "figures/diagrams/numerical-models-and-growth-2.svg",
+        "source_sha256": "aa75fe6eb2b38742093b0d71f216e80a630191eb36ccacb2ad018e37b32816ef"
+      }
+    ],
+    "game-backend-and-state-machines.md": [
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-1.svg",
+        "source_sha256": "45fd8a6252eac7276a015ffc3a26cc24eec9e6b29269abdae1da51c13abe0257"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-2.svg",
+        "source_sha256": "1349d9f305780aca312fb752e8eb23ddfda2f881b17311d7cba9e7b4110fef0d"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-3.svg",
+        "source_sha256": "53a6882b9845a740df18f317b1adba513e5136919f6d418ac69abc69c411db6f"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-4.svg",
+        "source_sha256": "b112dd092897ade85287caf73fdc309872fe286755676a79e972f21018b05c18"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-5.svg",
+        "source_sha256": "e193f498808174145a7e4165f66eea7bb4e0c6a50f58de4a172f6a5ebafbe648"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-6.svg",
+        "source_sha256": "6e0591bd5a89a09b056ac25623ca66e6c8037685465ad85bd9a0b0dfbf13b1bd"
+      },
+      {
+        "file": "figures/diagrams/game-backend-and-state-machines-7.svg",
+        "source_sha256": "f680930e3cf18148d20620f658fcad1c62afe8b6cbe2e08569c479e7e2e1e47d"
+      }
+    ],
+    "system-data-and-evidence.md": [
+      {
+        "file": "figures/diagrams/system-data-and-evidence-1.svg",
+        "source_sha256": "9b3b3df3ed211554852ff799fb6fe06f594cf53eb5d9f719295b4c17583115a5"
+      },
+      {
+        "file": "figures/diagrams/system-data-and-evidence-2.svg",
+        "source_sha256": "af2a62c3f2676f3eb97e9eff3c1509aa3b34a214442ad6319ae9458be2a036b3"
+      },
+      {
+        "file": "figures/diagrams/system-data-and-evidence-3.svg",
+        "source_sha256": "bbc8478d96b01b52d702216736a9b82add497b1293258d95993f1f775b3e9ac3"
+      },
+      {
+        "file": "figures/diagrams/system-data-and-evidence-4.svg",
+        "source_sha256": "45e315f37e7fa62e603d8584d44d4ebe21d7b0e3aeda4a14d69283f81bd56197"
+      }
+    ]
+  }
+}

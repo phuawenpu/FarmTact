@@ -20,12 +20,15 @@ reference membership is not factual entailment. Both v7 recorded actual adviser
 responses were unsupported. Transport, replay, frozen context and tenant-isolation
 passes do not override that result or establish agricultural answer quality.
 
-**Required next-iteration work:** AI-01 through AI-07 and the Council GAME- gaps
+**Required next-iteration work:** AI-01 through AI-12 and the Council GAME- gaps
 are part of the acceptance contract. In particular:
 
 - Distinguish archived capability evidence, configured credentials and recent
   execution; current `capabilities()` uses archived JSON/key presence, not fresh
   account verification. Do not label that mechanism as a current capability probe.
+- Align conversational prompt limits with the actual reply schema, preserve bounded
+  validation reasons for later turns, and version prompts/schemas/validators. Separate
+  job completion from evidence support and local decision status.
 - Add adversarial reference/entity/unit/period tests and a bounded grounded-answer
   benchmark with explicit abstention, contradiction and unsupported-claim reporting.
 - Repair the forecast harvest mass reference key mismatch and use shared typed
@@ -298,7 +301,7 @@ Development rollback is automatic under a versioned policy to a previously teste
 | DS-17 | Provider/model/mode/usage metadata is retained without keys, image payloads or private reasoning |
 | DS-18 | Egress and bundled dependency audit of the isolated development deployment finds no hidden runtime provider calls; repeat for future production |
 | DS-19 | Test/live/replay labels remain distinct across UI, logs and exported strategies |
-| DS-20 | Development promotion/rollback are automatic, policy-versioned and audited; stale acceptance is recomputed, simulated work is idempotent, and operational live promotion remains disabled |
+| DS-20 | Development promotion/rollback are automatic, policy-versioned and audited; stale acceptance is recomputed; projected simulation records are preserved; a future work-execution engine requires separate idempotency tests (GAME-01); operational live promotion remains disabled |
 
 A09 owns gateway and council implementation; A12 owns isolated environments, network policy, trial execution and release evidence; A11 independently verifies the policy and tests. A04 adds audit/mode fields to shared contracts. A05/A06 route any LLM-assisted ingestion interpretation through the gateway. A02/A03 separate initial GPT-assisted research provenance from later DeepSeek runtime extraction. A07/A08 keep calculations local and send only their validated results to agents. A10 displays model/mode/vision availability and blocked states honestly. A01 records new runtime extraction lineage.
 
