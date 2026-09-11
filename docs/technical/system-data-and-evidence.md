@@ -1,7 +1,7 @@
 # System, data, and evidence architecture
 
-**Audit date:** 11 September 2026 UTC  
-**Repository baseline:** commit `a96025e` (the working tree may contain the documentation changes prepared for the next release)  
+**Audit date:** 11 September 2026 UTC<br>
+**Repository baseline:** commit `a96025e` (the working tree may contain the documentation changes prepared for the next release)<br>
 **Published application covered:** immutable v7, with v1–v6 retained as separate editions
 
 This chapter describes what the FarmTact source and recorded release evidence implement. It does not promote roadmap items in the v1.2 specification to shipped capabilities. FarmTact is a synthetic planning demonstration: its farm records, recipes, demand histories, schedules, yields, prices, costs, scenarios, and simulated outcomes are fictional. Real public weather, forecast, trade, news, and scholarly records supply attributed context. They do **not** automatically change demand, yield, recipe, price, or solver inputs.

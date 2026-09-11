@@ -1,7 +1,7 @@
 # AI provider and council implementation report
 
-**Audit date:** 11 September 2026 (UTC)  
-**Audited revision:** `a96025e49226d8ca641cf07b49192bd85b464805`  
+**Audit date:** 11 September 2026 (UTC)<br>
+**Audited revision:** `a96025e49226d8ca641cf07b49192bd85b464805`<br>
 **Scope:** the DeepSeek provider boundary, mission and conversation councils, the
 playable council study, vision, numerical forecasting and simulation interfaces,
 evaluation evidence, persistence, replay, budgets, admission control, and egress.
