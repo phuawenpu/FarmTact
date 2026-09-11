@@ -1,0 +1,44 @@
+{
+  "id": "v11",
+  "title": "Guided farm production planning",
+  "published_at": "2026-09-11",
+  "summary": "Plan from farm records, simulate progress and compare keeping a saved schedule with replanning under identical demand and seasonal changes. Review grounded Council advice explicitly. Editions now appear newest first.",
+  "status": "published",
+  "source_commit": "37802adbc9010bc80a50869ef725285a119af3f3",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/37802adbc9010bc80a50869ef725285a119af3f3",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3...37802adbc9010bc80a50869ef725285a119af3f3",
+  "image_digest": "registry.fly.io/farmtact@sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d",
+  "review_url": "/v11/review",
+  "play_url": "/v11/",
+  "changes": [
+    {
+      "title": "One guided production mission",
+      "description": "Connect records, numerical schedules, the farm board, an explicit Council checkpoint, synthetic execution and future-only replanning.",
+      "feedback_ids": [],
+      "evidence": [
+        "docs/technical/v11-guided-production-planning.md",
+        "reports/v11/frontend-browser.json"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Fair adaptation and bounded advice",
+      "description": "Compare retained and reoptimized schedules under the same changed conditions; preserve executed work, bookings and inventory. Council selects validated facts and bounded rationales.",
+      "feedback_ids": [],
+      "evidence": [
+        "reports/v11/numerics.md",
+        "reports/v11/council.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Newest editions first",
+      "description": "The starting screen and version switcher sort numbered editions in reverse chronological order.",
+      "feedback_ids": [],
+      "evidence": [
+        "reports/v11/frontend-browser.json"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
