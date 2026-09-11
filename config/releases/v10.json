@@ -1,0 +1,35 @@
+{
+  "id": "v10",
+  "title": "V10 \u00b7 Fulfillment checks and clean abstentions",
+  "published_at": "2026-09-11",
+  "summary": "Supply receives explicit booked fulfillment status and rejects known contradictory full-delivery claims. Council specialists without external evidence receive an absence-only context. All earlier editions and trial failures are preserved.",
+  "status": "published",
+  "source_commit": "ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/89d29cc3e071e12373204ff234d0a261ce71b5a1...ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+  "image_digest": "registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf",
+  "review_url": "/v10/review",
+  "play_url": "/v10/",
+  "changes": [
+    {
+      "title": "Booked fulfillment reconciles with frozen quantities",
+      "description": "Requested, delivered and shortfall quantities accompany a code-derived fulfillment status. Explicit claims of full booked fulfillment fail when the frozen plan has a shortfall. Semantic rejection cannot consume a format-only repair.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3/docs/technical/v10-grounding-followup.md",
+        "https://github.com/phuawenpu/FarmTact/blob/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3/tests/seven_agents/test_council.py"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Absent-source specialists give clean abstentions",
+      "description": "Weather and Market Council turns with absent external observations receive only their absence boundary, with empty reference and action arrays required. Frozen records remain durable and numerical direct questions retain their facts.",
+      "feedback_ids": [],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3/tests/gameplay/test_conversations.py",
+        "https://github.com/phuawenpu/FarmTact/blob/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3/docs/technical/v10-grounding-followup.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
