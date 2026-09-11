@@ -1,5 +1,5 @@
 {
-  "latest": "v8",
+  "latest": "v9",
   "editions": [
     {
       "id": "v1",
@@ -397,6 +397,50 @@
           "evidence": [
             "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/full-regression.xml",
             "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/docs/runbooks/retention.md"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v9",
+      "title": "V9 \u00b7 Readable adviser facts and precise context",
+      "published_at": "2026-09-11",
+      "summary": "Advisers retain metric meaning, use bounded role evidence and clearer policy context, and show exact frozen facts in mission Council, conversations and research. Prior editions and their trial records remain unchanged.",
+      "status": "published",
+      "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/a00e546b1270a5c532e8eae6b8b64e568c344c13...89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "image_digest": "registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4",
+      "review_url": "/v9/review",
+      "play_url": "/v9/",
+      "changes": [
+        {
+          "title": "Metric meaning survives short references",
+          "description": "Mission references preserve canonical names, labels, units and strategy identity. The Council receives the actual required/advisory selection policy and explicit external-source availability. Unsupported role findings remain visible and cannot spend format-repair requests.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/89d29cc3e071e12373204ff234d0a261ce71b5a1/docs/technical/v9-ai-followup.md",
+            "https://github.com/phuawenpu/FarmTact/blob/89d29cc3e071e12373204ff234d0a261ce71b5a1/reports/v8/public-ai-postmortem.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Bounded, relevant numerical answers",
+          "description": "Conversation context filters every comparison segment and admits available baseline/scenario/delta groups together. Numerical answers require typed evidence. Absent-source Council specialists abstain; direct numerical questions remain answerable from their frozen facts.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/89d29cc3e071e12373204ff234d0a261ce71b5a1/reports/v9/ai-focused.xml",
+            "https://github.com/phuawenpu/FarmTact/blob/89d29cc3e071e12373204ff234d0a261ce71b5a1/tests/gameplay/test_context_triplets.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Authoritative facts visible beside interpretations",
+          "description": "Mission Council, saved conversations and research adviser responses display code-rendered quantities and dates, with clear unavailable and unsupported states. AI prose remains qualitative interpretation; it never supplies authoritative values or authorizes real farm operations.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/89d29cc3e071e12373204ff234d0a261ce71b5a1/docs/technical/v9-ai-followup.md"
           ],
           "status": "implemented"
         }
