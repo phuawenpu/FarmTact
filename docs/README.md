@@ -1,9 +1,10 @@
 # FarmTact documentation
 
-Documentation audit: **11 September 2026**. Published application: **v7**.
-The working tree is a **v8 candidate**, not a published edition. Current-source
-claims use the v8 evidence below; v1–v7 source, images, state and release reports
-remain immutable historical evidence.
+Documentation audit: **11 September 2026**. Published application: **v8**.
+The working tree contains the **v9 AI follow-up candidate**. V8 publication,
+health and prior-state preservation passed, but public AI quality failed; the
+follow-up report separates those results from V9's pending live verification.
+Earlier edition source, images, state and trial reports remain immutable.
 
 ## Start here
 
@@ -16,6 +17,7 @@ remain immutable historical evidence.
 | How do missions, quests, proposals, acceptance, replay and simulated work behave? | [Complete game backend](technical/game-backend-and-state-machines.md) |
 | Where do records, evidence and public context come from? | [System, data and evidence](technical/system-data-and-evidence.md) |
 | What is missing or misleading, and what should v8 address? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
+| Which AI defects did the public trial expose, and how are they corrected? | [V9 AI follow-up](technical/v9-ai-followup.md) |
 | What did v8 change, verify and leave unresolved? | [V8 remediation report](technical/v8-remediation-report.md) |
 | What do the bounded v8 work packages report? | [Council](../reports/v8/council.md), [planner](../reports/v8/planner.md), [data/ML](../reports/v8/data-ml.md) |
 | How can I reproduce the documentation and its checks? | [Reproducibility guide](technical/reproducibility.md) |
@@ -46,11 +48,11 @@ historical decisions. Use the current deployment runbook for operations. Existin
 numbered editions retain their frozen source/image and independent progress;
 documentation changes do not publish a new application edition.
 
-For the v8 candidate, the clean-checkout pipeline and synthetic-only V3 numerical
-report pass. The isolated PostgreSQL suite passed 589 tests with one skip, and the
-56-day network execution trial passed across an actual application restart.
-Twenty-three focused root tests include an 84-day, two-replan lot-provenance case.
-Subsequent focused AI tests cover the narrow V5 mission-reference alias change.
-The final local research adviser passed reference validation. The retained
-pre-context-fix combined provider scorer remains failed (8 of 18 cases); public
-mission/conversation verification and immutable publication are still pending.
+V8's isolated PostgreSQL suite passed 589 tests with one skip; its final 56-day
+network trial passed across an actual application restart. It is published and
+all eight edition health endpoints match their source pins. Prior-seven state
+preservation and public numerical concurrency passed. Its public combined AI
+scorer failed (6 of 10 completed cases passed; workflows incomplete). Read the
+[V8 postmortem](../reports/v8/public-ai-postmortem.md) and
+[V9 correction report](technical/v9-ai-followup.md) before interpreting current
+AI quality. The final V9 provider result is a separate required evidence item.

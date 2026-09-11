@@ -1,0 +1,53 @@
+{
+  "status": "FAIL",
+  "started_at": "2026-09-11T12:12:38Z",
+  "target": "public Fly application",
+  "target_url": "https://farmtact.fly.dev",
+  "editions": [
+    "v7",
+    "v8"
+  ],
+  "provider_calls_requested": 0,
+  "policy": "Synthetic frozen scenarios only; council and inference disabled; no farm acceptance or operations.",
+  "jobs": [],
+  "browse_samples": [
+    {
+      "edition": "v7",
+      "endpoint": "bootstrap",
+      "method": "GET",
+      "status_code": 200,
+      "elapsed_seconds": 0.25
+    }
+  ],
+  "memory_samples": {
+    "before": {
+      "captured_at": "2026-09-11T12:12:40Z",
+      "elapsed_seconds": 2.095,
+      "status": "ok",
+      "MemTotal_kib": 4010180,
+      "MemFree_kib": 1119616,
+      "MemAvailable_kib": 2387972,
+      "Buffers_kib": 47524,
+      "Cached_kib": 1554012,
+      "SwapTotal_kib": 0,
+      "SwapFree_kib": 0,
+      "used_excluding_reclaimable_kib": 1622208
+    },
+    "after": {
+      "captured_at": "2026-09-11T12:12:42Z",
+      "elapsed_seconds": 1.901,
+      "status": "ok",
+      "MemTotal_kib": 4010180,
+      "MemFree_kib": 1113384,
+      "MemAvailable_kib": 2381956,
+      "Buffers_kib": 47544,
+      "Cached_kib": 1554292,
+      "SwapTotal_kib": 0,
+      "SwapFree_kib": 0,
+      "used_excluding_reclaimable_kib": 1628224
+    }
+  },
+  "checks": [],
+  "error": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/farmtact-v8-capacity-cookies/farmtact-shared-capacity-v7.cookies.json'",
+  "finished_at": "2026-09-11T12:12:42Z"
+}

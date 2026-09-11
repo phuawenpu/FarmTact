@@ -1,0 +1,203 @@
+{
+  "events": [
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": null,
+      "sequence": 1,
+      "occurred_at": "2026-09-11T12:14:10.506891+00:00",
+      "event_type": "conversation_created",
+      "schema_version": "1.0",
+      "body": {
+        "advisor_id": "mei",
+        "snapshot_ref": {
+          "kind": "scenario",
+          "id": "759d0c79dce348cad6d2064bcd837609",
+          "hash": "5257bbb5bf1af42c8cb124de265bf161f98a5b45f63495ac740baaa018713668",
+          "version": 3,
+          "data_mode": "synthetic_demo",
+          "frozen_at": "2026-09-11T12:14:10.453579+00:00"
+        }
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "0e8f91aeafcb3c5d39eecd98e445da28",
+      "sequence": 2,
+      "occurred_at": "2026-09-11T12:14:11.188309+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "01f6eebdcd8e205027062c3ad7b3c71d",
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "0e8f91aeafcb3c5d39eecd98e445da28",
+      "sequence": 3,
+      "occurred_at": "2026-09-11T12:14:11.446521+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "advisor_turns": 1
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "0e8f91aeafcb3c5d39eecd98e445da28",
+      "sequence": 4,
+      "occurred_at": "2026-09-11T12:14:11.606854+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "0e8f91aeafcb3c5d39eecd98e445da28",
+      "sequence": 5,
+      "occurred_at": "2026-09-11T12:14:14.134459+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "d234445b9d056b7cc8244119bb0778a2",
+        "speaker_id": "mei",
+        "reply_to": "01f6eebdcd8e205027062c3ad7b3c71d",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "0e8f91aeafcb3c5d39eecd98e445da28",
+      "sequence": 6,
+      "occurred_at": "2026-09-11T12:14:14.222996+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "direct",
+        "completed_turns": 1,
+        "repair_attempts": 0
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 7,
+      "occurred_at": "2026-09-11T12:14:15.728775+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "b713b4a0b292ff777cc3c62445d62c91",
+        "mode": "invite",
+        "advisor_turns": 2
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 8,
+      "occurred_at": "2026-09-11T12:14:16.125546+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "invite",
+        "advisor_turns": 2
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 9,
+      "occurred_at": "2026-09-11T12:14:16.278053+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 10,
+      "occurred_at": "2026-09-11T12:14:18.323179+00:00",
+      "event_type": "advisor_reply_repair",
+      "schema_version": "1.0",
+      "body": {
+        "role": "demand_analyst",
+        "repair_attempt": 1,
+        "validation_issues": [
+          {
+            "field": "content",
+            "type": "string_too_long"
+          }
+        ]
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 11,
+      "occurred_at": "2026-09-11T12:14:18.330834+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 12,
+      "occurred_at": "2026-09-11T12:14:19.738955+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "10e0cb74db2bf772de0a7c43cf74a9fa",
+        "speaker_id": "ravi",
+        "reply_to": "d234445b9d056b7cc8244119bb0778a2",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 13,
+      "occurred_at": "2026-09-11T12:14:19.758503+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 3,
+        "reserved_output_tokens": 1024
+      }
+    },
+    {
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "request_id": "abb06b1a2a5061b59329937c95183f4b",
+      "sequence": 14,
+      "occurred_at": "2026-09-11T12:14:21.742999+00:00",
+      "event_type": "conversation_request_failed",
+      "schema_version": "1.0",
+      "body": {
+        "status": "PARTIAL",
+        "completed_turns": 1,
+        "message": "Advisor exchange incomplete (DeepSeek structured output failed local validation); completed messages were preserved and no provider fallback was used.",
+        "validation_issues": [
+          {
+            "field": "content",
+            "type": "string_too_long"
+          }
+        ]
+      }
+    }
+  ]
+}

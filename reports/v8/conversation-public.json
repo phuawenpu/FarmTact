@@ -1,0 +1,8 @@
+{
+  "status": "PARTIAL",
+  "actual_inference_requests": 4,
+  "completed_advisor_messages": 2,
+  "planned_advisor_messages": 10,
+  "failure": "Invited production return exceeded content length after shared repair consumed. Council not started.",
+  "evidence": "conversation-public-replay.json"
+}

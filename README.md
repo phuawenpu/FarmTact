@@ -6,18 +6,20 @@ compare planting strategies, and discuss the consequences with a council of advi
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**Play:** [guided v7 council](https://farmtact.fly.dev/v7/research) ·
-[main v7 farm](https://farmtact.fly.dev/v7/) ·
-[edition chooser, v1–v7](https://farmtact.fly.dev/)
+**Play:** [guided v8 council](https://farmtact.fly.dev/v8/research) ·
+[main v8 farm](https://farmtact.fly.dev/v8/) ·
+[edition chooser, v1–v8](https://farmtact.fly.dev/)
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
-[v8 package evidence](reports/v8/)
+[v8 package evidence](reports/v8/) ·
+[v9 AI follow-up](docs/technical/v9-ai-followup.md)
 
-The public links remain immutable v7. The current checkout is a **v8 candidate**;
-it has not been published as a numbered edition. Candidate behavior below must be
-read with its dated reports rather than attributed to v7.
+The latest public edition is **v8**, pinned to source
+[`a00e546`](https://github.com/phuawenpu/FarmTact/commit/a00e546b1270a5c532e8eae6b8b64e568c344c13).
+All prior editions retain their original source/images and independent progress.
+The [deployment evidence](reports/v8/deployment-health.json) verifies every edition.
 
 ## What you can do
 
@@ -37,7 +39,7 @@ read with its dated reports rather than attributed to v7.
 - Enable optional locally bundled music/effects. Text fields support device-keyboard
   dictation where the device offers it; custom recording/transcription is not integrated.
 
-Acceptance saves projected outcomes and worklists. In the v8 candidate, an accepted
+Acceptance saves projected outcomes and worklists. In v8, an accepted
 current mission can create a tenant-owned synthetic execution world. Explicit
 advance actions move its civil-date clock by one or seven days and record synthetic
 sowing, transplanting, harvesting, delivery, inventory, cost and revenue events.
@@ -181,17 +183,23 @@ import, planning, conversation, research and simulation mutations require an
 `Idempotency-Key` of at most 128 characters. Reusing a key with identical input
 returns the stored result; changed input is rejected.
 
-The candidate passed the isolated PostgreSQL suite with **589 tests passed and one
-skipped**, plus a 56-day HTTP execution trial with an actual application restart.
-A separate 84-day test covers replans on days 7 and 42 and cross-replan lot origins.
-The clean-checkout pipeline and planner V3 synthetic numerical evaluation passed.
-The subsequent narrow mission-reference alias change passed focused AI tests; it
-postdates that full-suite run. The final local research adviser passed exact
-reference validation and used 6,704 prompt tokens, versus 64,756 in the earlier
-trial. Across all retained experiments, 44 actual provider requests were consumed.
-The historical pre-context-fix quality score remains **FAIL** (8 of 18 cases).
-The final public mission/conversation quality result and immutable v8 publication
-are pending; local correctness tests do not establish live answer quality.
+V8 passed the isolated PostgreSQL suite with **589 tests passed and one skipped**,
+a 56-day HTTP execution trial across an application restart, and the separate
+84-day test with replans on days 7 and 42. Its clean-checkout pipeline and planner
+V3 synthetic numerical evaluation passed. The narrow mission V5 alias change
+postdated that full suite and passed focused AI tests. V8 is published; all eight
+health/source checks, prior-seven preservation and public numerical concurrency
+passed.
+
+**V8 public AI quality failed.** The planning Council completed seven validly
+referenced replies, but some explanations confused metric meaning or role scope.
+The invited conversation stopped at the existing response-length limit. The
+combined scorer passed 6 of 10 completed cases and failed workflow completeness.
+The [postmortem](reports/v8/public-ai-postmortem.md) preserves all evidence. The
+current working tree contains a **v9 AI correction candidate**, with meaningful
+reference labels, better comparison coverage and stronger response requirements;
+its final public trial and publication are pending. Fifty-five actual requests
+were consumed through V8, including failures and repairs.
 
 Expired anonymous workspaces can be reviewed and removed only through the explicit
 [retention CLI](docs/runbooks/retention.md). It defaults to dry-run, retains 30

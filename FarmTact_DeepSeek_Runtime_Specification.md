@@ -1,8 +1,10 @@
 # Runtime implementation audit — 11 September 2026
 
-The published application edition is **v7**; the working tree is an undeployed
-**v8 candidate**. Frozen earlier source/images and historical probe results are
-unchanged. See the [v8 remediation report](docs/technical/v8-remediation-report.md),
+The latest published application edition is **v8**, built from source
+`a00e546b1270a5c532e8eae6b8b64e568c344c13` and image digest
+`8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+Frozen earlier source/images and historical probe results are unchanged. See the
+[v8 remediation report](docs/technical/v8-remediation-report.md),
 [Council package evidence](reports/v8/council.md), and [AI/provider report](docs/technical/ai-provider-and-council.md),
 [game backend report](docs/technical/game-backend-and-state-machines.md) and
 [gap register](docs/technical/gaps-and-next-iteration.md).
@@ -29,7 +31,7 @@ reference membership is not factual entailment. Both v7 recorded actual adviser
 responses were unsupported. Transport, replay, frozen context and tenant-isolation
 passes do not override that result or establish agricultural answer quality.
 
-**V8 implementation:** AI-01 through AI-12 now have candidate server changes and
+**V8 implementation:** AI-01 through AI-12 now have published server changes and
 offline regression evidence. Current responses use code-rendered typed facts whose
 entity, unit, period and snapshot hash come from server-owned context; qualitative
 interpretation remains unverified. Prompt, schema, validator, context and source
@@ -46,13 +48,21 @@ from admitted context must produce an abstention. A format repair retains the
 rejected attempt and must preserve lexical meaning, relationships, proposed actions
 and references while removing or relocating only the invalid number/date form.
 
-Before the final V4 mission run, the ledger recorded 36 actual paid requests: 24
+At the pre-final V4 checkpoint, the ledger recorded 36 actual paid requests: 24
 mission requests across four experiments, 11 conversation requests and one research
 request. Conversation inputs totalled 805,878 prompt tokens for ten persisted
 adviser messages; the research request used 64,756 prompt tokens. The retained
 pre-context-fix scorer has 18 cases, eight PASS and ten FAIL. Exact workflow counts
-passed, but overall quality did not. V4 source and offline tests do not convert
-that failure into a live-quality pass; final live evidence remains pending.
+passed, but overall quality did not. Later local trials brought the local total to
+44 requests. The final research-adviser request passed exact reference validation
+using 6,704 prompt tokens, versus 64,756 in the earlier retained request; the final
+local mission still failed one reference check and motivated the V5 alias change.
+The full PostgreSQL suite passed 589 tests with one skip before that narrow change;
+the later focused AI suite passed 250 with one skip and one PostgreSQL case
+deselected. All eight deployed-edition health checks and v1–v7 preservation checks
+passed. None of these results converts the historical 8/18 score into a public
+quality pass. At documentation freeze, the public mission was running and public
+conversation had not started; their calls are excluded from the 44-call local total.
 
 Remaining work includes:
 
@@ -381,3 +391,17 @@ Documentation was checked on **8 September 2026**. Exact URLs and access notes a
 ## Seven-agent routing amendment — 2026-09-09
 
 Current runtime roles, in council order: `demand_analyst`, `weather_analyst`, `market_analyst`, `production_analyst`, `supply_chain_analyst`, `profit_analyst`, `planning_chair`. Remove the independent-critic route in v3. Existing v1/v2 deployments retain their frozen configuration. Numerical/evidence validation is local code, not a hidden replacement critic call. Each numerical council finding reserves at most 1,536 output tokens; seven calls plus two shared repairs reserve at most 13,824, leaving optional vision inside the unchanged 16,384 ceiling. No new provider, feed scraping, sentiment classifier or background inference is introduced. Market context is frozen with the result; no connected social feed is claimed. Historical evaluation reports retain their original six-role labels and settings.
+
+## V9 AI follow-up candidate — 11 September 2026
+
+The public V8 quality trial failed despite mission transport/reference success:
+6 of 10 completed quality cases passed, and the invited return and conversational
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
+V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+validator V4. It preserves semantic names alongside exact aliases, passes the
+actual required/advisory policy, bounds role-specific facts, balances comparison
+segments, requires typed numerical evidence and enforces absent-source abstention
+for Council source specialists. Direct/invited numerical questions remain
+answerable from their frozen facts. Conversation prose targets 220 characters
+under the unchanged 400-character hard limit. Actual-provider verification and
+immutable V9 publication are pending. V8 stays unchanged.

@@ -16,13 +16,13 @@ import re
 from typing import Any, Literal, Mapping, Sequence
 
 
-PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v4"
-MISSION_PROMPT_TEMPLATE_VERSION = "farmtact-mission-council-prompt-v5"
+PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v5"
+MISSION_PROMPT_TEMPLATE_VERSION = "farmtact-mission-council-prompt-v6"
 OUTPUT_SCHEMA_VERSION = "farmtact-advisor-output-v3"
-VALIDATOR_VERSION = "farmtact-ai-evidence-validator-v3"
+VALIDATOR_VERSION = "farmtact-ai-evidence-validator-v4"
 CONTEXT_VERSION = "farmtact-frozen-ai-context-v3"
-CONVERSATION_CONTEXT_VERSION = "farmtact-conversation-context-v4"
-MISSION_CONTEXT_VERSION = "farmtact-mission-context-v5"
+CONVERSATION_CONTEXT_VERSION = "farmtact-conversation-context-v5"
+MISSION_CONTEXT_VERSION = "farmtact-mission-context-v6"
 SOURCE_CONTEXT_VERSION = "farmtact-source-context-v3"
 RESPONSE_LIMITS = {
     "content_characters": 400,

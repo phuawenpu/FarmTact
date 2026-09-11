@@ -1,14 +1,14 @@
 # FarmTact V8 remediation: methods, implementation evidence, and validation limits
 
 **Audit date:** 11 September 2026 UTC<br>
-**System state:** V8 candidate; local regression and restart gates passed; public AI verification and immutable publication pending<br>
+**System state:** immutable V8 published; all edition health and prior-state preservation checks passed; V9 AI correction under development<br>
 **Data status:** synthetic demonstration only<br>
 **Operational status:** real farm operations disabled<br>
 **Live Council quality status:** **FAILED / remediation in progress**
 
 ## Abstract
 
-This report evaluates the V8 remediation of FarmTact as a software and numerical system, rather than as a validated agricultural decision system. The evaluated implementation joins a deterministic demand baseline, a whole-bed planning model, a persistent synthetic execution world, bounded scenario and research workflows, and optional DeepSeek interpretation. Planned schedules can be advanced through a recorded civil-date clock with append-only events, order and lot attribution, inventory conservation, cash accounting, and future replanning. `daily-bed-cpsat-v3` adds absolute crop-cycle identities, collision-checked harvest-lot IDs, a persistent cross-replan origin map, exclusion of all historically executed cycle IDs, and resource reservations against the largest declared scenario yield. The data package preserves the original fixture hash while adding disjoint, versioned synthetic training and evaluation cohorts. Demand evaluation uses rolling origins and one-, two-, and four-week horizons; crop-cycle evaluation uses independent whole-batch outcomes. The current evaluator is `rolling-origin-demand-v4` and includes a behavioral counterfactual availability probe. No fitted candidate is eligible for production, and every real-data promotion gate remains blocked. The Council now selects server-owned typed facts and keeps execution, evidence, and decision influence as separate statuses. Conversation projection is V4 and mission-reference selection is V5: the model selects short lookup aliases that resolve exactly to canonical server-owned evidence. Role projection has explicit ranking and size bounds, frozen research inputs, abstention rules and preserved rejected attempts. The isolated PostgreSQL regression passed 589 tests with one skip; a subsequent focused AI suite covers the narrow V5 alias change. A 56-day network execution trial survived an actual application restart, and a separate 84-day regression exercised two replans and cross-segment lot attribution. The clean-checkout zero-inference pipeline and V3 synthetic numerical report passed. The final local research adviser passed reference validation using 6,704 prompt tokens, compared with 64,756 in the earlier retained request. Forty-four actual provider requests have been consumed across the retained experiments. The pre-context-fix scorer passed 8 of 18 cases and remains historical failed evidence. Immutable publication and final public mission/conversation quality verification are still pending; mechanical correctness and exact references do not establish qualitative truth.
+This report evaluates the V8 remediation of FarmTact as a software and numerical system, rather than as a validated agricultural decision system. The evaluated implementation joins a deterministic demand baseline, a whole-bed planning model, a persistent synthetic execution world, bounded scenario and research workflows, and optional DeepSeek interpretation. Planned schedules can be advanced through a recorded civil-date clock with append-only events, order and lot attribution, inventory conservation, cash accounting, and future replanning. `daily-bed-cpsat-v3` adds absolute crop-cycle identities, collision-checked harvest-lot IDs, a persistent cross-replan origin map, exclusion of all historically executed cycle IDs, and resource reservations against the largest declared scenario yield. The data package preserves the original fixture hash while adding disjoint, versioned synthetic training and evaluation cohorts. Demand evaluation uses rolling origins and one-, two-, and four-week horizons; crop-cycle evaluation uses independent whole-batch outcomes. The current evaluator is `rolling-origin-demand-v4` and includes a behavioral counterfactual availability probe. No fitted candidate is eligible for production, and every real-data promotion gate remains blocked. The Council now selects server-owned typed facts and keeps execution, evidence, and decision influence as separate statuses. Conversation projection is V4 and mission-reference selection is V5: the model selects short lookup aliases that resolve exactly to canonical server-owned evidence. Role projection has explicit ranking and size bounds, frozen research inputs, abstention rules and preserved rejected attempts. The isolated PostgreSQL regression passed 589 tests with one skip; a subsequent focused AI suite covers the narrow V5 alias change. A 56-day network execution trial survived an actual application restart, and a separate 84-day regression exercised two replans and cross-segment lot attribution. The clean-checkout zero-inference pipeline and V3 synthetic numerical report passed. The final local research adviser passed reference validation using 6,704 prompt tokens, compared with 64,756 in the earlier retained request. Forty-four actual provider requests have been consumed across the retained experiments. The pre-context-fix scorer passed 8 of 18 cases and remains historical failed evidence. V8 was published from `a00e546b1270a5c532e8eae6b8b64e568c344c13`; all edition health and prior-state preservation checks passed. The public mission passed its mechanical gate using seven calls, but a public invited conversation stopped after its return turn exceeded the response limit. The public combined scorer passed six of ten completed cases and failed workflow completeness; no public conversation Council ran. Total consumption through V8 was 55 requests. These failures motivated the separate [V9 follow-up](v9-ai-followup.md); mechanical correctness and exact references do not establish qualitative truth.
 
 ## 1. Questions and claim boundary
 
@@ -138,7 +138,7 @@ Harvest lots use a separate deterministic hash and collision ordinal, checked ag
 
 The dedicated PostgreSQL test issued six simultaneous same-key advances and found one committed civil day and one matching receipt. Two different keys competing at the next revision produced one success and one 409 conflict. Historical receipt replay returned the original response without changing the newer world. A second tenant received 404 for the world, events, and mutation route. A reconstructed store observed the same world and ordered events. This focused test passed once in 7.38 seconds; details are in [execution-validation.md](../../reports/v8/execution-validation.md).
 
-The archived intermediate 56-day HTTP trial in [v8_execution_trial.py](../../scripts/v8_execution_trial.py) passed across an application restart and made zero provider calls. Its immutable [intermediate artifact](../../reports/v8/archive/execution-trial.intermediate.json) records the exact synthetic counts and invariants it checked. Later identity and runtime changes require the separate final network restart trial now designated for [execution-trial.json](../../reports/v8/execution-trial.json); this report does not pre-judge that result. The cash constraint remains narrower than the execution ledger: planning constrains new input cost, while execution deducts input, labour, packing, and disposal. A conserved ledger can consequently have a negative balance. That semantic gap must be resolved before cash is described as a full liquidity constraint.
+The archived intermediate 56-day HTTP trial in [v8_execution_trial.py](../../scripts/v8_execution_trial.py) passed across an application restart and made zero provider calls. Its immutable [intermediate artifact](../../reports/v8/archive/execution-trial.intermediate.json) records the exact synthetic counts and invariants it checked. The separate final network restart trial passed with 56 task events and 64 demand-service events: [execution-trial.json](../../reports/v8/execution-trial.json). The cash constraint remains narrower than the execution ledger: planning constrains new input cost, while execution deducts input, labour, packing, and disposal. A conserved ledger can consequently have a negative balance. That semantic gap must be resolved before cash is described as a full liquidity constraint.
 
 ## 5. Planner and accounting remediation
 
@@ -361,9 +361,9 @@ The evolving experiment ledger preserves all attempts and reconciles actual paid
 
 The four mission counts sum to 24. Before the final V4 mission run, the ledger additionally records 11 V4 conversation requests and one V4 research request, for 36 actual paid requests. Conversation inputs totalled 805,878 prompt tokens and produced ten persisted adviser messages; the research request used 64,756 prompt tokens. These are usage measurements, not a quality score or a recommended production budget. The first mission failure demonstrates why exact returned-model validation matters. The canonical vision run shows that native visual input traversed the route, but five unsupported outputs prevent a quality pass. The next two runs each produced six locally valid role outputs and still failed complete coverage.
 
-The retained [pre-context-fix scorer](../../reports/v8/ai-quality-before-context-fix.json) covers 18 cases: eight PASS and ten FAIL, so its overall automated status is **FAIL**. Exact workflow-integrity counts passed for direct, invite, Council, planning and research sequences. Those count checks show that the intended routes ran exactly once in the tested workflow; they do not establish entailment or usefulness. The frozen V4 agent core addresses context admission and repair semantics, but no final live evidence yet proves that it fixes quality.
+The retained [pre-context-fix scorer](../../reports/v8/ai-quality-before-context-fix.json) covers 18 cases: eight PASS and ten FAIL, so its overall automated status is **FAIL**. Exact workflow-integrity counts passed for direct, invite, Council, planning and research sequences. Those count checks show that the intended routes ran exactly once in the tested workflow; they do not establish entailment or usefulness. Conversation V4 and mission V5 address context admission, exact aliases and repair semantics, but no final live evidence yet proves that it fixes quality.
 
-**Historical combined status: FAILED / FINAL PUBLIC QUALITY RESULT PENDING.** No deployed-quality claim is made. The retained planning artifacts are [planning-local.json](../../reports/v8/planning-local.json), [planning-local-canonical.json](../../reports/v8/planning-local-canonical.json), [planning-local-v3.json](../../reports/v8/planning-local-v3.json), and [planning-local-v4.json](../../reports/v8/planning-local-v4.json). The final mission budget reserves at most nine requests; unused reservation is not counted as consumption.
+**Historical combined status: FAILED. Final V8 public quality status: FAILED.** No deployed-quality claim is made. The retained planning artifacts are [planning-local.json](../../reports/v8/planning-local.json), [planning-local-canonical.json](../../reports/v8/planning-local-canonical.json), [planning-local-v3.json](../../reports/v8/planning-local-v3.json), and [planning-local-v4.json](../../reports/v8/planning-local-v4.json). The final mission budget reserves at most nine requests; unused reservation is not counted as consumption.
 
 ## 9. Scenarios, conversations, and research state machines
 
@@ -462,10 +462,10 @@ The machine-readable [browser report](../../reports/v8/ui-browser.json) records 
 | Simulation concurrency | isolated PostgreSQL test | 1 passed in 7.38 s | Same-key, competing-key, tenant, restart-store |
 | Worker/research cancellation | latest focused integration group | 10 passed | SQLite worker serialization plus queued/running cancellation |
 | Root identity/retention/cancellation focus | `final-root-focused.xml` | 23 passed in 20.369 s | Includes 84-day ASGI world and replans on days 7 and 42 |
-| AI frozen implementation focus | focused pytest group | 53 passed, 1 PostgreSQL case deselected | Offline/source behavior; no live-quality pass |
+| Final V8 AI implementation focus | focused pytest group | 250 passed, 1 skipped, 1 PostgreSQL case deselected | Covers mission V5/conversation V4; no live-quality pass |
 | Clean checkout | `clean-checkout.json` | PASS, zero inference calls | Rebuild/install/fixture/API path in recorded isolated environment |
 | Numerical evaluation | `numerical_evaluation.json` | PASS, planner V3 | Synthetic-only; no fitted candidate promoted |
-| Intermediate restart execution | `archive/execution-trial.intermediate.json` | PASS: 56 days, one restart, zero provider calls | Superseded test scope; final network run pending |
+| Intermediate restart execution | `archive/execution-trial.intermediate.json` | PASS: 56 days, one restart, zero provider calls | Superseded by the final network PASS below |
 | Web build | TypeScript no-emit plus Vite | PASS | Build only |
 | Browser | `v8_simulation_ui.mjs` | 27/27 PASS | Local PG, zero inference, exact journey above |
 | Intermediate full regression | `archive/full-regression.intermediate.xml` | 556 passed, 1 skipped in 398.002 s | Predates final identity/context changes |
@@ -617,14 +617,14 @@ V8 materially improves the fidelity of FarmTact's synthetic planning experiment.
 
 The data and model work also improves the honesty of evaluation. Disjoint generators and cohorts, rolling origins, multiple horizons, whole-batch outcomes, fit cutoffs, and a counterfactual availability probe provide useful engineering tests. Their current result supports no fitted-model promotion, and the promotion policy correctly blocks production eligibility.
 
-The Council architecture has stronger provenance and safer local validation. Its current actual-provider evidence nevertheless fails the quality gate. The canonical `deepseek-flash` migration and bounded V4 projection are implemented, but the retained pre-fix score is only 8 of 18 cases passing. Exact workflow counts pass; answer quality remains unvalidated until the final live result is recorded.
+The Council architecture has stronger provenance and safer local validation. Its current actual-provider evidence nevertheless fails the quality gate. The canonical `deepseek-flash` migration, conversation V4 projection and mission V5 aliases are implemented, but the retained pre-fix score is only 8 of 18 cases passing. Exact workflow counts pass; answer quality remains unvalidated until the final live result is recorded.
 
 The remaining integration decisions are evidence-driven and explicit:
 
 - **PASS:** clean-checkout pipeline, V3 numerical report, 589-test PostgreSQL regression (one skip), focused AI/root regressions, final 56-day restart execution and final local research adviser;
 - **ARCHIVED PASS:** intermediate 556-pass regression and intermediate 56-day restart-safe execution trial;
-- **PENDING:** immutable V8 publication, deployment preservation and public AI verification;
-- **FAILED / FINAL TRIAL PENDING:** complete actual DeepSeek Council quality suite;
+- **PENDING:** immutable V9 follow-up publication and live verification;
+- **FAILED:** public V8 combined AI quality and exact workflow completeness (6 of 10 completed cases passed);
 - **BLOCKED:** any production model promotion without authorized real outcomes;
 - **DISABLED:** all real farm operations.
 
@@ -641,3 +641,36 @@ A fifth local mission consumed seven requests and again withheld acceptance beca
 The local total is 44 actual provider requests. The internal experiment ceiling was explicitly revised as defects were discovered; all revisions and request accounting remain in the [ledger](../../reports/v8/live-call-ledger.json). Runtime and shared-production daily limits were not changed. A public mission and public direct/invite/Council trial remain to be run after immutable V8 publication. Their results must be reported separately from these local passes.
 
 The full suite predates the narrow V5 alias change; the focused AI suite then passed 250 tests, with one skipped and one PostgreSQL-only case excluded because the full PostgreSQL run covers storage. Root also checks the alias and interrupted-harness regressions separately. Final publication and automated live-quality outcomes remain pending in this source snapshot.
+
+## 19. Immutable V8 publication and public quality result
+
+V8 is published from `a00e546b1270a5c532e8eae6b8b64e568c344c13`, image
+`sha256:8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+[All eight health checks](../../reports/v8/deployment-health.json) matched source
+pins and the [prior-seven preservation audit](../../reports/v8/preservation-after.json)
+passed. Concurrent v7/v8 numerical scenarios completed in 22.768 and 36.169 seconds;
+70 timed requests had read p95 0.2392 seconds. Cross-edition cookie rejection and
+unchanged main-farm snapshots passed. Available memory after the trial was
+2,325,268 KiB. This supports the tested light load, not general scalability:
+[capacity evidence](../../reports/v8/shared-capacity-public.json).
+
+The [public planning mission](../../reports/v8/planning-public.json) completed all
+roles, passed reference/schema checks, was accepted for synthetic simulation and
+passed its deterministic replan and zero-inference replay. It consumed seven
+requests with no repairs. AI-assisted inspection nevertheless found missing role
+relevance, metric mislabelling and a misleading policy explanation. These are
+qualitative defects that reference membership alone cannot detect.
+
+The public conversation consumed four requests: a direct reply, a Demand invite
+and its schema repair, then a Production return rejected for excess content
+length after the shared repair allowance was spent. The last request is PARTIAL;
+the conversation Council was never started. The retained direct response also
+omitted typed facts. The combined [public V8 scorer](../../reports/v8/ai-quality-public-v8.json)
+passed six of ten completed cases, failed four, and failed workflow completeness.
+The [postmortem](../../reports/v8/public-ai-postmortem.md) records exact outputs,
+usage, failed checks and the limits of the AI-assisted semantic review.
+
+V8 remains immutable. The subsequent [V9 follow-up](v9-ai-followup.md) corrects the
+identified context/response-contract defects and has its own source, image and
+live verification. The final-local observations in Section 18 are historical
+checkpoints; this section is the final V8 public outcome.

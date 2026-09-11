@@ -2,10 +2,12 @@
 
 ## Implementation audit amendment — 11 September 2026
 
-This amendment distinguishes the **v8 candidate** from published v7 and from the
-broader v1.2 requirements below. V8 is not deployed. It supersedes conflicting
-current-state descriptions without changing immutable v1–v7 source, images or game
-state. See the [v8 remediation report](docs/technical/v8-remediation-report.md)
+This amendment records published **v8** separately from the broader v1.2
+requirements below. V8 was published from source
+`a00e546b1270a5c532e8eae6b8b64e568c344c13` and immutable image digest
+`8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+It supersedes conflicting current-state descriptions without changing immutable
+v1–v7 source, images or game state. See the [v8 remediation report](docs/technical/v8-remediation-report.md)
 and [package evidence](reports/v8/).
 See the [scientific implementation report](docs/technical/README.md), detailed
 [game backend audit](docs/technical/game-backend-and-state-machines.md), and
@@ -13,8 +15,8 @@ See the [scientific implementation report](docs/technical/README.md), detailed
 
 ### Current implementation boundary
 
-- Latest published edition is **v7**. One Singapore Fly Machine and volume host
-  eight isolated containers: the gateway and v1–v7. Twelve crop profiles and
+- Latest published edition is **v8**. One Singapore Fly Machine and volume host
+  nine isolated containers: the gateway and v1–v8. Twelve crop profiles and
   twenty-four publication records support **four synthetic single-harvest recipes**.
 - The application uses React/TypeScript/**Vite**, FastAPI, PostgreSQL JSON records,
   local content-addressed public snapshots, and in-process worker loops. The broad
@@ -54,20 +56,32 @@ See the [scientific implementation report](docs/technical/README.md), detailed
 
 ### V8 remediation status and remaining requirements
 
-V8 candidate source implements the typed Council facts/status/policy work, canonical
+Published V8 source implements the typed Council facts/status/policy work, canonical
 harvest contract, weighted-scenario and FEFO planner corrections, explicit terminal
 stock and price states, versioned evaluation metadata, checked-in offline fixture
 bundle, independent generated benchmark cohorts, conversation reliability and
 synthetic execution clock. The dated remediation report maps these changes to the
-stable gap IDs; source alone is not deployment or live-quality evidence.
+stable gap IDs. Publication and health checks establish deployment of that source;
+they do not establish live answer quality.
 
-The frozen Council implementation uses prompt/projected-context V4: role-ranked
+Conversation prompts/projection are V4. Mission prompts/projection are V5: short
+per-role `F001`/`C001` aliases resolve by exact server lookup to canonical frozen
+facts and qualitative references, and unknown aliases fail closed. Role-ranked
 context is bounded to 48 typed facts, 24 qualitative references, 16 prior turns,
 six evidence records and 120,000 serialized characters, while exact frozen research
 inputs are retained. Unanswerable questions must abstain. Format-repair attempts
 preserve the rejected attempt and its lexical meaning. The retained pre-fix quality
 score is 8 PASS and 10 FAIL across 18 cases despite exact workflow counts passing;
 quality is not yet established.
+
+The isolated PostgreSQL regression passed 589 tests with one skip before the narrow
+V5 alias change; a subsequent focused AI suite passed 250 tests with one skip and
+one PostgreSQL case deselected. The final 56-day HTTP trial passed across an actual
+application restart with 56 task and 64 demand-service events. All eight edition
+health checks and preservation checks for v1–v7 passed. The local provider-call
+ledger totals 44; the public mission was running and public conversation remained
+unstarted at documentation freeze, so public requests and quality remain separate
+pending evidence.
 
 Anonymous-tenant pruning is an explicit operator-only command. It is dry-run by
 default, retains 30 days by default with a seven-day minimum, examines at most 500
@@ -1020,3 +1034,17 @@ for the same horizontal flex space. Message fields must remain at least 180 pixe
 wide at 360-pixel viewport width; field and send touch targets are at least 44 pixels
 high. V4 corrects this presentation issue without changing seven-agent roles,
 numerical calculations or source connections. V3 and earlier instances stay frozen.
+
+## V9 AI follow-up candidate — 11 September 2026
+
+The public V8 quality trial failed despite mission transport/reference success:
+6 of 10 completed quality cases passed, and the invited return and conversational
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
+V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+validator V4. It preserves semantic names alongside exact aliases, passes the
+actual required/advisory policy, bounds role-specific facts, balances comparison
+segments, requires typed numerical evidence and enforces absent-source abstention
+for Council source specialists. Direct/invited numerical questions remain
+answerable from their frozen facts. Conversation prose targets 220 characters
+under the unchanged 400-character hard limit. Actual-provider verification and
+immutable V9 publication are pending. V8 stays unchanged.

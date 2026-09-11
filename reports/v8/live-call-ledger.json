@@ -1,8 +1,8 @@
 {
   "schema_version": "v8-live-experiment-ledger-1",
-  "goal_request_ceiling": 72,
+  "goal_request_ceiling": 96,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 44,
+  "actual_requests_consumed": 55,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -87,6 +87,31 @@
       "includes_repair_attempts": true,
       "report": "reports/v8/research-advisor-final.json",
       "actual_requests": 1
+    },
+    {
+      "id": "public-planning-final-v5",
+      "status": "PASS",
+      "base_url": "https://farmtact.fly.dev/v8",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/planning-public.json",
+      "actual_requests": 7,
+      "source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "run_id": "7330b56653a309a5cab41100fe64c371"
+    },
+    {
+      "id": "public-conversation-final-v4",
+      "status": "PARTIAL",
+      "base_url": "https://farmtact.fly.dev/v8",
+      "maximum_requests": 14,
+      "expected_requests": 10,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/conversation-public-replay.json",
+      "actual_requests": 4,
+      "source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "conversation_id": "a061bf7bbe5d6e37e4b579fd2195ba5d",
+      "failure": "Invited return turn exceeded content schema after shared repair was consumed; Council stage not started."
     }
   ],
   "budget_revisions": [
@@ -107,6 +132,13 @@
       "remaining_public_mission_maximum": 9,
       "remaining_public_conversation_maximum": 14,
       "maximum_total_reserved": 68
+    },
+    {
+      "previous_ceiling": 72,
+      "revised_ceiling": 96,
+      "reason": "Public V8 evidence exposed semantic meaning lost by opaque mission aliases and invited-turn length failures. Correct context semantics and compact response guidance, then verify one immutable V9 mission, conversation and research workflow. Preserve failed V8 evidence; runtime/shared daily48 limit unchanged.",
+      "maximum_remaining_requests": 25,
+      "maximum_total_reserved": 80
     }
   ]
 }

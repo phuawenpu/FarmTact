@@ -1,23 +1,28 @@
-Current checkout note (v8 candidate, 11 September 2026): v7 remains the latest
-published immutable edition. Start from README.md, the v8 remediation report and
-package reports, docs/execution-plan.md and the release manifests; extend the
-working application instead of recreating it.
+Current checkout note (11 September 2026): v8 is the latest published immutable
+edition, built from source `a00e546b1270a5c532e8eae6b8b64e568c344c13` with
+image digest `8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+Start from README.md, the v8 remediation report and package reports,
+docs/execution-plan.md and the release manifests; extend the working application
+instead of recreating it.
 The catalogue now has twelve profiles and the synthetic fixture still has four
 recipes. V7 added a guided, isolated playable council at /v7/research, with labelled
 scripted dialogue and real numerical comparisons. Prioritize immediate first-time
-usability. Hosting uses one shared Machine and volume for seven editions; follow
+usability. Hosting uses one shared Machine and volume for eight editions; follow
 the editions runbook. The historical kickoff below is already delivered; current
-user intent is conversation connected to tangible farm consequences. V8 candidate
+user intent is conversation connected to tangible farm consequences. V8
 source adds explicit required/advisory Council policy, typed server-rendered facts,
 a durable synthetic simulation clock and future-only replanning. The current
 `daily-bed-cpsat-v3` contract binds cycles to absolute dates, collision-checks
 harvest-lot IDs, preserves lot origins across replans, excludes historical executed
 cycle IDs and reserves resources against the maximum declared yield factor. The
-frozen V4 Council projection has explicit context bounds and abstains when admitted
-context cannot answer. Its retained pre-fix actual-provider score is 8/18, so live
-quality remains unproven. Expired anonymous tenant pruning is a bounded explicit
-dry-run-by-default operator action with no automatic schedule. V8 remains a
-simulation with real operations disabled and must not be described as deployed.
+conversation prompts/projection are V4; mission prompts/projection are V5 and map
+short `F001`/`C001` aliases exactly to canonical frozen references. Both use explicit
+context bounds and abstain when admitted context cannot answer. The retained
+pre-fix actual-provider score is 8/18, so live quality remains unproven. Expired
+anonymous tenant pruning is a bounded explicit dry-run-by-default operator action
+with no automatic schedule. V8 is deployed as a simulation; real operations remain
+disabled. At this documentation freeze, the public mission trial was running and
+the public conversation trial had not started, so public answer quality was pending.
 
 Start implementing FarmTact in this repository.
 
@@ -128,3 +133,17 @@ At each milestone, report files changed, tests actually executed,
 source coverage, screenshots where relevant, remaining limitations,
 and exact commands to reproduce the result. Preserve resumable status
 in the repository.
+
+## V9 AI follow-up candidate — 11 September 2026
+
+The public V8 quality trial failed despite mission transport/reference success:
+6 of 10 completed quality cases passed, and the invited return and conversational
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
+V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+validator V4. It preserves semantic names alongside exact aliases, passes the
+actual required/advisory policy, bounds role-specific facts, balances comparison
+segments, requires typed numerical evidence and enforces absent-source abstention
+for Council source specialists. Direct/invited numerical questions remain
+answerable from their frozen facts. Conversation prose targets 220 characters
+under the unchanged 400-character hard limit. Actual-provider verification and
+immutable V9 publication are pending. V8 stays unchanged.

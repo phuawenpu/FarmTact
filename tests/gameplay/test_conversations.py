@@ -93,12 +93,15 @@ class FakeGateway:
                 in messages[0]["content"]
                 else "answer"
             )
-            supplied_facts = json.loads(messages[1]["content"])["typed_facts"]
+            supplied_context = json.loads(messages[1]["content"])
+            supplied_facts = supplied_context["typed_facts"]
+            if supplied_context.get("response_requirements", {}).get("required_relationship") == "abstention":
+                relationship = "abstention"
             response = {
                 "content": f"{ADVISORS[next(key for key, row in ADVISORS.items() if row['role'] == role)]['name']} reviewed the frozen comparison.",
                 "evidence_refs": [],
                 "tool_refs": [],
-                "fact_refs": [next(iter(supplied_facts))],
+                "fact_refs": [] if relationship == "abstention" else [next(iter(supplied_facts))],
                 "highlight_refs": [],
                 "relationship": relationship,
                 "proposed_actions": [],
@@ -1036,6 +1039,7 @@ def test_whitespace_is_rejected_and_reply_to_advisor_targets_that_speaker(env, m
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["speaker_id"] == "idris" and reply["reply_to"] == queued["message_id"]
     assert reply["relationship"] == "answer"
+    assert reply["validation_status"] == "references_verified"
     assert "planner_conclusion" in reply and reply["planner_conclusion"] is False
 
 
@@ -1371,3 +1375,78 @@ def test_cancelled_conversation_request_is_terminal_and_never_calls_provider(env
     public=client.get(f"/api/v1/conversations/{conversation_id}").json()
     assert public["model_call_status"] == "cancelled"
     assert public["decision_influence"] == "none_cancelled"
+
+
+def test_role_comparison_projection_keeps_delta_scenario_baseline_triplets():
+    from packages.ai_contracts import typed_reference_catalog
+    tools = {
+        f"comparison:{policy}.{segment}.{metric}": index
+        for policy in ("lean", "balanced", "resilient")
+        for segment in ("baseline_metrics", "scenario_metrics", "deltas")
+        for index, metric in enumerate(("harvest_kg", "fill_rate", "labour_hours", "margin_sgd", "cost_sgd", "booked_requested_kg", "unrelated_kg"))
+    }
+    conversation = {"snapshot_ref": {"kind": "scenario", "hash": "frozen"},
+                    "_tool_results": tools,
+                    "_typed_facts": typed_reference_catalog(tools, snapshot_hash="frozen")}
+    _, typed = _bounded_model_context(conversation, "production_analyst")
+    assert not any(ref.endswith(("margin_sgd", "cost_sgd", "booked_requested_kg", "unrelated_kg")) for ref in typed)
+    for policy in ("lean", "balanced", "resilient"):
+        for segment in ("baseline_metrics", "scenario_metrics", "deltas"):
+            assert f"comparison:{policy}.{segment}.harvest_kg" in typed
+            assert f"comparison:{policy}.{segment}.fill_rate" in typed
+    assert len(typed) <= 48
+
+
+def test_numerical_reply_requires_typed_evidence_and_absent_context_requires_abstention():
+    from services.api.conversations import AdvisorReply, _validate_reply
+    from packages.ai_contracts import typed_reference_catalog
+    tools = {"comparison:balanced.deltas.harvest_kg": -5, "scenario:status": "completed"}
+    conversation = {"_tool_results": tools, "_typed_facts": typed_reference_catalog(tools, snapshot_hash="frozen"),
+                    "_evidence": [], "_highlight_refs": [], "_snapshot": {"batches": [], "recipes": []}}
+    reply = AdvisorReply(content="The frozen scenario comparison is synthetic.", tool_refs=["scenario:status"], relationship="answer")
+    errors, _ = _validate_reply(reply, conversation, require_typed_fact=True)
+    assert "Numerical interpretation requires a supplied typed fact" in errors
+    grounded = reply.model_copy(update={"fact_refs": ["comparison:balanced.deltas.harvest_kg"]})
+    assert _validate_reply(grounded, conversation, require_typed_fact=True)[0] == []
+    errors, _ = _validate_reply(grounded, conversation, required_relationship="abstention")
+    assert "Reply must abstain because relevant frozen evidence is unavailable" in errors
+    abstention = AdvisorReply(content="Weather evidence is unavailable; no yield adjustment is supported.", relationship="abstention")
+    assert _validate_reply(abstention, conversation, required_relationship="abstention", require_typed_fact=True)[0] == []
+
+
+def test_source_list_availability_and_direct_market_questions_are_separate(env):
+    client, store, tenant = env
+    conversation_id = create(client, key="availability-shapes").json()["id"]
+    persistence = ConversationStore(store)
+    conversation = persistence.get_conversation(tenant, conversation_id)
+    conversation["_tool_results"]["weather:source_context"] = [
+        {"id": "D04", "status": "validated", "origin": "public", "summary": "Frozen NEA outlook"}
+    ]
+    request = {"mode": "council", "question": "Interpret frozen weather context.", "reply_to": None}
+    messages = _provider_messages(persistence, tenant, conversation, request, "weather_analyst", "question", False)
+    requirements = json.loads(messages[1]["content"])["response_requirements"]
+    assert requirements["external_weather_context_available"] is True
+    assert requirements["required_relationship"] is None
+    conversation["_tool_results"]["weather:source_context"] = [
+        {"id": "D04", "status": "validated", "origin": "synthetic", "summary": "Contract fixture"}
+    ]
+    messages = _provider_messages(persistence, tenant, conversation, request, "weather_analyst", "question", False)
+    assert json.loads(messages[1]["content"])["response_requirements"]["required_relationship"] == "abstention"
+    conversation["_tool_results"]["market:signals"] = {"status": "not_connected"}
+    request.update(mode="direct", question="Which frozen scenario evidence would change your view?")
+    conversation["snapshot_ref"]["kind"] = "scenario"
+    messages = _provider_messages(persistence, tenant, conversation, request, "market_analyst", "question", False)
+    requirements = json.loads(messages[1]["content"])["response_requirements"]
+    assert requirements["required_relationship"] is None
+    assert requirements["typed_fact_required"] is True
+
+
+def test_abstention_cannot_smuggle_a_claim_or_proposed_action():
+    from services.api.conversations import AdvisorReply, _validate_reply
+    conversation = {"_tool_results": {"scenario:status": "completed"}, "_typed_facts": {},
+                    "_evidence": [], "_highlight_refs": [], "_snapshot": {"batches": [], "recipes": []}}
+    reply = AdvisorReply(content="Weather evidence is unavailable.", relationship="abstention", tool_refs=["scenario:status"],
+                         proposed_actions=[{"control": "cash_percent", "value": 100, "unit": "percent", "target_id": None}])
+    errors, actions = _validate_reply(reply, conversation, required_relationship="abstention")
+    assert "Abstention cannot attach claims, highlights or proposed actions" in errors
+    assert actions[0]["status"] == "blocked_unsupported"

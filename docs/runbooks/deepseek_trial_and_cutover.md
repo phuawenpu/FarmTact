@@ -2,7 +2,7 @@
 
 FarmTact runtime inference uses the direct official DeepSeek Chat Completions API. The browser never receives the credential. The server route manifest is `config/deepseek_runtime.json`; callers select a registered role and cannot supply a provider, origin, or model.
 
-The v8 candidate manifest version 1.2 allowlists exact canonical
+The published v8 manifest version 1.2 allowlists exact canonical
 `deepseek-flash` for every current text and native-vision route. This follows the
 10 September 2026 provider migration and authenticated 11 September discovery in
 `reports/v8/model-discovery.json`. The gateway still requires returned model ID to
@@ -72,10 +72,10 @@ presence are not current model/account verification. Read the detailed
 validation, configured-but-unused roles and request/token/deadline limits.
 A documentation reproduction does not require a paid capability trial.
 
-## V8 evidence before the final quality run
+## V8 evidence checkpoints
 
-The V8 ledger had consumed 36 actual paid requests before the final V4 mission
-run: 24 mission requests across four retained experiments, 11 conversation
+The V8 ledger had consumed 36 actual paid requests at the pre-final V4 checkpoint:
+24 mission requests across four retained experiments, 11 conversation
 requests and one research-adviser request. The conversation run submitted 805,878
 prompt tokens and persisted ten adviser messages; the research request submitted
 64,756 prompt tokens. These measurements describe the admitted test inputs and
@@ -88,8 +88,10 @@ planning and research call sequences, while the overall automated status remaine
 [`ai-quality-before-context-fix.json`](../../reports/v8/ai-quality-before-context-fix.json).
 Preserve that result even if a later run improves.
 
-The frozen application contract now uses prompt and projected-context V4. Role
-projection admits at most 48 typed facts, 24 qualitative references, 16 prior
+Conversation prompt/projection remains V4. Mission prompt/projection is V5: short
+per-role `F001`/`C001` aliases resolve by exact lookup to canonical frozen references,
+and unknown aliases fail closed. Role projection admits at most 48 typed facts, 24
+qualitative references and 16 prior
 turns and six evidence records, subject to a hard 120,000 serialized-character
 limit. Exact frozen research inputs are retained when normal ranking caps are
 reached. A question that cannot be answered from admitted context must produce an
@@ -100,8 +102,20 @@ One format repair is permitted for an otherwise rejected reply. The audit retain
 the rejected attempt, and the repair instruction preserves its lexical meaning,
 relationships, proposed actions and references while removing or relocating only
 the invalid quantity/date expression. A repair is another paid call and cannot
-erase the original failure. The final mission reserves at most nine requests; its
-result, the final PostgreSQL suite and deployment gate are pending. There is no
+erase the original failure. A mission reserves at most nine requests.
+
+Later local trials brought the local ledger to 44 actual provider requests. The
+final research adviser passed exact reference validation with 6,704 prompt tokens,
+versus 64,756 in the earlier retained request. The final local mission still failed
+one reference check and motivated the V5 alias contract. The isolated PostgreSQL
+suite passed 589 tests with one skip; the final 56-day HTTP trial passed across an
+actual application restart with 56 task and 64 demand-service events. V8 was then
+published from source `a00e546b1270a5c532e8eae6b8b64e568c344c13` and image digest
+`8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+All eight edition health checks and preservation of v1–v7 passed. Public mission
+and conversation calls must be added separately from the 44 local calls. At this
+documentation freeze, the public mission was running, the public conversation had
+not started, and public answer quality remained pending. There is no
 human release-approval checkpoint in this autonomous development phase: the
 specified technical gates control advancement, while real farm execution remains
 disabled.
@@ -116,3 +130,17 @@ session, stable action receipts and request ID on restart. Finally,
 `scripts/deepseek_quality_e2e.py` reads the stored conversations and makes zero
 inference calls. Keep actual failures, repairs and consumed calls in the experiment
 ledger; do not overwrite them with a later successful attempt.
+
+## V9 AI follow-up candidate — 11 September 2026
+
+The public V8 quality trial failed despite mission transport/reference success:
+6 of 10 completed quality cases passed, and the invited return and conversational
+Council were incomplete. See `reports/v8/public-ai-postmortem.md`. The subsequent
+V9 candidate uses mission prompt/context V6, conversation prompt/context V5 and
+validator V4. It preserves semantic names alongside exact aliases, passes the
+actual required/advisory policy, bounds role-specific facts, balances comparison
+segments, requires typed numerical evidence and enforces absent-source abstention
+for Council source specialists. Direct/invited numerical questions remain
+answerable from their frozen facts. Conversation prose targets 220 characters
+under the unchanged 400-character hard limit. Actual-provider verification and
+immutable V9 publication are pending. V8 stays unchanged.

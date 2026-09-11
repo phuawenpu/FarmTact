@@ -2,6 +2,12 @@
   "tool": "Mermaid CLI",
   "version": "11.17.0",
   "chapters": {
+    "v9-ai-followup.md": [
+      {
+        "file": "figures/diagrams/v9-ai-followup-1.svg",
+        "source_sha256": "78c4e6b0ff1e5bdfc85dcf3001557c1baaa7fb3598274bd75b292ddc383da095"
+      }
+    ],
     "v8-remediation-report.md": [
       {
         "file": "figures/diagrams/v8-remediation-report-1.svg",

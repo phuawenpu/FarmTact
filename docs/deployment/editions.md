@@ -1,6 +1,6 @@
 # Publishing immutable editions
 
-Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v7 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
+Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v8 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
 
 The publisher never resolves an image tag. You may supply a previously verified `sha256` digest. When `--image` is omitted, it runs the fixed gateway Fly build with `--build-only --push --remote-only`, labels it from the edition and short source hash, passes the full source commit as a build argument, and accepts only the pinned registry digest reported by Fly. Commit the complete candidate source first. The publisher rejects dirty worktrees, abbreviated commits, non-HEAD commits, mutable image references, skipped edition numbers, changes to existing registry entries, and reuse of a locally reserved number with different inputs.
 
@@ -8,8 +8,8 @@ Prepare a notes file containing exactly `title`, `summary`, and `changes`. Each 
 
 ```bash
 .venv/bin/python -m scripts.publish_edition \
-  --edition v8 \
-  --notes /absolute/private/path/v8-notes.json \
+  --edition v9 \
+  --notes /absolute/private/path/v9-notes.json \
   --image registry.fly.io/farmtact@sha256:<64-hex-digest> \
   --source-commit "$(git rev-parse HEAD)" \
   --dry-run
@@ -29,7 +29,7 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
 
-The current next unused number is v8; always check the registry before publishing.
+The current next unused number is v9; always check the registry before publishing.
 The legacy separate-app provisioning path remains for environments without a
 shared-host record. Do not remove that record to publish on this deployment.
 No credential values enter generated configuration, command output or manifests.
@@ -42,7 +42,7 @@ If a step fails, inspect the reported Fly command and rerun with the same editio
 The gateway refreshes its validated destinations and control edition allowlist after atomic publication. Updating the shared Machine can restart the gateway and all edition containers.
 
 
-## Active shared-host deployment (v7)
+## Active shared-host deployment (v8)
 
 The verified deployment uses one 4-shared-vCPU/4-GB Machine with one persistent volume.
 The public chooser and every immutable edition run in separate Pilot containers,
@@ -109,3 +109,20 @@ memory in sampled readings, no inference or main-farm changes, and cross-edition
 cookie rejection. This bounded smoke test supports retaining the current size;
 it does not establish capacity under sustained load. See
 [the v7 capacity report](../../reports/v7/shared_capacity_public.json).
+
+## V8 publication evidence — 11 September 2026
+
+V8 is published at [the immutable v8 application](https://farmtact.fly.dev/v8/),
+from source `a00e546b1270a5c532e8eae6b8b64e568c344c13` and image
+`sha256:8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`.
+The first machine-update command exited unsuccessfully before publication; its
+underlying stderr was not retained. A retry with the same reserved source and
+digest completed successfully. No alternate v8 image was built or substituted.
+
+All eight public edition health endpoints match their recorded source commits,
+and the live registry equals the append-only Git registry. The before/after
+preservation audit covers the seven prior editions, their source hashes and all
+existing tables in the expanded state/event/research snapshot allowlist. It
+passed before new capacity-test sessions were created. See
+[health evidence](../../reports/v8/deployment-health.json) and
+[preservation evidence](../../reports/v8/preservation-after.json).

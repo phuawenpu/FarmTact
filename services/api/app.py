@@ -140,7 +140,7 @@ class Worker:
                             emit('tool_started',dict(tool='vision_observation',role='visual_observer'))
                             visual=observe_fixture(id,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant));r['visual_observation']=visual
                             emit('tool_completed',dict(tool='vision_observation',role='visual_observer',asset_id=visual['asset_id'],review_status=visual['review_status']))
-                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant),market_signals=r.get('market_signals'),news_context=r.get('news_context'))
+                        claims,audits=council(computed,id,emit,cancelled,visual=visual,progress=progress,budget=call_budget,provider_user_id=provider_user_id_for_tenant(tenant),market_signals=r.get('market_signals'),news_context=r.get('news_context'),council_policy=r.get('council_policy','required'))
                         r['council_status']='completed' if not council_review_issues(claims) else 'claims_rejected'
                     except Exception as exc:
                         # No raw provider/transport message or request may enter public records.
