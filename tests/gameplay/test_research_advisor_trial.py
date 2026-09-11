@@ -21,14 +21,16 @@ class Response:
     ("validation_status", "expected_status"),
     [("references_verified", "PASS"), ("unsupported", "FAIL")],
 )
+@pytest.mark.parametrize('interrupt_before_message', [False, True])
 def test_research_trial_reuses_private_session_and_is_restart_safe(
-    tmp_path, monkeypatch, validation_status, expected_status
+    tmp_path, monkeypatch, validation_status, expected_status, interrupt_before_message
 ):
     farm = {"id": "unchanged-main-farm"}
     study = {"id": "research-private", "revision": 0, "input_version": 1, "results": []}
     conversation = None
     posts = []
     receipts = {}
+    interrupted = False
 
     class Client:
         def __init__(self, **_):
@@ -64,7 +66,7 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(
             raise AssertionError(path)
 
         def post(self, path, json, headers):
-            nonlocal conversation
+            nonlocal conversation, interrupted
             key = headers["Idempotency-Key"]
             posts.append((path, key))
             if key in receipts:
@@ -91,7 +93,8 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(
                     "last_request_id": None,
                     "last_request_status": None,
                     "snapshot_ref": {
-                        "id": "research-private",
+                        "id": f"research-private:v{study['input_version']}",
+                        "kind": "research",
                         "hash": "frozen-hash",
                         "version": study["input_version"],
                     },
@@ -99,6 +102,9 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(
                     "messages": [],
                 }
             elif path.endswith("/messages"):
+                if interrupt_before_message and not interrupted:
+                    interrupted = True
+                    raise RuntimeError('temporary admission interruption')
                 payload = {"id": "request-private", "status": "QUEUED"}
                 conversation.update(
                     last_request_id="request-private",
@@ -130,6 +136,9 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(
     report_path = tmp_path / "report.json"
     ledger_path = tmp_path / "ledger.json"
 
+    if interrupt_before_message:
+        with pytest.raises(RuntimeError, match='temporary admission interruption'):
+            trial.run(None, report_path, ledger_path, state_path, timeout=1)
     first = trial.run(None, report_path, ledger_path, state_path, timeout=1)
     first_posts = list(posts)
     resumed = trial.run(None, report_path, ledger_path, state_path, timeout=1)

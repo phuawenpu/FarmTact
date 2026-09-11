@@ -11,11 +11,11 @@
   "order_lot_conservation": "PASS",
   "provider_calls": 0,
   "restart_persistence": "PASS",
-  "run_id": "10f630aabb496baff113cc4dc4d887db",
+  "run_id": "73d6010e99089c4a8f813a544e89ecc2",
   "schema_version": "farmtact-v8-execution-trial-1.0.0",
   "simulation_only": true,
   "status": "PASS",
-  "task_events": 52,
-  "world_hash": "09062139a5edc54778127d31947dad1125a16bf1a2616af1d6bb4f3d3235b7af",
-  "world_id": "679f1906218909f8b8fc2b3d6f9f1823"
+  "task_events": 56,
+  "world_hash": "25d5673ccb08f8b7d377b691e1f25934b6536d643eb2e86f55c4bad3386e92b6",
+  "world_id": "a7fd49e1826e9b0906145c4df6f72d0a"
 }

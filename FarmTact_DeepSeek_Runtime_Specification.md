@@ -37,6 +37,23 @@ versions are retained. Execution, evidence and decision influence are separate
 statuses. The active caller manifest distinguishes product/API integrations from
 diagnostic routes. Actual quality trials remain dated evidence and may fail.
 
+Conversation prompts and context projection are V4. Mission prompts and context are V5: short per-role `F001` / `C001` aliases map by exact lookup to canonical frozen facts and qualitative references; unknown aliases fail closed. Every completion audit retains the supplied mapping and returned aliases. Role projection is
+bounded to 48 typed facts, 24 qualitative references, 16 prior conversation turns
+and six evidence records, with a hard 120,000 serialized-character limit. Exact
+research inputs referenced by the frozen result remain admitted when normal rank
+caps are reached. Truncation is explicit; a user question that cannot be answered
+from admitted context must produce an abstention. A format repair retains the
+rejected attempt and must preserve lexical meaning, relationships, proposed actions
+and references while removing or relocating only the invalid number/date form.
+
+Before the final V4 mission run, the ledger recorded 36 actual paid requests: 24
+mission requests across four experiments, 11 conversation requests and one research
+request. Conversation inputs totalled 805,878 prompt tokens for ten persisted
+adviser messages; the research request used 64,756 prompt tokens. The retained
+pre-context-fix scorer has 18 cases, eight PASS and ten FAIL. Exact workflow counts
+passed, but overall quality did not. V4 source and offline tests do not convert
+that failure into a live-quality pass; final live evidence remains pending.
+
 Remaining work includes:
 
 - Preserve the implemented distinction between archived probe evidence, configured

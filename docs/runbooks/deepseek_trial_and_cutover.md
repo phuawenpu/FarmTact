@@ -72,6 +72,40 @@ presence are not current model/account verification. Read the detailed
 validation, configured-but-unused roles and request/token/deadline limits.
 A documentation reproduction does not require a paid capability trial.
 
+## V8 evidence before the final quality run
+
+The V8 ledger had consumed 36 actual paid requests before the final V4 mission
+run: 24 mission requests across four retained experiments, 11 conversation
+requests and one research-adviser request. The conversation run submitted 805,878
+prompt tokens and persisted ten adviser messages; the research request submitted
+64,756 prompt tokens. These measurements describe the admitted test inputs and
+provider usage, not answer quality or a production budget recommendation.
+
+The pre-context-fix scorer evaluated 18 retained cases: eight passed and ten
+failed. Its exact workflow-integrity checks passed for direct, invite, Council,
+planning and research call sequences, while the overall automated status remained
+**FAIL**. The machine record is
+[`ai-quality-before-context-fix.json`](../../reports/v8/ai-quality-before-context-fix.json).
+Preserve that result even if a later run improves.
+
+The frozen application contract now uses prompt and projected-context V4. Role
+projection admits at most 48 typed facts, 24 qualitative references, 16 prior
+turns and six evidence records, subject to a hard 120,000 serialized-character
+limit. Exact frozen research inputs are retained when normal ranking caps are
+reached. A question that cannot be answered from admitted context must produce an
+abstention. These bounds deliberately truncate context and do not establish that
+every relevant record is present.
+
+One format repair is permitted for an otherwise rejected reply. The audit retains
+the rejected attempt, and the repair instruction preserves its lexical meaning,
+relationships, proposed actions and references while removing or relocating only
+the invalid quantity/date expression. A repair is another paid call and cannot
+erase the original failure. The final mission reserves at most nine requests; its
+result, the final PostgreSQL suite and deployment gate are pending. There is no
+human release-approval checkpoint in this autonomous development phase: the
+specified technical gates control advancement, while real farm execution remains
+disabled.
+
 For the bounded product-quality trial, run
 `scripts/deepseek_conversation_trial.py` against the intended local or deployed base
 URL. It persists a private 0600 state file and runs direct, invite and Council stages

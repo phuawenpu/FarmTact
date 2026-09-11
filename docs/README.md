@@ -23,6 +23,7 @@ remain immutable historical evidence.
 | Security and inference boundaries | [Security](security.md) |
 | Hosting, deployment and edition preservation | [Fly runtime](deployment/fly.md), [immutable publication](deployment/editions.md) |
 | Provider capability tests | [DeepSeek trial runbook](runbooks/deepseek_trial_and_cutover.md) |
+| How are expired anonymous workspaces pruned? | [Retention runbook](runbooks/retention.md) |
 | What was actually tested for v7? | [V7 release evidence](../reports/v7/implementation.md) |
 | Development history and ownership | [Execution plan](execution-plan.md), [decision log](decision-log.md) |
 
@@ -44,3 +45,12 @@ The v5 plans, consolidation assessment and older execution-log entries preserve
 historical decisions. Use the current deployment runbook for operations. Existing
 numbered editions retain their frozen source/image and independent progress;
 documentation changes do not publish a new application edition.
+
+For the v8 candidate, the clean-checkout pipeline and synthetic-only V3 numerical
+report pass. The isolated PostgreSQL suite passed 589 tests with one skip, and the
+56-day network execution trial passed across an actual application restart.
+Twenty-three focused root tests include an 84-day, two-replan lot-provenance case.
+Subsequent focused AI tests cover the narrow V5 mission-reference alias change.
+The final local research adviser passed reference validation. The retained
+pre-context-fix combined provider scorer remains failed (8 of 18 cases); public
+mission/conversation verification and immutable publication are still pending.

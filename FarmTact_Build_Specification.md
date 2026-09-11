@@ -33,6 +33,12 @@ See the [scientific implementation report](docs/technical/README.md), detailed
   maximizes the worst-scenario aggregate fill floor before its utility tie-break.
   This is not CVaR, calibrated risk or a per-order guarantee. FEASIBLE is not proof
   of global optimality.
+- The current planner contract is `daily-bed-cpsat-v3`. Allocation IDs bind bed,
+  crop, recipe and absolute sow/transplant/harvest dates; harvest-lot IDs are
+  collision checked. The recorded world carries lot-to-allocation origins across
+  replans, and replanning excludes every historical executed allocation ID while
+  retaining current locks. Harvest labour and conservative cash use the maximum
+  yield factor declared by the actual scenario set.
 - Daily simulation reports crop/date fulfilment, expiry, stock, costs and margin.
   It does not represent individual buyer/grade allocations, observed crop outcomes,
   water/energy/HVAC/packaging/rotation/multi-cut/partner supply, or real execution.
@@ -54,6 +60,19 @@ stock and price states, versioned evaluation metadata, checked-in offline fixtur
 bundle, independent generated benchmark cohorts, conversation reliability and
 synthetic execution clock. The dated remediation report maps these changes to the
 stable gap IDs; source alone is not deployment or live-quality evidence.
+
+The frozen Council implementation uses prompt/projected-context V4: role-ranked
+context is bounded to 48 typed facts, 24 qualitative references, 16 prior turns,
+six evidence records and 120,000 serialized characters, while exact frozen research
+inputs are retained. Unanswerable questions must abstain. Format-repair attempts
+preserve the rejected attempt and its lexical meaning. The retained pre-fix quality
+score is 8 PASS and 10 FAIL across 18 cases despite exact workflow counts passing;
+quality is not yet established.
+
+Anonymous-tenant pruning is an explicit operator-only command. It is dry-run by
+default, retains 30 days by default with a seven-day minimum, examines at most 500
+tenants per invocation, skips queued/running work and preserves shared budget and
+security records. It has no automatic worker or production schedule.
 
 Both archived v7 actual replies and every rejected v8 attempt remain evidence.
 Continue meaningful frozen-case Council quality evaluation. Before any real-farm,

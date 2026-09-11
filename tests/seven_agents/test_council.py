@@ -17,31 +17,21 @@ class FakeGateway:
 
     def chat_json(self, role, messages, output_model, **kwargs):
         self.calls.append((role, messages, kwargs))
-        metric = {
-            "demand_analyst": "booked_requested_kg",
-            "weather_analyst": "fill_rate",
-            "market_analyst": "margin_sgd",
-            "production_analyst": "harvest_kg",
-            "supply_chain_analyst": "shortfall_kg",
-            "profit_analyst": "margin_sgd",
-            "planning_chair": "margin_sgd",
-        }[role]
-        context_ref = {
-            "demand_analyst": "forecast:lead_times",
-            "weather_analyst": "source:weather_scope",
-            "market_analyst": "market:signals",
-            "production_analyst": "forecast:lead_times",
-            "supply_chain_analyst": "forecast:lead_times",
-            "profit_analyst": "strategy:balanced.violations",
-            "planning_chair": "policy:automatic_selection",
-        }[role]
+        context = __import__("json").loads(messages[1]["content"])
+        context_ref = next(iter(context["qualitative_context"]))
+        if role == "planning_chair":
+            context_ref = next(
+                alias for alias, value in context["qualitative_context"].items()
+                if "balanced-service-margin-id-v1" in str(value)
+            )
+        fact_ref = next(iter(context["typed_facts"]), None)
         data = output_model.model_validate(
             {
                 "claim_type": "observation",
                 "statement": "The frozen comparison supports this role-specific finding.",
                 "evidence_ids": [],
                 "tool_result_refs": [context_ref],
-                "fact_refs": [f"strategy:balanced.metrics.{metric}"],
+                "fact_refs": [fact_ref] if fact_ref else [],
                 "recommendation": "proceed_simulation",
             }
         )
@@ -146,17 +136,74 @@ def test_council_runs_six_specialists_then_planner_with_frozen_market_context(mo
     assert all(claim["evidence_status"] == "grounded_facts_qualitative_unverified" for claim in claims)
     assert all(claim["rendered_facts"][0]["verification"] == "code_rendered_frozen_value" for claim in claims)
     assert all(call[2]["max_tokens"] == 1_536 for call in calls)
+    assert all("reference_alias_mapping" in audit for audit in audits)
+    assert all("provider_returned_aliases" in audit for audit in audits)
+    assert all(
+        all(not ref.startswith("F") for ref in claim["fact_refs"])
+        and all(not ref.startswith("C") for ref in claim["tool_result_refs"])
+        for claim in claims
+    )
     for role, messages, _ in calls[:-1]:
         assert role != "planning_chair"
         assert '"prior_claims": []' in messages[1]["content"]
     planner_context = calls[-1][1][1]["content"]
     assert '"prior_claims": [' in planner_context
-    assert '"market:signals": {"status": "not_connected"' in planner_context
+    assert '"status": "not_connected"' in planner_context
     parsed = __import__("json").loads(planner_context)
     assert set(parsed["qualitative_context"]).isdisjoint(parsed["typed_facts"])
-    assert "policy:automatic_selection" in parsed["qualitative_context"]
+    assert all(ref.startswith("C") for ref in parsed["qualitative_context"])
+    assert any("balanced-service-margin-id-v1" in str(value) for value in parsed["qualitative_context"].values())
     demand_context = __import__("json").loads(calls[0][1][1]["content"])
-    assert any(ref.startswith("forecast:caixin.week_") for ref in demand_context["typed_facts"])
+    assert all(ref.startswith("F") for ref in demand_context["typed_facts"])
+    assert any(value["context"] == "forecast" for value in demand_context["typed_facts"].values())
+
+
+def test_short_aliases_resolve_exactly_to_the_same_canonical_frozen_fact():
+    qualitative = {"policy:automatic_selection": "server-owned policy"}
+    typed = {
+        "order:strategy_order:order-0-0.shortfall_kg": {
+            "reference": "order:strategy_order:order-0-0.shortfall_kg",
+            "kind": "quantity", "value": 4.0, "unit": "kg",
+        }
+    }
+    aliased_qualitative, aliased_typed, mapping = council_module._alias_context(
+        qualitative, typed
+    )
+    assert aliased_qualitative == {"C001": "server-owned policy"}
+    assert aliased_typed["F001"]["reference"] == "F001"
+    claim, returned, alias_issues = council_module._resolve_claim_aliases(
+        {"tool_result_refs": ["C001"], "fact_refs": ["F001"]}, mapping
+    )
+    assert alias_issues == []
+    assert returned == {"tool_result_refs": ["C001"], "fact_refs": ["F001"]}
+    assert claim["tool_result_refs"] == ["policy:automatic_selection"]
+    assert claim["fact_refs"] == ["order:strategy_order:order-0-0.shortfall_kg"]
+    assert council_module.render_facts(claim["fact_refs"], typed)[0]["value"] == 4.0
+
+
+def test_unknown_and_cross_kind_aliases_still_fail_closed():
+    qualitative = {"context:lead_time": "server-owned"}
+    typed = {"strategy:balanced.metrics.margin_sgd": {"reference": "strategy:balanced.metrics.margin_sgd"}}
+    _, _, mapping = council_module._alias_context(qualitative, typed)
+    unknown, _, alias_issues = council_module._resolve_claim_aliases(
+        {"tool_result_refs": [], "fact_refs": ["F999"]}, mapping
+    )
+    assert alias_issues[0]["code"] == "unknown_fact_alias"
+    assert unknown["fact_refs"] == ["F999"]
+
+    crossed, _, alias_issues = council_module._resolve_claim_aliases(
+        {
+            "statement": "The frozen comparison needs review.",
+            "evidence_ids": [],
+            "tool_result_refs": ["F001"],
+            "fact_refs": ["C001"],
+        }, mapping
+    )
+    assert alias_issues == []
+    issues = council_module._claim_issues(crossed, qualitative, typed, set())
+    assert {issue["code"] for issue in issues} == {
+        "unknown_tool_reference", "typed_fact_in_context_refs", "unknown_typed_fact"
+    }
 
 
 def test_typed_claim_gate_rejects_wrong_meaning_and_model_authored_values():
@@ -207,10 +254,12 @@ def test_chair_context_carries_specialist_rejection_categories(monkeypatch):
         "strategies": [{"id":"balanced","name":"Balanced","metrics":{"margin_sgd":10.0},"violations":[],"risk":"bounded","status":"FEASIBLE","assumptions":[]}],
     }
     claims, _ = council_module.council(computed, "run-errors", lambda *_: None)
-    assert claims[0]["validation_issues"][0]["code"] == "unknown_typed_fact"
+    assert {issue["code"] for issue in claims[0]["validation_issues"]} == {
+        "unknown_fact_alias", "unknown_typed_fact"
+    }
     chair = __import__("json").loads(calls[-1][1][1]["content"])["prior_claims"][0]
     assert chair["eligible_as_evidence"] is False
-    assert chair["validation_issues"][0]["code"] == "unknown_typed_fact"
+    assert chair["validation_issues"][0]["code"] == "unknown_fact_alias"
 
 
 def test_actual_failure_patterns_remain_rejected_and_prompt_explains_repairs():

@@ -1,14 +1,14 @@
 # FarmTact V8 remediation: methods, implementation evidence, and validation limits
 
 **Audit date:** 11 September 2026 UTC<br>
-**System state:** development worktree; full regression passed, release decision pending<br>
+**System state:** V8 candidate; local regression and restart gates passed; public AI verification and immutable publication pending<br>
 **Data status:** synthetic demonstration only<br>
 **Operational status:** real farm operations disabled<br>
 **Live Council quality status:** **FAILED / remediation in progress**
 
 ## Abstract
 
-This report evaluates the V8 remediation of FarmTact as a software and numerical system, rather than as a validated agricultural decision system. The evaluated implementation joins a deterministic demand baseline, a whole-bed planning model, a persistent synthetic execution world, bounded scenario and research workflows, and optional DeepSeek interpretation. The principal engineering change is that planned schedules can now be advanced through a recorded civil-date clock with append-only events, order and lot attribution, inventory conservation, cash accounting, and future replanning. The numerical planner now consumes explicit weighted scenarios, exposes its objective components, applies a lexicographic maximin policy for the Resilient strategy, distinguishes missing prices from observed zero prices, and aligns optimization with first-expiry-first-out (FEFO) replay. The data package preserves the original fixture hash while adding disjoint, versioned synthetic training and evaluation cohorts. Demand evaluation uses rolling origins and one-, two-, and four-week horizons; crop-cycle evaluation uses independent whole-batch outcomes. The current evaluator is `rolling-origin-demand-v4` and includes a behavioral counterfactual availability probe. No fitted candidate is eligible for production. The crop residual candidate is worse than its recipe baseline on both primary held-out errors, and every real-data promotion gate remains blocked. The Council now selects server-owned typed facts and keeps execution, evidence, and decision influence as separate statuses. However, the retained actual-provider experiments do not pass the quality gate. Twenty-four paid requests have been consumed across four experiments: one failed on a retired-model mismatch, nine exercised the canonical model and native vision but included five unsupported claims, seven exercised the V3 contract with six valid outputs and one format rejection caused by the word `three`, and seven exercised the repaired V3 prompt with six valid outputs and one unknown-reference rejection. Provider connectivity and native-vision transport therefore cannot be reported as validated Council quality. Focused deterministic, browser, and PostgreSQL concurrency tests provide strong evidence for the implemented mechanics. The repository-wide regression completed with 556 passed and one skipped test in 398.002 seconds according to its XML artifact. The retained 56-day HTTP execution trial also passed across an actual application restart with zero provider calls. Release and live Council quality decisions remain separate and unresolved.
+This report evaluates the V8 remediation of FarmTact as a software and numerical system, rather than as a validated agricultural decision system. The evaluated implementation joins a deterministic demand baseline, a whole-bed planning model, a persistent synthetic execution world, bounded scenario and research workflows, and optional DeepSeek interpretation. Planned schedules can be advanced through a recorded civil-date clock with append-only events, order and lot attribution, inventory conservation, cash accounting, and future replanning. `daily-bed-cpsat-v3` adds absolute crop-cycle identities, collision-checked harvest-lot IDs, a persistent cross-replan origin map, exclusion of all historically executed cycle IDs, and resource reservations against the largest declared scenario yield. The data package preserves the original fixture hash while adding disjoint, versioned synthetic training and evaluation cohorts. Demand evaluation uses rolling origins and one-, two-, and four-week horizons; crop-cycle evaluation uses independent whole-batch outcomes. The current evaluator is `rolling-origin-demand-v4` and includes a behavioral counterfactual availability probe. No fitted candidate is eligible for production, and every real-data promotion gate remains blocked. The Council now selects server-owned typed facts and keeps execution, evidence, and decision influence as separate statuses. Conversation projection is V4 and mission-reference selection is V5: the model selects short lookup aliases that resolve exactly to canonical server-owned evidence. Role projection has explicit ranking and size bounds, frozen research inputs, abstention rules and preserved rejected attempts. The isolated PostgreSQL regression passed 589 tests with one skip; a subsequent focused AI suite covers the narrow V5 alias change. A 56-day network execution trial survived an actual application restart, and a separate 84-day regression exercised two replans and cross-segment lot attribution. The clean-checkout zero-inference pipeline and V3 synthetic numerical report passed. The final local research adviser passed reference validation using 6,704 prompt tokens, compared with 64,756 in the earlier retained request. Forty-four actual provider requests have been consumed across the retained experiments. The pre-context-fix scorer passed 8 of 18 cases and remains historical failed evidence. Immutable publication and final public mission/conversation quality verification are still pending; mechanical correctness and exact references do not establish qualitative truth.
 
 ## 1. Questions and claim boundary
 
@@ -63,7 +63,7 @@ flowchart LR
     API --> DB[(PostgreSQL state and receipts)]
     API --> Worker[Bounded job worker]
     Worker --> Forecast[recipe-ewma-v1]
-    Worker --> Planner[daily-bed-cpsat-v2]
+    Worker --> Planner[daily-bed-cpsat-v3]
     Planner --> Replay[Daily FEFO simulation]
     API --> World[synthetic-execution-v1]
     World --> DB
@@ -128,17 +128,23 @@ sequenceDiagram
     B->>A: GET current world
 ```
 
-### 4.5 Execution evidence and limits
+### 4.5 Absolute cycle identity and lot provenance
+
+Final review found that horizon-relative allocation IDs could refer to different absolute crop cycles after a replan. This could suppress a later task while its numerical trace still produced harvest. The V3 planner now derives allocation identity from bed, crop, recipe and absolute sow/transplant/harvest dates. Replanning also excludes every previously executed allocation ID from new candidates, covering caller-controlled imported batch IDs while preserving existing locks.
+
+Harvest lots use a separate deterministic hash and collision ordinal, checked against opening and earlier generated lots. The recorded world retains a lot-to-allocation origin map across replans. Harvest events expose produced lot IDs, and subsequent demand-service events carry their source allocation even when stock crosses a planning segment. These fields are provenance, not additional yield. The new 84-day ASGI HTTP regression replans after days 7 and 42 and checks cycle identity, harvest tasks and cross-segment lot attribution. Its initial failure is preserved in [the discovery record](../../reports/v8/late-replan-discovery.md).
+
+### 4.6 Execution evidence and limits
 
 The dedicated PostgreSQL test issued six simultaneous same-key advances and found one committed civil day and one matching receipt. Two different keys competing at the next revision produced one success and one 409 conflict. Historical receipt replay returned the original response without changing the newer world. A second tenant received 404 for the world, events, and mutation route. A reconstructed store observed the same world and ordered events. This focused test passed once in 7.38 seconds; details are in [execution-validation.md](../../reports/v8/execution-validation.md).
 
-The 56-day restart-safe HTTP trial in [v8_execution_trial.py](../../scripts/v8_execution_trial.py) passed across an actual application restart. Its retained [execution-trial.json](../../reports/v8/execution-trial.json) records 56 contiguous `day_closed` events, 64 demand-service events, 52 task events, one future replan, mass/cash/order-lot conservation passes, historical-action replay, restart persistence, and zero provider calls. The cash constraint nevertheless remains narrower than the execution ledger: planning constrains new input cost, while execution deducts input, labour, packing, and disposal. A conserved ledger can consequently have a negative balance. That semantic gap must be resolved before cash is described as a full liquidity constraint.
+The archived intermediate 56-day HTTP trial in [v8_execution_trial.py](../../scripts/v8_execution_trial.py) passed across an application restart and made zero provider calls. Its immutable [intermediate artifact](../../reports/v8/archive/execution-trial.intermediate.json) records the exact synthetic counts and invariants it checked. Later identity and runtime changes require the separate final network restart trial now designated for [execution-trial.json](../../reports/v8/execution-trial.json); this report does not pre-judge that result. The cash constraint remains narrower than the execution ledger: planning constrains new input cost, while execution deducts input, labour, packing, and disposal. A conserved ledger can consequently have a negative balance. That semantic gap must be resolved before cash is described as a full liquidity constraint.
 
 ## 5. Planner and accounting remediation
 
 ### 5.1 Weighted declared scenarios
 
-`daily-bed-cpsat-v2` accepts an optional declared scenario set while preserving the original three-scenario default. The planner rejects empty sets, duplicate IDs, more than 100 rows, invalid factors, negative or non-finite weights, and non-positive total weight. Raw weights are normalized and converted to 1,000 deterministic integer objective units, with at least one unit for every positive weight. Returned scenario records expose raw, normalized, and integer weights. This is an engineering distribution chosen by the caller, not a calibrated probability model.
+`daily-bed-cpsat-v3` accepts an optional declared scenario set while preserving the original three-scenario default. The planner rejects empty sets, duplicate IDs, more than 100 rows, invalid factors, negative or non-finite weights, and non-positive total weight. Raw weights are normalized and converted to 1,000 deterministic integer objective units, with at least one unit for every positive weight. Returned scenario records expose raw, normalized, and integer weights. This is an engineering distribution chosen by the caller, not a calibrated probability model.
 
 ```mermaid
 flowchart TD
@@ -158,7 +164,7 @@ flowchart TD
     Replay --> Gate[Constraint, mass, and objective reconciliation]
 ```
 
-A constructed one-bed test changes the chosen action when the quiet/busy weights are reversed from 99/1 to 1/99. This behavioral check supports use of weights in the objective rather than merely their presence in metadata. The objective charges scenario-independent new-work cost once. The reported maximum quantization scale is approximately 0.001 of total objective weight.
+A constructed one-bed test changes the chosen action when the quiet/busy weights are reversed from 99/1 to 1/99. This behavioral check supports use of weights in the objective rather than merely their presence in metadata. The objective charges scenario-independent new-work cost once. Harvest-labour and conservative cash reservations use the maximum yield factor in the actual declared scenario set; custom factors above the default high-yield case cannot silently bypass those resource checks. The reported maximum quantization scale is approximately 0.001 of total objective weight.
 
 ### 5.2 Policy objectives and proof language
 
@@ -319,7 +325,9 @@ The normal mission budget is seven calls with up to two bounded structural repai
 
 V8 replaces numeric coincidence with selected `fact_refs`. The server builds a typed catalogue from frozen values and renders the value, unit, entity, period, and snapshot hash after model output. Model-authored quantities and dates are rejected even when they happen to match a value elsewhere in the context. `tool_result_refs` are restricted to qualitative context. Wrong entity, wrong unit, wrong meaning, citation laundering, and numeric prose have adversarial tests in [test_ai_injection_boundaries.py](../../tests/review/test_ai_injection_boundaries.py) and [test_ai_quality.py](../../tests/review/test_ai_quality.py).
 
-`RESPONSE_LIMITS` is the shared prompt/schema authority: 400 content characters, one evidence reference, three context references, three typed facts, one highlight, and one proposed action. Contract versions identify prompt, output schema, validator, frozen context, and source context. New records include a public-context SHA-256 value. Earlier stored records remain readable through conservative additive defaults.
+`RESPONSE_LIMITS` is the shared prompt/schema authority: 400 content characters, one evidence reference, three context references, three typed facts, one highlight, and one proposed action. Conversation prompt/projection is V4; mission prompt/projection is V5. Mission outputs select exact short `F001`/`C001` aliases, resolved locally to canonical references with both forms preserved in the audit. Unknown aliases are rejected; alias resolution does not weaken numeric, membership or evidence checks. Role projection admits at most 48 typed facts, 24 qualitative references, 16 prior turns and six evidence records, subject to a hard 120,000-character serialized prompt limit. Exact research inputs referenced by the frozen result are included even when ordinary rank caps have been reached. Projection truncation is a declared limitation, and questions that cannot be answered from admitted context must receive an abstention. Contract versions identify prompt, output schema, validator, frozen context, and source context. New records include a public-context SHA-256 value. Earlier stored records remain readable through conservative additive defaults.
+
+A structural format repair preserves the rejected attempt as an auditable record. Its instruction must preserve lexical meaning, relationships, proposed actions and evidence/highlight references; it may only remove or relocate an invalid number or date form. This correction can improve contract conformance but cannot retroactively make the rejected attempt valid or prove factual quality.
 
 Execution status answers whether a provider workflow ran. Evidence status answers whether the returned references and typed facts passed the local checks. Decision influence answers whether policy can consider the result or must withhold. A successful HTTP response can therefore be `completed`, `unsupported_all`, and `advisory_only` at the same time. Qualitative interpretation remains `qualitative_unverified`; selecting a correct fact reference does not verify causal or agronomic prose.
 
@@ -342,7 +350,7 @@ On 10 September 2026, DeepSeek announced V4.1-Flash, stated that it was live on 
 
 ### 8.5 Retained actual-provider evidence
 
-The immutable experiment ledger records 24 actual paid requests across four runs; see [live-call-ledger.json](../../reports/v8/live-call-ledger.json).
+The evolving experiment ledger preserves all attempts and reconciles actual paid requests; see [live-call-ledger.json](../../reports/v8/live-call-ledger.json).
 
 | Experiment | Requests | Observed result | Audit interpretation |
 | --- | ---: | --- | --- |
@@ -351,9 +359,11 @@ The immutable experiment ledger records 24 actual paid requests across four runs
 | V3 context/schema run | 7 | six valid outputs; one response rejected for the word `three` | Improved contract adherence, still incomplete |
 | V3 format-repair run | 7 | six valid outputs; Supply Chain selected one unknown reference | Reference membership rejected locally; mission withheld |
 
-The four counts sum to the ledger's `actual_requests_consumed=24`. The first failure demonstrates why exact returned-model validation matters. The second run demonstrates that native visual input can traverse the current route, but five unsupported outputs prevent a quality pass. The third run demonstrates six locally valid outputs, but the remaining format violation prevents complete seven-role coverage. The word `three` was rejected because the V3 prompt forbids number words in model prose and requires exact quantities to be selected through typed facts. The fourth run removed that failure mode but remained withheld because the Supply Chain response selected a reference outside its permitted frozen catalogue.
+The four mission counts sum to 24. Before the final V4 mission run, the ledger additionally records 11 V4 conversation requests and one V4 research request, for 36 actual paid requests. Conversation inputs totalled 805,878 prompt tokens and produced ten persisted adviser messages; the research request used 64,756 prompt tokens. These are usage measurements, not a quality score or a recommended production budget. The first mission failure demonstrates why exact returned-model validation matters. The canonical vision run shows that native visual input traversed the route, but five unsupported outputs prevent a quality pass. The next two runs each produced six locally valid role outputs and still failed complete coverage.
 
-**Current status: FAILED / PENDING FURTHER QUALITY TRIALS.** No deployed-quality claim is made. The retained planning artifacts are [planning-local.json](../../reports/v8/planning-local.json), [planning-local-canonical.json](../../reports/v8/planning-local-canonical.json), [planning-local-v3.json](../../reports/v8/planning-local-v3.json), and [planning-local-v4.json](../../reports/v8/planning-local-v4.json).
+The retained [pre-context-fix scorer](../../reports/v8/ai-quality-before-context-fix.json) covers 18 cases: eight PASS and ten FAIL, so its overall automated status is **FAIL**. Exact workflow-integrity counts passed for direct, invite, Council, planning and research sequences. Those count checks show that the intended routes ran exactly once in the tested workflow; they do not establish entailment or usefulness. The frozen V4 agent core addresses context admission and repair semantics, but no final live evidence yet proves that it fixes quality.
+
+**Historical combined status: FAILED / FINAL PUBLIC QUALITY RESULT PENDING.** No deployed-quality claim is made. The retained planning artifacts are [planning-local.json](../../reports/v8/planning-local.json), [planning-local-canonical.json](../../reports/v8/planning-local-canonical.json), [planning-local-v3.json](../../reports/v8/planning-local-v3.json), and [planning-local-v4.json](../../reports/v8/planning-local-v4.json). The final mission budget reserves at most nine requests; unused reservation is not counted as consumption.
 
 ## 9. Scenarios, conversations, and research state machines
 
@@ -403,7 +413,7 @@ The research workflow supports comparison and provenance, but it does not establ
 
 The core store hashes the anonymous session bearer before persistence and scopes farm, mission, event, receipt, scenario, conversation, research, and simulation queries by tenant. PostgreSQL tenant transactions lock the tenant row to serialize state allocation. An ambient connection context lets nested event, world, and receipt writes join the same transaction. SQLite uses a serialization lock only as a test adapter; it is not the production concurrency claim.
 
-Dedicated PostgreSQL tests used six concurrent same-key scenario retries after a forced transient failure and observed exactly one second attempt. Six concurrent scenario cancellations and six conversation-request cancellations each produced exactly one transition. The simulation concurrency result is described in Section 4.5. One pre-existing shared-database test observed a queued job become RUNNING because another live worker claimed it; the isolated V8 PostgreSQL test passed. This is why the final suite should run without unrelated workers polling the same test queue.
+Dedicated PostgreSQL tests used six concurrent same-key scenario retries after a forced transient failure and observed exactly one second attempt. Six concurrent scenario cancellations and six conversation-request cancellations each produced exactly one transition. The simulation concurrency result is described in Section 4.6. One pre-existing shared-database test observed a queued job become RUNNING because another live worker claimed it; the isolated V8 PostgreSQL test passed. This is why the final suite should run without unrelated workers polling the same test queue.
 
 A later focused integration group passed 10 tests covering the SQLite background-worker serialization adapter and both queued and running research-calculation cancellation paths. This result supports those regressions in the test adapter; the production concurrency evidence remains the isolated PostgreSQL runs.
 
@@ -413,9 +423,11 @@ The shared client mutation transport writes an idempotency key before transmissi
 
 The browser harness injected a 503 followed by a 429 and then success across page reloads. All three requests carried the same key. A later successful operation cleared it, and a deliberate 409 import response also cleared its separate pending key. This test exercises uncertainty semantics rather than merely checking storage keys.
 
-### 10.3 Remaining persistence limits
+### 10.3 Retention mechanism and remaining persistence limits
 
-Anonymous-session expiry blocks later authentication but does not delete persisted tenant rows. No edition-aware retention and deletion job exists. Cancellation cannot preempt a CP-SAT solve or abort an already active synchronous provider call immediately. Concurrent identical replans may compute the same local solution more than once, although revision and receipt serialization allow only one committed state.
+Anonymous-session authentication expires after 24 hours. An explicit operator CLI can identify inactive tenants and delete tenant-owned rows in dependency order within one transaction. It defaults to dry-run and 30 retained days, rejects fewer than seven retained days, considers at most 500 tenants per invocation, and skips any tenant with queued or running mission, scenario, conversation or research work. It covers the registered schema while preserving shared budgets and security controls; 12 isolated tests cover dry-run, full child deletion, recent/active retention and bounds. The command has no automatic schedule and Store initialization may create missing schema objects even in dry-run mode, so operators must target the intended database and inspect its JSON report.
+
+Cancellation cannot preempt a CP-SAT solve or abort an already active synchronous provider call immediately. Concurrent identical replans may compute the same local solution more than once, although revision and receipt serialization allow only one committed state. There is not yet an approved production retention schedule or operating history for the CLI.
 
 ## 11. Browser behavior and visual evidence
 
@@ -449,20 +461,27 @@ The machine-readable [browser report](../../reports/v8/ui-browser.json) records 
 | Simulation execution | execution unit suite | 3 passed in 7.76 s | Synthetic world behavior |
 | Simulation concurrency | isolated PostgreSQL test | 1 passed in 7.38 s | Same-key, competing-key, tenant, restart-store |
 | Worker/research cancellation | latest focused integration group | 10 passed | SQLite worker serialization plus queued/running cancellation |
-| Restart HTTP execution | `execution-trial.json` | PASS: 56 days, one restart, zero provider calls | Deterministic synthetic execution only |
+| Root identity/retention/cancellation focus | `final-root-focused.xml` | 23 passed in 20.369 s | Includes 84-day ASGI world and replans on days 7 and 42 |
+| AI frozen implementation focus | focused pytest group | 53 passed, 1 PostgreSQL case deselected | Offline/source behavior; no live-quality pass |
+| Clean checkout | `clean-checkout.json` | PASS, zero inference calls | Rebuild/install/fixture/API path in recorded isolated environment |
+| Numerical evaluation | `numerical_evaluation.json` | PASS, planner V3 | Synthetic-only; no fitted candidate promoted |
+| Intermediate restart execution | `archive/execution-trial.intermediate.json` | PASS: 56 days, one restart, zero provider calls | Superseded test scope; final network run pending |
 | Web build | TypeScript no-emit plus Vite | PASS | Build only |
 | Browser | `v8_simulation_ui.mjs` | 27/27 PASS | Local PG, zero inference, exact journey above |
-| Full regression | `full-regression.xml` | 556 passed, 1 skipped in 398.002 s | Development worktree at recorded timestamp |
+| Intermediate full regression | `archive/full-regression.intermediate.xml` | 556 passed, 1 skipped in 398.002 s | Predates final identity/context changes |
+| Final full regression | `full-regression.xml` | 589 passed, 1 skipped in 437.76 s | Predates only the narrow V5 alias and trial-harness changes, covered by focused regressions |
+| Final network execution | `execution-trial.json` | PASS: 56 days, one restart, zero provider calls | Exact receipts and cash/mass/order-lot reconciliation |
+| Final research adviser | `research-advisor-final.json` | PASS: references verified, one actual call | Exact references do not prove all qualitative prose |
 
 These results are not additive because test sets can overlap. They should not be summed into a repository pass count.
 
 ### 12.2 Repository-wide gate
 
-An earlier repository-wide run reported 499 passing tests and 34 failures while multiple packages were still editing generated manifests. The integration review attributed 32 failures to that concurrent manifest churn and identified two actual defects, which were fixed. The subsequent clean run completed with 557 collected tests: 556 passed, one skipped, zero failures, and zero errors in 398.002 seconds according to the XML suite timer. The authoritative machine-readable evidence is [full-regression.xml](../../reports/v8/full-regression.xml).
+An earlier repository-wide run reported 499 passing tests and 34 failures while multiple packages were still editing generated manifests. The integration review attributed 32 failures to concurrent manifest churn and identified two actual defects, which were fixed. The next run completed with 557 collected tests: 556 passed, one skipped, zero failures and zero errors in 398.002 seconds. That result is preserved as [intermediate evidence](../../reports/v8/archive/full-regression.intermediate.xml), because planner identity, retention and V4 context changes followed it.
 
-**Repository-wide regression gate: PASS.**
+The later [focused root result](../../reports/v8/final-root-focused.xml) records 23 of 23 tests passing in 20.369 seconds. It includes the 84-day ASGI world, replans on days 7 and 42, cycle identity, lot origins, tenant retention, cancellation and SQLite worker serialization. The [clean-checkout result](../../reports/v8/clean-checkout.json) separately records a PASS with zero inference calls. These results narrow specific risks but do not replace the final repository-wide run.
 
-This result supports the recorded worktree and test environment. Release and deployment status remain separate decisions and should not be inferred from this test pass.
+**Final repository-wide regression gate: PASS.** The isolated-PostgreSQL run completed with 589 passed and one skipped in 437.76 seconds: [full-regression.xml](../../reports/v8/full-regression.xml). The subsequent narrow V5 alias and trial-harness changes have separate focused evidence. Release and live AI quality still require their own recorded checks.
 
 ### 12.3 Test interpretation
 
@@ -486,8 +505,8 @@ The authoritative machine-readable register was being revised during report prep
 | NUM-07 | Explicit missing-price state and unpriced accounting | Current observed prices and commercial validation |
 | NUM-08 | Rolling-origin multi-horizon V4 evaluator | Real temporal and external-farm holdouts |
 | NUM-09 | Promotion gates block synthetic candidates | Monitoring, rollback, drift, and approved thresholds |
-| GAME-08 | Bounded attempt history, cancellation, retry, and pagination | Retention/deletion policy and wider soak testing |
-| GAME-11 | Tenant locks, same-key receipts, revision conflicts | Multi-process fault injection and production monitoring |
+| GAME-08 | Bounded attempt history, cancellation, retry, pagination and active-job retention exclusions | Wider soak testing and approved operational retention schedule |
+| GAME-11 | Tenant locks, same-key receipts, revision conflicts and explicit bounded retention CLI | Multi-process fault injection, production monitoring and operator execution evidence |
 | GAME-12 | Exact computed order delivery impacts | Buyer/grade/customer-priority contract expansion |
 | Execution world | Durable clock, events, ledgers, replanning | Completed restart HTTP artifact and negative-cash resolution |
 | AI-01/02 | Typed facts and independent local quality dimensions | Successful full live quality suite plus expert scoring |
@@ -520,15 +539,15 @@ The planner uses whole beds, integer grams, one grade, single-harvest lots, and 
 
 ### 14.5 Execution scope
 
-Execution replays the deterministic plan and central synthetic scenario. Events do not actuate equipment, assign a worker, send a buyer message, purchase an input, or record an observed harvest. The cash hard constraint does not yet cover every execution cost. The passed restart-safe 56-day HTTP protocol strengthens persistence evidence but remains a local synthetic trial.
+Execution replays the deterministic plan and central synthetic scenario. Events do not actuate equipment, assign a worker, send a buyer message, purchase an input, or record an observed harvest. The cash hard constraint does not yet cover every execution cost. The final 56-day HTTP protocol passed with a real application restart, exact historical receipts and reconciled cash/mass/order-lot totals. It remains synthetic engineering evidence.
 
 ### 14.6 AI scope
 
-Typed rendering prevents a model from altering selected values, but it cannot make qualitative interpretation true. The current live quality status is failed. Vision transport success is not agronomic visual validation. Two later trials each produced six locally valid responses but still did not achieve complete Council coverage. No additional paid calls were made for this report.
+Typed rendering prevents a model from altering selected values, but it cannot make qualitative interpretation true. The current live quality status is failed: the pre-context-fix scorer passed 8 of 18 cases. Vision transport success is not agronomic visual validation. V4 role projection can omit relevant information under its 48/24/16/6 and 120,000-character bounds; it therefore requires abstention when admitted context is insufficient and must not be described as universal context coverage. Forty-four actual requests were consumed through the final local research trial. The final local mission still failed one reference check; the subsequent V5 alias change awaits public verification.
 
 ### 14.7 Operations and privacy scope
 
-The session is an anonymous tenant, not an authenticated farm user. Expired records lack a deletion policy. Focused local PostgreSQL concurrency does not prove behavior under every network, process, database failover, or deployment condition. The final repository suite and deployment decision are pending.
+The session is an anonymous tenant, not an authenticated farm user. The explicit retention CLI supplies a bounded deletion mechanism, but it has no automatic schedule, approved production cadence or production execution evidence. Focused local PostgreSQL concurrency does not prove behavior under every network, process, database failover, or deployment condition. The final repository suite and network restart trial passed; deployment and final public AI verification remain pending.
 
 ## 15. Evidence required before stronger claims
 
@@ -540,7 +559,7 @@ Public weather or market context may enter a numerical model only after units, f
 
 AI promotion requires a complete current-model trial across direct, invitation, Council, vision where applicable, and research interpretation workflows. The retained report must include every request, repair, usage record, local issue, and failed output. Agronomic usefulness and harm must then receive independent human scoring under the [human study protocol](../research/v8-human-study-protocol.md).
 
-Operational release requires the successful build and regression evidence already recorded plus edition immutability checks, database migration checks, deployment health checks, and a documented rollback target. The zero-AI execution HTTP trial now supplies local restart evidence. None of these steps enables real farm operations under the present policy.
+Operational release requires a successful final build and regression, edition immutability checks, database migration checks, a final network restart trial, deployment health checks and a documented rollback target. Passing technical gates advance autonomously; there is no human release-approval checkpoint in this development phase. None of these steps enables real farm operations under the present policy.
 
 ## 16. Reproducibility map
 
@@ -562,6 +581,8 @@ Operational release requires the successful build and regression evidence alread
 | Scenario state machine | [scenarios.py](../../services/api/scenarios.py) |
 | Core transactional store | [store.py](../../services/api/store.py) |
 | Conversation persistence | [conversation_store.py](../../services/api/conversation_store.py) |
+| Tenant retention mechanism | [retention.py](../../services/api/retention.py) |
+| Retention operator command | [prune_expired_tenants.py](../../scripts/prune_expired_tenants.py) |
 | Research state machine/history | [council_research.py](../../services/api/council_research.py) |
 | Council orchestration | [council.py](../../services/api/council.py) |
 | Council roster and gate | [agents.py](../../packages/agents.py) |
@@ -573,8 +594,13 @@ Operational release requires the successful build and regression evidence alread
 | Recorded execution panel | [SimulationPanel.tsx](../../apps/web/src/components/SimulationPanel.tsx) |
 | Browser method | [v8_simulation_ui.mjs](../../tests/browser/v8_simulation_ui.mjs) |
 | Browser result | [ui-browser.json](../../reports/v8/ui-browser.json) |
-| Restart execution result | [execution-trial.json](../../reports/v8/execution-trial.json) |
-| Full regression result | [full-regression.xml](../../reports/v8/full-regression.xml) |
+| Intermediate restart execution | [execution-trial.intermediate.json](../../reports/v8/archive/execution-trial.intermediate.json) |
+| Final restart execution target | [execution-trial.json](../../reports/v8/execution-trial.json) |
+| Focused root regression | [final-root-focused.xml](../../reports/v8/final-root-focused.xml) |
+| Clean-checkout result | [clean-checkout.json](../../reports/v8/clean-checkout.json) |
+| Intermediate full regression | [full-regression.intermediate.xml](../../reports/v8/archive/full-regression.intermediate.xml) |
+| Final full regression target | [full-regression.xml](../../reports/v8/full-regression.xml) |
+| Pre-context-fix AI score | [ai-quality-before-context-fix.json](../../reports/v8/ai-quality-before-context-fix.json) |
 | Execution concurrency method | [test_v8_simulation_postgres.py](../../tests/gameplay/test_v8_simulation_postgres.py) |
 | Scenario/conversation reliability report | [game-reliability.md](../../reports/v8/game-reliability.md) |
 | UI evidence report | [ui.md](../../reports/v8/ui.md) |
@@ -583,22 +609,35 @@ Operational release requires the successful build and regression evidence alread
 | Council evidence report | [council.md](../../reports/v8/council.md) |
 | Execution evidence report | [execution-validation.md](../../reports/v8/execution-validation.md) |
 
-The numerical report used a deterministic zero-second fallback and records `daily-bed-cpsat-v2`, `recipe-ewma-v1`, fixture hash, settings, cutoff, source revision, dirty state, report schema, and public feature exclusions. Bounded CP-SAT wall time, objective, and best bound can vary with solver build and runtime when a positive time limit is used. The archived pre-V8 report remains at [numerical_evaluation.pre-v8.json](../../reports/v8/archive/numerical_evaluation.pre-v8.json).
+The numerical report used a deterministic zero-second fallback and records `daily-bed-cpsat-v3`, `recipe-ewma-v1`, fixture hash, settings, cutoff, source revision, dirty state, report schema, and public feature exclusions. Bounded CP-SAT wall time, objective, and best bound can vary with solver build and runtime when a positive time limit is used. The archived pre-V8 report remains at [numerical_evaluation.pre-v8.json](../../reports/v8/archive/numerical_evaluation.pre-v8.json).
 
 ## 17. Conclusions and pending decisions
 
-V8 materially improves the fidelity of FarmTact's synthetic planning experiment. The implementation now connects an accepted plan to a durable, revisioned execution world whose clock, tasks, lots, orders, costs, and replans can be inspected. Weighted objectives, maximin proof labels, FEFO replay, explicit missing-price state, terminal inventory, and exact order attribution remove several important ambiguities from the numerical layer.
+V8 materially improves the fidelity of FarmTact's synthetic planning experiment. The implementation now connects an accepted plan to a durable, revisioned execution world whose clock, tasks, lots, orders, costs, and replans can be inspected. Weighted objectives, maximin proof labels, FEFO replay, explicit missing-price state, terminal inventory and exact order attribution remove several important ambiguities from the numerical layer. Planner V3 further makes cycle identity absolute, collision-checks harvest lots, persists their origin across replans, excludes all historically executed IDs and reserves resources against the declared maximum yield.
 
 The data and model work also improves the honesty of evaluation. Disjoint generators and cohorts, rolling origins, multiple horizons, whole-batch outcomes, fit cutoffs, and a counterfactual availability probe provide useful engineering tests. Their current result supports no fitted-model promotion, and the promotion policy correctly blocks production eligibility.
 
-The Council architecture has stronger provenance and safer local validation. Its current actual-provider evidence nevertheless fails the quality gate. The canonical `deepseek-flash` migration is implemented, but five unsupported outputs in the vision run, one V3 format rejection, and one later unknown-reference rejection leave the complete workflow unvalidated.
+The Council architecture has stronger provenance and safer local validation. Its current actual-provider evidence nevertheless fails the quality gate. The canonical `deepseek-flash` migration and bounded V4 projection are implemented, but the retained pre-fix score is only 8 of 18 cases passing. Exact workflow counts pass; answer quality remains unvalidated until the final live result is recorded.
 
 The remaining integration decisions are evidence-driven and explicit:
 
-- **PASS:** repository-wide regression, 556 passed and one skipped;
-- **PASS:** retained 56-day restart-safe zero-inference HTTP execution trial;
-- **FAILED / REMEDIATING:** complete actual DeepSeek Council quality suite;
+- **PASS:** clean-checkout pipeline, V3 numerical report, 589-test PostgreSQL regression (one skip), focused AI/root regressions, final 56-day restart execution and final local research adviser;
+- **ARCHIVED PASS:** intermediate 556-pass regression and intermediate 56-day restart-safe execution trial;
+- **PENDING:** immutable V8 publication, deployment preservation and public AI verification;
+- **FAILED / FINAL TRIAL PENDING:** complete actual DeepSeek Council quality suite;
 - **BLOCKED:** any production model promotion without authorized real outcomes;
 - **DISABLED:** all real farm operations.
 
 This report is therefore a reproducible V8 engineering assessment and limitation record, not a deployment certificate, agronomic validation, or operational authorization.
+
+## 18. Final local integration results and release handoff
+
+The final full PostgreSQL regression completed with **589 passed, one skipped, zero failed** in 437.76 seconds. The recorded 56-day HTTP world again passed after an actual application restart, with 56 day-close events, 56 task events, 64 demand-service events, a future replan, exact historical receipts and reconciled cash/mass/order-lot totals. The separate 84-day ASGI HTTP regression covers replans on days 7 and 42 and cross-segment lot attribution. These are synthetic engineering results.
+
+The final research-adviser request passed `references_verified` with exact reservation dates, a bed-area fact and the unconfirmed-order context. Its prompt used 6,704 tokens, versus 64,756 in the earlier retained request. These are observed counts from separate bounded trial instances, not a cost or reliability benchmark. The final [research report](../../reports/v8/research-advisor-final.json) and [read-only replay](../../reports/v8/research-advisor-final-replay.json) retain the response and evidence.
+
+A fifth local mission consumed seven requests and again withheld acceptance because Supply Chain shortened a complex order reference. This repeatable failure motivated a structural V5 mission-reference change: the model selects short `F001` and `C001` lookup aliases; the server resolves them exactly to the original canonical references before applying the existing type and evidence checks. Unknown aliases fail closed. Audit rows preserve both the mapping and the returned aliases, and public claims retain canonical references. This does not prove qualitative entailment. The [failed final local mission](../../reports/v8/planning-local-final.json) remains preserved.
+
+The local total is 44 actual provider requests. The internal experiment ceiling was explicitly revised as defects were discovered; all revisions and request accounting remain in the [ledger](../../reports/v8/live-call-ledger.json). Runtime and shared-production daily limits were not changed. A public mission and public direct/invite/Council trial remain to be run after immutable V8 publication. Their results must be reported separately from these local passes.
+
+The full suite predates the narrow V5 alias change; the focused AI suite then passed 250 tests, with one skipped and one PostgreSQL-only case excluded because the full PostgreSQL run covers storage. Root also checks the alias and interrupted-harness regressions separately. Final publication and automated live-quality outcomes remain pending in this source snapshot.

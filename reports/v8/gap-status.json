@@ -13,16 +13,16 @@
   "validation": {
     "full_regression": {
       "status": "passed",
-      "passed": 556,
+      "passed": 589,
       "skipped": 1,
       "failed": 0,
       "evidence": "reports/v8/full-regression.xml"
     },
     "newest_root_focused": {
       "status": "passed",
-      "passed": 10,
+      "passed": 23,
       "failed": 0,
-      "evidence": "PENDING_ROOT_FOCUSED_REPORT_LINK"
+      "evidence": "reports/v8/final-root-focused.xml"
     }
   },
   "pending_evidence": {
@@ -60,7 +60,7 @@
     {
       "id": "AI-02",
       "status": "fixed",
-      "current_v8_disposition": "Server-owned typed facts bind reference, value, unit, entity, period and snapshot hash; authored quantities and semantic mismatches fail local validation.",
+      "current_v8_disposition": "Server-owned typed facts bind reference, value, unit, entity, period and snapshot hash; unknown references and model-authored quantities fail local validation. Qualitative entailment is not established by these checks.",
       "remaining": "Qualitative entailment remains explicitly unverified rather than promoted.",
       "evidence": [
         "reports/v8/council.md",

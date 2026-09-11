@@ -1,8 +1,8 @@
 # V8 planner and numerical remediation
 
-Date: 11 September 2026 UTC  
-Implementation: `daily-bed-cpsat-v2`  
-Scope: NUM-03 through NUM-07 plus additive execution/replanning hooks  
+Date: 11 September 2026 UTC
+Implementation: `daily-bed-cpsat-v3`
+Scope: NUM-03 through NUM-07 plus additive execution/replanning hooks
 Data status: synthetic demonstration only
 
 ## Implemented semantics

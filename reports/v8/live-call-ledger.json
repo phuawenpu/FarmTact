@@ -2,7 +2,7 @@
   "schema_version": "v8-live-experiment-ledger-1",
   "goal_request_ceiling": 72,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 43,
+  "actual_requests_consumed": 44,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -81,11 +81,12 @@
     },
     {
       "id": "local-research-final-v4",
-      "status": "reserved",
+      "status": "PASS",
       "maximum_requests": 2,
       "expected_requests": 1,
       "includes_repair_attempts": true,
-      "report": "reports/v8/research-advisor-final.json"
+      "report": "reports/v8/research-advisor-final.json",
+      "actual_requests": 1
     }
   ],
   "budget_revisions": [

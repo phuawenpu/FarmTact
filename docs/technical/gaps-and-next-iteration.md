@@ -69,17 +69,17 @@ register's next-iteration scope and must not be lost in a provider-only assessme
 
 The machine-readable source for this table is
 [gap-status.json](../../reports/v8/gap-status.json). The complete PostgreSQL-backed
-regression reports 556 passed, 1 skipped and 0 failed in
+regression reports 589 passed, 1 skipped and 0 failed in
 [full-regression.xml](../../reports/v8/full-regression.xml). The newest focused root
-checks report 10 passed and 0 failed; attach their durable artifact at
-`PENDING_ROOT_FOCUSED_REPORT_LINK`. These local results do not establish current
+checks report 23 passed and 0 failed in
+[final-root-focused.xml](../../reports/v8/final-root-focused.xml). These local results do not establish current
 AI answer quality or a published V8 release. Those two gates remain
 `PENDING_ROOT_AI_QUALITY_FINAL` and `PENDING_ROOT_V8_DEPLOYMENT`.
 
 | ID | V8 status | Evidence-backed disposition | Remaining limitation |
 | --- | --- | --- | --- |
 | AI-01 | **Partial** | A frozen zero-inference quality scorer and bounded actual-output harness now assess role relevance, expected references, unsupported quantities, forbidden conclusions, abstention and usefulness. Evidence: [council.md](../../reports/v8/council.md), [ai_quality.py](../../packages/ai_quality.py), [deepseek_quality_e2e.py](../../scripts/deepseek_quality_e2e.py). | Final stored direct/invite/Council/research quality run is pending; human expert agronomic review is absent. |
-| AI-02 | **Fixed** | Server-owned typed facts bind reference, value, unit, entity, period and snapshot hash; authored quantities and semantic mismatches fail local validation. Evidence: [council.md](../../reports/v8/council.md), [ai_contracts.py](../../packages/ai_contracts.py), [test_ai_injection_boundaries.py](../../tests/review/test_ai_injection_boundaries.py). | Qualitative entailment remains explicitly unverified rather than promoted. |
+| AI-02 | **Fixed** | Server-owned typed facts bind reference, value, unit, entity, period and snapshot hash; unknown references and model-authored quantities fail local validation. Qualitative entailment is not established. Evidence: [council.md](../../reports/v8/council.md), [ai_contracts.py](../../packages/ai_contracts.py), [test_ai_injection_boundaries.py](../../tests/review/test_ai_injection_boundaries.py). | Qualitative entailment remains explicitly unverified rather than promoted. |
 | AI-03 | **Fixed** | Workflow type, inference origin, model-call state and calculation state distinguish numerical, scripted, actual, failed and replayed paths. Evidence: [council.md](../../reports/v8/council.md), [conversations.py](../../services/api/conversations.py). | Older records use conservative compatibility values. |
 | AI-04 | **Partial** | Configured state, dated archived evidence and tenant-scoped last observed execution are separate and reads trigger no probe. Evidence: [council.md](../../reports/v8/council.md), [test_v8_integration_policy.py](../../tests/gameplay/test_v8_integration_policy.py), [live-call-ledger.json](../../reports/v8/live-call-ledger.json). | Current canonical provider quality/availability remains pending explicit root-owned evidence. |
 | AI-05 | **Fixed** | The fail-closed runtime manifest now inventories route callers, integrations, prompt/schema versions and bounded roles. Evidence: [council.md](../../reports/v8/council.md), [deepseek_runtime.json](../../config/deepseek_runtime.json), [test_provider_isolation.py](../../tests/review/test_provider_isolation.py). | It is reviewed configuration rather than automatic call-graph discovery. |

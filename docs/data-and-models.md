@@ -68,7 +68,7 @@ forecast feature**. The feature manifest explicitly records `public_features_use
 | --- | --- |
 | Demand baseline | Exponentially weighted moving average, alpha 0.35, over available historical weekly orders. Confirmed orders are retained; only remaining expected demand is added, avoiding double counting. |
 | Harvest baseline | Recorded schedule dates and assumed fresh marketable batch yields. Future yield is bed area × declared recipe yield. There is no learned growth or weather-response model. |
-| Planner | OR-Tools CP-SAT chooses whole-bed crop schedules under lead-time, bed/nursery occupancy, labour, cash and inventory constraints. Lean/Balanced/Resilient use different declared objectives and resource allowances. A deterministic backward-scheduling fallback is available. This is optimisation, not a trained ML model. |
+| Planner | `daily-bed-cpsat-v3` uses OR-Tools CP-SAT to choose whole-bed crop schedules under lead-time, bed/nursery occupancy, labour, cash and inventory constraints. Absolute sow/transplant/harvest dates enter crop-cycle identity; harvest-lot IDs are collision checked, and the execution world preserves lot-to-cycle origins across replans. Replanning excludes every historically executed cycle ID while retaining current locks. Labour and conservative cash reservation use the maximum yield factor declared by the scenario set. Lean/Balanced/Resilient use different declared objectives and resource allowances. A deterministic backward-scheduling fallback is available. This is optimisation, not a trained ML model. |
 | Risk comparison | Declared stress scenarios carry validated weights consumed by the objective. Resilient uses a lexicographic worst-scenario aggregate fill floor before its utility tie-break. Scenarios and weights remain engineering assumptions, not learned probabilities or per-order guarantees. |
 | Advisors | The v8 candidate routes every current role through exact canonical `deepseek-flash`. Product callers are enumerated separately from diagnostic routes. There is no FarmTact fine-tuning or automatic retraining. |
 | Vision capability | The reviewed native-vision route uses the same canonical model to read a generated synthetic FT batch label and the server checks it exactly. It does not detect crop disease, estimate biomass, or assess plant health. |
@@ -80,6 +80,11 @@ the recipe harvest baseline. Candidate gains were inconsistent and every product
 promotion gate is blocked. See [the data/ML package report](../reports/v8/data-ml.md).
 There is no deployed supervised crop model, satellite predictor, trained demand
 regressor, disease classifier or production model-retraining pipeline.
+
+The current [numerical evaluation](../reports/v8/numerical_evaluation.json) records
+`daily-bed-cpsat-v3` and passes its engineering checks. It remains synthetic-only,
+uses the deterministic zero-second fallback for reproducibility, and does not
+promote any fitted candidate.
 
 Implementation evidence: `packages/fixtures.py`, `packages/models/__init__.py`,
 `packages/planner/engine.py`, `scripts/build_features.py`,

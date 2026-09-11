@@ -72,7 +72,7 @@ FarmTact has three distinct Council workflows:
 | Farm records | Deterministic versioned fixture; validated imports and saved snapshots | Orders, recipes and farm outcomes in the demonstration are synthetic |
 | Demand | Deployed alpha-0.35 EWMA over available weekly order history; confirmed bookings plus positive residual demand | Statistical baseline; the separate synthetic benchmark does not replace it or establish real-farm accuracy |
 | Plant development | Recipe nursery/grow dates, fixed marketable yield per area, calendar-based visual progress | Scheduling simulation; no physiological growth, disease or biomass model |
-| Strategies | OR-Tools CP-SAT whole-bed selection plus FEFO local simulation and validation | Feasibility within declared constraints does not imply full delivery coverage; only an `OPTIMAL` solver result proves the stated optimum |
+| Strategies | `daily-bed-cpsat-v3` OR-Tools CP-SAT whole-bed selection plus FEFO local simulation and validation | Absolute crop-cycle IDs, collision-checked harvest-lot IDs and a persistent lot-origin map preserve identity across replans; feasibility within declared constraints does not imply full delivery coverage, and only an `OPTIMAL` solver result proves the stated optimum |
 | Risk | Declared weighted stress scenarios; Resilient first maximizes the worst scenario aggregate fill floor, then applies its utility tie-break when that floor is proven | Engineering scenarios and weights, not calibrated probabilities, per-order guarantees or confidence intervals |
 | Council | Separate planning, conversation and scripted research workflows | Seven roles do not establish seven independent sources of truth |
 | DeepSeek | Server-only allowlisted text/native-vision routes use the exact canonical `deepseek-flash` model, bounded calls and local validation | The active caller manifest distinguishes product callers from diagnostic routes; configuration is not a current capability or correctness result |
@@ -180,6 +180,23 @@ models; edit the models and regenerate rather than hand-editing that file. Fixtu
 import, planning, conversation, research and simulation mutations require an
 `Idempotency-Key` of at most 128 characters. Reusing a key with identical input
 returns the stored result; changed input is rejected.
+
+The candidate passed the isolated PostgreSQL suite with **589 tests passed and one
+skipped**, plus a 56-day HTTP execution trial with an actual application restart.
+A separate 84-day test covers replans on days 7 and 42 and cross-replan lot origins.
+The clean-checkout pipeline and planner V3 synthetic numerical evaluation passed.
+The subsequent narrow mission-reference alias change passed focused AI tests; it
+postdates that full-suite run. The final local research adviser passed exact
+reference validation and used 6,704 prompt tokens, versus 64,756 in the earlier
+trial. Across all retained experiments, 44 actual provider requests were consumed.
+The historical pre-context-fix quality score remains **FAIL** (8 of 18 cases).
+The final public mission/conversation quality result and immutable v8 publication
+are pending; local correctness tests do not establish live answer quality.
+
+Expired anonymous workspaces can be reviewed and removed only through the explicit
+[retention CLI](docs/runbooks/retention.md). It defaults to dry-run, retains 30
+days, enforces a minimum of seven days and a maximum of 500 candidate tenants per
+invocation, skips active jobs, and has no automatic deletion schedule.
 
 The full suite includes PostgreSQL integration tests; use the dedicated test
 databases documented in the [reproduction guide](docs/technical/reproducibility.md).

@@ -1,0 +1,200 @@
+{
+  "actual_provider_calls": 1,
+  "advisor_messages": [
+    {
+      "advisor_location": "Council pavilion",
+      "advisor_role": "planning_chair",
+      "advisor_title": "Planner agent",
+      "content": "The frozen research context records a reservation for bed-04 that is research-only and carries no operational execution flag; the unconfirmed order is excluded from booked commitments and its demand is not observed. The bed figures and reservation dates cited are frozen research values, not real farm changes.",
+      "contract_versions": {
+        "context": "farmtact-conversation-context-v4",
+        "output_schema": "farmtact-advisor-output-v3",
+        "prompt_template": "farmtact-advisor-prompt-v4",
+        "sources": "farmtact-source-context-v3",
+        "validator": "farmtact-ai-evidence-validator-v3"
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "created_at": "2026-09-11T11:58:46.169471+00:00",
+      "decision_influence": "advisory_only",
+      "evidence_refs": [],
+      "evidence_status": "grounded_facts_qualitative_unverified",
+      "execution_status": "completed",
+      "fact_refs": [
+        "research:reservation:bed-04.start_date",
+        "research:reservation:bed-04.end_date",
+        "bed:bed-04.area_m2"
+      ],
+      "highlight_refs": [
+        "bed:bed-04"
+      ],
+      "id": "a989ce0feaaab12ae68f34303c52bea6",
+      "interpretation_status": "qualitative_unverified",
+      "model": "deepseek-flash",
+      "planner_conclusion": false,
+      "proposed_actions": [],
+      "public_context_sha256": "11387dbde0f2f176ff3a599a5ad3ab365f6549dd457cd6c48858ea93a7aa30f9",
+      "qualitative_status": "unverified",
+      "relationship": "answer",
+      "rendered_facts": [
+        {
+          "context": "research",
+          "entity": {
+            "id": "reservation:bed-04",
+            "type": "research"
+          },
+          "kind": "date",
+          "period": {
+            "kind": "start_date",
+            "value": "2026-09-17"
+          },
+          "reference": "research:reservation:bed-04.start_date",
+          "snapshot_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "unit": null,
+          "value": "2026-09-17",
+          "verification": "code_rendered_frozen_value"
+        },
+        {
+          "context": "research",
+          "entity": {
+            "id": "reservation:bed-04",
+            "type": "research"
+          },
+          "kind": "date",
+          "period": {
+            "kind": "end_date",
+            "value": "2026-11-02"
+          },
+          "reference": "research:reservation:bed-04.end_date",
+          "snapshot_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "unit": null,
+          "value": "2026-11-02",
+          "verification": "code_rendered_frozen_value"
+        },
+        {
+          "context": "bed",
+          "entity": {
+            "id": "bed-04",
+            "type": "bed"
+          },
+          "kind": "quantity",
+          "period": null,
+          "reference": "bed:bed-04.area_m2",
+          "snapshot_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "unit": "m2",
+          "value": "20",
+          "verification": "code_rendered_frozen_value"
+        }
+      ],
+      "reply_to": "ab8bd386376954ed286991cd555bab7b",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "request_mode": "direct",
+      "sequence": 2,
+      "snapshot_ref": {
+        "data_mode": "synthetic_demo",
+        "frozen_at": "2026-09-11T11:53:52.347858+00:00",
+        "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+        "id": "67464b11b7bf213242fabfd16310872f:v3",
+        "kind": "research",
+        "version": 3
+      },
+      "speaker": "advisor",
+      "speaker_id": "asha",
+      "speaker_name": "Asha",
+      "tool_refs": [
+        "research:reservation:bed-04",
+        "research:unconfirmed_order:research-extra-order",
+        "research:dialogue_mode"
+      ],
+      "usage": {
+        "completion_tokens": 158,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 6704,
+        "prompt_tokens": 6704,
+        "reasoning_tokens": null,
+        "total_tokens": 6862
+      },
+      "validation_errors": [],
+      "validation_issues": [],
+      "validation_scope": "typed_fact_membership_entity_unit_period_and_supported_controls",
+      "validation_status": "references_verified"
+    }
+  ],
+  "events": [
+    {
+      "body": {
+        "advisor_turns": 1,
+        "message_id": "ab8bd386376954ed286991cd555bab7b",
+        "mode": "direct"
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "event_type": "message_queued",
+      "occurred_at": "2026-09-11T11:58:43.286754+00:00",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "schema_version": "1.0",
+      "sequence": 2
+    },
+    {
+      "body": {
+        "advisor_turns": 1,
+        "mode": "direct"
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "event_type": "conversation_request_started",
+      "occurred_at": "2026-09-11T11:58:43.341696+00:00",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "schema_version": "1.0",
+      "sequence": 3
+    },
+    {
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "event_type": "inference_request_reserved",
+      "occurred_at": "2026-09-11T11:58:43.374270+00:00",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "schema_version": "1.0",
+      "sequence": 4
+    },
+    {
+      "body": {
+        "evidence_status": "grounded_facts_qualitative_unverified",
+        "execution_status": "completed",
+        "message_id": "a989ce0feaaab12ae68f34303c52bea6",
+        "reply_to": "ab8bd386376954ed286991cd555bab7b",
+        "speaker_id": "asha",
+        "validation_status": "references_verified"
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "event_type": "advisor_message",
+      "occurred_at": "2026-09-11T11:58:46.178755+00:00",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "schema_version": "1.0",
+      "sequence": 5
+    },
+    {
+      "body": {
+        "completed_turns": 1,
+        "mode": "direct",
+        "repair_attempts": 0
+      },
+      "conversation_id": "c8c70448f3d5c6d57682495d17fc2778",
+      "event_type": "conversation_request_completed",
+      "occurred_at": "2026-09-11T11:58:46.202577+00:00",
+      "request_id": "79c67ab8a7a382505fc94b925b34fd0c",
+      "schema_version": "1.0",
+      "sequence": 6
+    }
+  ],
+  "frozen_context_match": true,
+  "main_farm_unchanged": true,
+  "maximum_provider_calls_this_run": 2,
+  "pass_scope": "Provider boundary, frozen context, main-farm preservation and replay; interpretation quality is reported separately.",
+  "private_state_updated": true,
+  "purpose": "Explicit interpretation of a frozen numerical research result; no farm mutation.",
+  "references_verified": true,
+  "replay_inference_triggered": false,
+  "status": "PASS",
+  "url": "http://127.0.0.1:8080"
+}

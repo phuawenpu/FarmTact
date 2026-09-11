@@ -82,6 +82,12 @@ with `nosniff`, same-origin referrers and no-store API responses.
 - User text, source material and earlier messages are untrusted context. They
   cannot choose provider configuration, execute SQL/shell commands, register tools,
   read environment variables or select another tenant's snapshot.
+- The frozen V4 conversation projection admits at most 48 typed facts, 24
+  qualitative references, 16 prior turns and six evidence records, with a hard
+  120,000-character serialized prompt limit. Explicit frozen research inputs are
+  retained even when ordinary ranking caps are reached. This bound can omit other
+  relevant context, so an adviser must abstain when the admitted context cannot
+  answer the question; projection is not a claim of universal coverage.
 - Model JSON is locally schema validated. Quantity/date outputs select typed frozen
   fact IDs; server code renders their value, unit, entity, period and snapshot hash.
   Qualitative refs are disjoint. Invalid
@@ -138,4 +144,4 @@ details job, proposal, challenge and selection state boundaries and their gaps.
 Strict deadline cancellation, monetary reservation and infrastructure egress remain
 separate requirements; the implemented limits must not be described more broadly.
 
-Anonymous tenant cleanup is an explicit operator action: see the [retention runbook](runbooks/retention.md). The command defaults to a dry run, retains at least seven days, skips active jobs, and preserves shared budgets and security records. It is not automatically scheduled.
+Anonymous tenant cleanup is an explicit operator action: see the [retention runbook](runbooks/retention.md). The command defaults to a dry run and 30 retained days, enforces a minimum of seven days and a maximum of 500 candidate tenants per invocation, skips any tenant with queued/running mission, scenario, conversation or research work, and preserves shared budgets and security records. Twelve isolated tests cover dry-run, complete child deletion, active/recent retention and input bounds. It is not automatically scheduled.

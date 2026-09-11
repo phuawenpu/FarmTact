@@ -271,7 +271,8 @@ def run(
             save_state()
             if state.get("research_conversation_id"):
                 conversation = get(f"/conversations/{state['research_conversation_id']}")
-                if conversation["snapshot_ref"]["id"] != state["research_session_id"]:
+                expected_snapshot_id = f"{state['research_session_id']}:v{study['input_version']}"
+                if conversation["snapshot_ref"].get("kind") != "research" or conversation["snapshot_ref"]["id"] != expected_snapshot_id or conversation["snapshot_ref"].get("version") != study["input_version"]:
                     raise RuntimeError("Saved research conversation uses another study")
             else:
                 created = post(

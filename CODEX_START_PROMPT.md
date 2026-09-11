@@ -9,7 +9,14 @@ usability. Hosting uses one shared Machine and volume for seven editions; follow
 the editions runbook. The historical kickoff below is already delivered; current
 user intent is conversation connected to tangible farm consequences. V8 candidate
 source adds explicit required/advisory Council policy, typed server-rendered facts,
-a durable synthetic simulation clock and future-only replanning. It remains a
+a durable synthetic simulation clock and future-only replanning. The current
+`daily-bed-cpsat-v3` contract binds cycles to absolute dates, collision-checks
+harvest-lot IDs, preserves lot origins across replans, excludes historical executed
+cycle IDs and reserves resources against the maximum declared yield factor. The
+frozen V4 Council projection has explicit context bounds and abstains when admitted
+context cannot answer. Its retained pre-fix actual-provider score is 8/18, so live
+quality remains unproven. Expired anonymous tenant pruning is a bounded explicit
+dry-run-by-default operator action with no automatic schedule. V8 remains a
 simulation with real operations disabled and must not be described as deployed.
 
 Start implementing FarmTact in this repository.
