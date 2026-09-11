@@ -10,3 +10,6 @@ def test_features_have_rebuildable_cutoff_and_lineage(tmp_path):
     assert len(rows)==32
     assert all(r['input_hash']==content_hash(farm) and r['dependency_ids'] for r in rows)
     assert one['public_features_used']==[]
+    assert one['forecast_contract_version']=='2.0.0'
+    assert sum(one['price_status_counts'].values())==32
+    assert all(r['price_status'] in {'booked_weighted_average','unavailable_no_booked_price'} for r in rows)

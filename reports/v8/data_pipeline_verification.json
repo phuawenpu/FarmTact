@@ -1,0 +1,80 @@
+{
+  "bundle": {
+    "bundle_id": "public-context-contract-fixture-v1",
+    "licence": "CC0-1.0",
+    "notice": "Payloads exercise documented response shapes. They are not copied public observations, current source snapshots, forecasts, demand evidence, or agronomic evidence.",
+    "source_count": 6,
+    "source_hashes": {
+      "D01": "625fe52a6af53cce822999d97cd6e9e99b5005a2804b99a81e4078aaf7419d9a",
+      "D02": "ad0ac535b071c4b6cc2d14710965bcbe0bbd756c19579d453638fd1219e6230f",
+      "D03": "c4d2760265eb58b38256296c6565ce840238c3bdebd3d260a8b1830b316d37ec",
+      "D04": "0fe6fb2ad131458d6b7a03b5961670ea306ea02ce08e40b92199e7a57e873585",
+      "D05": "7212993dfeff5fb3d7d817f9d7bc629b5d6bb7417e29a6f61c9b8b78cca00389",
+      "D06": "2dff646012758f632f28ea20826151a144621737f1714f98ee0609db872c9fcc"
+    }
+  },
+  "checks": {
+    "fixture_source_hashes_verified": true,
+    "normalized_artifact_hashes_stable": true,
+    "normalized_dataset_id_stable": true,
+    "normalized_row_counts_stable": true,
+    "original_private_fixture_hash_preserved": true,
+    "public_context_excluded_from_numerical_features": true,
+    "registry_counts_current": true
+  },
+  "generated_at": "2026-09-11T10:47:43.406564+00:00",
+  "limitations": [
+    "The public bundle contains project-authored synthetic contract values, not current public observations.",
+    "The historical September 2026 real-public manifest remains an archive; its ignored raw snapshots are not reconstructed or redistributed.",
+    "No public context value enters demand or harvest calculations."
+  ],
+  "mode": "offline_synthetic_contract_fixture",
+  "normalized": {
+    "artifact_hashes": {
+      "trade_observations": "7aaad79873eaf2ab5e2c9112699312ee629bf91cd04507973e37985a9f68461c",
+      "weather_forecasts": "1e2a45b9d09b4a2936d29f2436cdb2bb94eb74063f13b25c5df8f8b46e701948",
+      "weather_observations": "1e7b9fc4d3a2c4260f192827557b1e02e932d3d9c1d57c4e4d0f7d2a4f5ab719"
+    },
+    "dataset_id": "b227a554b48163ed2dd8768d70adee6a4d938be3dceff156781ed74401619849",
+    "registry_coverage": {
+      "catalogue_profiles": 12,
+      "catalogue_sha256": "44c08af662b46771078cdd1d656984eb942adcf423cbdd73bd02c895530f0165",
+      "catalogue_version": "2026-09-09.v2",
+      "evidence_register_sha256": "7a0e8443ffee05dfa18a5c4460a2691420bb532e62cd639ffeba9041bf7711ab",
+      "evidence_register_version": "2026-09-09.v2",
+      "schema_version": "farmtact-registry-coverage-1.0.0",
+      "scientific_evidence_documents": 24
+    },
+    "row_counts": {
+      "traceable_rows": 24,
+      "trade_observations": 1,
+      "weather_forecasts": 17,
+      "weather_observations": 6
+    }
+  },
+  "private_features": {
+    "build_version": "point-in-time-demand-v1",
+    "cutoff": "2026-09-08T00:00:00+00:00",
+    "dependency_rule": "Every private dependency available_at/booked_at <= cutoff; no public observation is a private target",
+    "feature_count": 32,
+    "file": "normalized/features.parquet",
+    "forecast_contract_version": "2.0.0",
+    "input_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+    "origin": "synthetic",
+    "price_status_counts": {
+      "booked_weighted_average": 32
+    },
+    "private_snapshot_sha256": "b0e8b55395b2325e699726dc15a600769bee08026469ad3f8d72d23814726a7f",
+    "public_context_exclusion": "No public weather, News or trade value is coupled to demand/yield. Availability, exposure mapping and predictive benefit remain unvalidated.",
+    "public_features_used": [],
+    "schema_version": "1.1",
+    "sha256": "acb39957fd3ec56825c68e89f10bd811dce0c79cc40219039b26eb06fca06edd"
+  },
+  "rebuild_commands": [
+    "python scripts/verify_data_pipeline.py",
+    "python scripts/build_dataset.py --fixture-bundle data/fixtures/public_context_v1 --data-dir <destination>",
+    "python scripts/build_dataset.py --offline --data-dir <destination>"
+  ],
+  "schema_version": "farmtact-data-pipeline-verification-1.0.0",
+  "status": "PASS"
+}

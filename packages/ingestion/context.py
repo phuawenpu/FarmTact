@@ -254,6 +254,10 @@ def get_public_context(data_dir: Path | str = Path("data")) -> PublicContext:
         context = _load_dataclass_context(json.loads(path.read_text(encoding="utf-8")))
         read_at = _utc_now()
         for source in context.sources:
+            if source.get("data_mode") == "synthetic_contract_fixture":
+                source["freshness_age_minutes"] = None
+                source["freshness"] = "not_applicable_fixture"
+                continue
             threshold = FRESHNESS_THRESHOLDS.get(source.get("source_id"))
             age = _age_minutes(read_at, source.get("source_time"))
             source["freshness_age_minutes"] = round(age, 2) if age is not None else None
@@ -281,7 +285,8 @@ def rebuild(data_dir: Path | str = Path("data")) -> PublicContext:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     context = PublicContext(
         schema_version=manifest["schema_version"], built_at=manifest["built_at"],
-        execution_mode="offline_snapshot_rebuild", sources=manifest.get("sources", []),
+        execution_mode=("offline_fixture_snapshot_rebuild" if manifest.get("data_mode")=="synthetic_contract_fixture"
+            else "offline_snapshot_rebuild"), sources=manifest.get("sources", []),
         snapshots=[SnapshotRecord(**row) for row in manifest.get("source_snapshots", [])],
         failures=[SourceFailure(**row) for row in manifest.get("failures", [])],
     )
@@ -313,7 +318,7 @@ def rebuild(data_dir: Path | str = Path("data")) -> PublicContext:
     context.trade_observations = trade_rows
     context.freshness = [{key: source.get(key) for key in ("source_id", "source_time", "retrieved_at", "freshness", "freshness_age_minutes")}
                          for source in context.sources]
-    context.quality = validate_context(context)
+    context.quality = validate_context(context,declared_registry_coverage=manifest.get("registry_coverage"))
     _persist_context(destination, context)
     return context
 
@@ -337,14 +342,18 @@ def _persist_context(data_dir: Path, context: PublicContext) -> None:
     dataset_id = hashlib.sha256(json.dumps({"transform": TRANSFORM_VERSION, "snapshots": dependency_hashes}, sort_keys=True).encode()).hexdigest()
     artifacts = {name: {"path": str(path.relative_to(data_dir)), "sha256": _file_sha256(path),
                         "row_count": len(getattr(context, name))} for name, path in paths.items()}
+    synthetic_fixture=bool(context.sources) and all(source.get("data_mode")=="synthetic_contract_fixture" for source in context.sources)
     manifest = {
         "schema_version": SCHEMA_VERSION, "dataset_id": dataset_id, "built_at": context.built_at,
         "transform_version": TRANSFORM_VERSION, "execution_mode": context.execution_mode,
+        "data_mode": ("synthetic_contract_fixture" if synthetic_fixture else "real_public"),
+        "registry_coverage": context.quality.get("coverage"),
         "source_snapshots": [snapshot.__dict__ for snapshot in context.snapshots],
         "sources": context.sources,
         "artifacts": artifacts, "quality_status": context.quality.get("status"),
         "failures": [failure.__dict__ for failure in context.failures],
-        "rebuild_command": "python scripts/build_dataset.py --data-dir data",
+        "rebuild_command": ("python scripts/build_dataset.py --fixture-bundle data/fixtures/public_context_v1 --data-dir /tmp/farmtact-public-fixture"
+            if synthetic_fixture else "python scripts/build_dataset.py --data-dir data"),
     }
     contributing_ids = {
         "weather_observations": {row["snapshot_id"] for row in context.weather_observations},

@@ -3,7 +3,10 @@ from __future__ import annotations
 from collections import Counter
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import hashlib
+import json
 import math
+from pathlib import Path
 from typing import Any
 
 from .models import PublicContext
@@ -16,8 +19,54 @@ EXPECTED_UNITS = {
     "forecast_condition": {None},
 }
 
+REGISTRY_COVERAGE_SCHEMA_VERSION='farmtact-registry-coverage-1.0.0'
 
-def validate_context(context: PublicContext) -> dict[str, Any]:
+
+def registry_coverage(registry_dir:Path|str|None=None,declared:dict[str,Any]|None=None)->dict[str,Any]:
+    """Validate the two scientific registries and derive versioned coverage.
+
+    Counts are never accepted as configuration.  A manifest may provide a prior
+    declaration, but a contradiction with the checked-in registry is an error.
+    """
+
+    root=Path(registry_dir) if registry_dir is not None else Path(__file__).resolve().parents[2]/'research'
+    catalogue_path=root/'crop_catalogue.json';evidence_path=root/'evidence_register.json'
+    catalogue=json.loads(catalogue_path.read_text(encoding='utf-8'))
+    evidence=json.loads(evidence_path.read_text(encoding='utf-8'))
+    if catalogue.get('schema_version')!='1.0.0' or evidence.get('schema_version')!='1.0.0':
+        raise ValueError('unsupported crop/evidence registry schema version')
+    profiles=catalogue.get('profiles');documents=evidence.get('documents')
+    if not isinstance(profiles,list) or not profiles or not isinstance(documents,list) or not documents:
+        raise ValueError('crop/evidence registries require non-empty record arrays')
+    crop_ids=[row.get('crop_id') for row in profiles];evidence_ids=[row.get('evidence_id') for row in documents]
+    if None in crop_ids or len(crop_ids)!=len(set(crop_ids)):
+        raise ValueError('crop registry has missing or duplicate crop IDs')
+    if None in evidence_ids or len(evidence_ids)!=len(set(evidence_ids)):
+        raise ValueError('evidence registry has missing or duplicate evidence IDs')
+    evidence_id_set=set(evidence_ids)
+    missing=sorted({identifier for row in profiles for identifier in row.get('evidence_ids',[]) if identifier not in evidence_id_set})
+    if missing:
+        raise ValueError(f'crop profiles reference missing evidence IDs: {missing}')
+    output={
+        'schema_version':REGISTRY_COVERAGE_SCHEMA_VERSION,
+        'catalogue_profiles':len(profiles),'scientific_evidence_documents':len(documents),
+        'catalogue_version':catalogue.get('catalogue_version'),'evidence_register_version':evidence.get('register_version'),
+        'catalogue_sha256':hashlib.sha256(catalogue_path.read_bytes()).hexdigest(),
+        'evidence_register_sha256':hashlib.sha256(evidence_path.read_bytes()).hexdigest(),
+    }
+    if not output['catalogue_version'] or not output['evidence_register_version']:
+        raise ValueError('registry versions are required for coverage evidence')
+    if declared is not None:
+        compared=('schema_version','catalogue_profiles','scientific_evidence_documents','catalogue_version',
+            'evidence_register_version','catalogue_sha256','evidence_register_sha256')
+        contradictions={key:{'declared':declared.get(key),'derived':output[key]} for key in compared if declared.get(key)!=output[key]}
+        if contradictions:
+            raise ValueError(f'declared registry coverage contradicts validated registries: {contradictions}')
+    return output
+
+
+def validate_context(context: PublicContext, *, registry_dir:Path|str|None=None,
+                     declared_registry_coverage:dict[str,Any]|None=None) -> dict[str, Any]:
     issues: list[dict[str, Any]] = []
     all_rows = context.weather_observations + context.weather_forecasts + context.trade_observations
     traceable = sum(1 for row in all_rows if row.get("source_id") and row.get("snapshot_id") and row.get("raw_locator"))
@@ -67,7 +116,7 @@ def validate_context(context: PublicContext) -> dict[str, Any]:
         issues.append({"severity": "error", "code": "untraceable_rows", "count": len(all_rows) - traceable})
     if orphaned_snapshot_references:
         issues.append({"severity": "error", "code": "orphaned_snapshot_references", "count": orphaned_snapshot_references})
-    crop_counts = {"catalogue_profiles": 10, "scientific_evidence_documents": 20}
+    crop_counts = registry_coverage(registry_dir,declared_registry_coverage)
     return {
         "status": "passed" if not any(issue["severity"] == "error" for issue in issues) else "failed",
         "row_counts": {

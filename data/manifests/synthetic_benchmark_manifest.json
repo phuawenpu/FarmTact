@@ -1,0 +1,64 @@
+{
+  "bundles": {
+    "crop_cycle_evaluation": {
+      "content_sha256": "55c39c6ee73de409250e3f311394b4e983f1fb1e788e7893310de05f759ed252",
+      "excluded_features": [
+        "public_weather",
+        "news",
+        "trade",
+        "causal_weather_coefficients"
+      ],
+      "generation_scope": "Synthetic independent whole-batch timing and fresh-marketable-mass observations with operational regimes and declared non-weather shocks.",
+      "generator_version": "synthetic-crop-cycle-evaluation-v1",
+      "partition": "evaluation",
+      "row_count": 256,
+      "schema_version": "1.0.0",
+      "seed": 771283
+    },
+    "crop_cycle_training": {
+      "content_sha256": "678cabf80c0c474dee6213358841d248e8d6f1bcf8ef3d1e8536fa823cd43a47",
+      "excluded_features": [
+        "public_weather",
+        "news",
+        "trade",
+        "causal_weather_coefficients"
+      ],
+      "generation_scope": "Synthetic independent whole-batch timing and fresh-marketable-mass observations with operational regimes and declared non-weather shocks.",
+      "generator_version": "synthetic-crop-cycle-train-v1",
+      "partition": "training",
+      "row_count": 576,
+      "schema_version": "1.0.0",
+      "seed": 445901
+    },
+    "demand_evaluation": {
+      "content_sha256": "92c975ef711e888092379b93f923ea8a67e01bdf14e17df7600a430e2f4faf26",
+      "generation_scope": "Synthetic order-level benchmark with distinct farms/buyers, 13-week seasonality, trend regimes, declared shocks, booking lead times and cancellations.",
+      "generator_version": "synthetic-demand-evaluation-v2",
+      "partition": "evaluation",
+      "public_features_used": [],
+      "row_count": 3072,
+      "schema_version": "1.0.0",
+      "seed": 982451,
+      "start_week": "2025-01-06",
+      "week_count": 64
+    },
+    "demand_training": {
+      "content_sha256": "45141d35ec0d4e309199651bf9c2d789cb323b06e9febd0695a3a8f4f9b49934",
+      "generation_scope": "Synthetic order-level benchmark with distinct farms/buyers, 13-week seasonality, trend regimes, declared shocks, booking lead times and cancellations.",
+      "generator_version": "synthetic-demand-train-v2",
+      "partition": "training",
+      "public_features_used": [],
+      "row_count": 7488,
+      "schema_version": "1.0.0",
+      "seed": 731104,
+      "start_week": "2023-01-02",
+      "week_count": 104
+    }
+  },
+  "claim_boundary": "Synthetic-only pipeline validation; not evidence of real-farm model validity.",
+  "mode": "synthetic_benchmark",
+  "public_features_used": [],
+  "rebuild_command": "python scripts/evaluate_synthetic_models.py",
+  "report_id": "ca7ba903a51ee903a53ba4cafb0571ca14b5a76387456d2698d8ce7217b69f6b",
+  "schema_version": "1.0.0"
+}

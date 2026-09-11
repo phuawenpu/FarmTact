@@ -1,0 +1,602 @@
+{
+  "conclusions": [
+    "The evaluation pipeline is deterministic and exercises disjoint synthetic cohorts, rolling origins, multiple horizons, cancellations and whole-batch crop outcomes.",
+    "Synthetic metrics can compare implementations but cannot establish real-farm accuracy or authorize model promotion."
+  ],
+  "crop_cycle_evaluation": {
+    "candidate_interval_coverage": {
+      "marketable_kg": 0.84375,
+      "maturity_days": 0.875
+    },
+    "evaluation_outcome_count": 256,
+    "evaluation_unit": "whole_batch_temporal_and_farm_holdout",
+    "excluded_features": [
+      "public_weather",
+      "news",
+      "trade",
+      "causal_weather_coefficients"
+    ],
+    "feature_set": [
+      "crop_id",
+      "recipe_cycle_days",
+      "recipe_marketable_kg_per_m2",
+      "area_m2"
+    ],
+    "interval_definition": "Training residual 10th to 90th percentiles; synthetic descriptive interval, not calibrated uncertainty.",
+    "models": {
+      "crop_residual_mean": {
+        "marketable_kg": {
+          "bias": 2.655971,
+          "mae": 3.907328,
+          "n": 256,
+          "rmse": 5.083063
+        },
+        "maturity_days": {
+          "bias": -0.115885,
+          "mae": 1.035536,
+          "n": 256,
+          "rmse": 1.343813
+        }
+      },
+      "recipe_baseline": {
+        "marketable_kg": {
+          "bias": 2.262629,
+          "mae": 3.722184,
+          "n": 256,
+          "rmse": 4.887262
+        },
+        "maturity_days": {
+          "bias": -0.542969,
+          "mae": 0.957031,
+          "n": 256,
+          "rmse": 1.442925
+        }
+      }
+    },
+    "training_outcome_count": 576
+  },
+  "crop_cycle_evaluation_manifest": {
+    "content_sha256": "55c39c6ee73de409250e3f311394b4e983f1fb1e788e7893310de05f759ed252",
+    "excluded_features": [
+      "public_weather",
+      "news",
+      "trade",
+      "causal_weather_coefficients"
+    ],
+    "generation_scope": "Synthetic independent whole-batch timing and fresh-marketable-mass observations with operational regimes and declared non-weather shocks.",
+    "generator_version": "synthetic-crop-cycle-evaluation-v1",
+    "partition": "evaluation",
+    "row_count": 256,
+    "schema_version": "1.0.0",
+    "seed": 771283
+  },
+  "crop_cycle_evaluator_version": "whole-batch-cycle-v1",
+  "crop_cycle_training_manifest": {
+    "content_sha256": "678cabf80c0c474dee6213358841d248e8d6f1bcf8ef3d1e8536fa823cd43a47",
+    "excluded_features": [
+      "public_weather",
+      "news",
+      "trade",
+      "causal_weather_coefficients"
+    ],
+    "generation_scope": "Synthetic independent whole-batch timing and fresh-marketable-mass observations with operational regimes and declared non-weather shocks.",
+    "generator_version": "synthetic-crop-cycle-train-v1",
+    "partition": "training",
+    "row_count": 576,
+    "schema_version": "1.0.0",
+    "seed": 445901
+  },
+  "demand_evaluation": {
+    "cohorts": {
+      "buyer": {
+        "metrics": [
+          {
+            "bias_kg": 0.72102,
+            "horizon_weeks": 1,
+            "mae": 0.72102,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 0.791011,
+              "low": 0.646507,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 1968,
+            "rmse": 1.379841,
+            "wape": 0.069221
+          },
+          {
+            "bias_kg": 0.929121,
+            "horizon_weeks": 1,
+            "mae": 0.929121,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.080575,
+              "low": 0.808523,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 1968,
+            "rmse": 1.724321,
+            "wape": 0.089199
+          },
+          {
+            "bias_kg": 0.645232,
+            "horizon_weeks": 1,
+            "mae": 0.645232,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 0.729082,
+              "low": 0.579517,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 1968,
+            "rmse": 1.224888,
+            "wape": 0.061945
+          },
+          {
+            "bias_kg": 0.679606,
+            "horizon_weeks": 1,
+            "mae": 0.679606,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 0.753502,
+              "low": 0.609185,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 1968,
+            "rmse": 1.312798,
+            "wape": 0.065245
+          },
+          {
+            "bias_kg": 0.644587,
+            "horizon_weeks": 2,
+            "mae": 1.116092,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.251839,
+              "low": 0.999635,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 1968,
+            "rmse": 1.794664,
+            "wape": 0.107376
+          },
+          {
+            "bias_kg": 0.707568,
+            "horizon_weeks": 2,
+            "mae": 1.293138,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.454536,
+              "low": 1.134631,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 1968,
+            "rmse": 2.072761,
+            "wape": 0.124409
+          },
+          {
+            "bias_kg": 0.567898,
+            "horizon_weeks": 2,
+            "mae": 0.975353,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.096391,
+              "low": 0.867579,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 1968,
+            "rmse": 1.55623,
+            "wape": 0.093836
+          },
+          {
+            "bias_kg": 0.620517,
+            "horizon_weeks": 2,
+            "mae": 1.062976,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.218855,
+              "low": 0.941952,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 1968,
+            "rmse": 1.705699,
+            "wape": 0.102266
+          },
+          {
+            "bias_kg": 0.187528,
+            "horizon_weeks": 4,
+            "mae": 1.795858,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 2.019195,
+              "low": 1.586767,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 1968,
+            "rmse": 2.25345,
+            "wape": 0.175094
+          },
+          {
+            "bias_kg": 0.123444,
+            "horizon_weeks": 4,
+            "mae": 1.780011,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 2.037285,
+              "low": 1.574038,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 1968,
+            "rmse": 2.372987,
+            "wape": 0.173549
+          },
+          {
+            "bias_kg": 0.204016,
+            "horizon_weeks": 4,
+            "mae": 1.441515,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.643613,
+              "low": 1.268599,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 1968,
+            "rmse": 1.826104,
+            "wape": 0.140546
+          },
+          {
+            "bias_kg": 0.192349,
+            "horizon_weeks": 4,
+            "mae": 1.680187,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.92144,
+              "low": 1.490729,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 1968,
+            "rmse": 2.10193,
+            "wape": 0.163816
+          }
+        ],
+        "series_count": 48
+      },
+      "farm": {
+        "metrics": [
+          {
+            "bias_kg": 1.573747,
+            "horizon_weeks": 1,
+            "mae": 1.573747,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.653381,
+              "low": 1.464971,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 656,
+            "rmse": 3.008023,
+            "wape": 0.050362
+          },
+          {
+            "bias_kg": 2.303335,
+            "horizon_weeks": 1,
+            "mae": 2.303335,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 2.762695,
+              "low": 1.775204,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 656,
+            "rmse": 4.345245,
+            "wape": 0.07371
+          },
+          {
+            "bias_kg": 1.567586,
+            "horizon_weeks": 1,
+            "mae": 1.567586,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.727981,
+              "low": 1.436791,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 656,
+            "rmse": 2.767754,
+            "wape": 0.050165
+          },
+          {
+            "bias_kg": 1.528644,
+            "horizon_weeks": 1,
+            "mae": 1.528644,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 1.616657,
+              "low": 1.444328,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 656,
+            "rmse": 2.871547,
+            "wape": 0.048919
+          },
+          {
+            "bias_kg": 0.979479,
+            "horizon_weeks": 2,
+            "mae": 3.222314,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 3.564663,
+              "low": 2.997171,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 656,
+            "rmse": 4.43582,
+            "wape": 0.103337
+          },
+          {
+            "bias_kg": 0.894332,
+            "horizon_weeks": 2,
+            "mae": 3.968963,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 4.590521,
+              "low": 3.471125,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 656,
+            "rmse": 5.668751,
+            "wape": 0.127281
+          },
+          {
+            "bias_kg": 0.897842,
+            "horizon_weeks": 2,
+            "mae": 3.02447,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 3.452994,
+              "low": 2.748818,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 656,
+            "rmse": 3.971159,
+            "wape": 0.096992
+          },
+          {
+            "bias_kg": 0.958348,
+            "horizon_weeks": 2,
+            "mae": 3.137939,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 3.523971,
+              "low": 2.915762,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 656,
+            "rmse": 4.262135,
+            "wape": 0.100631
+          },
+          {
+            "bias_kg": 0.562584,
+            "horizon_weeks": 4,
+            "mae": 4.545181,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 5.156675,
+              "low": 4.082805,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "last_week",
+            "n": 656,
+            "rmse": 5.467988,
+            "wape": 0.147716
+          },
+          {
+            "bias_kg": 0.370331,
+            "horizon_weeks": 4,
+            "mae": 4.356666,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 4.840634,
+              "low": 3.802053,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "seasonal_naive",
+            "n": 656,
+            "rmse": 5.871659,
+            "wape": 0.14159
+          },
+          {
+            "bias_kg": 0.612049,
+            "horizon_weeks": 4,
+            "mae": 3.730953,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 4.282758,
+              "low": 3.40064,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "ewma_alpha_0_35",
+            "n": 656,
+            "rmse": 4.540269,
+            "wape": 0.121254
+          },
+          {
+            "bias_kg": 0.577047,
+            "horizon_weeks": 4,
+            "mae": 4.29904,
+            "mae_95_interval": {
+              "confidence": 0.95,
+              "high": 4.825756,
+              "low": 3.858286,
+              "method": "deterministic_series_bootstrap_500_replicates"
+            },
+            "model": "tuned_ewma",
+            "n": 656,
+            "rmse": 5.163142,
+            "wape": 0.139717
+          }
+        ],
+        "series_count": 16
+      }
+    },
+    "feature_exclusion": "No public weather, News or trade feature enters a forecast because exposure and predictive value are unvalidated.",
+    "horizons_weeks": [
+      1,
+      2,
+      4
+    ],
+    "leakage": {
+      "buyer": {
+        "availability_rule": "Training values require every order outcome_available_at <= forecast origin; future bookings/cancellations contribute only after their own availability timestamps.",
+        "cancellation_records": 359,
+        "leakage_violations": 0,
+        "unavailable_history_weeks_excluded": 0,
+        "unavailable_seasonal_fallbacks": 0
+      },
+      "farm": {
+        "availability_rule": "Training values require every order outcome_available_at <= forecast origin; future bookings/cancellations contribute only after their own availability timestamps.",
+        "cancellation_records": 359,
+        "leakage_violations": 0,
+        "unavailable_history_weeks_excluded": 0,
+        "unavailable_seasonal_fallbacks": 0
+      }
+    },
+    "public_features_used": [],
+    "seasonal_period_weeks": 13,
+    "target": "final_net_ordered_kg_after_cancellations",
+    "tuning": {
+      "availability_rule": "Every historical target dependency is available at its training forecast origin.",
+      "candidate_alphas": [
+        0.1,
+        0.2,
+        0.35,
+        0.5,
+        0.65,
+        0.8,
+        0.9
+      ],
+      "evaluation_partition_used_for_selection": false,
+      "selected_alpha": 0.8,
+      "selection_metric": "one_step_mae",
+      "training_scores": {
+        "0.1": 3.360184,
+        "0.2": 3.282919,
+        "0.35": 3.132093,
+        "0.5": 2.980099,
+        "0.65": 2.884162,
+        "0.8": 2.87309,
+        "0.9": 2.906478
+      },
+      "unavailable_history_weeks_excluded": 0
+    }
+  },
+  "demand_evaluation_manifest": {
+    "content_sha256": "92c975ef711e888092379b93f923ea8a67e01bdf14e17df7600a430e2f4faf26",
+    "generation_scope": "Synthetic order-level benchmark with distinct farms/buyers, 13-week seasonality, trend regimes, declared shocks, booking lead times and cancellations.",
+    "generator_version": "synthetic-demand-evaluation-v2",
+    "partition": "evaluation",
+    "public_features_used": [],
+    "row_count": 3072,
+    "schema_version": "1.0.0",
+    "seed": 982451,
+    "start_week": "2025-01-06",
+    "week_count": 64
+  },
+  "demand_evaluator_version": "rolling-origin-demand-v3",
+  "demand_training_manifest": {
+    "content_sha256": "45141d35ec0d4e309199651bf9c2d789cb323b06e9febd0695a3a8f4f9b49934",
+    "generation_scope": "Synthetic order-level benchmark with distinct farms/buyers, 13-week seasonality, trend regimes, declared shocks, booking lead times and cancellations.",
+    "generator_version": "synthetic-demand-train-v2",
+    "partition": "training",
+    "public_features_used": [],
+    "row_count": 7488,
+    "schema_version": "1.0.0",
+    "seed": 731104,
+    "start_week": "2023-01-02",
+    "week_count": 104
+  },
+  "generated_at": "2026-09-11T10:59:16.838782Z",
+  "limitations": [
+    "Every target was generated by declared code; shared design choices can favor models that resemble the generator.",
+    "No public weather, News or trade variable is used and no weather causal coefficient is asserted.",
+    "Intervals are descriptive residual ranges, not calibrated probability statements.",
+    "A future real-data evaluation needs farm/buyer sampling, availability audit, stockout censoring policy and frozen acceptance thresholds."
+  ],
+  "mode": "synthetic_benchmark",
+  "promotion": {
+    "candidate_scope": "synthetic_benchmark_only",
+    "eligible_for_production": false,
+    "gates": [
+      {
+        "gate_id": "schema_and_split_integrity",
+        "observed": "{'farm_ids_disjoint': True, 'buyer_ids_disjoint': True, 'batch_ids_disjoint': True, 'dates_non_overlapping': True, 'separate_generator_versions': True, 'crop_cycle_farms_disjoint': True, 'crop_training_outcomes_available_before_evaluation': True, 'demand_training_outcomes_available_before_first_evaluation_week': True}",
+        "required": true,
+        "requirement": "Validated records and disjoint train/evaluation identities, dates and generator versions.",
+        "status": "passed"
+      },
+      {
+        "gate_id": "point_in_time_leakage",
+        "observed": "0 detected dependency violations",
+        "required": true,
+        "requirement": "Every feature dependency must be available at or before forecast origin.",
+        "status": "passed"
+      },
+      {
+        "gate_id": "real_farm_temporal_validation",
+        "observed": "No real farm/customer outcome dataset supplied.",
+        "required": true,
+        "requirement": "Pass pre-registered temporal holdout evaluation on authorized real net orders and whole-batch outcomes.",
+        "status": "blocked"
+      },
+      {
+        "gate_id": "external_farm_validation",
+        "observed": "No independent external farm cohort supplied.",
+        "required": true,
+        "requirement": "Validate performance and interval behavior on farms absent from model development.",
+        "status": "blocked"
+      },
+      {
+        "gate_id": "operational_monitoring",
+        "observed": "No production model, drift reference or rollback trial exists.",
+        "required": true,
+        "requirement": "Define monitoring, alert, rollback and retraining controls before operational promotion.",
+        "status": "blocked"
+      }
+    ],
+    "policy_version": "farmtact-model-promotion-v1",
+    "status": "blocked"
+  },
+  "report_id": "ca7ba903a51ee903a53ba4cafb0571ca14b5a76387456d2698d8ce7217b69f6b",
+  "schema_version": "farmtact-synthetic-evaluation-2.0.0",
+  "split_checks": {
+    "batch_ids_disjoint": true,
+    "buyer_ids_disjoint": true,
+    "crop_cycle_farms_disjoint": true,
+    "crop_training_outcomes_available_before_evaluation": true,
+    "dates_non_overlapping": true,
+    "demand_training_outcomes_available_before_first_evaluation_week": true,
+    "farm_ids_disjoint": true,
+    "separate_generator_versions": true
+  },
+  "validation_status": "synthetic_only"
+}

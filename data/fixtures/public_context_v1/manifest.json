@@ -1,0 +1,26 @@
+{
+  "schema_version": "farmtact-public-contract-fixture-1.0.0",
+  "bundle_id": "public-context-contract-fixture-v1",
+  "created_at": "2026-09-11T00:00:00+00:00",
+  "data_mode": "synthetic_contract_fixture",
+  "licence": "CC0-1.0",
+  "authorship": "Project-authored synthetic values and labels",
+  "notice": "Payloads exercise documented response shapes. They are not copied public observations, current source snapshots, forecasts, demand evidence, or agronomic evidence.",
+  "derived_shape_sources": [
+    "https://api-open.data.gov.sg/v2/real-time/api/rainfall",
+    "https://api-open.data.gov.sg/v2/real-time/api/air-temperature",
+    "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity",
+    "https://api-open.data.gov.sg/v2/real-time/api/twenty-four-hr-forecast",
+    "https://api-open.data.gov.sg/v2/real-time/api/four-day-outlook",
+    "https://tablebuilder.singstat.gov.sg/api/table/tabledata/T010002"
+  ],
+  "fixed_build_time": "2026-09-11T00:05:00+00:00",
+  "files": {
+    "D01": {"path": "d01.json", "sha256": "625fe52a6af53cce822999d97cd6e9e99b5005a2804b99a81e4078aaf7419d9a", "byte_count": 504},
+    "D02": {"path": "d02.json", "sha256": "ad0ac535b071c4b6cc2d14710965bcbe0bbd756c19579d453638fd1219e6230f", "byte_count": 509},
+    "D03": {"path": "d03.json", "sha256": "c4d2760265eb58b38256296c6565ce840238c3bdebd3d260a8b1830b316d37ec", "byte_count": 514},
+    "D04": {"path": "d04.json", "sha256": "0fe6fb2ad131458d6b7a03b5961670ea306ea02ce08e40b92199e7a57e873585", "byte_count": 670},
+    "D05": {"path": "d05.json", "sha256": "7212993dfeff5fb3d7d817f9d7bc629b5d6bb7417e29a6f61c9b8b78cca00389", "byte_count": 599},
+    "D06": {"path": "d06.json", "sha256": "2dff646012758f632f28ea20826151a144621737f1714f98ee0609db872c9fcc", "byte_count": 521}
+  }
+}
