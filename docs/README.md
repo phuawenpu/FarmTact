@@ -1,8 +1,9 @@
 # FarmTact documentation
 
 Documentation audit: **11 September 2026**. Published application: **v7**.
-The implementation audit starts from repository commit
-`a96025e` and distinguishes current source, frozen release evidence and future requirements.
+The working tree is a **v8 candidate**, not a published edition. Current-source
+claims use the v8 evidence below; v1–v7 source, images, state and release reports
+remain immutable historical evidence.
 
 ## Start here
 
@@ -15,6 +16,8 @@ The implementation audit starts from repository commit
 | How do missions, quests, proposals, acceptance, replay and simulated work behave? | [Complete game backend](technical/game-backend-and-state-machines.md) |
 | Where do records, evidence and public context come from? | [System, data and evidence](technical/system-data-and-evidence.md) |
 | What is missing or misleading, and what should v8 address? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
+| What did v8 change, verify and leave unresolved? | [V8 remediation report](technical/v8-remediation-report.md) |
+| What do the bounded v8 work packages report? | [Council](../reports/v8/council.md), [planner](../reports/v8/planner.md), [data/ML](../reports/v8/data-ml.md) |
 | How can I reproduce the documentation and its checks? | [Reproducibility guide](technical/reproducibility.md) |
 | Short inventory of datasets and models | [Data and models](data-and-models.md) |
 | Security and inference boundaries | [Security](security.md) |
@@ -27,8 +30,9 @@ The implementation audit starts from repository commit
 
 The [build specification](../FarmTact_Build_Specification.md) and
 [runtime specification](../FarmTact_DeepSeek_Runtime_Specification.md) contain both
-requirements and implemented amendments. Their 11 September audit amendments and
-the gap register distinguish these explicitly. A requirement is not proof of delivery.
+requirements and implemented amendments. Their 11 September v8 amendments, the
+remediation report and the gap register distinguish these explicitly. A requirement
+or candidate source file is not proof of a deployed or successfully trialled feature.
 
 Release reports describe the dates, fixtures, models, source commits and tests they
 actually exercised. Historical six-role council results remain historical; they

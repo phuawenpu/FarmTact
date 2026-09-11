@@ -1,5 +1,7 @@
 # AI provider and council implementation report
 
+> **Historical baseline:** This chapter records the pre-remediation audit of source `a96025e` and published v7. Its implementation findings and measured results describe that baseline. Read [the V8 remediation report](v8-remediation-report.md) for the current simulation engine, synthetic model evaluation, Council contracts, tests and remaining limitations. Source links below are navigation aids into the maintained repository; use the [frozen baseline](https://github.com/phuawenpu/FarmTact/tree/a96025e) to reproduce the original inspection.
+
 **Audit date:** 11 September 2026 (UTC)<br>
 **Audited revision:** `a96025e49226d8ca641cf07b49192bd85b464805`<br>
 **Scope:** the DeepSeek provider boundary, mission and conversation councils, the

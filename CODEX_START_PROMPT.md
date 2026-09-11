@@ -1,12 +1,16 @@
-Current checkout note (v7, 10 September 2026): the initial implementation below
-has been delivered. Start from README.md, docs/execution-plan.md and the current
-release manifests; extend the working application instead of recreating it.
+Current checkout note (v8 candidate, 11 September 2026): v7 remains the latest
+published immutable edition. Start from README.md, the v8 remediation report and
+package reports, docs/execution-plan.md and the release manifests; extend the
+working application instead of recreating it.
 The catalogue now has twelve profiles and the synthetic fixture still has four
-recipes. V7 adds a guided, isolated playable council at /v7/research, with labelled
+recipes. V7 added a guided, isolated playable council at /v7/research, with labelled
 scripted dialogue and real numerical comparisons. Prioritize immediate first-time
 usability. Hosting uses one shared Machine and volume for seven editions; follow
 the editions runbook. The historical kickoff below is already delivered; current
-user intent is conversation connected to tangible farm consequences.
+user intent is conversation connected to tangible farm consequences. V8 candidate
+source adds explicit required/advisory Council policy, typed server-rendered facts,
+a durable synthetic simulation clock and future-only replanning. It remains a
+simulation with real operations disabled and must not be described as deployed.
 
 Start implementing FarmTact in this repository.
 

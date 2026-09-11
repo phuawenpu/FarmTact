@@ -2,6 +2,32 @@
   "tool": "Mermaid CLI",
   "version": "11.17.0",
   "chapters": {
+    "v8-remediation-report.md": [
+      {
+        "file": "figures/diagrams/v8-remediation-report-1.svg",
+        "source_sha256": "97e23dcd591277690d9821eb37960bf47832dbd9555c169da641bf2d2465c3bf"
+      },
+      {
+        "file": "figures/diagrams/v8-remediation-report-2.svg",
+        "source_sha256": "9b731b8e4b80c1854a71cf49af12409f7913d8c2b7e696e0c31e7862d1dbb9ff"
+      },
+      {
+        "file": "figures/diagrams/v8-remediation-report-3.svg",
+        "source_sha256": "22f37365ab8fd5fdfa66134b83f41e82b9f27ac391e9c1ca5145cbdc7821a978"
+      },
+      {
+        "file": "figures/diagrams/v8-remediation-report-4.svg",
+        "source_sha256": "67e6c98edd7a6247c1f99b8fda0526447775f210bdcdb3766c258e45ac7e230f"
+      },
+      {
+        "file": "figures/diagrams/v8-remediation-report-5.svg",
+        "source_sha256": "2f7b6fc67c88ef504e07b2ea40d14485f6ca2effda4feece8406fd0181d5cbfa"
+      },
+      {
+        "file": "figures/diagrams/v8-remediation-report-6.svg",
+        "source_sha256": "22ce793ae46c9540778667b5b82fd60e6252955f601a18deefd4221ec312c53c"
+      }
+    ],
     "ai-provider-and-council.md": [
       {
         "file": "figures/diagrams/ai-provider-and-council-1.svg",

@@ -11,7 +11,13 @@ import shlex
 import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
-TABLES=['farm_versions','planning_runs','scenario_branches','quest_progress','conversations','conversation_messages']
+TABLES=[
+    'farm_versions','planning_runs','run_events','scenario_branches','quest_progress',
+    'conversations','conversation_messages','conversation_requests','conversation_events',
+    'explorer_snapshots','council_research_sessions','council_research_jobs',
+    'council_research_actions','council_research_history','council_research_action_receipts',
+    'simulation_worlds','simulation_events','simulation_receipts','mutation_receipts',
+]
 
 def capture(edition):
     code='''import hashlib,json,psycopg

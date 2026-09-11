@@ -71,7 +71,9 @@ with `nosniff`, same-origin referrers and no-store API responses.
 ## Inference and injection boundaries
 
 - The server alone holds the provider credential. No generic provider proxy is
-  exposed. Only the reviewed DeepSeek HTTPS origin, paths, models and role mappings
+  exposed. V8's fail-closed caller manifest distinguishes active product/API callers
+  from diagnostic routes, and every current text/native-vision role requests exact
+  canonical `deepseek-flash`. Only the reviewed DeepSeek HTTPS origin, paths and mappings
   are accepted; redirects and alternate-provider fallback are disabled.
 - Every application inference request sends a stable opaque DeepSeek `user_id`
   derived from its random internal tenant ID. Neither IP nor session cookie is
@@ -80,13 +82,16 @@ with `nosniff`, same-origin referrers and no-store API responses.
 - User text, source material and earlier messages are untrusted context. They
   cannot choose provider configuration, execute SQL/shell commands, register tools,
   read environment variables or select another tenant's snapshot.
-- Model JSON is locally schema validated. References must belong to the frozen
-  snapshot; numerical values come from validated backend references. Invalid
+- Model JSON is locally schema validated. Quantity/date outputs select typed frozen
+  fact IDs; server code renders their value, unit, entity, period and snapshot hash.
+  Qualitative refs are disjoint. Invalid
   suggestions stay blocked. Qualitative interpretations remain unverified even
   when their references are recognized. No model-generated HTML is executed.
 - Advisor proposals use only the declared bounded scenario controls. They open
   editable experiments and cannot directly mutate the main farm. Simulation
   acceptance is backend-only and independently checks numerical feasibility.
+  A mission's explicit `required` policy withholds incomplete/unsupported Council
+  findings; `advisory` can retain numerical acceptance while exposing those issues.
 - The generic gateway tool helper accepts only names supplied by trusted Python
   callers and strict argument models. No HTTP route lets a caller register a tool
   or provide an executor. Future executable tools require a separate authorization
@@ -132,3 +137,5 @@ and archived probes from current availability. [The backend audit](technical/gam
 details job, proposal, challenge and selection state boundaries and their gaps.
 Strict deadline cancellation, monetary reservation and infrastructure egress remain
 separate requirements; the implemented limits must not be described more broadly.
+
+Anonymous tenant cleanup is an explicit operator action: see the [retention runbook](runbooks/retention.md). The command defaults to a dry run, retains at least seven days, skips active jobs, and preserves shared budgets and security records. It is not automatically scheduled.

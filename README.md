@@ -12,7 +12,12 @@ interpret frozen results. Actual planting, purchases and farm communications are
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
-[known gaps and next iteration](docs/technical/gaps-and-next-iteration.md)
+[v8 remediation report](docs/technical/v8-remediation-report.md) ·
+[v8 package evidence](reports/v8/)
+
+The public links remain immutable v7. The current checkout is a **v8 candidate**;
+it has not been published as a numbered edition. Candidate behavior below must be
+read with its dated reports rather than attributed to v7.
 
 ## What you can do
 
@@ -32,14 +37,31 @@ interpret frozen results. Actual planting, purchases and farm communications are
 - Enable optional locally bundled music/effects. Text fields support device-keyboard
   dictation where the device offers it; custom recording/transcription is not integrated.
 
-Acceptance saves projected outcomes and worklists. The backend does not yet advance
-a simulation clock or mark sowing, harvesting and delivery tasks as executed.
+Acceptance saves projected outcomes and worklists. In the v8 candidate, an accepted
+current mission can create a tenant-owned synthetic execution world. Explicit
+advance actions move its civil-date clock by one or seven days and record synthetic
+sowing, transplanting, harvesting, delivery, inventory, cost and revenue events.
+Replanning freezes the next unexecuted day, locks work already started and preserves
+past events. The farm-map date slider remains a static preview and records nothing.
+Neither path performs a real farm operation.
 The [game backend audit](docs/technical/game-backend-and-state-machines.md) traces
 these boundaries and the Council gaps in detail.
 
-The v7 research study stores its own inputs, jobs, proposals and selected simulation.
-It does not change the main farm. Its default dialogue is **scripted**; calculation
-jobs run the real numerical planner. Actual adviser interpretation is a separate action.
+FarmTact has three distinct Council workflows:
+
+1. A **planning mission Council** runs six specialist DeepSeek calls followed by
+   the Planner on one frozen numerical result. Specialists do not debate each other;
+   only the Planner receives their validated, bounded findings. There are no two
+   challenge rounds. A mission declares `required` or `advisory` Council policy.
+   Required policy withholds automatic selection on incomplete or unsupported
+   findings; advisory policy keeps the numerical decision available while showing
+   Council issues.
+2. A **persistent adviser conversation** supports one direct reply, a two-turn
+   invited exchange, or a seven-turn sequential Council on a frozen farm, scenario
+   or research snapshot. Stored replay makes no inference call.
+3. The **guided research study** uses scripted dialogue and local numerical jobs.
+   It stores private versioned inputs and never changes the main farm. An explicit
+   separate direct-adviser action may interpret a completed frozen research result.
 
 ## How the intelligence works
 
@@ -48,18 +70,22 @@ jobs run the real numerical planner. Actual adviser interpretation is a separate
 | Component | Implemented method | Interpretation boundary |
 | --- | --- | --- |
 | Farm records | Deterministic versioned fixture; validated imports and saved snapshots | Orders, recipes and farm outcomes in the demonstration are synthetic |
-| Demand | EWMA over available weekly order history; confirmed bookings plus positive residual demand | Statistical baseline; no trained demand regressor or real-farm accuracy claim |
+| Demand | Deployed alpha-0.35 EWMA over available weekly order history; confirmed bookings plus positive residual demand | Statistical baseline; the separate synthetic benchmark does not replace it or establish real-farm accuracy |
 | Plant development | Recipe nursery/grow dates, fixed marketable yield per area, calendar-based visual progress | Scheduling simulation; no physiological growth, disease or biomass model |
-| Strategies | OR-Tools CP-SAT whole-bed selection plus local simulation and validation | Feasibility within declared constraints does not imply full delivery coverage or proven optimality |
-| Risk | Three fixed yield/demand stress cases with equal declared weights | Scenario comparisons, not calibrated probabilities or confidence intervals |
+| Strategies | OR-Tools CP-SAT whole-bed selection plus FEFO local simulation and validation | Feasibility within declared constraints does not imply full delivery coverage; only an `OPTIMAL` solver result proves the stated optimum |
+| Risk | Declared weighted stress scenarios; Resilient first maximizes the worst scenario aggregate fill floor, then applies its utility tie-break when that floor is proven | Engineering scenarios and weights, not calibrated probabilities, per-order guarantees or confidence intervals |
 | Council | Separate planning, conversation and scripted research workflows | Seven roles do not establish seven independent sources of truth |
-| DeepSeek | Server-only allowlisted text/vision routes with bounded calls and local validation | An allowed route is not proof that a feature uses it or that a response is correct |
+| DeepSeek | Server-only allowlisted text/native-vision routes use the exact canonical `deepseek-flash` model, bounded calls and local validation | The active caller manifest distinguishes product callers from diagnostic routes; configuration is not a current capability or correctness result |
 | Public sources / News | Cached, provenance-aware context | No automatic numerical effect on demand, yield or maturity |
 | Vision | Synthetic batch-label reading probe | No deployed crop-health, disease, satellite or biomass inference |
 
-No model is trained or fine-tuned on FarmTact farm/customer records. There is no
-embedding/vector-search or model-retraining pipeline. GPT/Codex builds and reviews
-the software; application LLM inference uses the DeepSeek gateway.
+No model is trained or fine-tuned on real FarmTact farm/customer records. V8 adds
+independent generated train/evaluation cohorts and benchmarks fixed/tuned EWMA,
+seasonal-naive and crop-residual candidates. Promotion is blocked because real-farm,
+external-cohort and operational evidence is absent; deployed forecasts remain
+`recipe-ewma-v1`. There is no embedding/vector-search or automatic retraining
+pipeline. GPT/Codex builds and reviews the software; application inference uses
+the DeepSeek gateway.
 The [technical report](docs/technical/README.md) documents equations, prompts,
 call triggers, budgets, persistence, evidence and limitations with source links.
 
@@ -89,7 +115,7 @@ See [data inventory](docs/data-and-models.md),
 | `services/api/app.py` | FastAPI application, planning worker, simulation acceptance and routes |
 | `services/api/` | Tenant persistence, scenarios, conversations, research, security and edition gateway |
 | `runtime/deepseek_gateway.py` | Provider policy, transport, JSON/tool/vision/stream handling and safe audit |
-| `config/deepseek_runtime.json` | Registered roles, model aliases and transport/budget limits |
+| `config/deepseek_runtime.json` | Active caller inventory, exact canonical model routes, migration provenance and transport/budget limits |
 | `packages/contracts.py` | Validated farm inputs, recipes and hashes |
 | `packages/fixtures.py`, `packages/models/` | Synthetic generation and EWMA/harvest baselines |
 | `packages/planner/` | Whole-bed scheduling, scenario simulation and research constraints |
@@ -121,13 +147,16 @@ does not contain a virtual environment, running database or generated frontend b
 ```bash
 .venv/bin/python scripts/initialize_database.py
 .venv/bin/python -m packages.fixtures
-.venv/bin/python scripts/build_dataset.py --with-power
+.venv/bin/python scripts/build_dataset.py --fixture-bundle data/fixtures/public_context_v1
 .venv/bin/python scripts/build_features.py
+.venv/bin/python scripts/generate_web_contracts.py
 ```
 
-Dataset building makes bounded public-source requests and writes explicit
-failure/cache states. `--offline` requires previously fetched raw files, which
-are not committed. See the [reproduction guide](docs/technical/reproducibility.md)
+The fixture-bundle command is a clean-checkout, network-free path. It verifies the
+committed project-authored synthetic provider-contract bundle before running the
+normalizers. `--offline` instead rebuilds previously captured immutable snapshots;
+a live build makes bounded public-source requests and writes explicit failure/cache
+states. See the [reproduction guide](docs/technical/reproducibility.md)
 for offline checks, generated artifacts and service prerequisites.
 
 Outside Sprite, run `.venv/bin/python scripts/serve.py` to serve the application
@@ -145,6 +174,12 @@ and logs. Key presence does not establish current model availability.
 .venv/bin/python scripts/generate_web_contracts.py --check
 npm run build --prefix apps/web
 ```
+
+`apps/web/src/lib/types.ts` is generated from the authoritative Pydantic view
+models; edit the models and regenerate rather than hand-editing that file. Fixture
+import, planning, conversation, research and simulation mutations require an
+`Idempotency-Key` of at most 128 characters. Reusing a key with identical input
+returns the stored result; changed input is rejected.
 
 The full suite includes PostgreSQL integration tests; use the dedicated test
 databases documented in the [reproduction guide](docs/technical/reproducibility.md).
@@ -165,7 +200,10 @@ transport/context/replay boundaries, not farming-answer quality. Earlier success
 provider trials do not erase those results. Future work includes grounded adviser
 quality, capability freshness, clearer model semantics, stronger numerical validation
 and human usability studies; acceptance criteria are in the
-[gap register](docs/technical/gaps-and-next-iteration.md).
+[v8 remediation report](docs/technical/v8-remediation-report.md). Current package
+evidence is in [Council](reports/v8/council.md), [planner](reports/v8/planner.md)
+and [data/ML](reports/v8/data-ml.md); actual trial failures remain evidence rather
+than being overwritten by later attempts.
 
 ## Hosting and releases
 

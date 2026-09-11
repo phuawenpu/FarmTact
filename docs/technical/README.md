@@ -1,14 +1,18 @@
 # FarmTact: scientific implementation report
 
+> **Historical baseline:** This chapter records the pre-remediation audit of source `a96025e` and published v7. Its implementation findings and measured results describe that baseline. Read [the V8 remediation report](v8-remediation-report.md) for the current simulation engine, synthetic model evaluation, Council contracts, tests and remaining limitations. Source links below are navigation aids into the maintained repository; use the [frozen baseline](https://github.com/phuawenpu/FarmTact/tree/a96025e) to reproduce the original inspection.
+
 **AI orchestration, numerical planning, crop development and evidence boundaries**
 
 Audit date: **11 September 2026** · Source baseline: [`a96025e`](https://github.com/phuawenpu/FarmTact/commit/a96025e)
 · Published v7 source: [`6efbbfd`](https://github.com/phuawenpu/FarmTact/commit/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda)
 · Study type: **source-code and engineering-evidence audit**, not an agronomic trial.
 
-**Reading copies:** [PDF](../../reports/documentation/farmtact-technical-report.pdf) ·
+**Original audit reading copies:** [PDF](../../reports/documentation/farmtact-technical-report.pdf) ·
 [offline HTML](../../reports/documentation/farmtact-technical-report.html).
-The Markdown chapters below are the maintained source.
+The Markdown chapters below preserve the original audit with explicit current-status notices.
+
+**V8 follow-up:** [remediation report](v8-remediation-report.md) · [combined PDF](../../reports/v8/farmtact-remediation-report.pdf) · [offline HTML](../../reports/v8/farmtact-remediation-report.html).
 
 ## Abstract
 

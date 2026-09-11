@@ -1,0 +1,180 @@
+{
+  "actual_provider_calls": 1,
+  "advisor_messages": [
+    {
+      "advisor_location": "Council pavilion",
+      "advisor_role": "planning_chair",
+      "advisor_title": "Planner agent",
+      "content": "The frozen research inputs record a bed reservation on bed-04 and one unconfirmed order, alongside a labour setting; these are declared scenario inputs, not observed farm operations or demand. I cannot attach a tool reference for them because no matching tool or fact reference is supplied for those input fields.",
+      "contract_versions": {
+        "context": "farmtact-frozen-ai-context-v3",
+        "output_schema": "farmtact-advisor-output-v3",
+        "prompt_template": "farmtact-advisor-prompt-v3",
+        "sources": "farmtact-source-context-v3",
+        "validator": "farmtact-ai-evidence-validator-v3"
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "created_at": "2026-09-11T11:32:03.802865+00:00",
+      "decision_influence": "advisory_only",
+      "evidence_refs": [],
+      "evidence_status": "unsupported",
+      "execution_status": "completed",
+      "fact_refs": [
+        "bed:bed-04.area_m2",
+        "farm:resources.labour_hours_per_week"
+      ],
+      "highlight_refs": [],
+      "id": "c36161a1d80dc072a177eaeb4eca8b37",
+      "interpretation_status": "qualitative_unverified",
+      "model": "deepseek-flash",
+      "planner_conclusion": false,
+      "proposed_actions": [],
+      "public_context_sha256": "c1f2df31bc912b5f736fb0e4221ded9c076876c60b95db67200e4b73f8ad60b4",
+      "qualitative_status": "unverified",
+      "relationship": "answer",
+      "rendered_facts": [
+        {
+          "context": "bed",
+          "entity": {
+            "id": "bed-04",
+            "type": "bed"
+          },
+          "kind": "quantity",
+          "period": null,
+          "reference": "bed:bed-04.area_m2",
+          "snapshot_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "unit": "m2",
+          "value": "20",
+          "verification": "code_rendered_frozen_value"
+        },
+        {
+          "context": "farm",
+          "entity": {
+            "id": "frozen_snapshot",
+            "type": "farm"
+          },
+          "kind": "quantity",
+          "period": null,
+          "reference": "farm:resources.labour_hours_per_week",
+          "snapshot_hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+          "unit": "hours/week",
+          "value": "32.0",
+          "verification": "code_rendered_frozen_value"
+        }
+      ],
+      "reply_to": "54143122782014bb212d9156c8461eb1",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "request_mode": "direct",
+      "sequence": 2,
+      "snapshot_ref": {
+        "data_mode": "synthetic_demo",
+        "frozen_at": "2026-09-11T11:32:00.947749+00:00",
+        "hash": "20b9d8969ae24e77e6d2fb9e7ba156fa8d09269bb496313e326b57c1deadb7bb",
+        "id": "8b0f88ff47c912fb0bc21bf6040b0350:v3",
+        "kind": "research",
+        "version": 3
+      },
+      "speaker": "advisor",
+      "speaker_id": "asha",
+      "speaker_name": "Asha",
+      "tool_refs": [],
+      "usage": {
+        "completion_tokens": 119,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 64500,
+        "prompt_tokens": 64756,
+        "reasoning_tokens": null,
+        "total_tokens": 64875
+      },
+      "validation_errors": [
+        "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+      ],
+      "validation_issues": [
+        {
+          "code": "model_authored_quantity",
+          "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+        }
+      ],
+      "validation_scope": "typed_fact_membership_entity_unit_period_and_supported_controls",
+      "validation_status": "unsupported"
+    }
+  ],
+  "events": [
+    {
+      "body": {
+        "advisor_turns": 1,
+        "message_id": "54143122782014bb212d9156c8461eb1",
+        "mode": "direct"
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "event_type": "message_queued",
+      "occurred_at": "2026-09-11T11:32:01.059469+00:00",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "schema_version": "1.0",
+      "sequence": 2
+    },
+    {
+      "body": {
+        "advisor_turns": 1,
+        "mode": "direct"
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "event_type": "conversation_request_started",
+      "occurred_at": "2026-09-11T11:32:01.149574+00:00",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "schema_version": "1.0",
+      "sequence": 3
+    },
+    {
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1024
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "event_type": "inference_request_reserved",
+      "occurred_at": "2026-09-11T11:32:01.176313+00:00",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "schema_version": "1.0",
+      "sequence": 4
+    },
+    {
+      "body": {
+        "evidence_status": "unsupported",
+        "execution_status": "completed",
+        "message_id": "c36161a1d80dc072a177eaeb4eca8b37",
+        "reply_to": "54143122782014bb212d9156c8461eb1",
+        "speaker_id": "asha",
+        "validation_status": "unsupported"
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "event_type": "advisor_message_unsupported",
+      "occurred_at": "2026-09-11T11:32:03.814692+00:00",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "schema_version": "1.0",
+      "sequence": 5
+    },
+    {
+      "body": {
+        "completed_turns": 1,
+        "mode": "direct",
+        "repair_attempts": 0
+      },
+      "conversation_id": "3d57e7ca67865139d248cef496580d34",
+      "event_type": "conversation_request_completed",
+      "occurred_at": "2026-09-11T11:32:03.841816+00:00",
+      "request_id": "34bbe55de2a1ff552219fdf9219da8af",
+      "schema_version": "1.0",
+      "sequence": 6
+    }
+  ],
+  "frozen_context_match": true,
+  "main_farm_unchanged": true,
+  "maximum_provider_calls_this_run": 2,
+  "pass_scope": "Provider boundary, frozen context, main-farm preservation and replay; interpretation quality is reported separately.",
+  "private_state_updated": true,
+  "purpose": "Explicit interpretation of a frozen numerical research result; no farm mutation.",
+  "references_verified": false,
+  "replay_inference_triggered": false,
+  "status": "PASS",
+  "url": "http://127.0.0.1:8080"
+}

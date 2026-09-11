@@ -2,7 +2,7 @@
   "schema_version": "v8-live-experiment-ledger-1",
   "goal_request_ceiling": 40,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 17,
+  "actual_requests_consumed": 36,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -37,6 +37,37 @@
       "report": "reports/v8/planning-local-v3.json",
       "actual_requests": 7,
       "run_id": "b36900e8f8888760764d8eafa6aff215"
+    },
+    {
+      "id": "local-planning-format-repair-v3",
+      "status": "INCOMPLETE",
+      "base_url": "http://127.0.0.1:8080",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/planning-local-v4.json",
+      "actual_requests": 7,
+      "run_id": "e07bfe0f73e5e8b85784a2e056df38f7"
+    },
+    {
+      "id": "local-conversation-v4",
+      "status": "transport_and_replay_pass_quality_pending",
+      "base_url": "http://127.0.0.1:8080",
+      "maximum_requests": 14,
+      "expected_requests": 10,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/conversation-local-replay.json",
+      "actual_requests": 11,
+      "conversation_id": "d883219ded4785123974be0cae518833"
+    },
+    {
+      "id": "local-research-advisor-v4",
+      "status": "transport_and_boundaries_pass_quality_pending",
+      "maximum_requests": 2,
+      "expected_requests": 1,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/research-advisor-local.json",
+      "actual_requests": 1
     }
   ]
 }

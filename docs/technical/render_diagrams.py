@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 
 HERE=Path(__file__).resolve().parent
-CHAPTERS=['ai-provider-and-council.md','numerical-models-and-growth.md',
+CHAPTERS=['v8-remediation-report.md','ai-provider-and-council.md','numerical-models-and-growth.md',
           'game-backend-and-state-machines.md','system-data-and-evidence.md']
 
 def main():

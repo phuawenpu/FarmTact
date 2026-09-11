@@ -411,7 +411,9 @@ def install_routes(app,tenant):
                 job.update(attempt=attempt,cancellation_requested=False)
                 c.execute(update(JOBS).where(JOBS.c.id==row['id'],JOBS.c.tenant_id==t).values(status='QUEUED',payload=job))
                 for result in s['results']:
-                    if result['version']==s['input_version']:result.update(status='QUEUED',attempt=attempt)
+                    if result['version']==s['input_version']:
+                        result.update(status='QUEUED',attempt=attempt)
+                        result.pop('error',None)
                 s['numerical_calculation_status']='queued'
                 event(s,'calculation_retried',result_version=s['input_version'],attempt=attempt)
             elif a=='run':

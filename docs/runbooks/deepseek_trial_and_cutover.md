@@ -2,6 +2,12 @@
 
 FarmTact runtime inference uses the direct official DeepSeek Chat Completions API. The browser never receives the credential. The server route manifest is `config/deepseek_runtime.json`; callers select a registered role and cannot supply a provider, origin, or model.
 
+The v8 candidate manifest version 1.2 allowlists exact canonical
+`deepseek-flash` for every current text and native-vision route. This follows the
+10 September 2026 provider migration and authenticated 11 September discovery in
+`reports/v8/model-discovery.json`. The gateway still requires returned model ID to
+equal requested model ID; it does not silently accept retired aliases or reroutes.
+
 ## Offline verification
 
 Install the repository's Python development dependencies in the environment, then run:
@@ -65,3 +71,14 @@ presence are not current model/account verification. Read the detailed
 [AI report](../technical/ai-provider-and-council.md) for exact call triggers,
 validation, configured-but-unused roles and request/token/deadline limits.
 A documentation reproduction does not require a paid capability trial.
+
+For the bounded product-quality trial, run
+`scripts/deepseek_conversation_trial.py` against the intended local or deployed base
+URL. It persists a private 0600 state file and runs direct, invite and Council stages
+with stable idempotency keys: ten normal calls and fourteen worst case. Then run
+`scripts/research_advisor_trial.py --state <same-private-state> --report <path> --live`.
+The research interpreter adds one normal call or two worst case and reuses the same
+session, stable action receipts and request ID on restart. Finally,
+`scripts/deepseek_quality_e2e.py` reads the stored conversations and makes zero
+inference calls. Keep actual failures, repairs and consumed calls in the experiment
+ledger; do not overwrite them with a later successful attempt.

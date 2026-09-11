@@ -64,6 +64,7 @@ with TestClient(create_app()) as c:
     b=c.get('/api/v1/bootstrap'); assert b.status_code==200 and len(b.json()['crops'])==registry_coverage()['catalogue_profiles']
     assert c.get('/').status_code==200
     imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'},headers={'Idempotency-Key':'clean-import'}); assert imported.status_code==201
+    if imported.json().get('planning_run'):wait(c,imported.json()['planning_run']['id'])
     r=c.post('/api/v1/planning-runs',json={'council':False},headers={'Idempotency-Key':'clean-plan'}); assert r.status_code==202
     run=wait(c,r.json()['id']); assert run['status']=='ACCEPTED_FOR_SIMULATION' and len(run['strategies'])==3 and run['claims']==[]
     replay=c.get('/api/v1/planning-runs/'+run['id']+'/replay').json(); assert replay['execution_mode']=='replay' and replay['strategies']==run['strategies']

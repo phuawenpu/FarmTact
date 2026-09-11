@@ -2,10 +2,11 @@
 
 ## Implementation audit amendment — 11 September 2026
 
-This amendment distinguishes **implemented v7 behavior** from the broader v1.2
-requirements below. It supersedes conflicting current-state descriptions without
-removing scientific or future operational requirements. The documentation audit
-changes no application source, immutable edition, numerical coefficient or game state.
+This amendment distinguishes the **v8 candidate** from published v7 and from the
+broader v1.2 requirements below. V8 is not deployed. It supersedes conflicting
+current-state descriptions without changing immutable v1–v7 source, images or game
+state. See the [v8 remediation report](docs/technical/v8-remediation-report.md)
+and [package evidence](reports/v8/).
 See the [scientific implementation report](docs/technical/README.md), detailed
 [game backend audit](docs/technical/game-backend-and-state-machines.md), and
 [gap register](docs/technical/gaps-and-next-iteration.md).
@@ -18,18 +19,20 @@ See the [scientific implementation report](docs/technical/README.md), detailed
 - The application uses React/TypeScript/**Vite**, FastAPI, PostgreSQL JSON records,
   local content-addressed public snapshots, and in-process worker loops. The broad
   proposed object-store/schema/tool architecture below is a target, not an inventory.
-- Demand uses a **constant-level EWMA**, default alpha 0.35, plus confirmed bookings
-  and positive unbooked residuals. No FarmTact model is trained or fine-tuned.
-  Public/weather/trade/News context is not a numerical forecast feature.
+- Deployed demand behavior remains **constant-level EWMA**, default alpha 0.35,
+  plus confirmed bookings and positive unbooked residuals. V8 benchmarks several
+  candidates on independent generated cohorts, but all production-promotion gates
+  remain blocked. Public/weather/trade/News context is not a numerical forecast feature.
 - Harvest is a schedule projection from recorded batch dates and fixed marketable
   mass assumptions. Nursery plus grow days determine new-crop maturity; sanitation
   blocks bed reuse after harvest. Visual progress is linear calendar interpolation,
   not biomass, physiological maturity, elapsed computation or a probability.
 - Whole-bed CP-SAT decisions optimize **policy-weighted utility** under implemented
-  bed/nursery/labour/cash/timing constraints. Current scenario cases are fixed and
-  equally processed; the stored weight field is not consumed and seed generates no
-  draws. Resilient raises shortage penalties; it is not maximin/CVaR protection or
-  a guaranteed service level. FEASIBLE is not proof of global optimality.
+  bed/nursery/labour/cash/timing constraints. Scenario weights are validated,
+  normalized and consumed; no random draw occurs. Resilient lexicographically
+  maximizes the worst-scenario aggregate fill floor before its utility tie-break.
+  This is not CVaR, calibrated risk or a per-order guarantee. FEASIBLE is not proof
+  of global optimality.
 - Daily simulation reports crop/date fulfilment, expiry, stock, costs and margin.
   It does not represent individual buyer/grade allocations, observed crop outcomes,
   water/energy/HVAC/packaging/rotation/multi-cut/partner supply, or real execution.
@@ -38,33 +41,25 @@ See the [scientific implementation report](docs/technical/README.md), detailed
   bounded script proposing edits; applying an edit creates a version and a separate
   calculation evaluates consequences. Optional DeepSeek interpretation cannot apply
   a proposal, choose a research result or change the main farm.
-- Main planning acceptance is backend-controlled simulation bookkeeping; research
-  choice is explicit, current-version, feasible and challenge-gated. Neither is
-  evidence of an advancing agronomic world. See the game audit for quests, events,
-  job recovery, branches, locks, worklists and persistence boundaries.
+- Main planning acceptance remains backend controlled. A separate v8 synthetic
+  execution world advances only on explicit actions, records synthetic tasks and
+  ledgers, and can replan remaining days while locking started work. The farm-map
+  slider remains a static projection. No real farm action is enabled.
 
-### Required corrections for the next application iteration
+### V8 remediation status and remaining requirements
 
-The stable AI-/NUM-/DATA-/OPS-/UX- IDs in the gap register and GAME- IDs in the
-backend audit are acceptance work, not completed fixes. Prioritize:
+V8 candidate source implements the typed Council facts/status/policy work, canonical
+harvest contract, weighted-scenario and FEFO planner corrections, explicit terminal
+stock and price states, versioned evaluation metadata, checked-in offline fixture
+bundle, independent generated benchmark cohorts, conversation reliability and
+synthetic execution clock. The dated remediation report maps these changes to the
+stable gap IDs; source alone is not deployment or live-quality evidence.
 
-1. **Council evidence and state:** distinguish script/actual/replay/blocked output;
-   validate typed quantities against entity/unit/period, test citation entailment
-   failures, and evaluate useful grounded answers. Both archived v7 actual replies
-   remain unsupported. Preserve those failed quality results.
-2. **Canonical crop state:** unify backend/UI harvest, sanitation and horizon
-   boundaries; repair the `marketable_kg` versus `expected_kg` adviser reference
-   mismatch. Add boundary-day and frozen-context regression cases.
-3. **Numerical semantics:** consume or explicitly constrain scenario weights;
-   reconcile optimizer inventory with FIFO replay, declare terminal-stock treatment,
-   and expose missing prices and objective terms. Add small enumerated acceptance
-   cases before claiming optimal or robust decisions.
-4. **Reproducibility:** derive profile/publication counts from current registries,
-   remove the stale ten-crop integrated-demo assertion, and emit complete versioned
-   numerical-evaluation metadata. Historical report contents remain dated evidence.
-5. **Next scientific steps:** use independent crop-cycle and order observations,
-   grouped temporal validation and a real task-based human study before claiming
-   agronomic accuracy, calibrated uncertainty or improved farmer decisions.
+Both archived v7 actual replies and every rejected v8 attempt remain evidence.
+Continue meaningful frozen-case Council quality evaluation. Before any real-farm,
+agronomic-accuracy, calibrated-uncertainty or improved-decision claim, obtain
+independent crop-cycle and order observations, grouped temporal and external-cohort
+validation, operational monitoring/rollback evidence and a task-based human study.
 
 Detailed requirements later in this specification—including learned duration/yield
 distributions, richer tools/APIs, water/energy constraints and multi-cut crops—remain
@@ -592,7 +587,7 @@ All actual role/helper inference—including runtime research and LLM-based eval
 
 These seven responsibilities follow Sumin Lee's interactive research brief and the user's 2026-09-09 direction. They are roles in an auditable workflow, not a claim that more model calls improve accuracy. The independent critic persona is removed in v3. Deterministic numerical, provenance, scope and evidence checks remain independent of every persona. Old editions and recorded critic messages keep their original semantics.
 
-The current bounded council runs six specialist findings followed by the Planner's conclusion, using the same frozen numerical snapshot. Up to two shared repair requests fit inside nine reserved requests (ten with optional vision), with the existing 16,384-token and 300-second ceilings. Dialogue councils also have seven turns. A new `planner_conclusion` closes those conversations; historical `critic_conclusion` remains a historical record.
+The current bounded council runs six independent specialist findings followed by the Planner's conclusion on the same frozen numerical snapshot. Only the Planner receives validated earlier findings. Up to two shared schema-repair requests fit inside nine reserved requests (ten with optional vision), with the existing 16,384-token and 300-second ceilings. There are no challenge rounds. Persistent dialogue councils have seven sequential turns. A `planner_conclusion` closes those conversations; historical `critic_conclusion` remains a historical record.
 
 ### 7.2 State machine
 
@@ -603,24 +598,30 @@ steps emit events; they are not all separate persisted status values. Source/bud
 problems may be warnings or `council_status`, rather than mission terminal states.
 Conversation and research jobs use different state machines; see the backend report.
 
-The backend stores a frozen projected `simulated_outcome` and worklist. No runtime
-farm-time or work-execution state machine currently records completion of sow,
-transplant, harvest or delivery. Such future execution must preserve historical
-actuals and have idempotent versioned events (GAME-01). The operational branch
+The backend stores a frozen projected `simulated_outcome` and worklist. V8 may copy
+an accepted current mission into a tenant-owned `synthetic-execution-v1` world.
+Only explicit advance actions move its civil date and record synthetic sow,
+transplant, harvest, delivery, inventory, cost and revenue events. Replanning locks
+started allocations and changes only the future trace. The operational branch
 `READY_FOR_APPROVAL → APPROVED` remains disabled.
 
-**Next-iteration reliability requirements:** GAME-02 requires numerical work to
-avoid a slow provider job's shared worker queue. GAME-03 requires an explicit
-advisory-versus-required Council policy: zero returned claims currently permits
-a numerical baseline, while partial claims withhold. GAME-05 requires challenge
-resolution to match the current research input version. GAME-06/08/10 require
-retained retry identity, recoverable calculation attempts and durable audit history.
-Acceptance currently prefers Balanced then the first eligible result in output
-order; objective-ranked baseline selection below is a target, not implemented policy.
+**V8 reliability behavior:** numerical and provider workers use separate lanes.
+Mission requests declare `required` or `advisory` Council policy. Required policy
+withholds incomplete or unsupported Council results; advisory policy can retain a
+numerically eligible result while exposing issues. Research challenge resolution is
+bound to the current input version. Conversation/research/simulation mutations use
+stable idempotency receipts, and interrupted work preserves status/history.
+Automatic selection considers feasible, allocation-valid strategies and ranks
+Balanced first, then fill rate, margin and stable ID (`balanced-service-margin-id-v1`).
 
 The backend validates inputs and freezes the cutoff, numerical strategy results and Market context. Six specialists inspect these results, followed by the Planner. The backend validates every finding and runs the versioned acceptance policy; an advisor cannot accept a plan. Partial, rejected or unresolved findings withhold automatic acceptance while feasible numerical alternatives stay inspectable (`REVIEW_WITHHELD`). A council with no returned findings may expose the explicitly labelled deterministic baseline, never a claimed council success.
 
-**Future interaction target (not implemented in v7):** at most two challenge rounds, bounded tool calls, deadline and per-run spending budget, configured in versioned development settings by the coding agents without human confirmation. Limits are engineering defaults, not a claim about optimal agent behaviour. On timeout, preserve completed evidence and expose the deterministic baseline or a partial-data state. Never manufacture agent messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
+Council interaction is deliberately single-pass and bounded: independent specialist
+findings then the Planner, with at most two shared format repairs. Adding challenge
+rounds would require a separate versioned workflow, budget and evaluation; it is
+not part of the current product requirement. On timeout, preserve completed evidence
+and expose a deterministic baseline or partial-data state. Never manufacture agent
+messages to conceal a failed LLM call. Replay fixtures must say `REPLAY`.
 
 ### 7.3 Claim types and discussion rules
 
@@ -732,7 +733,7 @@ In particular, actual-harvest/work ingestion is not established by this table.
 | `/api/v1/outcomes/compare` | GET | Baseline comparison with mode and cohort definitions |
 | `/api/v1/reports/{id}` | GET | Audit-safe export; redact private data appropriately |
 
-Use request IDs, pagination, size limits, validation errors, tenant checks and clear 401/403/409/422/429 handling. Treat uploads as untrusted. Implement optimistic concurrency and idempotency on automatic acceptance and simulated work; stale versions trigger recomputation without a human approval prompt. Plan creation must accept an idempotency key so UI retries do not launch duplicate expensive council runs.
+Use request IDs, pagination, size limits, validation errors, tenant checks and clear 401/403/409/422/429 handling. Treat uploads as untrusted. Current fixture import, plan creation, replan, conversation, research and simulation mutations require a bounded `Idempotency-Key`; identical retries return the stored receipt and changed bodies conflict. Optimistic revisions protect stateful actions. Stale versions trigger recomputation without a human approval prompt.
 
 ### 8.6 Streaming events
 
@@ -752,7 +753,7 @@ Use a TypeScript/React frontend, preferably Next.js; a Python FastAPI/Pydantic b
 
 These are design choices, not a claim that a particular version is currently best. The master agent verifies current compatible versions and locks dependencies at implementation time. Do not guess future package versions. Use containers for reproducible local execution and separate real integration tests from fixture-only CI.
 
-Run the numerical models and optimizer in Python. Generate frontend types from Pydantic/OpenAPI or checked shared JSON schemas to prevent drift. Use the DeepSeek-only server adapter and its documented Chat Completions tool/JSON contract; schema conformance still requires local validation and semantic checks. Use `deepseek-v4-flash` / `deepseek-v4-pro` for approved text roles and `deepseek-v4-flash-vision-exp` for image input. Both use `https://api.deepseek.com/chat/completions`. See the mandatory runtime amendment and its DS01–DS12 source register. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
+Run numerical models and optimization in Python. Generate frontend types from the authoritative Pydantic view models with `scripts/generate_web_contracts.py`; the generated TypeScript file is not hand-maintained. Use the DeepSeek-only server adapter and its documented Chat Completions JSON contract; schema conformance still requires local validation and semantic checks. The v8 manifest requests exact canonical `deepseek-flash` for every current text and native-vision route and rejects a returned identifier that differs from the request. It uses `https://api.deepseek.com/chat/completions`. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
 
 ### 9.2 Repository layout
 
@@ -823,7 +824,7 @@ FarmTact is a tactical planning board, not a generic ERP dashboard and not a cas
 
 **Crop library:** twelve crop cards with local aliases, harvested part, system compatibility, research references, stage/time-basis warnings and approved-versus-provisional parameters. Clicking a parameter opens its source and applicability. No fake nationally ranked “top ten” badge.
 
-**Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs and actual tool activity. Two bounded challenge rounds remain a future interaction requirement; v7 uses independent findings followed by a chair conclusion. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
+**Strategy room:** load the configured planning horizon and goal automatically, with optional user editing. Show specialist evidence briefs and actual tool activity. Use independent specialist findings followed by a chair conclusion; no challenge rounds are required. Highlight disagreements and the actual input that would resolve them. Provide compact view by default and an expandable audit view.
 
 **Tactical board:** bed/rack occupancy timeline, nursery-to-grow-out transitions, harvest windows and customer due dates. Strategy cards compare service, margin, waste, resources and downside—not just a composite score. The automatically accepted strategy populates the board; selecting another card previews it. No approval click is required. Locked/executed actions remain locked.
 
@@ -939,7 +940,7 @@ P0 does not require satellite processing, deep learning or all optional external
 29. Every numeric recommendation references a validated tool field or approved evidence claim.
 30. A malicious instruction embedded in a paper or CSV cannot trigger tools or reveal secrets.
 31. A runtime council agent cannot mutate recipes, accept its own plan or bypass tenant authorization; only the backend policy may accept a validated plan for simulation in an eligible development tenant. Reject browser/prompt attempts to override phase, modes or service identity, and reject automatic acceptance for operational tenants or `live_advisory`/`live` runs.
-32. Current acceptance: seven ordered council findings and bounded repairs respect budgets, with validation before the chair sees previous claims. Future challenge-round support requires explicit round state, termination and disagreement tests; it is not implemented in v7.
+32. Current acceptance: seven ordered council findings and bounded repairs respect budgets, with validation before the chair sees previous claims. No phantom debate or challenge rounds may be claimed.
 33. Stale acceptance returns a conflict; the backend invalidates it and replans/revalidates automatically without waiting for a human.
 34. Cross-tenant order, evidence-upload, plan and job access is denied.
 35. Source failure shows cached/stale/blocked status instead of a fabricated live response.

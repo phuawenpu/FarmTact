@@ -1,0 +1,254 @@
+{
+  "schema_version": "farmtact-simulation-capabilities-1.0.0",
+  "as_of_date": "2026-09-11",
+  "scope": "synthetic_demo_planner_and_execution_world",
+  "operational_use_authorized": false,
+  "registry_semantics": "Implemented means represented in the current strict Farm contract and enforced or accounted for by the cited planning and replay paths. It does not mean agronomically validated on a real farm.",
+  "sources": [
+    "packages/contracts.py",
+    "packages/planner/engine.py",
+    "packages/planner/accounting.py",
+    "packages/models/__init__.py",
+    "packages/growth.py",
+    "services/api/simulation.py"
+  ],
+  "hard_bounds": {
+    "planning_horizon_days": {"minimum": 7, "maximum": 84},
+    "beds_per_farm": {"minimum": 1, "maximum": 40},
+    "recipes_per_farm": {"minimum": 1, "maximum": 10},
+    "existing_batches_per_farm": {"maximum": 40},
+    "orders_per_farm": {"maximum": 1000},
+    "inventory_lots_per_farm": {"maximum": 100},
+    "declared_scenarios": {"minimum": 1, "maximum": 100},
+    "execution_advance_days_per_request": {"minimum": 1, "maximum": 14},
+    "replans_per_world": {"maximum": 12},
+    "worlds_per_tenant": {"maximum": 8},
+    "quantity_boundary": "integer grams",
+    "labour_solver_boundary": "integer minutes",
+    "money_reporting_boundary": "SGD cents",
+    "bed_decision_boundary": "whole declared bed"
+  },
+  "implemented": [
+    {
+      "id": "crop_recipe_scope",
+      "capability": "Four recipe-backed leafy crops in sheltered hydroponics",
+      "contract": "Recipe.crop_id is caixin, pak_choi, kailan, or lettuce; Recipe.system and Bed.system are sheltered_hydroponic.",
+      "enforcement": ["strict input validation", "recipe-to-bed system compatibility", "unknown dependency rejection"],
+      "limitations": "Other catalogue crops are presentation/evidence records and cannot enter the planner contract. Recipe coefficients remain synthetic demo values."
+    },
+    {
+      "id": "whole_bed_single_harvest",
+      "capability": "Whole-bed, single-transplant, single-harvest allocations",
+      "contract": "Each allocation uses exactly the declared bed area and has one sow, transplant, and harvest date.",
+      "enforcement": ["candidate construction", "BED_AREA validation", "unique allocation IDs"],
+      "limitations": "No split beds, partial area, intercropping, succession within one allocation, or multi-cut regrowth."
+    },
+    {
+      "id": "biological_schedule_minima",
+      "capability": "Minimum nursery and grow durations",
+      "contract": "transplant_date - sow_date >= nursery_days and harvest_date - transplant_date >= grow_days.",
+      "enforcement": ["Batch and Farm validation", "candidate generation", "BIOLOGICAL_LEAD_TIME validation"],
+      "limitations": "Schedule elapsed time is not a physiological biomass, pest, disease, or weather-response model."
+    },
+    {
+      "id": "bed_occupancy_and_sanitation",
+      "capability": "Daily bed exclusivity from transplant through sanitation",
+      "contract": "A bed is occupied on every civil day from transplant through harvest + sanitation_days, inclusive; it is next available the following day.",
+      "enforcement": ["daily CP-SAT occupancy", "BED_OCCUPANCY validation", "replan lock retention", "execution task clock"],
+      "limitations": "Nursery activity is capacity-accounted but does not occupy the production bed before transplant."
+    },
+    {
+      "id": "nursery_capacity",
+      "capability": "Daily nursery-site capacity",
+      "contract": "Whole-plant sites equal ceil(bed area * recipe density) for each nursery day.",
+      "enforcement": ["daily CP-SAT upper bound", "NURSERY_CAPACITY validation"],
+      "limitations": "No tray geometry, germination loss, nursery zones, or cultivar-specific site sharing."
+    },
+    {
+      "id": "weekly_labour_capacity",
+      "capability": "Weekly sow and harvest labour capacity",
+      "contract": "Sow labour is area-based; harvest labour is marketable-kg-based and reserved at the maximum declared scenario yield factor.",
+      "enforcement": ["integer-minute CP-SAT upper bound", "LABOUR_CAPACITY validation"],
+      "limitations": "No daily shifts, skills, worker identities, overtime bands, breaks, task travel, transplant labour, or sanitation labour."
+    },
+    {
+      "id": "cash_and_cost_gate",
+      "capability": "Bounded modeled cash cost",
+      "contract": "Candidate selection limits recipe input spend by policy capital fraction; FEASIBLE output additionally requires every declared scenario's total modeled input, sow/harvest labour, packing, and disposal cost to fit Farm.resources.cash_sgd.",
+      "enforcement": ["CP-SAT input-cost bound", "fallback worst-scenario total-cost check", "TOTAL_CASH_BUDGET post-solve violation gate", "main mission accepts only FEASIBLE strategies"],
+      "limitations": "Rates are declared fixture constants or recipe coefficients. Revenue timing does not finance new candidates within the same horizon, and no credit, payable, tax, depreciation, or general overhead model exists."
+    },
+    {
+      "id": "existing_batch_and_replan_locks",
+      "capability": "Immutable executed work and active replan locks",
+      "contract": "Existing Farm batches and supplied locked allocations must remain byte-equivalent in every validated continuation; new sowing can be bounded to a future date.",
+      "enforcement": ["EXECUTED_ACTION_CHANGED validation", "LOCK_ID_COLLISION validation", "candidate_not_before", "world completed-task ledger"],
+      "limitations": "Only the declared sow/transplant/harvest/sanitation task model is preserved; no arbitrary field-work dependency graph exists."
+    },
+    {
+      "id": "bed_reservations",
+      "capability": "Inclusive bed unavailability windows",
+      "contract": "A reservation names one bed and an inclusive start/end date within the horizon; same-bed reservation windows cannot overlap.",
+      "enforcement": ["reservation validation", "candidate exclusion", "BED_RESERVATION and RESERVATION_EXECUTED_CONFLICT validation"],
+      "limitations": "Reservations are planner API inputs used by research branching and are not a general maintenance-resource model."
+    },
+    {
+      "id": "declared_scenarios",
+      "capability": "Weighted yield and residual-demand scenarios",
+      "contract": "Finite nonnegative weights and factors are normalized to 1000 integer objective units. Yield affects harvest; demand factor affects residual forecast only and never shrinks booked orders.",
+      "enforcement": ["scenario validation and normalization", "weighted policy objective", "Resilient lexicographic worst-case fill objective", "scenario-specific replay"],
+      "limitations": "Scenarios are declared synthetic sensitivities, not calibrated probabilities, prediction intervals, or correlated stochastic processes."
+    },
+    {
+      "id": "dated_order_service",
+      "capability": "Order-level due-date demand and cancellation netting",
+      "contract": "Only orders booked by the cutoff enter the snapshot. Net booked quantity is quantity minus cancellations and is serviced on its due date.",
+      "enforcement": ["Farm cutoff validation", "order demand-line expansion", "booked-before-residual allocation", "per-order execution events"],
+      "limitations": "The order schema has no buyer, grade, service-window, substitution, minimum-fill, lateness, or contractual-priority field. Known higher price and stable ID are deterministic tie-breakers, not buyer preference claims."
+    },
+    {
+      "id": "lot_inventory_and_expiry",
+      "capability": "Order-attributed FEFO/FIFO inventory replay",
+      "contract": "Lots carry crop, quantity, harvest date, and expiry date. Expired stock is disposed before same-day service; allocation sorts by expiry, harvest date, then lot ID.",
+      "enforcement": ["integer-gram allocator", "daily mass balance", "lot-level order allocations", "daily closing-lot snapshots"],
+      "limitations": "No grade, storage zone, temperature history, commingling, recall, shrink other than explicit expiry, or manual lot choice."
+    },
+    {
+      "id": "terminal_inventory",
+      "capability": "Explicit physical stock at the planning horizon",
+      "contract": "Usable or expiring closing lots remain terminal inventory with zero salvage value and a separate declared policy penalty.",
+      "enforcement": ["daily closing-lot replay", "terminal-stock objective term", "terminal stock output"],
+      "limitations": "Terminal inventory is not automatically sold, discarded, or valued."
+    },
+    {
+      "id": "synthetic_execution_clock",
+      "capability": "Durable daily synthetic execution and local replanning",
+      "contract": "World advance commits scheduled tasks, lot movements, explicit-price revenue, modeled costs, cash, and one day-close event per civil day under tenant locking and idempotency receipts.",
+      "enforcement": ["PostgreSQL tenant transaction", "world revision compare", "idempotency receipt", "frozen planner replay", "mass and cash equations"],
+      "limitations": "Events are synthetic schedule execution. They are not observed farm operations, sensor measurements, or permission to actuate equipment."
+    }
+  ],
+  "unsupported": [
+    {
+      "id": "water_nutrients_energy_hvac",
+      "capability": "Water, nutrient, electricity, lighting, pumps, cooling, and HVAC constraints",
+      "current_behavior": "Absent from contracts, solver, costs, and replay.",
+      "expansion_requirements": {
+        "contract": ["metered resource IDs", "units", "time-indexed capacity and tariff series", "recipe demand profiles", "availability timestamps"],
+        "validation": ["unit compatibility", "missing interval policy", "meter provenance", "capacity bounds"],
+        "solver": ["time-indexed consumption", "peak and cumulative constraints", "tariff-aware objective terms"],
+        "execution": ["metered consumption events", "variance and reconciliation fields"],
+        "ui_and_tests": ["resource timelines with units and provenance", "boundary and conservation tests"]
+      }
+    },
+    {
+      "id": "seed_and_consumable_inventory",
+      "capability": "Seed, substrate, nutrient, packaging, and other consumable stock",
+      "current_behavior": "Recipe input cost is monetary only; no item quantities, lead times, lots, or stockouts exist.",
+      "expansion_requirements": {
+        "contract": ["item/SKU", "quantity and unit", "lot/expiry", "recipe bill of materials", "supplier lead time"],
+        "validation": ["unit conversions", "lot identity", "nonnegative stock"],
+        "solver": ["material balance", "purchase timing", "storage and supplier bounds"],
+        "execution": ["receive, reserve, consume, waste, and adjustment events"],
+        "ui_and_tests": ["shortage and purchase explanations", "per-item conservation and late-supply tests"]
+      }
+    },
+    {
+      "id": "grade_quality_and_packhouse_capacity",
+      "capability": "Grades, quality loss, pack formats, and packhouse throughput",
+      "current_behavior": "Marketable yield is one already-packed endpoint and packing is only a flat delivered-kg cost.",
+      "expansion_requirements": {
+        "contract": ["grade and pack-SKU", "grade yield distribution", "buyer acceptance", "pack-line capacity and calendar"],
+        "validation": ["mass endpoint separation", "grade totals", "compatible buyer/pack requirements"],
+        "solver": ["grade flow", "pack conversion", "line capacity and changeovers"],
+        "execution": ["weigh, grade, reject, pack, and dispatch events"],
+        "ui_and_tests": ["grade-level fulfillment", "gross-to-marketable-to-packed conservation tests"]
+      }
+    },
+    {
+      "id": "crop_rotation_and_biosecurity",
+      "capability": "Rotation, disease, pest, cleaning, and biosecurity rules beyond fixed sanitation days",
+      "current_behavior": "Only an unconditional recipe sanitation interval is represented.",
+      "expansion_requirements": {
+        "contract": ["crop family", "prior-crop history", "rotation interval", "zone and incident status", "cleaning protocol"],
+        "validation": ["complete prior history", "zone dependencies", "rule version"],
+        "solver": ["sequence-dependent exclusions and cleaning transitions"],
+        "execution": ["inspection, incident, treatment, clearance, and cleaning evidence"],
+        "ui_and_tests": ["reason codes and remediation", "sequence and quarantine adversarial tests"]
+      }
+    },
+    {
+      "id": "multi_cut_and_regrowth",
+      "capability": "Multiple harvests and regrowth from one planting",
+      "current_behavior": "Every allocation has exactly one harvest; the bed enters sanitation immediately afterward.",
+      "expansion_requirements": {
+        "contract": ["cut sequence", "cut-specific maturity and yield", "regrowth duration", "termination rule"],
+        "validation": ["ordered cuts", "one termination", "yield endpoint per cut"],
+        "solver": ["persistent bed occupancy through regrowth", "cut-specific labour, demand, and uncertainty"],
+        "execution": ["one observed harvest lot per cut", "regrowth and termination events"],
+        "ui_and_tests": ["cut lineage", "capacity and mass tests across all cuts"]
+      }
+    },
+    {
+      "id": "partner_supply_and_procurement",
+      "capability": "Partner-farm supply, spot purchases, transfers, and substitutions",
+      "current_behavior": "Supply comes only from opening inventory and the farm's declared allocations.",
+      "expansion_requirements": {
+        "contract": ["supplier", "offer quantity/grade/price", "lead time", "reliability", "transfer location", "availability timestamp"],
+        "validation": ["source authorization", "currency/unit", "duplicate and stale offer checks"],
+        "solver": ["buy/transfer decisions", "lead-time and supplier-capacity constraints", "substitution rules"],
+        "execution": ["purchase approval, receipt, rejection, and payable events"],
+        "ui_and_tests": ["source-specific provenance and cost", "late/missing/partial receipt tests"]
+      }
+    },
+    {
+      "id": "buyer_contracts_and_logistics",
+      "capability": "Buyer priority, delivery windows, minimum fill, substitutions, penalties, routes, and vehicle capacity",
+      "current_behavior": "Order ID, crop, exact due date, net kg, and explicit price are the supported commercial fields.",
+      "expansion_requirements": {
+        "contract": ["pseudonymous buyer", "grade/SKU", "window", "priority source", "minimum fill", "substitution", "penalty", "destination and route"],
+        "validation": ["contract version and effective dates", "compatible substitutions", "route units"],
+        "solver": ["service-level and lateness constraints", "routing/loading or an explicit downstream optimizer boundary"],
+        "execution": ["pick, dispatch, proof-of-delivery, rejection, and penalty events"],
+        "ui_and_tests": ["buyer-level rationale without inferred preference", "window, priority, and route conflict tests"]
+      }
+    },
+    {
+      "id": "fractional_beds_and_multiple_systems",
+      "capability": "Bed subdivision, intercropping, vertical layers, fields, and production systems beyond sheltered hydroponics",
+      "current_behavior": "Each decision consumes one whole declared bed in one fixed system.",
+      "expansion_requirements": {
+        "contract": ["spatial unit hierarchy", "usable area", "system capabilities", "adjacency and sharing rules"],
+        "validation": ["nonoverlapping geometry or explicit capacity partition", "system compatibility"],
+        "solver": ["integer spatial units or audited discretization", "shared-resource coupling"],
+        "execution": ["location-specific tasks and yields"],
+        "ui_and_tests": ["visible allocation geometry", "no hidden fractional-capacity tests"]
+      }
+    },
+    {
+      "id": "workforce_scheduling",
+      "capability": "Daily worker shifts, skills, overtime, task dependencies, and absences",
+      "current_behavior": "One aggregate weekly labour-hours ceiling covers sow and worst-scenario harvest labour only.",
+      "expansion_requirements": {
+        "contract": ["pseudonymous worker/crew or skill pool", "shift calendar", "skills", "task durations", "overtime policy"],
+        "validation": ["availability and skill coverage", "labour-law and consent review"],
+        "solver": ["daily assignment or explicit capacity handoff", "overtime and precedence constraints"],
+        "execution": ["assigned, started, completed, corrected, and absent events"],
+        "ui_and_tests": ["workload and skill gaps", "shift, absence, and precedence tests"]
+      }
+    },
+    {
+      "id": "calibrated_biology_and_uncertainty",
+      "capability": "Validated farm-specific yield, maturity, spoilage, and uncertainty models",
+      "current_behavior": "Recipe values, scenario factors, and shelf lives are synthetic declarations. Schedule progress is elapsed time only.",
+      "expansion_requirements": {
+        "contract": ["authorized observed outcomes", "measurement and availability timestamps", "model and calibration version", "prediction interval"],
+        "validation": ["point-in-time leakage audit", "whole-batch mass endpoints", "external temporal holdout"],
+        "solver": ["frozen calibrated distributions or uncertainty sets", "declared risk acceptance"],
+        "execution": ["observed-versus-predicted reconciliation without overwriting observations"],
+        "ui_and_tests": ["uncertainty and applicability display", "coverage, drift, and rollback tests"]
+      }
+    }
+  ],
+  "expansion_rule": "A capability remains unsupported until its units and point-in-time fields are in the strict contract, invalid states fail validation, the solver and deterministic replay share the same semantics, the UI exposes the assumption and provenance, and adversarial plus conservation tests pass."
+}

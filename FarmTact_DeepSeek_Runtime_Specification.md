@@ -1,9 +1,9 @@
 # Runtime implementation audit — 11 September 2026
 
-The current application edition is **v7**; the shared host runs the gateway and
-seven independent editions. This documentation-only amendment supersedes stale
-current-state wording below. Frozen earlier source/images and historical probe
-results are unchanged. See the [AI/provider report](docs/technical/ai-provider-and-council.md),
+The published application edition is **v7**; the working tree is an undeployed
+**v8 candidate**. Frozen earlier source/images and historical probe results are
+unchanged. See the [v8 remediation report](docs/technical/v8-remediation-report.md),
+[Council package evidence](reports/v8/council.md), and [AI/provider report](docs/technical/ai-provider-and-council.md),
 [game backend report](docs/technical/game-backend-and-state-machines.md) and
 [gap register](docs/technical/gaps-and-next-iteration.md).
 
@@ -15,29 +15,41 @@ roles are capability allowlists, not proof of integrated feature callers. The
 main council consumes precomputed tool results; the gateway's tool round trip is
 separately implemented/tested and is not an open-ended application agent loop.
 
+The three Council workflows are intentionally different: a mission makes six
+independent specialist calls and one chair call, with only the chair receiving
+validated prior findings; persistent conversations offer direct, two-turn invite
+and seven-turn sequential Council requests; guided research is scripted/local until
+an explicit separate direct adviser request interprets a frozen result. No workflow
+implements two challenge rounds or an unrecorded debate loop. Mission policy is
+explicitly `required` or `advisory`; required withholds incomplete/unsupported
+Council results, while advisory leaves numerical acceptance available with issues.
+
 **Evidence semantics:** local JSON/reference/numeric checks constrain output, but
 reference membership is not factual entailment. Both v7 recorded actual adviser
 responses were unsupported. Transport, replay, frozen context and tenant-isolation
 passes do not override that result or establish agricultural answer quality.
 
-**Required next-iteration work:** AI-01 through AI-12 and the Council GAME- gaps
-are part of the acceptance contract. In particular:
+**V8 implementation:** AI-01 through AI-12 now have candidate server changes and
+offline regression evidence. Current responses use code-rendered typed facts whose
+entity, unit, period and snapshot hash come from server-owned context; qualitative
+interpretation remains unverified. Prompt, schema, validator, context and source
+versions are retained. Execution, evidence and decision influence are separate
+statuses. The active caller manifest distinguishes product/API integrations from
+diagnostic routes. Actual quality trials remain dated evidence and may fail.
 
-- Distinguish archived capability evidence, configured credentials and recent
-  execution; current `capabilities()` uses archived JSON/key presence, not fresh
-  account verification. Do not label that mechanism as a current capability probe.
-- Align conversational prompt limits with the actual reply schema, preserve bounded
-  validation reasons for later turns, and version prompts/schemas/validators. Separate
-  job completion from evidence support and local decision status.
-- Add adversarial reference/entity/unit/period tests and a bounded grounded-answer
-  benchmark with explicit abstention, contradiction and unsupported-claim reporting.
-- Repair the forecast harvest mass reference key mismatch and use shared typed
-  context contracts. Preserve unsupported replies as visibly unverified evidence.
+Remaining work includes:
+
+- Preserve the implemented distinction between archived probe evidence, configured
+  credential readiness and the latest tenant execution. None is silently labelled
+  as a fresh account capability probe.
+- Continue the bounded grounded-answer benchmark with explicit abstention,
+  contradiction and unsupported-claim reporting; transport success is insufficient.
 - Keep route-to-caller/prompt/schema/budget inventory current. Prompts cannot select
   a provider, register tools, spend without reservations or authorize farm operations.
 - Treat output-token and request ceilings as the limits actually implemented, not
-  a guaranteed USD cap. Strict end-to-end cancellation and monetary reservation
-  require their own implementation and failure tests before such claims are made.
+  a guaranteed USD cap. Cancellation now prevents later request/repair calls and
+  preserves a visible terminal state; a verified monetary reservation remains a
+  separate future requirement.
 
 The original provider-documentation review date below is historical. Configured
 aliases and archived successful calls do not imply continuing account availability.
@@ -109,12 +121,19 @@ Conventional local computation remains allowed: statistical forecasts, optimizat
 
 ## 2. Current documented API and the selected application contract
 
-DeepSeek's current quick-start lists `deepseek-v4-flash`, `deepseek-v4-pro` and `deepseek-v4-flash-vision-exp`. Its changelog records the vision model's experimental release on 21 August 2026. Use these documented aliases rather than assuming self-hosted model names or old `deepseek-chat`/`deepseek-reasoner` tutorials remain appropriate. Recheck official documentation and account access during deployment. [DS01, DS02]
+On 11 September 2026, authenticated model discovery returned `deepseek-flash` and
+`deepseek-v4-pro`. DeepSeek's 10 September V4.1 notice and current pricing page
+retired the previous Flash and experimental-vision identifiers and identify
+`deepseek-flash` as canonical. V8 therefore allowlists only exact
+`deepseek-flash` for current routes. Returned model identifiers must equal the
+requested identifier; temporary provider rerouting is not accepted as an implicit
+FarmTact alias. Evidence is retained in `reports/v8/model-discovery.json` and the
+dated `model_migration` block in `config/deepseek_runtime.json`.
 
 | FarmTact request | Exact selected route | Required model/capability |
 |---|---|---|
-| Text generation, discussion, extraction and function calls | `POST https://api.deepseek.com/chat/completions` | An approved Flash or Pro alias |
-| Farm images, scanned-page images, charts and rendered geospatial images | **The same** `POST https://api.deepseek.com/chat/completions` | **`deepseek-v4-flash-vision-exp`** |
+| Text generation, discussion, extraction and function calls | `POST https://api.deepseek.com/chat/completions` | Exact `deepseek-flash` |
+| Farm images, scanned-page images, charts and rendered geospatial images | **The same** `POST https://api.deepseek.com/chat/completions` | Exact `deepseek-flash`, native image content |
 | Account model discovery | `GET https://api.deepseek.com/models` | Bearer authentication; model list is not proof of modality quality |
 | Optional future reusable-image upload | `POST https://api.deepseek.com/files` | Separate capability configuration, lifecycle and integration tests; synthetic assets only by default in development |
 | Optional future strict tool schema mode | `POST https://api.deepseek.com/beta/chat/completions` | Separate reviewed beta adapter; disabled in this seed |
@@ -127,17 +146,10 @@ Implement the development gateway with `httpx` directly. Using the OpenAI Python
 
 | Runtime role or helper | Proposed default | Input contract |
 |---|---|---|
-| Demand Analyst | `deepseek-v4-flash` | Typed customer-demand and tool-result text |
-| Production | `deepseek-v4-pro` | Reviewed agronomic evidence and approved recipes |
-| Weather | `deepseek-v4-flash` | Weather, trade and remote-sensing **tool outputs** |
-| Profit | `deepseek-v4-flash` | Validated capacities, costs and solver outputs |
-| Planning Chair | `deepseek-v4-pro` | Comparable strategies and evidence-backed dissent |
-| Market | `deepseek-v4-flash` | Price assumptions and sourced community evidence; explicit missing-feed state |
-| Supply Chain | `deepseek-v4-flash` | Inventory, expiry and delivery timing; missing logistics identified |
-| Evidence Extractor / Crop Alias Resolver | `deepseek-v4-flash` | Source text; structured but untrusted proposed extraction |
-| Runtime Researcher | `deepseek-v4-pro` | Approved retrieval tools; no unrestricted browser or shell |
-| Visual Observer / Document Vision / Satellite Visual Reviewer | `deepseek-v4-flash-vision-exp` | Validated images plus bounded questions |
-| Test Evaluator, if LLM-based | `deepseek-v4-pro` | Evaluation evidence; never substitutes for numerical assertions |
+| Demand, Production, Weather, Profit, Planning Chair, Market and Supply Chain | `deepseek-flash` | Role-specific frozen context and typed fact IDs |
+| Evidence Extractor / Crop Alias Resolver / Runtime Researcher | `deepseek-flash` | Source text; structured but untrusted proposed extraction |
+| Visual Observer / Document Vision / Satellite Visual Reviewer | `deepseek-flash` | Validated native images plus bounded questions |
+| Test Evaluator, if LLM-based | `deepseek-flash` | Evaluation evidence; never substitutes for numerical assertions |
 
 These assignments are project defaults, not a proven ranking of model suitability. Compare capability and cost on FarmTact tasks. A text specialist asks a vision helper for an image observation rather than sending the image to its own text model. Cross-role messages contain reviewed observation fields and provenance, not copied private reasoning.
 
@@ -150,7 +162,7 @@ DeepSeek documents images in `user` messages for Chat Completions, using content
 ```python
 # HTTP JSON payload; DEEPSEEK_API_KEY belongs only in the Authorization header.
 payload = {
-    "model": "deepseek-v4-flash-vision-exp",
+    "model": "deepseek-flash",
     "thinking": {"type": "disabled"},
     "max_tokens": 1024,
     "response_format": {"type": "json_object"},
@@ -206,7 +218,7 @@ FarmTact browser --> authenticated backend / council state machine
                            DeepSeek-only model gateway
                                       |
                          api.deepseek.com/chat/completions
-                       text: Flash / Pro     images: Vision-Exp
+                       text: deepseek-flash  images: deepseek-flash native vision
 ```
 
 Use `.env.example` for names, but supply the actual `DEEPSEEK_API_KEY` through the environment or secret manager. Never place it in a `NEXT_PUBLIC_*` variable, command-line argument, client bundle, committed `.env`, screenshot or report. Do not print environment dumps. Sharing a development machine with Codex does not authorize reusing its credentials in runtime.
@@ -254,11 +266,13 @@ A09 and A12 inspect the existing repo for provider SDK defaults, hosted tracing,
 
 ### DS-G1 — Authenticated capability trial
 
-Once implemented, run `scripts/deepseek_trial.py --live` automatically with the supplied environment key and `FARMTACT_EXECUTION_MODE=test`, under the recorded development request/token budget. No human confirmation is required. Here `--live` means real authenticated HTTP calls; it does not select `execution_mode=live` or authorize farm operations. This performs model discovery, Flash/Pro JSON probes, an actual thinking/tool-result round trip, an actual image-reading request and a streaming/usage probe. The image contains a batch identifier absent from the text prompt, so the test verifies image input rather than a model repeating a supplied textual answer.
+Once implemented, run `scripts/deepseek_trial.py --live` automatically with the supplied environment key and `FARMTACT_EXECUTION_MODE=test`, under the recorded development request/token budget. No human confirmation is required. Here `--live` means real authenticated HTTP calls; it does not select `execution_mode=live` or authorize farm operations. The current trial must discover and request the exact canonical manifest model for JSON, thinking/tool-result, native-image and streaming probes. The image contains a batch identifier absent from the text prompt, so the test verifies image input rather than a model repeating a supplied textual answer. Historical Flash/Pro/experimental-vision reports remain archival evidence for their original configuration only.
 
 The default full probe uses at most seven HTTP requests: model listing, two text calls, two calls for tool continuation, one vision call and one stream. No automatic retry is enabled. A failure stops the sequence and is reported honestly. Missing credentials are `BLOCKED` with zero calls and a nonzero exit code, not `SKIP` disguised as a passing release check.
 
-Require both a discovered model and a successful content-level probe. An experimental vision alias being listed does not prove the user's account can execute the required request. Do not promote image features when that probe fails.
+Require both a discovered model and a successful content-level probe. A listed
+model does not prove native-image execution or quality. Do not promote image
+features when that probe fails.
 
 ### DS-G2 — Actual DeepSeek council on synthetic farm inputs
 
