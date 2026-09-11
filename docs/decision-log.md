@@ -110,3 +110,17 @@ completed transport, a synthetic regression or an automated topic-word score wit
 semantic truth or agronomic validity. V10's fulfillment and absence corrections
 are bounded safeguards, not a proof of arbitrary interpretation. The scientific
 follow-up records final deployment, call accounting, tests and remaining gaps.
+
+
+Final remediation publication: V10 is pinned to source
+`ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3`; all ten edition health/source checks
+and captured prior-nine preservation passed. The final suite passed 611 tests
+with one skip, and public 56-day execution reconciliation passed. Live AI quality
+remains failed/incomplete: the Council-only run produced seven messages with nine
+calls, while a fresh mission was blocked before inference by the unchanged daily
+reservation boundary. Final shared-host capacity also failed its latency and job
+deadlines; post-deadline inspection found both test jobs completed, with no
+cancellation necessary. These are retained findings and next-iteration acceptance
+requirements, not relabelled passes. See `docs/technical/v10-grounding-followup.md`
+and `reports/v10/` for the complete evidence. The task ledger totals 85 actual
+requests, including failed and repaired attempts; no further paid retry followed.

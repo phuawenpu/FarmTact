@@ -1,0 +1,19 @@
+{
+  "method": "Public V9/V10 HTML and script-byte comparison; GET only, no browser execution or inference.",
+  "provider_calls": 0,
+  "editions": {
+    "v9": {
+      "script_url": "https://farmtact.fly.dev/v9/assets/index-ClRMDJlK.js",
+      "sha256": "4de949c362504ee72a0df545dd1a50a10b8e81fb7b5fb71fe42a04c3d857646a",
+      "bytes": 484799
+    },
+    "v10": {
+      "script_url": "https://farmtact.fly.dev/v10/assets/index-ClRMDJlK.js",
+      "sha256": "4de949c362504ee72a0df545dd1a50a10b8e81fb7b5fb71fe42a04c3d857646a",
+      "bytes": 484799
+    }
+  },
+  "same_script_bytes": true,
+  "status": "PASS",
+  "claim_limit": "V9 browser tests exercise the identical frontend bundle; this comparison does not establish new V10 provider quality or browser interactions."
+}

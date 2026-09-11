@@ -60,10 +60,10 @@
     }
   },
   "pending_evidence": {
-    "v10_targeted_ai_quality": {
-      "status": "pending",
+    "future_semantic_acceptance": {
+      "status": "open",
       "followup": "docs/technical/v10-grounding-followup.md",
-      "claim_limit": "V9 published; complete 18-case workflow score: 12 pass, 6 fail; mission Supply false full-fulfillment assertion missed by scorer. V10 narrow correction still requires separate evidence."
+      "claim_limit": "V10 deployed and deterministic checks passed; live Council quality failed and fresh mission inference was budget-blocked. Typed proposition validation, human expert review and real-farm validation remain future requirements."
     }
   },
   "summary_counts": {
@@ -639,6 +639,44 @@
       },
       "actual_requests": 21,
       "cumulative_task_requests": 76
+    },
+    "v10": {
+      "publication": "published",
+      "full_regression": {
+        "passed": 611,
+        "skipped": 1
+      },
+      "quality": {
+        "status": "FAIL",
+        "cases": 7,
+        "passed": 5,
+        "failed": 2,
+        "workflow_integrity": "FAIL_MISSION_NOT_EXECUTED",
+        "evidence": "reports/v10/ai-quality-targeted.json"
+      },
+      "ai_assisted_semantics": {
+        "sound": 2,
+        "sound_with_limits": 4,
+        "contradiction": 1,
+        "human_review": false
+      },
+      "actual_requests": 9,
+      "cumulative_task_requests": 85,
+      "mission_budget_boundary": "PASS_EXPECTED_BUDGET_BOUNDARY",
+      "fresh_mission_quality": "NOT_EXERCISED",
+      "shared_capacity": {
+        "status": "FAIL",
+        "browse_p95_seconds": 15.0367,
+        "timed_out_jobs": 2,
+        "deadline_seconds": 180,
+        "evidence": "reports/v10/shared-capacity-public.json"
+      },
+      "execution": {
+        "status": "PASS",
+        "days": 56,
+        "provider_calls": 0,
+        "evidence": "reports/v10/execution-public.json"
+      }
     }
   }
 }

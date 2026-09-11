@@ -1,0 +1,17 @@
+{
+  "status": "PASS_EXPECTED_BUDGET_BOUNDARY",
+  "actual_provider_calls": 0,
+  "checks": {
+    "blocked": true,
+    "no_claims": true,
+    "no_audits": true,
+    "no_reserved_provider_request": true,
+    "numerical_results_retained": true
+  },
+  "shared_limit_unchanged": 48,
+  "known_shared_consumed": 41,
+  "remaining_allowance": 7,
+  "required_mission_reservation": 9,
+  "mission_live_quality": "NOT_EXERCISED",
+  "source_report": "reports/v10/planning-public.json"
+}

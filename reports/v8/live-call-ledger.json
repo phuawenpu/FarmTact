@@ -2,7 +2,7 @@
   "schema_version": "v8-live-experiment-ledger-1",
   "goal_request_ceiling": 96,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 76,
+  "actual_requests_consumed": 85,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -147,6 +147,34 @@
       "report": "reports/v9/research-public.json",
       "actual_requests": 1,
       "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1"
+    },
+    {
+      "id": "public-v10-council-v6",
+      "status": "FAIL",
+      "base_url": "https://farmtact.fly.dev/v10",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v10/conversation-public.json",
+      "actual_requests": 9,
+      "source_commit": "ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+      "workflow_scope": "council_only",
+      "combined_v10_remaining_envelope": 16,
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c"
+    },
+    {
+      "id": "public-v10-planning-budget-boundary",
+      "status": "PASS_EXPECTED_BUDGET_BOUNDARY",
+      "base_url": "https://farmtact.fly.dev/v10",
+      "maximum_requests": 0,
+      "normal_workflow_reservation": 9,
+      "known_shared_available": 7,
+      "expected_requests": 0,
+      "report": "reports/v10/planning-public.json",
+      "actual_requests": 0,
+      "source_commit": "ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+      "reason": "Conservative full-workflow reservation exceeds remaining daily allowance; no cap change or paid retry.",
+      "run_id": "eec86eb9fffdc1feea24a1d44317f83b"
     }
   ],
   "budget_revisions": [

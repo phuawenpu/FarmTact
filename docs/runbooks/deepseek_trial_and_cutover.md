@@ -2,7 +2,7 @@
 
 FarmTact runtime inference uses the direct official DeepSeek Chat Completions API. The browser never receives the credential. The server route manifest is `config/deepseek_runtime.json`; callers select a registered role and cannot supply a provider, origin, or model.
 
-The published v9 manifest version 1.2 allowlists exact canonical
+The published v10 manifest version 1.2 allowlists exact canonical
 `deepseek-flash` for every current text and native-vision route. This follows the
 10 September 2026 provider migration and authenticated 11 September discovery in
 `reports/v8/model-discovery.json`. The gateway still requires returned model ID to
@@ -164,7 +164,7 @@ with workflow integrity PASS. The completed
 determined that four automated failures were conservative prefix/word false
 negatives and two were real abstention-contract failures. It classified 10 messages
 as sound, 5 as sound with limits and 3 as materially contradictory. Separately, the scorer passed Supply's false claim that
-an 824 kg booked request was fully delivered despite scenario deliveries of 370,
+an 824 kg booked request was fully delivered despite strategy deliveries of 370,
 446 and 518 kg. The cumulative actual-request ledger is 76. Preserve
 [`ai-quality-final.json`](../../reports/v9/ai-quality-final.json) and the source
 mission, conversation and research reports as the V9 verdict.
@@ -176,7 +176,7 @@ provider calls; it did not exercise an actual application restart. See
 [`shared-capacity-public.json`](../../reports/v9/shared-capacity-public.json) and
 [`execution-public.json`](../../reports/v9/execution-public.json).
 
-## V10 grounding-remediation candidate — unpublished
+## V10 grounding-remediation edition — published 11 September 2026
 
 V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
 validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
@@ -185,8 +185,24 @@ conversation context strips numerical and prior-conversation prose and supplies
 explicit empty arrays with `typed_required=false`. The absence-only projection
 applies only to Weather/Market in conversational Council mode when their source is
 absent; numerical direct/invite and research retain their existing projections. See
-the [V10 grounding follow-up](../technical/v10-grounding-followup.md). The V10 full
-suite passed 611 tests with one skip in 441.23 seconds. Candidate checks do not
-establish publication or provider-backed quality. The narrow fix does not establish
+the [V10 grounding follow-up](../technical/v10-grounding-followup.md). V10 is
+published from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` with image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+The full suite passed 611 tests with one skip in 441.23 seconds, and all ten
+health/source checks plus captured v1-v9 preservation passed. The Council-only
+live trial used nine requests for seven messages and passed 5 of 7 targeted cases.
+Weather and Market returned reference-verified abstentions with empty references;
+Supply was withheld for the model-authored quantity word `zero`, and Chair missed
+a topic word. Its missing mission workflow therefore remained FAIL.
+
+A fresh mission ended `REVIEW_WITHHELD` before inference: 41 public requests had
+been used and seven remained, below the nine-request reservation. It made zero
+provider calls and retained all three numerical strategies. The
+[`planning-budget-boundary.json`](../../reports/v10/planning-budget-boundary.json)
+check is `PASS_EXPECTED_BUDGET_BOUNDARY`; no cap bypass or further paid request was
+attempted. The cumulative ledger is 85 requests (44 local and 41 public). The
+Supply guard passed the 611-test suite and 15 focused tests, but new actual mission
+quality was not exercised. No new direct, invite, research or vision result is
+claimed. The narrow fix does not establish
 general prose or crop-mix entailment; the two V9 Production contradictions remain
 unresolved evidence. V8 and V9 stay unchanged.

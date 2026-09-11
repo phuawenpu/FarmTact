@@ -6,24 +6,24 @@ compare planting strategies, and discuss the consequences with a council of advi
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**Play:** [guided v9 council](https://farmtact.fly.dev/v9/research) ·
-[main v9 farm](https://farmtact.fly.dev/v9/) ·
-[edition chooser, v1–v9](https://farmtact.fly.dev/)
+**Play:** [guided v10 council](https://farmtact.fly.dev/v10/research) ·
+[main v10 farm](https://farmtact.fly.dev/v10/) ·
+[edition chooser, v1–v10](https://farmtact.fly.dev/)
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
-[v10 grounding follow-up candidate](docs/technical/v10-grounding-followup.md) ·
+[v10 grounding follow-up](docs/technical/v10-grounding-followup.md) ·
 [v9 AI follow-up](docs/technical/v9-ai-followup.md) ·
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
 [V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
 
-The latest public edition is **v9**, pinned to source
-[`89d29cc`](https://github.com/phuawenpu/FarmTact/commit/89d29cc3e071e12373204ff234d0a261ce71b5a1)
+The latest public edition is **v10**, pinned to source
+[`ec4e298`](https://github.com/phuawenpu/FarmTact/commit/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3)
 and immutable image
-`sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
-All nine edition health/source checks passed, and the captured v1–v8 source and
-state remained unchanged. See [deployment health](reports/v9/deployment-health.json)
-and [preservation evidence](reports/v9/preservation-after.json).
+`sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+All ten edition health/source checks and captured preservation of v1–v9 passed.
+See [deployment health](reports/v10/deployment-health.json) and
+[preservation evidence](reports/v10/preservation-after.json).
 
 ## What you can do
 
@@ -86,7 +86,7 @@ FarmTact has three distinct Council workflows:
 | Vision | Synthetic batch-label reading probe | No deployed crop-health, disease, satellite or biomass inference |
 
 No model is trained or fine-tuned on real FarmTact farm/customer records. V8
-introduced, and V9 retains,
+introduced, and later editions retain,
 independent generated train/evaluation cohorts and benchmarks fixed/tuned EWMA,
 seasonal-naive and crop-residual candidates. Promotion is blocked because real-farm,
 external-cohort and operational evidence is absent; deployed forecasts remain
@@ -216,17 +216,31 @@ but its live quality gate also failed: **12 of 18** automated cases passed while
 workflow integrity passed. V9 consumed 21 actual requests (nine mission, eleven
 conversation and one research), bringing the cumulative ledger to 76. Two Council
 abstentions persisted as unsupported, and a Supply reply falsely said an 824 kg
-booked request was fully delivered despite scenario deliveries of 370, 446 and
+booked request was fully delivered despite strategy deliveries of 370, 446 and
 518 kg. The completed [AI-assisted semantic review](reports/v9/ai-assisted-semantic-review.md)
 classified the 18 messages as 10 sound, 5 sound with limits and 3 materially
 contradictory: Planning Supply and two Production replies. It found that four
 automated failures were conservative keyword/prefix misses and two were real
-abstention-contract failures. V10 is the unpublished
-[grounding-remediation candidate](docs/technical/v10-grounding-followup.md).
-Its full suite passed 611 tests with one skip in 441.23 seconds. That narrow fix
+abstention-contract failures. V10 is the published
+[grounding-remediation edition](docs/technical/v10-grounding-followup.md).
+Its full suite passed 611 tests with one skip in 441.23 seconds. The live
+Council-only trial used nine requests for seven messages and passed 5 of 7 targeted
+cases: Weather/Market absence handling passed, while Supply was withheld for the
+model-authored word “zero” and Chair missed a topic word. A fresh mission was
+correctly withheld before inference because seven daily requests remained but nine
+were required; all three numerical strategies remained available. No new direct,
+invite, research or vision result is claimed. That narrow fix
 does not establish general prose or crop-mix entailment; AI quality remains partial.
-Fifty-five actual requests were consumed through
-V8, including failures and repairs.
+The final task total is **85 actual requests** (44 local and 41 public), including
+failed and repaired attempts. **V10 AI quality remains failed/incomplete.** Its
+[seven-case semantic audit](reports/v10/ai-assisted-semantic-review.md) found two
+sound messages, four with limits and one contradiction: Profit called a negative
+Lean margin delta a gain. These gaps are retained as explicit next-iteration
+requirements. The public 56-day V10 execution passed numerical reconciliation
+and receipt replay with zero provider calls. **Shared-host capacity also failed**
+the final two-job test: both scenarios exceeded 180 seconds and browse p95 was
+15.04 seconds. [Capacity evidence](reports/v10/capacity-protocol-note.md) preserves
+both runs; healthy endpoints do not establish acceptable loaded performance.
 
 Expired anonymous workspaces can be reviewed and removed only through the explicit
 [retention CLI](docs/runbooks/retention.md). It defaults to dry-run, retains 30
@@ -261,15 +275,15 @@ later attempts.
 ## Hosting and releases
 
 The `farmtact` app runs in Singapore on one shared 4-vCPU/4-GB Fly Machine and one
-3-GB persistent volume. The gateway and v1–v9 occupy ten isolated containers with
+3-GB persistent volume. The gateway and v1–v10 occupy eleven isolated containers with
 separate application databases/caches/progress; abuse and inference spending limits
 are shared. One host is a shared failure boundary. Read-only checks on 11 September
 2026 found the Machine started with 1/1 health checks passing.
 
 Every newly published application iteration receives a new immutable edition.
 Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
-does not describe the active container topology. After V9 publication, the next
-contiguous edition is v10. See [Fly operations](docs/deployment/fly.md).
+does not describe the active container topology. After V10 publication, the next
+contiguous edition is v11. See [Fly operations](docs/deployment/fly.md).
 
 Development scope and provider policy are controlled by the
 [build specification](FarmTact_Build_Specification.md),

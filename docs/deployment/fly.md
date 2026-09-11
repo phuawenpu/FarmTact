@@ -1,12 +1,12 @@
 # FarmTact on Fly.io
 
 Live: [edition chooser](https://farmtact.fly.dev/) and
-[v9 application](https://farmtact.fly.dev/v9/), Singapore (`sin`). This is a synthetic
+[v10 application](https://farmtact.fly.dev/v10/), Singapore (`sin`). This is a synthetic
 development demonstration; actual farm operations remain disabled.
 
 ## Active runtime
 
-One shared 4-vCPU/4096-MB Machine runs the gateway and v1–v9 as ten containers,
+One shared 4-vCPU/4096-MB Machine runs the gateway and v1–v10 as eleven containers,
 each pinned to its release image. One encrypted 3-GB volume provides isolated
 subtrees for their PostgreSQL clusters, caches and saved state. The common storage
 parent is unmounted before each app drops privileges. PostgreSQL uses private
@@ -55,7 +55,16 @@ forwarding mutation or inference requests. These are deployment and isolation
 results. The separate live V9 trial used 21
 actual requests and failed its quality gate: 12 of 18 automated cases passed while
 workflow integrity passed, and a scorer-missed false-fulfilment claim independently
-prevents acceptance. V10 is the next unpublished remediation candidate.
+prevents acceptance. V10 is the published remediation edition.
+
+[V10 deployment evidence](../../reports/v10/deployment-health.json) records ten
+passing edition health/source checks for source
+`ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` and image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+Captured v1–v9 preservation passed. The first update attempt received Fly
+`MANIFEST_UNKNOWN`; retrying the same pinned source/image succeeded without an
+alternate rebuild. The targeted Council-only provider trial passed 5 of 7 cases;
+a fresh mission was withheld before inference at the request-budget boundary.
 
 [V7 rollout evidence](../../reports/v7/implementation.md) records public browser,
 strategy, isolation, preservation and health checks. Its two explicit adviser
@@ -65,3 +74,13 @@ and limitations; do not treat a numerical test as a live advisor capability test
 The Sprite HTTP and private tunnel services are shut down; the local PostgreSQL
 service is retained. Register temporary development services through the Sprite
 skill. Do not expose backups, credentials or arbitrary filesystem paths over HTTP.
+
+
+V10 final capacity evidence is **FAIL** (`reports/v10/shared-capacity-public.json`):
+the isolated pair exceeded the 180-second job deadline and browse p95 reached
+15.0367 seconds. An earlier mixed-load probe also failed. HTTP health, farm/cookie
+isolation and zero inference passed; they do not imply loaded performance passed.
+Future acceptance requires queue/execution tracing, CPU/platform-quota measurement,
+shared numerical admission control evaluation and bounded cancellation testing.
+No host resource increase or threshold relaxation was made. See the V10 technical
+follow-up and capacity protocol note for exact scope and cleanup.

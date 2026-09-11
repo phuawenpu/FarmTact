@@ -1,0 +1,20 @@
+{
+  "actual_inference_requests": 9,
+  "advisor_messages": 7,
+  "base_url": "https://farmtact.fly.dev/v10",
+  "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+  "favourable_recommendation_required": false,
+  "maximum_permitted_requests": 9,
+  "preserved_failed_requests": 0,
+  "private_state_updated": true,
+  "references_verified": false,
+  "replay_inference_triggered": false,
+  "scenario_id": "ebd70bbcf26a5945f7716ecb8532253d",
+  "snapshot_hash": "b0aba1dbf560acc67f5d1894f681a73e5eb0d56a5c2ef15356a166290edfb6d7",
+  "status": "FAIL",
+  "validation_states": [
+    "references_verified",
+    "unsupported"
+  ],
+  "workflow_scope": "council_only"
+}

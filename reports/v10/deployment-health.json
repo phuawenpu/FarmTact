@@ -1,0 +1,128 @@
+{
+  "checked_at": "2026-09-11T13:33:43.920861+00:00",
+  "registry_matches": true,
+  "latest": "v10",
+  "editions": [
+    {
+      "edition": "v1",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v1",
+        "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+      },
+      "expected_source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "passed": true
+    },
+    {
+      "edition": "v2",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v2",
+        "source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812"
+      },
+      "expected_source_commit": "e9c3edfe10da162e4f50fd5a69df5a4394aa0812",
+      "passed": true
+    },
+    {
+      "edition": "v3",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v3",
+        "source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607"
+      },
+      "expected_source_commit": "f8e04999fba5a82dcb1435c7a4c920e004e76607",
+      "passed": true
+    },
+    {
+      "edition": "v4",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v4",
+        "source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d"
+      },
+      "expected_source_commit": "f1510825ab60ea0c70d0144d859bdf6266c1ac9d",
+      "passed": true
+    },
+    {
+      "edition": "v5",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v5",
+        "source_commit": "0f54565d23f5387fc751eeac4f329372e0460018"
+      },
+      "expected_source_commit": "0f54565d23f5387fc751eeac4f329372e0460018",
+      "passed": true
+    },
+    {
+      "edition": "v6",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v6",
+        "source_commit": "f4606222af6658986b491250de66cb12f6422f32"
+      },
+      "expected_source_commit": "f4606222af6658986b491250de66cb12f6422f32",
+      "passed": true
+    },
+    {
+      "edition": "v7",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v7",
+        "source_commit": "6efbbfd5a57cb557683e636d1fe20ae63b6b9eda"
+      },
+      "expected_source_commit": "6efbbfd5a57cb557683e636d1fe20ae63b6b9eda",
+      "passed": true
+    },
+    {
+      "edition": "v8",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v8",
+        "source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13"
+      },
+      "expected_source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "passed": true
+    },
+    {
+      "edition": "v9",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v9",
+        "source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1"
+      },
+      "expected_source_commit": "89d29cc3e071e12373204ff234d0a261ce71b5a1",
+      "passed": true
+    },
+    {
+      "edition": "v10",
+      "http_status": 200,
+      "health": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v10",
+        "source_commit": "ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3"
+      },
+      "expected_source_commit": "ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3",
+      "passed": true
+    }
+  ],
+  "status": "PASS"
+}

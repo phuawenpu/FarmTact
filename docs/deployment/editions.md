@@ -1,6 +1,6 @@
 # Publishing immutable editions
 
-Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v9 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
+Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v10 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
 
 The publisher never resolves an image tag. You may supply a previously verified `sha256` digest. When `--image` is omitted, it runs the fixed gateway Fly build with `--build-only --push --remote-only`, labels it from the edition and short source hash, passes the full source commit as a build argument, and accepts only the pinned registry digest reported by Fly. Commit the complete candidate source first. The publisher rejects dirty worktrees, abbreviated commits, non-HEAD commits, mutable image references, skipped edition numbers, changes to existing registry entries, and reuse of a locally reserved number with different inputs.
 
@@ -8,8 +8,8 @@ Prepare a notes file containing exactly `title`, `summary`, and `changes`. Each 
 
 ```bash
 .venv/bin/python -m scripts.publish_edition \
-  --edition v10 \
-  --notes /absolute/private/path/v10-notes.json \
+  --edition v11 \
+  --notes /absolute/private/path/v11-notes.json \
   --image registry.fly.io/farmtact@sha256:<64-hex-digest> \
   --source-commit "$(git rev-parse HEAD)" \
   --dry-run
@@ -29,7 +29,7 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
 
-The current next unused number is v10; always check the registry before publishing.
+The current next unused number is v11; always check the registry before publishing.
 The legacy separate-app provisioning path remains for environments without a
 shared-host record. Do not remove that record to publish on this deployment.
 No credential values enter generated configuration, command output or manifests.
@@ -42,7 +42,7 @@ If a step fails, inspect the reported Fly command and rerun with the same editio
 The gateway refreshes its validated destinations and control edition allowlist after atomic publication. Updating the shared Machine can restart the gateway and all edition containers.
 
 
-## Active shared-host deployment (v9)
+## Active shared-host deployment (v10)
 
 The verified deployment uses one 4-shared-vCPU/4-GB Machine with one persistent volume.
 The public chooser and every immutable edition run in separate Pilot containers,
@@ -144,4 +144,29 @@ made no inference calls. These checks establish source identity, availability an
 edition isolation. The separate V9 provider-backed trial used 21 actual requests
 and failed its quality gate: 12 of 18 automated cases passed while workflow
 integrity passed, and a scorer-missed false-fulfilment claim independently prevents
-acceptance. V10 is the next unpublished remediation candidate.
+acceptance. V10 is the published remediation edition.
+
+## V10 publication evidence — 11 September 2026
+
+V10 is published at [the immutable v10 application](https://farmtact.fly.dev/v10/),
+from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` and image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+The first update attempt failed because Fly returned `MANIFEST_UNKNOWN` for the
+new image. A retry with the same pinned source and digest succeeded; no alternate
+image was rebuilt or substituted. All ten edition health/source checks passed.
+Captured v1–v9 preservation passed. See
+[health evidence](../../reports/v10/deployment-health.json) and
+[preservation evidence](../../reports/v10/preservation-after.json). Publication made no inference call. The
+separate Council-only trial used nine requests for seven messages and failed its
+targeted quality gate, with five of seven cases passing. A later mission was withheld before inference at the
+request-budget boundary. The next unused edition is v11.
+
+
+V10 final capacity evidence is **FAIL** (`reports/v10/shared-capacity-public.json`):
+the isolated pair exceeded the 180-second job deadline and browse p95 reached
+15.0367 seconds. An earlier mixed-load probe also failed. HTTP health, farm/cookie
+isolation and zero inference passed; they do not imply loaded performance passed.
+Future acceptance requires queue/execution tracing, CPU/platform-quota measurement,
+shared numerical admission control evaluation and bounded cancellation testing.
+No host resource increase or threshold relaxation was made. See the V10 technical
+follow-up and capacity protocol note for exact scope and cleanup.

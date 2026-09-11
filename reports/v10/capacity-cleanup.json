@@ -1,0 +1,27 @@
+{
+  "method": "Inspect only two named benchmark scenarios after client timeout; cancel still-active jobs through the normal domain function. No user records or credentials exported.",
+  "results": [
+    {
+      "scenario_id": "9fe0e6e9a456ecfb3c6c192f45fd70f8",
+      "status_before": "COMPLETED",
+      "started_at": "2026-09-11T13:23:55.592674+00:00",
+      "completed_at": "2026-09-11T13:27:52.548507+00:00",
+      "attempt_count": 1,
+      "status_after": "COMPLETED",
+      "cancel_requested": false,
+      "edition": "v9"
+    },
+    {
+      "scenario_id": "45738feb96a8fcabd68779a2128d5c21",
+      "status_before": "COMPLETED",
+      "started_at": "2026-09-11T13:24:14.392049+00:00",
+      "completed_at": "2026-09-11T13:27:31.030482+00:00",
+      "attempt_count": 1,
+      "status_after": "COMPLETED",
+      "cancel_requested": false,
+      "edition": "v10"
+    }
+  ],
+  "provider_calls": 0,
+  "initial_cleanup_helper_failures": "Two attempts failed before mutation because /app was absent from the SSH Python import path; fixed the helper path and explicit database URL."
+}

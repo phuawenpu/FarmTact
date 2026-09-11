@@ -1,9 +1,10 @@
 # Runtime implementation audit — 11 September 2026
 
-The latest published application edition is **v9**, built from source
-`89d29cc3e071e12373204ff234d0a261ce71b5a1` and image
-`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+The latest published application edition is **v10**, built from source
+`ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` and image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
 Frozen earlier source/images and historical probe results are unchanged. See the
+[V10 grounding follow-up](docs/technical/v10-grounding-followup.md), [V10 evidence](reports/v10/),
 [V9 AI follow-up](docs/technical/v9-ai-followup.md), [V9 evidence](reports/v9/),
 [V8 remediation report](docs/technical/v8-remediation-report.md),
 [Council package evidence](reports/v8/council.md), and [AI/provider report](docs/technical/ai-provider-and-council.md),
@@ -32,7 +33,7 @@ reference membership is not factual entailment. Both v7 recorded actual adviser
 responses were unsupported. Transport, replay, frozen context and tenant-isolation
 passes do not override that result or establish agricultural answer quality.
 
-**V8/V9 implementation:** AI-01 through AI-12 have published server changes and
+**V8–V10 implementation:** AI-01 through AI-12 have published server changes and
 offline regression evidence. Current responses use code-rendered typed facts whose
 entity, unit, period and snapshot hash come from server-owned context; qualitative
 interpretation remains unverified. Prompt, schema, validator, context and source
@@ -40,8 +41,8 @@ versions are retained. Execution, evidence and decision influence are separate
 statuses. The active caller manifest distinguishes product/API integrations from
 diagnostic routes. Actual quality trials remain dated evidence and may fail.
 
-V9 conversation prompts and context projection are V5. Mission prompts and context
-are V6 and validation is V4: short per-role `F001` / `C001` aliases map by exact lookup to canonical frozen facts and qualitative references; unknown aliases fail closed. Every completion audit retains the supplied mapping and returned aliases. Role projection is
+V10 conversation prompts and context projection are V6. Mission prompts and context
+are V7, validation is V5 and schema is V3: short per-role `F001` / `C001` aliases map by exact lookup to canonical frozen facts and qualitative references; unknown aliases fail closed. Every completion audit retains the supplied mapping and returned aliases. Role projection is
 bounded to 48 typed facts, 24 qualitative references, 16 prior conversation turns
 and six evidence records, with a hard 120,000 serialized-character limit. Exact
 research inputs referenced by the frozen result remain admitted when normal rank
@@ -360,7 +361,7 @@ A09 owns gateway and council implementation; A12 owns isolated environments, net
 
 ## 8. Implementation status and remaining operational work
 
-V9 is deployed. The server-only gateway, capability routes, offline tests,
+V10 is deployed. The server-only gateway, capability routes, offline tests,
 bounded authenticated trial, tenant authorization, reservations, idempotent jobs
 and replay are implemented. See `runtime/deepseek_gateway.py`, `tests/deepseek/`,
 `reports/deepseek/authenticated_trial_summary.md`, `reports/v9/` and the versioned
@@ -371,7 +372,7 @@ v7 records two actual adviser calls whose interpretations remain unsupported.
 Missing credentials or unavailable capabilities must still produce a visible
 blocked state, never fabricated success or another-provider fallback.
 
-The gateway and nine editions share one Fly Machine and volume while retaining
+The gateway and ten editions share one Fly Machine and volume while retaining
 separate application databases/workers. Authenticated operational controls retain
 the shared 48-call daily ceiling and abuse limits. This hosting change adds no
 provider route, speech service or background inference. The News scout remains
@@ -428,10 +429,10 @@ completed, but Weather and Market abstentions persisted `unsupported` with
 with workflow integrity PASS. The completed AI-assisted semantic review determined
 that four automated failures were conservative prefix/word false negatives and two
 were real abstention-contract failures. Separately, the scorer passed Supply's false claim that
-an 824 kg booked request was fully delivered despite scenario deliveries of 370,
+an 824 kg booked request was fully delivered despite strategy deliveries of 370,
 446 and 518 kg. The cumulative actual-request ledger is 76.
 
-## V10 grounding-remediation candidate — unpublished
+## V10 grounding-remediation edition — published 11 September 2026
 
 V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
 validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
@@ -440,8 +441,45 @@ conversation context strips numerical and prior-conversation prose and supplies
 explicit empty arrays with `typed_required=false`. The absence-only projection
 applies only to Weather/Market in conversational Council mode when their source is
 absent; numerical direct/invite and research retain their existing projections. See
-the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md). The V10
-full suite passed 611 tests with one skip in 441.23 seconds. Candidate checks do not
-establish publication or provider-backed quality. The narrow fix does not establish
+the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md). V10 is
+published from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` with image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+Its full suite passed 611 tests with one skip in 441.23 seconds, and all ten
+health/source checks plus captured v1-v9 preservation passed. The Council-only
+live trial used nine requests for seven messages and passed 5 of 7 targeted cases:
+Weather/Market absence handling passed, Supply was withheld for model-authored
+`zero`, and Chair missed a topic word. A fresh mission was correctly withheld with
+zero provider calls because 41 public requests were used and seven remained, below
+its nine-request reservation; all three numerical strategies were retained. The
+cumulative ledger is 85 (44 local and 41 public). No new direct, invite, research
+or vision result is claimed. The narrow fix does not establish
 general prose or crop-mix entailment; the two V9 Production contradictions remain
 unresolved evidence. V8 and V9 stay unchanged.
+
+**Future acceptance requirement — not implemented in V10:** Replace ad hoc prose
+guarantees with typed comparison propositions carrying the metric, operands,
+relation and scope, verified locally before rendering. Derive crop-allocation
+composition changes in code, and represent causal limits when multiple controls
+change or the optimizer reruns. Evaluate semantic gates on a calibrated set that
+measures both false positives and false negatives, including false claims that cite
+valid references. Phrase guards remain bounded safety checks, not proof of meaning.
+
+
+Final V10 semantic evidence: `reports/v10/ai-assisted-semantic-review.md` audits
+seven messages and 26 assertions: two sound, four sound with limits, one
+contradiction. Profit incorrectly labels Lean's −SGD 52.87 margin delta as a gain.
+This AI-assisted review is not human expert validation. V10 quality remains failed
+and its fresh mission-provider path was budget-blocked; publication and numerical
+regression do not close this semantic acceptance requirement. The public 56-day
+execution passed mass/cash/order-lot reconciliation and historical receipt replay
+with zero provider calls (`reports/v10/execution-public.json`).
+
+
+V10 final capacity evidence is **FAIL** (`reports/v10/shared-capacity-public.json`):
+the isolated pair exceeded the 180-second job deadline and browse p95 reached
+15.0367 seconds. An earlier mixed-load probe also failed. HTTP health, farm/cookie
+isolation and zero inference passed; they do not imply loaded performance passed.
+Future acceptance requires queue/execution tracing, CPU/platform-quota measurement,
+shared numerical admission control evaluation and bounded cancellation testing.
+No host resource increase or threshold relaxation was made. See the V10 technical
+follow-up and capacity protocol note for exact scope and cleanup.

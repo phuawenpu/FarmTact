@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "local_development": true,
+  "health": {
+    "status": "ok",
+    "development_phase": "autonomous_development"
+  },
+  "provider_calls": 0
+}

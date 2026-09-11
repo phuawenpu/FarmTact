@@ -1,0 +1,594 @@
+{
+  "schema_version": "farmtact-ai-assisted-semantic-review-v1",
+  "review_kind": "AI-assisted semantic audit; not a human agronomy, logistics, market, accounting, or ML-expert review",
+  "reviewed_at": "2026-09-11",
+  "scope": {
+    "final_cases": 7,
+    "actual_provider_calls": 9,
+    "format_repairs": 2,
+    "new_provider_calls_for_review": 0,
+    "workflow": "V10 council-only actual trial",
+    "snapshot_id": "ebd70bbcf26a5945f7716ecb8532253d",
+    "snapshot_hash": "b0aba1dbf560acc67f5d1894f681a73e5eb0d56a5c2ef15356a166290edfb6d7"
+  },
+  "source_artifacts": [
+    "reports/v10/conversation-public-replay.json",
+    "reports/v10/conversation-public-events.json",
+    "reports/v10/conversation-public.json",
+    "reports/v10/planning-public.json"
+  ],
+  "method": [
+    "Decomposed all seven final messages into atomic assertions.",
+    "Compared claims with all frozen policy metrics and affected delivery lines, not only selected references.",
+    "Used one authenticated GET of the persisted scenario to inspect batch-to-order allocation details; no credential was printed or retained.",
+    "Kept semantic findings separate from application validation."
+  ],
+  "summary": {
+    "sound": 2,
+    "sound_with_limits": 4,
+    "contradiction": 1,
+    "material_contradiction": "Profit says Lean margin gains, but Lean margin delta is -52.87 SGD and Chair correctly says every policy margin falls.",
+    "application_unsupported": "Supply is semantically supportable within stated limits but remains unsupported because prose authored the quantity “zero”.",
+    "v10_abstention_fix": "Weather and Market are now clean, fact-free, references_verified abstentions.",
+    "planning_trial": "The separate V10 mission is REVIEW_WITHHELD with Council blocked, zero claims and zero inference audits because only 7 shared daily calls remained but 9 had to be reserved. It is negative budget evidence, not a live test of the new mission Supply guard."
+  },
+  "frozen_evidence": {
+    "scenario_controls": {
+      "batch_id": "batch-01",
+      "delay_days": 3,
+      "yield_percent": 90,
+      "demand_crop_id": null,
+      "demand_percent": 100,
+      "labour_percent": 100,
+      "cash_percent": 100
+    },
+    "policy_comparisons": {
+      "Lean": {
+        "baseline_status": "FEASIBLE",
+        "scenario_status": "FEASIBLE",
+        "baseline_metrics": {
+          "fill_rate": 0.4375,
+          "margin_sgd": 2467.6,
+          "waste_kg": 153.99,
+          "harvest_kg": 660.0,
+          "shortfall_kg": 612.02,
+          "cost_sgd": 1141.5,
+          "labour_hours": 55.8,
+          "area_m2": 120.0,
+          "closing_stock_kg": 35.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 3609.11,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 370.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 106.014,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "scenario_metrics": {
+          "fill_rate": 0.4145,
+          "margin_sgd": 2414.73,
+          "waste_kg": 176.59,
+          "harvest_kg": 657.6,
+          "shortfall_kg": 637.02,
+          "cost_sgd": 1155.38,
+          "labour_hours": 55.63,
+          "area_m2": 120.0,
+          "closing_stock_kg": 35.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 3570.1,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 348.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 103.013,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "deltas": {
+          "fill_rate": -0.023,
+          "margin_sgd": -52.87,
+          "waste_kg": 22.6,
+          "harvest_kg": -2.4,
+          "shortfall_kg": 25.0,
+          "cost_sgd": 13.88,
+          "labour_hours": -0.17,
+          "area_m2": 0.0,
+          "closing_stock_kg": 0.0,
+          "opening_stock_kg": 0.0,
+          "revenue_sgd": -39.01,
+          "booked_requested_kg": 0.0,
+          "booked_delivered_kg": -22.0,
+          "residual_requested_kg": 0.0,
+          "residual_delivered_kg": -3.001,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        }
+      },
+      "Balanced": {
+        "baseline_status": "FEASIBLE",
+        "scenario_status": "FEASIBLE",
+        "baseline_metrics": {
+          "fill_rate": 0.534,
+          "margin_sgd": 2930.59,
+          "waste_kg": 175.99,
+          "harvest_kg": 806.0,
+          "shortfall_kg": 507.01,
+          "cost_sgd": 1522.54,
+          "labour_hours": 70.82,
+          "area_m2": 180.0,
+          "closing_stock_kg": 54.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 4453.13,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 446.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 135.017,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "scenario_metrics": {
+          "fill_rate": 0.5037,
+          "margin_sgd": 2704.98,
+          "waste_kg": 221.59,
+          "harvest_kg": 805.6,
+          "shortfall_kg": 540.02,
+          "cost_sgd": 1513.15,
+          "labour_hours": 70.79,
+          "area_m2": 180.0,
+          "closing_stock_kg": 41.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 4218.12,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 426.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 122.016,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "deltas": {
+          "fill_rate": -0.0303,
+          "margin_sgd": -225.61,
+          "waste_kg": 45.6,
+          "harvest_kg": -0.4,
+          "shortfall_kg": 33.01,
+          "cost_sgd": -9.39,
+          "labour_hours": -0.03,
+          "area_m2": 0.0,
+          "closing_stock_kg": -13.0,
+          "opening_stock_kg": 0.0,
+          "revenue_sgd": -235.01,
+          "booked_requested_kg": 0.0,
+          "booked_delivered_kg": -20.0,
+          "residual_requested_kg": 0.0,
+          "residual_delivered_kg": -13.001,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        }
+      },
+      "Resilient": {
+        "baseline_status": "FEASIBLE",
+        "scenario_status": "FEASIBLE",
+        "baseline_metrics": {
+          "fill_rate": 0.6213,
+          "margin_sgd": 3193.15,
+          "waste_kg": 220.98,
+          "harvest_kg": 946.0,
+          "shortfall_kg": 412.01,
+          "cost_sgd": 1862.99,
+          "labour_hours": 85.42,
+          "area_m2": 240.0,
+          "closing_stock_kg": 54.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 5056.15,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 518.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 158.02,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "scenario_metrics": {
+          "fill_rate": 0.5928,
+          "margin_sgd": 3016.15,
+          "waste_kg": 247.59,
+          "harvest_kg": 941.6,
+          "shortfall_kg": 443.01,
+          "cost_sgd": 1853.99,
+          "labour_hours": 85.11,
+          "area_m2": 240.0,
+          "closing_stock_kg": 54.0,
+          "opening_stock_kg": 5.0,
+          "revenue_sgd": 4870.14,
+          "booked_requested_kg": 824.0,
+          "booked_delivered_kg": 496.0,
+          "residual_requested_kg": 264.032,
+          "residual_delivered_kg": 149.019,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        },
+        "deltas": {
+          "fill_rate": -0.0285,
+          "margin_sgd": -177.0,
+          "waste_kg": 26.61,
+          "harvest_kg": -4.4,
+          "shortfall_kg": 31.0,
+          "cost_sgd": -9.0,
+          "labour_hours": -0.31,
+          "area_m2": 0.0,
+          "closing_stock_kg": 0.0,
+          "opening_stock_kg": 0.0,
+          "revenue_sgd": -186.01,
+          "booked_requested_kg": 0.0,
+          "booked_delivered_kg": -22.0,
+          "residual_requested_kg": 0.0,
+          "residual_delivered_kg": -9.001,
+          "unpriced_requested_kg": 0.0,
+          "unpriced_delivered_kg": 0.0
+        }
+      }
+    },
+    "near_term_order": {
+      "order_id": "order-0-0",
+      "due_date": "2026-09-14",
+      "baseline_delivered_kg_each_policy": 22.0,
+      "scenario_delivered_kg_each_policy": 0.0,
+      "baseline_source_allocation_id": "batch-01",
+      "baseline_batch_harvest_date": "2026-09-14",
+      "scenario_batch_harvest_date": "2026-09-17",
+      "scenario_batch_order_uses_each_policy": 0
+    },
+    "later_affected_lines_fully_met": {
+      "Lean": "6/7",
+      "Balanced": "9/11",
+      "Resilient": "11/11"
+    }
+  },
+  "recorded_repairs": [
+    {
+      "event_sequence": 7,
+      "role": "weather_analyst",
+      "semantic_status": "sound",
+      "statement": "No frozen public weather observation is supplied for this experiment, so I cannot assess conditions or their uncertainty. Any comparison across the three policies would exceed that evidence limit; abstaining.",
+      "application_issue": [
+        {
+          "code": "model_authored_quantity",
+          "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+        }
+      ]
+    },
+    {
+      "event_sequence": 13,
+      "role": "production_analyst",
+      "semantic_status": "sound_with_limits",
+      "statement": "The delay leaves the delayed batch's harvest unsold in the near-term order for all policies, while later orders stay met in most policies. Limits: these are synthetic scenario-minus-baseline deltas, not observed outcomes. Relevant metrics are fill rate and harvest weight.",
+      "application_issue": [
+        {
+          "code": "typed_fact_in_context_refs",
+          "message": "Quantities and dates must use fact_refs"
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "v10:council:0:demand_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "73cfded9c5192e22a0217c6d280d3215",
+        "sequence": 2,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "demand_analyst",
+      "statement": "Booked demand is identical across policies, yet scenario booked deliveries fall in every policy versus baseline, so the delay leaves booked orders short. Limit: these are synthetic policy comparisons, not observed outcomes.",
+      "selected_fact_refs": [
+        "comparison:lean.deltas.booked_delivered_kg",
+        "comparison:balanced.deltas.booked_delivered_kg",
+        "comparison:resilient.deltas.booked_delivered_kg"
+      ],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "grounded_facts_qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "sound_with_limits",
+      "assertions": [
+        {
+          "text": "Booked requested demand is identical across policies.",
+          "status": "sound",
+          "evidence": "Baseline and scenario booked requested quantity is 824 kg for Lean, Balanced and Resilient; every requested delta is zero."
+        },
+        {
+          "text": "Scenario booked delivery falls for every policy.",
+          "status": "sound",
+          "evidence": "Booked-delivery deltas are Lean -22 kg, Balanced -20 kg and Resilient -22 kg."
+        },
+        {
+          "text": "The delay leaves booked orders short.",
+          "status": "sound_with_limits",
+          "evidence": "The delayed batch moves from 2026-09-14 to 2026-09-17, and the 2026-09-14 booked line falls from 22 kg delivered to zero in every policy. Because yield also changes and the allocator reruns, the delay alone does not explain every aggregate delivery delta."
+        },
+        {
+          "text": "The comparison is synthetic rather than observed.",
+          "status": "sound",
+          "evidence": "Snapshot data_mode is synthetic_demo."
+        }
+      ],
+      "citation_and_scope_limits": "Selected refs cover all booked-delivery deltas but omit booked-requested deltas and the affected order record. Full frozen context supports the comparison; causal scope should be limited to the near-term line."
+    },
+    {
+      "case_id": "v10:council:1:weather_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "c9afdacd79f7a5bc9e76c95fba73e8e7",
+        "sequence": 3,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "weather_analyst",
+      "statement": "No frozen public weather observation is supplied for this experiment, so I cannot assess conditions or their uncertainty. Any comparison across the policies would exceed that evidence limit; abstaining.",
+      "selected_fact_refs": [],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "sound",
+      "assertions": [
+        {
+          "text": "No frozen public weather observation is supplied.",
+          "status": "sound",
+          "evidence": "weather source context is unavailable."
+        },
+        {
+          "text": "Observed conditions and their uncertainty cannot be assessed.",
+          "status": "sound",
+          "evidence": "No weather observations, forecast or uncertainty record is present."
+        },
+        {
+          "text": "Cross-policy weather interpretation would exceed the evidence, so the role abstains.",
+          "status": "sound",
+          "evidence": "The response remains within the Weather role and contains no numerical plan facts."
+        }
+      ],
+      "citation_and_scope_limits": "This is a clean fact-free abstention under conversation context v6 and validator v5. “Any comparison” is read within the Weather role; numerical plan comparison exists for other roles."
+    },
+    {
+      "case_id": "v10:council:2:market_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "b8a05514c5a857d2966d63f526c70727",
+        "sequence": 4,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "market_analyst",
+      "statement": "No connected frozen community-market observation is available, so market consequences cannot be assessed. This abstains for lack of that source, not from evidence of no effect.",
+      "selected_fact_refs": [],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "sound",
+      "assertions": [
+        {
+          "text": "No connected frozen community-market observation is available.",
+          "status": "sound",
+          "evidence": "Market status is not_connected with zero observations."
+        },
+        {
+          "text": "Market consequences cannot be assessed.",
+          "status": "sound",
+          "evidence": "There is no observed buyer/community response evidence."
+        },
+        {
+          "text": "Missing evidence is not evidence of no effect.",
+          "status": "sound",
+          "evidence": "The abstention correctly avoids converting source absence into a market conclusion."
+        }
+      ],
+      "citation_and_scope_limits": "This is a clean fact-free abstention. It does not deny synthetic booked quantities or contract-price inputs; it declines observed market interpretation."
+    },
+    {
+      "case_id": "v10:council:3:production_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "a437a4202d2bdb3a424df8a4f96a10b6",
+        "sequence": 5,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "production_analyst",
+      "statement": "The delay leaves the delayed batch's harvest unsold in the near-term order across policies, while later orders stay met in most policies. Limits: these are synthetic scenario-minus-baseline deltas, not observed outcomes. Relevant metrics are fill rate and harvest weight.",
+      "selected_fact_refs": [
+        "comparison:lean.deltas.harvest_kg",
+        "comparison:balanced.deltas.harvest_kg",
+        "comparison:resilient.deltas.harvest_kg"
+      ],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "grounded_facts_qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "sound_with_limits",
+      "assertions": [
+        {
+          "text": "The delayed batch's harvest is unsold in the near-term order across policies.",
+          "status": "sound",
+          "evidence": "In every baseline policy batch-01 harvests 44 kg on 2026-09-14 and supplies 22 kg to order-0-0; in every scenario it harvests 39.6 kg on 2026-09-17, supplies no order line, and order-0-0 delivery is zero."
+        },
+        {
+          "text": "Later orders stay met in most policies.",
+          "status": "sound_with_limits",
+          "evidence": "Among affected later policy-lines, 6/7 Lean, 9/11 Balanced and 11/11 Resilient are fully met. The wording is ambiguous: not every later order remains met for Lean or Balanced."
+        },
+        {
+          "text": "The deltas are synthetic rather than observed.",
+          "status": "sound",
+          "evidence": "The scenario is synthetic_demo."
+        },
+        {
+          "text": "Fill rate and harvest weight are relevant metrics.",
+          "status": "sound",
+          "evidence": "Both metrics decline for every policy."
+        }
+      ],
+      "citation_and_scope_limits": "The selected refs only show harvest deltas. They do not prove sale/allocation or later-order claims; those require full persisted order allocations and affected delivery lines inspected through the read-only scenario GET."
+    },
+    {
+      "case_id": "v10:council:4:supply_chain_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "0b2419ace351cfc2d3c49b1a8382083a",
+        "sequence": 6,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "supply_chain_analyst",
+      "statement": "Delivery timing is the binding issue: the delayed batch's near-term booked line drops to zero delivered in all policies, while later dated lines remain filled in most policies. This is a synthetic comparison, not an observed outcome.",
+      "selected_fact_refs": [
+        "comparison:balanced.deltas.fill_rate",
+        "comparison:lean.deltas.fill_rate",
+        "comparison:resilient.deltas.fill_rate"
+      ],
+      "selected_tool_refs": [
+        "scenario:controls",
+        "comparison:balanced.violations",
+        "comparison:resilient.violations"
+      ],
+      "application_validation": {
+        "status": "unsupported",
+        "evidence_status": "unsupported",
+        "issues": [
+          {
+            "code": "model_authored_quantity",
+            "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+          }
+        ]
+      },
+      "semantic_status": "sound_with_limits",
+      "assertions": [
+        {
+          "text": "Delivery timing is the binding issue for the delayed near-term line.",
+          "status": "sound_with_limits",
+          "evidence": "The booked line is due 2026-09-14; its baseline lot comes from batch-01 harvested that day, while the scenario batch harvests 2026-09-17. This supports timing for that line, not every aggregate loss."
+        },
+        {
+          "text": "The delayed batch's near-term booked line drops to zero delivered in all policies.",
+          "status": "sound",
+          "evidence": "order-0-0 delivery changes 22 kg to zero for Lean, Balanced and Resilient."
+        },
+        {
+          "text": "Later dated lines remain filled in most policies.",
+          "status": "sound_with_limits",
+          "evidence": "Most affected later policy-lines are filled: Lean 6/7, Balanced 9/11, Resilient 11/11. Some later Lean and Balanced lines are unfilled."
+        },
+        {
+          "text": "The comparison is synthetic, not observed.",
+          "status": "sound",
+          "evidence": "Snapshot data_mode is synthetic_demo."
+        }
+      ],
+      "citation_and_scope_limits": "Application status is unsupported because “zero” is a model-authored quantity. Selected fact refs are fill-rate deltas rather than the order-line facts needed for the prose. Full frozen context supports the narrow timing statement, but validator v5 does not verify that entailment."
+    },
+    {
+      "case_id": "v10:council:5:profit_analyst",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "16d27ed18cee1ce95988fd5f275a063a",
+        "sequence": 7,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "profit_analyst",
+      "statement": "Cost and margin effects differ by policy: Lean shows a small margin gain versus both Balanced and Resilient, which each show margin losses. Limit: these are synthetic scenario-minus-baseline deltas, not observed outcomes.",
+      "selected_fact_refs": [
+        "comparison:lean.deltas.margin_sgd",
+        "comparison:balanced.deltas.margin_sgd",
+        "comparison:resilient.deltas.margin_sgd"
+      ],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "grounded_facts_qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "contradiction",
+      "assertions": [
+        {
+          "text": "Cost and margin effects differ by policy.",
+          "status": "sound",
+          "evidence": "Cost deltas are +13.88, -9.39 and -9.00 SGD; margin deltas are -52.87, -225.61 and -177.00 SGD."
+        },
+        {
+          "text": "Lean shows a small margin gain.",
+          "status": "contradiction",
+          "evidence": "Lean margin falls from 2467.60 to 2414.73 SGD, a -52.87 SGD delta."
+        },
+        {
+          "text": "Balanced and Resilient show margin losses.",
+          "status": "sound",
+          "evidence": "Their margin deltas are -225.61 and -177.00 SGD."
+        },
+        {
+          "text": "The values are synthetic, not observed.",
+          "status": "sound",
+          "evidence": "Snapshot data_mode is synthetic_demo."
+        }
+      ],
+      "citation_and_scope_limits": "Material contradiction despite correct selected margin references and references_verified status. The following Chair response correctly states that every margin falls."
+    },
+    {
+      "case_id": "v10:council:6:planning_chair",
+      "record": {
+        "artifact": "reports/v10/conversation-public-replay.json",
+        "message_id": "3b74bd2076275f645b9b89e4f62909d9",
+        "sequence": 8,
+        "request_id": "026984777d73ed1fef053e85df3d6963"
+      },
+      "role": "planning_chair",
+      "statement": "Across policies, scenario fill rates sit below their baselines and shortfalls rise, with Resilient highest and Lean lowest. Margins fall under all policies, though Lean's decline is smallest. These are synthetic deltas, not observed effects.",
+      "selected_fact_refs": [
+        "comparison:lean.deltas.fill_rate",
+        "comparison:balanced.deltas.fill_rate",
+        "comparison:resilient.deltas.fill_rate"
+      ],
+      "selected_tool_refs": [],
+      "application_validation": {
+        "status": "references_verified",
+        "evidence_status": "grounded_facts_qualitative_unverified",
+        "issues": []
+      },
+      "semantic_status": "sound_with_limits",
+      "assertions": [
+        {
+          "text": "Every scenario fill rate is below baseline and every shortfall rises.",
+          "status": "sound",
+          "evidence": "Fill deltas are -0.0230, -0.0303 and -0.0285; shortfall deltas are +25.00, +33.01 and +31.00 kg."
+        },
+        {
+          "text": "Resilient is highest and Lean lowest.",
+          "status": "sound_with_limits",
+          "evidence": "This is true for scenario fill rate: 0.5928 versus 0.5037 and 0.4145. It is false for shortfall, where Resilient is lowest and Lean highest; the sentence does not name the ranked metric."
+        },
+        {
+          "text": "Margins fall under all policies and Lean has the smallest decline.",
+          "status": "sound",
+          "evidence": "Margin deltas are Lean -52.87, Balanced -225.61, Resilient -177.00 SGD."
+        },
+        {
+          "text": "The deltas are synthetic, not observed effects.",
+          "status": "sound",
+          "evidence": "Snapshot data_mode is synthetic_demo."
+        }
+      ],
+      "citation_and_scope_limits": "Selected refs contain only fill-rate deltas, so shortfall and margin assertions require the full frozen comparison. The margin statement correctly contradicts the Profit response, but the Chair does not explicitly rebut it."
+    }
+  ],
+  "global_limits": [
+    "This is an AI-assisted consistency review, not independent human expert validation.",
+    "The combined delay, yield reduction and allocator rerun do not identify a unique cause for aggregate outcomes.",
+    "Reference validation does not prove that arbitrary qualitative prose follows from selected references.",
+    "Synthetic results do not establish real agronomy, demand, market, logistics, costs, or farm safety.",
+    "No further paid request or capacity bypass was attempted."
+  ]
+}

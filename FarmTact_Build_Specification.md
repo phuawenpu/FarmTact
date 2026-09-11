@@ -2,22 +2,22 @@
 
 ## Implementation audit amendment — 11 September 2026
 
-This amendment records published **v9** separately from the broader v1.2
-requirements below. V9 was published from source
-`89d29cc3e071e12373204ff234d0a261ce71b5a1` and immutable image
-`registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4`.
+This amendment records published **v10** separately from the broader v1.2
+requirements below. V10 was published from source
+`ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` and immutable image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
 It supersedes conflicting current-state descriptions without changing immutable
-v1–v8 source, images or game state. See the [V9 AI follow-up](docs/technical/v9-ai-followup.md),
-[V9 evidence](reports/v9/), [V8 remediation report](docs/technical/v8-remediation-report.md)
-and [V8 evidence](reports/v8/).
+v1–v9 source, images or game state. See the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md),
+[V10 evidence](reports/v10/), [V9 AI follow-up](docs/technical/v9-ai-followup.md),
+[V8 remediation report](docs/technical/v8-remediation-report.md) and [V8 evidence](reports/v8/).
 See the [scientific implementation report](docs/technical/README.md), detailed
 [game backend audit](docs/technical/game-backend-and-state-machines.md), and
 [gap register](docs/technical/gaps-and-next-iteration.md).
 
 ### Current implementation boundary
 
-- Latest published edition is **v9**. One Singapore Fly Machine and volume host
-  ten isolated containers: the gateway and v1–v9. Twelve crop profiles and
+- Latest published edition is **v10**. One Singapore Fly Machine and volume host
+  eleven isolated containers: the gateway and v1–v10. Twelve crop profiles and
   twenty-four publication records support **four synthetic single-harvest recipes**.
 - The application uses React/TypeScript/**Vite**, FastAPI, PostgreSQL JSON records,
   local content-addressed public snapshots, and in-process worker loops. The broad
@@ -55,7 +55,7 @@ See the [scientific implementation report](docs/technical/README.md), detailed
   ledgers, and can replan remaining days while locking started work. The farm-map
   slider remains a static projection. No real farm action is enabled.
 
-### V8 remediation, V9 follow-up and remaining requirements
+### V8 remediation, V9 follow-up, V10 grounding and remaining requirements
 
 Published V8 source implements the typed Council facts/status/policy work, canonical
 harvest contract, weighted-scenario and FEFO planner corrections, explicit terminal
@@ -65,8 +65,8 @@ synthetic execution clock. The dated remediation report maps these changes to th
 stable gap IDs. Publication and health checks establish deployment of that source;
 they do not establish live answer quality.
 
-V9 conversation prompts/projection are V5. Mission prompts/projection are V6 and
-validation is V4: short
+V10 conversation prompts/projection are V6. Mission prompts/projection are V7,
+validation is V5 and schema is V3: short
 per-role `F001`/`C001` aliases resolve by exact server lookup to canonical frozen
 facts and qualitative references, and unknown aliases fail closed. Role-ranked
 context is bounded to 48 typed facts, 24 qualitative references, 16 prior turns,
@@ -79,7 +79,7 @@ eleven conversation and one research), bringing the cumulative ledger to 76. Its
 automated quality result is FAIL: 12 of 18 cases passed while workflow integrity
 passed. Two Council abstentions persisted unsupported; the scorer also missed a
 false full-fulfilment claim for an 824 kg booked request against 370/446/518 kg
-scenario deliveries. The completed AI-assisted review of 18 messages and 62 atomic
+strategy deliveries. The completed AI-assisted review of 18 messages and 62 atomic
 assertions found 10 sound, 5 sound with limits and 3 materially contradictory:
 Planning Supply and two Production replies. Publication and transport evidence do
 not establish answer quality.
@@ -801,7 +801,7 @@ Use a TypeScript/React frontend, preferably Next.js; a Python FastAPI/Pydantic b
 
 These are design choices, not a claim that a particular version is currently best. The master agent verifies current compatible versions and locks dependencies at implementation time. Do not guess future package versions. Use containers for reproducible local execution and separate real integration tests from fixture-only CI.
 
-Run numerical models and optimization in Python. Generate frontend types from the authoritative Pydantic view models with `scripts/generate_web_contracts.py`; the generated TypeScript file is not hand-maintained. Use the DeepSeek-only server adapter and its documented Chat Completions JSON contract; schema conformance still requires local validation and semantic checks. The v9 manifest requests exact canonical `deepseek-flash` for every current text and native-vision route and rejects a returned identifier that differs from the request. It uses `https://api.deepseek.com/chat/completions`. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
+Run numerical models and optimization in Python. Generate frontend types from the authoritative Pydantic view models with `scripts/generate_web_contracts.py`; the generated TypeScript file is not hand-maintained. Use the DeepSeek-only server adapter and its documented Chat Completions JSON contract; schema conformance still requires local validation and semantic checks. The v10 manifest requests exact canonical `deepseek-flash` for every current text and native-vision route and rejects a returned identifier that differs from the request. It uses `https://api.deepseek.com/chat/completions`. Deterministic replay is explicitly labelled and makes no new inference calls. No secret or provider key belongs in frontend code.
 
 ### 9.2 Repository layout
 
@@ -1073,10 +1073,10 @@ completed, but Weather and Market abstentions persisted `unsupported` with
 with workflow integrity PASS. The completed AI-assisted semantic review determined
 that four automated failures were conservative prefix/word false negatives and two
 were real abstention-contract failures. Separately, the scorer passed Supply's false claim that
-an 824 kg booked request was fully delivered despite scenario deliveries of 370,
+an 824 kg booked request was fully delivered despite strategy deliveries of 370,
 446 and 518 kg. The cumulative actual-request ledger is 76.
 
-## V10 grounding-remediation candidate — unpublished
+## V10 grounding-remediation edition — published 11 September 2026
 
 V10 advances mission prompt/context to V7, conversation prompt/context to V6 and
 validator to V5 while retaining schema V3. Code derives Supply's booked-fulfilment
@@ -1085,8 +1085,45 @@ conversation context strips numerical and prior-conversation prose and supplies
 explicit empty arrays with `typed_required=false`. The absence-only projection
 applies only to Weather/Market in conversational Council mode when their source is
 absent; numerical direct/invite and research retain their existing projections. See
-the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md). The V10
-full suite passed 611 tests with one skip in 441.23 seconds. Candidate checks do not
-establish publication or provider-backed quality. The narrow fix does not establish
+the [V10 grounding follow-up](docs/technical/v10-grounding-followup.md). V10 is
+published from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` with image
+`registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
+Its full suite passed 611 tests with one skip in 441.23 seconds, and all ten
+health/source checks plus captured v1-v9 preservation passed. The Council-only
+live trial used nine requests for seven messages and passed 5 of 7 targeted cases:
+Weather/Market absence handling passed, Supply was withheld for model-authored
+`zero`, and Chair missed a topic word. A fresh mission was correctly withheld with
+zero provider calls because 41 public requests were used and seven remained, below
+its nine-request reservation; all three numerical strategies were retained. The
+cumulative ledger is 85 (44 local and 41 public). No new direct, invite, research
+or vision result is claimed. The narrow fix does not establish
 general prose or crop-mix entailment; the two V9 Production contradictions remain
 unresolved evidence. V8 and V9 stay unchanged.
+
+**Future acceptance requirement — not implemented in V10:** Replace ad hoc prose
+guarantees with typed comparison propositions carrying the metric, operands,
+relation and scope, verified locally before rendering. Derive crop-allocation
+composition changes in code, and represent causal limits when multiple controls
+change or the optimizer reruns. Evaluate semantic gates on a calibrated set that
+measures both false positives and false negatives, including false claims that cite
+valid references. Phrase guards remain bounded safety checks, not proof of meaning.
+
+
+Final V10 semantic evidence: `reports/v10/ai-assisted-semantic-review.md` audits
+seven messages and 26 assertions: two sound, four sound with limits, one
+contradiction. Profit incorrectly labels Lean's −SGD 52.87 margin delta as a gain.
+This AI-assisted review is not human expert validation. V10 quality remains failed
+and its fresh mission-provider path was budget-blocked; publication and numerical
+regression do not close this semantic acceptance requirement. The public 56-day
+execution passed mass/cash/order-lot reconciliation and historical receipt replay
+with zero provider calls (`reports/v10/execution-public.json`).
+
+
+V10 final capacity evidence is **FAIL** (`reports/v10/shared-capacity-public.json`):
+the isolated pair exceeded the 180-second job deadline and browse p95 reached
+15.0367 seconds. An earlier mixed-load probe also failed. HTTP health, farm/cookie
+isolation and zero inference passed; they do not imply loaded performance passed.
+Future acceptance requires queue/execution tracing, CPU/platform-quota measurement,
+shared numerical admission control evaluation and bounded cancellation testing.
+No host resource increase or threshold relaxation was made. See the V10 technical
+follow-up and capacity protocol note for exact scope and cleanup.

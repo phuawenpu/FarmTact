@@ -1,0 +1,21 @@
+{
+  "actual_application_http": true,
+  "cash_conservation": "PASS",
+  "day_closed_events": 56,
+  "days_executed": 56,
+  "demand_service_events": 64,
+  "future_replans": 1,
+  "get_inference_calls": 0,
+  "historical_action_replay": "PASS",
+  "mass_conservation": "PASS",
+  "order_lot_conservation": "PASS",
+  "provider_calls": 0,
+  "restart_persistence": "NOT_EXERCISED_IN_ALL_PHASE",
+  "run_id": "bf29b1943e8446f4fef347c99b367feb",
+  "schema_version": "farmtact-v8-execution-trial-1.0.0",
+  "simulation_only": true,
+  "status": "PASS",
+  "task_events": 60,
+  "world_hash": "9a8a41d7985c850ffb4d12eef3269155e4288588031ebc0cf09cb9143c86db52",
+  "world_id": "b326d5588cd9a21ea04b212421d322c3"
+}

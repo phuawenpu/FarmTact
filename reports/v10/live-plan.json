@@ -1,6 +1,6 @@
 {
   "schema_version": "farmtact-v10-live-plan-1",
-  "status": "planned_before_calls",
+  "status": "completed_with_failed_quality_and_budget_block",
   "target": "https://farmtact.fly.dev/v10",
   "changed_workflows": [
     "planning",
@@ -19,5 +19,22 @@
     "research",
     "vision"
   ],
-  "claim_limit": "Targeted verification of changed paths only. Earlier workflows retain original source/fixture scope; shared cap not bypassed ifblocked. No retry for a favorable output."
+  "claim_limit": "Targeted verification of changed paths only. Earlier workflows retain original source/fixture scope; shared cap not bypassed ifblocked. No retry for a favorable output.",
+  "observed": {
+    "conversation": {
+      "actual_calls": 9,
+      "messages": 7,
+      "status": "FAIL",
+      "corrected_absent_source_roles": "references_verified_empty_arrays",
+      "remaining_unsupported_role": "supply_chain_analyst"
+    },
+    "planning": {
+      "actual_calls": 0,
+      "status": "REVIEW_WITHHELD",
+      "reason": "Full nine-call reservation cannot fit seven remaining shared calls"
+    },
+    "cumulative_task_calls": 85,
+    "public_calls_today": 41,
+    "no_further_paid_retry": true
+  }
 }

@@ -1,13 +1,15 @@
 # FarmTact documentation
 
-Documentation audit: **11 September 2026**. Published application: **v9**, frozen
-from source `89d29cc3e071e12373204ff234d0a261ce71b5a1`. All nine health/source
-checks and captured v1–v8 preservation passed. Earlier edition source, images,
+Documentation audit: **11 September 2026**. Published application: **v10**, frozen
+from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3`. All ten health/source
+checks and captured v1–v9 preservation passed. Earlier edition source, images,
 state and trial reports remain immutable. V8 public AI quality failed. V9 is the
 separate published corrective edition, but its live quality gate also failed:
 12 of 18 automated cases passed while workflow integrity passed. The completed
 AI-assisted review classified 10 messages as sound, 5 as sound with limits and 3
-as materially contradictory. V10 is the unpublished grounding-remediation candidate.
+as materially contradictory. V10 is the published grounding-remediation edition;
+its targeted Council-only quality result is FAIL (5 of 7 cases passed), and its fresh mission
+was correctly withheld at the request-budget boundary before inference.
 
 ## Start here
 
@@ -19,8 +21,8 @@ as materially contradictory. V10 is the unpublished grounding-remediation candid
 | How are demand, plant development and plans calculated? | [Numerical models and growth](technical/numerical-models-and-growth.md) |
 | How do missions, quests, proposals, acceptance, replay and simulated work behave? | [Complete game backend](technical/game-backend-and-state-machines.md) |
 | Where do records, evidence and public context come from? | [System, data and evidence](technical/system-data-and-evidence.md) |
-| What remains missing or misleading after v8/v9? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
-| What does the unpublished V10 candidate correct? | [V10 grounding follow-up](technical/v10-grounding-followup.md) |
+| What remains missing or misleading after v8–v10? | [Gap register and acceptance criteria](technical/gaps-and-next-iteration.md) |
+| What does V10 correct and leave unresolved? | [V10 grounding follow-up](technical/v10-grounding-followup.md) |
 | Which AI defects did the public trial expose, and how are they corrected? | [V9 AI follow-up](technical/v9-ai-followup.md) |
 | What did v8 change, verify and leave unresolved? | [V8 remediation report](technical/v8-remediation-report.md) |
 | What do the bounded v8 work packages report? | [Council](../reports/v8/council.md), [planner](../reports/v8/planner.md), [data/ML](../reports/v8/data-ml.md) |
@@ -63,10 +65,13 @@ quality result is FAIL (12 of 18 passed; workflow integrity passed) after 21 new
 actual requests, bringing the cumulative ledger to 76. The
 [AI-assisted semantic review](../reports/v9/ai-assisted-semantic-review.md) found
 10 sound messages, 5 sound with limits and 3 materially contradictory. The narrow
-unpublished [V10 remediation candidate](technical/v10-grounding-followup.md)
+published [V10 remediation edition](technical/v10-grounding-followup.md)
 addresses the Supply and absence-context mechanisms. Its full suite passed 611
-tests with one skip in 441.23 seconds; publication and provider-backed verification
-remain pending, and general prose/crop-mix entailment remains unresolved.
+tests with one skip in 441.23 seconds. Its Council-only live run used nine requests
+for seven messages and passed 5 of 7 targeted cases. A fresh mission used zero
+provider calls because seven remaining daily requests could not satisfy its nine-call
+reservation; the three numerical strategies were retained. Direct, invite, research
+and vision were not rerun. General prose/crop-mix entailment remains unresolved.
 
 The [authenticated public V9 UI replay](../reports/v9/ui-live-replay.json) passed 38 of 38 checks across mobile and
 desktop widths. It used saved mission, conversation and research state; mutation
@@ -77,3 +82,20 @@ samples with zero provider calls. Its 56-day synthetic execution run passed mass
 cash and lot-receipt checks with 60 task events, 64 demand-service events, one
 future replan and zero provider calls; an actual application restart was not
 exercised.
+
+The final [V10 semantic audit](../reports/v10/ai-assisted-semantic-review.md)
+examines seven messages and 26 assertions: two sound, four with limits, one
+contradictory. Profit mislabels a negative Lean margin delta as a gain. This is
+AI-assisted review, not human expert validation. The [V10 execution trial](../reports/v10/execution-public.json)
+passed 56 days of numerical reconciliation and receipt replay with zero provider
+calls; these are separate evidence dimensions.
+
+
+V10 final capacity evidence is **FAIL** (`reports/v10/shared-capacity-public.json`):
+the isolated pair exceeded the 180-second job deadline and browse p95 reached
+15.0367 seconds. An earlier mixed-load probe also failed. HTTP health, farm/cookie
+isolation and zero inference passed; they do not imply loaded performance passed.
+Future acceptance requires queue/execution tracing, CPU/platform-quota measurement,
+shared numerical admission control evaluation and bounded cancellation testing.
+No host resource increase or threshold relaxation was made. See the V10 technical
+follow-up and capacity protocol note for exact scope and cleanup.

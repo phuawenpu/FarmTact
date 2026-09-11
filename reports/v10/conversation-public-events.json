@@ -1,0 +1,358 @@
+{
+  "events": [
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": null,
+      "sequence": 1,
+      "occurred_at": "2026-09-11T13:17:12.085443+00:00",
+      "event_type": "conversation_created",
+      "schema_version": "1.0",
+      "body": {
+        "advisor_id": "mei",
+        "snapshot_ref": {
+          "kind": "scenario",
+          "id": "ebd70bbcf26a5945f7716ecb8532253d",
+          "hash": "b0aba1dbf560acc67f5d1894f681a73e5eb0d56a5c2ef15356a166290edfb6d7",
+          "version": 1,
+          "data_mode": "synthetic_demo",
+          "frozen_at": "2026-09-11T13:17:12.024454+00:00"
+        }
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 2,
+      "occurred_at": "2026-09-11T13:17:12.675944+00:00",
+      "event_type": "message_queued",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "173f8a96a8a5b78f7a5fa95b0ca9659f",
+        "mode": "council",
+        "advisor_turns": 7
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 3,
+      "occurred_at": "2026-09-11T13:17:12.797673+00:00",
+      "event_type": "conversation_request_started",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "council",
+        "advisor_turns": 7
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 4,
+      "occurred_at": "2026-09-11T13:17:12.949000+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 1,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 5,
+      "occurred_at": "2026-09-11T13:17:15.139562+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "73cfded9c5192e22a0217c6d280d3215",
+        "speaker_id": "ravi",
+        "reply_to": "173f8a96a8a5b78f7a5fa95b0ca9659f",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 6,
+      "occurred_at": "2026-09-11T13:17:15.155975+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 2,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 7,
+      "occurred_at": "2026-09-11T13:17:16.301503+00:00",
+      "event_type": "advisor_reply_rejected",
+      "schema_version": "1.0",
+      "body": {
+        "role": "weather_analyst",
+        "repair_attempt": 1,
+        "content": "No frozen public weather observation is supplied for this experiment, so I cannot assess conditions or their uncertainty. Any comparison across the three policies would exceed that evidence limit; abstaining.",
+        "evidence_refs": [],
+        "tool_refs": [],
+        "fact_refs": [],
+        "highlight_refs": [],
+        "relationship": "abstention",
+        "proposed_actions": [],
+        "validation_issues": [
+          {
+            "code": "model_authored_quantity",
+            "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1671,
+          "completion_tokens": 79,
+          "total_tokens": 1750,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 1671,
+          "reasoning_tokens": null
+        },
+        "execution_status": "format_rejected",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 8,
+      "occurred_at": "2026-09-11T13:17:16.311840+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 3,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 9,
+      "occurred_at": "2026-09-11T13:17:17.077387+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "c9afdacd79f7a5bc9e76c95fba73e8e7",
+        "speaker_id": "hana",
+        "reply_to": "73cfded9c5192e22a0217c6d280d3215",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 10,
+      "occurred_at": "2026-09-11T13:17:17.096060+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 4,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 11,
+      "occurred_at": "2026-09-11T13:17:17.891815+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "b8a05514c5a857d2966d63f526c70727",
+        "speaker_id": "idris",
+        "reply_to": "c9afdacd79f7a5bc9e76c95fba73e8e7",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 12,
+      "occurred_at": "2026-09-11T13:17:17.919187+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 5,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 13,
+      "occurred_at": "2026-09-11T13:17:19.177865+00:00",
+      "event_type": "advisor_reply_rejected",
+      "schema_version": "1.0",
+      "body": {
+        "role": "production_analyst",
+        "repair_attempt": 2,
+        "content": "The delay leaves the delayed batch's harvest unsold in the near-term order for all policies, while later orders stay met in most policies. Limits: these are synthetic scenario-minus-baseline deltas, not observed outcomes. Relevant metrics are fill rate and harvest weight.",
+        "evidence_refs": [],
+        "tool_refs": [
+          "scenario:controls.delay_days"
+        ],
+        "fact_refs": [
+          "comparison:lean.deltas.harvest_kg",
+          "comparison:balanced.deltas.harvest_kg",
+          "comparison:resilient.deltas.harvest_kg"
+        ],
+        "highlight_refs": [],
+        "relationship": "answer",
+        "proposed_actions": [],
+        "validation_issues": [
+          {
+            "code": "typed_fact_in_context_refs",
+            "message": "Quantities and dates must use fact_refs"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 19745,
+          "completion_tokens": 143,
+          "total_tokens": 19888,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 19745,
+          "reasoning_tokens": null
+        },
+        "execution_status": "format_rejected",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 14,
+      "occurred_at": "2026-09-11T13:17:19.190688+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 6,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 15,
+      "occurred_at": "2026-09-11T13:17:20.500956+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "a437a4202d2bdb3a424df8a4f96a10b6",
+        "speaker_id": "mei",
+        "reply_to": "b8a05514c5a857d2966d63f526c70727",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 16,
+      "occurred_at": "2026-09-11T13:17:20.524366+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 7,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 17,
+      "occurred_at": "2026-09-11T13:17:21.844617+00:00",
+      "event_type": "advisor_message_unsupported",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "0b2419ace351cfc2d3c49b1a8382083a",
+        "speaker_id": "lina",
+        "reply_to": "a437a4202d2bdb3a424df8a4f96a10b6",
+        "validation_status": "unsupported",
+        "execution_status": "completed",
+        "evidence_status": "unsupported"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 18,
+      "occurred_at": "2026-09-11T13:17:21.864242+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 8,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 19,
+      "occurred_at": "2026-09-11T13:17:23.232683+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "16d27ed18cee1ce95988fd5f275a063a",
+        "speaker_id": "ben",
+        "reply_to": "0b2419ace351cfc2d3c49b1a8382083a",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 20,
+      "occurred_at": "2026-09-11T13:17:23.251385+00:00",
+      "event_type": "inference_request_reserved",
+      "schema_version": "1.0",
+      "body": {
+        "request_index": 9,
+        "reserved_output_tokens": 1536
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 21,
+      "occurred_at": "2026-09-11T13:17:25.396281+00:00",
+      "event_type": "advisor_message",
+      "schema_version": "1.0",
+      "body": {
+        "message_id": "3b74bd2076275f645b9b89e4f62909d9",
+        "speaker_id": "asha",
+        "reply_to": "16d27ed18cee1ce95988fd5f275a063a",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
+        "evidence_status": "grounded_facts_qualitative_unverified"
+      }
+    },
+    {
+      "conversation_id": "2c3ad027cfe3cbf827f60bbb5fa0ba7c",
+      "request_id": "026984777d73ed1fef053e85df3d6963",
+      "sequence": 22,
+      "occurred_at": "2026-09-11T13:17:25.441317+00:00",
+      "event_type": "conversation_request_completed",
+      "schema_version": "1.0",
+      "body": {
+        "mode": "council",
+        "completed_turns": 7,
+        "repair_attempts": 2
+      }
+    }
+  ],
+  "next_cursor": 22
+}

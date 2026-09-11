@@ -1,0 +1,285 @@
+{
+  "automated_status": "FAIL",
+  "case_count": 7,
+  "execution_scope": "stored_actual_outputs_no_new_inference",
+  "explicitly_excluded_workflows": [
+    "direct",
+    "invite",
+    "research",
+    "vision"
+  ],
+  "failed_case_ids": [
+    "conversation:council:4:supply_chain_analyst",
+    "conversation:council:6:planning_chair"
+  ],
+  "human_reviews": {},
+  "pass_scope": "Automated status covers exact workflow roles and counts, persisted validation, reference shape, required topic groups, quantitative-prose blocking, and known contradiction phrases. It does not establish that arbitrary prose follows from facts.",
+  "provider_calls": 0,
+  "required_workflows": [
+    "council",
+    "planning"
+  ],
+  "results": [
+    {
+      "attempts": [],
+      "case_id": "conversation:council:0:demand_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "73cfded9c5192e22a0217c6d280d3215",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 130,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 19219,
+        "prompt_tokens": 19219,
+        "reasoning_tokens": null,
+        "total_tokens": 19349
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:1:weather_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "c9afdacd79f7a5bc9e76c95fba73e8e7",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 75,
+        "prompt_cache_hit_tokens": 1664,
+        "prompt_cache_miss_tokens": 212,
+        "prompt_tokens": 1876,
+        "reasoning_tokens": null,
+        "total_tokens": 1951
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:2:market_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "b8a05514c5a857d2966d63f526c70727",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 73,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1684,
+        "prompt_tokens": 1684,
+        "reasoning_tokens": null,
+        "total_tokens": 1757
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:3:production_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "a437a4202d2bdb3a424df8a4f96a10b6",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 133,
+        "prompt_cache_hit_tokens": 19712,
+        "prompt_cache_miss_tokens": 297,
+        "prompt_tokens": 20009,
+        "reasoning_tokens": null,
+        "total_tokens": 20142
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:4:supply_chain_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": false,
+        "expected_reference": false,
+        "persisted_validation": false,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": false,
+        "useful_answer": true
+      },
+      "message_id": "0b2419ace351cfc2d3c49b1a8382083a",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 138,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20068,
+        "prompt_tokens": 20068,
+        "reasoning_tokens": null,
+        "total_tokens": 20206
+      },
+      "validation_issues": [
+        {
+          "code": "model_authored_quantity",
+          "message": "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
+        }
+      ],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:5:profit_analyst",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": true,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "16d27ed18cee1ce95988fd5f275a063a",
+      "status": "PASS",
+      "usage": {
+        "completion_tokens": 121,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20217,
+        "prompt_tokens": 20217,
+        "reasoning_tokens": null,
+        "total_tokens": 20338
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    },
+    {
+      "attempts": [],
+      "case_id": "conversation:council:6:planning_chair",
+      "checks": {
+        "abstention": true,
+        "contradiction": true,
+        "evidence": true,
+        "expected_reference": true,
+        "persisted_validation": true,
+        "reference_integrity": true,
+        "relationship": true,
+        "role_relevance": false,
+        "unsupported_quantity": true,
+        "useful_answer": true
+      },
+      "message_id": "3b74bd2076275f645b9b89e4f62909d9",
+      "status": "FAIL",
+      "usage": {
+        "completion_tokens": 120,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 20419,
+        "prompt_tokens": 20419,
+        "reasoning_tokens": null,
+        "total_tokens": 20539
+      },
+      "validation_issues": [],
+      "workflow": "council"
+    }
+  ],
+  "scope_basis": "reports/v10/live-plan.json, recorded before any V10 provider calls",
+  "semantic_assurance": "Human review checks whether each conclusion follows from its rendered frozen facts; keyword and reference checks alone do not establish meaning.",
+  "semantic_review_status": "PENDING",
+  "source_artifacts": {
+    "conversation": "reports/v10/conversation-public-replay.json",
+    "planning": "reports/v10/planning-public.json"
+  },
+  "status": "FAIL",
+  "suite_version": "farmtact-advisor-quality-v2",
+  "workflow_integrity": {
+    "status": "FAIL",
+    "workflows": [
+      {
+        "checks": {
+          "exact_message_count": true,
+          "exact_role_sequence": true,
+          "single_request": true
+        },
+        "expected_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "observed_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "status": "PASS",
+        "workflow": "council"
+      },
+      {
+        "checks": {
+          "exact_message_count": false,
+          "exact_role_sequence": false,
+          "single_request": true
+        },
+        "expected_roles": [
+          "demand_analyst",
+          "weather_analyst",
+          "market_analyst",
+          "production_analyst",
+          "supply_chain_analyst",
+          "profit_analyst",
+          "planning_chair"
+        ],
+        "observed_roles": [],
+        "status": "FAIL",
+        "workflow": "planning"
+      }
+    ]
+  }
+}
