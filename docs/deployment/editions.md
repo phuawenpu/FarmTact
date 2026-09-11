@@ -177,3 +177,12 @@ follow-up and capacity protocol note for exact scope and cleanup.
 `scripts/stage_edition_candidate.py` builds or accepts an exact committed image and stages the next unused edition on the shared host while preserving the public registry. No publication number is reserved until the normal publisher runs. Candidate requests use authenticated operator access; no public candidate endpoint or secret-bearing diagnostic endpoint is created. Validate the staged image, full source identity, numerical/Council journey and all three prescribed capacity trials before publishing that identical source/image with `scripts.publish_edition`. Unpublished candidate failures may be corrected and restaged; no published edition may be overwritten.
 
 Starting with V11, the gateway uses the new candidate image so the root chooser reflects the numeric newest-first ordering. Older edition container images remain unchanged.
+
+Staged V11 admission is explicitly configured with `FARMTACT_STAGED_EDITION` on
+the gateway. The control service admits only that exact next unpublished number,
+under the same authentication, rate limits and shared provider cap. Public routing
+continues to require the published registry. When restaging an unlisted candidate,
+the staging helper verifies and resets only its local release manifest to the
+published prefix; candidate game data and all published containers' manifests are
+retained. Keep the staging record for safe retries. Stage and publish on the same
+UTC date, because release metadata includes that date.

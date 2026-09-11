@@ -24,7 +24,8 @@ def test_config_retains_registry_images_and_bounds_one_machine():
     assert config["guest"] == {"cpu_kind": "shared", "cpus": 4, "memory_mb": 4096}
     assert config["mounts"] == [{"volume": "vol_review123", "path": "/persist"}]
     assert config["services"][0]["internal_port"] == 8080
-    assert containers["gateway"]["image"] == GATEWAY_IMAGE
+    expected_gateway = source['editions'][-1]['image_digest'] if int(source['latest'][1:]) >= 11 else GATEWAY_IMAGE
+    assert containers["gateway"]["image"] == expected_gateway
     assert {name: row["image"] for name, row in containers.items() if name != "gateway"} == {
         row["id"]: row["image_digest"] for row in source["editions"]
     }

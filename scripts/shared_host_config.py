@@ -37,6 +37,8 @@ def machine_config(registry, volume, *, public=False, origin='https://farmtact.f
                    PYTHONUNBUFFERED='1')
         if gateway: env.update(FARMTACT_ROLE='gateway', FARMTACT_EDITION_UPSTREAMS=json.dumps(upstreams))
         else: env.update(FARMTACT_EDITION=name, FARMTACT_CONTROL_URL='http://farmtact-local-control.flycast:8080')
+        if gateway and int(ids[-1][1:]) >= 11:
+            env['FARMTACT_STAGED_EDITION'] = ids[-1]
         containers.append(dict(name=name,image=image,env=env,
             secrets=[dict(env_var=key,name=key) for key in (['FARMTACT_CONTROL_SECRET'] if gateway else ['FARMTACT_CONTROL_SECRET','DEEPSEEK_API_KEY'])],
             entrypoint=['python','/opt/farmtact-shared-entrypoint.py'],

@@ -141,3 +141,19 @@ def test_concurrent_editions_never_exceed_daily_ceiling(control):
     assert sum(results) == 6
     with store.engine.connect() as connection:
         assert connection.execute(select(budget.c.reserved_calls).where(budget.c.id == DAY)).scalar_one() == 48
+
+
+def test_staged_next_edition_requires_explicit_admission_and_shares_budget(control, monkeypatch):
+    from services.api.release_registry import registry
+    _store, client = control
+    next_id = f"v{len(registry()['editions']) + 1}"
+    monkeypatch.delenv('FARMTACT_STAGED_EDITION', raising=False)
+    assert post(client, 'reserve', reservation(next_id, count=7)).status_code == 409
+    monkeypatch.setenv('FARMTACT_STAGED_EDITION', next_id)
+    assert post(client, 'reserve', reservation(next_id, count=7), 'wrong').status_code == 401
+    assert post(client, 'reserve', reservation(next_id, count=7)).json()['accepted'] is True
+    for index, count in enumerate((16, 16, 9)):
+        assert post(client, 'reserve', reservation('v1', f'fill-{index}', count)).json()['accepted'] is True
+    assert post(client, 'reserve', reservation(next_id, 'over-cap', 1)).json()['accepted'] is False
+    monkeypatch.setenv('FARMTACT_STAGED_EDITION', 'v999')
+    assert post(client, 'reserve', reservation('v999', 'invalid', 1)).status_code == 409

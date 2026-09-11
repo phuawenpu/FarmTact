@@ -88,3 +88,11 @@ def test_gateway_never_reuses_upstream_cookie_between_visitors(gateway):
     assert not seen[-1].headers.get('cookie')
     client.get('/v2/api/v1/bootstrap')
     assert not seen[-1].headers.get('cookie')
+
+
+def test_staged_admission_does_not_publish_route(gateway, monkeypatch):
+    client, seen = gateway
+    monkeypatch.setenv('FARMTACT_STAGED_EDITION', 'v3')
+    assert client.get('/v3/api/v1/bootstrap').status_code == 404
+    assert [item['id'] for item in client.get('/api/releases').json()['editions']] == ['v1', 'v2']
+    assert not seen
