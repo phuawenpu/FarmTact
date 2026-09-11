@@ -1,5 +1,5 @@
 {
-  "latest": "v7",
+  "latest": "v8",
   "editions": [
     {
       "id": "v1",
@@ -341,6 +341,62 @@
           "evidence": [
             "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/docs/research/council-participation.md",
             "https://github.com/phuawenpu/FarmTact/blob/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda/reports/v7/advisor_local.json"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v8",
+      "title": "V8 \u00b7 Recorded seasons and adviser evidence",
+      "published_at": "2026-09-11",
+      "summary": "Advance a persistent synthetic farm season, trace orders and harvest lots across replans, inspect versioned model experiments, and ask advisers about bounded frozen evidence. Actual farm operations remain disabled.",
+      "status": "published",
+      "source_commit": "a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/6efbbfd5a57cb557683e636d1fe20ae63b6b9eda...a00e546b1270a5c532e8eae6b8b64e568c344c13",
+      "image_digest": "registry.fly.io/farmtact@sha256:8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357",
+      "review_url": "/v8/review",
+      "play_url": "/v8/",
+      "changes": [
+        {
+          "title": "Recorded synthetic seasons",
+          "description": "Create an execution world from an accepted plan. Advance the recorded clock, inspect tasks, inventory, demand, cash and append-only events, and replan future work with stable crop-cycle and harvest-lot identities.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/docs/technical/v8-remediation-report.md",
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/execution-trial.json"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Explicit planning and model experiments",
+          "description": "Weighted scenario utilities, worst-case fill objectives, FEFO order allocation, resource reservations and independent synthetic training/evaluation cohorts expose assumptions and limitations. Synthetic results do not establish real-farm predictive accuracy.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/docs/data-and-models.md",
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/synthetic_model_evaluation.json",
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/numerical_evaluation.json"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Bounded adviser evidence",
+          "description": "Separate Council execution, evidence and decision status. Typed server-owned facts, exact mission lookup aliases, bounded conversation context, frozen research references and preserved rejected attempts improve inspectability; qualitative truth remains unverified.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/docs/technical/v8-remediation-report.md",
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/council.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Durable research and application state",
+          "description": "Versioned research history, receipt-safe mutations, separate numerical and provider worker lanes, bounded retries and cancellation, source provenance and explicit retention controls strengthen the synthetic research workflow.",
+          "feedback_ids": [],
+          "evidence": [
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/reports/v8/full-regression.xml",
+            "https://github.com/phuawenpu/FarmTact/blob/a00e546b1270a5c532e8eae6b8b64e568c344c13/docs/runbooks/retention.md"
           ],
           "status": "implemented"
         }
