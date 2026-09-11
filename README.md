@@ -1,5 +1,7 @@
 # FarmTact · Command & Cultivate
 
+**V11 reading copies:** [PDF](reports/v11/farmtact-report.pdf) · [offline HTML](reports/v11/farmtact-report.html).
+
 FarmTact is a visual production-planning demonstration for a fictional Singapore
 vegetable farm. Use customer demand, crop cycles, growing space and declared
 seasonal conditions to compare planting schedules, customer fulfillment and crop
@@ -7,9 +9,9 @@ wastage. The farm board and adviser Council make those decisions tangible.
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**Play:** [guided v10 council](https://farmtact.fly.dev/v10/research) ·
-[main v10 farm](https://farmtact.fly.dev/v10/) ·
-[edition chooser, v1–v10](https://farmtact.fly.dev/)
+**Play:** [guided V11 production planning](https://farmtact.fly.dev/v11/) ·
+[edition chooser, newest first](https://farmtact.fly.dev/) ·
+[preserved V10](https://farmtact.fly.dev/v10/)
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
@@ -18,17 +20,16 @@ interpret frozen results. Actual planting, purchases and farm communications are
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
 [V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
 
-The latest public edition is **v10**, pinned to source
-[`ec4e298`](https://github.com/phuawenpu/FarmTact/commit/ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3)
+The latest public edition is **v11**, pinned to source
+[`37802ad`](https://github.com/phuawenpu/FarmTact/commit/37802adbc9010bc80a50869ef725285a119af3f3)
 and immutable image
-`sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.
-All ten edition health/source checks and captured preservation of v1–v9 passed.
-See [deployment health](reports/v10/deployment-health.json) and
-[preservation evidence](reports/v10/preservation-after.json).
+`sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d`.
+All eleven edition health/source checks and captured V1–V10 preservation passed.
+See the [implementation and acceptance report](reports/v11/implementation.md).
 
-## V11 guided production planning — candidate
+## V11 guided production planning
 
-The next iteration follows the [organizer’s original brief](docs/v11-implementation-plan.md):
+V11 follows the [organizer’s original brief](docs/v11-implementation-plan.md):
 review farm records, calculate schedules, explicitly request Council review, simulate
 a selected plan, then change demand or seasonal assumptions and compare keeping
 the saved schedule against replanning. Both comparison arms face the same changed
@@ -40,13 +41,18 @@ The guided Council selects server-verified facts and tradeoffs. Four specialists
 and the Chair make actual DeepSeek calls; Weather and Market receive labelled
 absence notices when observations are not admitted. The numerical plan remains
 available if optional review is blocked. See the [V11 technical chapter](docs/technical/v11-guided-production-planning.md)
-and [acceptance evidence](reports/v11/). V11 remains unpublished until acceptance;
-the published links above continue to identify V10.
+and [acceptance evidence](reports/v11/implementation.md). The full suite passed 643 tests
+with one skip; the subsequent staging fix passed 63 tests. The staged live journey
+passed all 20 checks using five DeepSeek calls, with no repairs.
 
-The edition chooser now sorts numbered editions newest first in the candidate UI.
+The starting screen and V11 switcher list numbered editions newest first.
+Planning remains synthetic: the accepted example still leaves 440 kg of booked
+demand unserved. Empirical model calibration and farmer validation remain open.
 
 ## What you can do
 
+- Follow the guided production mission from records to schedules, Council review,
+  simulated progress and comparison under changed conditions.
 - Start the guided council study, calculate a plan, reserve a bed, test an
   unconfirmed order, challenge an assumption and compare frozen versions.
 - Explore the main farm board, active batches, deliveries, constraints and worklists.
@@ -295,15 +301,15 @@ later attempts.
 ## Hosting and releases
 
 The `farmtact` app runs in Singapore on one shared 4-vCPU/4-GB Fly Machine and one
-3-GB persistent volume. The gateway and v1–v10 occupy eleven isolated containers with
+3-GB persistent volume. The gateway and v1–v11 occupy twelve isolated containers with
 separate application databases/caches/progress; abuse and inference spending limits
 are shared. One host is a shared failure boundary. Read-only checks on 11 September
 2026 found the Machine started with 1/1 health checks passing.
 
 Every newly published application iteration receives a new immutable edition.
 Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
-does not describe the active container topology. After V10 publication, the next
-contiguous edition is v11. See [Fly operations](docs/deployment/fly.md).
+does not describe the active container topology. After V11 publication, the next
+contiguous edition is v12. See [Fly operations](docs/deployment/fly.md).
 
 Development scope and provider policy are controlled by the
 [build specification](FarmTact_Build_Specification.md),

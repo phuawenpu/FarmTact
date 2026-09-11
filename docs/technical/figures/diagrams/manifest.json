@@ -2,6 +2,16 @@
   "tool": "Mermaid CLI",
   "version": "11.17.0",
   "chapters": {
+    "v11-guided-production-planning.md": [
+      {
+        "file": "figures/diagrams/v11-guided-production-planning-1.svg",
+        "source_sha256": "808beeaeebafae3f9455dfd2c8233ca1f7052a213890f78884c7562276c9edbc"
+      },
+      {
+        "file": "figures/diagrams/v11-guided-production-planning-2.svg",
+        "source_sha256": "595fb672ea421849a58cbd4f46481a8f8560928dc6d4129c653f0946720c0392"
+      }
+    ],
     "v10-grounding-followup.md": [
       {
         "file": "figures/diagrams/v10-grounding-followup-1.svg",

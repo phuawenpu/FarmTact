@@ -1,15 +1,12 @@
 # FarmTact documentation
 
-Documentation audit: **11 September 2026**. Published application: **v10**, frozen
-from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3`. All ten health/source
-checks and captured v1–v9 preservation passed. Earlier edition source, images,
-state and trial reports remain immutable. V8 public AI quality failed. V9 is the
-separate published corrective edition, but its live quality gate also failed:
-12 of 18 automated cases passed while workflow integrity passed. The completed
-AI-assisted review classified 10 messages as sound, 5 as sound with limits and 3
-as materially contradictory. V10 is the published grounding-remediation edition;
-its targeted Council-only quality result is FAIL (5 of 7 cases passed), and its fresh mission
-was correctly withheld at the request-budget boundary before inference.
+Documentation updated **11 September 2026**. Latest edition: **V11**, frozen from
+source `37802adbc9010bc80a50869ef725285a119af3f3`. All eleven health/source checks
+and captured V1–V10 preservation passed. The [V11 report](../reports/v11/implementation.md)
+records the guided planning workflow, 643-test regression, subsequent 63-test
+staging correction, 24 browser checks and a 20-check staged live journey using
+five DeepSeek requests. The earlier V8–V10 AI/capacity failures remain historical
+evidence; V11's bounded Council does not certify their free-text workflows.
 
 ## Start here
 
@@ -101,4 +98,4 @@ No host resource increase or threshold relaxation was made. See the V10 technica
 follow-up and capacity protocol note for exact scope and cleanup.
 
 
-V11 candidate: [organizer brief and implementation plan](v11-implementation-plan.md), [technical methods and boundaries](technical/v11-guided-production-planning.md), [acceptance evidence](../reports/v11/). These records distinguish candidate work from immutable V10 publication.
+V11: [organizer brief and implementation plan](v11-implementation-plan.md), [technical methods and boundaries](technical/v11-guided-production-planning.md), [acceptance evidence](../reports/v11/). These records distinguish V11 evidence from preserved historical editions.

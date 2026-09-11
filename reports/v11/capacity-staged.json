@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "trials": [
+    {
+      "trial": 1,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v11_completed_under_180s": true,
+        "v10_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.2866103080000073,
+      "browse_samples": 36,
+      "v11_seconds": 12.978217414000007,
+      "v10_seconds": 24.57644980100001,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 2,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v11_completed_under_180s": true,
+        "v10_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.3115967300000051,
+      "browse_samples": 36,
+      "v11_seconds": 10.977719277000006,
+      "v10_seconds": 24.008985346000003,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 3,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v11_completed_under_180s": true,
+        "v10_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 4.189694352000004,
+      "browse_samples": 34,
+      "v11_seconds": 16.45145599,
+      "v10_seconds": 85.00561134600001,
+      "errors": [],
+      "inference_requests": 0
+    }
+  ],
+  "protocol": "Three prescribed V11/V10 paired jobs; no other submitted numerical or provider work; browse p95<5s and terminal jobs<180s. Operator-private loopback transport excludes public network latency.",
+  "started_at": "2026-09-11T17:03:08.237628+00:00",
+  "completed_at": "2026-09-11T17:05:27.371316+00:00",
+  "base_url": "http://127.0.0.1:8091",
+  "private_gateway": true
+}

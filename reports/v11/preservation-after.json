@@ -1,0 +1,196 @@
+{
+  "status": "PASS",
+  "editions": {
+    "v1": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 432
+    },
+    "v2": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 11
+    },
+    "v3": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 28
+    },
+    "v4": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 23
+    },
+    "v5": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 31
+    },
+    "v6": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true
+      },
+      "captured_rows": 30
+    },
+    "v7": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true,
+        "council_research_sessions": true,
+        "council_research_jobs": true,
+        "council_research_actions": true
+      },
+      "captured_rows": 130
+    },
+    "v8": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true,
+        "council_research_sessions": true,
+        "council_research_jobs": true,
+        "council_research_actions": true,
+        "council_research_history": true,
+        "council_research_action_receipts": true,
+        "simulation_worlds": true,
+        "simulation_events": true,
+        "simulation_receipts": true,
+        "mutation_receipts": true
+      },
+      "captured_rows": 81
+    },
+    "v9": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true,
+        "council_research_sessions": true,
+        "council_research_jobs": true,
+        "council_research_actions": true,
+        "council_research_history": true,
+        "council_research_action_receipts": true,
+        "simulation_worlds": true,
+        "simulation_events": true,
+        "simulation_receipts": true,
+        "mutation_receipts": true
+      },
+      "captured_rows": 346
+    },
+    "v10": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true,
+        "council_research_sessions": true,
+        "council_research_jobs": true,
+        "council_research_actions": true,
+        "council_research_history": true,
+        "council_research_action_receipts": true,
+        "simulation_worlds": true,
+        "simulation_events": true,
+        "simulation_receipts": true,
+        "mutation_receipts": true
+      },
+      "captured_rows": 252
+    }
+  },
+  "scope": "Captured game records preserved; additional records allowed. No cookies or raw rows exported."
+}

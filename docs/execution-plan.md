@@ -294,10 +294,19 @@ and `reports/v10/` for the complete evidence. The task ledger totals 85 actual
 requests, including failed and repaired attempts; no further paid retry followed.
 
 
-## V11 guided production planning — implementation in progress
+## V11 guided production planning — published
 
 Organizer brief: farm managers schedule planting from expected customer demand, crop cycles, land and seasonal conditions; manual experience makes balancing capacity, changing demand and wastage difficult. User selected a guided farm mission, an explicit live Council checkpoint, keeping a saved schedule versus replanning under identical disruption, and scoped synthetic seasonal assumptions.
 
 Root owns versioned session contracts/API/persistence, bounded worker process, shared types, integration, docs and immutable publication. Three real gpt-5.6-sol specialists: `v11_numerics` owns numerical assumption/comparison engine and focused tests; `v11_council` owns typed propositions and grounded guided Council; `v11_frontend` owns guided UI and browser checks. No recursive delegation. Preserve prior edition sources/images/state and the shared 48-call limit. Existing local service is named farmtact-v8 despite serving the current checkout.
 
 Acceptance: independent records→schedule→Council→simulation→disruption→same-conditions comparison journey; demand history and bookings unchanged except explicit edits; seasonal boundary/resource checks; retained-plan fairness; truthful AI claim/abstention tests; persistent tenant/revision/idempotency behavior; responsive browser checks; real bounded provider evidence; fixed capacity deadlines; scientific docs and edition release evidence.
+
+V11 complete: source `37802adbc9010bc80a50869ef725285a119af3f3`, pinned image in
+release registry. Full regression 643 passed/one skipped; staging fix 63 passed;
+local browser 24 passed; staged live journey 20 passed, five actual DeepSeek calls.
+Three fixed capacity pairs passed; sustained initial planning took 127.76s and
+remains a stated performance limit. Eleven health/source checks and captured
+prior-ten preservation passed. Reports retain initial staging-admission failure
+and the corrected smoke-test assumption about automatic empty mission creation.
+No actual farm operations enabled. Next unused publication number is V12.

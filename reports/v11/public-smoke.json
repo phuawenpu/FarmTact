@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "checks": {
+    "390_newest_first": true,
+    "390_all_11": true,
+    "390_fits": true,
+    "1280_newest_first": true,
+    "1280_all_11": true,
+    "1280_fits": true,
+    "chooser_no_cookie": true,
+    "guided_default": true,
+    "switcher_newest_first": true,
+    "only_initial_mission_creation": true,
+    "no_page_errors": true
+  },
+  "errors": [],
+  "mutationPaths": [
+    "/v11/api/v1/planning-sessions"
+  ],
+  "inference_requests": 0,
+  "scope": "Public chooser and initial guided screen only; numerical/Council acceptance reported separately."
+}

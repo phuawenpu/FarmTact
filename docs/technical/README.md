@@ -247,6 +247,6 @@ experiments. It supplies the implementation account and acceptance criteria need
 to design those experiments responsibly in the next iteration.
 
 
-## V11 guided production planning candidate
+## V11 guided production planning
 
-The [organizer-aligned V11 chapter](v11-guided-production-planning.md) documents the guided mission, future-demand/booking separation, scoped seasonal assumptions, fair retained-plan comparison, bounded numerical worker and structured Council. Candidate acceptance is recorded separately from published V10 evidence.
+The [organizer-aligned V11 chapter](v11-guided-production-planning.md) documents the guided mission, future-demand/booking separation, scoped seasonal assumptions, fair retained-plan comparison, bounded numerical worker and structured Council. [Published V11 acceptance](../../reports/v11/implementation.md) is recorded separately from historical V10 evidence.

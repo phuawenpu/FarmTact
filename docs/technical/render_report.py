@@ -16,7 +16,7 @@ import markdown
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-CHAPTERS = ['v10-grounding-followup.md', 'v9-ai-followup.md', 'v8-remediation-report.md', 'README.md', 'ai-provider-and-council.md', 'numerical-models-and-growth.md',
+CHAPTERS = ['v11-guided-production-planning.md', 'v10-grounding-followup.md', 'v9-ai-followup.md', 'v8-remediation-report.md', 'README.md', 'ai-provider-and-council.md', 'numerical-models-and-growth.md',
             'game-backend-and-state-machines.md', 'system-data-and-evidence.md',
             'gaps-and-next-iteration.md', 'reproducibility.md']
 

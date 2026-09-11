@@ -1,3 +1,10 @@
+Current V11 handoff (11 September 2026): latest published edition is V11 from
+source `37802adbc9010bc80a50869ef725285a119af3f3`, image
+`sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d`.
+Read `reports/v11/implementation.md` and the V11 technical chapter first. Guided
+production planning and newest-first chooser are published. V1–V10 remain pinned.
+The historical handoff below is retained as evidence of earlier states.
+
 # Master implementation brief
 
 Follow CODEX_START_PROMPT.md, build spec v1.2 Section 0, and DeepSeek runtime v1.2. Published v1–v9 remain immutable; v10 is published from source `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` with image `registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`. Read `docs/technical/v10-grounding-followup.md`, `docs/technical/v9-ai-followup.md`, `reports/v10/` and `reports/v9/` before making current-state claims. This brief is reconstructed from the supplied specifications because no original master prompt was present.

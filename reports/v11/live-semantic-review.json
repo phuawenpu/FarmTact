@@ -1,0 +1,17 @@
+{
+  "status": "PASS_BOUNDED_REVIEW",
+  "reviewer": "Codex deterministic-artifact inspection, not farm expert validation",
+  "inference_requests_added": 0,
+  "checks": {
+    "five_actual_calls_no_repairs": true,
+    "four_specialists_and_chair_validated": true,
+    "two_source_absence_notices": true
+  },
+  "observations": [
+    "Chair states Balanced delivers 300 kg against 740 kg booked demand; 440 kg remains unserved. No full-fulfillment claim is made.",
+    "Chair cites 74.8 kg lower expired waste and SGD 251.65 higher projected margin versus retaining the saved schedule under identical changed conditions. These are synthetic model comparisons, not measured farm gains.",
+    "Production speaks only about unchanged crop-ID sets. This does not imply equal area, allocation counts or yield.",
+    "Margin/cost figures use rounded outputs; independently rounded operands can differ by one cent from rounded deltas.",
+    "The bounded rationale expresses a preference, not evidence of globally optimal agronomic advice."
+  ]
+}
