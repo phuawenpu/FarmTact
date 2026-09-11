@@ -15,24 +15,24 @@
         "git",
         "checkout-index",
         "--all",
-        "--prefix=/tmp/farmtact-clean-g0cxlspg/checkout/"
+        "--prefix=/tmp/farmtact-clean-hibicsq2/checkout/"
       ],
       "exit_code": 0,
-      "seconds": 1.7
+      "seconds": 3.07
     },
     {
       "command": [
         "/home/sprite/workspaces/Code2/.venv/bin/python",
         "-m",
         "venv",
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv"
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv"
       ],
       "exit_code": 0,
-      "seconds": 3.37
+      "seconds": 4.68
     },
     {
       "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
         "-m",
         "pip",
         "install",
@@ -40,7 +40,7 @@
         "requirements.lock.txt"
       ],
       "exit_code": 0,
-      "seconds": 32.63
+      "seconds": 31.62
     },
     {
       "command": [
@@ -50,7 +50,7 @@
         "apps/web"
       ],
       "exit_code": 0,
-      "seconds": 6.09
+      "seconds": 5.04
     },
     {
       "command": [
@@ -61,75 +61,75 @@
         "apps/web"
       ],
       "exit_code": 0,
-      "seconds": 3.26
+      "seconds": 2.83
     },
     {
       "command": [
         "createdb",
         "-h",
         "/tmp/farmtact-pg",
-        "farmtact_clean_f50957fb1b55"
+        "farmtact_clean_6cfac94ee209"
+      ],
+      "exit_code": 0,
+      "seconds": 0.15
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
+        "scripts/initialize_database.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.96
+    },
+    {
+      "command": [
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
+        "-m",
+        "packages.fixtures"
       ],
       "exit_code": 0,
       "seconds": 0.24
     },
     {
       "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
-        "scripts/initialize_database.py"
-      ],
-      "exit_code": 0,
-      "seconds": 9.69
-    },
-    {
-      "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
-        "-m",
-        "packages.fixtures"
-      ],
-      "exit_code": 0,
-      "seconds": 0.37
-    },
-    {
-      "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
         "scripts/build_dataset.py",
         "--fixture-bundle",
         "data/fixtures/public_context_v1"
       ],
       "exit_code": 0,
-      "seconds": 0.22
+      "seconds": 0.15
     },
     {
       "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
         "scripts/build_features.py"
       ],
       "exit_code": 0,
-      "seconds": 0.98
+      "seconds": 0.76
     },
     {
       "command": [
-        "/tmp/farmtact-clean-g0cxlspg/checkout/.venv/bin/python",
+        "/tmp/farmtact-clean-hibicsq2/checkout/.venv/bin/python",
         "-c",
         "\nimport json,time\nfrom fastapi.testclient import TestClient\nfrom services.api.app import create_app\nfrom packages.ingestion.validation import registry_coverage\n\ndef wait(c,id):\n    deadline=time.monotonic()+90\n    while time.monotonic()<deadline:\n        run=c.get('/api/v1/planning-runs/'+id).json()\n        if run['status'] not in ('CREATED','RUNNING'):return run\n        time.sleep(.2)\n    raise AssertionError('mission timeout')\nwith TestClient(create_app()) as c:\n    b=c.get('/api/v1/bootstrap'); assert b.status_code==200 and len(b.json()['crops'])==registry_coverage()['catalogue_profiles']\n    assert c.get('/').status_code==200\n    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'},headers={'Idempotency-Key':'clean-import'}); assert imported.status_code==201\n    if imported.json().get('planning_run'):wait(c,imported.json()['planning_run']['id'])\n    r=c.post('/api/v1/planning-runs',json={'council':False},headers={'Idempotency-Key':'clean-plan'}); assert r.status_code==202\n    run=wait(c,r.json()['id']); assert run['status']=='ACCEPTED_FOR_SIMULATION' and len(run['strategies'])==3 and run['claims']==[]\n    replay=c.get('/api/v1/planning-runs/'+run['id']+'/replay').json(); assert replay['execution_mode']=='replay' and replay['strategies']==run['strategies']\n    assert c.get('/api/v1/planning-runs/'+run['id']+'/worklist.csv').status_code==200\n    changed=c.post('/api/v1/planning-runs/'+run['id']+'/replan',json={'council':False},headers={'Idempotency-Key':'clean-replan'}); assert changed.status_code==202\n    replanned=wait(c,changed.json()['id']); assert replanned['status']=='ACCEPTED_FOR_SIMULATION' and replanned['input_version']==3\n    assert c.get('/api/v1/planning-runs/'+run['id']+'/worklist.csv').status_code==409\n    print(json.dumps({'status':'PASS','crop_count':len(b.json()['crops']),'strategy_count':3,'initial_version':run['input_version'],'replan_version':replanned['input_version'],'inference_calls':0}))\n"
       ],
       "exit_code": 0,
-      "seconds": 20.25
+      "seconds": 20.63
     },
     {
       "command": [
         "dropdb",
         "-h",
         "/tmp/farmtact-pg",
-        "farmtact_clean_f50957fb1b55"
+        "farmtact_clean_6cfac94ee209"
       ],
       "exit_code": 0,
-      "seconds": 0.09
+      "seconds": 1.92
     }
   ],
-  "staged_tree": "4d49ce1ad893d3f7c192548395aebd3aa1961e39",
-  "source_digest": "ead95473a7b405aec9cfe5fa3b08b1c04d6552c636d41236a3e715a956174506",
+  "staged_tree": "3dd47c404217a8ee34b405b9a955ba7fc4bde69c",
+  "source_digest": "eb96ff61884fcca0a9e94aae1054d8ef96663a9c737ea3b3bad8f2d87a13d0d3",
   "public_data_quality": {
     "coverage": {
       "catalogue_profiles": 12,

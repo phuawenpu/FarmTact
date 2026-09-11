@@ -1,5 +1,6 @@
 from packages.ai_quality import QualityCase, evaluate_message, evaluate_suite
-from scripts.deepseek_quality_e2e import collect_cases
+from scripts.deepseek_quality_e2e import _apply_human_review, _workflow_integrity, collect_cases
+from scripts.deepseek_conversation_trial import responses_verified
 
 
 CASE = QualityCase(
@@ -21,6 +22,8 @@ def message(**overrides):
         "fact_refs": ["forecast:batch_batch-01.marketable_kg"],
         "tool_refs": [],
         "relationship": "answer",
+        "validation_status": "references_verified",
+        "execution_status": "completed",
         "evidence_status": "grounded_facts_qualitative_unverified",
         "validation_issues": [],
         "usage": {"prompt_tokens": 10, "completion_tokens": 8},
@@ -33,8 +36,9 @@ def test_quality_case_scores_dimensions_separately_and_preserves_usage():
     result = evaluate_message(CASE, message())
     assert result["status"] == "PASS"
     assert set(result["checks"]) == {
-        "role_relevance", "expected_reference", "unsupported_quantity",
-        "contradiction", "abstention", "evidence", "useful_answer",
+        "role_relevance", "expected_reference", "reference_integrity",
+        "unsupported_quantity", "contradiction", "abstention", "relationship",
+        "persisted_validation", "evidence", "useful_answer",
     }
     assert result["usage"]["completion_tokens"] == 8
 
@@ -109,3 +113,50 @@ def test_e2e_harness_labels_direct_invite_council_and_research_without_calling_p
         {"snapshot_ref":{"kind":"research"},"messages":[messages[0]]},"research"
     )
     assert research_cases[0].workflow == "research"
+
+
+def test_keyword_and_reference_shape_cannot_certify_bad_persisted_validation():
+    result = evaluate_message(
+        CASE,
+        message(
+            content="Harvest harvest harvest remains a batch review.",
+            validation_status="unsupported",
+            validation_errors=["Known validation failure"],
+        ),
+    )
+    assert result["status"] == "FAIL"
+    assert result["checks"]["persisted_validation"] is False
+
+
+def test_reference_must_not_be_laundered_between_typed_and_qualitative_lists():
+    ref = "forecast:batch_batch-01.marketable_kg"
+    result = evaluate_message(CASE, message(fact_refs=[ref], tool_refs=[ref]))
+    assert result["checks"]["reference_integrity"] is False
+    assert result["status"] == "FAIL"
+
+
+def test_transport_complete_trial_does_not_pass_an_unsupported_reply():
+    assert responses_verified([message()]) is True
+    assert responses_verified([message(validation_status="unsupported")]) is False
+    assert responses_verified([]) is False
+
+
+def test_automated_pass_does_not_claim_unreviewed_semantic_assurance():
+    report = evaluate_suite([CASE], {CASE.case_id: message()})
+    _apply_human_review(report, None)
+    assert report["status"] == "PASS_AUTOMATED"
+    assert report["automated_status"] == "PASS"
+    assert report["semantic_review_status"] == "PENDING"
+    assert "does not establish" in report["pass_scope"]
+
+
+def test_workflow_integrity_rejects_role_shaped_but_incomplete_council():
+    messages = [
+        message(id="chair", advisor_role="planning_chair", request_id="request", request_mode="council")
+    ]
+    cases, by_case, _ = collect_cases(
+        {"snapshot_ref": {"kind": "scenario"}, "messages": messages}, "main"
+    )
+    integrity = _workflow_integrity(cases, by_case, {"council"})
+    assert integrity["status"] == "FAIL"
+    assert integrity["workflows"][0]["checks"]["exact_message_count"] is False

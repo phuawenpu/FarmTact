@@ -1,8 +1,8 @@
 {
   "schema_version": "v8-live-experiment-ledger-1",
-  "goal_request_ceiling": 40,
+  "goal_request_ceiling": 72,
   "app_daily_request_ceiling": 48,
-  "actual_requests_consumed": 36,
+  "actual_requests_consumed": 43,
   "experiments": [
     {
       "id": "local-planning-council",
@@ -68,6 +68,44 @@
       "includes_repair_attempts": true,
       "report": "reports/v8/research-advisor-local.json",
       "actual_requests": 1
+    },
+    {
+      "id": "local-planning-final-v4",
+      "status": "INCOMPLETE",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/planning-local-final.json",
+      "actual_requests": 7,
+      "run_id": "b4513d1a85895455c0d554b98ca241fc"
+    },
+    {
+      "id": "local-research-final-v4",
+      "status": "reserved",
+      "maximum_requests": 2,
+      "expected_requests": 1,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/research-advisor-final.json"
+    }
+  ],
+  "budget_revisions": [
+    {
+      "previous_ceiling": 40,
+      "revised_ceiling": 64,
+      "reason": "Actual trials exposed retired provider IDs, format failures, missing research references and oversized contexts. Revalidate the corrected mission/research locally, then the direct/invite/Council workflow on the requested immutable Fly deployment. Preserve all failures; no runtime daily limit is changed.",
+      "planned_remaining_local_maximum": 11,
+      "planned_public_conversation_maximum": 14,
+      "maximum_total_reserved": 61
+    },
+    {
+      "previous_ceiling": 64,
+      "revised_ceiling": 72,
+      "reason": "The final mission repeated the same complex order-reference corruption. Validate the structural short-reference mapping through a post-deployment mission as well as the previously planned conversation workflow. No application or shared-production daily cap is changed.",
+      "known_consumed_before_revision": 43,
+      "remaining_local_research_maximum": 2,
+      "remaining_public_mission_maximum": 9,
+      "remaining_public_conversation_maximum": 14,
+      "maximum_total_reserved": 68
     }
   ]
 }

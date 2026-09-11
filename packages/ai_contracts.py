@@ -16,11 +16,13 @@ import re
 from typing import Any, Literal, Mapping, Sequence
 
 
-PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v3"
-MISSION_PROMPT_TEMPLATE_VERSION = "farmtact-mission-council-prompt-v3"
+PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v4"
+MISSION_PROMPT_TEMPLATE_VERSION = "farmtact-mission-council-prompt-v4"
 OUTPUT_SCHEMA_VERSION = "farmtact-advisor-output-v3"
 VALIDATOR_VERSION = "farmtact-ai-evidence-validator-v3"
 CONTEXT_VERSION = "farmtact-frozen-ai-context-v3"
+CONVERSATION_CONTEXT_VERSION = "farmtact-conversation-context-v4"
+MISSION_CONTEXT_VERSION = "farmtact-mission-context-v4"
 SOURCE_CONTEXT_VERSION = "farmtact-source-context-v3"
 RESPONSE_LIMITS = {
     "content_characters": 400,
@@ -46,8 +48,14 @@ class InferenceVersions:
         return asdict(self)
 
 
-CONVERSATION_VERSIONS = InferenceVersions(prompt_template=PROMPT_TEMPLATE_VERSION)
-MISSION_VERSIONS = InferenceVersions(prompt_template=MISSION_PROMPT_TEMPLATE_VERSION)
+CONVERSATION_VERSIONS = InferenceVersions(
+    prompt_template=PROMPT_TEMPLATE_VERSION,
+    context=CONVERSATION_CONTEXT_VERSION,
+)
+MISSION_VERSIONS = InferenceVersions(
+    prompt_template=MISSION_PROMPT_TEMPLATE_VERSION,
+    context=MISSION_CONTEXT_VERSION,
+)
 
 
 def canonical_hash(value: object) -> str:
@@ -106,7 +114,7 @@ def _entity_for(reference: str) -> tuple[str, str] | tuple[None, None]:
         return "crop", identifier
     if namespace == "strategy":
         return "strategy", identifier
-    if namespace in {"scenario", "comparison"}:
+    if namespace in {"scenario", "comparison", "research"}:
         return namespace, identifier
     if namespace == "farm":
         return "farm", "frozen_snapshot"
@@ -115,7 +123,7 @@ def _entity_for(reference: str) -> tuple[str, str] | tuple[None, None]:
 
 def _period_for(reference: str, value: object) -> dict[str, str] | None:
     terminal = reference.rsplit(".", 1)[-1]
-    if terminal in {"harvest_date", "due_date", "sow_date", "transplant_date", "cutoff"}:
+    if terminal in {"harvest_date", "due_date", "sow_date", "transplant_date", "start_date", "end_date", "cutoff"}:
         return {"kind": terminal, "value": str(value)}
     if ".week_" in reference:
         week = reference.split(".week_", 1)[1].split(".", 1)[0]
@@ -127,7 +135,7 @@ def _fact_kind(reference: str, value: object) -> FactKind | None:
     if isinstance(value, bool) or value is None:
         return None
     terminal = reference.rsplit(".", 1)[-1]
-    if terminal in {"harvest_date", "due_date", "sow_date", "transplant_date", "cutoff", "observed_at", "retrieved_at"}:
+    if terminal in {"harvest_date", "due_date", "sow_date", "transplant_date", "start_date", "end_date", "cutoff", "observed_at", "retrieved_at"}:
         return "date"
     if isinstance(value, (int, float)):
         return "quantity"

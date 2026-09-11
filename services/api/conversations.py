@@ -437,12 +437,59 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         news_context,
     )
     if research_result:
+        research_inputs = research_result["inputs"]
         tool_results.update({
-            "research:inputs": research_result["inputs"],
+            "research:inputs": research_inputs,
             "research:version": research_result["version"],
             "research:input_hash": research_result["input_hash"],
             "research:dialogue_mode": "Explicit paid interpretation of a frozen numerical research result; earlier scripted turns were not AI output",
         })
+        for reservation in research_inputs.get("reservations", []):
+            prefix = f"research:reservation:{reservation['bed_id']}"
+            tool_results[prefix] = {
+                "kind": "research_only_bed_reservation",
+                "bed_id": reservation["bed_id"],
+                "operational_execution": False,
+            }
+            tool_results[f"{prefix}.start_date"] = reservation.get("start_date")
+            tool_results[f"{prefix}.end_date"] = reservation.get("end_date")
+        for order_id in research_inputs.get("unconfirmed_order_ids", []):
+            tool_results[f"research:unconfirmed_order:{order_id}"] = {
+                "kind": "research_only_unconfirmed_order",
+                "order_id": order_id,
+                "excluded_from_booked_commitments": True,
+                "observed_demand": False,
+            }
+        tool_results["research:labour_percent"] = research_inputs.get("labour_percent")
+        baseline = next(
+            (
+                item for item in research.get("results", [])
+                if item.get("status") == "COMPLETED"
+                and item.get("version") < research_result["version"]
+            ),
+            None,
+        )
+        baseline_by_name = {
+            item.get("name"): item
+            for item in (baseline or {}).get("calculation", {}).get("strategies", [])
+        }
+        for current in research_result["calculation"].get("strategies", []):
+            name = str(current.get("name", "unknown")).casefold()
+            earlier = baseline_by_name.get(current.get("name"))
+            for metric in (
+                "fill_rate", "margin_sgd", "shortfall_kg", "labour_hours",
+                "harvest_kg", "waste_kg", "closing_stock_kg",
+            ):
+                current_value = current.get("metrics", {}).get(metric)
+                if current_value is not None:
+                    tool_results[f"research:current.{name}.metrics.{metric}"] = current_value
+                baseline_value = (earlier or {}).get("metrics", {}).get(metric)
+                if baseline_value is not None:
+                    tool_results[f"research:baseline.{name}.metrics.{metric}"] = baseline_value
+                if current_value is not None and baseline_value is not None:
+                    tool_results[f"research:delta.{name}.metrics.{metric}"] = round(
+                        float(current_value) - float(baseline_value), 6
+                    )
     return {
         "snapshot": snapshot,
         "scenario": scenario,
@@ -951,27 +998,44 @@ def _has_spelled_quantity_or_date(statement: str) -> bool:
 
 
 def _validate_reply(
-    reply: AdvisorReply, conversation: dict[str, Any]
+    reply: AdvisorReply,
+    conversation: dict[str, Any],
+    *,
+    permitted_tool_refs: set[str] | None = None,
+    permitted_fact_refs: set[str] | None = None,
+    permitted_evidence_ids: set[str] | None = None,
+    permitted_highlight_refs: set[str] | None = None,
 ) -> tuple[list[str], list[dict[str, Any]]]:
     tool_results = conversation["_tool_results"]
     typed_facts = conversation.get("_typed_facts") or typed_reference_catalog(
         tool_results, snapshot_hash=conversation.get("snapshot_ref", {}).get("hash", "test-fixture")
     )
-    permitted_evidence = {
-        row["evidence_id"] for row in conversation["_evidence"] if row.get("evidence_id")
-    }
+    permitted_evidence = (
+        permitted_evidence_ids
+        if permitted_evidence_ids is not None
+        else {row["evidence_id"] for row in conversation["_evidence"] if row.get("evidence_id")}
+    )
+    allowed_tools = set(tool_results) if permitted_tool_refs is None else permitted_tool_refs
+    allowed_facts = set(typed_facts) if permitted_fact_refs is None else permitted_fact_refs
+    allowed_highlights = (
+        set(conversation["_highlight_refs"])
+        if permitted_highlight_refs is None else permitted_highlight_refs
+    )
     errors: list[str] = []
     if reply.relationship != "abstention" and not reply.tool_refs and not reply.fact_refs and not reply.evidence_refs:
         errors.append("Advisor reply has no supplied evidence or tool reference")
-    if any(ref not in tool_results for ref in reply.tool_refs):
+    if any(
+        ref not in tool_results or (ref not in allowed_tools and ref not in allowed_facts)
+        for ref in reply.tool_refs
+    ):
         errors.append("Unknown frozen tool reference")
     if any(ref not in permitted_evidence for ref in reply.evidence_refs):
         errors.append("Evidence outside supplied frozen context")
-    if any(ref not in typed_facts for ref in reply.fact_refs):
+    if any(ref not in typed_facts or ref not in allowed_facts for ref in reply.fact_refs):
         errors.append("Unknown frozen typed fact reference")
     if any(ref in typed_facts for ref in reply.tool_refs):
         errors.append("Quantities and dates must use fact_refs")
-    if any(ref not in conversation["_highlight_refs"] for ref in reply.highlight_refs):
+    if any(ref not in allowed_highlights for ref in reply.highlight_refs):
         errors.append("Highlight outside supplied frozen snapshot")
     if quantitative_prose_present(reply.content):
         errors.append(
@@ -1037,6 +1101,30 @@ def _validation_issues(errors: list[str]) -> list[dict[str, str]]:
     ]
 
 
+_FORMAT_REMOVABLE_WORDS = set(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen "
+    "fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty fifty "
+    "sixty seventy eighty ninety hundred thousand million billion dozen half quarter "
+    "double triple twice first second third fourth fifth sixth seventh eighth ninth tenth "
+    "eleventh twelfth last january february march april may june july august september "
+    "october november december today tomorrow yesterday tonight percent percentage sgd kg "
+    "day days week weeks month months year years".split()
+)
+_FORMAT_STOP_WORDS = set("a an and are as at be by for from in is it of on or that the this to with".split())
+
+
+def _format_content_preserved(original: str, corrected: str) -> bool:
+    """Reject a nominal format repair that substitutes unrelated prose."""
+    original_words = {
+        word for word in re.findall(r"[a-z]+", original.casefold())
+        if word not in _FORMAT_REMOVABLE_WORDS and word not in _FORMAT_STOP_WORDS
+    }
+    corrected_words = set(re.findall(r"[a-z]+", corrected.casefold()))
+    if not original_words:
+        return bool(corrected_words)
+    return len(original_words & corrected_words) / len(original_words) >= 0.6
+
+
 def _system_prompt(
     role: str,
     mode: str,
@@ -1069,7 +1157,7 @@ def _system_prompt(
         "Use this compact shape: "
         + json.dumps(compact_example, separators=(",", ":"))
         + ". "
-        "Use only the supplied frozen tool_results, typed_facts and evidence_context. Use relationship abstention with no references when the frozen context cannot answer. Do not put any number, percentage, date, quantity, or numeric literal in content. Select quantities and dates only through fact_refs so FarmTact renders the frozen value, unit, entity and period; use tool_refs only for qualitative context. "
+        "Use only the supplied frozen tool_results, typed_facts and evidence_context. Use relationship abstention with no references when the frozen context cannot answer. A weather or market role with no connected relevant evidence must use relationship abstention; missing optional context is a limitation, not a reason to invent a finding. Do not put digits, number words, ordinals, counts, percentages, dates, quantities, or numeric literals in content; this explicitly bans words such as zero, one, two, three, first, second, and today. Select quantities and dates only through fact_refs so FarmTact renders the frozen value, unit, entity and period; use tool_refs only for qualitative context. Reference IDs are opaque strings: copy them byte-for-byte from the supplied object and never construct, shorten, or guess an ID. Do not invent a label, cause, trend, ratio, marginal return, ordering, or cross-strategy comparison that is not directly represented by the cited context. State the limitation or abstain when the frozen facts do not establish an interpretation. "
         "Action rules: delay_days uses unit days, a value from 0 through 14, and an actual batch target_id; yield_percent uses unit percent, a value from 50 through 100, and an actual batch target_id; demand_percent uses unit percent, a value from 50 through 150, and an actual crop target_id; labour_percent and cash_percent use unit percent, a value from 50 through 150, and target_id null. "
         "You may propose only those declared sandbox controls; proposals are hypotheses and never authorize a farm or scenario change. "
         "Never claim a simulated value is an observation, never permit real farm operations, and keep the answer concise. "
@@ -1121,6 +1209,95 @@ def _safe_validation_issues(error: DeepSeekResponseError) -> list[dict[str, str]
     return summaries
 
 
+ROLE_CONTEXT_METRICS = {
+    "demand_analyst": {"fill_rate", "shortfall_kg", "booked_requested_kg", "booked_delivered_kg", "residual_requested_kg", "residual_delivered_kg"},
+    "weather_analyst": {"fill_rate", "harvest_kg", "waste_kg"},
+    "market_analyst": {"margin_sgd", "revenue_sgd", "booked_requested_kg", "residual_requested_kg"},
+    "production_analyst": {"fill_rate", "harvest_kg", "area_m2", "labour_hours", "delay_days", "yield_percent"},
+    "supply_chain_analyst": {"fill_rate", "shortfall_kg", "closing_stock_kg", "harvest_kg", "waste_kg", "booked_delivered_kg", "residual_delivered_kg"},
+    "profit_analyst": {"margin_sgd", "revenue_sgd", "cost_sgd", "labour_hours", "waste_kg", "closing_stock_kg", "cash_sgd"},
+    "planning_chair": {"fill_rate", "margin_sgd", "shortfall_kg"},
+}
+MAX_PROVIDER_CONTEXT_CHARACTERS = 120_000
+
+
+def _bounded_context_value(value: Any, depth: int = 0) -> Any:
+    """Keep source payloads structured while bounding prompt-amplification risk."""
+    if depth >= 4:
+        return "[bounded]"
+    if isinstance(value, str):
+        return value[:800]
+    if isinstance(value, list):
+        return [_bounded_context_value(item, depth + 1) for item in value[:12]]
+    if isinstance(value, dict):
+        return {
+            str(key)[:160]: _bounded_context_value(item, depth + 1)
+            for key, item in list(value.items())[:16]
+        }
+    return value
+
+
+def _bounded_model_context(conversation: dict[str, Any], role: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Project the frozen catalogue to a useful, auditable model-sized view."""
+
+    typed = conversation.get("_typed_facts", {})
+    tools = conversation.get("_tool_results", {})
+    metrics = ROLE_CONTEXT_METRICS[role]
+    selected_bed = conversation.get("selected_bed_id")
+    research = conversation.get("snapshot_ref", {}).get("kind") == "research"
+
+    def allowed(reference: str) -> bool:
+        terminal = reference.rsplit(".", 1)[-1]
+        if research and not reference.startswith("research:") and not (
+            selected_bed and reference.startswith(f"bed:{selected_bed}.")
+        ):
+            return False
+        if reference.startswith("research:"):
+            return reference not in {"research:inputs", "research:input_hash"} and (
+                ".metrics." not in reference or terminal in metrics
+            )
+        if reference.startswith(("strategy:", "scenario:", "comparison:")):
+            return ".metrics." not in reference and ".deltas." not in reference or terminal in metrics
+        if reference.startswith(("forecast:batch_", "batch:", "recipe:", "schedule:")):
+            return role in {"production_analyst", "supply_chain_analyst", "planning_chair"}
+        if reference.startswith(("forecast:", "delivery:", "order:")):
+            return role in {"demand_analyst", "market_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"}
+        if reference.startswith(("weather:", "source:", "news:", "market:")):
+            return role in {"weather_analyst", "market_analyst", "planning_chair"}
+        if reference.startswith("farm:resources."):
+            return terminal in metrics
+        if selected_bed and reference.startswith(f"bed:{selected_bed}."):
+            return True
+        return False
+
+    def priority(reference: str) -> tuple[int, str]:
+        return (
+            0 if reference.startswith("research:")
+            else 1 if reference.startswith(("scenario:", "comparison:"))
+            else 2 if reference.startswith("strategy:")
+            else 3,
+            reference,
+        )
+
+    typed_refs = sorted((ref for ref in typed if allowed(ref)), key=priority)[:48]
+    qualitative_refs = sorted(
+        (ref for ref in tools if ref not in typed and allowed(ref)), key=priority
+    )[:24]
+    # Research requests must always receive their exact bounded controls even if
+    # a future result adds enough metrics to hit the general catalogue cap.
+    if research:
+        for ref in sorted(ref for ref in typed if ref.startswith("research:") and allowed(ref)):
+            if ref not in typed_refs:
+                typed_refs.append(ref)
+        for ref in sorted(ref for ref in tools if ref.startswith("research:") and ref not in typed and allowed(ref)):
+            if ref not in qualitative_refs:
+                qualitative_refs.append(ref)
+    return (
+        {ref: _bounded_context_value(tools[ref]) for ref in qualitative_refs},
+        {ref: _bounded_context_value(typed[ref]) for ref in typed_refs},
+    )
+
+
 def _provider_messages(
     persistence: ConversationStore,
     tenant: str,
@@ -1133,7 +1310,7 @@ def _provider_messages(
     messages = persistence.list_messages(tenant, conversation["id"])
     # Bound context size while retaining the full current exchange and its reply
     # graph. Full history remains durable and visible in replay.
-    selected_messages = messages[-32:]
+    selected_messages = messages[-16:]
     selected_ids = {message["id"] for message in selected_messages}
     for referenced_id in (request_payload.get("reply_to"), expected_reply_to):
         if referenced_id and referenced_id not in selected_ids:
@@ -1144,6 +1321,7 @@ def _provider_messages(
                 selected_messages.insert(0, referenced)
                 selected_ids.add(referenced_id)
     prior = [validated_turn_projection(message) for message in selected_messages]
+    tool_results, typed_facts = _bounded_model_context(conversation, role)
     context = {
         "contract_versions": CONVERSATION_VERSIONS.public(),
         "snapshot_ref": conversation["snapshot_ref"],
@@ -1161,13 +1339,26 @@ def _provider_messages(
         }
         if conversation.get("_scenario")
         else None,
-        "tool_results": conversation["_tool_results"],
-        "typed_facts": conversation.get("_typed_facts", {}),
-        "evidence_context": conversation["_evidence"],
+        "tool_results": tool_results,
+        "typed_facts": typed_facts,
+        "evidence_context": [
+            _bounded_context_value(item) for item in conversation["_evidence"][:6]
+        ],
+        "highlight_refs": [
+            ref for ref in conversation.get("_highlight_refs", [])
+            if ref == f"bed:{conversation.get('selected_bed_id')}"
+            or ref in {
+                *(f"bed:{item}" for item in (conversation.get("_scenario") or {}).get("affected_bed_ids", [])),
+                *(f"delivery:{item.get('order_id')}" for item in (conversation.get("_scenario") or {}).get("affected_deliveries", [])),
+            }
+        ][:12],
         "prior_turns": prior,
         "question": request_payload["question"],
         "expected_reply_to": expected_reply_to,
     }
+    rendered_context = json.dumps(context, default=str)
+    if len(rendered_context) > MAX_PROVIDER_CONTEXT_CHARACTERS:
+        raise ValueError("Bounded advisor context exceeds the serialized character ceiling")
     return [
         {
             "role": "system",
@@ -1178,7 +1369,7 @@ def _provider_messages(
                 final_turn,
             ),
         },
-        {"role": "user", "content": json.dumps(context, default=str)},
+        {"role": "user", "content": rendered_context},
     ]
 
 
@@ -1455,7 +1646,106 @@ def execute_conversation_job(store: Any, tenant: str, request_id: str) -> None:
                 reply = completion.data
                 if reply is None:
                     raise DeepSeekResponseError("DeepSeek returned no validated advisor reply")
-                errors, actions = _validate_reply(reply, conversation)
+                supplied_context = json.loads(messages[1]["content"])
+                supplied_validation = {
+                    "permitted_tool_refs": set(supplied_context["tool_results"]),
+                    "permitted_fact_refs": set(supplied_context["typed_facts"]),
+                    "permitted_evidence_ids": {
+                        item["evidence_id"] for item in supplied_context["evidence_context"]
+                        if item.get("evidence_id")
+                    },
+                    "permitted_highlight_refs": set(supplied_context["highlight_refs"]),
+                }
+                errors, actions = _validate_reply(reply, conversation, **supplied_validation)
+                issues = _validation_issues(errors)
+                format_codes = {"model_authored_quantity", "typed_fact_in_context_refs"}
+                if (
+                    issues
+                    and {issue["code"] for issue in issues} <= format_codes
+                    and repairs < max_repairs
+                ):
+                    if job_cancelled():
+                        budget.cancel()
+                        return
+                    repairs += 1
+                    original_shape = reply.model_dump()
+                    original_audit = asdict(completion.audit)
+                    original_audit.update(
+                        attempt_status="rejected_format",
+                        validation_issues=issues,
+                    )
+                    audits.append(original_audit)
+                    request_payload.update(repair_attempts=repairs, audits=audits)
+                    persistence.save_request(tenant, request_payload)
+                    emit(
+                        "advisor_reply_rejected",
+                        {
+                            "role": role,
+                            "repair_attempt": repairs,
+                            "content": reply.content,
+                            "evidence_refs": reply.evidence_refs,
+                            "tool_refs": reply.tool_refs,
+                            "fact_refs": reply.fact_refs,
+                            "highlight_refs": reply.highlight_refs,
+                            "relationship": reply.relationship,
+                            "proposed_actions": original_shape["proposed_actions"],
+                            "validation_issues": issues,
+                            "usage": asdict(completion.usage),
+                            "execution_status": "format_rejected",
+                            "evidence_status": "unsupported",
+                        },
+                    )
+                    messages.extend(
+                        [
+                            {"role": "assistant", "content": json.dumps(original_shape, separators=(",", ":"))},
+                            {
+                                "role": "user",
+                                "content": json.dumps(
+                                    {
+                                        "task": "format_correction_only",
+                                        "validation_issues": issues,
+                                        "requirements": [
+                                            "Preserve the original meaning, relationship, and proposed_actions exactly.",
+                                            "Remove every digit, spelled number, ordinal, count, quantity, and date from content.",
+                                            "Move any typed quantity or date ID from tool_refs to fact_refs; copy existing IDs exactly and invent none.",
+                                            "Preserve evidence_refs and highlight_refs and return only the corrected JSON object.",
+                                        ],
+                                    },
+                                    separators=(",", ":"),
+                                ),
+                            },
+                        ]
+                    )
+                    completion = gateway.chat_json(
+                        role,
+                        messages,
+                        AdvisorReply,
+                        max_tokens=output_tokens,
+                        thinking="disabled",
+                        versions=CONVERSATION_VERSIONS,
+                        public_context_sha256=canonical_hash(messages[1]["content"]),
+                    )
+                    if job_cancelled():
+                        budget.cancel()
+                        return
+                    reply = completion.data
+                    if reply is None:
+                        raise DeepSeekResponseError("DeepSeek returned no validated advisor reply")
+                    errors, actions = _validate_reply(
+                        reply, conversation, **supplied_validation
+                    )
+                    if (
+                        not _format_content_preserved(
+                            original_shape["content"], reply.content
+                        )
+                        or
+                        reply.relationship != original_shape["relationship"]
+                        or [item.model_dump() for item in reply.proposed_actions]
+                        != original_shape["proposed_actions"]
+                        or reply.evidence_refs != original_shape["evidence_refs"]
+                        or reply.highlight_refs != original_shape["highlight_refs"]
+                    ):
+                        errors.append("Format repair changed non-format response fields")
                 final_planner_conclusion = (
                     council_mode
                     and final_turn

@@ -1,0 +1,96 @@
+{
+  "machines": [
+    {
+      "id": "2871575b4544d8",
+      "state": "started",
+      "region": "sin",
+      "containers": [
+        {
+          "name": "v6",
+          "state": "healthy"
+        },
+        {
+          "name": "v7",
+          "state": "healthy"
+        },
+        {
+          "name": "gateway",
+          "state": "healthy"
+        },
+        {
+          "name": "v1",
+          "state": "healthy"
+        },
+        {
+          "name": "v2",
+          "state": "healthy"
+        },
+        {
+          "name": "v3",
+          "state": "healthy"
+        },
+        {
+          "name": "v4",
+          "state": "healthy"
+        },
+        {
+          "name": "v5",
+          "state": "healthy"
+        }
+      ],
+      "guest": {
+        "cpu_kind": "shared",
+        "cpus": 4,
+        "memory_mb": 4096
+      },
+      "images": [
+        {
+          "name": "gateway",
+          "image": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+        },
+        {
+          "name": "v1",
+          "image": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+        },
+        {
+          "name": "v2",
+          "image": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+        },
+        {
+          "name": "v3",
+          "image": "registry.fly.io/farmtact@sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6"
+        },
+        {
+          "name": "v4",
+          "image": "registry.fly.io/farmtact@sha256:a676954e2958dbc289c909bbe18289d84aa58ae20af0917d0ae31dff5c6b92b0"
+        },
+        {
+          "name": "v5",
+          "image": "registry.fly.io/farmtact@sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103"
+        },
+        {
+          "name": "v6",
+          "image": "registry.fly.io/farmtact@sha256:2415d2a861c83dfda71e13fb25c3187d3082c2f49a987ef3e68751208f63d334"
+        },
+        {
+          "name": "v7",
+          "image": "registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc"
+        }
+      ]
+    }
+  ],
+  "memory": {
+    "captured_at": "2026-09-11T11:40:34Z",
+    "elapsed_seconds": 2.203,
+    "status": "ok",
+    "MemTotal_kib": 4010180,
+    "MemFree_kib": 1255860,
+    "MemAvailable_kib": 2382296,
+    "Buffers_kib": 45044,
+    "Cached_kib": 1402828,
+    "SwapTotal_kib": 0,
+    "SwapFree_kib": 0,
+    "used_excluding_reclaimable_kib": 1627884
+  },
+  "inference_calls": 0
+}

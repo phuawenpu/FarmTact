@@ -21,7 +21,7 @@ from urllib.parse import urlsplit
 import httpx
 
 
-TERMINAL = {"COMPLETED", "PARTIAL", "FAILED", "BLOCKED", "INTERRUPTED"}
+TERMINAL = {"COMPLETED", "PARTIAL", "FAILED", "BLOCKED", "INTERRUPTED", "CANCELLED"}
 
 
 def post(client: httpx.Client, path: str, body: dict, key: str) -> dict:
@@ -65,6 +65,15 @@ def request_messages(conversation: dict, request_id: str) -> list[dict]:
         for message in conversation.get("messages", [])
         if message.get("request_id") == request_id and message.get("speaker") == "advisor"
     ]
+
+
+def responses_verified(messages: list[dict]) -> bool:
+    return bool(messages) and all(
+        message.get("validation_status") == "references_verified"
+        and not message.get("validation_issues")
+        and not message.get("validation_errors")
+        for message in messages
+    )
 
 
 def digest(value: object) -> str:
@@ -304,8 +313,10 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             conversation_trial_completed=True,
         )
         save_state()
+        all_messages = direct_messages + invited_messages + council_messages
+        references_verified = responses_verified(all_messages)
         return {
-            "status": "PASS",
+            "status": "PASS" if references_verified else "FAIL",
             "base_url": base_url,
             "scenario_id": scenario["id"],
             "conversation_id": conversation_id,
@@ -314,6 +325,7 @@ def run(base_url: str, timeout: float, state_path: Path | None = None, retry_fai
             "maximum_permitted_requests": 16,
             "advisor_messages": 10,
             "validation_states": validation_states,
+            "references_verified": references_verified,
             "favourable_recommendation_required": False,
             "replay_inference_triggered": replay["inference_triggered"],
             "private_state_updated": bool(state_path),
@@ -340,11 +352,9 @@ def main() -> None:
     args = parser.parse_args()
     if not args.live:
         parser.error("Pass --live to run the deployed billable conversation trial")
-    print(
-        json.dumps(
-            run(args.base_url, args.timeout, args.state, args.retry_failed), indent=2, sort_keys=True
-        )
-    )
+    result = run(args.base_url, args.timeout, args.state, args.retry_failed)
+    print(json.dumps(result, indent=2, sort_keys=True))
+    raise SystemExit(0 if result["status"] == "PASS" else 1)
 
 
 if __name__ == "__main__":

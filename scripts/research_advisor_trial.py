@@ -50,6 +50,7 @@ def run(
     ledger_path: Path,
     state_path: Path | None = None,
     timeout: float = 330,
+    retry_unsupported: bool = False,
 ) -> dict:
     state = (
         json.loads(state_path.read_text(encoding="utf-8"))
@@ -83,12 +84,13 @@ def run(
     )
     if ledger.get("maximum_provider_calls_per_run") != MAX_PROVIDER_CALLS:
         raise RuntimeError("Research experiment ledger has an incompatible request ceiling")
+    active_run_key = state.setdefault("research_active_run_key", prefix)
     run_record = next(
-        (item for item in ledger["runs"] if item.get("run_key") == prefix), None
+        (item for item in ledger["runs"] if item.get("run_key") == active_run_key), None
     )
     if run_record is None:
         run_record = {
-            "run_key": prefix,
+            "run_key": active_run_key,
             "status": "PREPARING",
             "maximum_provider_calls": MAX_PROVIDER_CALLS,
             "actual_provider_calls": 0,
@@ -215,6 +217,54 @@ def run(
             if result["status"] != "COMPLETED":
                 raise RuntimeError("Research numerical calculation failed")
 
+            prior_request_id = state.get("research_request_id")
+            if (
+                retry_unsupported
+                and prior_request_id
+                and state.get("research_conversation_id")
+                and not state.get("research_context_v4_retry_used")
+            ):
+                prior = get(f"/conversations/{state['research_conversation_id']}")
+                prior_replies = [
+                    message for message in prior.get("messages", [])
+                    if message.get("speaker") == "advisor"
+                    and message.get("request_id") == prior_request_id
+                ]
+                if (
+                    prior.get("last_request_id") == prior_request_id
+                    and prior.get("last_request_status") == "COMPLETED"
+                    and prior_replies
+                    and any(message.get("validation_status") != "references_verified" for message in prior_replies)
+                ):
+                    state.update(
+                        research_context_v4_retry_used=True,
+                        research_prior_conversation_id=state["research_conversation_id"],
+                        research_prior_unsupported_request_id=prior_request_id,
+                        research_active_run_key=f"{prefix}:context-v4-retry",
+                        research_trial_conversation_key=f"{prefix}-conversation-context-v4-retry",
+                        research_trial_message_key=f"{prefix}-direct-context-v4-retry",
+                        research_trial_completed=False,
+                    )
+                    state.pop("research_conversation_id", None)
+                    state.pop("research_request_id", None)
+                    active_run_key = state["research_active_run_key"]
+                    run_record = next(
+                        (item for item in ledger["runs"] if item.get("run_key") == active_run_key),
+                        None,
+                    )
+                    if run_record is None:
+                        run_record = {
+                            "run_key": active_run_key,
+                            "status": "PREPARING",
+                            "maximum_provider_calls": MAX_PROVIDER_CALLS,
+                            "actual_provider_calls": 0,
+                            "started_at": datetime.now(timezone.utc).isoformat(),
+                            "reason": "Reviewed retry with newly frozen v4 context",
+                        }
+                        ledger["runs"].append(run_record)
+                    save_state()
+                    write_json(ledger_path, ledger)
+
             conversation_key = state.setdefault(
                 "research_trial_conversation_key", f"{prefix}-conversation"
             )
@@ -242,13 +292,14 @@ def run(
             message_body = {
                 "content": (
                     "Explain the reserved bed and unconfirmed order in this frozen research result. "
-                    "Cite research:inputs and relevant numerical tool references. Do not claim to "
+                    "Cite the exact research:reservation and research:unconfirmed_order references, "
+                    "plus relevant typed numerical or date references. Do not claim to "
                     "have changed any inputs or real farm operations."
                 )
             }
+            request_id = state.get("research_request_id")
             message_key = state.setdefault("research_trial_message_key", f"{prefix}-direct")
             save_state()
-            request_id = state.get("research_request_id")
             if not request_id:
                 run_record["status"] = "RESERVED"
                 write_json(ledger_path, ledger)
@@ -311,7 +362,11 @@ def run(
             )
             final_status = (
                 "PASS"
-                if conversation["last_request_status"] == "COMPLETED" and replies
+                if conversation["last_request_status"] == "COMPLETED"
+                and replies
+                and references_verified
+                else "FAIL"
+                if conversation["last_request_status"] == "COMPLETED"
                 else conversation["last_request_status"]
             )
             state.update(
@@ -367,10 +422,18 @@ def main() -> None:
     )
     parser.add_argument("--timeout", type=float, default=330)
     parser.add_argument("--live", action="store_true")
+    parser.add_argument(
+        "--retry-unsupported",
+        action="store_true",
+        help="Retry one preserved unsupported pre-v4 response with a new stable key.",
+    )
     args = parser.parse_args()
     if not args.live:
         parser.error("Explicit --live required: the application may invoke DeepSeek")
-    result = run(args.url, args.report, args.ledger, args.state, args.timeout)
+    result = run(
+        args.url, args.report, args.ledger, args.state, args.timeout,
+        retry_unsupported=args.retry_unsupported,
+    )
     print(
         result["status"],
         "provider requests:",

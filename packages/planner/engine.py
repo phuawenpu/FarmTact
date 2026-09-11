@@ -14,12 +14,31 @@ from packages.contracts import Farm,content_hash
 from packages.models import forecast,scenarios
 from packages.planner.accounting import allocate_lots,demand_line_sort_key,demand_lines
 
-VERSION='daily-bed-cpsat-v2'
+VERSION='daily-bed-cpsat-v3'
 SCENARIO_WEIGHT_SCALE=1000
 POLICIES={
  'Lean':dict(shortage=1,waste=9,terminal_stock=.50,commit=.20,capital_fraction=.65,objective='weighted_policy_utility',description='Keep inputs light. Accept more uncovered demand to limit surplus.'),
  'Balanced':dict(shortage=4,waste=5,terminal_stock=.20,commit=.04,capital_fraction=.85,objective='weighted_policy_utility',description='Balance customer coverage, growing cost and avoidable surplus.'),
  'Resilient':dict(shortage=25,waste=1,terminal_stock=.05,commit=0,capital_fraction=1,objective='maximin_fill_then_weighted_policy_utility',description='Maximize the worst declared scenario fill rate, then improve weighted policy utility.')}
+
+
+def _allocation_id(*,bed_id,crop_id,recipe_id,sow_date,transplant_date,harvest_date):
+    """Return a fixed-length identity for one absolute crop-cycle allocation."""
+    identity=dict(kind='crop_cycle_allocation',bed_id=bed_id,crop_id=crop_id,recipe_id=recipe_id,
+                  sow_date=str(sow_date),transplant_date=str(transplant_date),harvest_date=str(harvest_date))
+    return 'allocation-'+content_hash(identity)[:32]
+
+
+def _harvest_lot_id(allocation,used_ids):
+    """Derive a bounded lot ID without trusting caller-controlled ID namespaces."""
+    identity=dict(kind='harvest_lot',allocation_id=allocation['id'],bed_id=allocation['bed_id'],
+                  crop_id=allocation['crop_id'],recipe_id=allocation['recipe_id'],
+                  sow_date=allocation['sow_date'],harvest_date=allocation['harvest_date'])
+    used={str(value) for value in used_ids}
+    for ordinal in range(len(used)+1):
+        candidate='harvest-'+content_hash(dict(identity,collision_ordinal=ordinal))[:32]
+        if candidate not in used:return candidate
+    raise ValueError('unable to derive a unique harvest lot ID')
 
 
 def normalize_scenario_set(scenario_set):
@@ -104,11 +123,14 @@ def candidates(farm,*,reservations=(),candidate_not_before=None):
             for harvest in sorted(set(range(6,farm.horizon_days,7)) | {(o.due_date-day).days for o in farm.orders if o.crop_id==r.crop_id and 0<=(o.due_date-day).days<farm.horizon_days}):
                 sow=harvest-r.cycle_days; transplant=sow+r.nursery_days
                 if sow<0 or day+timedelta(days=sow)<not_before or transplant<busy.get(bed.id,0): continue
-                candidate=dict(id=f'{bed.id}-{r.crop_id}-{sow}',bed_id=bed.id,crop_id=r.crop_id,recipe_id=r.id,sow_date=str(day+timedelta(days=sow)),transplant_date=str(day+timedelta(days=transplant)),harvest_date=str(day+timedelta(days=harvest)),area_m2=float(bed.area_m2),expected_kg=float(bed.area_m2*r.marketable_kg_per_m2),executed=False)
+                sow_date=day+timedelta(days=sow);transplant_date=day+timedelta(days=transplant);harvest_date=day+timedelta(days=harvest)
+                candidate=dict(id=_allocation_id(bed_id=bed.id,crop_id=r.crop_id,recipe_id=r.id,sow_date=sow_date,transplant_date=transplant_date,harvest_date=harvest_date),bed_id=bed.id,crop_id=r.crop_id,recipe_id=r.id,sow_date=str(sow_date),transplant_date=str(transplant_date),harvest_date=str(harvest_date),area_m2=float(bed.area_m2),expected_kg=float(bed.area_m2*r.marketable_kg_per_m2),executed=False)
                 if not _reservation_conflicts(farm,candidate,windows): result.append(candidate)
     return result
 
-def resource_usage(farm,allocations):
+def resource_usage(farm,allocations,*,harvest_yield_factor=1.1):
+    harvest_yield_factor=Decimal(str(harvest_yield_factor))
+    if not harvest_yield_factor.is_finite() or harvest_yield_factor<0:raise ValueError('harvest_yield_factor must be finite and non-negative')
     recipes={r.id:r for r in farm.recipes}; day=farm.planning_date; nursery=defaultdict(int); labour=defaultdict(float); bed_days=defaultdict(list); costs=0
     for a in allocations:
         r=recipes[a['recipe_id']]; area=Decimal(str(a['area_m2'])); sow=(date.fromisoformat(a['sow_date'])-day).days; transplant=(date.fromisoformat(a['transplant_date'])-day).days; harvest=(date.fromisoformat(a['harvest_date'])-day).days
@@ -118,12 +140,12 @@ def resource_usage(farm,allocations):
             labour[sow//7]+=float(area*r.sow_labour_hours_per_m2)
             if not a.get('executed'): costs+=ceil(float(area*r.cost_sgd_per_m2)*100)/100
         if 0<=harvest<farm.horizon_days:
-            # Reserve the maximum scenario harvest labour, not just the central yield.
-            labour[harvest//7]+=ceil(a['expected_kg']*1.1*float(r.harvest_labour_hours_per_kg)*60)/60
+            labour[harvest//7]+=ceil(Decimal(str(a['expected_kg']))*harvest_yield_factor*r.harvest_labour_hours_per_kg*60)/60
     return nursery,labour,bed_days,costs
 
-def validate_allocations(farm,allocations,*,reservations=(),locked_allocations=()):
+def validate_allocations(farm,allocations,*,reservations=(),locked_allocations=(),scenario_set=None):
     violations=[]; recipes={r.id:r for r in farm.recipes}; beds={b.id:b for b in farm.beds}; day=farm.planning_date
+    reserve_yield=max((Decimal(str(s['yield_factor'])) for s in normalize_scenario_set(scenario_set)),default=Decimal('1.1')) if scenario_set is not None else Decimal('1.1')
     windows=_reservation_windows(farm,reservations)
     def bad(code,entity,required,available,unit,period=None):
         violations.append(dict(constraint_code=code,entity_id=entity,period=period,required=required,available=available,unit=unit,severity='hard',repair_options=['Rebuild candidates from the frozen input']))
@@ -149,7 +171,7 @@ def validate_allocations(farm,allocations,*,reservations=(),locked_allocations=(
             code='RESERVATION_EXECUTED_CONFLICT' if a.get('executed') else 'BED_RESERVATION'
             bad(code,a['id'],1,0,'available bed',f'{reservation["start_date"]}/{reservation["end_date"]}')
     if any(v['constraint_code']=='UNKNOWN_DEPENDENCY' for v in violations): return violations
-    nursery,labour,occupancy,cost=resource_usage(farm,allocations)
+    nursery,labour,occupancy,cost=resource_usage(farm,allocations,harvest_yield_factor=reserve_yield)
     for d,v in nursery.items():
         if v>farm.resources.nursery_sites: bad('NURSERY_CAPACITY','nursery',v,farm.resources.nursery_sites,'sites',d)
     for w,v in labour.items():
@@ -169,7 +191,7 @@ def simulate(farm,allocations,demand,scenario):
     for line in lines: demand_by_day[(date.fromisoformat(line['date'])-day).days].append(line)
     harvest_by_day=defaultdict(list)
     for a in allocations: harvest_by_day[(date.fromisoformat(a['harvest_date'])-day).days].append(a)
-    total_revenue=Decimal('0'); total_delivered=0; total_demand=0; total_waste=0; total_harvest=0; order_results=[]
+    total_revenue=Decimal('0'); total_delivered=0; total_demand=0; total_waste=0; total_harvest=0; order_results=[];lot_origins={}
     booked_demand=0; booked_delivered=0; residual_demand=0; residual_delivered=0; unpriced_requested=0; unpriced_delivered=0
     opening=sum(l['quantity_g'] for l in lots)
     for n in range(farm.horizon_days):
@@ -179,7 +201,8 @@ def simulate(farm,allocations,demand,scenario):
                 disposed+=lot['quantity_g']; lot['quantity_g']=0
         for a in harvest_by_day[n]:
             quantity_g=round(a['expected_kg']*scenario['yield_factor']*1000); harvested+=quantity_g
-            lots.append(dict(id=a['id'],crop_id=a['crop_id'],quantity_g=quantity_g,harvested_date=today,expires_date=today+timedelta(days=recipes[a['recipe_id']].shelf_life_days-1)))
+            lot_id=_harvest_lot_id(a,(lot['id'] for lot in lots));lot_origins[lot_id]=a['id']
+            lots.append(dict(id=lot_id,crop_id=a['crop_id'],quantity_g=quantity_g,harvested_date=today,expires_date=today+timedelta(days=recipes[a['recipe_id']].shelf_life_days-1)))
         allocated=allocate_lots(lots,demand_by_day[n],today)
         requested=sum(row['requested_g'] for row in allocated); delivered=sum(row['delivered_g'] for row in allocated)
         day_revenue=Decimal('0')
@@ -189,11 +212,16 @@ def simulate(farm,allocations,demand,scenario):
             if row['price_sgd_per_kg'] is None:
                 unpriced_requested+=row['requested_g']; unpriced_delivered+=row['delivered_g']
             else: day_revenue+=Decimal(row['delivered_g'])*Decimal(str(row['price_sgd_per_kg']))/Decimal(1000)
+            lot_allocations=[]
+            for item in row['lot_allocations']:
+                detail=dict(lot_id=item['lot_id'],quantity_kg=round(item['quantity_g']/1000,3),harvested_date=item['harvested_date'],expires_date=item['expires_date'])
+                if item['lot_id'] in lot_origins:detail['source_allocation_id']=lot_origins[item['lot_id']]
+                lot_allocations.append(detail)
             order_results.append(dict(
                 demand_line_id=row['demand_line_id'],order_id=row['order_id'],demand_kind=row['demand_kind'],crop_id=row['crop_id'],date=row['date'],
                 requested_kg=round(row['requested_g']/1000,3),delivered_kg=round(row['delivered_g']/1000,3),shortfall_kg=round(row['shortfall_g']/1000,3),
                 price_sgd_per_kg=row['price_sgd_per_kg'],price_status=row['price_status'],
-                lot_allocations=[dict(lot_id=item['lot_id'],quantity_kg=round(item['quantity_g']/1000,3),harvested_date=item['harvested_date'],expires_date=item['expires_date']) for item in row['lot_allocations']],
+                lot_allocations=lot_allocations,
             ))
         total_revenue+=day_revenue
         closing=sum(l['quantity_g'] for l in lots)
@@ -219,6 +247,8 @@ def simulate(farm,allocations,demand,scenario):
     total_cost=cost+labour_cost+packing_cost+disposal_cost; closing_g=sum(l['quantity_g'] for l in lots)
     return dict(
         scenario_id=scenario['id'],weekly=weekly,ledger=ledger,order_allocations=order_results,inventory_snapshots=snapshots,
+        resource_reserve_yield_factor=float(Decimal(str(scenario['yield_factor']))),
+        harvest_lot_origins=[dict(lot_id=lot_id,source_allocation_id=allocation_id) for lot_id,allocation_id in sorted(lot_origins.items())],
         terminal_stock=dict(quantity_kg=round(closing_g/1000,3),physical_status='usable_or_expiring_inventory_at_horizon_close',salvage_value_sgd=0,disposal_kg=0),
         metrics=dict(fill_rate=round(total_delivered_kg/total_demand_kg,4) if total_demand_kg else 1,margin_sgd=round(float(total_revenue)-total_cost,2),waste_kg=round(total_waste_kg,2),harvest_kg=round(total_harvest/1000,2),shortfall_kg=round(total_demand_kg-total_delivered_kg,2),cost_sgd=round(total_cost,2),labour_hours=round(actual_labour,2),area_m2=sum(a['area_m2'] for a in allocations if not a.get('executed')),closing_stock_kg=round(closing_g/1000,2),opening_stock_kg=round(opening/1000,3),revenue_sgd=round(float(total_revenue),2),booked_requested_kg=round(booked_demand/1000,3),booked_delivered_kg=round(booked_delivered/1000,3),residual_requested_kg=round(residual_demand/1000,3),residual_delivered_kg=round(residual_delivered/1000,3),unpriced_requested_kg=round(unpriced_requested/1000,3),unpriced_delivered_kg=round(unpriced_delivered/1000,3)),
         cost_breakdown=dict(inputs_sgd=cost,labour_sgd=round(labour_cost,2),packing_sgd=round(packing_cost,2),disposal_sgd=round(disposal_cost,2)),
@@ -227,8 +257,9 @@ def simulate(farm,allocations,demand,scenario):
 def _solve(farm,cands,existing,demand,scenario_set,policy,time_limit=4,*,reservations=()):
     if any('objective_weight_units' not in scenario for scenario in scenario_set): scenario_set=normalize_scenario_set(scenario_set)
     m=cp_model.CpModel(); x=[m.new_bool_var(a['id']) for a in cands]; day=farm.planning_date; recipes={r.id:r for r in farm.recipes}; p=POLICIES[policy]
-    fixed_n,fixed_l,fixed_o,fixed_cost=resource_usage(farm,existing)
-    usages=[resource_usage(farm,[a]) for a in cands]
+    reserve_yield=max(Decimal(str(s['yield_factor'])) for s in scenario_set)
+    fixed_n,fixed_l,fixed_o,fixed_cost=resource_usage(farm,existing,harvest_yield_factor=reserve_yield)
+    usages=[resource_usage(farm,[a],harvest_yield_factor=reserve_yield) for a in cands]
     windows=_reservation_windows(farm,reservations)
     for i,a in enumerate(cands):
         if _reservation_conflicts(farm,a,windows): m.add(x[i]==0)
@@ -241,8 +272,8 @@ def _solve(farm,cands,existing,demand,scenario_set,policy,time_limit=4,*,reserva
     for w in range((farm.horizon_days+6)//7):
         m.add(sum(ceil(u[1].get(w,0)*60)*x[i] for i,u in enumerate(usages))+ceil(fixed_l.get(w,0)*60)<=int(farm.resources.labour_hours_per_week*60))
     # Cash covers input + reserved labour + worst-case packing/disposal for existing/new work.
-    fixed_cash=ceil(fixed_cost*100+sum(fixed_l.values())*1200+sum(a['expected_kg']*1.1*.45*100 for a in existing))
-    new_cash=[ceil(u[3]*100+sum(u[1].values())*1200+a['expected_kg']*1.1*.45*100) for a,u in zip(cands,usages)]
+    fixed_cash=ceil(Decimal(str(fixed_cost))*100+Decimal(str(sum(fixed_l.values())))*1200+sum((Decimal(str(a['expected_kg']))*reserve_yield*Decimal('.45')*100 for a in existing),Decimal(0)))
+    new_cash=[ceil(Decimal(str(u[3]))*100+Decimal(str(sum(u[1].values())))*1200+Decimal(str(a['expected_kg']))*reserve_yield*Decimal('.45')*100) for a,u in zip(cands,usages)]
     m.add(sum(c*x[i] for i,c in enumerate(new_cash))+fixed_cash<=int(farm.resources.cash_sgd*100*Decimal(str(p['capital_fraction']))))
     objective=[]; scenario_delivery_totals=[]; scenario_demands=[]
     for si,sc in enumerate(scenario_set):
@@ -334,11 +365,12 @@ def baseline(farm,cands,existing,demand,*,reservations=(),scenario_set=None,lock
             if a['crop_id']!=d['crop_id'] or a['harvest_date']!=d['date'] or any(a['id']==b['id'] for b in chosen): continue
             trial=chosen+[a]
             worst_cost=max(simulate(farm,trial,demand,s)['metrics']['cost_sgd'] for s in (scenario_set or normalize_scenario_set(scenarios())))
-            if not validate_allocations(farm,trial,reservations=reservations,locked_allocations=locked_allocations) and worst_cost<=float(farm.resources.cash_sgd): chosen=trial; available+=a['expected_kg']
+            if not validate_allocations(farm,trial,reservations=reservations,locked_allocations=locked_allocations,scenario_set=scenario_set) and worst_cost<=float(farm.resources.cash_sgd): chosen=trial; available+=a['expected_kg']
     return chosen
 
-def _objective_terms(farm,allocations,simulation,policy):
-    p=POLICIES[policy]; new=[a for a in allocations if not a.get('executed')]; _,labour,_,inputs=resource_usage(farm,new)
+def _objective_terms(farm,allocations,simulation,policy,*,harvest_yield_factor=None):
+    if harvest_yield_factor is None: harvest_yield_factor=simulation.get('resource_reserve_yield_factor',1.1)
+    p=POLICIES[policy]; new=[a for a in allocations if not a.get('executed')]; _,labour,_,inputs=resource_usage(farm,new,harvest_yield_factor=harvest_yield_factor)
     commitment=(inputs+sum(labour.values())*12)*(1+p['commit'])
     metrics=simulation['metrics']; shortage=metrics['shortfall_kg']*p['shortage']; avoidable_waste=metrics['waste_kg']*p['waste']; terminal=metrics['closing_stock_kg']*p['terminal_stock']
     score=metrics['revenue_sgd']-metrics['cost_sgd']+simulation['cost_breakdown']['inputs_sgd']+simulation['cost_breakdown']['labour_sgd']-shortage-avoidable_waste-terminal-commitment
@@ -351,24 +383,31 @@ def _objective_terms(farm,allocations,simulation,policy):
     )
 
 
-def plan(farm:Farm,time_limit=4,*,alpha=.35,reservations=(),scenario_set=None,locked_allocations=(),candidate_not_before=None):
+def plan(farm:Farm,time_limit=4,*,alpha=.35,reservations=(),scenario_set=None,locked_allocations=(),candidate_not_before=None,excluded_candidate_ids=()):
     windows=_reservation_windows(farm,reservations)
+    if isinstance(excluded_candidate_ids,(str,bytes)):raise ValueError('excluded_candidate_ids must be a collection of IDs')
+    excluded=[]
+    for candidate_id in excluded_candidate_ids:
+        if len(excluded)==10000 or not isinstance(candidate_id,str):raise ValueError('excluded_candidate_ids must contain at most 10000 string IDs')
+        excluded.append(candidate_id)
     f=forecast(farm,alpha=alpha); ss=normalize_scenario_set(scenario_set or scenarios(farm.fixture_seed)); farm_existing=allocations_existing(farm)
     supplied_locks=[dict(allocation) for allocation in locked_allocations]
     if len({a['id'] for a in supplied_locks})!=len(supplied_locks): raise ValueError('locked allocation IDs must be unique')
     if {a['id'] for a in farm_existing}&{a['id'] for a in supplied_locks}: raise ValueError('locked allocations must not duplicate Farm batches')
     existing=farm_existing+supplied_locks
     lock_ids={a['id'] for a in existing}
-    cands=[a for a in candidates(farm,reservations=windows,candidate_not_before=candidate_not_before) if a['id'] not in lock_ids]; result=[]
+    excluded_ids=set(excluded)
+    cands=[a for a in candidates(farm,reservations=windows,candidate_not_before=candidate_not_before) if a['id'] not in lock_ids|excluded_ids]; result=[]
     for name,p in POLICIES.items():
         chosen,solver=_solve(farm,cands,existing,f['demand'],ss,name,time_limit,reservations=windows)
         allocations=existing+(chosen or [])
         if chosen is None:
             allocations=baseline(farm,cands,existing,f['demand'],reservations=windows,scenario_set=ss,locked_allocations=supplied_locks); solver['fallback']='backward-scheduling-v1'
-        violations=validate_allocations(farm,allocations,reservations=windows,locked_allocations=supplied_locks)
+        violations=validate_allocations(farm,allocations,reservations=windows,locked_allocations=supplied_locks,scenario_set=ss)
         sims=[simulate(farm,allocations,f['demand'],s) for s in ss]
         if any(s['metrics']['cost_sgd']>float(farm.resources.cash_sgd)+.01 for s in sims): violations.append(dict(constraint_code='TOTAL_CASH_BUDGET',entity_id=farm.id,period=None,required=max(s['metrics']['cost_sgd'] for s in sims),available=float(farm.resources.cash_sgd),unit='SGD',severity='hard',repair_options=['Reduce planting or increase the declared fixture budget']))
-        central=next((s for s in sims if s['scenario_id']=='central'),sims[max(range(len(ss)),key=lambda i:ss[i]['normalized_weight'])]); sid=content_hash(dict(name=name,input=f['numerical_input_hash'],allocations=allocations,scenario_set=ss,candidate_not_before=candidate_not_before))[:20]
-        terms=[_objective_terms(farm,allocations,s,name) for s in sims]; weighted_score=sum(t['policy_utility_sgd_equivalent']*s['normalized_weight'] for t,s in zip(terms,ss))
+        central=next((s for s in sims if s['scenario_id']=='central'),sims[max(range(len(ss)),key=lambda i:ss[i]['normalized_weight'])]); sid=content_hash(dict(name=name,input=f['numerical_input_hash'],allocations=allocations,scenario_set=ss,candidate_not_before=candidate_not_before,excluded_candidate_ids=sorted(excluded_ids)))[:20]
+        reserve_yield=max(Decimal(str(s['yield_factor'])) for s in ss)
+        terms=[_objective_terms(farm,allocations,s,name,harvest_yield_factor=reserve_yield) for s in sims]; weighted_score=sum(t['policy_utility_sgd_equivalent']*s['normalized_weight'] for t,s in zip(terms,ss))
         result.append(dict(id=sid,name=name,status='FEASIBLE' if not violations else 'NO_FEASIBLE_PLAN',description=p['description'],policy_parameters=p,metrics=central['metrics'],cost_breakdown=central['cost_breakdown'],allocations=allocations,weekly=central['weekly'],ledger=central['ledger'],order_allocations=central['order_allocations'],inventory_snapshots=central['inventory_snapshots'],terminal_stock=central['terminal_stock'],objective_terms=dict(unit='SGD-equivalent policy utility; coefficients are declared preferences, not forecast costs',scenario_terms=terms,weighted_policy_utility_sgd_equivalent=round(weighted_score,2),scenario_independent_new_work_charged_once=True),scenario_results=[dict(scenario_id=s['scenario_id'],metrics=s['metrics'],terminal_stock=s['terminal_stock']) for s in sims],scenario_set_id=content_hash(ss),scenario_seed=None,violations=violations,solver=solver,input_hash=f['input_hash'],numerical_input_hash=f['numerical_input_hash'],configuration_hash=f['configuration_hash'],forecast_settings=f['forecast_settings'],model_version=f['model_version'],calculation_version=VERSION,assumptions=['Synthetic recipes and declared scenarios; not commercial yield validation.','Scenario weights are validated, normalized and consumed by the weighted objective. No random scenario sampling is performed.','Fresh marketable yield includes packout once.','Future sowing cannot cover earlier deliveries.','Order service uses booked-before-residual, then known higher price and stable ID because buyer/grade priority fields are absent.','Closing stock remains physical inventory with zero salvage value and a declared policy penalty; it is not counted as waste.','SGD cost fixture: labour 12/hour, packing 0.30/kg delivered, disposal 0.15/kg.'],risk=dict(downside_fill_rate=min(s['metrics']['fill_rate'] for s in sims),downside_margin_sgd=min(s['metrics']['margin_sgd'] for s in sims),basis=('lexicographic maximin fill-rate across declared scenarios before weighted utility tie-break' if name=='Resilient' else 'reported minimum across declared scenarios; not a calibrated quantile'),optimization_proven=bool(solver.get('risk_optimization',{}).get('primary_proven_optimal')) if name=='Resilient' else None)))
-    return dict(forecast=f,scenario_set=ss,strategies=result,candidate_count=len(cands),input_hash=f['input_hash'],numerical_input_hash=f['numerical_input_hash'],configuration_hash=f['configuration_hash'],forecast_settings=f['forecast_settings'])
+    return dict(forecast=f,scenario_set=ss,strategies=result,candidate_count=len(cands),excluded_candidate_ids=sorted(excluded_ids),input_hash=f['input_hash'],numerical_input_hash=f['numerical_input_hash'],configuration_hash=f['configuration_hash'],forecast_settings=f['forecast_settings'])

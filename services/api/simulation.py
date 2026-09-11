@@ -77,7 +77,7 @@ def public_world(world):
     result['beds'] = beds
     result['simulation_only'] = True
     result['inference_triggered'] = False
-    result['state_hash'] = content_hash({k: world[k] for k in ('revision','clock_date','inventory','completed_task_ids','totals','cash_sgd','segment_farm','segment_allocations')})
+    result['state_hash'] = content_hash({k: world[k] for k in ('revision','clock_date','inventory','completed_task_ids','totals','cash_sgd','segment_farm','segment_allocations')} | {'harvest_lot_origins': world.get('harvest_lot_origins', {})})
     return result
 
 
@@ -116,6 +116,7 @@ def advance(store, tenant, world, days):
     recipes = {r.id: r for r in farm.recipes}
     for index in range(world['segment_days_executed'], world['segment_days_executed'] + days):
         row = deepcopy(world['trace']['ledger'][index]); day = row['date']
+        lot_origins = world.setdefault('harvest_lot_origins', {})
         old_stock = sum(Decimal(str(l['quantity_kg'])) for l in world['inventory'])
         if old_stock != Decimal(str(row['opening_kg'])):
             raise ValueError('Execution opening inventory does not match frozen trace')
@@ -126,13 +127,18 @@ def advance(store, tenant, world, days):
                 task_id = f"{a['id']}:{task}"
                 if due == day and task_id not in world['completed_task_ids']:
                     world['completed_task_ids'].append(task_id)
-                    append_event(store, tenant, world, 'task_completed', day, task_id=task_id, task=task, allocation_id=a['id'], bed_id=a['bed_id'], crop_id=a['crop_id'])
+                    produced_lots = [item['lot_id'] for item in world['trace'].get('harvest_lot_origins', []) if item['source_allocation_id'] == a['id']] if task == 'harvest' else []
+                    for lot_id in produced_lots: lot_origins[lot_id] = a['id']
+                    append_event(store, tenant, world, 'task_completed', day, task_id=task_id, task=task, allocation_id=a['id'], bed_id=a['bed_id'], crop_id=a['crop_id'], produced_lot_ids=produced_lots)
         day_revenue = Decimal(0)
         for allocation in world['trace']['order_allocations']:
             if allocation['date'] == day:
                 if allocation['price_sgd_per_kg'] is not None:
                     day_revenue += Decimal(str(allocation['delivered_kg'])) * Decimal(str(allocation['price_sgd_per_kg']))
-                append_event(store, tenant, world, 'demand_serviced', day, **{k: v for k, v in allocation.items() if k != 'date'})
+                delivery = deepcopy({k: v for k, v in allocation.items() if k != 'date'})
+                for lot in delivery.get('lot_allocations', []):
+                    if lot['lot_id'] in lot_origins: lot['source_allocation_id'] = lot_origins[lot['lot_id']]
+                append_event(store, tenant, world, 'demand_serviced', day, **delivery)
         costs = day_costs(farm, world['segment_allocations'], day, row, world['scenario'])
         # Keep decimal totals, round only the public balances. No cumulative penny drift.
         world['revenue_exact_sgd'] = str(Decimal(world['revenue_exact_sgd']) + day_revenue)
@@ -208,7 +214,7 @@ def register(app, tenant):
                 created_at=now(), updated_at=now(), clock_date=None, start_date=str(farm.planning_date), end_date=str(farm.planning_date + timedelta(days=farm.horizon_days - 1)),
                 days_executed=0, segment_days_executed=0, input_hash=run['input_hash'], input_version=run['input_version'],
                 segment_farm=farm.model_dump(mode='json'), segment_allocations=deepcopy(strategy['allocations']), trace=trace, scenario=scenario,
-                strategy_id=strategy['id'], strategy_name=strategy['name'], plan_history=[], completed_task_ids=[], event_sequence=0,
+                strategy_id=strategy['id'], strategy_name=strategy['name'], plan_history=[], completed_task_ids=[], harvest_lot_origins={}, event_sequence=0,
                 inventory=[l.model_dump(mode='json') for l in farm.inventory if l.harvested_date <= farm.planning_date],
                 opening_cash_sgd=str(farm.resources.cash_sgd), cash_sgd=float(farm.resources.cash_sgd), revenue_exact_sgd='0', cost_exact_sgd='0', revenue_sgd=0, cost_sgd=0,
                 totals=dict(harvest_kg=0, delivered_kg=0, disposed_kg=0, demand_kg=0),
@@ -266,7 +272,11 @@ def register(app, tenant):
         farm.inventory = [InventoryLot.model_validate(lot) for lot in world['inventory']]; farm.orders = [o for o in farm.orders if o.due_date >= start]
         farm.resources.cash_sgd = Decimal(str(max(0, world['cash_sgd'])))
         farm = Farm.model_validate(farm.model_dump(mode='json'))
-        result = plan(farm, locked_allocations=locks, candidate_not_before=start)
+        # Initial imported batch IDs are caller-controlled. Even an ID chosen to
+        # mimic a future generated cycle cannot reuse an already recorded task.
+        historical_ids = {task.rsplit(':', 1)[0] for task in world['completed_task_ids']}
+        result = plan(farm, locked_allocations=locks, candidate_not_before=start,
+                      excluded_candidate_ids=historical_ids)
         strategy = next((s for s in result['strategies'] if s['name'] == 'Balanced' and s['status'] == 'FEASIBLE'), None)
         if strategy is None: raise HTTPException(409, 'No feasible continuation; the existing future plan is preserved')
         trace = simulate(farm, strategy['allocations'], result['forecast']['demand'], world['scenario'])

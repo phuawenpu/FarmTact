@@ -1,6 +1,7 @@
 import json
 
 import httpx
+import pytest
 
 from scripts import research_advisor_trial as trial
 
@@ -16,7 +17,13 @@ class Response:
         return self.payload
 
 
-def test_research_trial_reuses_private_session_and_is_restart_safe(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    ("validation_status", "expected_status"),
+    [("references_verified", "PASS"), ("unsupported", "FAIL")],
+)
+def test_research_trial_reuses_private_session_and_is_restart_safe(
+    tmp_path, monkeypatch, validation_status, expected_status
+):
     farm = {"id": "unchanged-main-farm"}
     study = {"id": "research-private", "revision": 0, "input_version": 1, "results": []}
     conversation = None
@@ -100,7 +107,7 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(tmp_path, mon
                         {
                             "speaker": "advisor",
                             "request_id": "request-private",
-                            "validation_status": "references_verified",
+                            "validation_status": validation_status,
                         }
                     ],
                 )
@@ -127,7 +134,7 @@ def test_research_trial_reuses_private_session_and_is_restart_safe(tmp_path, mon
     first_posts = list(posts)
     resumed = trial.run(None, report_path, ledger_path, state_path, timeout=1)
 
-    assert first["status"] == resumed["status"] == "PASS"
+    assert first["status"] == resumed["status"] == expected_status
     assert first["actual_provider_calls"] == 1
     assert posts == first_posts
     state = json.loads(state_path.read_text())

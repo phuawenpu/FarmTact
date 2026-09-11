@@ -139,7 +139,7 @@
     "alpha": 0.35
   },
   "forecast_version": "recipe-ewma-v1",
-  "generated_at": "2026-09-11T10:46:41.102381Z",
+  "generated_at": "2026-09-11T11:47:40.182653Z",
   "generator_settings": {
     "history_multiplier": 1.0,
     "history_trend": 0.0,
@@ -184,12 +184,12 @@
         "yield_factor": 1.1
       }
     ],
-    "time_limit_seconds": 0.0
+    "time_limit_seconds": 0
   },
-  "planner_version": "daily-bed-cpsat-v2",
+  "planner_version": "daily-bed-cpsat-v3",
   "promotion_status": "not_eligible_synthetic_only",
   "public_features_used": [],
-  "report_id": "213fd8006a86688d278da6c0c01c7724e3435fe952585b97daff4952cedc59c6",
+  "report_id": "f22992e2ac189d4d4080b8fc615b8e960342b6e8ef1f9dc357b28387d5473c73",
   "report_schema_version": "farmtact-numerical-evaluation-2.0.0",
   "solver_reproducibility": {
     "deterministic_fallback_requested": true,
@@ -198,7 +198,7 @@
     "single_worker": true
   },
   "source_revision": {
-    "git_head": "d10f316d68d4a4c02dd75cc375a13cafc7030875",
+    "git_head": "4f4b3fb0036f36047b010c8c6403a5e0762b3eb5",
     "working_tree_dirty_at_generation": true
   },
   "status": "PASS",
@@ -338,8 +338,8 @@
         },
         "risk_optimization": null,
         "status": "UNKNOWN",
-        "time_limit_seconds": 0.0,
-        "wall_seconds": 0.021
+        "time_limit_seconds": 0,
+        "wall_seconds": 0.023
       },
       "violations": []
     },
@@ -478,8 +478,8 @@
         },
         "risk_optimization": null,
         "status": "UNKNOWN",
-        "time_limit_seconds": 0.0,
-        "wall_seconds": 0.023
+        "time_limit_seconds": 0,
+        "wall_seconds": 0.025
       },
       "violations": []
     },
@@ -624,8 +624,8 @@
           "resolution_basis_points": 1
         },
         "status": "UNKNOWN",
-        "time_limit_seconds": 0.0,
-        "wall_seconds": 0.011
+        "time_limit_seconds": 0,
+        "wall_seconds": 0.01
       },
       "violations": []
     }

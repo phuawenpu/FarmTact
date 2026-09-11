@@ -18,6 +18,8 @@ from services.api.conversation_store import ConversationStore
 from services.api.conversations import (
     ADVISORS,
     AdvisorReply,
+    MAX_PROVIDER_CONTEXT_CHARACTERS,
+    _bounded_model_context,
     _provider_messages,
     _tool_results,
     execute_conversation_job,
@@ -91,12 +93,13 @@ class FakeGateway:
                 in messages[0]["content"]
                 else "answer"
             )
+            supplied_facts = json.loads(messages[1]["content"])["typed_facts"]
             response = {
                 "content": f"{ADVISORS[next(key for key, row in ADVISORS.items() if row['role'] == role)]['name']} reviewed the frozen comparison.",
                 "evidence_refs": [],
                 "tool_refs": [],
-                "fact_refs": ["farm:resources.cash_sgd"],
-                "highlight_refs": ["bed:bed-01"],
+                "fact_refs": [next(iter(supplied_facts))],
+                "highlight_refs": [],
                 "relationship": relationship,
                 "proposed_actions": [],
             }
@@ -232,7 +235,7 @@ def test_direct_message_persists_validated_reply_and_replay_makes_no_call(
     assert reply["validation_status"] == "references_verified"
     assert reply["interpretation_status"] == "qualitative_unverified"
     assert reply["evidence_status"] == "grounded_facts_qualitative_unverified"
-    assert reply["rendered_facts"][0]["unit"] == "SGD"
+    assert reply["rendered_facts"][0]["unit"] in {"SGD", "ratio"}
     assert transcript["tool_results"]["farm:resources.cash_sgd"]
     assert transcript["transcript_mode"] == "recorded"
     monkeypatch.setattr(
@@ -608,7 +611,7 @@ def test_numeric_coincidence_never_semantically_validates_wrong_quantity(env, mo
             {
                 "content": "Balanced margin is 32 SGD.",
                 "evidence_refs": [],
-                "tool_refs": ["farm:resources.labour_hours_per_week"],
+                "tool_refs": ["strategy:balanced.metrics.fill_rate"],
                 "highlight_refs": [],
                 "relationship": "answer",
                 "proposed_actions": [],
@@ -621,7 +624,11 @@ def test_numeric_coincidence_never_semantically_validates_wrong_quantity(env, mo
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["validation_status"] == "unsupported"
     assert reply["validation_scope"] == "typed_fact_membership_entity_unit_period_and_supported_controls"
-    assert reply["validation_issues"][0]["code"] in {"typed_fact_in_context_refs", "model_authored_quantity"}
+    events = client.get(f"/api/v1/conversations/{conversation_id}/events").json()["events"]
+    rejected = next(event for event in events if event["event_type"] == "advisor_reply_rejected")
+    assert {issue["code"] for issue in rejected["body"]["validation_issues"]} == {
+        "typed_fact_in_context_refs", "model_authored_quantity"
+    }
 
 
 @pytest.mark.parametrize(
@@ -658,10 +665,145 @@ def test_spelled_quantities_and_relative_dates_remain_unsupported(
     execute(store, tenant, queued["id"])
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["validation_status"] == "unsupported"
-    assert (
-            "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
-        in reply["validation_errors"]
+    events = client.get(f"/api/v1/conversations/{conversation_id}/events").json()["events"]
+    rejected = next(event for event in events if event["event_type"] == "advisor_reply_rejected")
+    assert rejected["body"]["content"] == content
+    assert "model_authored_quantity" in {
+        issue["code"] for issue in rejected["body"]["validation_issues"]
+    }
+
+
+def test_format_only_reply_repair_preserves_meaning_fields_and_original_attempt(env, monkeypatch):
+    client, store, tenant = env
+    calls = []
+    original = {
+        "content": "The one delayed batch needs review.",
+        "evidence_refs": [],
+        "tool_refs": ["batch:batch-01.harvest_date"],
+        "fact_refs": [],
+        "highlight_refs": [],
+        "relationship": "answer",
+        "proposed_actions": [],
+    }
+    corrected = {
+        **original,
+        "content": "The delayed batch needs review.",
+        "tool_refs": [],
+        "fact_refs": ["batch:batch-01.harvest_date"],
+    }
+    gateway_factory(monkeypatch, calls, responses=[original, corrected])
+    conversation_id = create(client, key="format-repair-conversation").json()["id"]
+    queued = send(client, conversation_id, key="format-repair-message").json()
+    execute(store, tenant, queued["id"])
+
+    transcript = client.get(f"/api/v1/conversations/{conversation_id}").json()
+    reply = transcript["messages"][-1]
+    events = client.get(f"/api/v1/conversations/{conversation_id}/events").json()["events"]
+    rejected = next(event for event in events if event["event_type"] == "advisor_reply_rejected")
+    assert len(calls) == 2
+    assert reply["validation_status"] == "references_verified"
+    assert reply["relationship"] == original["relationship"]
+    assert reply["proposed_actions"] == original["proposed_actions"]
+    assert rejected["body"]["content"] == original["content"]
+    assert rejected["body"]["usage"]["total_tokens"] == 15
+
+
+def test_bounded_research_context_keeps_exact_inputs_without_full_catalogue():
+    tools = {
+        **{f"delivery:order-{index}.quantity_kg": index for index in range(100)},
+        "research:inputs": {"large": "aggregate"},
+        "research:reservation:bed-04": {"kind": "research_only_bed_reservation"},
+        "research:reservation:bed-04.start_date": "2026-09-17",
+        "research:unconfirmed_order:research-extra-order": {
+            "kind": "research_only_unconfirmed_order"
+        },
+        "research:labour_percent": 100,
+    }
+    from packages.ai_contracts import typed_reference_catalog
+
+    conversation = {
+        "snapshot_ref": {"kind": "research", "hash": "frozen"},
+        "selected_bed_id": "bed-04",
+        "_tool_results": tools,
+        "_typed_facts": typed_reference_catalog(tools, snapshot_hash="frozen"),
+    }
+    qualitative, typed = _bounded_model_context(conversation, "planning_chair")
+    assert "research:inputs" not in qualitative
+    assert "research:reservation:bed-04" in qualitative
+    assert "research:unconfirmed_order:research-extra-order" in qualitative
+    assert "research:reservation:bed-04.start_date" in typed
+    assert "research:labour_percent" in typed
+    assert not any(ref.startswith("delivery:") for ref in typed)
+
+
+@pytest.mark.parametrize("snapshot_kind", ["scenario", "research"])
+def test_provider_context_has_a_hard_serialized_bound_at_maximum_history(snapshot_kind):
+    from packages.ai_contracts import typed_reference_catalog
+
+    tools = {
+        **{
+            f"comparison:policy-{index}.scenario_metrics.margin_sgd": index
+            for index in range(300)
+        },
+        **{
+            f"strategy:strategy-{index}.metrics.margin_sgd": index
+            for index in range(300)
+        },
+        "research:reservation:bed-04": {
+            "kind": "research_only_bed_reservation",
+            "untrusted_padding": "x" * 100_000,
+        },
+        "research:reservation:bed-04.start_date": "2026-09-17",
+        "research:unconfirmed_order:research-extra-order": {
+            "kind": "research_only_unconfirmed_order"
+        },
+    }
+    history = [
+        {
+            "id": f"message-{index}",
+            "speaker": "advisor",
+            "speaker_id": "mei",
+            "content": "x" * 400,
+            "evidence_refs": [],
+            "tool_refs": [],
+            "fact_refs": [],
+            "validation_status": "references_verified",
+            "evidence_status": "qualitative_unverified",
+            "validation_issues": [],
+            "relationship": "answer",
+        }
+        for index in range(120)
+    ]
+
+    class Persistence:
+        def list_messages(self, *_):
+            return history
+
+        def get_message(self, *_):
+            return None
+
+    conversation = {
+        "id": "bounded",
+        "snapshot_ref": {"kind": snapshot_kind, "hash": "frozen"},
+        "selected_bed_id": "bed-04",
+        "_scenario": {"id": "scenario", "controls": {}, "affected_deliveries": []}
+        if snapshot_kind == "scenario" else None,
+        "_tool_results": tools,
+        "_typed_facts": typed_reference_catalog(tools, snapshot_hash="frozen"),
+        "_evidence": [{"finding": "e" * 100_000} for _ in range(24)],
+    }
+    request = {"mode": "direct", "question": "Review frozen inputs.", "reply_to": None}
+    messages = _provider_messages(
+        Persistence(), "tenant", conversation, request,
+        "planning_chair", "message-119", False,
     )
+    context = json.loads(messages[1]["content"])
+    assert len(messages[1]["content"]) <= MAX_PROVIDER_CONTEXT_CHARACTERS
+    assert len(context["prior_turns"]) == 16
+    assert len(context["evidence_context"]) == 6
+    if snapshot_kind == "research":
+        assert "research:reservation:bed-04" in context["tool_results"]
+        assert "research:reservation:bed-04.start_date" in context["typed_facts"]
 
 
 def test_council_preflight_counts_user_and_all_seven_advisor_turns(env):

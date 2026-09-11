@@ -123,3 +123,59 @@ def test_explicit_sqlite_adapter_keeps_transactions_atomic_with_polling_workers(
             state=post(c,f"/api/v1/simulations/{state['id']}/advance",dict(revision=state['revision'],days=14))
             assert c.get(f"/api/v1/simulations/{state['id']}").json()==state
         assert state['days_executed']==56
+
+
+def test_late_replans_preserve_distinct_crop_cycles_and_every_harvest_task(monkeypatch):
+    """A second season on the same bed cannot reuse completed task identities."""
+    from services.api import simulation
+    farm=synthetic_farm().model_copy(update={'horizon_days':84})
+    farm=Farm.model_validate(farm.model_dump(mode='json'))
+    result=plan(farm,time_limit=1)
+    client,store,tenant,run,_=setup_world((farm,result))
+    original_plan=simulation.plan
+    monkeypatch.setattr(simulation,'plan',lambda *a,**kw:original_plan(*a,**kw,time_limit=1))
+    with client:
+        state=post(client,'/api/v1/simulations',{'run_id':run['id']})
+        path=f"/api/v1/simulations/{state['id']}"
+        seen_cycles={}
+        def remember_allocations():
+            for allocation in simulation.get_world(store,tenant,state['id'])['segment_allocations']:
+                identity=(allocation['bed_id'],allocation['recipe_id'],allocation['sow_date'],allocation['harvest_date'])
+                assert allocation['id'] not in seen_cycles or seen_cycles[allocation['id']]==identity
+                seen_cycles[allocation['id']]=identity
+        remember_allocations()
+        for checkpoint in (7,42):
+            while state['days_executed']<checkpoint:
+                days=min(14,checkpoint-state['days_executed'])
+                state=post(client,path+'/advance',dict(revision=state['revision'],days=days))
+            prior=deepcopy(state)
+            state=post(client,path+'/replan',dict(revision=state['revision']))
+            assert state['completed_task_ids']==prior['completed_task_ids']
+            assert state['inventory']==prior['inventory']
+            remember_allocations()
+        while state['days_executed']<84:
+            state=post(client,path+'/advance',dict(revision=state['revision'],days=min(14,84-state['days_executed'])))
+        events=[];after=0
+        while True:
+            page=client.get(path+f'/events?after={after}&limit=200').json()
+            events.extend(page['events'])
+            if page['next_cursor'] is None:break
+            after=page['next_cursor']
+        tasks=[e for e in events if e['type']=='task_completed']
+        assert len({e['task_id'] for e in tasks})==len(tasks)
+        harvests=[e for e in tasks if e['task']=='harvest']
+        origins={lot_id:e['allocation_id'] for e in harvests for lot_id in e['produced_lot_ids']}
+        assert origins and state['harvest_lot_origins']==origins
+        assert any(e['date']>str(farm.planning_date) and not e['allocation_id'].startswith('batch-') for e in harvests)
+        assert any((date.fromisoformat(e['date'])-farm.planning_date).days>=42 for e in harvests)
+        for event in events:
+            if event['type']=='demand_serviced':
+                for lot in event['lot_allocations']:
+                    if lot['lot_id'] in origins:
+                        assert lot['source_allocation_id']==origins[lot['lot_id']]
+            if event['type']=='day_closed':
+                lots=event['closing_lots']
+                assert len({lot['id'] for lot in lots})==len(lots)
+                if event['ledger']['harvest_kg']>0:
+                    assert any(task['date']==event['date'] for task in harvests)
+        assert state['status']=='COMPLETED' and state['days_executed']==84
