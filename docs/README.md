@@ -10,6 +10,8 @@ evidence; V11's bounded Council does not certify their free-text workflows.
 
 ## Start here
 
+- [Fresh-workspace handoff](workspace-handoff.md): durable state, restart instructions and outstanding work.
+
 | Reader / question | Document |
 | --- | --- |
 | What does the app do, and how do I run it? | [Repository README](../README.md) |

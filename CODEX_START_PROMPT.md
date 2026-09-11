@@ -1,3 +1,5 @@
+Fresh-workspace restart: read [docs/workspace-handoff.md](docs/workspace-handoff.md).
+
 Current V11 handoff (11 September 2026): latest published edition is V11 from
 source `37802adbc9010bc80a50869ef725285a119af3f3`, image
 `sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d`.
