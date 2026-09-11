@@ -1,0 +1,25 @@
+{
+  "status": "FAIL",
+  "started_at": "2026-09-11T16:27:27.915Z",
+  "base_url": "http://127.0.0.1:8080/v11",
+  "inference_policy": "Numerical planning only; Council button is verified but never invoked.",
+  "checks": [
+    {
+      "name": "V11 opens on guided production planning",
+      "pass": true
+    },
+    {
+      "name": "confirmed orders and expected demand are presented separately",
+      "pass": true
+    },
+    {
+      "name": "manual-style records disclose synthetic limits",
+      "pass": true
+    }
+  ],
+  "failures": [
+    "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: 'Three feasible priorities' }) to be visible\u001b[22m\n\n    at /home/sprite/workspaces/Code2/tests/browser/v11_planning_journey.mjs:36:74"
+  ],
+  "screenshots": [],
+  "completed_at": "2026-09-11T16:28:10.060Z"
+}

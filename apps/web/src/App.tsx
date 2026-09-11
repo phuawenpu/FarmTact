@@ -1,4 +1,4 @@
-import { Activity, MessagesSquare, Database, FlaskConical, Leaf, Map, Menu, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
+import { Activity, MessagesSquare, Database, FlaskConical, Leaf, Map, MoreHorizontal, Plus, Settings2, Sprout, Wrench, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Board } from './components/Board'
 import { CropLibrary, Outcomes, Setup } from './components/Rooms'
@@ -13,8 +13,10 @@ import { playAudioEffect, playSimulationResult } from './lib/audio'
 import type { AppView, Bootstrap, Crop, Run } from './lib/types'
 import { deriveDecisionMission, loadDecisionMission, saveDecisionMission, type DecisionMission } from './components/DecisionJourney'
 import { runSoundOutcome } from './lib/game'
+import { GuidedPlanning } from './components/GuidedPlanning'
 
-const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
+type WorkspaceView = AppView | 'planning'
+const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
   { id: 'world', label: 'Farm', icon: Map },
   { id: 'council', label: 'Council research', icon: MessagesSquare },
   { id: 'board', label: 'Farm tools', icon: Wrench },
@@ -25,10 +27,12 @@ const navItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
 ]
 
 export default function App({ editionId = 'v1', initialView }: { editionId?: string; initialView?: AppView }) {
+  const isGuidedEdition = editionId === 'v11'
+  const navItems: Array<{ id: WorkspaceView; label: string; icon: typeof Map }> = isGuidedEdition ? [{ id: 'planning', label: 'Plan', icon: Sprout }, ...legacyNavItems] : legacyNavItems
   const initialMission=useRef<DecisionMission|null>(loadDecisionMission())
   const [mission, setMission] = useState<DecisionMission | null>(initialMission.current)
   const [mainMission,setMainMission]=useState<DecisionMission|null>(initialMission.current?.snapshotKind==='farm'?initialMission.current:null)
-  const [view, setView] = useState<AppView>(initialView || (initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world'))
+  const [view, setView] = useState<WorkspaceView>(initialView || (isGuidedEdition ? 'planning' : initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world'))
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
   const [loading, setLoading] = useState(true)
@@ -187,10 +191,10 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
     return () => { cancelled = true }
   }, [bootstrap, mission])
   const continueMission = (next: DecisionMission) => { setMission(next); saveDecisionMission(next); if(next.snapshotKind==='farm')setMainMission(next);setView(next.snapshotKind === 'farm' ? 'world' : 'data'); window.scrollTo({ top: 0, behavior: 'auto' }) }
-  const navigate = (next: AppView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
+  const navigate = (next: WorkspaceView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isGuidedEdition ? 'app-shell--guided' : ''}`}>
       <aside className="side-rail">
         <Brand />
         <nav aria-label="FarmTact rooms">
@@ -221,6 +225,7 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
+              {view === 'planning' && <GuidedPlanning crops={bootstrap.crops}/>}
               {view === 'council' && <CouncilResearch />}
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} capabilities={bootstrap.capabilities} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}

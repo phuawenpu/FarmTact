@@ -15,6 +15,7 @@ from services.api.conversation_store import conversation_requests
 from services.api.council_research import JOBS as research_jobs
 from services.api.scenarios import branches as scenario_branches
 from services.api.store import metadata, runs as planning_runs, tenants
+from services.api.planning_sessions import JOBS as guided_jobs
 
 
 MIN_RETAINED_DAYS = 7
@@ -104,6 +105,7 @@ def _active_reasons(connection: Any, tenant_id: str) -> list[str]:
         ("scenario", scenario_branches),
         ("conversation", conversation_requests),
         ("research", research_jobs),
+        ("guided_planning", guided_jobs),
     )
     reasons = []
     for name, table in checks:

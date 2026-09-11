@@ -103,7 +103,7 @@ def render_typescript() -> str:
                 blocks.append(_definition(alias, definition))
                 emitted_aliases.add(alias)
         blocks.append(_definition(model.__name__, schema))
-    blocks.append("export type AppView = 'world' | 'board' | 'crops' | 'data' | 'outcomes' | 'setup' | 'council'")
+    blocks.append("export type AppView = 'world' | 'board' | 'crops' | 'data' | 'outcomes' | 'setup' | 'council' | 'planning'")
     return "\n\n".join(blocks) + "\n"
 
 

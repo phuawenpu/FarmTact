@@ -16,7 +16,7 @@ from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, Integer, JSON, 
 
 from packages.contracts import Farm, InventoryLot, Strict, content_hash
 from packages.growth import crop_state
-from packages.planner import plan
+from services.api.numerical_worker import plan
 from packages.planner.engine import simulate
 from services.api.store import metadata, now
 

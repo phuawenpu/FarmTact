@@ -8,7 +8,8 @@ from fastapi import HTTPException, Request
 from pydantic import Field, model_validator
 from sqlalchemy import Table, Column, String, JSON, ForeignKey, UniqueConstraint, func, select, update
 from packages.contracts import Strict, Farm, content_hash
-from packages.planner import plan, validate_allocations
+from packages.planner import validate_allocations
+from services.api.numerical_worker import plan
 from services.api.store import metadata, now
 
 MAX_SCENARIOS_PER_TENANT=30

@@ -5,6 +5,12 @@ export type ReleaseChange = { title: string; description: string; feedback_ids: 
 export type ReleaseEdition = { id: string; title: string; published_at: string; summary: string; changes: ReleaseChange[]; source_commit: string; source_url: string; compare_url: string; image_digest: string; review_url: string; play_url: string; status: 'published' }
 export type Releases = { latest: string; editions: ReleaseEdition[] }
 
+/** Newest numbered editions first; v10 must sort ahead of v9. */
+export function newestEditions(editions: ReleaseEdition[]) {
+  const number = (id: string) => Number(id.match(/^v(\d+)$/i)?.[1] || -1)
+  return [...editions].sort((left, right) => number(right.id) - number(left.id) || right.published_at.localeCompare(left.published_at))
+}
+
 export function useReleases() {
   const [data, setData] = useState<Releases | null>(null)
   const [error, setError] = useState('')
@@ -17,14 +23,14 @@ export function useReleases() {
 
 export function EditionSwitcher({ editionId }: { editionId: string }) {
   const { data } = useReleases()
-  return <div className="edition-switcher"><label><span>Edition &amp; evolution</span><select aria-label="Choose FarmTact edition" value={editionId} onChange={event => window.location.assign(`/${event.target.value}/`)}>{data?.editions.map(edition => <option key={edition.id} value={edition.id}>{edition.id.toUpperCase()} · {edition.title}</option>) || <option value={editionId}>{editionId.toUpperCase()}</option>}</select></label><p>Each edition has its own farm and progress.</p><a href={`/${editionId}/changes`}>Changes and evidence</a></div>
+  return <div className="edition-switcher"><label><span>Edition &amp; evolution</span><select aria-label="Choose FarmTact edition" value={editionId} onChange={event => window.location.assign(`/${event.target.value}/`)}>{data ? newestEditions(data.editions).map(edition => <option key={edition.id} value={edition.id}>{edition.id.toUpperCase()} · {edition.title}</option>) : <option value={editionId}>{editionId.toUpperCase()}</option>}</select></label><p>Each edition has its own farm and progress.</p><a href={`/${editionId}/changes`}>Changes and evidence</a></div>
 }
 
 export function EditionChooser() {
   const { data, error } = useReleases()
   return <main className="edition-page"><header className="edition-hero"><span className="brand__mark"><Sprout size={28}/></span><p className="kicker">FarmTact editions</p><h1>Choose your strategy room</h1><p>Play the preserved original or explore the latest evolution. Every edition remains available with its own review evidence.</p></header>
     {error && <p className="error-banner" role="alert">{error}</p>}{!data && !error && <p role="status">Loading editions…</p>}
-    <section className="edition-grid" aria-label="Published editions">{data?.editions.map(edition => <article className={edition.id === data.latest ? 'edition-card is-latest' : 'edition-card'} key={edition.id}><div><span className="edition-badge">{edition.id === data.latest ? 'Latest edition' : 'Preserved edition'}</span><h2>{edition.title}</h2><p>{edition.summary}</p><small>Published {new Date(edition.published_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</small></div><div className="edition-actions"><a className="button button--forest" href={edition.play_url}>Play {edition.id.toUpperCase()} <ArrowRight size={17}/></a><a className="button button--cream" href={`/${edition.id}/changes`}><History size={17}/> See changes</a></div></article>)}</section>
+    <section className="edition-grid" aria-label="Published editions">{data && newestEditions(data.editions).map(edition => <article className={edition.id === data.latest ? 'edition-card is-latest' : 'edition-card'} key={edition.id}><div><span className="edition-badge">{edition.id === data.latest ? 'Latest edition' : 'Preserved edition'}</span><h2>{edition.title}</h2><p>{edition.summary}</p><small>Published {new Date(edition.published_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</small></div><div className="edition-actions"><a className="button button--forest" href={edition.play_url}>Play {edition.id.toUpperCase()} <ArrowRight size={17}/></a><a className="button button--cream" href={`/${edition.id}/changes`}><History size={17}/> See changes</a></div></article>)}</section>
   </main>
 }
 

@@ -65,7 +65,7 @@ def _create_tenant(store, tenant_id: str, age_days: int) -> None:
 
 
 def _seed_every_tenant_table(store, tenant_id: str) -> None:
-    """Put one terminal row in each of the 19 current tenant-owned tables."""
+    """Put one terminal row in every current tenant-owned table."""
 
     run_id = f"run-{tenant_id}"
     conversation_id = f"conversation-{tenant_id}"
@@ -73,7 +73,13 @@ def _seed_every_tenant_table(store, tenant_id: str) -> None:
     research_id = f"research-{tenant_id}"
     action_id = f"action-{tenant_id}"
     world_id = f"world-{tenant_id}"
+    from services.api.planning_sessions import SESSIONS as guided_sessions,JOBS as guided_jobs,VERSIONS as guided_versions,RECEIPTS as guided_receipts
     with store.connection(write=True) as connection:
+        guided_id=f'guided-{tenant_id}'
+        connection.execute(guided_sessions.insert().values(id=guided_id,tenant_id=tenant_id,status='COMPLETED',payload={}))
+        connection.execute(guided_jobs.insert().values(id=f'guided-job-{tenant_id}',tenant_id=tenant_id,session_id=guided_id,status='COMPLETED',kind='calculate',created_at=AS_OF.isoformat(),payload={}))
+        connection.execute(guided_versions.insert().values(id=f'guided-version-{tenant_id}',tenant_id=tenant_id,session_id=guided_id,payload={}))
+        connection.execute(guided_receipts.insert().values(tenant_id=tenant_id,key=f'guided-key-{tenant_id}',request_hash='guided-hash',payload={}))
         connection.execute(
             farms.insert().values(
                 id=f"farm-{tenant_id}",

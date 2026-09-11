@@ -248,7 +248,7 @@ def execute(store,tenant,id):
         if latest.get('cancellation_requested'):raise CalculationCancelled()
     try:
         check_cancelled()
-        from packages.planner.research import calculate_research
+        from services.api.numerical_worker import calculate_research
         from packages.models import MODEL_VERSION
         from packages.planner.engine import VERSION as PLANNER_VERSION
         if j.get('schema_version')!=VERSION or j.get('forecast_version')!=MODEL_VERSION or j.get('planner_version')!=PLANNER_VERSION:raise ValueError('Unsupported frozen numerical version')

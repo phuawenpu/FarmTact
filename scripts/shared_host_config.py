@@ -25,7 +25,9 @@ def machine_config(registry, volume, *, public=False, origin='https://farmtact.f
     upstreams = {name: f'http://farmtact-local-{name}.flycast:{8080+int(name[1:])}' for name in ids}
     adapter = base64.b64encode((ROOT/'scripts/shared_container_entrypoint.py').read_bytes()).decode()
     containers = []
-    for name, image in [('gateway', GATEWAY_IMAGE), *images.items()]:
+    # V11 refreshes the chooser to newest-first without touching older edition images.
+    gateway_image=images[ids[-1]] if int(ids[-1][1:])>=11 else GATEWAY_IMAGE
+    for name, image in [('gateway', gateway_image), *images.items()]:
         gateway = name == 'gateway'; port = 8080 if gateway else 8080+int(name[1:])
         env = dict(FARMTACT_CONTAINER=name, FARMTACT_PORT=str(port),
                    FARMTACT_EXECUTION_MODE='test', FARMTACT_SECURE_COOKIES='true',

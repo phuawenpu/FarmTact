@@ -54,7 +54,7 @@ PREVIEW_IP = Rule("explorer_preview_ip", 60, 60)
 PREVIEW_TENANT = Rule("explorer_preview_session", 30, 60)
 PROBE_IP = Rule("probe_ip", 30, 60)
 STREAM_IP = Rule("stream_open_ip", 12, 60)
-AI_PATH = re.compile(r"^/api/v1/(?:conversations/[^/]+/(?:messages|invite|council)|planning-runs(?:/[^/]+/replan)?)$")
+AI_PATH = re.compile(r"^/api/v1/(?:planning-sessions/[^/]+/review|conversations/[^/]+/(?:messages|invite|council)|planning-runs(?:/[^/]+/replan)?)$")
 
 
 class Limited(Exception):

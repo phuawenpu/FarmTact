@@ -71,32 +71,69 @@
   },
   "callers": {
     "mission_council": {
-      "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+      "routes": [
+        "demand_analyst",
+        "weather_analyst",
+        "market_analyst",
+        "production_analyst",
+        "supply_chain_analyst",
+        "profit_analyst",
+        "planning_chair"
+      ],
       "feature": "planning_mission",
       "integration": "active_product",
       "max_requests": 9,
       "failure_semantics": "visible_withheld_or_partial"
     },
     "persistent_conversation": {
-      "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+      "routes": [
+        "demand_analyst",
+        "weather_analyst",
+        "market_analyst",
+        "production_analyst",
+        "supply_chain_analyst",
+        "profit_analyst",
+        "planning_chair"
+      ],
       "feature": "direct_invite_council_research_interpretation",
       "integration": "active_product",
       "max_requests": 9,
       "failure_semantics": "visible_unsupported_partial_or_failed"
     },
     "synthetic_label_observer": {
-      "routes": ["visual_observer"],
+      "routes": [
+        "visual_observer"
+      ],
       "feature": "synthetic_label_observation",
       "integration": "active_api",
       "max_requests": 1,
       "failure_semantics": "visible_missing_visual_evidence"
     },
     "authenticated_gateway_trial": {
-      "routes": ["demand_analyst", "production_analyst", "visual_observer"],
+      "routes": [
+        "demand_analyst",
+        "production_analyst",
+        "visual_observer"
+      ],
       "feature": "provider_contract_diagnostic",
       "integration": "diagnostic_only",
       "max_requests": 16,
       "failure_semantics": "preserved_failed_trial"
+    },
+    "guided_planning_council": {
+      "routes": [
+        "demand_analyst",
+        "weather_analyst",
+        "market_analyst",
+        "production_analyst",
+        "supply_chain_analyst",
+        "profit_analyst",
+        "planning_chair"
+      ],
+      "feature": "guided_planning_session_review",
+      "integration": "active_product",
+      "max_requests": 9,
+      "failure_semantics": "visible_blocked_partial_or_rejected"
     }
   },
   "model_migration": {

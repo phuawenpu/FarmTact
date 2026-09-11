@@ -1127,3 +1127,8 @@ Future acceptance requires queue/execution tracing, CPU/platform-quota measureme
 shared numerical admission control evaluation and bounded cancellation testing.
 No host resource increase or threshold relaxation was made. See the V10 technical
 follow-up and capacity protocol note for exact scope and cleanup.
+
+
+## V11 organizer-aligned iteration — implementation in progress
+
+The organizer recap and accepted implementation plan are in [V11 implementation plan](docs/v11-implementation-plan.md). This iteration reuses the farm board and numerical core for a guided records-to-schedule-to-Council-to-simulation-to-replanning journey. Future-demand controls modify residual forecasts only; explicit booking edits and dated synthetic seasonal projections are separate. Saved schedules and reoptimized schedules must share identical changed conditions and remaining initial state. Authoritative claims are server-rendered typed propositions; live DeepSeek review is explicit and advisory with the unchanged shared 48-request daily cap. Missing-source role notices are deterministic and must not count as provider calls. Numerical jobs use bounded local subprocesses; old editions are preserved. Newest numbered editions appear first in the chooser. Verification and deployment remain pending until recorded.

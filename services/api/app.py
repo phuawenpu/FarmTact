@@ -12,7 +12,8 @@ from pydantic import Field
 from packages.contracts import Farm,Strict,content_hash
 from packages.fixtures import synthetic_farm
 from packages.agents import COUNCIL_VERSION, COUNCIL_MAX_REQUESTS, council_review_issues, council_statuses
-from packages.planner import plan,validate_allocations
+from packages.planner import validate_allocations
+from services.api.numerical_worker import plan
 from services.api.store import Store,now
 from services.api.views import ROOT,farm_view,crop_views,source_views,capabilities
 
@@ -57,6 +58,8 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
 class Worker:
     def __init__(self,store):self.store=store;self.stop=threading.Event();self.thread=None;self.provider_thread=None
     def start(self):
+        from services.api.planning_sessions import recover as recover_planning
+        recover_planning(self.store)
         self.store.interrupt_abandoned()
         from services.api.scenarios import interrupt_scenarios
         interrupt_scenarios(self.store)
@@ -80,6 +83,10 @@ class Worker:
                 logging.getLogger(__name__).error('Worker lane %s iteration failed (%s)',lane,type(exc).__name__)
                 self.stop.wait(1)
     def tick(self,lane):
+        from services.api.planning_sessions import pending as pending_planning, execute_job
+        guided = pending_planning(self.store,lane)
+        if guided: execute_job(self.store,*guided)
+        if self.stop.is_set():return
         for tenant,id in self.store.pending(council_requested=lane=='provider'):
             record=self.store.get_run(tenant,id)
             if bool(record.get('council_requested'))!=(lane=='provider'):continue
@@ -204,6 +211,15 @@ def create_app(store=None,start_worker=True):
     app=FastAPI(title='FarmTact',version='0.1.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
     @app.middleware('http')
     async def boundaries(request,call_next):
+        # Only the next unpublished edition is addressable in an unsealed local checkout.
+        if not os.environ.get('FARMTACT_EDITION'):
+            from services.api.release_registry import registry
+            next_edition = 'v'+str(max(int(e['id'][1:]) for e in registry()['editions'])+1)
+            prefix='/'+next_edition
+            path=request.scope['path']
+            if path==prefix or path.startswith(prefix+'/'):
+                request.scope['path']=path[len(prefix):] or '/'
+                request.scope['raw_path']=request.scope['path'].encode()
         if request.method not in ('GET','HEAD','OPTIONS'):
             origin=request.headers.get('origin')
             if origin:
@@ -414,6 +430,8 @@ def create_app(store=None,start_worker=True):
     install_conversations(app,tenant)
     from services.api.council_research import install_routes as install_research
     install_research(app,tenant)
+    from services.api.planning_sessions import register as install_planning
+    install_planning(app,tenant)
     from services.api.simulation import register as install_simulations
     install_simulations(app,tenant)
     from services.api.reviews import install_routes as install_reviews

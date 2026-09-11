@@ -60,6 +60,7 @@ REVIEWED_MODEL_MIGRATION: dict[str, Any] = {
     "routing_policy": "Every current text and native-vision route requests deepseek-flash; returned model identifiers must match exactly.",
 }
 REVIEWED_CALLERS: dict[str, dict[str, Any]] = {
+    "guided_planning_council": {'routes': ['demand_analyst', 'weather_analyst', 'market_analyst', 'production_analyst', 'supply_chain_analyst', 'profit_analyst', 'planning_chair'], 'feature': 'guided_planning_session_review', 'integration': 'active_product', 'max_requests': 9, 'failure_semantics': 'visible_blocked_partial_or_rejected'},
     "mission_council": {
         "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
         "feature": "planning_mission", "integration": "active_product",
