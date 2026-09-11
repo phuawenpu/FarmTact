@@ -20,7 +20,7 @@ try {
  report.advisor_card_count=await dialog.locator('.message-card--advisor').count(); check('Live transcript contains eleven persisted advisor replies',report.advisor_card_count===11)
  check('Council shows all six speakers',await dialog.getByLabel('Council speakers').locator('span').count()===6)
  check('Final critic conclusion is visible',await dialog.getByText('Critic’s conclusion',{exact:true}).isVisible())
- check('Frozen facts render from tool references',await dialog.getByText('Facts from this frozen snapshot',{exact:true}).count()>0)
+ check('Legacy tool references render as qualitative context',await dialog.getByText('Qualitative context references',{exact:true}).count()>0)
  check('Invited advisor disagreement is visible',await dialog.getByText('disagreement',{exact:true}).count()>0)
  const blocked=dialog.locator('.message-card--advisor').filter({has:page.locator('.validation-chip--bad')})
  check('Unsupported live suggestions remain disabled',await blocked.locator('.proposed-actions button:disabled').count()>0)

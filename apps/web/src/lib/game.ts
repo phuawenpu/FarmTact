@@ -26,10 +26,13 @@ export interface ConversationMessage {
   snapshot_ref?: string | null
   evidence_refs?: string[]
   tool_refs?: string[]
+  fact_refs?: string[]
+  rendered_facts?: RenderedFact[]
   highlight_refs?: string[]
   validation_status?: string
   validation_scope?: string
   interpretation_status?: string
+  evidence_status?: string
   relationship?: string
   request_mode?: string
   planner_conclusion?: boolean
@@ -37,6 +40,18 @@ export interface ConversationMessage {
   proposed_actions?: ProposedAction[]
   replay?: boolean
   [key: string]: unknown
+}
+
+export interface RenderedFact {
+  reference: string
+  kind?: string
+  value: unknown
+  unit?: string | null
+  entity?: { type?: string; id?: string } | null
+  period?: { kind?: string; value?: string } | null
+  context?: string | null
+  snapshot_hash?: string | null
+  verification?: string | null
 }
 
 export interface ProposedAction {
@@ -67,6 +82,9 @@ export interface Conversation {
   selected_bed_id?: string | null
   last_request_id?: string | null
   last_request_status?: string | null
+  tool_results?: Record<string, unknown>
+  typed_facts?: Record<string, RenderedFact>
+  evidence_context?: Array<{ evidence_id?: string; title?: string; finding?: string; scope?: string; limit?: string; source_url?: string; access_review_status?: string }>
   [key: string]: unknown
 }
 

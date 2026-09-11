@@ -1,9 +1,9 @@
 # FarmTact V8 public AI postmortem
 
-**Evidence date:** 11 September 2026  
-**Published edition:** immutable V8  
-**Source:** `a00e546b1270a5c532e8eae6b8b64e568c344c13`  
-**Image digest:** `8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`  
+**Evidence date:** 11 September 2026<br>
+**Published edition:** immutable V8<br>
+**Source:** `a00e546b1270a5c532e8eae6b8b64e568c344c13`<br>
+**Image digest:** `8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357`<br>
 **Overall AI quality result:** **FAIL**
 
 ## Scope and claim boundary
@@ -214,3 +214,13 @@ substituted for one another.
 - **UNSUPPORTED:** claims that V8 AI quality passed, that valid references prove the
   prose follows their meaning, or that these synthetic adviser outputs validate farm
   decisions.
+
+## Additional display finding from source review
+
+The V8 server stores `fact_refs` and code-rendered `rendered_facts`, but both
+`AdvisorEvidence.tsx` and the research `ActualConversation` display read only
+legacy `tool_refs`. A typed-only reply therefore omits its authoritative values
+in those views even though replay retains them. This is a display integration
+defect, separate from provider response quality. The V9 candidate must render
+typed facts in both views and verify exact values/units and missing/unsupported
+states in a browser before publication.

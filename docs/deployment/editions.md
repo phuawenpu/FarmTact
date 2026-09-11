@@ -68,9 +68,9 @@ volume remain. Unrelated resources were untouched. See
 [final inventory](../../reports/v6/fly_inventory_after.json).
 
 Public capacity evidence: two fresh concurrent v5/v6 numerical scenarios finished
-in 21.803s and 21.847s, read p95 was 0.1993s, and 2603.5 MiB remained available. This validates light concurrent use, not arbitrary scale. Singapore
-base estimate: $28.92 compute + $0.45 volume = $29.37 per 30-day month, excluding
-other billable items. One host is one availability boundary; deployments may
+in 21.803s and 21.847s, read p95 was 0.1993s, and 2603.5 MiB remained available. This validates light concurrent use, not arbitrary scale. Archived V6 Singapore planning estimate: $28.92 compute + $0.45 volume =
+$29.37 per 30-day month, excluding other billable items. This audit did not refresh
+pricing or inspect an invoice. One host is one availability boundary; deployments may
 briefly interrupt all editions. Reassess memory before accumulating many more
 editions. See [capacity](../../reports/v6/shared_capacity_public.json) and
 [transfer evidence](../../reports/v6/data_transfer.json).

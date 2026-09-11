@@ -1,6 +1,7 @@
 import { editionPath } from './edition'
 import { mutationRequest } from './api'
 import type { Farm, StrategyMetrics } from './types'
+import type { RenderedFact } from './game'
 
 export type CouncilConcept = 'inline' | 'sheet' | 'cards'
 export type SteeringMode = 'continuous' | 'checkpoints'
@@ -18,7 +19,8 @@ export interface ResearchSession {
   numerical_calculation_status?:string
 }
 export interface ResearchReport { title:string; documents:Array<{title:string;markdown:string}>; sources:Array<{title:string;url:string}>; screenshots:Array<{title:string;url:string}> }
-export interface ActualConversation { id:string; snapshot_ref?:string|{kind?:string;id?:string;hash?:string;version?:number}; tool_results?:Record<string,unknown>; messages:Array<{id:string;speaker:string;speaker_name?:string;content:string;validation_status?:string;interpretation_status?:string;tool_refs?:string[];evidence_refs?:string[]}>; last_request_status?:string|null }
+export interface ActualConversationMessage { id:string;speaker:string;speaker_name?:string;content:string;validation_status?:string;interpretation_status?:string;evidence_status?:string;tool_refs?:string[];evidence_refs?:string[];fact_refs?:string[];rendered_facts?:RenderedFact[] }
+export interface ActualConversation { id:string; snapshot_ref?:string|{kind?:string;id?:string;hash?:string;version?:number}; tool_results?:Record<string,unknown>; typed_facts?:Record<string,RenderedFact>; messages:ActualConversationMessage[]; last_request_status?:string|null }
 export type ResearchActionBody = {action:ResearchAction;revision:number;text?:string;refs?:string[];operation?:ResearchProposal['operation'];bed_id?:string;order_id?:string;start_date?:string;end_date?:string;confirmed?:boolean;labour_percent?:number;policy?:'Lean'|'Balanced'|'Resilient';result_version?:number;concept?:CouncilConcept;steering?:SteeringMode;selection_mode?:'chips'|'cards';animation?:'static'|'transition';resolution?:ResearchChallenge['status'];advisor?:string}
 
 async function call<T>(path:string, init?:RequestInit):Promise<T>{

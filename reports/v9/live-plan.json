@@ -1,0 +1,60 @@
+{
+  "schema_version": "farmtact-v9-live-plan-1",
+  "status": "planned_before_public_calls",
+  "target": "https://farmtact.fly.dev/v9",
+  "normal_requests": 18,
+  "maximum_requests": 25,
+  "shared_daily_request_limit_unchanged": 48,
+  "workflows": [
+    {
+      "workflow": "planning",
+      "roles": 7,
+      "normal_requests": 7,
+      "maximum_requests": 9
+    },
+    {
+      "workflow": "direct",
+      "roles": 1,
+      "normal_requests": 1,
+      "maximum_requests": 2
+    },
+    {
+      "workflow": "invite",
+      "roles": 2,
+      "normal_requests": 2,
+      "maximum_requests": 3
+    },
+    {
+      "workflow": "conversation_council",
+      "roles": 7,
+      "normal_requests": 7,
+      "maximum_requests": 9
+    },
+    {
+      "workflow": "research",
+      "roles": 1,
+      "normal_requests": 1,
+      "maximum_requests": 2
+    }
+  ],
+  "zero_inference_checks": [
+    "stored_replay",
+    "quality_scoring",
+    "edition_health_and_source",
+    "prior_edition_preservation",
+    "concurrent_numerical_scenarios",
+    "recorded_56_day_execution",
+    "browser_reading_of_stored_facts"
+  ],
+  "semantic_review": {
+    "reviewer_type": "AI-assisted, not human expert",
+    "checks": [
+      "metric names match selected facts",
+      "conclusions follow frozen comparison and policy scope",
+      "absence-driven abstention does not invent external observations",
+      "scripted and numerical actions are not described as actual AI or farm operations",
+      "no claim of empirically validated agricultural accuracy"
+    ],
+    "claim_limit": "This review does not prove arbitrary prose entailment or general provider reliability."
+  }
+}

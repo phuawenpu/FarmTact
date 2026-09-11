@@ -2,6 +2,8 @@ import { ArrowRight, CalendarDays, CheckCircle2, ChevronRight, CircleAlert, Gaug
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Capabilities, Crop, Farm, Run, Strategy } from '../lib/types'
 import { editionPath } from '../lib/edition'
+import type { RenderedFact } from '../lib/game'
+import { FrozenFactEvidence } from './AdvisorEvidence'
 import { CropArt, EventIcon, formatDate, formatMoney, humanizeExecutionMode, humanizeSystem, Meter, StatusPill } from './Visuals'
 
 interface BoardProps {
@@ -282,7 +284,16 @@ function Council({ run }: { run: Run | null }) {
   const influence = String(run.council_decision_influence || 'unreported')
   return <div className="sheet-stack advisor-list">
     <div className="council-trace" aria-label="Council execution record"><div><span>Execution</span><strong>{execution.replaceAll('_', ' ')}</strong></div><div><span>Evidence references</span><strong>{evidence.replaceAll('_', ' ')}</strong></div><div><span>Decision influence</span><strong>{influence.replaceAll('_', ' ')}</strong></div><p>These fields describe separate facts. Evidence-reference checks do not verify the truth of qualitative council prose.</p></div>
-    {run.claims.map((claim, index) => <article className="advisor-card advisor-card--full" key={`${claim.role}-${index}`}><div className={`advisor-avatar advisor-avatar--${index % 3}`}>{claim.role.slice(0, 2).toUpperCase()}</div><div><div className="advisor-card__meta"><strong>{claim.role.replaceAll('_', ' ')}</strong><StatusPill status={claim.status} /></div><p>{claim.statement}</p><small>Qualitative interpretation · {claim.evidence_ids.length ? `references ${claim.evidence_ids.join(', ')}` : 'no evidence references reported'}</small></div></article>)}
+    {run.claims.map((claim, index) => {
+      const factRefs = Array.isArray(claim.fact_refs) ? claim.fact_refs.filter((value): value is string => typeof value === 'string') : []
+      const renderedFacts = Array.isArray(claim.rendered_facts) ? claim.rendered_facts.filter((value): value is RenderedFact => !!value && typeof value === 'object' && typeof (value as RenderedFact).reference === 'string' && 'value' in value) : []
+      const evidenceStatus = typeof claim.evidence_status === 'string' ? claim.evidence_status : undefined
+      const policyLabels = Object.fromEntries(factRefs.flatMap(ref => {
+        const strategy = run.strategies.find(item => ref.includes(item.id))
+        return strategy ? [[ref, `${strategy.name} policy`]] : []
+      }))
+      return <article className="advisor-card advisor-card--full" key={`${claim.role}-${index}`}><div className={`advisor-avatar advisor-avatar--${index % 3}`}>{claim.role.slice(0, 2).toUpperCase()}</div><div style={{ minWidth: 0 }}><div className="advisor-card__meta"><strong>{claim.role.replaceAll('_', ' ')}</strong><StatusPill status={claim.status} /></div><p>{claim.statement}</p><FrozenFactEvidence factRefs={factRefs} renderedFacts={renderedFacts} policyLabels={policyLabels} validationStatus={claim.status} evidenceStatus={evidenceStatus}/><small>Qualitative interpretation · {claim.evidence_ids.length ? `references ${claim.evidence_ids.join(', ')}` : 'no evidence references reported'}</small></div></article>
+    })}
   </div>
 }
 

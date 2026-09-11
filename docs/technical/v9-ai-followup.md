@@ -1,8 +1,8 @@
 # V9 AI follow-up: semantic context and bounded answers
 
-**Date:** 11 September 2026 UTC  
-**State:** candidate; immutable publication and actual-provider verification pending  
-**Scope:** AI context/validation corrections after the immutable V8 public trial  
+**Date:** 11 September 2026 UTC<br>
+**State:** candidate; immutable publication and actual-provider verification pending<br>
+**Scope:** AI context/validation corrections after the immutable V8 public trial<br>
 **Data:** synthetic demonstration; actual farm operations disabled
 
 ## Abstract
@@ -35,7 +35,8 @@ that examination was not human expert agronomic review.
 | Chair described withholding while the numerical selection was accepted | Conditional generic policy prose was ambiguous and the Council was not given the mission's required/advisory policy | Pass the actual mission policy and expose structured deterministic selection semantics |
 | Numerical direct reply cited controls but no typed result | A qualitative context reference alone satisfied the local evidence gate | Require typed evidence for a non-abstaining numerical interpretation when relevant facts are supplied |
 | Unrelated comparison metrics occupied the context | The filter recognized `.metrics.` but missed `.baseline_metrics.` and `.scenario_metrics.` | Recognize all comparison segments and apply the role metric set consistently |
-| Relevant scenario values and deltas could be crowded out | Alphabetical reference order favored an early policy and segment | Interleave metric/policy/segment records under the existing bound; prioritize controls and relevant source status |
+| Relevant scenario values and deltas could be crowded out | Alphabetical reference order favored an early policy and segment | Admit available metric/policy triplet members atomically under the existing bound; prioritize controls and relevant source status |
+| Authoritative typed values were absent from the UI | Saved conversation and research views rendered only legacy `tool_refs`; the mission sheet omitted typed claims | Render server-owned `rendered_facts`/`fact_refs` in all three actual-AI views, with explicit unavailable and unsupported states |
 | Invited return exceeded 400 characters | Guidance encouraged explanation near the hard bound | Target fewer than 220 content characters, while retaining the 400-character schema limit and finite shared repairs |
 
 These are testable software hypotheses. They do not claim that arbitrary free-form
@@ -72,10 +73,22 @@ can create a synthetic execution world from an accepted numerical result.
 Conversation context includes server-authored response requirements. A numerical
 non-abstention must select a supplied typed fact; a typed fact accidentally placed
 in qualitative references remains eligible for the existing bounded format-only
-repair, and the final response must still place it correctly. An explicit absence
-of relevant frozen weather or community-market observations requires abstention.
+repair, and the final response must still place it correctly. In Council mode an explicit absence
+of relevant frozen weather or community-market observations requires abstention
+from those external-source specialist assessments. Direct or invited questions
+about an answerable frozen numerical result remain allowed; scenario/research
+answers must then select typed facts.
 General news does not become observed price, demand or weather evidence merely
 because a feed is connected. Arbitrary unanswerable questions may still abstain.
+
+The mission path currently supplies no site-weather observation or forecast, so
+its Weather role must abstain. Market assessment depends on supplied community
+observations, which are not connected in the default demonstration. Conversation
+weather context can separately contain frozen public-source records. These paths
+must not be conflated. The fixed seven-call mission still spends requests on
+absence-driven abstentions; an explicit, correctly labelled deterministic skip
+policy is a future cost experiment, not an implemented saving.
+
 
 The context remains bounded to 48 ordinary typed facts, 24 ordinary qualitative
 references, 16 ordinary prior turns and six evidence records, with declared
@@ -92,9 +105,13 @@ receipt replay, request accounting, preserved rejected attempts and format-repai
 semantics. Tests use isolated PostgreSQL databases where required; background
 application workers must never share a regression database.
 
-The [conversation focus](../../reports/v9/conversation-focused.xml) passed 43 tests.
-The final mission-focused and whole-repository results will be attached after the
-candidate is frozen. The earlier [V8 full regression](../../reports/v8/full-regression.xml)
+The initial [conversation focus](../../reports/v9/conversation-focused.xml) passed 43 tests.
+The subsequent [integrated AI focus](../../reports/v9/ai-focused.xml) passed 116 tests;
+additional crowded-context tests cover atomic comparison groups.
+The first full run had 603 passes, three setup failures and one skip because
+a concurrent browser build temporarily removed the local static-asset directory.
+The [race report](../../reports/v9/regression-build-race.md) retains all evidence.
+The final [whole-repository rerun](../../reports/v9/full-regression.xml), after freezing the browser build, passed **606 tests with one skip** in 446.38 seconds. The earlier [V8 full regression](../../reports/v8/full-regression.xml)
 passed 589 tests with one skip and remains evidence for its recorded source scope.
 V9 does not claim new numerical accuracy from those software tests.
 
@@ -129,3 +146,13 @@ this candidate. The deployed V8 and its failed quality evidence remain available
 and unchanged. The final report must attach the actual V9 source/image identity,
 all-edition health, prior-edition preservation, workflow counts and per-case result
 before describing this candidate as verified.
+
+## 6. Display verification
+
+The [mobile browser check](../../reports/v9/ui-typed-facts.json) passed 21 assertions across mission Council, saved conversation and research adviser views at 390 × 844 pixels, with no JavaScript errors. It used intercepted, server-shaped frozen fixtures and made zero provider calls. These images verify presentation, including missing-reference handling; they do not establish actual-provider answer quality.
+
+![Mission Council shows exact frozen policy values separately from interpretation](../../reports/v9/ui-typed-facts/mission-council-mobile.png)
+
+![Saved conversation explicitly identifies a fact missing from its frozen snapshot](../../reports/v9/ui-typed-facts/saved-conversation-mobile.png)
+
+![Research adviser displays frozen dates and growing area from server records](../../reports/v9/ui-typed-facts/research-actual-mobile.png)

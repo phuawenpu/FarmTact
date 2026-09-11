@@ -1,0 +1,143 @@
+{
+  "started_at": "2026-09-11T12:46:25.820Z",
+  "origin": "http://127.0.0.1:8080",
+  "status": "PASS",
+  "method": "Headless Chromium at a 390 x 844 CSS viewport; saved server-shaped records are rendered through intercepted GET responses. All POST requests and direct provider traffic are blocked.",
+  "build_validation": {
+    "command": "npm run build --prefix apps/web",
+    "status": "PASS",
+    "checks": [
+      "tsc --noEmit -p tsconfig.app.json",
+      "tsc --noEmit -p tsconfig.node.json",
+      "vite build"
+    ],
+    "built_asset": "assets/index-ClRMDJlK.js"
+  },
+  "fixture_sources": [
+    "reports/v8/planning-public.json",
+    "reports/v8/research-advisor-final-replay.json"
+  ],
+  "checks": [
+    {
+      "name": "mission Council renders code-authoritative values outside prose",
+      "pass": true,
+      "detail": "This typed-only fixture keeps all quantities out of qualitative prose."
+    },
+    {
+      "name": "mission identifies Balanced beside its value",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "mission identifies Resilient beside its value",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "mission identifies Lean beside its value",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "mission canonical hashed IDs remain optional technical details",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved conversation renders a server rendered fact",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved conversation falls back to canonical typed_facts catalogue",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved conversation explicitly marks a missing referenced fact",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved conversation separates qualitative context references",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "unsupported values are visible without being labelled validated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved typed-fact cards fit the mobile viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "saved conversation has no horizontal document overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "research actual response renders its code-authoritative values",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research actual response shows both exact dates and bed area from server records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research prose contains no copied typed quantity or date",
+      "pass": true,
+      "detail": "Asha: The selected server records are shown below."
+    },
+    {
+      "name": "research typed-fact cards fit the mobile viewport",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research page has no horizontal document overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "browser proof made no POST requests",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser proof contacted no inference provider",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser pages raised no JavaScript errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "browser console raised no errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "console_errors": [],
+  "page_errors": [],
+  "posts": [],
+  "provider_requests": [],
+  "screenshots": [
+    "reports/v9/ui-typed-facts/mission-council-mobile.png",
+    "reports/v9/ui-typed-facts/saved-conversation-mobile.png",
+    "reports/v9/ui-typed-facts/research-actual-mobile.png"
+  ],
+  "limitations": [
+    "This is a deterministic rendering and responsive-layout test, not a provider-quality evaluation.",
+    "The typed-only messages deliberately omit quantities from prose so the test can prove values come from rendered_facts or the canonical typed_facts catalogue.",
+    "Headless Chromium does not substitute for physical-device, screen-reader, or human usability testing."
+  ],
+  "completed_at": "2026-09-11T12:46:29.368Z"
+}

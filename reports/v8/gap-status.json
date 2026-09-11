@@ -4,7 +4,7 @@
   "audit_date": "2026-09-11",
   "audit_source_baseline": "a96025e",
   "historical_findings_preserved_in": "docs/technical/gaps-and-next-iteration.md",
-  "status": "local_remediation_verified_release_and_ai_quality_pending",
+  "status": "v8_published_mechanical_gates_passed_ai_quality_failed",
   "status_vocabulary": {
     "fixed": "The audited technical acceptance mechanism is implemented and locally verified; empirical claim limits may remain.",
     "partial": "Material remediation exists, but one or more acceptance or empirical requirements remain open.",
@@ -23,19 +23,49 @@
       "passed": 23,
       "failed": 0,
       "evidence": "reports/v8/final-root-focused.xml"
+    },
+    "deployment_health": {
+      "status": "passed",
+      "editions_checked": 8,
+      "evidence": "reports/v8/deployment-health.json"
+    },
+    "prior_edition_preservation": {
+      "status": "passed",
+      "editions_checked": 7,
+      "evidence": "reports/v8/preservation-after.json"
+    },
+    "shared_capacity": {
+      "status": "passed",
+      "editions": [
+        "v7",
+        "v8"
+      ],
+      "evidence": "reports/v8/shared-capacity-public.json"
+    },
+    "public_ai_quality": {
+      "status": "failed",
+      "passed_cases": 6,
+      "failed_cases": 4,
+      "case_count": 10,
+      "incomplete_workflows": [
+        "invite",
+        "council"
+      ],
+      "evidence": "reports/v8/ai-quality-public-v8.json"
+    },
+    "provider_accounting": {
+      "actual_requests_consumed": 55,
+      "app_daily_request_ceiling": 48,
+      "evidence": "reports/v8/live-call-ledger.json"
     }
   },
   "pending_evidence": {
-    "ai_quality": {
+    "v9_ai_quality": {
       "status": "pending",
-      "marker": "PENDING_ROOT_AI_QUALITY_FINAL",
-      "current_evidence": "reports/v8/live-call-ledger.json",
-      "claim_limit": "Recorded attempts, migration and partial Council validity do not establish final answer quality."
-    },
-    "v8_deployment": {
-      "status": "pending",
-      "marker": "PENDING_ROOT_V8_DEPLOYMENT",
-      "claim_limit": "Local V8 mechanisms are not yet verified on an immutable published edition."
+      "marker": "PENDING_V9_AI_QUALITY",
+      "current_v8_result": "failed_6_of_10_passed_invite_incomplete_council_absent",
+      "followup": "docs/technical/v9-ai-followup.md",
+      "claim_limit": "V9 is a candidate with corrective work in progress; no V9 deployment, complete workflow quality pass, or final full-suite result is established."
     }
   },
   "summary_counts": {
@@ -48,12 +78,12 @@
     {
       "id": "AI-01",
       "status": "partial",
-      "current_v8_disposition": "A frozen zero-inference quality scorer and bounded actual-output harness now assess role relevance, expected references, unsupported quantities, forbidden conclusions, abstention and usefulness.",
-      "remaining": "Final stored direct/invite/Council/research quality run is pending; human expert agronomic review is absent.",
+      "current_v8_disposition": "The frozen scorer evaluated retained public V8 mission/conversation output: six of ten cases passed, four failed, the invitation was incomplete, and the Council conversation was absent.",
+      "remaining": "V8 quality failed. V9 corrective work and a new complete public workflow remain pending; human expert agronomic review is absent.",
       "evidence": [
-        "reports/v8/council.md",
-        "packages/ai_quality.py",
-        "scripts/deepseek_quality_e2e.py"
+        "reports/v8/ai-quality-public-v8.json",
+        "reports/v8/public-ai-postmortem.md",
+        "reports/v8/council.md"
       ],
       "baseline_status": "open"
     },
@@ -83,11 +113,11 @@
     {
       "id": "AI-04",
       "status": "partial",
-      "current_v8_disposition": "Configured state, dated archived evidence and tenant-scoped last observed execution are separate and reads trigger no probe.",
-      "remaining": "Current canonical provider quality/availability remains pending explicit root-owned evidence.",
+      "current_v8_disposition": "Configured state, dated archived evidence and tenant-scoped last observed execution are separate; V8's public mission completed seven canonical calls and its conversation retained a partial actual execution.",
+      "remaining": "Those dated executions establish only their observed availability. V8 quality failed, and V9 availability/quality requires separate fresh evidence.",
       "evidence": [
-        "reports/v8/council.md",
-        "tests/gameplay/test_v8_integration_policy.py",
+        "reports/v8/planning-public.json",
+        "reports/v8/conversation-public-replay.json",
         "reports/v8/live-call-ledger.json"
       ],
       "baseline_status": "open"
@@ -107,10 +137,10 @@
     {
       "id": "AI-06",
       "status": "partial",
-      "current_v8_disposition": "Exact request ceilings, token accounting, cooperative cancellation and no automatic billed retry are implemented and tested.",
+      "current_v8_disposition": "Exact request ceilings, token accounting, cooperative cancellation and no automatic billed retry are implemented; the retained ledger counts all 55 actual requests while the application daily ceiling remains 48.",
       "remaining": "No dated-price USD cap, strict mid-transport abort, or completed deployment-wide midnight accounting proof exists.",
       "evidence": [
-        "reports/v8/council.md",
+        "reports/v8/live-call-ledger.json",
         "runtime/deepseek_gateway.py",
         "reports/v8/game-reliability.md"
       ],
@@ -319,11 +349,12 @@
     {
       "id": "GAME-07",
       "status": "fixed",
-      "current_v8_disposition": "Conversation transport completion and evidence validity are distinct, and unsupported output remains advisory-only.",
-      "remaining": "Answer quality still requires the pending AI-01 evaluation.",
+      "current_v8_disposition": "Conversation transport completion and evidence validity are distinct; V8 retained its direct reply, successful invited turn and terminal partial failure without treating reference validation as prose quality.",
+      "remaining": "V8 answer quality failed; the distinct V9 AI follow-up remains pending.",
       "evidence": [
-        "reports/v8/council.md",
-        "tests/review/test_ai_quality.py"
+        "reports/v8/conversation-public-replay.json",
+        "reports/v8/conversation-public-events.json",
+        "reports/v8/public-ai-postmortem.md"
       ],
       "baseline_status": "open"
     },
@@ -341,11 +372,12 @@
     {
       "id": "GAME-09",
       "status": "partial",
-      "current_v8_disposition": "Published editions retain exact pinned images and isolated state, so their frozen calculation code remains addressable.",
-      "remaining": "Development upgrades still lack a general per-object runner registry; V8 deployment verification is pending.",
+      "current_v8_disposition": "V8 is published from its pinned source/image; all eight edition health checks, captured v1–v7 preservation and bounded v7/v8 capacity checks passed.",
+      "remaining": "Development upgrades still lack a general per-object runner registry; broader recovery and sustained-capacity evidence remain open.",
       "evidence": [
-        "docs/deployment/editions.md",
-        "reports/v8/operations-review.md"
+        "reports/v8/deployment-health.json",
+        "reports/v8/preservation-after.json",
+        "reports/v8/shared-capacity-public.json"
       ],
       "baseline_status": "open"
     },
@@ -569,12 +601,13 @@
     {
       "id": "OPS-01",
       "status": "partial",
-      "current_v8_disposition": "A local isolated PostgreSQL dump/restore preserved hashes/counts; shared namespace and Python-process egress mechanisms have focused tests.",
+      "current_v8_disposition": "A local isolated PostgreSQL dump/restore preserved hashes/counts; public V8 health, prior-edition preservation and bounded v7/v8 capacity checks passed.",
       "remaining": "OS/network egress, Fly snapshot restore, multi-host failover, sustained availability and recovery objectives remain unproven.",
       "evidence": [
         "reports/v8/operations-review.md",
-        "tests/deployment/test_shared_transfer_operator.py",
-        "tests/security/test_process_egress.py"
+        "reports/v8/deployment-health.json",
+        "reports/v8/preservation-after.json",
+        "reports/v8/shared-capacity-public.json"
       ],
       "baseline_status": "open"
     },

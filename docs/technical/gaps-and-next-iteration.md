@@ -1,8 +1,9 @@
 # Implementation gaps and next-iteration acceptance criteria
 
-**Audit:** 11 September 2026, source baseline `a96025e`; deployed v7 remains frozen.
+**Audit:** 11 September 2026, source baseline `a96025e`; published V8 source is
+`a00e546b1270a5c532e8eae6b8b64e568c344c13`, and v1–v7 remain immutable.
 This register preserves the 48 findings observed at that audit baseline and adds
-an evidence-backed disposition for the current V8 local tree. The “Observed gap”
+an evidence-backed disposition for published V8. The “Observed gap”
 columns below remain historical; they have not been rewritten to make the original
 audit look better. `Fixed` means the specified technical mechanism is implemented
 and locally verified, while `Partial` means an empirical, operational or product
@@ -65,25 +66,38 @@ register's next-iteration scope and must not be lost in a provider-only assessme
 | OPS-01 / P1 | Python egress policy is not an OS/network enforcement boundary; a single host shares availability across editions. | Before operational promotion, validate infrastructure egress controls and recovery on an isolated environment. Exercise provider denial and database restore, not only static string scans or volume existence. |
 | UX-01 / P1 | AI/headless walkthroughs do not establish human usability or agronomic decision benefit. | Pre-register a small task-based human study with novice and relevant practitioner groups, clear synthetic framing, task success, time, error and comprehension outcomes. Do not infer benefits from animated dialogue or agent agreement. |
 
-## 4. V8 remediation disposition in the current local tree
+## 4. V8 remediation disposition and public evidence
 
 The machine-readable source for this table is
 [gap-status.json](../../reports/v8/gap-status.json). The complete PostgreSQL-backed
 regression reports 589 passed, 1 skipped and 0 failed in
 [full-regression.xml](../../reports/v8/full-regression.xml). The newest focused root
 checks report 23 passed and 0 failed in
-[final-root-focused.xml](../../reports/v8/final-root-focused.xml). These local results do not establish current
-AI answer quality or a published V8 release. Those two gates remain
-`PENDING_ROOT_AI_QUALITY_FINAL` and `PENDING_ROOT_V8_DEPLOYMENT`.
+[final-root-focused.xml](../../reports/v8/final-root-focused.xml). V8 deployment
+health, preservation of captured v1–v7 state, and the bounded public v7/v8 capacity
+trial pass in [deployment-health.json](../../reports/v8/deployment-health.json),
+[preservation-after.json](../../reports/v8/preservation-after.json), and
+[shared-capacity-public.json](../../reports/v8/shared-capacity-public.json).
+
+The public V8 AI quality result is **FAIL**: six of ten stored cases passed, the
+invited exchange was incomplete, and the Council conversation stage did not run.
+The public planning mission's transport, seven-role sequence and reference gate
+passed, but those mechanics did not establish that its prose followed the meaning
+of selected facts. The ledger records 55 actual requests. Evidence:
+[quality result](../../reports/v8/ai-quality-public-v8.json),
+[postmortem](../../reports/v8/public-ai-postmortem.md), and
+[call ledger](../../reports/v8/live-call-ledger.json). Corrective V9 work is a
+distinct pending item in [the V9 AI follow-up](v9-ai-followup.md); V9 is a candidate,
+not a deployed or quality-validated edition, and its full suite has no final result.
 
 | ID | V8 status | Evidence-backed disposition | Remaining limitation |
 | --- | --- | --- | --- |
-| AI-01 | **Partial** | A frozen zero-inference quality scorer and bounded actual-output harness now assess role relevance, expected references, unsupported quantities, forbidden conclusions, abstention and usefulness. Evidence: [council.md](../../reports/v8/council.md), [ai_quality.py](../../packages/ai_quality.py), [deepseek_quality_e2e.py](../../scripts/deepseek_quality_e2e.py). | Final stored direct/invite/Council/research quality run is pending; human expert agronomic review is absent. |
+| AI-01 | **Partial** | The frozen zero-inference scorer evaluated retained public V8 mission/conversation output: six of ten cases passed, four failed, the invitation was incomplete and the Council conversation was absent. Evidence: [public quality](../../reports/v8/ai-quality-public-v8.json), [postmortem](../../reports/v8/public-ai-postmortem.md), [council.md](../../reports/v8/council.md). | V8 quality failed. V9 corrective work and a new complete public workflow remain pending; human expert agronomic review is absent. |
 | AI-02 | **Fixed** | Server-owned typed facts bind reference, value, unit, entity, period and snapshot hash; unknown references and model-authored quantities fail local validation. Qualitative entailment is not established. Evidence: [council.md](../../reports/v8/council.md), [ai_contracts.py](../../packages/ai_contracts.py), [test_ai_injection_boundaries.py](../../tests/review/test_ai_injection_boundaries.py). | Qualitative entailment remains explicitly unverified rather than promoted. |
 | AI-03 | **Fixed** | Workflow type, inference origin, model-call state and calculation state distinguish numerical, scripted, actual, failed and replayed paths. Evidence: [council.md](../../reports/v8/council.md), [conversations.py](../../services/api/conversations.py). | Older records use conservative compatibility values. |
-| AI-04 | **Partial** | Configured state, dated archived evidence and tenant-scoped last observed execution are separate and reads trigger no probe. Evidence: [council.md](../../reports/v8/council.md), [test_v8_integration_policy.py](../../tests/gameplay/test_v8_integration_policy.py), [live-call-ledger.json](../../reports/v8/live-call-ledger.json). | Current canonical provider quality/availability remains pending explicit root-owned evidence. |
+| AI-04 | **Partial** | Configured state, dated archived evidence and tenant-scoped last observed execution are separate; V8's public mission completed seven canonical calls and its conversation retained a partial actual execution. Evidence: [public mission](../../reports/v8/planning-public.json), [public conversation](../../reports/v8/conversation-public-replay.json), [live-call-ledger.json](../../reports/v8/live-call-ledger.json). | Those dated executions establish only their observed availability. V8 quality failed, and V9 availability/quality requires separate fresh evidence. |
 | AI-05 | **Fixed** | The fail-closed runtime manifest now inventories route callers, integrations, prompt/schema versions and bounded roles. Evidence: [council.md](../../reports/v8/council.md), [deepseek_runtime.json](../../config/deepseek_runtime.json), [test_provider_isolation.py](../../tests/review/test_provider_isolation.py). | It is reviewed configuration rather than automatic call-graph discovery. |
-| AI-06 | **Partial** | Exact request ceilings, token accounting, cooperative cancellation and no automatic billed retry are implemented and tested. Evidence: [council.md](../../reports/v8/council.md), [deepseek_gateway.py](../../runtime/deepseek_gateway.py), [game-reliability.md](../../reports/v8/game-reliability.md). | No dated-price USD cap, strict mid-transport abort, or completed deployment-wide midnight accounting proof exists. |
+| AI-06 | **Partial** | Exact request ceilings, token accounting, cooperative cancellation and no automatic billed retry are implemented; the retained ledger counts all 55 actual requests while the application daily ceiling remains 48. Evidence: [live-call-ledger.json](../../reports/v8/live-call-ledger.json), [deepseek_gateway.py](../../runtime/deepseek_gateway.py), [game-reliability.md](../../reports/v8/game-reliability.md). | No dated-price USD cap, strict mid-transport abort, or completed deployment-wide midnight accounting proof exists. |
 | AI-07 | **Fixed** | A typed harvest forecast and shared reference builder expose marketable mass with batch/date/endpoint/origin/value status and units. Evidence: [council.md](../../reports/v8/council.md), [test_synthetic_evaluation.py](../../tests/models/test_synthetic_evaluation.py). | Frozen older records remain unchanged and are interpreted conservatively. |
 | AI-08 | **Partial** | The product now states the actual sequence: six independent specialists followed by a chair that receives bounded validated and rejected findings. The malformed blank-table break in the audit register is removed. Evidence: [council.md](../../reports/v8/council.md), [test_council.py](../../tests/seven_agents/test_council.py). | No two-round challenge protocol exists and no evidence shows it would improve usefulness. |
 | AI-09 | **Fixed** | One RESPONSE_LIMITS contract drives schema and prompt bounds, with exact-boundary and one-over tests. Evidence: [council.md](../../reports/v8/council.md), [conversations.py](../../services/api/conversations.py). | Sentence count remains nonbinding guidance. |
@@ -102,9 +116,9 @@ AI answer quality or a published V8 release. Those two gates remain
 | GAME-04 | **Partial** | The implemented topology is now represented truthfully as sequential specialist reviews plus chair synthesis with explicit visibility. Evidence: [council.md](../../reports/v8/council.md), [v8-human-study-protocol.md](../research/v8-human-study-protocol.md). | Challenge rounds were not implemented and comparative usefulness is unmeasured. |
 | GAME-05 | **Fixed** | Research challenges retain history, revalidate on changed inputs, and action retries return the original revision response. Evidence: [test_v8_history.py](../../tests/council_research/test_v8_history.py), [council_research.py](../../services/api/council_research.py). | The workflow remains scripted unless an explicit separate advisor request is made. |
 | GAME-06 | **Fixed** | A shared browser mutation transport persists edition/path/body-bound keys before submission; imports and other mutations have backend receipts. Evidence: [ui.md](../../reports/v8/ui.md), [v8_simulation_ui.mjs](../../tests/browser/v8_simulation_ui.mjs), [test_v8_integration_policy.py](../../tests/gameplay/test_v8_integration_policy.py). | Session storage is browser-session scoped rather than cross-device synchronization. |
-| GAME-07 | **Fixed** | Conversation transport completion and evidence validity are distinct, and unsupported output remains advisory-only. Evidence: [council.md](../../reports/v8/council.md), [test_ai_quality.py](../../tests/review/test_ai_quality.py). | Answer quality still requires the pending AI-01 evaluation. |
+| GAME-07 | **Fixed** | Conversation transport completion and evidence validity are distinct; V8 retained its direct reply, successful invited turn and terminal partial failure without treating reference validation as prose quality. Evidence: [public conversation](../../reports/v8/conversation-public-replay.json), [conversation events](../../reports/v8/conversation-public-events.json), [postmortem](../../reports/v8/public-ai-postmortem.md). | V8 answer quality failed; the distinct V9 AI follow-up remains pending. |
 | GAME-08 | **Fixed** | Failed/cancelled immutable scenarios can retry with the original run key, bounded attempt history and atomic no-duplicate accounting. Evidence: [game-reliability.md](../../reports/v8/game-reliability.md), [test_v8_reliability_postgres.py](../../tests/gameplay/test_v8_reliability_postgres.py). | Retries remain local numerical recomputation only. |
-| GAME-09 | **Partial** | Published editions retain exact pinned images and isolated state, so their frozen calculation code remains addressable. Evidence: [editions.md](../deployment/editions.md), [operations-review.md](../../reports/v8/operations-review.md). | Development upgrades still lack a general per-object runner registry; V8 deployment verification is pending. |
+| GAME-09 | **Partial** | V8 is published from its pinned source/image; all eight edition health checks, captured v1–v7 preservation and bounded v7/v8 capacity checks passed. Evidence: [deployment health](../../reports/v8/deployment-health.json), [preservation](../../reports/v8/preservation-after.json), [capacity](../../reports/v8/shared-capacity-public.json). | Development upgrades still lack a general per-object runner registry; broader recovery and sustained-capacity evidence remain open. |
 | GAME-10 | **Fixed** | Council research retains append-only revision history beyond bounded current message/event projections and returns original action receipts. Evidence: [test_v8_history.py](../../tests/council_research/test_v8_history.py), [council_research.py](../../services/api/council_research.py). | The current view remains intentionally bounded. |
 | GAME-11 | **Partial** | Scenario and conversation admission/listing now enforce tenant quotas and bounded cursor queries before expensive work. Evidence: [game-reliability.md](../../reports/v8/game-reliability.md), [test_v8_reliability.py](../../tests/gameplay/test_v8_reliability.py). | An explicit [retention command](../runbooks/retention.md) now previews or deletes bounded inactive expired tenants with shared budgets protected. Operator scheduling, backup-retention alignment and deletion-request procedures remain unestablished. |
 | GAME-12 | **Partial** | Scenario, conversation and research cancellation endpoints and safe-boundary checks prevent stale acceptance/new provider turns and reconcile unused reservations. Evidence: [game-reliability.md](../../reports/v8/game-reliability.md), [conversations.py](../../services/api/conversations.py), [scenarios.py](../../services/api/scenarios.py). | An active CP-SAT call and synchronous provider transport are cooperative rather than immediately preemptible. |
@@ -124,7 +138,7 @@ AI answer quality or a published V8 release. Those two gates remain
 | NUM-08 | **Partial** | Independent typed synthetic whole-batch outcomes, temporal/external-style splits, baseline evaluation and hard promotion blocks are implemented; a real-outcome protocol is preregistered. Evidence: [data-ml.md](../../reports/v8/data-ml.md), [v8-outcome-collection-protocol.md](../research/v8-outcome-collection-protocol.md), [synthetic_model_evaluation.json](../../reports/v8/synthetic_model_evaluation.json). | No authorized observed farm outcomes or fitted production biology model exist. |
 | NUM-09 | **Partial** | Synthetic rolling-origin 1/2/4-week farm/buyer evaluation includes cancellations, availability checks, baselines and bootstrap intervals; real evaluation is preregistered. Evidence: [data-ml.md](../../reports/v8/data-ml.md), [v8-outcome-collection-protocol.md](../research/v8-outcome-collection-protocol.md), [test_v8_availability_adversarial.py](../../tests/models/test_v8_availability_adversarial.py). | No authorized real-order holdout or calibrated demand distribution exists. |
 | NUM-10 | **Partial** | A machine-readable registry now enumerates implemented constraints, bounds, unsupported capabilities and the contract/validator/solver/replay/UI work needed for each expansion. Evidence: [simulation_capabilities.json](../../config/simulation_capabilities.json), [operations-review.md](../../reports/v8/operations-review.md). | Water, energy, HVAC, consumables, grade, rotation, multi-cut, partner supply and richer buyer/logistics constraints remain unsupported. |
-| OPS-01 | **Partial** | A local isolated PostgreSQL dump/restore preserved hashes/counts; shared namespace and Python-process egress mechanisms have focused tests. Evidence: [operations-review.md](../../reports/v8/operations-review.md), [test_shared_transfer_operator.py](../../tests/deployment/test_shared_transfer_operator.py), [test_process_egress.py](../../tests/security/test_process_egress.py). | OS/network egress, Fly snapshot restore, multi-host failover, sustained availability and recovery objectives remain unproven. |
+| OPS-01 | **Partial** | A local isolated PostgreSQL dump/restore preserved hashes/counts; public V8 health, prior-edition preservation and bounded v7/v8 capacity checks passed. Evidence: [operations-review.md](../../reports/v8/operations-review.md), [deployment health](../../reports/v8/deployment-health.json), [preservation](../../reports/v8/preservation-after.json), [capacity](../../reports/v8/shared-capacity-public.json). | OS/network egress, Fly snapshot restore, multi-host failover, sustained availability and recovery objectives remain unproven. |
 | UX-01 | **Partial** | A novice/practitioner task study is preregistered with fixed tasks, outcomes, thresholds, coding and privacy handling. Evidence: [v8-human-study-protocol.md](../research/v8-human-study-protocol.md), [ui.md](../../reports/v8/ui.md). | No participants have been enrolled; human usability and agronomic benefit remain unknown. |
 
 The unresolved items cluster around evidence that software tests cannot create:
@@ -132,8 +146,8 @@ observed farm outcomes (`NUM-08`), real-order forecasting (`NUM-09`), participan
 results (`UX-01`), and operator recovery/availability controls (`OPS-01`). Other
 partial items retain bounded product limitations such as immediate in-flight
 cancellation, retention, cross-device client state, challenge rounds and unsupported
-resource/biology constraints. AI quality and immutable V8 deployment remain the
-explicit pending release gates above.
+resource/biology constraints. Immutable V8 deployment is complete; V8 AI quality
+failed, and the separate V9 corrective evaluation remains pending.
 
 ## 5. Original bounded implementation sequence (historical)
 
@@ -149,6 +163,6 @@ explicit pending release gates above.
    observed data and research design. Keep operational integrations disabled.
 
 This sequence records the order proposed at the audit baseline. The current
-status and remaining acceptance work are recorded in Section 4. Any published V8
-iteration must still use the next unused immutable edition and retain previous
-editions' source, image and state.
+status and remaining acceptance work are recorded in Section 4. V8 is now immutable;
+V9 candidate changes require their own full validation, publication record and
+preservation checks and must not be attributed to deployed V8.
