@@ -33,6 +33,38 @@ ACTIONS=Table('council_research_actions',metadata,
     UniqueConstraint('tenant_id','idempotency_key'),
     ForeignKeyConstraint(['session_id','tenant_id'],['council_research_sessions.id','council_research_sessions.tenant_id'],name='research_action_tenant_fk'))
 
+HISTORY=Table('council_research_history',metadata,
+    Column('session_id',String,primary_key=True),Column('revision',Integer,primary_key=True),
+    Column('tenant_id',String,ForeignKey('tenants.id'),nullable=False),Column('payload',JSON,nullable=False),
+    ForeignKeyConstraint(['session_id','tenant_id'],['council_research_sessions.id','council_research_sessions.tenant_id'],name='research_history_tenant_fk',ondelete='CASCADE'))
+
+
+def record_revision(store,tenant,s,previous=None):
+    """Append immutable deltas; large frozen results are stored only when changed."""
+    previous=previous or {}
+    delta={k:deepcopy(v) for k,v in s.items() if k not in ('messages','events') and (k not in previous or previous[k]!=v)}
+    old_messages={m['id'] for m in previous.get('messages',[])}
+    old_events={e.get('id') or content_hash(e) for e in previous.get('events',[])}
+    payload=dict(changes=delta,messages=[deepcopy(m) for m in s['messages'] if m['id'] not in old_messages],
+                 events=[deepcopy(e) for e in s['events'] if (e.get('id') or content_hash(e)) not in old_events],at=now())
+    with store.connection(write=True) as c:
+        c.execute(HISTORY.insert().values(session_id=s['id'],revision=s['revision'],tenant_id=tenant,payload=payload))
+
+
+def revision_snapshot(store,tenant,id,revision):
+    with store.connection() as c:
+        rows=c.execute(select(HISTORY.c.payload).where(HISTORY.c.session_id==id,HISTORY.c.tenant_id==tenant,HISTORY.c.revision<=revision).order_by(HISTORY.c.revision)).scalars().all()
+    if not rows:return None
+    state=dict(messages=[],events=[])
+    for row in rows:
+        state.update(deepcopy(row['changes']));state['messages']+=deepcopy(row['messages']);state['events']+=deepcopy(row['events'])
+    state['messages']=state['messages'][-120:];state['events']=state['events'][-240:]
+    return state
+
+RECEIPTS=Table('council_research_action_receipts',metadata,
+    Column('action_id',String,ForeignKey('council_research_actions.id',ondelete='CASCADE'),primary_key=True),
+    Column('tenant_id',String,ForeignKey('tenants.id'),nullable=False),Column('revision',Integer,nullable=False))
+
 class NewSession(Strict):
     concept:Literal['inline','sheet','cards']='sheet'
     steering:Literal['continuous','checkpoints']='continuous'
@@ -63,6 +95,8 @@ def get_session(store,tenant,id):
     with store.connection() as c:return c.execute(select(SESSIONS.c.payload).where(SESSIONS.c.id==id,SESSIONS.c.tenant_id==tenant)).scalar_one_or_none()
 
 def save(store,tenant,s):
+    previous=get_session(store,tenant,s['id'])
+    record_revision(store,tenant,s,previous)
     with store.connection(write=True) as c:c.execute(update(SESSIONS).where(SESSIONS.c.id==s['id'],SESSIONS.c.tenant_id==tenant).values(payload=s))
 
 def append(s,speaker,text,refs=None,kind='scripted'):
@@ -70,7 +104,8 @@ def append(s,speaker,text,refs=None,kind='scripted'):
     s['messages']=s['messages'][-120:]
 
 def event(s,kind,**details):
-    s['events'].append(dict(type=kind,at=now(),input_version=s['input_version'],**details));s['events']=s['events'][-240:]
+    s['event_sequence']=s.get('event_sequence',len(s['events']))+1
+    s['events'].append(dict(id=secrets.token_hex(12),sequence=s['event_sequence'],type=kind,at=now(),input_version=s['input_version'],**details));s['events']=s['events'][-240:]
 
 def all_refs(s):
     f=s['farm'];return {f"bed:{x['id']}" for x in f['beds']}|{f"order:{x['id']}" for x in f['orders']}|{f"batch:{x['id']}" for x in f['batches']}|{f"crop:{x['crop_id']}" for x in f['recipes']}
@@ -142,7 +177,8 @@ def say(s,a):
 def challenge(s,a):
     text=a.text or 'Why would outdoor rainfall affect this sheltered crop?'
     category='rainfall' if any(word in text.lower() for word in ['rain','indoor','shelter']) else 'other'
-    s['challenge']=dict(status='unresolved',category=category,text=text,input_version=s['input_version'])
+    if s.get('challenge'):s.setdefault('challenge_history',[]).append(deepcopy(s['challenge']))
+    s['challenge']=dict(id=secrets.token_hex(12),status='unresolved',category=category,text=text,input_version=s['input_version'])
     s['chosen']=None
     s['milestones'].pop('chosen',None)
     s['milestones'].pop('challenge',None)
@@ -171,6 +207,11 @@ def apply(s,a):
     except ValueError as exc:raise HTTPException(422,str(exc))
     s['inputs']=inputs;s['input_version']+=1;s['proposal']=None;s['chosen']=None;s['pending_turns']=[]
     s['milestones'].pop('chosen',None)
+    if s.get('challenge'):
+        s.setdefault('challenge_history',[]).append(deepcopy(s['challenge']))
+        s['challenge']=dict(s['challenge'],id=secrets.token_hex(12),status='unresolved',input_version=s['input_version'],revalidation_of=s['challenge'].get('id'))
+        s['milestones'].pop('challenge',None)
+        append(s,'Planner','The input changed. Review the challenge again against this new version before choosing.')
     append(s,'Planner','The edit is applied to a new research version. Earlier results remain inspectable but cannot be selected as the current plan.')
     event(s,'inputs_changed',operation=p['operation']);s['milestones'][p['operation']]=True
 
@@ -256,7 +297,7 @@ def install_routes(app,tenant):
                 if old['request_hash']!=h:raise HTTPException(409,'Idempotency key changed')
                 return old['payload']
             if len(c.execute(select(SESSIONS.c.id).where(SESSIONS.c.tenant_id==t)).all())>=30:raise HTTPException(429,'Research session limit reached for this temporary workspace')
-            s=new_session(body);c.execute(SESSIONS.insert().values(id=s['id'],tenant_id=t,idempotency_key=k,request_hash=h,payload=s));return s
+            s=new_session(body);c.execute(SESSIONS.insert().values(id=s['id'],tenant_id=t,idempotency_key=k,request_hash=h,payload=s));record_revision(store,t,s);return s
     @app.get('/api/v1/council-research/report')
     def report(request:Request):
         tenant(request)
@@ -277,6 +318,14 @@ def install_routes(app,tenant):
             ('W3C · Animation from interactions','https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html'),
         ]
         return dict(title='Playable council research',documents=documents,sources=[dict(title=t,url=u) for t,u in sources],screenshots=[dict(title='Baseline '+name.replace('.png','').replace('-',' '),url='/research-evidence/'+name) for name in ['farm-board-390.png','bed-conversation-390.png','scenario-lab-390.png','bed-conversation-1280.png']])
+    @app.get('/api/v1/council-research/{id}/history')
+    def history(id:str,request:Request,after:int=-1,limit:int=20):
+        t=tenant(request);owned(t,id)
+        if after < -1 or not 1<=limit<=50:raise HTTPException(422,'Invalid history cursor or page size')
+        with app.state.store.connection() as c:
+            rows=c.execute(select(HISTORY.c.revision,HISTORY.c.payload).where(HISTORY.c.session_id==id,HISTORY.c.tenant_id==t,HISTORY.c.revision>after).order_by(HISTORY.c.revision).limit(limit+1)).all()
+        page=rows[:limit]
+        return dict(revisions=[dict(revision=r,payload=p) for r,p in page],next_cursor=page[-1][0] if len(rows)>limit else None,origin='recorded_scripted_and_numerical_events',inference_triggered=False)
     @app.get('/api/v1/council-research/{id}')
     def detail(id:str,request:Request):return owned(tenant(request),id)
     @app.post('/api/v1/council-research/{id}/actions')
@@ -287,7 +336,9 @@ def install_routes(app,tenant):
             old=c.execute(select(ACTIONS).where(ACTIONS.c.tenant_id==t,ACTIONS.c.idempotency_key==k)).mappings().first()
             if old:
                 if old['request_hash']!=h:raise HTTPException(409,'Idempotency key changed')
-                return s
+                with store.connection() as receipts:
+                    revision=receipts.execute(select(RECEIPTS.c.revision).where(RECEIPTS.c.action_id==old['id'],RECEIPTS.c.tenant_id==t)).scalar_one_or_none()
+                return revision_snapshot(store,t,id,revision) if revision is not None else dict(s,replay_scope='legacy_current_state')
             if body.revision!=s['revision']:raise HTTPException(409,'Research session changed; refresh and review before retrying')
             if len(c.execute(select(ACTIONS.c.id).where(ACTIONS.c.session_id==id,ACTIONS.c.tenant_id==t)).all())>=400:raise HTTPException(429,'Research action limit reached; start a fresh study')
             a=body.action
@@ -303,6 +354,7 @@ def install_routes(app,tenant):
             elif a=='challenge':challenge(s,body)
             elif a=='resolve':
                 if not s['challenge'] or body.resolution is None:raise HTTPException(422,'Open a challenge and choose its resolution')
+                if s['challenge']['input_version']!=s['input_version']:raise HTTPException(409,'Challenge belongs to an earlier input version; challenge the current result again')
                 if body.resolution=='corrected' and s['challenge'].get('category')!='rainfall':raise HTTPException(409,'This challenge has no verified resolution in the scripted study')
                 if body.resolution!='evidence':s['challenge']['status']=body.resolution
                 s['chosen']=None
@@ -329,9 +381,12 @@ def install_routes(app,tenant):
             elif a=='choose':
                 r=result_current(s)
                 if body.result_version!=s['input_version'] or not r:raise HTTPException(409,'Calculate and review the current version first')
-                if s['proposal'] or (s['challenge'] and s['challenge']['status']!='corrected'):raise HTTPException(409,'Resolve pending edits and challenges before choosing')
+                if s['proposal'] or (s['challenge'] and (s['challenge']['status']!='corrected' or s['challenge']['input_version']!=s['input_version'])):raise HTTPException(409,'Resolve pending edits and challenges before choosing')
                 chosen=eligible(s,r,body.policy)
                 if not chosen:raise HTTPException(409,'This policy has unresolved numerical violations or is infeasible')
                 s['chosen']=dict(version=s['input_version'],policy=body.policy,strategy_id=chosen['id'],input_hash=r['input_hash'],actor='research-participant',simulation_only=True,chosen_at=now());append(s,'Planner','You chose this version for the study. No operational commitment or main-farm change was made.');event(s,'simulated_version_chosen',policy=body.policy);s['milestones']['chosen']=True
             s['revision']+=1
-            c.execute(ACTIONS.insert().values(id=secrets.token_hex(16),session_id=id,tenant_id=t,idempotency_key=k,request_hash=h));save(store,t,s);return s
+            action_id=secrets.token_hex(16)
+            c.execute(ACTIONS.insert().values(id=action_id,session_id=id,tenant_id=t,idempotency_key=k,request_hash=h))
+            c.execute(RECEIPTS.insert().values(action_id=action_id,tenant_id=t,revision=s['revision']))
+            save(store,t,s);return s
