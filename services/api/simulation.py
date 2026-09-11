@@ -248,6 +248,7 @@ def register(app, tenant):
             key, digest, replay = operation(request, t, body, f'advance:{id}')
             if replay is not None: return replay
             _, world = owned(request, id)
+            if str(world.get('run_id','')).startswith('planning-session:'):raise HTTPException(409, 'Advance through the owning guided planning mission')
             if world['revision'] != body.revision: raise HTTPException(409, 'Simulation revision changed; refresh before advancing')
             advance(store, t, world, body.days)
             return finish(t, key, digest, world)
@@ -259,6 +260,7 @@ def register(app, tenant):
         key, digest, replay = operation(request, t, body, f'replan:{id}')
         if replay is not None: return replay
         _, world = owned(request, id)
+        if str(world.get('run_id','')).startswith('planning-session:'):raise HTTPException(409, 'Replan through the owning guided planning mission')
         if world['revision'] != body.revision: raise HTTPException(409, 'Simulation revision changed')
         if not world['clock_date']: raise HTTPException(409, 'Advance at least one day before replanning')
         if len(world['plan_history']) >= 12: raise HTTPException(429, 'Twelve replans per world maximum')

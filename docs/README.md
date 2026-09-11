@@ -99,3 +99,6 @@ Future acceptance requires queue/execution tracing, CPU/platform-quota measureme
 shared numerical admission control evaluation and bounded cancellation testing.
 No host resource increase or threshold relaxation was made. See the V10 technical
 follow-up and capacity protocol note for exact scope and cleanup.
+
+
+V11 candidate: [organizer brief and implementation plan](v11-implementation-plan.md), [technical methods and boundaries](technical/v11-guided-production-planning.md), [acceptance evidence](../reports/v11/). These records distinguish candidate work from immutable V10 publication.

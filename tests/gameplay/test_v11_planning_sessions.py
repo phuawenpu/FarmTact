@@ -101,3 +101,13 @@ def test_missing_provider_is_visible_and_does_not_block_numerical_use(env,monkey
     assert s['review']['status']=='blocked' and s['review']['request_count']==0
     assert s['selected_strategy_id']
     assert post(client,f"/{s['id']}/advance",{'revision':s['revision'],'days':1}).status_code==200
+
+
+def test_guided_world_cannot_be_mutated_through_legacy_routes(env):
+    client,store,tenant=env;s=calculate(client,store,tenant,create(client))
+    s=post(client,f"/{s['id']}/advance",{'revision':s['revision'],'days':1}).json()
+    world=s['simulation']
+    for operation,body in [('advance',{'revision':world['revision'],'days':1}),('replan',{'revision':world['revision']})]:
+        response=client.post(f"/api/v1/simulations/{world['id']}/{operation}",json=body,headers={'Idempotency-Key':'legacy-'+operation})
+        assert response.status_code==409
+    assert client.get('/api/v1/planning-sessions/'+s['id']).json()['simulation']['revision']==world['revision']

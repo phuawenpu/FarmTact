@@ -72,6 +72,19 @@ def test_initial_plan_has_authoritative_strategy_metrics_without_fake_baseline()
     assert "relative" not in margin["statement"]
 
 
+def test_claim_context_hash_binds_assumptions_and_outputs_not_farm_hash_alone():
+    first = _result()
+    first.pop("snapshot_hash")
+    first.update(input_hash="same-farm", numerical_input_hash="demand-v1",
+                 configuration_hash="config-v1", assumptions={"future_demand": []})
+    changed = __import__("copy").deepcopy(first)
+    changed["assumptions"] = {"future_demand": [{"crop_id": "caixin", "percent": 125}]}
+    first_hash = {row["snapshot_hash"] for row in build_claims(first)}
+    changed_hash = {row["snapshot_hash"] for row in build_claims(changed)}
+    assert len(first_hash) == len(changed_hash) == 1
+    assert first_hash != changed_hash
+
+
 def test_semantic_gate_ties_rationale_and_proposal_to_selected_claims():
     claims = build_claims(_result())
     margin = next(row for row in claims if row["metric"] == "margin_sgd")
@@ -167,6 +180,8 @@ def test_review_skips_absent_external_roles_and_chair_sees_statuses(monkeypatch)
     assert len(chair_context["prior_statuses"]) == 6
     assert all(set(row) == {"role", "status", "claim_ids", "proposed_strategy_id", "rejection_reasons"}
                for row in chair_context["prior_statuses"])
+    assert chair_context["allowed_tradeoff_rationales"]["margin_over_service"] == ["preserve_margin"]
+    assert "margin_sgd" in chair_context["rationale_metrics"]["preserve_margin"]
     assert all("raw_provider_output" in row for row in review["findings"])
     assert any(kind == "planning_council_role_unavailable" for kind, _ in events)
 

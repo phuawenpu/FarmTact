@@ -41,7 +41,8 @@ def test_cancel_during_calculation_discards_output(monkeypatch):
             response=c.post(f"/api/v1/council-research/{s['id']}/actions",json=dict(action='cancel_calculation',revision=current['revision']),headers={'Idempotency-Key':'cancel-running'})
             assert response.status_code==200
             return {'must_not_be_applied':True}
-        import packages.planner.research as numerical
+        # Inject at the API process boundary; numerical children are isolated.
+        import services.api.numerical_worker as numerical
         monkeypatch.setattr(numerical,'calculate_research',calculate)
         r.execute(store,tenant,job)
         current=c.get(f"/api/v1/council-research/{s['id']}").json()

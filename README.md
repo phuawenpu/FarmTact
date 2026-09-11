@@ -1,8 +1,9 @@
 # FarmTact · Command & Cultivate
 
-FarmTact is a mobile farm-planning game and research demonstration for a fictional
-Singapore vegetable farm. Explore a visual farm, inspect orders and evidence,
-compare planting strategies, and discuss the consequences with a council of advisers.
+FarmTact is a visual production-planning demonstration for a fictional Singapore
+vegetable farm. Use customer demand, crop cycles, growing space and declared
+seasonal conditions to compare planting schedules, customer fulfillment and crop
+wastage. The farm board and adviser Council make those decisions tangible.
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
@@ -24,6 +25,25 @@ and immutable image
 All ten edition health/source checks and captured preservation of v1–v9 passed.
 See [deployment health](reports/v10/deployment-health.json) and
 [preservation evidence](reports/v10/preservation-after.json).
+
+## V11 guided production planning — candidate
+
+The next iteration follows the [organizer’s original brief](docs/v11-implementation-plan.md):
+review farm records, calculate schedules, explicitly request Council review, simulate
+a selected plan, then change demand or seasonal assumptions and compare keeping
+the saved schedule against replanning. Both comparison arms face the same changed
+conditions. Future demand adjustments preserve history and confirmed bookings;
+booking edits are explicit. Seasonal yield/delay assumptions are dated synthetic
+sensitivities, not fitted weather predictions.
+
+The guided Council selects server-verified facts and tradeoffs. Four specialists
+and the Chair make actual DeepSeek calls; Weather and Market receive labelled
+absence notices when observations are not admitted. The numerical plan remains
+available if optional review is blocked. See the [V11 technical chapter](docs/technical/v11-guided-production-planning.md)
+and [acceptance evidence](reports/v11/). V11 remains unpublished until acceptance;
+the published links above continue to identify V10.
+
+The edition chooser now sorts numbered editions newest first in the candidate UI.
 
 ## What you can do
 

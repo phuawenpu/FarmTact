@@ -211,15 +211,6 @@ def create_app(store=None,start_worker=True):
     app=FastAPI(title='FarmTact',version='0.1.0',lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
     @app.middleware('http')
     async def boundaries(request,call_next):
-        # Only the next unpublished edition is addressable in an unsealed local checkout.
-        if not os.environ.get('FARMTACT_EDITION'):
-            from services.api.release_registry import registry
-            next_edition = 'v'+str(max(int(e['id'][1:]) for e in registry()['editions'])+1)
-            prefix='/'+next_edition
-            path=request.scope['path']
-            if path==prefix or path.startswith(prefix+'/'):
-                request.scope['path']=path[len(prefix):] or '/'
-                request.scope['raw_path']=request.scope['path'].encode()
         if request.method not in ('GET','HEAD','OPTIONS'):
             origin=request.headers.get('origin')
             if origin:
@@ -249,6 +240,17 @@ def create_app(store=None,start_worker=True):
     app.add_middleware(AbuseMiddleware)
     from services.api.edition_ingress import EditionIngress
     app.add_middleware(EditionIngress)
+    class LocalEditionPrefix:
+        def __init__(self, app): self.app=app
+        async def __call__(self, scope, receive, send):
+            if scope['type']=='http' and not os.environ.get('FARMTACT_EDITION'):
+                from services.api.release_registry import registry
+                prefix='/v'+str(max(int(e['id'][1:]) for e in registry()['editions'])+1)
+                path=scope['path']
+                if path==prefix or path.startswith(prefix+'/'):
+                    scope=dict(scope);scope['path']=path[len(prefix):] or '/';scope['raw_path']=scope['path'].encode()
+            return await self.app(scope,receive,send)
+    app.add_middleware(LocalEditionPrefix)
     @app.exception_handler(RequestValidationError)
     async def invalid(request,exc):return JSONResponse({'detail':'Invalid request schema','errors':[{'loc':e['loc'],'type':e['type']} for e in exc.errors()]},422)
     def tenant(request):

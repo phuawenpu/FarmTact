@@ -105,6 +105,30 @@ def _claim_id(payload: dict[str, Any]) -> str:
     return "pc_" + canonical_hash(payload)[:20]
 
 
+def _snapshot_hash(result: dict[str, Any]) -> str:
+    """Bind claims to assumptions and outputs, excluding incidental timings."""
+    if result.get("snapshot_hash"):
+        return str(result["snapshot_hash"])
+
+    def plan_identity(plan: Any) -> Any:
+        if not isinstance(plan, dict):
+            return None
+        return {key: plan.get(key) for key in (
+            "id", "name", "status", "metrics", "allocations", "violations",
+            "input_hash", "numerical_input_hash", "calculation_version",
+        )}
+
+    return canonical_hash({
+        "calculation_contract": result.get("calculation_contract"),
+        "numerical_input_hash": result.get("numerical_input_hash"),
+        "configuration_hash": result.get("configuration_hash"),
+        "assumptions": result.get("assumptions"),
+        "retained_strategy": plan_identity(result.get("retained_strategy")),
+        "strategies": [plan_identity(row) for row in result.get("strategies", [])],
+        "comparisons": result.get("comparisons"),
+    })
+
+
 def _metric_claim(
     *, metric: str, policy: str, strategy_id: str, baseline: float, scenario: float,
     snapshot_hash: str,
@@ -198,10 +222,7 @@ def _pairs(result: dict[str, Any]) -> list[tuple[dict[str, Any], dict[str, Any],
 def build_claims(result: dict[str, Any]) -> list[VerifiedPlanningClaim]:
     """Build stable, code-rendered propositions from a frozen comparison result."""
 
-    snapshot_hash = str(
-        result.get("snapshot_hash") or result.get("input_hash")
-        or canonical_hash({key: result.get(key) for key in ("retained_strategy", "strategies", "comparisons")})
-    )
+    snapshot_hash = _snapshot_hash(result)
     claims: list[VerifiedPlanningClaim] = []
     pairs = _pairs(result)
     for baseline_plan, scenario_plan, policy, strategy_id in pairs:

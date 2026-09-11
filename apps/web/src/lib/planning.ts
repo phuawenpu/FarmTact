@@ -34,7 +34,7 @@ export function rememberPlanningSession(id: string) { try { localStorage.setItem
 
 export const planningApi = {
   list: () => request<{ sessions: PlanningSession[] }>('/planning-sessions'),
-  create: () => mutationRequest<PlanningSession>('/planning-sessions', {}),
+  create: (name = 'Farm production mission') => mutationRequest<PlanningSession>('/planning-sessions', { name }),
   get: (id: string) => request<PlanningSession>(`/planning-sessions/${encodeURIComponent(id)}`),
   calculate: (id: string, revision: number) => mutationRequest<PlanningSession>(`/planning-sessions/${encodeURIComponent(id)}/calculate`, { revision }),
   review: (id: string, revision: number) => mutationRequest<PlanningSession>(`/planning-sessions/${encodeURIComponent(id)}/review`, { revision }),

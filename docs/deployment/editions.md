@@ -170,3 +170,10 @@ Future acceptance requires queue/execution tracing, CPU/platform-quota measureme
 shared numerical admission control evaluation and bounded cancellation testing.
 No host resource increase or threshold relaxation was made. See the V10 technical
 follow-up and capacity protocol note for exact scope and cleanup.
+
+
+## V11 candidate acceptance before public listing
+
+`scripts/stage_edition_candidate.py` builds or accepts an exact committed image and stages the next unused edition on the shared host while preserving the public registry. No publication number is reserved until the normal publisher runs. Candidate requests use authenticated operator access; no public candidate endpoint or secret-bearing diagnostic endpoint is created. Validate the staged image, full source identity, numerical/Council journey and all three prescribed capacity trials before publishing that identical source/image with `scripts.publish_edition`. Unpublished candidate failures may be corrected and restaged; no published edition may be overwritten.
+
+Starting with V11, the gateway uses the new candidate image so the root chooser reflects the numeric newest-first ordering. Older edition container images remain unchanged.

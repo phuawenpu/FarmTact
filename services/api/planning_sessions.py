@@ -67,6 +67,7 @@ def public_session(store,tenant,session):
     from services.api.simulation import get_world,public_world
     value={k:deepcopy(v) for k,v in session.items() if not k.startswith('_')}
     value['result']=public_result(get_result(store,tenant,session.get('result_id')))
+    value['farm']['planning_date']=str(Farm.model_validate(session['farm']).planning_date)
     world=get_world(store,tenant,session['world_id']) if session.get('world_id') else None
     value['simulation']=public_world(world) if world else None
     return value
@@ -200,6 +201,11 @@ def execute_job(store,tenant,id):
             job.update(status='CANCELLED',completed_at=now())
             c.execute(update(JOBS).where(JOBS.c.id==id).values(status='CANCELLED',payload=job))
             return
+        if not error and job['kind']=='disrupt' and current.get('world_id'):
+            from services.api.simulation import get_world
+            world=get_world(store,tenant,current['world_id'])
+            if world['revision']!=job['input'].get('world_revision'):
+                error='Recorded simulation changed during calculation; the existing plan and events were preserved'
         job.update(status='FAILED' if error else 'COMPLETED',completed_at=now(),stage='failed' if error else 'complete',error=error)
         current.update(status=job['status'],job={k:v for k,v in job.items() if k!='input'},revision=current['revision']+1)
         if not error:
@@ -295,7 +301,9 @@ def register(app,tenant):
             try:body.assumptions.check_farm(Farm.model_validate(snapshot))
             except ValueError as exc:raise HTTPException(422,str(exc)) from None
             kwargs['assumptions']=body.assumptions.model_dump(mode='json',exclude_none=True)
-            queue(t,session,'disrupt',{'farm':snapshot,'kwargs':kwargs})
+            from services.api.simulation import get_world
+            world=get_world(store,t,session['world_id']) if session.get('world_id') else None
+            queue(t,session,'disrupt',{'farm':snapshot,'kwargs':kwargs,'world_revision':world['revision'] if world else None})
             return finish(t,key,digest,session)
     @app.post('/api/v1/planning-sessions/{id}/advance')
     def step(id:str,body:PlanningAdvance,request:Request):

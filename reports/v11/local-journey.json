@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "error": "GET /bootstrap: HTTP 429: {\"detail\":\"Too many requests. Retry in 2691 seconds.\",\"limit\":\"new_session_ip\"}",
+  "started_at": "2026-09-11T16:46:12.780732+00:00",
+  "completed_at": "2026-09-11T16:46:12.973650+00:00",
+  "base_url": "http://127.0.0.1:8080/v11",
+  "private_gateway": false
+}

@@ -1,6 +1,6 @@
 {
-  "status": "FAIL",
-  "started_at": "2026-09-11T16:27:27.915Z",
+  "status": "PASS",
+  "started_at": "2026-09-11T16:43:20.589Z",
   "base_url": "http://127.0.0.1:8080/v11",
   "inference_policy": "Numerical planning only; Council button is verified but never invoked.",
   "checks": [
@@ -15,11 +15,148 @@
     {
       "name": "manual-style records disclose synthetic limits",
       "pass": true
+    },
+    {
+      "name": "new mission uses current records without overwriting the saved session",
+      "pass": true
+    },
+    {
+      "name": "numerical planning returns all three strategies",
+      "pass": true
+    },
+    {
+      "name": "comparison shows fulfillment waste stock and margin together",
+      "pass": true,
+      "detail": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "Council is an explicit optional checkpoint",
+      "pass": true
+    },
+    {
+      "name": "disruption controls start neutral",
+      "pass": true
+    },
+    {
+      "name": "simulation advance remains synthetic and disables operations",
+      "pass": true
+    },
+    {
+      "name": "farm board exposes actual schedule or simulation stages",
+      "pass": true,
+      "detail": [
+        "A1, Caixin, growing",
+        "A2, Xiao bai cai / pak choi, growing",
+        "A3, Kailan, growing",
+        "A4, Lettuce, growing",
+        "B1, Caixin, growing",
+        "B2, Xiao bai cai / pak choi, growing",
+        "B3, Kailan, growing",
+        "B4, Lettuce, growing",
+        "C1, available bed, empty",
+        "C2, available bed, empty",
+        "C3, available bed, empty",
+        "C4, available bed, empty",
+        "D1, available bed, empty",
+        "D2, available bed, empty",
+        "D3, available bed, empty",
+        "D4, available bed, empty"
+      ]
+    },
+    {
+      "name": "changed demand remains distinct from explicit order edit",
+      "pass": true
+    },
+    {
+      "name": "seasonal assumption is dated and synthetic",
+      "pass": true
+    },
+    {
+      "name": "same-condition comparison is shown",
+      "pass": true
+    },
+    {
+      "name": "session selection survives reload",
+      "pass": true,
+      "detail": {
+        "storedId": "242c8e98b2c5cc13f5a6e3c56a827836",
+        "sessionId": "242c8e98b2c5cc13f5a6e3c56a827836"
+      }
+    },
+    {
+      "name": "360px journey has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "360px primary headings, cards and actions are fully visible",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390px journey has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "390px primary headings, cards and actions are fully visible",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430px journey has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "430px primary headings, cards and actions are fully visible",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280px journey has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "1280px primary headings, cards and actions are fully visible",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "journey made no provider request",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "journey has no page exceptions",
+      "pass": true,
+      "detail": []
     }
   ],
-  "failures": [
-    "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: 'Three feasible priorities' }) to be visible\u001b[22m\n\n    at /home/sprite/workspaces/Code2/tests/browser/v11_planning_journey.mjs:36:74"
+  "failures": [],
+  "screenshots": [
+    "apps/web/screenshots/v11-planning-360.png",
+    "apps/web/screenshots/v11-planning-390.png",
+    "apps/web/screenshots/v11-planning-430.png",
+    "apps/web/screenshots/v11-planning-1280.png"
   ],
-  "screenshots": [],
-  "completed_at": "2026-09-11T16:28:10.060Z"
+  "completed_at": "2026-09-11T16:43:40.613Z"
 }

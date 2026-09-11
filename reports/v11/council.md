@@ -30,7 +30,13 @@ The workflow has its own inference identity: planning Council prompt, output,
 validator, context and source contracts are all versioned independently from the
 legacy mission Council. Validation also binds each rationale to compatible selected
 metrics and each tradeoff to its rationale, so a margin rationale cannot be attached
-to an unrelated demand or crop-composition proposition.
+to an unrelated demand or crop-composition proposition. The provider receives these
+allowed pairings in its frozen context, reducing avoidable repair calls.
+
+Claim snapshot identity binds the numerical-input and configuration hashes,
+assumptions, retained-plan identity, candidate outputs and comparison records. It
+excludes worker timing. A future-demand or seasonal assumption therefore cannot
+reuse facts merely because the underlying farm-record hash stayed unchanged.
 
 Weather and Market receive deterministic `unavailable` findings when no admitted
 external evidence is frozen. Those findings do not create provider transcripts or

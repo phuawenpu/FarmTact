@@ -245,3 +245,8 @@ manifests identify the distinct deployed source/image.
 The report does not use archived pass counts as a substitute for new scientific
 experiments. It supplies the implementation account and acceptance criteria needed
 to design those experiments responsibly in the next iteration.
+
+
+## V11 guided production planning candidate
+
+The [organizer-aligned V11 chapter](v11-guided-production-planning.md) documents the guided mission, future-demand/booking separation, scoped seasonal assumptions, fair retained-plan comparison, bounded numerical worker and structured Council. Candidate acceptance is recorded separately from published V10 evidence.
