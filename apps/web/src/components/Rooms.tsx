@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Capabilities, Crop, Farm, Run, Source } from '../lib/types'
 import { editionPath } from '../lib/edition'
 import { CropArt, formatDate, formatMoney, humanizeExecutionMode, StatusPill } from './Visuals'
+import { SimulationPanel } from './SimulationPanel'
 
 export function DataRoom({ sources, capabilities }: { sources: Source[]; capabilities: Capabilities }) {
   return (
@@ -85,7 +86,7 @@ export function CropLibrary({ crops, onLoadCrop }: { crops: Crop[]; onLoadCrop: 
   )
 }
 
-export function Outcomes({ run, busy, onReplay }: { run: Run | null; busy: string | null; onReplay: () => void }) {
+export function Outcomes({ run, crops, busy, onReplay }: { run: Run | null; crops: Crop[]; busy: string | null; onReplay: () => void }) {
   const strategy = run?.strategies.find(item => item.id === run.accepted_strategy_id) || run?.strategies[0]
   const maxValue = Math.max(0, ...(strategy?.weekly.flatMap(week => [week.demand_kg, week.harvest_kg, week.delivered_kg]) || []))
   return (
@@ -105,6 +106,7 @@ export function Outcomes({ run, busy, onReplay }: { run: Run | null; busy: strin
             <div className="chart-legend"><span><i className="legend-dot legend-dot--demand"/> Demand</span><span><i className="legend-dot legend-dot--harvest"/> Harvest</span></div>
           </section>
           <section className="replay-card"><span className="replay-card__icon"><RefreshCw size={22}/></span><div><h2>{run.shared_demo ? 'Shared recorded demo' : 'Stored replay'}</h2><p>{run.shared_demo ? 'This curated replay uses stored council records and makes no current-time model calls.' : 'Review the same result with execution mode replay and zero new model calls.'}</p></div>{run.shared_demo ? <span className="shared-replay-note"><StatusPill status="replay" /> Start your own mission from the Board to enable worklist and replan actions.</span> : <div className="replay-card__actions"><a className="button button--cream" href={editionPath(`/api/v1/planning-runs/${encodeURIComponent(run.id)}/worklist.csv`)} download>Download worklist</a><button className="button button--forest" onClick={onReplay} disabled={!!busy}>{busy === 'replay' ? 'Loading…' : 'Open replay'}</button></div>}</section>
+          <SimulationPanel run={run} crops={crops}/>
         </>
       )}
     </div>

@@ -11,7 +11,7 @@ from packages.ingestion import get_public_context
 
 ROOT = Path(__file__).resolve().parents[2]
 DATASET_NAMES = ("weather_observations", "weather_forecasts", "trade_observations")
-REDISTRIBUTABLE_LICENCES = {"verified_singapore_open_data_licence"}
+REDISTRIBUTABLE_LICENCES = {"verified_singapore_open_data_licence", "CC0-1.0_project_authored_synthetic_fixture"}
 
 
 def _reuse_policy(licence_state: str | None) -> tuple[bool, list[str]]:
@@ -89,8 +89,10 @@ def public_explorer() -> dict[str, Any]:
         source_id = registered["source_id"]
         cached = context_sources.get(source_id)
         count = row_counts[source_id]
-        allowed, restrictions = _reuse_policy(registered.get("licence_state"))
-        export_policy[source_id] = (allowed, registered.get("licence_state"), restrictions)
+        fixture = bool(cached and cached.get('data_mode') == 'synthetic_contract_fixture')
+        licence = cached.get('licence_state') if fixture else registered.get('licence_state')
+        allowed, restrictions = _reuse_policy(licence)
+        export_policy[source_id] = (allowed, licence, restrictions)
         source_status = cached.get("status") if cached else None
         quality_flags: list[str] = []
         if source_status == "cached_stale":
@@ -101,8 +103,10 @@ def public_explorer() -> dict[str, Any]:
             quality_flags.append("no_ingested_rows")
         sources.append({
             "id": source_id,
-            "name": registered["name"],
-            "provider": registered.get("provider"),
+            "name": ('Synthetic example · ' if fixture else '') + registered["name"],
+            "provider": cached.get('provider') if fixture else registered.get("provider"),
+            "origin": 'synthetic' if fixture else 'public',
+            "data_mode": 'synthetic_contract_fixture' if fixture else 'public_context',
             "kind": registered.get("kind"),
             "url": registered.get("url"),
             "api_url": registered.get("api_url"),
@@ -119,7 +123,7 @@ def public_explorer() -> dict[str, Any]:
                 context.get("quality", {}).get("status", "unknown")
             ),
             "quality_flags": quality_flags,
-            "licence_state": registered.get("licence_state"),
+            "licence_state": licence,
             "reuse_restrictions": restrictions,
             "export_allowed": allowed,
             "record_count": count,
@@ -137,5 +141,8 @@ def public_explorer() -> dict[str, Any]:
             allowed, licence, restrictions = export_policy.get(
                 row.get("source_id"), (False, None, ["Source is absent from the public dataset registry."])
             )
-            datasets[name].append(_record(name, row, allowed, licence, restrictions))
+            record=_record(name, row, allowed, licence, restrictions)
+            fixture=licence=='CC0-1.0_project_authored_synthetic_fixture'
+            record.update(origin='synthetic' if fixture else 'public',data_mode='synthetic_contract_fixture' if fixture else 'public_context')
+            datasets[name].append(record)
     return {"sources": sources, "datasets": datasets}

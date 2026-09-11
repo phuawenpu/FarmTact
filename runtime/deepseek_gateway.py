@@ -24,29 +24,63 @@ import httpx
 from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
+from packages.ai_contracts import InferenceVersions, canonical_hash
+
 
 T = TypeVar("T")
 ThinkingMode = Literal["enabled", "disabled"]
 ReasoningEffort = Literal["low", "high", "max"]
 
-REVIEWED_MODELS = frozenset(
-    {"deepseek-v4-flash", "deepseek-v4-pro", "deepseek-v4-flash-vision-exp"}
-)
+REVIEWED_MODELS = frozenset({"deepseek-flash"})
 REVIEWED_ROUTES: dict[str, tuple[str, str]] = {
-    "demand_analyst": ("deepseek-v4-flash", "text"),
-    "production_analyst": ("deepseek-v4-pro", "text"),
-    "weather_analyst": ("deepseek-v4-flash", "text"),
-    "profit_analyst": ("deepseek-v4-flash", "text"),
-    "planning_chair": ("deepseek-v4-pro", "text"),
-    "market_analyst": ("deepseek-v4-flash", "text"),
-    "supply_chain_analyst": ("deepseek-v4-flash", "text"),
-    "evidence_extractor": ("deepseek-v4-flash", "text"),
-    "crop_alias_resolver": ("deepseek-v4-flash", "text"),
-    "runtime_researcher": ("deepseek-v4-pro", "text"),
-    "visual_observer": ("deepseek-v4-flash-vision-exp", "vision"),
-    "document_vision": ("deepseek-v4-flash-vision-exp", "vision"),
-    "satellite_visual_reviewer": ("deepseek-v4-flash-vision-exp", "vision"),
-    "test_evaluator": ("deepseek-v4-pro", "text"),
+    "demand_analyst": ("deepseek-flash", "text"),
+    "production_analyst": ("deepseek-flash", "text"),
+    "weather_analyst": ("deepseek-flash", "text"),
+    "profit_analyst": ("deepseek-flash", "text"),
+    "planning_chair": ("deepseek-flash", "text"),
+    "market_analyst": ("deepseek-flash", "text"),
+    "supply_chain_analyst": ("deepseek-flash", "text"),
+    "evidence_extractor": ("deepseek-flash", "text"),
+    "crop_alias_resolver": ("deepseek-flash", "text"),
+    "runtime_researcher": ("deepseek-flash", "text"),
+    "visual_observer": ("deepseek-flash", "vision"),
+    "document_vision": ("deepseek-flash", "vision"),
+    "satellite_visual_reviewer": ("deepseek-flash", "vision"),
+    "test_evaluator": ("deepseek-flash", "text"),
+}
+REVIEWED_MODEL_MIGRATION: dict[str, Any] = {
+    "reviewed_at": "2026-09-11",
+    "canonical_model": "deepseek-flash",
+    "discovered_models": ["deepseek-flash", "deepseek-v4-pro"],
+    "discovery_artifact": "reports/v8/model-discovery.json",
+    "provider_sources": [
+        "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+        "https://api-docs.deepseek.com/quick_start/pricing/",
+    ],
+    "routing_policy": "Every current text and native-vision route requests deepseek-flash; returned model identifiers must match exactly.",
+}
+REVIEWED_CALLERS: dict[str, dict[str, Any]] = {
+    "mission_council": {
+        "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+        "feature": "planning_mission", "integration": "active_product",
+        "max_requests": 9, "failure_semantics": "visible_withheld_or_partial",
+    },
+    "persistent_conversation": {
+        "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+        "feature": "direct_invite_council_research_interpretation",
+        "integration": "active_product", "max_requests": 9,
+        "failure_semantics": "visible_unsupported_partial_or_failed",
+    },
+    "synthetic_label_observer": {
+        "routes": ["visual_observer"], "feature": "synthetic_label_observation",
+        "integration": "active_api", "max_requests": 1,
+        "failure_semantics": "visible_missing_visual_evidence",
+    },
+    "authenticated_gateway_trial": {
+        "routes": ["demand_analyst", "production_analyst", "visual_observer"],
+        "feature": "provider_contract_diagnostic", "integration": "diagnostic_only",
+        "max_requests": 16, "failure_semantics": "preserved_failed_trial",
+    },
 }
 INTEGER_LIMIT_CEILINGS = {
     "max_requests": 16,
@@ -122,6 +156,8 @@ class GatewayConfig:
     models_path: str
     allowed_models: frozenset[str]
     routes: Mapping[str, Route]
+    callers: Mapping[str, Mapping[str, Any]]
+    model_migration: Mapping[str, Any]
     limits: Limits
     development_phase: str
     decision_policy: str
@@ -140,11 +176,12 @@ class GatewayConfig:
         expected_keys = {
             "schema_version", "provider", "origin", "chat_path", "models_path",
             "development_phase", "decision_policy", "default_execution_mode",
-            "default_data_mode", "allowed_models", "routes", "limits",
+            "default_data_mode", "allowed_models", "routes", "callers",
+            "model_migration", "limits",
         }
         if not isinstance(raw, dict) or set(raw) != expected_keys:
             raise DeepSeekPolicyError("DeepSeek runtime manifest fields differ from reviewed policy")
-        if raw.get("schema_version") != "1.0":
+        if raw.get("schema_version") != "1.2":
             raise DeepSeekPolicyError("Unreviewed DeepSeek runtime manifest version")
         if raw.get("provider") != "deepseek":
             raise DeepSeekPolicyError("Runtime provider must be DeepSeek")
@@ -175,6 +212,10 @@ class GatewayConfig:
             name: Route(model=model, capability=capability)  # type: ignore[arg-type]
             for name, (model, capability) in normalized_routes.items()
         }
+        if raw.get("callers") != REVIEWED_CALLERS:
+            raise DeepSeekPolicyError("Runtime caller inventory differs from reviewed policy")
+        if raw.get("model_migration") != REVIEWED_MODEL_MIGRATION:
+            raise DeepSeekPolicyError("Runtime model migration differs from reviewed policy")
         limits_raw = raw.get("limits")
         expected_limit_names = set(INTEGER_LIMIT_CEILINGS) | set(TIME_LIMIT_CEILINGS)
         if not isinstance(limits_raw, dict) or set(limits_raw) != expected_limit_names:
@@ -214,6 +255,8 @@ class GatewayConfig:
             models_path=raw["models_path"],
             allowed_models=allowed,
             routes=routes,
+            callers=raw["callers"],
+            model_migration=raw["model_migration"],
             limits=limits,
             development_phase=raw["development_phase"],
             decision_policy=raw["decision_policy"],
@@ -231,6 +274,7 @@ class RunBudget:
     request_count: int = 0
     reserved_output_tokens: int = 0
     _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
+    _cancelled: threading.Event = field(default_factory=threading.Event, repr=False)
 
     def __post_init__(self) -> None:
         integer_values = {
@@ -269,10 +313,20 @@ class RunBudget:
     def remaining_seconds(self) -> float:
         return self.max_wall_seconds - (time.monotonic() - self.started_at)
 
+    def cancel(self) -> None:
+        """Prevent any further request and stop bounded response consumption."""
+
+        self._cancelled.set()
+
+    def cancelled(self) -> bool:
+        return self._cancelled.is_set()
+
     def reserve(self, output_tokens: int) -> None:
         if not isinstance(output_tokens, int) or isinstance(output_tokens, bool) or output_tokens < 0:
             raise DeepSeekPolicyError("Output-token reservation must be a non-negative integer")
         with self._lock:
+            if self.cancelled():
+                raise DeepSeekBlockedError("DeepSeek run cancelled")
             if time.monotonic() - self.started_at >= self.max_wall_seconds:
                 raise DeepSeekBlockedError("DeepSeek run wall-clock budget exhausted")
             if self.request_count + 1 > self.max_requests:
@@ -322,6 +376,8 @@ class SafeAudit:
     request_id: str | None
     latency_ms: int
     usage: Usage
+    contract_versions: dict[str, str] = field(default_factory=dict)
+    public_context_sha256: str | None = None
 
 
 @dataclass(frozen=True)
@@ -467,6 +523,8 @@ class DeepSeekGateway:
         reasoning_effort: ReasoningEffort | None = None,
         execution_mode: str = "test",
         data_mode: str = "synthetic_demo",
+        versions: InferenceVersions | None = None,
+        public_context_sha256: str | None = None,
     ) -> PublicCompletion[T]:
         self._validate_modes(execution_mode, data_mode)
         route = self._route(role, "text")
@@ -479,7 +537,9 @@ class DeepSeekGateway:
             response_format={"type": "json_object"},
         )
         raw = self._chat_raw(payload, role=role)
-        return self._public_json(raw, route, role, output_model, execution_mode, data_mode)
+        resolved = self._resolved_versions(messages, output_model, versions)
+        return self._public_json(raw, route, role, output_model, execution_mode, data_mode,
+            resolved, public_context_sha256 or canonical_hash(messages))
 
     def run_tool_json(
         self,
@@ -494,6 +554,8 @@ class DeepSeekGateway:
         reasoning_effort: ReasoningEffort = "low",
         execution_mode: str = "test",
         data_mode: str = "synthetic_demo",
+        versions: InferenceVersions | None = None,
+        public_context_sha256: str | None = None,
     ) -> PublicCompletion[T]:
         self._validate_modes(execution_mode, data_mode)
         route = self._route(role, "text")
@@ -557,7 +619,9 @@ class DeepSeekGateway:
             response_format={"type": "json_object"},
         )
         second = self._chat_raw(second_payload, role=role)
-        completion = self._public_json(second, route, role, output_model, execution_mode, data_mode)
+        resolved = self._resolved_versions(messages, output_model, versions)
+        completion = self._public_json(second, route, role, output_model, execution_mode, data_mode,
+            resolved, public_context_sha256 or canonical_hash(messages))
         private_assistant_message.clear()
         return completion
 
@@ -571,6 +635,8 @@ class DeepSeekGateway:
         max_tokens: int = 512,
         execution_mode: str = "test",
         data_mode: str = "synthetic_demo",
+        versions: InferenceVersions | None = None,
+        public_context_sha256: str | None = None,
     ) -> PublicCompletion[T]:
         self._validate_modes(execution_mode, data_mode)
         route = self._route(role, "vision")
@@ -589,7 +655,9 @@ class DeepSeekGateway:
             response_format={"type": "json_object"},
         )
         raw = self._chat_raw(payload, role=role)
-        return self._public_json(raw, route, role, output_model, execution_mode, data_mode)
+        resolved = self._resolved_versions([{"role":"user","content":prompt}], output_model, versions)
+        return self._public_json(raw, route, role, output_model, execution_mode, data_mode,
+            resolved, public_context_sha256 or canonical_hash({"prompt":prompt,"assets":[item.source_sha256 for item in images]}))
 
     def stream_text(
         self,
@@ -600,6 +668,8 @@ class DeepSeekGateway:
         thinking: ThinkingMode = "disabled",
         execution_mode: str = "test",
         data_mode: str = "synthetic_demo",
+        versions: InferenceVersions | None = None,
+        public_context_sha256: str | None = None,
     ) -> PublicCompletion[None]:
         self._validate_modes(execution_mode, data_mode)
         route = self._route(role, "text")
@@ -679,6 +749,8 @@ class DeepSeekGateway:
         audit = self._audit(
             route, role, returned_model or "", execution_mode, data_mode,
             hashlib.sha256(encoded).hexdigest(), request_id, latency_ms, usage,
+            self._resolved_versions(messages, str, versions),
+            public_context_sha256 or canonical_hash(messages),
         )
         return PublicCompletion("".join(content_parts), None, returned_model or "", finish_reason, usage, audit)
 
@@ -895,6 +967,8 @@ class DeepSeekGateway:
         )
 
     def _ensure_wall_available(self) -> None:
+        if self.budget.cancelled():
+            raise DeepSeekBlockedError("DeepSeek run cancelled")
         if self.budget.remaining_seconds() <= 0:
             raise DeepSeekBlockedError("DeepSeek run wall-clock budget exhausted")
 
@@ -944,6 +1018,8 @@ class DeepSeekGateway:
         output_model: type[T] | Any,
         execution_mode: str,
         data_mode: str,
+        versions: InferenceVersions,
+        public_context_sha256: str,
     ) -> PublicCompletion[T]:
         content = raw.message.get("content")
         if not isinstance(content, str) or not content.strip():
@@ -955,7 +1031,7 @@ class DeepSeekGateway:
             raise DeepSeekResponseError("DeepSeek structured output failed local validation") from exc
         audit = self._audit(
             route, role, raw.model, execution_mode, data_mode, raw.input_sha256,
-            raw.request_id, raw.latency_ms, raw.usage,
+            raw.request_id, raw.latency_ms, raw.usage, versions, public_context_sha256,
         )
         return PublicCompletion(content, validated, raw.model, raw.finish_reason, raw.usage, audit)
 
@@ -970,6 +1046,8 @@ class DeepSeekGateway:
         request_id: str | None,
         latency_ms: int,
         usage: Usage,
+        versions: InferenceVersions | None = None,
+        public_context_sha256: str | None = None,
     ) -> SafeAudit:
         self._validate_modes(execution_mode, data_mode)
         return SafeAudit(
@@ -985,11 +1063,41 @@ class DeepSeekGateway:
             request_id=request_id,
             latency_ms=latency_ms,
             usage=usage,
+            contract_versions=versions.public() if versions else {},
+            public_context_sha256=public_context_sha256,
+        )
+
+    def _resolved_versions(
+        self,
+        messages: Sequence[Mapping[str, Any]],
+        output_model: type[Any] | Any,
+        supplied: InferenceVersions | None,
+    ) -> InferenceVersions:
+        if supplied is not None:
+            return supplied
+        try:
+            schema_hash = canonical_hash(TypeAdapter(output_model).json_schema())
+        except (TypeError, ValueError):
+            schema_hash = canonical_hash(str(output_model))
+        return InferenceVersions(
+            prompt_template="inline-prompt-sha256:" + canonical_hash(messages),
+            output_schema="output-schema-sha256:" + schema_hash,
+            validator="runtime-deepseek-gateway-v2",
+            context="request-messages-sha256:" + canonical_hash(messages),
+            sources="caller-unspecified-v1",
         )
 
     def _validate_returned_model(self, requested: str, returned: object) -> None:
         if not isinstance(returned, str) or returned != requested or returned not in self.config.allowed_models:
-            raise DeepSeekResponseError("DeepSeek returned an unexpected model")
+            safe_returned = (
+                returned
+                if isinstance(returned, str)
+                and re.fullmatch(r"[A-Za-z0-9._-]{1,128}", returned)
+                else "invalid_identifier"
+            )
+            raise DeepSeekResponseError(
+                f"DeepSeek returned an unexpected model (returned_model={safe_returned})"
+            )
 
 
 def _encode_payload(payload: Mapping[str, Any], max_bytes: int) -> bytes:

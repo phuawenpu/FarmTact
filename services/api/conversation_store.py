@@ -19,12 +19,16 @@ from sqlalchemy import (
     String,
     Table,
     UniqueConstraint,
+    func,
     select,
     update,
 )
 
 from services.api.store import metadata, now, tenants
 
+MAX_CONVERSATIONS_PER_TENANT = 30
+MAX_MESSAGES_PER_CONVERSATION = 120
+CONVERSATION_LIST_LIMIT = 30
 
 conversations = Table(
     "conversations",
@@ -124,6 +128,8 @@ class ConversationStore:
         request_hash: str,
         payload: dict[str, Any],
     ) -> tuple[dict[str, Any], bool]:
+        from services.api.provenance import runtime_provenance
+        payload.setdefault('runtime_provenance',runtime_provenance())
         with self.store.connection(write=True) as connection:
             connection.execute(
                 select(tenants.c.id).where(tenants.c.id == tenant).with_for_update()
@@ -138,6 +144,13 @@ class ConversationStore:
                 if existing["request_hash"] != request_hash:
                     raise ValueError("Idempotency key reused with changed conversation inputs")
                 return existing["payload"], False
+            count = connection.execute(
+                select(func.count()).select_from(conversations).where(
+                    conversations.c.tenant_id == tenant
+                )
+            ).scalar_one()
+            if count >= MAX_CONVERSATIONS_PER_TENANT:
+                raise ValueError("Thirty conversations per session maximum")
             connection.execute(
                 conversations.insert().values(
                     id=payload["id"],
@@ -150,12 +163,20 @@ class ConversationStore:
             )
         return payload, True
 
-    def list_conversations(self, tenant: str) -> list[dict[str, Any]]:
+    def list_conversations(
+        self, tenant: str, *, limit: int = CONVERSATION_LIST_LIMIT, before: str | None = None
+    ) -> list[dict[str, Any]]:
+        if not 1 <= limit <= CONVERSATION_LIST_LIMIT:
+            raise ValueError("Conversation list limit must be from 1 to 30")
         with self.store.connection() as connection:
+            updated = conversations.c.payload["updated_at"].as_string()
+            query = select(conversations.c.payload).where(conversations.c.tenant_id == tenant)
+            if before is not None:
+                query = query.where(updated < before)
             rows = connection.execute(
-                select(conversations.c.payload).where(conversations.c.tenant_id == tenant)
+                query.order_by(updated.desc(), conversations.c.id.desc()).limit(limit)
             ).scalars().all()
-        return sorted(rows, key=lambda row: row["updated_at"], reverse=True)
+        return list(rows)
 
     def get_conversation_by_key(
         self, tenant: str, key: str
@@ -312,6 +333,15 @@ class ConversationStore:
             ).first()
             if active:
                 raise ValueError("A conversation response is already running")
+            existing_messages = connection.execute(
+                select(func.count()).select_from(conversation_messages).where(
+                    conversation_messages.c.conversation_id == conversation_id,
+                    conversation_messages.c.tenant_id == tenant,
+                )
+            ).scalar_one()
+            required = 1 + len(payload.get("roles", []))
+            if existing_messages + required > MAX_MESSAGES_PER_CONVERSATION:
+                raise ValueError("Conversation message limit reached")
             saved_message = self._append_message_locked(
                 connection, tenant, conversation_id, user_message
             )
@@ -428,6 +458,89 @@ class ConversationStore:
                 .values(status="RUNNING", payload=payload)
             )
             return True
+
+    def cancel_request(
+        self, tenant: str, conversation_id: str, request_id: str
+    ) -> tuple[dict[str, Any] | None, bool]:
+        """Atomically mark queued/running work cancelled; terminal calls are idempotent."""
+
+        with self.store.connection(write=True) as connection:
+            row = connection.execute(
+                select(conversation_requests)
+                .where(
+                    conversation_requests.c.id == request_id,
+                    conversation_requests.c.conversation_id == conversation_id,
+                    conversation_requests.c.tenant_id == tenant,
+                )
+                .with_for_update()
+            ).mappings().first()
+            if not row:
+                return None, False
+            payload = row["payload"]
+            if row["status"] not in ("QUEUED", "RUNNING"):
+                return payload, False
+            cancelled_at = now()
+            payload = dict(
+                payload,
+                status="CANCELLED",
+                execution_status="cancelled",
+                cancelled_at=cancelled_at,
+                completed_at=cancelled_at,
+                error="Cancellation recorded before another advisor turn; completed messages were preserved.",
+            )
+            changed = connection.execute(
+                update(conversation_requests)
+                .where(
+                    conversation_requests.c.id == request_id,
+                    conversation_requests.c.conversation_id == conversation_id,
+                    conversation_requests.c.tenant_id == tenant,
+                    conversation_requests.c.status.in_(["QUEUED", "RUNNING"]),
+                )
+                .values(status="CANCELLED", payload=payload)
+            )
+            if changed.rowcount != 1:
+                current = connection.execute(
+                    select(conversation_requests.c.payload).where(
+                        conversation_requests.c.id == request_id,
+                        conversation_requests.c.conversation_id == conversation_id,
+                        conversation_requests.c.tenant_id == tenant,
+                    )
+                ).scalar_one_or_none()
+                return current, False
+            conversation = connection.execute(
+                select(conversations.c.payload).where(
+                    conversations.c.id == conversation_id,
+                    conversations.c.tenant_id == tenant,
+                )
+            ).scalar_one()
+            updated_conversation = dict(
+                conversation,
+                status="OPEN",
+                updated_at=cancelled_at,
+                last_request_id=request_id,
+                last_request_status="CANCELLED",
+                last_execution_status="cancelled",
+                last_evidence_status=payload.get("evidence_status", "not_evaluated"),
+                last_decision_influence="none_cancelled",
+            )
+            connection.execute(
+                update(conversations)
+                .where(
+                    conversations.c.id == conversation_id,
+                    conversations.c.tenant_id == tenant,
+                )
+                .values(status="OPEN", payload=updated_conversation)
+            )
+            return payload, True
+
+    def is_cancelled(self, tenant: str, request_id: str) -> bool:
+        with self.store.connection() as connection:
+            return connection.execute(
+                select(conversation_requests.c.status).where(
+                    conversation_requests.c.id == request_id,
+                    conversation_requests.c.tenant_id == tenant,
+                )
+            ).scalar_one_or_none() == "CANCELLED"
 
     def append_event(
         self,

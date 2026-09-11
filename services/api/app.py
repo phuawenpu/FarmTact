@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import Field
 from packages.contracts import Farm,Strict,content_hash
 from packages.fixtures import synthetic_farm
-from packages.agents import COUNCIL_VERSION, COUNCIL_MAX_REQUESTS, council_review_issues
+from packages.agents import COUNCIL_VERSION, COUNCIL_MAX_REQUESTS, council_review_issues, council_statuses
 from packages.planner import plan,validate_allocations
 from services.api.store import Store,now
 from services.api.views import ROOT,farm_view,crop_views,source_views,capabilities
@@ -19,9 +19,14 @@ from services.api.views import ROOT,farm_view,crop_views,source_views,capabiliti
 class MissionRequest(Strict):
     council: bool = True
     with_vision: bool = False
+    council_policy: Literal['required','advisory'] = 'required'
 class ReplanRequest(Strict):
     council: bool | None = None
     disruption: Literal['crop_delay'] = 'crop_delay'
+    batch_id: str | None = Field(default=None,max_length=100)
+    delay_days: int = Field(default=7,ge=0,le=14,strict=True)
+    yield_percent: int = Field(default=80,ge=50,le=100,strict=True)
+    input_version: int | None = Field(default=None,ge=1)
 class ImportRequest(Strict):
     fixture: Literal['synthetic_demo'] | None = None
     farm: Farm | None = None
@@ -35,6 +40,10 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
     r=dict(id=secrets.token_hex(16),status='CREATED',created_at=now(),input_version=snapshot['version'],input_hash=content_hash(snapshot),input_snapshot=snapshot,source_snapshot=source_views(),evidence_version=content_hash((ROOT/'research/evidence_register.json').read_text()) if (ROOT/'research/evidence_register.json').exists() else None,execution_mode='test',data_mode='synthetic_demo',development_phase='autonomous_development',decision_policy='automatic_development',council_requested=body.council,with_vision=body.with_vision,council_status='pending' if body.council else 'not_run',strategies=[],claims=[],events=[],warnings=[],parent_run_id=parent,disruption=disruption,replan_request=replan_request)
     from services.api.market_signals import summarize_signals
     r['council_version']=COUNCIL_VERSION
+    r['council_policy']=body.council_policy if body.council else 'not_requested'
+    r['workflow_type']='planning_council' if body.council else 'numerical_planning'
+    from services.api.provenance import runtime_provenance
+    r['runtime_provenance']=runtime_provenance()
     r['market_signals']=summarize_signals(snapshot)
     from packages.news import freeze_for_farm
     parent_record=store.get_run(t,parent) if parent else None
@@ -46,7 +55,7 @@ def create_mission(store,t,body,key,parent=None,disruption=None,replan_request=N
     return dict(id=result['id'],status=result['status'],reused=not created)
 
 class Worker:
-    def __init__(self,store):self.store=store;self.stop=threading.Event();self.thread=None
+    def __init__(self,store):self.store=store;self.stop=threading.Event();self.thread=None;self.provider_thread=None
     def start(self):
         self.store.interrupt_abandoned()
         from services.api.scenarios import interrupt_scenarios
@@ -55,25 +64,43 @@ class Worker:
         recover(self.store)
         from services.api.conversation_store import ConversationStore
         ConversationStore(self.store).interrupt_abandoned()
-        self.thread=threading.Thread(target=self.loop,daemon=True);self.thread.start()
-    def loop(self):
-        while not self.stop.wait(.3):
-            for tenant,id in self.store.pending():
-                if self.store.claim(tenant,id):self.execute(tenant,id)
-            from services.api.scenarios import pending_scenarios, execute_scenario
-            for tenant,id in pending_scenarios(self.store):
-                if self.stop.is_set():break
-                execute_scenario(self.store,tenant,id)
-            from services.api.council_research import pending as research_pending, execute as research_execute
-            for tenant,id in research_pending(self.store):
-                if self.stop.is_set():break
-                research_execute(self.store,tenant,id)
+        self.thread=threading.Thread(target=self.loop,args=('numerical',),daemon=True,name='farmtact-numerical')
+        self.provider_thread=threading.Thread(target=self.loop,args=('provider',),daemon=True,name='farmtact-provider')
+        self.thread.start();self.provider_thread.start()
+    def loop(self,lane='numerical'):
+        """One provider lane cannot monopolize the independent local calculation lane.
+
+        Each cycle handles at most one job per class, preventing a branch backlog
+        from draining in front of every research calculation. Claims remain atomic.
+        """
+        while not self.stop.wait(.1):
+            try:self.tick(lane)
+            except Exception as exc:
+                import logging
+                logging.getLogger(__name__).error('Worker lane %s iteration failed (%s)',lane,type(exc).__name__)
+                self.stop.wait(1)
+    def tick(self,lane):
+        for tenant,id in self.store.pending(council_requested=lane=='provider'):
+            record=self.store.get_run(tenant,id)
+            if bool(record.get('council_requested'))!=(lane=='provider'):continue
+            if self.store.claim(tenant,id):self.execute(tenant,id)
+            break
+        if self.stop.is_set():return
+        if lane=='numerical':
+            from services.api.scenarios import pending_scenarios,execute_scenario
+            jobs=pending_scenarios(self.store)
+            if jobs:execute_scenario(self.store,*jobs[0])
+            if self.stop.is_set():return
+            from services.api.council_research import pending,execute
+            jobs=pending(self.store)
+            if jobs:execute(self.store,*jobs[0])
+        else:
             from services.api.conversation_store import ConversationStore
             from services.api.conversations import execute_conversation_job
             conversations=ConversationStore(self.store)
             for tenant,id in conversations.pending():
-                if self.stop.is_set():break
                 if conversations.claim(tenant,id):execute_conversation_job(self.store,tenant,id)
+                break
     def execute(self,tenant,id):
         store=self.store;r=store.get_run(tenant,id)
         if r.get('cancel_requested'):
@@ -128,6 +155,8 @@ class Worker:
                         r['inference_budget']=dict(reserved_calls=reserved_calls,requests_consumed=call_budget.request_count,unused_released=unused,reserved_output_tokens=call_budget.reserved_output_tokens)
             else:r['council_status']='not_run'
             r['claims']=claims;r['inference_audit']=audits
+            dimensions=council_statuses(claims)
+            r.update(council_execution_status=dimensions['execution_status'] if claims else r['council_status'],council_evidence_status=dimensions['evidence_status'],council_decision_influence=dimensions['decision_influence'])
             if cancelled():r['status']='CANCELLED';store.save_run(tenant,r);emit('run_failed',dict(message='Mission cancelled; no plan accepted.'));return
             with store.transaction(tenant):
                 current=store.latest_farm(tenant)
@@ -139,18 +168,24 @@ class Worker:
                     emit('input_refreshed',dict(next_run_id=refreshed['id'],execution_mode='test',council_status='not_run'))
                 else:
                     eligible=[s for s in r['strategies'] if s['status']=='FEASIBLE' and not validate_allocations(farm,s['allocations'])]
-                    chosen=next((s for s in eligible if s['name']=='Balanced'),eligible[0] if eligible else None)
+                    ranked=sorted(eligible,key=lambda candidate:(candidate['name']!='Balanced',-float(candidate['metrics'].get('fill_rate',0)),-float(candidate['metrics'].get('margin_sgd',0)),candidate['id']))
+                    chosen=ranked[0] if ranked else None
+                    r['selection_ranking']=dict(policy='balanced-service-margin-id-v1',strategy_ids=[candidate['id'] for candidate in ranked])
                     review_issues=council_review_issues(claims) if claims else []
-                    r['evidence_validation']=dict(version='council-evidence-gate-v1',status='withheld' if review_issues else 'passed',basis='seven-agent-findings' if claims else 'numerical-baseline',issues=review_issues)
-                    if review_issues:
-                        chosen=None;r['warnings'].extend(review_issues)
+                    if r.get('council_policy')=='required' and r['council_status']!='completed':
+                        review_issues.append('Required Council did not complete with supported findings; automatic selection is withheld.')
+                    gate_issues=review_issues if r.get('council_policy')!='advisory' else []
+                    r['evidence_validation']=dict(version='council-evidence-gate-v2',status='withheld' if gate_issues else ('advisory_issues' if review_issues else 'passed'),basis='seven-agent-findings' if claims else 'numerical-baseline',issues=review_issues,qualitative_prose_verified=False)
+                    if review_issues:r['warnings'].extend(review_issues)
+                    if gate_issues:
+                        chosen=None
                     if chosen:
                         emit('acceptance_validating',dict(strategy_id=chosen['id']))
                         r['accepted_strategy_id']=chosen['id'];r['status']='ACCEPTED_FOR_SIMULATION'
-                        r['acceptance']=dict(actor='development-policy-service',policy_version='automatic-development-v2',input_hash=r['input_hash'],input_version=r['input_version'],strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),occurred_at=now(),simulation_only=True)
+                        r['acceptance']=dict(actor='development-policy-service',policy_version='automatic-development-v3',council_policy=r.get('council_policy','legacy_advisory'),input_hash=r['input_hash'],input_version=r['input_version'],strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),occurred_at=now(),simulation_only=True)
                         r['simulated_outcome']=dict(origin='synthetic',scenario_seed=farm.fixture_seed,ledger=chosen['ledger'],metrics=chosen['metrics'],work=[a for a in chosen['allocations'] if not a.get('executed')])
                         emit('accepted_for_simulation',r['acceptance'])
-                    else:r['status']='REVIEW_WITHHELD' if eligible and review_issues else 'NO_FEASIBLE_PLAN'
+                    else:r['status']='REVIEW_WITHHELD' if eligible and gate_issues else 'NO_FEASIBLE_PLAN'
                 r['completed_at']=now();r['events']=store.get_events(tenant,id)
                 store.save_run(tenant,r);emit('run_completed',dict(status=r['status'],council_status=r['council_status']))
         except Exception as exc:
@@ -228,7 +263,7 @@ def create_app(store=None,start_worker=True):
             t,token=app.state.store.new_session();response.set_cookie('farmtact_session',token,httponly=True,samesite='strict',secure=request.url.scheme=='https' or os.environ.get('FARMTACT_SECURE_COOKIES')=='true',max_age=86400)
             app.state.store.save_farm(t,synthetic_farm().model_dump(mode='json'))
         farm=Farm.model_validate(app.state.store.latest_farm(t));r=app.state.store.latest_run(t)
-        return dict(farm=farm_view(farm),crops=crop_views(farm),sources=source_views(),capabilities=capabilities(),latest_run=public_run(t,r) if r else None)
+        return dict(farm=farm_view(farm),crops=crop_views(farm),sources=source_views(),capabilities=capabilities(app.state.store,t),latest_run=public_run(t,r) if r else None)
     @app.get('/api/v1/demo/replay')
     def recorded_demo(request:Request):
         tenant(request)
@@ -257,14 +292,25 @@ def create_app(store=None,start_worker=True):
     def imports(body:ImportRequest,request:Request):
         t=tenant(request)
         if bool(body.fixture)==bool(body.farm):raise HTTPException(422,'Supply one fixture or farm')
+        key=request.headers.get('Idempotency-Key','')
+        if not key or len(key)>128:raise HTTPException(422,'Idempotency-Key required, maximum 128 characters')
+        from services.api.store import mutation_receipts
+        from sqlalchemy import select
+        digest=content_hash(dict(operation='farm_import',body=body.model_dump(mode='json')))
         farm=body.farm or synthetic_farm()
-        with app.state.store.transaction(t):
+        with app.state.store.transaction(t) as c:
+            old=c.execute(select(mutation_receipts).where(mutation_receipts.c.tenant_id==t,mutation_receipts.c.idempotency_key==key)).mappings().first()
+            if old:
+                if old['request_hash']!=digest:raise HTTPException(409,'Idempotency key reused with changed import inputs')
+                return old['payload']
             previous=app.state.store.latest_run(t)
             payload=app.state.store.save_farm(t,farm.model_dump(mode='json'))
             refresh=None
             if previous and previous['status'] not in ('CREATED','RUNNING'):
                 refresh=create_mission(app.state.store,t,MissionRequest(council=False),f'import:{payload["version"]}',parent=previous['id'])
-        return dict(id=content_hash(payload)[:20],status='validated',version=payload['version'],planning_run=refresh,rows=dict(beds=len(farm.beds),orders=len(farm.orders),batches=len(farm.batches)),origin='synthetic')
+            result=dict(id=content_hash(payload)[:20],status='validated',version=payload['version'],planning_run=refresh,rows=dict(beds=len(farm.beds),orders=len(farm.orders),batches=len(farm.batches)),origin='synthetic')
+            c.execute(mutation_receipts.insert().values(tenant_id=t,idempotency_key=key,request_hash=digest,payload=result))
+        return result
     @app.post('/api/v1/planning-runs',status_code=202)
     def mission(body:MissionRequest,request:Request):return create_mission(app.state.store,tenant(request),body,request.headers.get('Idempotency-Key'))
     @app.get('/api/v1/planning-runs/{id}')
@@ -289,8 +335,9 @@ def create_app(store=None,start_worker=True):
     @app.post('/api/v1/planning-runs/{id}/cancel')
     def cancel(id:str,request:Request):
         t,r=getrun(request,id)
-        if r['status'] in ('CREATED','RUNNING'):r['cancel_requested']=True;app.state.store.save_run(t,r)
-        return {'status':'cancel_requested'}
+        if r['status'] not in ('CREATED','RUNNING'):return dict(status=r['status'],cancelled=False,reason='already_terminal')
+        r['cancel_requested']=True;app.state.store.save_run(t,r)
+        return dict(status='cancel_requested',cancelled=False)
     @app.get('/api/v1/planning-runs/{id}/replay')
     def replay(id:str,request:Request):
         t,r=getrun(request,id)
@@ -315,12 +362,14 @@ def create_app(store=None,start_worker=True):
                 if old.get('parent_run_id')!=id or old.get('replan_request')!=body.model_dump():raise HTTPException(409,'Idempotency key belongs to different replan inputs')
                 return dict(id=old['id'],status=old['status'],reused=True)
             current=app.state.store.latest_farm(t)
-            if current['version']!=r['input_version']:raise HTTPException(409,'Parent mission is stale')
+            if current['version']!=r['input_version'] or (body.input_version is not None and body.input_version!=current['version']):raise HTTPException(409,'Parent mission is stale')
             farm=Farm.model_validate(current)
             # This is a synthetic observation update, not changing executed sow/transplant work.
-            b=farm.batches[0]; b.harvest_date+=timedelta(days=7);b.expected_marketable_kg*=__import__('decimal').Decimal('.8')
+            b=next((batch for batch in farm.batches if batch.id==body.batch_id),None) if body.batch_id else next(iter(farm.batches),None)
+            if b is None:raise HTTPException(422,'Select an existing batch for the disruption')
+            b.harvest_date+=timedelta(days=body.delay_days);b.expected_marketable_kg*=__import__('decimal').Decimal(body.yield_percent)/100
             app.state.store.save_farm(t,farm.model_dump(mode='json'))
-            return create_mission(app.state.store,t,MissionRequest(council=r['council_requested'] if body.council is None else body.council),request.headers.get('Idempotency-Key'),parent=id,disruption=dict(type='crop_delay',origin='synthetic',batch_id=b.id,delay_days=7,yield_factor=.8,observed_at=now()),replan_request=body.model_dump())
+            return create_mission(app.state.store,t,MissionRequest(council=r['council_requested'] if body.council is None else body.council,council_policy=r.get('council_policy','required') if r.get('council_policy') in ('required','advisory') else 'required'),request.headers.get('Idempotency-Key'),parent=id,disruption=dict(type='crop_delay',origin='synthetic',batch_id=b.id,delay_days=body.delay_days,yield_factor=body.yield_percent/100,observed_at=now()),replan_request=body.model_dump())
     @app.post('/api/v1/strategies/{id}/accept-for-simulation')
     def service_only(id:str,request:Request):tenant(request);raise HTTPException(403,'Acceptance is a backend policy operation')
     @app.get('/api/v1/planning-runs/{id}/worklist.csv')
@@ -365,6 +414,8 @@ def create_app(store=None,start_worker=True):
     install_conversations(app,tenant)
     from services.api.council_research import install_routes as install_research
     install_research(app,tenant)
+    from services.api.simulation import register as install_simulations
+    install_simulations(app,tenant)
     from services.api.reviews import install_routes as install_reviews
     install_reviews(app)
     dist=ROOT/'apps/web/dist'

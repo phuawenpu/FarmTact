@@ -50,7 +50,7 @@ class Result(BaseModel):
 
 
 def completion(
-    content: str = '{"status":"ok"}', *, model: str = "deepseek-v4-flash",
+    content: str = '{"status":"ok"}', *, model: str = "deepseek-flash",
     reasoning_content: str | None = None,
 ) -> dict:
     message = {"role": "assistant", "content": content}
@@ -99,7 +99,7 @@ def write_changed_config(tmp_path: Path, mutate) -> Path:
         lambda raw: raw["routes"]["demand_analyst"].update(model="deepseek-v4-pro"),
         lambda raw: raw["routes"]["visual_observer"].update(model="deepseek-v4-flash"),
         lambda raw: raw["routes"]["demand_analyst"].update(capability="vision"),
-        lambda raw: raw["routes"].update(attacker_role={"model": "deepseek-v4-flash", "capability": "text"}),
+        lambda raw: raw["routes"].update(attacker_role={"model": "deepseek-flash", "capability": "text"}),
         lambda raw: raw["routes"].pop("test_evaluator"),
     ],
 )
@@ -366,13 +366,13 @@ def test_synthetic_visual_workflow_preserves_provenance_and_scope(monkeypatch: p
         body = json.loads(request.content)
         requests.append(body)
         assert str(request.url) == "https://api.deepseek.com/chat/completions"
-        assert body["model"] == "deepseek-v4-flash-vision-exp"
+        assert body["model"] == "deepseek-flash"
         content = body["messages"][0]["content"]
         assert "synthetic label" in content[0]["text"].lower()
         assert content[1]["image_url"]["url"].startswith("data:image/png;base64,")
         return httpx.Response(200, json=completion(
             json.dumps({"batch_id": expected_label, "visible_condition": "Synthetic fixture label only", "uncertain": False}),
-            model="deepseek-v4-flash-vision-exp",
+            model="deepseek-flash",
         ))
 
     def factory(*_args, budget=None, **_kwargs):

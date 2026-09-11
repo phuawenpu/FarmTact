@@ -385,7 +385,7 @@ def test_unknown_probe_limit_strict_origin_host_and_docs_disabled() -> None:
         assert client.post(
             "/api/v1/imports",
             json={"fixture": "synthetic_demo"},
-            headers={"Host": "farm.example", "Origin": "https://farm.example"},
+            headers={"Host": "farm.example", "Origin": "https://farm.example", "Idempotency-Key": "origin-checked-import"},
         ).status_code == 201
         for path in ("/docs", "/redoc", "/openapi.json"):
             assert client.get(path, headers={"Host": "farm.example"}).status_code == 404

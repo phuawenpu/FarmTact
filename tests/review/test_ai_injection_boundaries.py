@@ -66,7 +66,7 @@ def test_prompt_injection_cannot_select_provider_origin_model_or_mode() -> None:
         assert str(request.url) == "https://api.deepseek.com/chat/completions"
         body = json.loads(request.content)
         seen.append(body)
-        assert body["model"] == "deepseek-v4-flash"
+        assert body["model"] == "deepseek-flash"
         assert "provider" not in body
         assert "origin" not in body
         assert "execution_mode" not in body

@@ -154,7 +154,7 @@ export function World({ farm, crops, run, mission, executionMode, onOpenTools, o
             <button className="world-facility" style={{ left: 155, top: 101 }} onClick={() => openAdvisor(advisorById('hana'))}>Check weather station</button>
             {farm.beds.map((bed, index) => {
               const position = bedPosition(index)
-              const state = previewBed(bed, previewDate, allocationsByBed.get(bed.id))
+              const state = previewBed(bed, previewDate, allocationsByBed.get(bed.id), farm.recipe_calendar)
               const crop = state.cropId ? cropMap.get(state.cropId) : undefined
               const cropImage = state.cropId && state.stage !== 'empty' ? editionPath(`/art/crops/${state.cropId}-${assetStage(state.stage)}.svg`) : null
               return (
@@ -201,7 +201,7 @@ export function World({ farm, crops, run, mission, executionMode, onOpenTools, o
 
         <div className="date-preview">
           <div><CalendarDays size={18}/><span><small>Plan preview</small><strong>{formatPreviewDate(previewDate)}</strong></span></div>
-          <div className="preview-day-controls"><button aria-label="Previous preview day" disabled={previewDay===0} onClick={()=>setPreviewDay(day=>Math.max(0,day-1))}><Minus size={17}/></button><input aria-label="Preview simulation date" type="range" min="0" max={farm.horizon_days} value={previewDay} onChange={event => setPreviewDay(Number(event.target.value))}/><button aria-label="Next preview day" disabled={previewDay===farm.horizon_days} onClick={()=>setPreviewDay(day=>Math.min(farm.horizon_days,day+1))}><Plus size={17}/></button></div>
+          <div className="preview-day-controls"><button aria-label="Previous preview day" disabled={previewDay===0} onClick={()=>setPreviewDay(day=>Math.max(0,day-1))}><Minus size={17}/></button><input aria-label="Preview simulation date" type="range" min="0" max={Math.max(0,farm.horizon_days-1)} value={previewDay} onChange={event=>setPreviewDay(Number(event.target.value))}/><button aria-label="Next preview day" disabled={previewDay===Math.max(0,farm.horizon_days-1)} onClick={()=>setPreviewDay(day=>Math.min(Math.max(0,farm.horizon_days-1),day+1))}><Plus size={17}/></button></div>
           <button onClick={() => setPreviewDay(0)} disabled={previewDay === 0}><RotateCcw size={15}/> Today</button>
           <p>Preview only — this does not advance time or create observations.</p>
         </div>
@@ -257,21 +257,27 @@ function bedPosition(index: number) {
   return { x: 328 + column * 108 - row * 56, y: 235 + row * 67 + column * 31 }
 }
 
-export function previewBed(bed: Bed, date: Date, allocations: Allocation[] = []) {
-  const scheduled = allocations.find(item => date >= parseDate(item.sow_date) && date <= parseDate(item.harvest_date)) || allocations.find(item => date < parseDate(item.sow_date))
+export function previewBed(bed: Bed, date: Date, allocations: Allocation[] = [], recipeCalendar: Farm['recipe_calendar'] = null) {
+  const scheduled = allocations.find(item => date >= parseDate(item.sow_date) && date < nextAvailable(item, recipeCalendar)) || allocations.find(item => date < parseDate(item.sow_date))
   if (scheduled) {
     const sow = parseDate(scheduled.sow_date), transplant = parseDate(scheduled.transplant_date), harvest = parseDate(scheduled.harvest_date)
+    const sanitationEnd = sanitationEndDate(scheduled, recipeCalendar)
     if (date < sow) return { stage: 'empty' as const, progress: 0, cropId: scheduled.crop_id, nextAction: `Sow ${scheduled.crop_id.replaceAll('_', ' ')} on ${formatPreviewDate(sow)}` }
     const progress = clamp((date.getTime() - sow.getTime()) / Math.max(1, harvest.getTime() - sow.getTime()) * 100, 0, 100)
     if (date < transplant) return { stage: 'nursery' as const, progress, cropId: scheduled.crop_id, nextAction: `Transplant on ${formatPreviewDate(transplant)}` }
     if (date < harvest) return { stage: 'growing' as const, progress, cropId: scheduled.crop_id, nextAction: `Inspect growth · harvest ${formatPreviewDate(harvest)}` }
-    return { stage: 'ready' as const, progress: 100, cropId: scheduled.crop_id, nextAction: `Harvest ${scheduled.crop_id.replaceAll('_', ' ')}` }
+    if (date.getTime() === harvest.getTime()) return { stage: 'ready' as const, progress: 100, cropId: scheduled.crop_id, nextAction: `Harvest ${scheduled.crop_id.replaceAll('_', ' ')}` }
+    if (date <= sanitationEnd) return { stage: 'sanitation' as const, progress: 100, cropId: undefined, nextAction: `Sanitation through ${formatPreviewDate(sanitationEnd)}` }
+    return { stage: 'empty' as const, progress: 100, cropId: undefined, nextAction: 'Bed available' }
   }
   if (!bed.crop_id || bed.stage === 'empty') return { stage: 'empty' as const, progress: 0, cropId: undefined, nextAction: 'Choose a crop' }
   const sow = bed.sow_date ? parseDate(bed.sow_date) : null
   const transplant = bed.transplant_date ? parseDate(bed.transplant_date) : null
   const harvest = bed.harvest_date ? parseDate(bed.harvest_date) : null
-  if (harvest && date >= harvest) return { stage: 'empty' as const, progress: 100, cropId: undefined, nextAction: 'Bed available after scheduled harvest' }
+  const sanitationEnd = typeof bed.sanitation_end_date === 'string' ? parseDate(bed.sanitation_end_date) : harvest
+  if (harvest && date.getTime() === harvest.getTime()) return { stage: 'ready' as const, progress: 100, cropId: bed.crop_id, nextAction: `Harvest ${bed.crop_id.replaceAll('_', ' ')}` }
+  if (harvest && date > harvest && sanitationEnd && date <= sanitationEnd) return { stage: 'sanitation' as const, progress: 100, cropId: undefined, nextAction: `Sanitation through ${formatPreviewDate(sanitationEnd)}` }
+  if (harvest && date > harvest) return { stage: 'empty' as const, progress: 100, cropId: undefined, nextAction: 'Bed available after sanitation' }
   if (sow && date < sow) return { stage: 'empty' as const, progress: 0, cropId: bed.crop_id, nextAction: `Sow on ${formatPreviewDate(sow)}` }
   if (sow && harvest) {
     const progress = clamp((date.getTime() - sow.getTime()) / (harvest.getTime() - sow.getTime()) * 100, 0, 100)
@@ -283,6 +289,18 @@ export function previewBed(bed: Bed, date: Date, allocations: Allocation[] = [])
 function assetStage(stage: Bed['stage']) { return stage === 'nursery' ? 'seedling' : stage === 'ready' ? 'ready' : 'growing' }
 function addDays(iso: string, days: number) { const date = new Date(`${iso.slice(0, 10)}T00:00:00Z`); date.setUTCDate(date.getUTCDate() + days); return date }
 function parseDate(iso: string) { return new Date(`${iso.slice(0, 10)}T00:00:00Z`) }
+function sanitationEndDate(allocation: Allocation, calendar: Farm['recipe_calendar']) {
+  if (typeof allocation.sanitation_end_date === 'string') return parseDate(allocation.sanitation_end_date)
+  const recipe = allocation.recipe_id ? calendar?.[allocation.recipe_id] : undefined
+  const days = Number(recipe?.sanitation_days)
+  return addDays(allocation.harvest_date, Number.isFinite(days) && days >= 0 ? days : 0)
+}
+function nextAvailable(allocation: Allocation, calendar: Farm['recipe_calendar']) {
+  if (typeof allocation.next_available_date === 'string') return parseDate(allocation.next_available_date)
+  const end = sanitationEndDate(allocation, calendar)
+  end.setUTCDate(end.getUTCDate() + 1)
+  return end
+}
 function singaporeCivilDate(iso: string) {
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return iso.slice(0, 10)

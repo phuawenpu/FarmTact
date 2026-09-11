@@ -223,10 +223,10 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
             <>
               {view === 'council' && <CouncilResearch />}
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
-              {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
+              {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} capabilities={bootstrap.capabilities} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
               {view === 'data' && <DataExplorer bootstrap={bootstrap} onContinueMission={continueMission} />}
-              {view === 'outcomes' && <Outcomes run={run} busy={busy} onReplay={replay} />}
+              {view === 'outcomes' && <Outcomes run={run} crops={bootstrap.crops} busy={busy} onReplay={replay} />}
               {view === 'setup' && <Setup farm={bootstrap.farm} busy={busy} onSeed={seed} onImport={importFarm} />}
             </>
           )}

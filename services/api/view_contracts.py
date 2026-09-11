@@ -25,6 +25,8 @@ class BedStage(StrEnum):
     nursery = "nursery"
     growing = "growing"
     ready = "ready"
+    harvested = "harvested"
+    sanitation = "sanitation"
 
 
 class StrategyName(StrEnum):
@@ -76,6 +78,7 @@ class Farm(ViewModel):
     cutoff: str
     planning_date: str | None = Field(default=None, json_schema_extra=OMIT_NULL)
     horizon_days: int
+    recipe_calendar: dict[str, dict[str, Any]] | None = None
     beds: list[Bed]
     resources: FarmResources
     orders: list[FarmOrder]
@@ -140,6 +143,11 @@ class DeepSeekCapability(ViewModel):
     models: list[str]
     reason: str | None = None
     overall_trial_status: str | None = None
+    configured: bool | None = None
+    current_verification: str | None = None
+    historical_probe: dict[str, Any] | None = None
+    last_observed_execution: dict[str, Any] | None = None
+    inference_triggered: bool | None = None
 
 
 class VisionCapability(ViewModel):
@@ -213,6 +221,10 @@ class Strategy(ViewModel):
     policy_parameters: dict[str, Any] | None = None
     cost_breakdown: dict[str, Any] | None = None
     ledger: list[dict[str, Any]] | None = None
+    order_allocations: list[dict[str, Any]] | None = None
+    inventory_snapshots: list[dict[str, Any]] | None = None
+    terminal_stock: dict[str, Any] | None = None
+    objective_terms: dict[str, Any] | None = None
     scenario_results: list[dict[str, Any]] | None = None
     scenario_set_id: str | None = None
     scenario_seed: int | None = None
@@ -268,6 +280,12 @@ class Run(ViewModel):
     development_phase: str | None = None
     decision_policy: str | None = None
     council_requested: bool | None = None
+    council_policy: str | None = None
+    workflow_type: str | None = None
+    council_execution_status: str | None = None
+    council_evidence_status: str | None = None
+    council_decision_influence: str | None = None
+    selection_ranking: dict[str, Any] | None = None
     with_vision: bool | None = None
     completed_at: str | None = None
     original_execution_mode: str | None = None

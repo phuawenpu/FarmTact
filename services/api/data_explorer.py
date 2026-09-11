@@ -330,6 +330,10 @@ def install_routes(app, tenant):
     def public_export(request:Request,dataset:Literal['weather_observations','weather_forecasts','trade_observations']='weather_observations',format:Literal['csv','json']='csv',source_id:str|None=Query(default=None,max_length=20),start:date|None=None,end:date|None=None,q:str=Query(default='',max_length=100)):
         tenant(request)
         rows,fields,context=public_rows(dataset,source_id,start,end,q)
+        if source_id:
+            selected=next((source for source in context['sources'] if source['id']==source_id),None)
+            if selected is None:raise HTTPException(404,'Source not found')
+            if not selected['export_allowed']:raise HTTPException(403,'Selected source redistribution terms are unverified, including empty filtered exports.')
         if any(not r['export_allowed'] for r in rows):raise HTTPException(403,'This selection includes a source whose redistribution terms are unverified. Select a source with verified export permission.')
         return download(rows,fields,format,dict(sources=[s for s in context['sources'] if s['id'] in {r['source_id'] for r in rows}]))
 

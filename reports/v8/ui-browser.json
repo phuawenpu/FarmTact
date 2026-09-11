@@ -1,0 +1,196 @@
+{
+  "started_at": "2026-09-11T11:16:58.177Z",
+  "base_url": "http://127.0.0.1:8081/v8",
+  "execution_policy": "numerical-only; no paid inference",
+  "checks": [
+    {
+      "name": "council is the primary planning action",
+      "pass": true,
+      "detail": "Plan with DeepSeek council"
+    },
+    {
+      "name": "numerical-only planning remains explicit",
+      "pass": true
+    },
+    {
+      "name": "configuration is disclosed separately",
+      "pass": true
+    },
+    {
+      "name": "local mission accepted for simulation",
+      "pass": true,
+      "detail": "ACCEPTED_FOR_SIMULATION"
+    },
+    {
+      "name": "local mission made no council call",
+      "pass": true,
+      "detail": "not_run"
+    },
+    {
+      "name": "accepted mission survives page refresh and room changes",
+      "pass": true,
+      "detail": "b42740594a9eaaf9c0646fa50c192593"
+    },
+    {
+      "name": "preview ends on final included horizon date",
+      "pass": true,
+      "detail": "55"
+    },
+    {
+      "name": "preview uses shared sanitation calendar",
+      "pass": true,
+      "detail": {
+        "recipe_id": "caixin-demo-v1",
+        "offset": 7
+      }
+    },
+    {
+      "name": "5xx uncertainty retains pending operation",
+      "pass": true
+    },
+    {
+      "name": "429 keeps the same uncertain operation key",
+      "pass": true
+    },
+    {
+      "name": "reload retry reuses idempotency key",
+      "pass": true
+    },
+    {
+      "name": "definitive success clears pending operation",
+      "pass": true
+    },
+    {
+      "name": "one-day advance records clock",
+      "pass": true,
+      "detail": 2
+    },
+    {
+      "name": "future replan available with seven or more days",
+      "pass": true
+    },
+    {
+      "name": "future replan is recorded",
+      "pass": true
+    },
+    {
+      "name": "seven-day advance remains usable after replan",
+      "pass": true
+    },
+    {
+      "name": "execution totals are visible",
+      "pass": true,
+      "detail": "Inventory\n54 kg\nDelivered\n136.004 kg\nHarvested\n190 kg\nCash\n$2,805\n$1,030 revenue · $425 cost"
+    },
+    {
+      "name": "360px simulation has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px simulation has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px simulation has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px simulation has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "7-day preview uses inclusive final index",
+      "pass": true,
+      "detail": "6"
+    },
+    {
+      "name": "56-day preview uses inclusive final index",
+      "pass": true,
+      "detail": "55"
+    },
+    {
+      "name": "84-day preview uses inclusive final index",
+      "pass": true,
+      "detail": "83"
+    },
+    {
+      "name": "definitive 4xx clears pending operation",
+      "pass": true
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no unexpected failed browser requests",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+  ],
+  "page_errors": [],
+  "http_errors": [
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:8081/api/releases"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:8081/api/releases"
+    },
+    {
+      "status": 503,
+      "url": "http://127.0.0.1:8081/v8/api/v1/simulations"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:8081/api/releases"
+    },
+    {
+      "status": 429,
+      "url": "http://127.0.0.1:8081/v8/api/v1/simulations"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:8081/api/releases"
+    },
+    {
+      "status": 409,
+      "url": "http://127.0.0.1:8081/v8/api/v1/imports"
+    }
+  ],
+  "screenshots": [
+    "apps/web/screenshots/v8-recorded-simulation-360.png",
+    "apps/web/screenshots/v8-recorded-simulation-390.png",
+    "apps/web/screenshots/v8-recorded-simulation-430.png",
+    "apps/web/screenshots/v8-recorded-simulation-1280.png"
+  ],
+  "completed_at": "2026-09-11T11:17:21.186Z",
+  "status": "PASS"
+}

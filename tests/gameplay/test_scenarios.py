@@ -197,7 +197,7 @@ def test_scenario_without_imported_farm_returns_recoverable_conflict(env):
     assert result.status_code==409 and 'Import a farm' in result.json()['detail']
 
 
-def test_computed_impacts_include_empty_bed_allocations_and_only_changed_delivery_dates():
+def test_legacy_computed_impacts_include_empty_beds_and_changed_delivery_dates():
     from services.api.scenarios import computed_impacts
     baseline={'name':'Balanced','allocations':[],'ledger':[{'date':'2026-09-10','demand_kg':10,'delivered_kg':5},{'date':'2026-09-11','demand_kg':10,'delivered_kg':5}]}
     after=deepcopy(baseline);after['allocations']=[{'id':'new-plan','bed_id':'bed-09','crop_id':'caixin'}];after['ledger'][1]['delivered_kg']=8
@@ -205,7 +205,7 @@ def test_computed_impacts_include_empty_bed_allocations_and_only_changed_deliver
     result=computed_impacts({'baseline':{'strategies':[baseline]},'result':{'strategies':[after]},'baseline_snapshot':{'orders':orders},'input_snapshot':{'orders':orders}})
     assert result['affected_bed_ids']==['bed-09']
     assert [row['order_id'] for row in result['affected_deliveries']]==['changed']
-    assert 'not per-order fulfilment' in result['affected_basis']
+    assert 'Legacy frozen strategies without order allocations' in result['affected_basis']
 
 
 def test_no_change_sandbox_reuses_frozen_baseline_exactly(env):

@@ -42,6 +42,10 @@ HISTORY=Table('council_research_history',metadata,
 def record_revision(store,tenant,s,previous=None):
     """Append immutable deltas; large frozen results are stored only when changed."""
     previous=previous or {}
+    if previous:
+        with store.connection() as c:
+            has_history=c.execute(select(HISTORY.c.revision).where(HISTORY.c.session_id==s['id'],HISTORY.c.tenant_id==tenant).limit(1)).first()
+        if not has_history:record_revision(store,tenant,previous)
     delta={k:deepcopy(v) for k,v in s.items() if k not in ('messages','events') and (k not in previous or previous[k]!=v)}
     old_messages={m['id'] for m in previous.get('messages',[])}
     old_events={e.get('id') or content_hash(e) for e in previous.get('events',[])}
@@ -70,7 +74,7 @@ class NewSession(Strict):
     steering:Literal['continuous','checkpoints']='continuous'
 
 class Action(Strict):
-    action:Literal['say','select','propose','apply','discard','run','challenge','resolve','choose','configure','stop','next']
+    action:Literal['say','select','propose','apply','discard','run','cancel_calculation','retry_calculation','challenge','resolve','choose','configure','stop','next']
     revision:int=Field(ge=0)
     text:str=Field(default='',max_length=1000)
     refs:list[str]=Field(default_factory=list,max_length=8)
@@ -219,6 +223,9 @@ def apply(s,a):
 def new_session(body):
     farm=synthetic_farm();farm.orders.append(Order(id='research-extra-order',crop_id='lettuce',booked_at=farm.cutoff,due_date=farm.planning_date+timedelta(days=48),quantity_kg=18,price_sgd_per_kg=9))
     s=dict(id=secrets.token_hex(16),created_at=now(),revision=0,input_version=1,schema_version=VERSION,concept=body.concept,steering=body.steering,selection_mode='chips',animation='static',farm=farm.model_dump(mode='json'),inputs=dict(reservations=[],unconfirmed_order_ids=[],labour_percent=100),selected_refs=[],proposal=None,challenge=None,chosen=None,messages=[],pending_turns=[],results=[],events=[],milestones={},inference_calls=0,dialogue_mode='scripted_research',operational_execution=False)
+    s.update(workflow_type='scripted_research',inference_origin='local_rules',model_call_status='not_called',numerical_calculation_status='not_run')
+    from services.api.provenance import runtime_provenance
+    s['runtime_provenance']=runtime_provenance()
     append(s,'Planner','Welcome to the council study. Dialogue here is scripted; the planner calculates actual synthetic outcomes. Ask for a plan, reserve Bed 4, change the additional order, challenge an assumption and choose a simulated result.')
     event(s,'session_started',concept=body.concept);return s
 
@@ -234,7 +241,13 @@ def execute(store,tenant,id):
         if not c.execute(update(JOBS).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant,JOBS.c.status=='QUEUED').values(status='RUNNING')).rowcount:return
         j=c.execute(select(JOBS.c.payload).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant)).scalar_one()
     baseline_record=None
+    class CalculationCancelled(Exception):pass
+    def check_cancelled():
+        with store.connection() as c:
+            latest=c.execute(select(JOBS.c.payload).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant)).scalar_one()
+        if latest.get('cancellation_requested'):raise CalculationCancelled()
     try:
+        check_cancelled()
         from packages.planner.research import calculate_research
         from packages.models import MODEL_VERSION
         from packages.planner.engine import VERSION as PLANNER_VERSION
@@ -244,16 +257,22 @@ def execute(store,tenant,id):
         if j['version']>1 and not any(r['version']==1 and r['status']=='COMPLETED' for r in existing['results']):
             original=dict(reservations=[],unconfirmed_order_ids=[],labour_percent=100)
             baseline_record=dict(version=1,status='COMPLETED',input_hash=content_hash(dict(farm=j['farm'],inputs=original,version=VERSION)),inputs=original,calculation=calculate_research(Farm.model_validate(j['farm']),**original),completed_at=now(),origin='unchanged study reference')
+        check_cancelled()
         result=calculate_research(Farm.model_validate(j['farm']),**j['inputs'])
         record=dict(version=j['version'],status='COMPLETED',input_hash=j['input_hash'],inputs=j['inputs'],calculation=result,completed_at=now())
     except Exception as exc:
-        record=dict(version=j['version'],status='FAILED',input_hash=j['input_hash'],inputs=j['inputs'],error=f'Numerical calculation failed ({type(exc).__name__}); frozen inputs are preserved.')
+        record=dict(version=j['version'],status='CANCELLED' if isinstance(exc,CalculationCancelled) else 'FAILED',input_hash=j['input_hash'],inputs=j['inputs'],error='Numerical calculation cancelled; frozen inputs are preserved.' if isinstance(exc,CalculationCancelled) else f'Numerical calculation failed ({type(exc).__name__}); frozen inputs are preserved.')
     with store.transaction(tenant) as c:
         s=get_session(store,tenant,j['session_id'])
+        latest=c.execute(select(JOBS.c.payload).where(JOBS.c.id==id,JOBS.c.tenant_id==tenant)).scalar_one()
+        if latest.get('cancellation_requested'):
+            baseline_record=None
+            record=dict(version=j['version'],status='CANCELLED',input_hash=j['input_hash'],inputs=j['inputs'],error='Numerical calculation cancelled; computed output was not applied.')
         if baseline_record:s['results']=[r for r in s['results'] if r['version']!=1]+[baseline_record]
         s['results']=sorted([r for r in s['results'] if r['version']!=j['version']]+[record],key=lambda r:r['version'])
         s['revision']+=1
         if j['version']==s['input_version']:
+            s['numerical_calculation_status']=record['status'].lower()
             if record['status']=='COMPLETED':
                 s['milestones']['calculated']=True
                 earlier=sorted([r for r in s['results'] if r['version']<j['version'] and r['status']=='COMPLETED'],key=lambda x:x['version'])
@@ -369,14 +388,48 @@ def install_routes(app,tenant):
             elif a=='next':
                 if s['pending_turns']:
                     turn=s['pending_turns'].pop(0);append(s,**turn);event(s,'scripted_turn_shown',speaker=turn['speaker'])
+            elif a=='cancel_calculation':
+                row=c.execute(select(JOBS).where(JOBS.c.session_id==id,JOBS.c.tenant_id==t,JOBS.c.version==s['input_version'])).mappings().first()
+                if row is None:raise HTTPException(409,'No current numerical calculation exists')
+                if row['status'] in ('QUEUED','RUNNING'):
+                    job=dict(row['payload'],cancellation_requested=True)
+                    status='CANCELLED' if row['status']=='QUEUED' else 'RUNNING'
+                    c.execute(update(JOBS).where(JOBS.c.id==row['id'],JOBS.c.tenant_id==t).values(status=status,payload=job))
+                    if status=='CANCELLED':
+                        for result in s['results']:
+                            if result['version']==s['input_version']:result.update(status='CANCELLED',error='Numerical calculation cancelled before claim.')
+                    s['numerical_calculation_status']='cancelled' if status=='CANCELLED' else 'cancellation_requested'
+                    append(s,'Tool','Cancellation requested. A calculation in progress stops at the next safe numerical boundary; its result cannot be applied.',kind='tool')
+                    event(s,'calculation_cancellation_requested',result_version=s['input_version'])
+                else:event(s,'calculation_cancellation_noop',status=row['status'])
+            elif a=='retry_calculation':
+                row=c.execute(select(JOBS).where(JOBS.c.session_id==id,JOBS.c.tenant_id==t,JOBS.c.version==s['input_version'])).mappings().first()
+                if not row or row['status'] not in ('FAILED','CANCELLED'):raise HTTPException(409,'Only a failed or cancelled current calculation can be retried')
+                if c.execute(select(JOBS.c.id).where(JOBS.c.tenant_id==t,JOBS.c.status.in_(['QUEUED','RUNNING']))).first():raise HTTPException(409,'A research calculation is already active')
+                job=deepcopy(row['payload']);attempt=job.get('attempt',1)+1
+                if attempt>3:raise HTTPException(429,'Three attempts per numerical version maximum')
+                job.update(attempt=attempt,cancellation_requested=False)
+                c.execute(update(JOBS).where(JOBS.c.id==row['id'],JOBS.c.tenant_id==t).values(status='QUEUED',payload=job))
+                for result in s['results']:
+                    if result['version']==s['input_version']:result.update(status='QUEUED',attempt=attempt)
+                s['numerical_calculation_status']='queued'
+                event(s,'calculation_retried',result_version=s['input_version'],attempt=attempt)
             elif a=='run':
                 if s['proposal']:raise HTTPException(409,'Apply or discard the pending proposal before calculating')
-                if c.execute(select(JOBS.c.id).where(JOBS.c.session_id==id,JOBS.c.version==s['input_version'])).first():return s
+                existing_job=c.execute(select(JOBS.c.id).where(JOBS.c.session_id==id,JOBS.c.version==s['input_version'])).first()
+                if existing_job:
+                    # A no-op still records its exact response revision for retries.
+                    s['revision']+=1;event(s,'existing_calculation_reused',result_version=s['input_version'])
+                    action_id=secrets.token_hex(16)
+                    c.execute(ACTIONS.insert().values(id=action_id,session_id=id,tenant_id=t,idempotency_key=k,request_hash=h))
+                    c.execute(RECEIPTS.insert().values(action_id=action_id,tenant_id=t,revision=s['revision']))
+                    save(store,t,s);return s
                 if c.execute(select(JOBS.c.id).where(JOBS.c.tenant_id==t,JOBS.c.status.in_(['QUEUED','RUNNING']))).first():raise HTTPException(409,'One research calculation may run per workspace; wait for completion')
                 if len(s['results'])>=12:raise HTTPException(429,'Twelve numerical versions per study; start a fresh study')
                 from packages.models import MODEL_VERSION
                 from packages.planner.engine import VERSION as PLANNER_VERSION
-                j=dict(schema_version=VERSION,forecast_version=MODEL_VERSION,planner_version=PLANNER_VERSION,id=secrets.token_hex(16),session_id=id,version=s['input_version'],farm=s['farm'],inputs=deepcopy(s['inputs']),input_hash=content_hash(dict(farm=s['farm'],inputs=s['inputs'],version=VERSION)))
+                j=dict(schema_version=VERSION,forecast_version=MODEL_VERSION,planner_version=PLANNER_VERSION,id=secrets.token_hex(16),session_id=id,version=s['input_version'],farm=s['farm'],inputs=deepcopy(s['inputs']),input_hash=content_hash(dict(farm=s['farm'],inputs=s['inputs'],version=VERSION)),attempt=1,cancellation_requested=False)
+                s['numerical_calculation_status']='queued'
                 c.execute(JOBS.insert().values(id=j['id'],tenant_id=t,session_id=id,version=j['version'],status='QUEUED',payload=j));s['results'].append(dict(version=j['version'],status='QUEUED',input_hash=j['input_hash'],inputs=j['inputs']));append(s,'Tool','Numerical work queued. Farm time does not advance while the worker calculates.',kind='tool');event(s,'tool_queued',result_version=j['version'])
             elif a=='choose':
                 r=result_current(s)

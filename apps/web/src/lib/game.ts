@@ -110,6 +110,11 @@ export interface Scenario {
   warnings?: string[]
   created_at?: string
   updated_at?: string
+  run_key?: string
+  attempts?: Array<{ number?: number; status?: string; queued_at?: string; started_at?: string; completed_at?: string; failed_at?: string; cancelled_at?: string; error?: string; [key: string]: unknown }>
+  attempt_count?: number
+  max_attempts?: number
+  cancellation_requested?: boolean
   [key: string]: unknown
 }
 

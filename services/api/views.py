@@ -20,19 +20,26 @@ def farm_view(farm):
         b=batches.get(bed.id); v=bed.model_dump(mode='json');v['area_m2']=float(bed.area_m2)
         v.update(stage='empty',progress=0)
         if b:
-            r=recipes[b.recipe_id];progress=max(0,min(1,(day-b.sow_date).days/(b.harvest_date-b.sow_date).days))
-            v.update(batch_id=b.id,transplant_date=str(b.transplant_date),crop_id=r.crop_id,stage='ready' if b.harvest_date<=day else ('nursery' if day<b.transplant_date else 'growing'),sow_date=str(b.sow_date),harvest_date=str(b.harvest_date),progress=round(progress,3))
+            from packages.growth import crop_state
+            r=recipes[b.recipe_id]
+            v.update(crop_state(b.model_dump(mode='json'),r,day))
+            v.update(batch_id=b.id,transplant_date=str(b.transplant_date),crop_id=r.crop_id,sow_date=str(b.sow_date),harvest_date=str(b.harvest_date))
         beds.append(v)
-    return dict(id=farm.id,name=farm.name,location=farm.location,timezone=farm.timezone,data_mode=farm.data_mode,cutoff=farm.cutoff.isoformat(),planning_date=str(farm.planning_date),horizon_days=farm.horizon_days,beds=beds,resources=dict(area_m2=sum(float(b.area_m2) for b in farm.beds),nursery_sites=farm.resources.nursery_sites,labour_hours_per_week=float(farm.resources.labour_hours_per_week),cash_sgd=float(farm.resources.cash_sgd)),orders=[dict(id=o.id,crop_id=o.crop_id,due_date=str(o.due_date),quantity_kg=float(o.quantity_kg-o.cancelled_kg),price_sgd_per_kg=float(o.price_sgd_per_kg)) for o in farm.orders],version=farm.version)
+    return dict(id=farm.id,name=farm.name,location=farm.location,timezone=farm.timezone,data_mode=farm.data_mode,cutoff=farm.cutoff.isoformat(),planning_date=str(farm.planning_date),horizon_days=farm.horizon_days,recipe_calendar={r.id:dict(nursery_days=r.nursery_days,grow_days=r.grow_days,sanitation_days=r.sanitation_days,shelf_life_days=r.shelf_life_days,growth_model_version='schedule-state-v2') for r in farm.recipes},beds=beds,resources=dict(area_m2=sum(float(b.area_m2) for b in farm.beds),nursery_sites=farm.resources.nursery_sites,labour_hours_per_week=float(farm.resources.labour_hours_per_week),cash_sgd=float(farm.resources.cash_sgd)),orders=[dict(id=o.id,crop_id=o.crop_id,due_date=str(o.due_date),quantity_kg=float(o.quantity_kg-o.cancelled_kg),price_sgd_per_kg=float(o.price_sgd_per_kg)) for o in farm.orders],version=farm.version)
 
-def capabilities():
+def capabilities(store=None,tenant=None):
     report_path=ROOT/'reports/deepseek/latest.json'
     report=json.loads(report_path.read_text()) if report_path.exists() else {}
     caps=report.get('capabilities',{})
+    configured_models=json.loads((ROOT/'config/deepseek_runtime.json').read_text()).get('allowed_models',[])
     text_ok=all(caps.get(k,{}).get('status')=='PASS' for k in ('flash_json','pro_json'))
-    status='verified' if text_ok and os.environ.get('DEEPSEEK_API_KEY') else 'blocked'
+    configured=bool(os.environ.get('DEEPSEEK_API_KEY'))
+    last=store.latest_run(tenant) if store is not None and tenant is not None else None
+    observed=None
+    if last and last.get('inference_audit'):
+        observed=dict(run_id=last['id'],observed_at=last.get('completed_at'),execution_status=last.get('council_status'),evidence_status=last.get('council_evidence_status'),source='stored_tenant_execution',model_ids=sorted({a.get('returned_model') for a in last['inference_audit'] if a.get('returned_model')}))
     vision=next((v for k,v in caps.items() if 'vision' in k),{})
-    return dict(deepseek=dict(status=status,models=caps.get('model_discovery',{}).get('reviewed_models_discovered',[]),reason=None if status=='verified' else 'Authenticated text capability unavailable',overall_trial_status=report.get('overall_status','NOT_RUN')),vision=dict(status='verified' if vision.get('status')=='PASS' else 'unverified'),data_mode='synthetic_demo',execution_mode='test')
+    return dict(deepseek=dict(status='configured' if configured else 'blocked',configured=configured,current_verification='not_probed',models=configured_models,reason='Server credential configured; availability is established by an actual requested execution.' if configured else 'Server credential unavailable',overall_trial_status=report.get('overall_status','NOT_RUN'),historical_probe=dict(text_passed=text_ok,models=caps.get('model_discovery',{}).get('reviewed_models_discovered',[]),observed_at=report.get('finished_at'),source='reports/deepseek/latest.json',trial_version=report.get('trial_version'),current_capability=False),last_observed_execution=observed,inference_triggered=False),vision=dict(status='unverified',historical_probe_status=vision.get('status','NOT_RUN'),current_verification='not_probed'),data_mode='synthetic_demo',execution_mode='test')
 
 def source_views():
     try:
@@ -57,5 +64,6 @@ def source_views():
         elif id=='D11':summary='Seven days of historical gridded climate in UTC. Not a station, on-farm sensor or forecast; release time is unknown.'
         elif id=='D06':summary='Public trade volume is market context, never customer demand or farm selling price.'
         if source.get('failure_reason'):summary=source['failure_reason']
-        result.append(dict(id=id,name=names.get(id,id),status=source['status'],observed_at=source.get('source_time'),available_at=row.get('available_at') if row else None,retrieved_at=source.get('retrieved_at'),freshness=source.get('freshness','unknown'),origin='public',execution_mode=context['execution_mode'],summary=summary,unit=unit,value=value,url=next((s['request_url'] for s in context.get('snapshots',[]) if s['snapshot_id']==source.get('snapshot_id')),None),snapshot_id=source.get('snapshot_id'),coverage=coverage,licence_state=source.get('licence_state'),availability_status=row.get('availability_status') if row else None))
+        if source.get('data_mode')=='synthetic_contract_fixture':summary='Synthetic source-contract example; not a public observation. '+summary
+        result.append(dict(id=id,name=names.get(id,id),status=source['status'],observed_at=source.get('source_time'),available_at=row.get('available_at') if row else None,retrieved_at=source.get('retrieved_at'),freshness=source.get('freshness','unknown'),origin='synthetic' if source.get('data_mode')=='synthetic_contract_fixture' else 'public',data_mode=source.get('data_mode','public_context'),execution_mode=context['execution_mode'],summary=summary,unit=unit,value=value,url=next((s['request_url'] for s in context.get('snapshots',[]) if s['snapshot_id']==source.get('snapshot_id')),None),snapshot_id=source.get('snapshot_id'),coverage=coverage,licence_state=source.get('licence_state'),availability_status=row.get('availability_status') if row else None))
     return result

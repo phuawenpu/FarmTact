@@ -1,0 +1,246 @@
+{
+  "baseline": "a21304e",
+  "status": "in_progress",
+  "gaps": [
+    {
+      "id": "AI-01",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-02",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-03",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-04",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-05",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-06",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-07",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-08",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-09",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-10",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-11",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "AI-12",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-01",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-02",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-03",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-04",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-05",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "DATA-06",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-01",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-02",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-03",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-04",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-05",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-06",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-07",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-08",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-09",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-10",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-11",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-12",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-13",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-14",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-15",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-16",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-17",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "GAME-18",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-01",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-02",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-03",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-04",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-05",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-06",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-07",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-08",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-09",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "NUM-10",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "OPS-01",
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "UX-01",
+      "status": "open",
+      "evidence": []
+    }
+  ]
+}

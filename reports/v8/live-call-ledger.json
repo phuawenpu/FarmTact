@@ -1,0 +1,42 @@
+{
+  "schema_version": "v8-live-experiment-ledger-1",
+  "goal_request_ceiling": 40,
+  "app_daily_request_ceiling": 48,
+  "actual_requests_consumed": 17,
+  "experiments": [
+    {
+      "id": "local-planning-council",
+      "status": "failed_model_identity_check",
+      "base_url": "http://127.0.0.1:8080",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/planning-local.json",
+      "actual_requests": 1,
+      "run_id": "427aff05087c1e8d82afd564b21cf13f"
+    },
+    {
+      "id": "local-planning-canonical-model",
+      "status": "INCOMPLETE",
+      "base_url": "http://127.0.0.1:8080",
+      "maximum_requests": 10,
+      "expected_requests": 8,
+      "includes_repair_attempts": true,
+      "includes_native_vision": true,
+      "report": "reports/v8/planning-local-canonical.json",
+      "actual_requests": 9,
+      "run_id": "678a12de43e37ce4ab0e90257fbc7541"
+    },
+    {
+      "id": "local-planning-context-v3",
+      "status": "INCOMPLETE",
+      "base_url": "http://127.0.0.1:8080",
+      "maximum_requests": 9,
+      "expected_requests": 7,
+      "includes_repair_attempts": true,
+      "report": "reports/v8/planning-local-v3.json",
+      "actual_requests": 7,
+      "run_id": "b36900e8f8888760764d8eafa6aff215"
+    }
+  ]
+}

@@ -59,6 +59,6 @@
   "mode": "synthetic_benchmark",
   "public_features_used": [],
   "rebuild_command": "python scripts/evaluate_synthetic_models.py",
-  "report_id": "ca7ba903a51ee903a53ba4cafb0571ca14b5a76387456d2698d8ce7217b69f6b",
+  "report_id": "50a060266336ca04fc542e28835f14c63e3786bea73b718125f07a69b61fcc14",
   "schema_version": "1.0.0"
 }

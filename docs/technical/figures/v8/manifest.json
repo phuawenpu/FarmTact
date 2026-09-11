@@ -1,0 +1,12 @@
+{
+  "source": "reports/v8/synthetic_model_evaluation.json",
+  "source_sha256": "e85543c64fad1a71e2284873a47630cfec3be5479b6cfd9e2ec0ff3770c18b86",
+  "evaluation_report_id": "50a060266336ca04fc542e28835f14c63e3786bea73b718125f07a69b61fcc14",
+  "origin": "synthetic_benchmark",
+  "figures": [
+    "demand-holdout",
+    "crop-cycle-holdout",
+    "cohort-design"
+  ],
+  "inference_calls": 0
+}

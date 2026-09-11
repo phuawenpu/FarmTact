@@ -21,6 +21,7 @@ from runtime.deepseek_gateway import (
     TIME_LIMIT_CEILINGS,
     ToolSpec,
 )
+from packages.ai_contracts import CONVERSATION_VERSIONS
 
 
 ROOT = Path(__file__).parents[2]
@@ -41,7 +42,7 @@ class Args(BaseModel):
 def completion(
     content: str | None,
     *,
-    model: str = "deepseek-v4-flash",
+    model: str = "deepseek-flash",
     finish: str = "stop",
     message_extra: dict | None = None,
 ) -> dict:
@@ -77,7 +78,7 @@ def test_chat_json_uses_exact_origin_and_server_route() -> None:
         assert str(request.url) == "https://api.deepseek.com/chat/completions"
         assert request.headers["authorization"].startswith("Bearer ")
         body = json.loads(request.content)
-        assert body["model"] == "deepseek-v4-flash"
+        assert body["model"] == "deepseek-flash"
         assert body["thinking"] == {"type": "disabled"}
         assert body["response_format"] == {"type": "json_object"}
         return httpx.Response(200, json=completion('{"status":"ok","count":2}'), headers={"x-request-id": "req-safe"})
@@ -88,6 +89,77 @@ def test_chat_json_uses_exact_origin_and_server_route() -> None:
     assert result.audit.provider == "deepseek"
     assert result.audit.request_id == "req-safe"
     assert not hasattr(result, "reasoning_content")
+    assert result.audit.contract_versions["validator"]
+    assert result.audit.public_context_sha256
+
+
+def test_caller_supplied_contract_versions_are_preserved() -> None:
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json=completion('{"status":"ok","count":2}'))
+
+    with gateway(handler) as client:
+        result = client.chat_json(
+            "demand_analyst",
+            [{"role": "user", "content": "Return JSON"}],
+            Probe,
+            versions=CONVERSATION_VERSIONS,
+            public_context_sha256="b" * 64,
+        )
+    assert result.audit.contract_versions == CONVERSATION_VERSIONS.public()
+    assert result.audit.public_context_sha256 == "b" * 64
+
+
+def test_cancelled_budget_blocks_before_transport() -> None:
+    budget = RunBudget(max_requests=1, max_reserved_output_tokens=512, max_wall_seconds=30)
+    budget.cancel()
+    with gateway(lambda _: pytest.fail("cancelled work must not transmit"), budget=budget) as client:
+        with pytest.raises(DeepSeekBlockedError, match="cancelled"):
+            client.chat_json(
+                "demand_analyst",
+                [{"role": "user", "content": "Return JSON"}],
+                Probe,
+            )
+
+
+def test_cancellation_during_response_stops_consumption_without_retry() -> None:
+    budget = RunBudget(max_requests=1, max_reserved_output_tokens=512, max_wall_seconds=30)
+    calls = 0
+
+    class CancellingStream(httpx.SyncByteStream):
+        def __iter__(self):
+            yield b'{"id":"partial"'
+            budget.cancel()
+            yield b'}'
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        return httpx.Response(200, stream=CancellingStream())
+
+    with gateway(handler, budget=budget) as client:
+        with pytest.raises(DeepSeekBlockedError, match="cancelled"):
+            client.chat_json(
+                "demand_analyst",
+                [{"role": "user", "content": "Return JSON"}],
+                Probe,
+            )
+    assert calls == 1
+    assert budget.request_count == 1
+
+
+def test_manifest_distinguishes_active_product_and_diagnostic_callers() -> None:
+    with gateway(lambda _: pytest.fail("manifest inspection makes no request")) as client:
+        callers = client.config.callers
+    assert callers["mission_council"]["max_requests"] == 9
+    assert callers["persistent_conversation"]["integration"] == "active_product"
+    assert callers["authenticated_gateway_trial"]["integration"] == "diagnostic_only"
+    active_routes = {
+        route
+        for caller in callers.values()
+        if caller["integration"].startswith("active")
+        for route in caller["routes"]
+    }
+    assert "evidence_extractor" not in active_routes
 
 
 def test_missing_key_is_blocked(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -125,7 +197,7 @@ def test_config_rejects_endpoint_override(tmp_path: Path) -> None:
         lambda raw: raw["routes"]["demand_analyst"].update(model="deepseek-v4-pro"),
         lambda raw: raw["routes"]["demand_analyst"].update(capability="vision"),
         lambda raw: raw["routes"].update(
-            extra_reviewer={"model": "deepseek-v4-flash", "capability": "text"}
+            extra_reviewer={"model": "deepseek-flash", "capability": "text"}
         ),
         lambda raw: raw["routes"].pop("test_evaluator"),
         lambda raw: raw["routes"]["demand_analyst"].update(note="unreviewed"),
@@ -134,6 +206,32 @@ def test_config_rejects_endpoint_override(tmp_path: Path) -> None:
 def test_config_rejects_role_manifest_mutation(tmp_path: Path, mutate) -> None:
     changed = changed_config(tmp_path, mutate)
     with pytest.raises(DeepSeekPolicyError, match="route|Role"):
+        DeepSeekGateway.from_config(changed, api_key="unit-test-placeholder")
+
+
+def test_config_rejects_caller_inventory_mutation(tmp_path: Path) -> None:
+    changed = changed_config(
+        tmp_path,
+        lambda raw: raw["callers"]["persistent_conversation"].update(max_requests=10),
+    )
+    with pytest.raises(DeepSeekPolicyError, match="caller inventory"):
+        DeepSeekGateway.from_config(changed, api_key="unit-test-placeholder")
+
+
+def test_model_migration_is_dated_and_all_routes_use_canonical_model() -> None:
+    with gateway(lambda _: pytest.fail("manifest inspection makes no request")) as client:
+        assert client.config.allowed_models == {"deepseek-flash"}
+        assert {route.model for route in client.config.routes.values()} == {"deepseek-flash"}
+        assert client.config.model_migration["reviewed_at"] == "2026-09-11"
+        assert client.config.model_migration["discovery_artifact"] == "reports/v8/model-discovery.json"
+
+
+def test_config_rejects_model_migration_mutation(tmp_path: Path) -> None:
+    changed = changed_config(
+        tmp_path,
+        lambda raw: raw["model_migration"].update(canonical_model="deepseek-v4-pro"),
+    )
+    with pytest.raises(DeepSeekPolicyError, match="model migration"):
         DeepSeekGateway.from_config(changed, api_key="unit-test-placeholder")
 
 
@@ -305,6 +403,24 @@ def test_invalid_or_incomplete_output_is_rejected(wire: dict) -> None:
         client.chat_json("demand_analyst", [{"role": "user", "content": "x"}], Probe)
 
 
+def test_unexpected_returned_model_is_safe_but_diagnostic() -> None:
+    wire = completion('{"status":"ok","count":1}', model="deepseek-v4-flash")
+    with gateway(lambda _: httpx.Response(200, json=wire)) as client, pytest.raises(
+        DeepSeekResponseError, match=r"returned_model=deepseek-v4-flash"
+    ):
+        client.chat_json("demand_analyst", [{"role": "user", "content": "x"}], Probe)
+
+
+def test_malformed_returned_model_is_not_exposed() -> None:
+    marker = "provider-private-marker"
+    wire = completion('{"status":"ok","count":1}', model=marker + "!")
+    with gateway(lambda _: httpx.Response(200, json=wire)) as client, pytest.raises(
+        DeepSeekResponseError, match="returned_model=invalid_identifier"
+    ) as caught:
+        client.chat_json("demand_analyst", [{"role": "user", "content": "x"}], Probe)
+    assert marker not in str(caught.value)
+
+
 def test_tool_round_trip_preserves_private_reasoning_on_wire_only() -> None:
     requests: list[dict] = []
 
@@ -427,7 +543,7 @@ def test_image_normalization_strips_metadata_and_uses_inline_png() -> None:
         return httpx.Response(
             200,
             json=completion(
-                '{"status":"ok","count":1}', model="deepseek-v4-flash-vision-exp"
+                '{"status":"ok","count":1}', model="deepseek-flash"
             ),
         )
 
@@ -476,8 +592,8 @@ def test_stream_parses_keepalive_usage_and_done() -> None:
     events = "\n".join(
         [
             ": keep-alive",
-            'data: {"model":"deepseek-v4-flash","choices":[{"delta":{"role":"assistant","content":"Farm"},"finish_reason":null}],"usage":null}',
-            'data: {"model":"deepseek-v4-flash","choices":[{"delta":{"content":"Tact"},"finish_reason":"stop"}],"usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}',
+            'data: {"model":"deepseek-flash","choices":[{"delta":{"role":"assistant","content":"Farm"},"finish_reason":null}],"usage":null}',
+            'data: {"model":"deepseek-flash","choices":[{"delta":{"content":"Tact"},"finish_reason":"stop"}],"usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}',
             "data: [DONE]",
             "",
         ]
@@ -491,10 +607,10 @@ def test_stream_parses_keepalive_usage_and_done() -> None:
 @pytest.mark.parametrize(
     "events",
     [
-        'data: {"model":"deepseek-v4-flash","choices":[{"delta":{"content":"x"},"finish_reason":"stop"}],"usage":null}\n',
+        'data: {"model":"deepseek-flash","choices":[{"delta":{"content":"x"},"finish_reason":"stop"}],"usage":null}\n',
         "data: not-json\n\ndata: [DONE]\n",
         'event: message\ndata: [DONE]\n',
-        'data: {"model":"deepseek-v4-flash","choices":[{"delta":{"content":"x"},"finish_reason":"length"}],"usage":null}\n\ndata: [DONE]\n',
+        'data: {"model":"deepseek-flash","choices":[{"delta":{"content":"x"},"finish_reason":"length"}],"usage":null}\n\ndata: [DONE]\n',
     ],
 )
 def test_incomplete_or_invalid_stream_fails(events: str) -> None:
@@ -505,10 +621,10 @@ def test_incomplete_or_invalid_stream_fails(events: str) -> None:
 def test_model_listing_shape() -> None:
     wire = {
         "object": "list",
-        "data": [{"id": "deepseek-v4-flash", "object": "model", "owned_by": "deepseek"}],
+        "data": [{"id": "deepseek-flash", "object": "model", "owned_by": "deepseek"}],
     }
     with gateway(lambda _: httpx.Response(200, json=wire)) as client:
-        assert client.list_models() == {"deepseek-v4-flash"}
+        assert client.list_models() == {"deepseek-flash"}
 
 
 def test_json_response_is_bounded_while_reading(tmp_path: Path) -> None:

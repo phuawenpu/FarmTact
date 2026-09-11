@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.2",
   "provider": "deepseek",
   "origin": "https://api.deepseek.com",
   "chat_path": "/chat/completions",
@@ -9,67 +9,109 @@
   "default_execution_mode": "test",
   "default_data_mode": "synthetic_demo",
   "allowed_models": [
-    "deepseek-v4-flash",
-    "deepseek-v4-pro",
-    "deepseek-v4-flash-vision-exp"
+    "deepseek-flash"
   ],
   "routes": {
     "demand_analyst": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "production_analyst": {
-      "model": "deepseek-v4-pro",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "weather_analyst": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "profit_analyst": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "planning_chair": {
-      "model": "deepseek-v4-pro",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "evidence_extractor": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "crop_alias_resolver": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "runtime_researcher": {
-      "model": "deepseek-v4-pro",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "visual_observer": {
-      "model": "deepseek-v4-flash-vision-exp",
+      "model": "deepseek-flash",
       "capability": "vision"
     },
     "document_vision": {
-      "model": "deepseek-v4-flash-vision-exp",
+      "model": "deepseek-flash",
       "capability": "vision"
     },
     "satellite_visual_reviewer": {
-      "model": "deepseek-v4-flash-vision-exp",
+      "model": "deepseek-flash",
       "capability": "vision"
     },
     "test_evaluator": {
-      "model": "deepseek-v4-pro",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "market_analyst": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     },
     "supply_chain_analyst": {
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "capability": "text"
     }
+  },
+  "callers": {
+    "mission_council": {
+      "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+      "feature": "planning_mission",
+      "integration": "active_product",
+      "max_requests": 9,
+      "failure_semantics": "visible_withheld_or_partial"
+    },
+    "persistent_conversation": {
+      "routes": ["demand_analyst", "weather_analyst", "market_analyst", "production_analyst", "supply_chain_analyst", "profit_analyst", "planning_chair"],
+      "feature": "direct_invite_council_research_interpretation",
+      "integration": "active_product",
+      "max_requests": 9,
+      "failure_semantics": "visible_unsupported_partial_or_failed"
+    },
+    "synthetic_label_observer": {
+      "routes": ["visual_observer"],
+      "feature": "synthetic_label_observation",
+      "integration": "active_api",
+      "max_requests": 1,
+      "failure_semantics": "visible_missing_visual_evidence"
+    },
+    "authenticated_gateway_trial": {
+      "routes": ["demand_analyst", "production_analyst", "visual_observer"],
+      "feature": "provider_contract_diagnostic",
+      "integration": "diagnostic_only",
+      "max_requests": 16,
+      "failure_semantics": "preserved_failed_trial"
+    }
+  },
+  "model_migration": {
+    "reviewed_at": "2026-09-11",
+    "canonical_model": "deepseek-flash",
+    "discovered_models": [
+      "deepseek-flash",
+      "deepseek-v4-pro"
+    ],
+    "discovery_artifact": "reports/v8/model-discovery.json",
+    "provider_sources": [
+      "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+      "https://api-docs.deepseek.com/quick_start/pricing/"
+    ],
+    "routing_policy": "Every current text and native-vision route requests deepseek-flash; returned model identifiers must match exactly."
   },
   "limits": {
     "max_requests": 16,

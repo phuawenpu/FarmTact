@@ -34,3 +34,18 @@ def test_training_tuner_reports_excluded_late_dependencies():
     result=_tune_alpha(data)
     assert result['unavailable_history_weeks_excluded']>0
     assert result['evaluation_partition_used_for_selection'] is False
+
+
+def test_training_selection_cannot_score_labels_unavailable_at_fit_time():
+    data=synthetic_demand_benchmark('training')
+    selected=data.records[0]
+    data.records=[r for r in data.records if r.farm_id==selected.farm_id and r.crop_id==selected.crop_id]
+    week=sorted({r.due_week for r in data.records})[40]
+    for r in data.records:
+        if r.due_week==week:r.outcome_available_at=datetime(2050,1,1,tzinfo=timezone.utc)
+    before=_tune_alpha(data)
+    for r in data.records:
+        if r.due_week==week:r.gross_ordered_kg=9999
+    after=_tune_alpha(data)
+    assert before['training_scores']==after['training_scores']
+    assert before['unavailable_tuning_targets_excluded']==1

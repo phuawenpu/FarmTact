@@ -86,7 +86,7 @@ def test_shared_replay_read_only_and_worklist_version_guard(env,monkeypatch):
     app.state.store.claim(t,r['id']);app.state.worker.execute(t,r['id'])
     csv=c.get('/api/v1/planning-runs/'+r['id']+'/worklist.csv')
     assert csv.status_code==200 and 'SIMULATION_ONLY' in csv.text
-    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'})
+    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'},headers={'Idempotency-Key':'import-refresh'})
     assert imported.status_code==201 and imported.json()['planning_run']['id']!=r['id']
     assert c.get('/api/v1/planning-runs/'+r['id']+'/worklist.csv').status_code==409
 

@@ -15,7 +15,13 @@ from packages.planner.engine import allocations_existing
 from runtime.deepseek_gateway import DeepSeekGatewayError, DeepSeekResponseError, SafeAudit, Usage
 from services.api.app import create_app
 from services.api.conversation_store import ConversationStore
-from services.api.conversations import ADVISORS, AdvisorReply, execute_conversation_job
+from services.api.conversations import (
+    ADVISORS,
+    AdvisorReply,
+    _provider_messages,
+    _tool_results,
+    execute_conversation_job,
+)
 from services.api.store import Store
 
 
@@ -88,7 +94,8 @@ class FakeGateway:
             response = {
                 "content": f"{ADVISORS[next(key for key, row in ADVISORS.items() if row['role'] == role)]['name']} reviewed the frozen comparison.",
                 "evidence_refs": [],
-                "tool_refs": ["farm:resources.cash_sgd"],
+                "tool_refs": [],
+                "fact_refs": ["farm:resources.cash_sgd"],
                 "highlight_refs": ["bed:bed-01"],
                 "relationship": relationship,
                 "proposed_actions": [],
@@ -97,8 +104,8 @@ class FakeGateway:
         usage = Usage(prompt_tokens=10, completion_tokens=5, total_tokens=15)
         audit = SafeAudit(
             provider="deepseek",
-            requested_model="deepseek-v4-flash",
-            returned_model="deepseek-v4-flash",
+            requested_model="deepseek-flash",
+            returned_model="deepseek-flash",
             role=role,
             capability="text",
             execution_mode="test",
@@ -111,7 +118,7 @@ class FakeGateway:
         )
         return SimpleNamespace(
             data=data,
-            model="deepseek-v4-flash",
+            model="deepseek-flash",
             usage=usage,
             audit=audit,
         )
@@ -200,7 +207,8 @@ def test_seven_current_advisors_and_frozen_create_idempotency(env):
     assert public["tool_results"]["batch:batch-01.bed_id"] == "bed-01"
     assert public["tool_results"]["batch:batch-01.crop_id"] == "caixin"
     assert public["tool_results"]["recipe:caixin-demo-v1.biological_lead_days"] == 28
-    assert public["tool_results"]["source:D04.summary"]
+    # Offline source cache availability is independent from conversation creation.
+    assert public["source_workflow_type"] == "numerical_snapshot_advisor"
     assert public["tool_results"]["market:signals"]["status"] == "not_connected"
     assert public["tool_results"]["market:signals"]["connected_social_feeds"] is False
 
@@ -222,7 +230,9 @@ def test_direct_message_persists_validated_reply_and_replay_makes_no_call(
     reply = transcript["messages"][-1]
     assert reply["reply_to"] == queued["message_id"]
     assert reply["validation_status"] == "references_verified"
-    assert reply["interpretation_status"] == "unverified_advisor_interpretation"
+    assert reply["interpretation_status"] == "qualitative_unverified"
+    assert reply["evidence_status"] == "grounded_facts_qualitative_unverified"
+    assert reply["rendered_facts"][0]["unit"] == "SGD"
     assert transcript["tool_results"]["farm:resources.cash_sgd"]
     assert transcript["transcript_mode"] == "recorded"
     monkeypatch.setattr(
@@ -231,7 +241,7 @@ def test_direct_message_persists_validated_reply_and_replay_makes_no_call(
     assert client.get(f"/api/v1/conversations/{conversation_id}").status_code == 200
     replay = client.get(f"/api/v1/conversations/{conversation_id}/replay").json()
     assert replay["transcript_mode"] == "replay"
-    assert replay["inference_origin"] == "stored_messages"
+    assert replay["inference_origin"] == "stored_actual_replay"
     assert replay["inference_triggered"] is False
     assert len(calls) == 1
 
@@ -448,9 +458,13 @@ def test_unsupported_numbers_evidence_and_actions_are_visible_but_never_executed
     queued = send(client, conversation_id).json()
     farm_before = deepcopy(store.latest_farm(tenant))
     execute(store, tenant, queued["id"])
-    reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
+    public = client.get(f"/api/v1/conversations/{conversation_id}").json()
+    reply = public["messages"][-1]
     assert reply["validation_status"] == "unsupported"
-    assert "Advisor prose contains a quantitative or temporal claim; exact values render only from tool references" in reply[
+    assert public["model_call_status"] == "completed"
+    assert public["evidence_status"] == "unsupported_all"
+    assert public["decision_influence"] == "advisory_only"
+    assert "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs" in reply[
         "validation_errors"
     ]
     assert reply["proposed_actions"][0]["status"] == "blocked_unsupported"
@@ -606,7 +620,8 @@ def test_numeric_coincidence_never_semantically_validates_wrong_quantity(env, mo
     execute(store, tenant, queued["id"])
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["validation_status"] == "unsupported"
-    assert reply["validation_scope"] == "reference_membership_and_supported_controls"
+    assert reply["validation_scope"] == "typed_fact_membership_entity_unit_period_and_supported_controls"
+    assert reply["validation_issues"][0]["code"] in {"typed_fact_in_context_refs", "model_authored_quantity"}
 
 
 @pytest.mark.parametrize(
@@ -644,7 +659,7 @@ def test_spelled_quantities_and_relative_dates_remain_unsupported(
     reply = client.get(f"/api/v1/conversations/{conversation_id}").json()["messages"][-1]
     assert reply["validation_status"] == "unsupported"
     assert (
-        "Advisor prose contains a quantitative or temporal claim; exact values render only from tool references"
+            "Advisor prose contains a quantitative or temporal claim; exact values render only from fact_refs"
         in reply["validation_errors"]
     )
 
@@ -720,6 +735,8 @@ def test_interruption_and_provider_error_preserve_partial_state_without_requeue(
     execute(store, tenant, failed["id"])
     request = persistence.get_request(tenant, failed["id"])
     assert request["status"] == "FAILED"
+    assert request["execution_status"] == "failed"
+    assert request["evidence_status"] == "not_evaluated"
     assert "safe failure" in request["error"]
     retry = send(client, failed_id, key="failed-message").json()
     execute(store, tenant, retry["id"])
@@ -795,8 +812,8 @@ def test_schema_repair_reports_safe_field_type_and_corrects_long_content(
     assert request["repair_attempts"] == 1
     assert len(calls) == 2
     system_prompt = calls[0]["messages"][0]["content"]
-    assert "exactly two short sentences and no more than 400 characters" in system_prompt
-    assert "at most three tool_refs, one evidence_ref" in system_prompt
+    assert "one or two short sentences and no more than 400 characters" in system_prompt
+    assert "at most 3 tool_refs, 3 fact_refs, 1 evidence_ref" in system_prompt
     assert '"relationship":"answer"' in system_prompt
     assert '"proposed_actions":[]' in system_prompt
     repair_prompt = calls[1]["messages"][-1]["content"]
@@ -1071,3 +1088,144 @@ def test_deployed_trial_runner_dry_contract_stays_within_aggregate_call_limit(
     assert resumed["status"] == "PASS"
     assert resumed["actual_inference_requests"] == expected_calls
     assert len(calls) == expected_calls
+
+
+def test_advisor_schema_and_prompt_share_every_response_boundary():
+    base = {
+        "content": "x" * 400,
+        "evidence_refs": ["P01"],
+        "tool_refs": ["a", "b", "c"],
+        "fact_refs": ["d", "e", "f"],
+        "highlight_refs": ["bed:a"],
+        "relationship": "answer",
+        "proposed_actions": [
+            {"control": "cash_percent", "target_id": None, "value": 100, "unit": "percent"}
+        ],
+    }
+    AdvisorReply.model_validate(base)
+    for field, extra in (
+        ("content", "x"),
+        ("evidence_refs", "P02"),
+        ("tool_refs", "overflow"),
+        ("fact_refs", "overflow"),
+        ("highlight_refs", "bed:b"),
+        ("proposed_actions", base["proposed_actions"][0]),
+    ):
+        invalid = deepcopy(base)
+        if field == "content":
+            invalid[field] += extra
+        else:
+            invalid[field].append(extra)
+        with pytest.raises(ValidationError):
+            AdvisorReply.model_validate(invalid)
+
+
+def test_forecast_harvest_mass_is_an_exact_typed_batch_fact():
+    from packages.fixtures import synthetic_farm
+    from packages.models import forecast
+    from packages.ai_contracts import typed_reference_catalog
+
+    farm = synthetic_farm()
+    calculation = {"strategies": [], "forecast": forecast(farm)}
+    snapshot = farm.model_dump(mode="json")
+    refs = _tool_results(snapshot, planning=calculation)
+    first = calculation["forecast"]["harvest"][0]
+    key = f"forecast:batch_{first['batch_id']}.marketable_kg"
+    assert refs[key] == first["marketable_kg"]
+    assert f"forecast:batch_{first['batch_id']}.expected_kg" not in refs
+    typed = typed_reference_catalog(refs, snapshot_hash="frozen-hash")
+    assert typed[key] == {
+        "reference": key,
+        "kind": "quantity",
+        "value": first["marketable_kg"],
+        "unit": "kg",
+        "entity": {"type": "batch", "id": first["batch_id"]},
+        "period": None,
+        "context": "forecast",
+        "snapshot_hash": "frozen-hash",
+        "verification": "code_rendered_frozen_value",
+    }
+    date_fact = typed[f"forecast:batch_{first['batch_id']}.harvest_date"]
+    assert date_fact["period"] == {"kind": "harvest_date", "value": first["harvest_date"]}
+
+
+def test_later_advisor_receives_bounded_validation_errors_and_cannot_use_rejected_turn(env):
+    client, store, tenant = env
+    conversation_id = create(client, key="error-projection-conversation").json()["id"]
+    persistence = ConversationStore(store)
+    rejected = persistence.append_message(
+        tenant,
+        conversation_id,
+        {
+            "id": "rejected-advisor-turn",
+            "speaker": "advisor",
+            "speaker_id": "ravi",
+            "content": "This assertion is unsupported.",
+            "evidence_refs": [],
+            "tool_refs": ["unknown"],
+            "fact_refs": [],
+            "validation_status": "unsupported",
+            "evidence_status": "unsupported",
+            "validation_issues": [
+                {"code": "unknown_tool_reference", "message": "Unknown frozen tool reference"}
+            ],
+            "relationship": "challenge",
+            "created_at": "2026-09-11T00:00:00+00:00",
+        },
+    )
+    conversation = persistence.get_conversation(tenant, conversation_id)
+    request_payload = {
+        "mode": "direct",
+        "question": "Review the prior claim.",
+        "reply_to": rejected["id"],
+    }
+    messages = _provider_messages(
+        persistence, tenant, conversation, request_payload,
+        "production_analyst", rejected["id"], False,
+    )
+    context = json.loads(messages[1]["content"])
+    prior = next(item for item in context["prior_turns"] if item["id"] == rejected["id"])
+    assert prior["validation_issues"] == [
+        {"code": "unknown_tool_reference", "message": "Unknown frozen tool reference"}
+    ]
+    assert prior["eligible_as_evidence"] is False
+
+
+def test_legacy_message_replay_decodes_without_new_contract_fields(env):
+    client, store, tenant = env
+    conversation_id = create(client, key="legacy-replay-conversation").json()["id"]
+    ConversationStore(store).append_message(
+        tenant,
+        conversation_id,
+        {
+            "id": "legacy-advisor-message",
+            "speaker": "advisor",
+            "speaker_id": "mei",
+            "content": "Archived qualitative interpretation.",
+            "validation_status": "references_verified",
+            "tool_refs": ["forecast:lead_times"],
+            "created_at": "2026-09-10T00:00:00+00:00",
+        },
+    )
+    replay = client.get(f"/api/v1/conversations/{conversation_id}/replay").json()
+    assert replay["messages"][-1]["content"] == "Archived qualitative interpretation."
+    assert replay["inference_origin"] == "stored_actual_replay"
+    assert replay["inference_triggered"] is False
+
+
+def test_cancelled_conversation_request_is_terminal_and_never_calls_provider(env, monkeypatch):
+    client, store, tenant = env
+    calls=[]
+    gateway_factory(monkeypatch,calls)
+    conversation_id=create(client,key="cancel-conversation").json()["id"]
+    queued=send(client,conversation_id,key="cancel-message").json()
+    path=f"/api/v1/conversations/{conversation_id}/requests/{queued['id']}/cancel"
+    cancelled=client.post(path).json()
+    assert cancelled == {"id":queued["id"],"status":"CANCELLED","cancelled":True}
+    assert client.post(path).json() == {"id":queued["id"],"status":"CANCELLED","cancelled":False}
+    execute(store,tenant,queued["id"])
+    assert ConversationStore(store).get_request(tenant,queued["id"])["status"] == "CANCELLED"
+    assert calls == []
+    public=client.get(f"/api/v1/conversations/{conversation_id}").json()
+    assert public["model_call_status"] == "cancelled"
+    assert public["decision_influence"] == "none_cancelled"

@@ -1,6 +1,6 @@
 import { ArrowRight, CalendarDays, CheckCircle2, ChevronRight, CircleAlert, Gauge, Layers3, ListTree, Play, RotateCcw, Sparkles, Table2, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Crop, Farm, Run, Strategy } from '../lib/types'
+import type { Capabilities, Crop, Farm, Run, Strategy } from '../lib/types'
 import { editionPath } from '../lib/edition'
 import { CropArt, EventIcon, formatDate, formatMoney, humanizeExecutionMode, humanizeSystem, Meter, StatusPill } from './Visuals'
 
@@ -10,6 +10,7 @@ interface BoardProps {
   run: Run | null
   busy: string | null
   executionMode: string
+  capabilities: Capabilities
   transientEvent: string | null
   onStart: (council: boolean) => void
   onDemoReplay: () => void
@@ -17,7 +18,7 @@ interface BoardProps {
   onReplay: () => void
 }
 
-export function Board({ farm, crops, run, busy, executionMode, transientEvent, onStart, onDemoReplay, onReplan, onReplay }: BoardProps) {
+export function Board({ farm, crops, run, busy, executionMode, capabilities, transientEvent, onStart, onDemoReplay, onReplan, onReplay }: BoardProps) {
   const accepted = run?.strategies.find(strategy => strategy.id === run.accepted_strategy_id)
   const terminalRun = Boolean(run && ['accepted_for_simulation', 'review_withheld', 'no_feasible_plan', 'failed', 'cancelled', 'stale_input'].includes(run.status.toLowerCase()))
   const compactHero = terminalRun && !run?.shared_demo
@@ -51,6 +52,7 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
                 {busy === 'start-numerical' ? <span className="spinner" /> : <Gauge size={18} />} Plan with numerical tools
               </button>
               {!run && <button className="hero-replay-button" onClick={onDemoReplay} disabled={!!busy}><RotateCcw size={15}/>{busy === 'demo-replay' ? 'Loading replay…' : 'Replay recorded demo'}</button>}
+              <small className="planning-default-note">Council planning is the primary mission. Numerical-only planning remains available for a local, no-inference run.</small>
             </div>
           ) : (
             <div className="mission-status">
@@ -60,6 +62,13 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
           )}
         </div>
         <div className="hero-orbit" aria-hidden="true"><span>🌱</span><span>🥬</span><span>✓</span></div>
+      </section>
+
+      <section className="capability-trace" aria-label="Council runtime capability">
+        <div><span>Configured route</span><strong><StatusPill status={capabilities.deepseek.status} /></strong><small>Configuration is readiness metadata, not proof that this mission executed inference.</small></div>
+        <div><span>Current verification</span><strong>{humanizeCapability(capabilities.deepseek.current_verification)}</strong><small>The planning action remains available; its run record reports the actual execution outcome.</small></div>
+        <div><span>Historical probe</span><strong>{capabilityObservation(capabilities.deepseek.historical_probe)}</strong><small>A prior probe does not verify the current mission.</small></div>
+        <div><span>Last observed execution</span><strong>{capabilityObservation(capabilities.deepseek.last_observed_execution)}</strong><small>Observation history is shown separately from configured status.</small></div>
       </section>
 
       {transientEvent && (
@@ -172,7 +181,7 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
 
         <div className="section-block advisors-panel">
           <div className="section-heading">
-            <div><p className="kicker">Specialist council</p><h2>Advisor briefs</h2></div>
+            <div><p className="kicker">Specialist council</p><h2>Council interpretations</h2></div>
             {run?.claims.length ? <button className="text-button" onClick={() => setSheet('council')}>View all</button> : null}
           </div>
           {run?.claims.length ? (
@@ -184,7 +193,7 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
                 </article>
               ))}
             </div>
-          ) : <div className="advisor-roster-empty"><div aria-hidden="true"><span>CR</span><span>DM</span><span>IC</span></div><p>Advisors are waiting on an evidence-grounded run. No simulated conversation is shown as live activity.</p></div>}
+          ) : <div className="advisor-roster-empty"><div aria-hidden="true"><span>CR</span><span>DM</span><span>IC</span></div><p>Advisors are waiting on a council run. Qualitative text is shown as interpretation and is not treated as a verified numerical result.</p></div>}
         </div>
       </section>
 
@@ -212,7 +221,7 @@ export function Board({ farm, crops, run, busy, executionMode, transientEvent, o
 function acceptanceSummary(run: Run, evidenceValidated: boolean) {
   if (run.status.toLowerCase() === 'review_withheld') return 'Numerical alternatives are available, but council evidence review was withheld. This is not an infeasibility finding.'
   const subject = run.shared_demo ? 'The recorded plan was accepted' : 'Accepted'
-  if (evidenceValidated) return `${subject} for simulation after numerical and evidence validation recorded by the council.`
+  if (evidenceValidated) return `${subject} for simulation after numerical validation. Council evidence references passed their separate check; qualitative prose remains unverified.`
   if (run.council_status === 'not_run') return `${subject} for simulation after numerical validation.`
   return `${subject} for simulation after numerical validation. Council findings remain separately labelled.`
 }
@@ -268,7 +277,24 @@ function Timeline({ farm, strategy, crops, table, onToggle }: { farm: Farm; stra
 
 function Council({ run }: { run: Run | null }) {
   if (!run?.claims.length) return <p className="muted-copy">No council findings were reported.</p>
-  return <div className="sheet-stack advisor-list">{run.claims.map((claim, index) => <article className="advisor-card advisor-card--full" key={`${claim.role}-${index}`}><div className={`advisor-avatar advisor-avatar--${index % 3}`}>{claim.role.slice(0, 2).toUpperCase()}</div><div><div className="advisor-card__meta"><strong>{claim.role.replaceAll('_', ' ')}</strong><StatusPill status={claim.status} /></div><p>{claim.statement}</p><small>{claim.evidence_ids.length ? `Evidence: ${claim.evidence_ids.join(', ')}` : 'No evidence references reported'}</small></div></article>)}</div>
+  const execution = String(run.council_execution_status || run.council_status || 'unreported')
+  const evidence = String(run.council_evidence_status || run.evidence_validation?.status || 'unreported')
+  const influence = String(run.council_decision_influence || 'unreported')
+  return <div className="sheet-stack advisor-list">
+    <div className="council-trace" aria-label="Council execution record"><div><span>Execution</span><strong>{execution.replaceAll('_', ' ')}</strong></div><div><span>Evidence references</span><strong>{evidence.replaceAll('_', ' ')}</strong></div><div><span>Decision influence</span><strong>{influence.replaceAll('_', ' ')}</strong></div><p>These fields describe separate facts. Evidence-reference checks do not verify the truth of qualitative council prose.</p></div>
+    {run.claims.map((claim, index) => <article className="advisor-card advisor-card--full" key={`${claim.role}-${index}`}><div className={`advisor-avatar advisor-avatar--${index % 3}`}>{claim.role.slice(0, 2).toUpperCase()}</div><div><div className="advisor-card__meta"><strong>{claim.role.replaceAll('_', ' ')}</strong><StatusPill status={claim.status} /></div><p>{claim.statement}</p><small>Qualitative interpretation · {claim.evidence_ids.length ? `references ${claim.evidence_ids.join(', ')}` : 'no evidence references reported'}</small></div></article>)}
+  </div>
+}
+
+function humanizeCapability(value: unknown) {
+  return typeof value === 'string' && value ? value.replaceAll('_', ' ') : 'not reported'
+}
+
+function capabilityObservation(value: Record<string, unknown> | null | undefined) {
+  if (!value) return 'none recorded'
+  const status = [value.status, value.outcome, value.result].find(item => typeof item === 'string')
+  const observed = [value.observed_at, value.completed_at, value.timestamp].find(item => typeof item === 'string')
+  return [status ? String(status).replaceAll('_', ' ') : 'recorded', observed ? formatDate(String(observed), true) : ''].filter(Boolean).join(' · ')
 }
 
 export function BottomSheet({ open, title, onClose, children }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode }) {

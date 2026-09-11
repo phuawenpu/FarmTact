@@ -42,7 +42,7 @@ def main():
             run(['createdb','-h','/tmp/farmtact-pg',dbname],checkout,env);database_created=True
             run([python,'scripts/initialize_database.py'],checkout,env)
             run([python,'-m','packages.fixtures'],checkout,env)
-            run([python,'scripts/build_dataset.py','--with-power'],checkout,env)
+            run([python,'scripts/build_dataset.py','--fixture-bundle','data/fixtures/public_context_v1'],checkout,env)
             run([python,'scripts/build_features.py'],checkout,env)
             quality=json.loads((checkout/'data/reports/data_quality.json').read_text())
             report['public_data_quality']=quality
@@ -51,6 +51,7 @@ def main():
 import json,time
 from fastapi.testclient import TestClient
 from services.api.app import create_app
+from packages.ingestion.validation import registry_coverage
 
 def wait(c,id):
     deadline=time.monotonic()+90
@@ -60,9 +61,9 @@ def wait(c,id):
         time.sleep(.2)
     raise AssertionError('mission timeout')
 with TestClient(create_app()) as c:
-    b=c.get('/api/v1/bootstrap'); assert b.status_code==200 and len(b.json()['crops'])==10
+    b=c.get('/api/v1/bootstrap'); assert b.status_code==200 and len(b.json()['crops'])==registry_coverage()['catalogue_profiles']
     assert c.get('/').status_code==200
-    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'}); assert imported.status_code==201
+    imported=c.post('/api/v1/imports',json={'fixture':'synthetic_demo'},headers={'Idempotency-Key':'clean-import'}); assert imported.status_code==201
     r=c.post('/api/v1/planning-runs',json={'council':False},headers={'Idempotency-Key':'clean-plan'}); assert r.status_code==202
     run=wait(c,r.json()['id']); assert run['status']=='ACCEPTED_FOR_SIMULATION' and len(run['strategies'])==3 and run['claims']==[]
     replay=c.get('/api/v1/planning-runs/'+run['id']+'/replay').json(); assert replay['execution_mode']=='replay' and replay['strategies']==run['strategies']
@@ -70,7 +71,7 @@ with TestClient(create_app()) as c:
     changed=c.post('/api/v1/planning-runs/'+run['id']+'/replan',json={'council':False},headers={'Idempotency-Key':'clean-replan'}); assert changed.status_code==202
     replanned=wait(c,changed.json()['id']); assert replanned['status']=='ACCEPTED_FOR_SIMULATION' and replanned['input_version']==3
     assert c.get('/api/v1/planning-runs/'+run['id']+'/worklist.csv').status_code==409
-    print(json.dumps({'status':'PASS','crop_count':10,'strategy_count':3,'initial_version':run['input_version'],'replan_version':replanned['input_version'],'inference_calls':0}))
+    print(json.dumps({'status':'PASS','crop_count':len(b.json()['crops']),'strategy_count':3,'initial_version':run['input_version'],'replan_version':replanned['input_version'],'inference_calls':0}))
 """
             report['workflow']=json.loads(run([python,'-c',smoke],checkout,env).strip())
             report['status']='PASS'
@@ -80,6 +81,6 @@ with TestClient(create_app()) as c:
         finally:
             if database_created:run(['dropdb','-h','/tmp/farmtact-pg',dbname],ROOT,env)
             REPORT.write_text(json.dumps(report,indent=2)+'\n')
-    print('Clean checkout PASS: isolated dependencies, public fetch, PostgreSQL workflow; no inference calls')
+    print('Clean checkout PASS: isolated dependencies, synthetic source-contract fixture, PostgreSQL workflow; no inference calls')
 
 if __name__=='__main__':main()

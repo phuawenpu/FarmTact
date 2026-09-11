@@ -22,6 +22,15 @@ def test_gate_rejects_incomplete_or_unsupported_findings(kind):
     assert not council_review_issues(findings())
 
 
+def test_optional_context_abstention_does_not_veto_numerical_acceptance():
+    claims = findings()
+    claims[1].update(claim_type='abstention', recommendation='exclude_unsupported')
+    claims[2].update(claim_type='abstention', recommendation='exclude_unsupported')
+    assert not council_review_issues(claims)
+    claims[1]['claim_type'] = 'observation'
+    assert council_review_issues(claims)
+
+
 @pytest.mark.parametrize('mode',['complete','partial','rejected','failed_before_claims'])
 def test_mission_gate_preserves_alternatives_and_budget(monkeypatch,mode):
     import services.api.council as council_module
@@ -47,15 +56,15 @@ def test_mission_gate_preserves_alternatives_and_budget(monkeypatch,mode):
         assert result['strategies'] and any(s['status']=='FEASIBLE' for s in result['strategies'])
         assert result['inference_budget']['reserved_calls']==9
         assert result['inference_budget']['unused_released']==8
-        assert result['council_version']=='seven-agent-council-v1'
-        if mode in ('partial','rejected'):
+        assert result['council_version']=='seven-agent-council-v3'
+        if mode != 'complete':
             assert result['status']=='REVIEW_WITHHELD'
             assert result['evidence_validation']['status']=='withheld'
             assert not result.get('accepted_strategy_id')
         else:
             assert result['status']=='ACCEPTED_FOR_SIMULATION'
-            assert result['acceptance']['policy_version']=='automatic-development-v2'
-            assert result['evidence_validation']['basis']==('numerical-baseline' if mode=='failed_before_claims' else 'seven-agent-findings')
+            assert result['acceptance']['policy_version']=='automatic-development-v3'
+            assert result['evidence_validation']['basis']=='seven-agent-findings'
         replay=client.get('/api/v1/planning-runs/'+item['id']+'/replay').json()
         assert replay['market_signals']==result['market_signals']
         assert replay['evidence_validation']==result['evidence_validation']

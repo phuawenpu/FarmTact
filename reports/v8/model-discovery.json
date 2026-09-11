@@ -1,0 +1,10 @@
+{
+  "observed_at": "2026-09-11T10:58:44.376467+00:00",
+  "origin": "https://api.deepseek.com",
+  "endpoint": "/models",
+  "model_ids": [
+    "deepseek-flash",
+    "deepseek-v4-pro"
+  ],
+  "inference_calls": 0
+}

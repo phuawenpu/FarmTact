@@ -6,7 +6,7 @@ to promote a model because their targets are generated, not observed on farms.
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import datetime,time,timezone
+from datetime import datetime,time,timedelta,timezone
 import math
 import random
 from statistics import mean
@@ -25,7 +25,7 @@ from packages.fixtures import (
 
 
 EVALUATION_SCHEMA_VERSION='farmtact-synthetic-evaluation-2.0.0'
-DEMAND_EVALUATOR_VERSION='rolling-origin-demand-v3'
+DEMAND_EVALUATOR_VERSION='rolling-origin-demand-v4'
 CROP_CYCLE_EVALUATOR_VERSION='whole-batch-cycle-v1'
 PROMOTION_POLICY_VERSION='farmtact-model-promotion-v1'
 HORIZONS=(1,2,4)
@@ -108,15 +108,18 @@ def _series(bundle:SyntheticDemandBundle,key_kind:Literal['farm','buyer'])->dict
     return dict(grouped)
 
 
-def _tune_alpha(training:SyntheticDemandBundle)->dict[str,Any]:
+def _tune_alpha(training:SyntheticDemandBundle,fit_cutoff:datetime|None=None)->dict[str,Any]:
     candidates=(.1,.2,.35,.5,.65,.8,.9)
     scores={alpha:[] for alpha in candidates}
-    excluded=0
+    excluded=0; excluded_targets=0
+    fit_cutoff=fit_cutoff or datetime.combine(max(row.due_week for row in training.records)+timedelta(days=7),time(hour=12),timezone.utc)
     for rows in _series(training,'farm').values():
         totals=_actual_by_week(rows)
         availability={week:max(row.outcome_available_at for row in rows if row.due_week==week) for week in totals}
         weeks=sorted(totals)
         for index in range(16,len(weeks)):
+            if availability[weeks[index]]>fit_cutoff:
+                excluded_targets+=1;continue
             origin=datetime.combine(weeks[index],time(hour=12),timezone.utc)
             history=[totals[week] for week in weeks[:index] if availability[week]<=origin]
             excluded+=sum(availability[week]>origin for week in weeks[:index])
@@ -124,17 +127,19 @@ def _tune_alpha(training:SyntheticDemandBundle)->dict[str,Any]:
             target=totals[weeks[index]]
             for alpha in candidates:
                 scores[alpha].append(abs(target-_ewma(history,alpha)))
+    if not scores[candidates[0]]:raise ValueError('Insufficient available training outcomes for rolling-origin tuning')
     mean_mae={alpha:mean(errors) for alpha,errors in scores.items()}
     selected=min(candidates,key=lambda alpha:(mean_mae[alpha],alpha))
     return {'selected_alpha':selected,'selection_metric':'one_step_mae',
         'candidate_alphas':list(candidates),'training_scores':{str(k):round(v,6) for k,v in mean_mae.items()},
         'evaluation_partition_used_for_selection':False,'unavailable_history_weeks_excluded':excluded,
+        'unavailable_tuning_targets_excluded':excluded_targets,'model_fit_cutoff':fit_cutoff.isoformat(),
         'availability_rule':'Every historical target dependency is available at its training forecast origin.'}
 
 
 def _rolling_predictions(bundle:SyntheticDemandBundle,key_kind:Literal['farm','buyer'],alpha:float)->tuple[list[dict],dict]:
     predictions=[]
-    leakage_violations=0
+    included_dependency_violations=0;included_dependency_count=0;max_included_lead_seconds=None
     excluded_history=0; unavailable_seasonal=0
     cancellation_records=sum(1 for row in bundle.records if row.cancelled_kg>0)
     for series_key,rows in _series(bundle,key_kind).items():
@@ -150,10 +155,15 @@ def _rolling_predictions(bundle:SyntheticDemandBundle,key_kind:Literal['farm','b
             available_values=[]
             for historical_week in weeks[:origin_index]:
                 dependencies=week_rows[historical_week]
-                if all(row.outcome_available_at<=origin for row in dependencies):
+                eligible=all(row.outcome_available_at<=origin for row in dependencies)
+                if eligible:
                     available_weeks.append(historical_week)
                     available_values.append(totals[historical_week])
-                    leakage_violations+=sum(row.outcome_available_at>origin for row in dependencies)
+                    for row in dependencies:
+                        lead=(row.outcome_available_at-origin).total_seconds()
+                        included_dependency_count+=1
+                        max_included_lead_seconds=lead if max_included_lead_seconds is None else max(max_included_lead_seconds,lead)
+                        included_dependency_violations+=int(lead>0)
                 else:excluded_history+=1
             if not available_values:
                 continue
@@ -177,7 +187,12 @@ def _rolling_predictions(bundle:SyntheticDemandBundle,key_kind:Literal['farm','b
                         'horizon_weeks':horizon,'origin_week':origin_week.isoformat(),
                         'target_week':target_week.isoformat(),'model':model,'actual':target,
                         'prediction':max(confirmed,prediction),'confirmed_as_of_origin':confirmed})
-    return predictions,{'leakage_violations':leakage_violations,'cancellation_records':cancellation_records,
+    return predictions,{'leakage_violations':included_dependency_violations,
+        'included_dependency_violations':included_dependency_violations,
+        'included_dependency_count':included_dependency_count,
+        'max_included_lead_seconds':max_included_lead_seconds,
+        'availability_filter_exercised':excluded_history>0,
+        'cancellation_records':cancellation_records,
         'unavailable_history_weeks_excluded':excluded_history,'unavailable_seasonal_fallbacks':unavailable_seasonal,
         'availability_rule':'Training values require every order outcome_available_at <= forecast origin; future bookings/cancellations contribute only after their own availability timestamps.'}
 
@@ -217,7 +232,8 @@ def _mae_interval(rows:list[dict],seed:int)->dict[str,float]:
 
 
 def evaluate_demand(training:SyntheticDemandBundle,evaluation:SyntheticDemandBundle)->dict[str,Any]:
-    tuning=_tune_alpha(training)
+    fit_cutoff=datetime.combine(min(row.due_week for row in evaluation.records),time(hour=12),timezone.utc)
+    tuning=_tune_alpha(training,fit_cutoff)
     output={'tuning':tuning,'horizons_weeks':list(HORIZONS),'seasonal_period_weeks':SEASONAL_PERIOD_WEEKS,
         'target':'final_net_ordered_kg_after_cancellations','cohorts':{},'leakage':{}}
     for kind in ('farm','buyer'):
@@ -231,8 +247,35 @@ def evaluate_demand(training:SyntheticDemandBundle,evaluation:SyntheticDemandBun
                     'mae_95_interval':_mae_interval(rows,982451+horizon*100+len(model)+len(kind))})
         output['cohorts'][kind]={'series_count':len(_series(evaluation,kind)),'metrics':summaries}
     output['public_features_used']=[]
+    output['availability_counterfactual_probe']=availability_counterfactual_probe(evaluation,tuning['selected_alpha'])
     output['feature_exclusion']='No public weather, News or trade feature enters a forecast because exposure and predictive value are unvalidated.'
     return output
+
+
+def availability_counterfactual_probe(bundle:SyntheticDemandBundle,alpha:float)->dict:
+    """Observe forecasts under a changed unavailable historical outcome.
+
+    This tests dependency behavior independently of the inclusion-filter counter.
+    It is a bounded synthetic regression probe, not proof for arbitrary datasets.
+    """
+    data=bundle.model_copy(deep=True); selected=data.records[0]
+    data.records=[row for row in data.records if row.farm_id==selected.farm_id and row.crop_id==selected.crop_id]
+    weeks=sorted({row.due_week for row in data.records})
+    if len(weeks)<25:return dict(status='not_evaluable',reason='At least 25 weeks required')
+    target=weeks[10]
+    for row in data.records:
+        if row.due_week==target:row.outcome_available_at=datetime(2050,1,1,tzinfo=timezone.utc)
+    before={kind:_rolling_predictions(data,kind,alpha)[0] for kind in ('farm','buyer')}
+    for row in data.records:
+        if row.due_week==target:row.gross_ordered_kg=min(10000,row.gross_ordered_kg+1000)
+    changes={}
+    for kind in ('farm','buyer'):
+        after=_rolling_predictions(data,kind,alpha)[0]
+        changes[kind]=sum(left['prediction']!=right['prediction'] for left,right in zip(before[kind],after)) + abs(len(before[kind])-len(after))
+    return dict(status='passed' if not any(changes.values()) else 'failed',changed_forecasts=changes,
+                forecast_comparisons={kind:len(rows) for kind,rows in before.items()},
+                perturbation='Add bounded mass to a permanently unavailable historical target; compare all model/horizon forecasts',
+                scope='One held-out farm/crop and its buyers; complements split and timestamp assertions')
 
 
 def _cycle_metric(rows:list[tuple[float,float]])->dict[str,float]:
@@ -288,12 +331,13 @@ def build_synthetic_evaluation(training_demand:SyntheticDemandBundle,evaluation_
         'demand_training_outcomes_available_before_first_evaluation_week':max(row.outcome_available_at for row in training_demand.records)<datetime.combine(min(row.due_week for row in evaluation_demand.records),time(hour=12),timezone.utc)}
     demand=evaluate_demand(training_demand,evaluation_demand)
     cycles=evaluate_crop_cycles(training_cycles,evaluation_cycles)
-    leakage=sum(check['leakage_violations'] for check in demand['leakage'].values())
+    leakage=sum(check['included_dependency_violations'] for check in demand['leakage'].values())
+    filter_exercised=demand['availability_counterfactual_probe']['status']=='passed'
     gates=[
         PromotionGate(gate_id='schema_and_split_integrity',required=True,status='passed' if all(split_checks.values()) else 'failed',
             observed=str(split_checks),requirement='Validated records and disjoint train/evaluation identities, dates and generator versions.'),
-        PromotionGate(gate_id='point_in_time_leakage',required=True,status='passed' if leakage==0 else 'failed',
-            observed=f'{leakage} detected dependency violations',requirement='Every feature dependency must be available at or before forecast origin.'),
+        PromotionGate(gate_id='point_in_time_leakage',required=True,status='passed' if leakage==0 and filter_exercised and all(split_checks.values()) else 'failed',
+            observed=f'{leakage} included dependency violations; counterfactual invariant={filter_exercised}; split availability={all(split_checks.values())}',requirement='Every feature dependency must be available at forecast origin; training labels available at fitting; unavailable historical target perturbations leave forecasts unchanged.'),
         PromotionGate(gate_id='real_farm_temporal_validation',required=True,status='blocked',
             observed='No real farm/customer outcome dataset supplied.',requirement='Pass pre-registered temporal holdout evaluation on authorized real net orders and whole-batch outcomes.'),
         PromotionGate(gate_id='external_farm_validation',required=True,status='blocked',

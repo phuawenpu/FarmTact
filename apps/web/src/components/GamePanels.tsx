@@ -46,7 +46,7 @@ function PanelShell({ open, title, eyebrow, wide, onClose, children }: PanelShel
 
 export function BedDetailPanel({ open, bed, crop, farm, run, previewDate, allocations, onClose, onExperiment, onAsk }: { open: boolean; bed: Bed | null; crop?: Crop; farm: Farm; run: Run | null; previewDate: Date; allocations?: import('../lib/types').Allocation[]; onClose: () => void; onExperiment: () => void; onAsk: () => void }) {
   if (!bed) return null
-  const preview = previewBed(bed, previewDate, allocations)
+  const preview = previewBed(bed, previewDate, allocations, farm.recipe_calendar)
   const harvestDate = allocations?.[0]?.harvest_date || bed.harvest_date
   const earlierDeliveries = bed.crop_id && harvestDate ? farm.orders.filter(order => order.crop_id === bed.crop_id && order.due_date < harvestDate) : []
   const runMatchesFarm = Boolean(run && !run.shared_demo && String(run.input_version) === String(farm.version))
@@ -296,12 +296,14 @@ export function ScenarioLab({ open, farm, crops, selectedBed, mission, initialQu
   const [comparison, setComparison] = useState<ScenarioComparison | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hasOlder, setHasOlder] = useState(false)
   const [phase, setPhase] = useState<'brief' | 'assumptions' | 'result'>('brief')
   const rememberScenario=(id:string)=>{try{sessionStorage.setItem(editionStorageKey('selected-scenario'),id)}catch{/* optional */}}
 
   const load = useCallback(async () => {
-    const [savedScenarios, savedQuests] = await Promise.all([api.scenarios(), api.quests()])
-    setScenarios(savedScenarios); setQuests(mergeQuests(savedQuests))
+    const [page, savedQuests] = await Promise.all([api.scenarioPage(12), api.quests()])
+    const savedScenarios = page.scenarios
+    setScenarios(savedScenarios); setHasOlder(savedScenarios.length === 12); setQuests(mergeQuests(savedQuests))
     return savedScenarios
   }, [])
   useEffect(() => {
@@ -343,6 +345,8 @@ export function ScenarioLab({ open, farm, crops, selectedBed, mission, initialQu
       let scenario = await api.createScenario({ name: `${quest.name || quest.title} · ${new Date().toLocaleDateString('en-SG')}`, controls, ...(questId !== 'sandbox' ? { quest_id: questId } : {}), ...(proposedAction ? { source_conversation_id: proposedAction.conversationId } : parentId ? { parent_scenario_id: parentId } : {}) })
       if (editionFromPath() !== 'v1') playAudioEffect('confirm')
       scenario = await api.runScenario(scenario.id)
+      setScenarios(values => [scenario, ...values.filter(item => item.id !== scenario.id)])
+      setSelectedIds([scenario.id]); rememberScenario(scenario.id); setPhase('result')
       for (let attempt = 0; !scenarioTerminal(scenario.status) && attempt < 300; attempt += 1) { await new Promise(resolve => window.setTimeout(resolve, 500)); scenario = await api.scenario(scenario.id) }
       setScenarios(values => [scenario, ...values.filter(item => item.id !== scenario.id)])
       setSelectedIds([scenario.id]); rememberScenario(scenario.id)
@@ -366,6 +370,40 @@ export function ScenarioLab({ open, farm, crops, selectedBed, mission, initialQu
     setBusy(true); setError(null)
     try { await api.inspectQuest(scenario.quest_id, scenario.id); setQuests(mergeQuests(await api.quests())) }
     catch (caught) { setError(messageFor(caught, 'Quest inspection could not be saved.')) }
+    finally { setBusy(false) }
+  }
+
+  const loadOlder = async () => {
+    const before = scenarios.at(-1)?.created_at
+    if (!before) return
+    setBusy(true); setError(null)
+    try {
+      const page = await api.scenarioPage(12, before)
+      setScenarios(values => [...values, ...page.scenarios.filter(item => !values.some(old => old.id === item.id))])
+      setHasOlder(page.scenarios.length === 12)
+    } catch (caught) { setError(messageFor(caught, 'Older saved branches could not be loaded.')) }
+    finally { setBusy(false) }
+  }
+
+  const cancel = async (scenario: Scenario) => {
+    setError(null)
+    try {
+      const cancelled = await api.cancelScenario(scenario.id)
+      setScenarios(values => [cancelled, ...values.filter(item => item.id !== cancelled.id)])
+    } catch (caught) { setError(messageFor(caught, 'The numerical experiment could not be cancelled.')) }
+  }
+
+  const retry = async (scenario: Scenario) => {
+    if (!scenario.run_key) { setError('The original numerical attempt key is unavailable, so this saved branch cannot be retried safely.'); return }
+    setBusy(true); setError(null)
+    try {
+      let next = await api.retryScenario(scenario.id, scenario.run_key)
+      setScenarios(values => [next, ...values.filter(item => item.id !== next.id)])
+      for (let attempt = 0; !scenarioTerminal(next.status) && attempt < 300; attempt += 1) { await new Promise(resolve => window.setTimeout(resolve, 500)); next = await api.scenario(next.id) }
+      setScenarios(values => [next, ...values.filter(item => item.id !== next.id)])
+      setSelectedIds([next.id]); rememberScenario(next.id); onHighlight(next.affected_bed_ids || [])
+      if (!scenarioTerminal(next.status)) throw new Error('The retried numerical job remains saved and will resume when this lab reopens.')
+    } catch (caught) { setError(messageFor(caught, 'The saved numerical attempt could not be retried.')) }
     finally { setBusy(false) }
   }
 
@@ -394,23 +432,23 @@ export function ScenarioLab({ open, farm, crops, selectedBed, mission, initialQu
           {busy&&<p className="calculation-wait" role="status"><LoaderCircle className="spinner-icon"/><span><strong>Calculation time · waiting for the numerical worker and solver</strong>Farm time is not advancing. This branch remains saved if you close the panel.</span></p>}
           {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
           <div className="panel-actions"><button className="button button--forest" onClick={() => setPhase('assumptions')}>Review assumptions</button><button className="button button--coral" onClick={() => void run()} disabled={busy}>{busy ? <LoaderCircle className="spinner-icon"/> : <Play size={17}/>} Run experiment</button></div>
-        </> : <ScenarioResults scenarios={scenarios} quests={quests} selectedIds={selectedIds} setSelectedIds={setSelectedIds} comparison={comparison} mission={mission} onCompare={() => void compare()} onInspect={scenario => void inspect(scenario)} onInterpret={onInterpret} busy={busy} error={error}/>}
+        </> : <ScenarioResults scenarios={scenarios} quests={quests} selectedIds={selectedIds} setSelectedIds={setSelectedIds} comparison={comparison} mission={mission} onCompare={() => void compare()} onInspect={scenario => void inspect(scenario)} onInterpret={onInterpret} onCancel={scenario => void cancel(scenario)} onRetry={scenario => void retry(scenario)} onLoadOlder={() => void loadOlder()} hasOlder={hasOlder} busy={busy} error={error}/>}
       </div>
     </div>
   </PanelShell>
 }
 
-function ScenarioResults({ scenarios, quests, selectedIds, setSelectedIds, comparison, mission, onCompare, onInspect, onInterpret, busy, error }: { scenarios: Scenario[]; quests: Quest[]; selectedIds: string[]; setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>; comparison: ScenarioComparison | null; mission?: DecisionMission | null; onCompare: () => void; onInspect: (scenario: Scenario) => void; onInterpret: (scenario: Scenario) => void; busy: boolean; error: string | null }) {
+function ScenarioResults({ scenarios, quests, selectedIds, setSelectedIds, comparison, mission, onCompare, onInspect, onInterpret, onCancel, onRetry, onLoadOlder, hasOlder, busy, error }: { scenarios: Scenario[]; quests: Quest[]; selectedIds: string[]; setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>; comparison: ScenarioComparison | null; mission?: DecisionMission | null; onCompare: () => void; onInspect: (scenario: Scenario) => void; onInterpret: (scenario: Scenario) => void; onCancel: (scenario: Scenario) => void; onRetry: (scenario: Scenario) => void; onLoadOlder: () => void; hasOlder: boolean; busy: boolean; error: string | null }) {
   const selected=scenarios.filter(item=>selectedIds.includes(item.id)),anchor=selected[0],compatible=selected.filter(item=>!anchor||sameComparisonRoot(anchor,item)),compared=comparison?.scenarios?.every(item=>!anchor||sameComparisonRoot(anchor,item))?comparison.scenarios:null
   const displayed = compared || compatible
   const [policy, setPolicy] = useState('Balanced')
   return <div className="scenario-results"><div className="scenario-heading"><div><p className="kicker">Before and after</p><h3>Inspect the trade-offs</h3></div><span><BadgeCheck size={14}/> Learning counts even when infeasible</span></div>
-    {!scenarios.length ? <div className="conversation-empty"><GitBranch size={28}/><strong>No branches yet</strong><p>Run an experiment to create one.</p></div> : <div className="branch-picker"><p>Select up to three branches from the same frozen baseline</p>{scenarios.map(item => { const isSelected=selectedIds.includes(item.id),incompatible=Boolean(anchor&&!isSelected&&!sameComparisonRoot(anchor,item)); return <label key={item.id}><input type="checkbox" checked={isSelected} disabled={!isSelected&&(selectedIds.length>=3||incompatible)} onChange={() => {const ids=isSelected?selectedIds.filter(id=>id!==item.id):[...selectedIds,item.id];setSelectedIds(ids);try{if(ids.length)sessionStorage.setItem(editionStorageKey('selected-scenario'),ids[0])}catch{/* optional */}}}/><span><b>{item.name}</b><small>{scenarioStatusLabel(item)}{incompatible?' · different frozen baseline':''}</small></span></label>})}</div>}
+    {!scenarios.length ? <div className="conversation-empty"><GitBranch size={28}/><strong>No branches yet</strong><p>Run an experiment to create one.</p></div> : <><div className="branch-picker"><p>Select up to three branches from the same frozen baseline</p>{scenarios.map(item => { const isSelected=selectedIds.includes(item.id),incompatible=Boolean(anchor&&!isSelected&&!sameComparisonRoot(anchor,item)); return <label key={item.id}><input type="checkbox" checked={isSelected} disabled={!isSelected&&(selectedIds.length>=3||incompatible)} onChange={() => {const ids=isSelected?selectedIds.filter(id=>id!==item.id):[...selectedIds,item.id];setSelectedIds(ids);try{if(ids.length)sessionStorage.setItem(editionStorageKey('selected-scenario'),ids[0])}catch{/* optional */}}}/><span><b>{item.name}</b><small>{scenarioStatusLabel(item)}{incompatible?' · different frozen baseline':''}</small></span></label>})}</div>{hasOlder && <button className="text-button scenario-load-older" onClick={onLoadOlder} disabled={busy}>Load older saved branches</button>}</>}
     <button className="button button--forest compare-button" onClick={onCompare} disabled={busy || !selectedIds.length}>{busy ? <LoaderCircle className="spinner-icon"/> : <GitBranch size={17}/>} Compare selected</button>
     {error && <p className="panel-error" role="alert"><CircleAlert size={15}/>{error}</p>}
     {!!displayed.length && <div className="policy-picker" aria-label="Planning policy"><span>Compare the same policy</span>{['Lean','Balanced','Resilient'].map(name => <button key={name} className={policy === name ? 'is-active' : ''} onClick={() => setPolicy(name)}>{name}</button>)}</div>}
     {!!displayed.length && <div className="comparison-table-wrap"><table className="comparison-table"><caption>{policy} policy · baseline, branch outcome and computed change</caption><thead><tr><th>Outcome</th><th>Baseline</th>{displayed.map(item => <th key={item.id}>{item.name}<small> outcome · Δ</small></th>)}</tr></thead><tbody>{['fill_rate','margin_sgd','waste_kg','shortfall_kg','labour_hours','cost_sgd'].map(metric => <tr key={metric}><th>{({ fill_rate: 'Demand filled', margin_sgd: 'Contribution margin', waste_kg: 'Waste', shortfall_kg: 'Unfilled demand', labour_hours: 'Labour needed', cost_sgd: 'Total cost' } as Record<string,string>)[metric]}</th><td>{policyMetric(displayed[0], policy, metric, 'baseline')}</td>{displayed.map(item => <td key={item.id} className={item.simulation_status === 'NO_FEASIBLE_PLAN' ? 'is-warning' : ''}>{policyMetric(item, policy, metric, 'scenario')} <small className="metric-delta">{formatDelta(item.policy_comparisons?.find(row => row.policy === policy)?.deltas?.[metric as keyof StrategyMetrics], metric)}</small></td>)}</tr>)}</tbody></table></div>}
-    {!!displayed.length && <>{displayed.map(item=><NumericalPerspectives key={`perspectives-${item.id}`} scenario={item} policy={policy} mission={scenarioMatchesMission(item,mission)?mission:null}/>) }<NewsPanel scenarioId={displayed[0].id}/><div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; const attachedMission=scenarioMatchesMission(item,mission)?mission:null; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p>{attachedMission&&<p className="mission-result-link"><Database size={14}/> Mission {attachedMission.cropId.replaceAll('_',' ')} · {attachedMission.date} · evidence {attachedMission.forecastId}</p>}{completed && row && <p className="computed-debrief"><strong>Computed debrief · {policy}</strong><br/>{scenarioDebrief(item, policy)}</p>}<small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} deliveries to inspect</span> : null}{item.affected_deliveries?.length ? <details><summary>Deliveries to inspect</summary><p>Dates with changed planned totals or changed order inputs; not per-order fulfilment.</p>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Open Asha · paid council only after you send</button>}</article>})}</div></>}
+    {!!displayed.length && <>{displayed.map(item=><NumericalPerspectives key={`perspectives-${item.id}`} scenario={item} policy={policy} mission={scenarioMatchesMission(item,mission)?mission:null}/>) }<NewsPanel scenarioId={displayed[0].id}/><div className="branch-cards">{displayed.map(item => { const row = item.policy_comparisons?.find(value => value.policy === policy); const inspected = quests.find(quest => quest.id === item.quest_id)?.inspected_ids?.includes(item.id); const completed = item.status === 'COMPLETED'; const active=requestActive(item.status),retryable=['FAILED','CANCELLED'].includes(item.status.toUpperCase())&&(item.attempt_count||0)<(item.max_attempts||3); const attachedMission=scenarioMatchesMission(item,mission)?mission:null; return <article key={item.id}><p className="kicker">{scenarioStatusLabel(item)}</p><h3>{item.name}</h3><p>{controlSummary(item.controls)}</p>{attachedMission&&<p className="mission-result-link"><Database size={14}/> Mission {attachedMission.cropId.replaceAll('_',' ')} · {attachedMission.date} · evidence {attachedMission.forecastId}</p>}{completed && row && <p className="computed-debrief"><strong>Computed debrief · {policy}</strong><br/>{scenarioDebrief(item, policy)}</p>}<small>Snapshot {item.input_hash?.slice(0, 10) || 'recorded'} · baseline {item.baseline_hash?.slice(0, 10) || 'recorded'}</small>{item.affected_bed_ids?.length ? <span>{item.affected_bed_ids.length} affected {item.affected_bed_ids.length === 1 ? 'bed' : 'beds'} · {item.affected_deliveries?.length || 0} deliveries to inspect</span> : null}{item.affected_deliveries?.length ? <details><summary>Deliveries to inspect</summary><p>Dates with changed planned totals or changed order inputs; not per-order fulfilment.</p>{item.affected_deliveries.map(delivery => <p key={delivery.order_id}>{delivery.order_id} · {delivery.crop_id?.replaceAll('_', ' ')} · due {delivery.due_date}</p>)}</details> : null}{item.attempts?.length ? <details className="attempt-history"><summary>Recorded attempt history · {item.attempts.length}</summary><p>Partial and failed attempts are preserved; retry adds a new attempt to this frozen branch.</p>{item.attempts.map((attempt,index)=><small key={index}>Attempt {attempt.number || index+1} · {String(attempt.status || 'recorded').toLowerCase().replaceAll('_',' ')}</small>)}</details> : null}{completed && row?.violations?.length ? <details><summary>{row.violations.length} constraint {row.violations.length === 1 ? 'issue' : 'issues'}</summary>{row.violations.map((violation,index) => <p key={index}>{formatConstraint(violation)}</p>)}</details> : completed ? <span><Check size={12}/> No {policy} constraint issues</span> : <span>Results unavailable until this job completes.</span>}{active && <button className="scenario-cancel" onClick={() => onCancel(item)}><X size={14}/> Cancel numerical run</button>}{retryable && <button className="scenario-retry" onClick={() => onRetry(item)} disabled={busy}><RotateCcw size={14}/> Retry saved attempt</button>}{completed && item.quest_id && <button className={inspected ? 'is-inspected' : ''} onClick={() => onInspect(item)} disabled={Boolean(inspected) || busy}>{inspected ? <><BadgeCheck size={14}/> Trade-off badge earned</> : <><Award size={14}/> Mark trade-offs inspected</>}</button>}{completed && <button onClick={() => onInterpret(item)}><MessageCircle size={14}/> Open Asha · paid council only after you send</button>}</article>})}</div></>}
   </div>
 }
 
@@ -420,7 +458,7 @@ function RangeControl({ label, value, min, max, suffix, onChange }: { label: str
 }
 
 export function AccessibleFarmView({ open, farm, crops, previewDate, allocations, onSelect, onClose }: { open: boolean; farm: Farm; crops: Map<string, Crop>; previewDate: Date; allocations: Map<string, import('../lib/types').Allocation[]>; onSelect: (bed: Bed) => void; onClose: () => void }) {
-  return <PanelShell open={open} title="Farm list" eyebrow={`Schedule preview · ${formatPreviewDate(previewDate)}`} wide onClose={onClose}><div className="accessible-world-table"><p className="preview-note">Keyboard-friendly alternative to the farm scene. Previewed stages use scheduled dates and do not create observations.</p><table><caption>All {farm.beds.length} growing beds</caption><thead><tr><th>Bed</th><th>Crop</th><th>Stage</th><th>Progress</th><th>Next action</th><th/></tr></thead><tbody>{farm.beds.map(bed => { const state = previewBed(bed, previewDate, allocations.get(bed.id)); return <tr key={bed.id}><th>{bed.name}</th><td>{state.cropId ? crops.get(state.cropId)?.label || state.cropId : 'Open bed'}</td><td>{state.stage}</td><td>{Math.round(state.progress)}%</td><td>{state.nextAction}</td><td><button onClick={() => onSelect(bed)}>Inspect</button></td></tr> })}</tbody></table></div></PanelShell>
+  return <PanelShell open={open} title="Farm list" eyebrow={`Schedule preview · ${formatPreviewDate(previewDate)}`} wide onClose={onClose}><div className="accessible-world-table"><p className="preview-note">Keyboard-friendly alternative to the farm scene. Previewed stages use scheduled dates and do not create observations.</p><table><caption>All {farm.beds.length} growing beds</caption><thead><tr><th>Bed</th><th>Crop</th><th>Stage</th><th>Progress</th><th>Next action</th><th/></tr></thead><tbody>{farm.beds.map(bed => { const state = previewBed(bed, previewDate, allocations.get(bed.id), farm.recipe_calendar); return <tr key={bed.id}><th>{bed.name}</th><td>{state.cropId ? crops.get(state.cropId)?.label || state.cropId : 'Open bed'}</td><td>{state.stage}</td><td>{Math.round(state.progress)}%</td><td>{state.nextAction}</td><td><button onClick={() => onSelect(bed)}>Inspect</button></td></tr> })}</tbody></table></div></PanelShell>
 }
 
 function comparisonRoot(scenario:Scenario){return String(scenario.comparison_root||scenario.baseline_hash||'')}

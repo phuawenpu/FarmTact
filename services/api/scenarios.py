@@ -1,15 +1,19 @@
 """Frozen, tenant-owned experiments. Numerical work never mutates the main farm."""
 from copy import deepcopy
-from datetime import timedelta
+from datetime import datetime,timedelta
 from decimal import Decimal
 import secrets
 from typing import Literal
 from fastapi import HTTPException, Request
 from pydantic import Field, model_validator
-from sqlalchemy import Table, Column, String, JSON, ForeignKey, UniqueConstraint, select, update
+from sqlalchemy import Table, Column, String, JSON, ForeignKey, UniqueConstraint, func, select, update
 from packages.contracts import Strict, Farm, content_hash
 from packages.planner import plan, validate_allocations
 from services.api.store import metadata, now
+
+MAX_SCENARIOS_PER_TENANT=30
+MAX_SCENARIO_ATTEMPTS=3
+SCENARIO_LIST_LIMIT=30
 
 branches = Table('scenario_branches', metadata,
     Column('id', String, primary_key=True), Column('tenant_id', String, ForeignKey('tenants.id'), nullable=False),
@@ -74,6 +78,42 @@ def save_scenario(store, tenant, payload):
     with store.connection(write=True) as c:
         c.execute(update(branches).where(branches.c.tenant_id==tenant, branches.c.id==payload['id']).values(status=payload['status'], payload=payload))
 
+def _attempt(payload,status,**fields):
+    attempts=[dict(row) for row in payload.get('attempts',[])]
+    if status=='QUEUED':
+        resume=fields.pop('resume_same_attempt',False)
+        if resume and attempts:attempts[-1].update(status='QUEUED',**fields)
+        else:attempts.append(dict(number=len(attempts)+1,status='QUEUED',queued_at=now(),**fields))
+    elif attempts:
+        attempts[-1].update(status=status,**fields)
+    payload['attempts']=attempts
+    payload['attempt_count']=len(attempts)
+
+def _is_cancelled(store,tenant,id):
+    with store.connection() as c:
+        return c.execute(select(branches.c.status).where(branches.c.tenant_id==tenant,branches.c.id==id)).scalar_one_or_none()=='CANCELLED'
+
+def cancel_scenario(store,tenant,id):
+    """Atomically request cancellation; repeated calls return the terminal payload."""
+    with store.transaction(tenant) as c:
+        row=c.execute(select(branches).where(branches.c.tenant_id==tenant,branches.c.id==id).with_for_update()).mappings().first()
+        if not row:return None,False
+        s=deepcopy(row['payload'])
+        if row['status'] in ('COMPLETED','FAILED','CANCELLED'):
+            return s,False
+        cancelled_at=now();s['status']='CANCELLED';s['cancellation_requested']=True;s['cancelled_at']=cancelled_at;s['completed_at']=cancelled_at
+        _attempt(s,'CANCELLED',cancelled_at=cancelled_at)
+        c.execute(update(branches).where(branches.c.tenant_id==tenant,branches.c.id==id,branches.c.status.in_(['DRAFT','QUEUED','RUNNING'])).values(status='CANCELLED',payload=s))
+        return s,True
+
+def _claim_scenario(store,tenant,id):
+    with store.transaction(tenant) as c:
+        row=c.execute(select(branches).where(branches.c.tenant_id==tenant,branches.c.id==id).with_for_update()).mappings().first()
+        if not row or row['status']!='QUEUED':return None
+        s=deepcopy(row['payload']);s['status']='RUNNING';s['started_at']=now();_attempt(s,'RUNNING',started_at=s['started_at'])
+        changed=c.execute(update(branches).where(branches.c.tenant_id==tenant,branches.c.id==id,branches.c.status=='QUEUED').values(status='RUNNING',payload=s))
+        return s if changed.rowcount==1 else None
+
 def apply_controls(snapshot, controls):
     farm=Farm.model_validate(snapshot).model_copy(deep=True)
     batch=next((b for b in farm.batches if b.id==controls.batch_id),None)
@@ -95,13 +135,11 @@ def apply_controls(snapshot, controls):
 
 def pending_scenarios(store):
     with store.connection() as c:
-        return c.execute(select(branches.c.tenant_id, branches.c.id).where(branches.c.status=='QUEUED')).all()
+        return c.execute(select(branches.c.tenant_id, branches.c.id).where(branches.c.status=='QUEUED').limit(100)).all()
 
 def execute_scenario(store, tenant, id):
-    with store.connection(write=True) as c:
-        claimed=c.execute(update(branches).where(branches.c.tenant_id==tenant,branches.c.id==id,branches.c.status=='QUEUED').values(status='RUNNING')).rowcount
-    if not claimed:return
-    s=get_scenario(store,tenant,id);s['status']='RUNNING';save_scenario(store,tenant,s)
+    s=_claim_scenario(store,tenant,id)
+    if not s:return
     try:
         from packages.models import MODEL_VERSION
         from packages.planner.engine import VERSION
@@ -116,8 +154,10 @@ def execute_scenario(store, tenant, id):
         baseline_args={'alpha':s['baseline_forecast_settings']['alpha']} if s.get('baseline_forecast_settings') else {}
         forecast_args={'alpha':s['forecast_settings']['alpha']} if s.get('forecast_settings') else {}
         s['baseline']=s.get('baseline') or plan(Farm.model_validate(s['baseline_snapshot']),**baseline_args)
+        if _is_cancelled(store,tenant,id):return
         same=s['input_hash']==s['baseline_hash'] and s.get('forecast_settings',{'alpha':.35})==s.get('baseline_forecast_settings',{'alpha':.35})
         s['result']=deepcopy(s['baseline']) if same else plan(Farm.model_validate(s['input_snapshot']),**forecast_args)
+        if _is_cancelled(store,tenant,id):return
         s['policy_comparisons']=policy_comparisons(s['baseline'],s['result'])
         farm=Farm.model_validate(s['input_snapshot'])
         eligible=[r for r in s['result']['strategies'] if r['status']=='FEASIBLE' and not validate_allocations(farm,r['allocations'])]
@@ -126,11 +166,15 @@ def execute_scenario(store, tenant, id):
         s['simulation_status']='ACCEPTED_FOR_SIMULATION' if chosen else 'NO_FEASIBLE_PLAN'
         s['accepted_strategy_id']=chosen['id'] if chosen else None
         s['acceptance']=dict(actor='development-policy-service', policy_version='scenario-simulation-v1',input_hash=s['input_hash'],input_version=farm.version,strategy_id=chosen['id'],strategy_hash=content_hash(chosen),validation_report_id=content_hash(chosen['violations']),decision_policy='automatic_development',execution_mode='test',data_mode='synthetic_demo',simulation_only=True,occurred_at=now()) if chosen else None
-        s['completed_at']=now()
+        s['completed_at']=now();_attempt(s,'COMPLETED',completed_at=s['completed_at'])
         s.update(computed_impacts(s))
     except Exception as exc:
-        s['status']='FAILED';s['warnings'].append(f'Numerical experiment failed ({type(exc).__name__}). Inputs were preserved; no inference was used.')
+        if _is_cancelled(store,tenant,id):return
+        s['status']='FAILED';s['completed_at']=now();s['warnings'].append(f'Numerical experiment failed ({type(exc).__name__}). Inputs were preserved; no inference was used.')
+        _attempt(s,'FAILED',completed_at=s['completed_at'],error_type=type(exc).__name__)
     with store.transaction(tenant):
+        current=get_scenario(store,tenant,id)
+        if not current or current['status']=='CANCELLED' or current['status']!='RUNNING':return
         save_scenario(store,tenant,s)
         if s['status']=='COMPLETED' and s.get('quest_id'):
             _progress(store,tenant,s['quest_id'],s['id'],False)
@@ -145,8 +189,8 @@ def policy_comparisons(baseline, result):
     return rows
 
 def computed_impacts(s):
-    """Compare declared allocations and daily totals; do not infer per-order fulfilment."""
-    changed_beds=set(); changed_dates=set()
+    """Compare allocations and exact planner-attributed order delivery mass."""
+    changed_beds=set(); delivery_impacts={}; legacy=False
     for after in s['result']['strategies']:
         before=next(row for row in s['baseline']['strategies'] if row['name']==after['name'])
         def by_bed(strategy):
@@ -156,19 +200,39 @@ def computed_impacts(s):
             return {bed:sorted(values) for bed,values in grouped.items()}
         old,new=by_bed(before),by_bed(after)
         changed_beds.update(bed for bed in old.keys()|new.keys() if old.get(bed)!=new.get(bed))
-        old_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in before['ledger']}
-        new_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in after['ledger']}
-        changed_dates.update(day for day in old_days.keys()|new_days.keys() if old_days.get(day)!=new_days.get(day))
-    old_orders={row['id']:row for row in s['baseline_snapshot']['orders']}
-    deliveries=[dict(crop_id=row['crop_id'],due_date=row['due_date'],order_id=row['id']) for row in s['input_snapshot']['orders'] if row['due_date'] in changed_dates or old_orders.get(row['id'])!=row]
-    return dict(affected_bed_ids=sorted(changed_beds),affected_deliveries=deliveries,affected_basis='Changed allocations across policies; deliveries to inspect on dates with changed aggregate demand or delivery totals, or changed order inputs. This is not per-order fulfilment attribution.')
+        if 'order_allocations' not in before or 'order_allocations' not in after:
+            legacy=True;continue
+        old_lines={row['demand_line_id']:row for row in before['order_allocations'] if row.get('order_id')}
+        new_lines={row['demand_line_id']:row for row in after['order_allocations'] if row.get('order_id')}
+        for line_id in old_lines.keys()|new_lines.keys():
+            prior=old_lines.get(line_id);current=new_lines.get(line_id)
+            def quantities(row):
+                return None if row is None else (tuple(row.get(key) for key in ('requested_kg','delivered_kg','shortfall_kg','price_sgd_per_kg','price_status')),content_hash(row.get('lot_allocations',[])))
+            if quantities(prior)==quantities(current):continue
+            source=current or prior
+            entry=delivery_impacts.setdefault(line_id,dict(order_id=source['order_id'],crop_id=source['crop_id'],due_date=source['date'],demand_line_id=line_id,policy_impacts=[]))
+            entry['policy_impacts'].append(dict(policy=after['name'],baseline_requested_kg=prior.get('requested_kg',0) if prior else 0,baseline_delivered_kg=prior.get('delivered_kg',0) if prior else 0,baseline_lot_allocations=prior.get('lot_allocations',[]) if prior else [],scenario_requested_kg=current.get('requested_kg',0) if current else 0,scenario_delivered_kg=current.get('delivered_kg',0) if current else 0,scenario_shortfall_kg=current.get('shortfall_kg',0) if current else 0,scenario_lot_allocations=current.get('lot_allocations',[]) if current else [],price_status=(current or prior).get('price_status')))
+    if legacy:
+        changed_dates=set()
+        for after in s['result']['strategies']:
+            before=next(row for row in s['baseline']['strategies'] if row['name']==after['name'])
+            old_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in before.get('ledger',[])}
+            new_days={row['date']:(row['demand_kg'],row['delivered_kg']) for row in after.get('ledger',[])}
+            changed_dates.update(day for day in old_days.keys()|new_days.keys() if old_days.get(day)!=new_days.get(day))
+        old_orders={row['id']:row for row in s['baseline_snapshot']['orders']}
+        for row in s['input_snapshot']['orders']:
+            if row['due_date'] in changed_dates or old_orders.get(row['id'])!=row:
+                delivery_impacts.setdefault('order:'+row['id'],dict(crop_id=row['crop_id'],due_date=row['due_date'],order_id=row['id']))
+    basis='Exact per-order requested, delivered and shortfall differences from the planner lot-allocation ledger across policies.'
+    if legacy:basis+=' Legacy frozen strategies without order allocations use aggregate changed-date screening.'
+    return dict(affected_bed_ids=sorted(changed_beds),affected_deliveries=sorted(delivery_impacts.values(),key=lambda row:(row['due_date'],row['order_id'])),affected_basis=basis)
 
 def interrupt_scenarios(store):
     # Numerical jobs may safely resume after restart; no inference side effects exist.
     with store.connection(write=True) as c:
         rows=c.execute(select(branches.c.payload).where(branches.c.status=='RUNNING')).scalars().all()
         for s in rows:
-            s['status']='QUEUED'
+            s['status']='QUEUED';_attempt(s,'QUEUED',interrupted_at=now(),resume_same_attempt=True)
             c.execute(update(branches).where(branches.c.id==s['id']).values(status='QUEUED',payload=s))
 
 def _progress(store,tenant,quest,id,inspect):
@@ -195,11 +259,18 @@ def install_routes(app,tenant):
         if not k or len(k)>128:raise HTTPException(422,'Idempotency-Key required, maximum 128 characters')
         return k
     @app.get('/api/v1/scenarios')
-    def listing(request:Request):
+    def listing(request:Request,limit:int=SCENARIO_LIST_LIMIT,before:str|None=None):
+        if not 1<=limit<=SCENARIO_LIST_LIMIT:raise HTTPException(422,'Scenario list limit must be from 1 to 30')
+        if before is not None:
+            try:datetime.fromisoformat(before.replace('Z','+00:00'))
+            except (ValueError,AttributeError):raise HTTPException(422,'Invalid scenario cursor')
         t=tenant(request)
-        with app.state.store.connection() as c:rows=c.execute(select(branches.c.payload).where(branches.c.tenant_id==t)).scalars().all()
+        with app.state.store.connection() as c:
+            created=branches.c.payload['created_at'].as_string();query=select(branches.c.payload).where(branches.c.tenant_id==t)
+            if before is not None:query=query.where(created<before)
+            rows=c.execute(query.order_by(created.desc(),branches.c.id.desc()).limit(limit)).scalars().all()
         # Return full persisted branches so reopening never requires a recalculation.
-        return dict(scenarios=sorted(rows,key=lambda x:x['created_at'],reverse=True))
+        return dict(scenarios=rows)
     @app.post('/api/v1/scenarios',status_code=201)
     def create(body:ScenarioRequest,request:Request):
         t=tenant(request);k=key(request);store=app.state.store;fingerprint=content_hash(body)
@@ -208,6 +279,8 @@ def install_routes(app,tenant):
             if old:
                 if old['request_hash']!=fingerprint:raise HTTPException(409,'Idempotency key reused with changed inputs')
                 return dict(old['payload'],reused=True)
+            count=c.execute(select(func.count()).select_from(branches).where(branches.c.tenant_id==t)).scalar_one()
+            if count>=MAX_SCENARIOS_PER_TENANT:raise HTTPException(429,'Thirty scenarios per session maximum')
             parent=get_scenario(store,t,body.parent_scenario_id) if body.parent_scenario_id else None
             if body.parent_scenario_id and not parent:raise HTTPException(404,'Parent scenario not found')
             if parent and parent['status']!='COMPLETED':raise HTTPException(409,'Complete the parent experiment first')
@@ -236,7 +309,7 @@ def install_routes(app,tenant):
             if controls['demand_crop_id'] and controls['demand_percent']!=100:crop_ids.add(controls['demand_crop_id'])
             if controls['cash_percent']!=100 or controls['labour_percent']!=100:crop_ids.update(r['crop_id'] for r in snapshot['recipes'])
             affected=[b['bed_id'] for b in snapshot['batches'] if next(r['crop_id'] for r in snapshot['recipes'] if r['id']==b['recipe_id']) in crop_ids]
-            s=dict(id=secrets.token_hex(16),name=body.name,created_at=now(),status='DRAFT',controls=controls,quest_id=body.quest_id,parent_scenario_id=parent['id'] if parent else None,source_conversation_id=body.source_conversation_id,input_snapshot=snapshot,input_hash=content_hash(snapshot),baseline_snapshot=parent['baseline_snapshot'] if parent else source,baseline=parent.get('baseline') if parent else None,result=None,affected_bed_ids=affected,affected_crop_ids=sorted(crop_ids),affected_deliveries=[],warnings=[],data_mode='synthetic_demo',execution_mode='test',inference_calls=0)
+            s=dict(id=secrets.token_hex(16),name=body.name,created_at=now(),status='DRAFT',controls=controls,quest_id=body.quest_id,parent_scenario_id=parent['id'] if parent else None,source_conversation_id=body.source_conversation_id,input_snapshot=snapshot,input_hash=content_hash(snapshot),baseline_snapshot=parent['baseline_snapshot'] if parent else source,baseline=parent.get('baseline') if parent else None,result=None,affected_bed_ids=affected,affected_crop_ids=sorted(crop_ids),affected_deliveries=[],warnings=[],data_mode='synthetic_demo',execution_mode='test',inference_calls=0,attempts=[],attempt_count=0,max_attempts=MAX_SCENARIO_ATTEMPTS,cancellation_requested=False)
             from packages.news import freeze_for_farm
             s['news_context']=deepcopy(parent['news_context']) if parent and parent.get('news_context') else (deepcopy(conversation['_news_context']) if conversation and conversation.get('_news_context') else freeze_for_farm(snapshot,s['created_at']))
             if explorer:
@@ -252,6 +325,8 @@ def install_routes(app,tenant):
             s.setdefault('comparison_root','farm:'+s['baseline_hash'])
             from packages.planner.engine import VERSION
             s['calculation_version']=VERSION
+            from services.api.provenance import runtime_provenance
+            s['runtime_provenance']=runtime_provenance()
             if s.get('forecast_settings'):
                 s['numerical_input_hash']=content_hash(dict(input_hash=s['input_hash'],configuration_hash=content_hash(dict(model_version=s['forecast_version'],forecast_settings=s['forecast_settings']))))
             c.execute(branches.insert().values(id=s['id'],tenant_id=t,idempotency_key=k,request_hash=fingerprint,status=s['status'],payload=s))
@@ -272,9 +347,26 @@ def install_routes(app,tenant):
         with store.transaction(t):
             s=get_scenario(store,t,id)
             if s.get('run_key') and s['run_key']!=k:raise HTTPException(409,'This frozen experiment already has a run; continue it in a new branch')
-            if s.get('run_key'):return dict(s,reused=True)
-            s['run_key']=k;s['status']='QUEUED';save_scenario(store,t,s)
+            if s['status'] in ('QUEUED','RUNNING','COMPLETED'):return dict(s,reused=True)
+            if s['status'] not in ('DRAFT','FAILED','CANCELLED'):raise HTTPException(409,'Scenario cannot be queued from its current state')
+            if len(s.get('attempts',[]))>=MAX_SCENARIO_ATTEMPTS:raise HTTPException(429,'Three numerical attempts per scenario maximum')
+            s['run_key']=k;s['status']='QUEUED';s['cancellation_requested']=False
+            for field in ('cancelled_at','completed_at','simulation_status','accepted_strategy_id','acceptance','policy_comparisons'):
+                s.pop(field,None)
+            s['result']=None;_attempt(s,'QUEUED');save_scenario(store,t,s)
         return s
+    @app.post('/api/v1/scenarios/{id}/retry',status_code=202)
+    def retry(id:str,request:Request):
+        t,s=owned(request,id);k=key(request)
+        if not s.get('run_key') or s['run_key']!=k:raise HTTPException(409,'Retry must use the original run idempotency key')
+        if s['status'] not in ('FAILED','CANCELLED'):
+            if s['status'] in ('QUEUED','RUNNING','COMPLETED'):return dict(s,reused=True)
+            raise HTTPException(409,'Only a failed or cancelled numerical attempt can be retried')
+        return run(id,request)
+    @app.post('/api/v1/scenarios/{id}/cancel')
+    def cancel(id:str,request:Request):
+        t,_=owned(request,id);s,changed=cancel_scenario(app.state.store,t,id)
+        return dict(s,reused=not changed)
     @app.get('/api/v1/quests')
     def quests(request:Request):
         t=tenant(request)

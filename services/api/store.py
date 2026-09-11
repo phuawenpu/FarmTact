@@ -1,6 +1,6 @@
 """Tenant-scoped durable snapshots/jobs/events. PostgreSQL in service, SQLite only explicit tests."""
 import os, secrets, hashlib
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from contextvars import ContextVar
 from datetime import datetime,timezone,timedelta
 from pathlib import Path
@@ -13,6 +13,7 @@ farms=Table('farm_versions',metadata,Column('id',String,primary_key=True),Column
 runs=Table('planning_runs',metadata,Column('id',String,primary_key=True),Column('tenant_id',String,ForeignKey('tenants.id'),nullable=False),Column('idempotency_key',String,nullable=False),Column('request_hash',String,nullable=False),Column('status',String,nullable=False),Column('payload',JSON,nullable=False),UniqueConstraint('tenant_id','idempotency_key'),UniqueConstraint('id','tenant_id',name='run_tenant_identity'))
 events=Table('run_events',metadata,Column('id',Integer,primary_key=True),Column('run_id',String,ForeignKey('planning_runs.id'),nullable=False),Column('tenant_id',String,ForeignKey('tenants.id'),nullable=False),Column('sequence',Integer,nullable=False),Column('payload',JSON,nullable=False),UniqueConstraint('run_id','sequence'),ForeignKeyConstraint(['run_id','tenant_id'],['planning_runs.id','planning_runs.tenant_id'],name='event_run_tenant_fk'))
 budget=Table('inference_budget',metadata,Column('id',String,primary_key=True),Column('reserved_calls',Integer,nullable=False))
+mutation_receipts=Table('mutation_receipts',metadata,Column('tenant_id',String,ForeignKey('tenants.id'),primary_key=True),Column('idempotency_key',String,primary_key=True),Column('request_hash',String,nullable=False),Column('payload',JSON,nullable=False))
 
 def now(): return datetime.now(timezone.utc).isoformat()
 class Store:
@@ -20,6 +21,11 @@ class Store:
         url=url or os.environ.get('FARMTACT_DATABASE_URL','postgresql+psycopg://sprite@/farmtact?host=/tmp/farmtact-pg')
         opts={}
         if url=='sqlite://': opts=dict(connect_args={'check_same_thread':False},poolclass=StaticPool)
+        # Explicit in-memory test mode has one DBAPI connection. Serializing its
+        # transactions prevents a background polling read from rolling back an
+        # unrelated HTTP write. PostgreSQL retains independent pooled connections.
+        import threading
+        self._serialization=threading.RLock() if url=='sqlite://' else nullcontext()
         self.engine=create_engine(url,**opts)
         self.control = None
         if os.environ.get('FARMTACT_EDITION'):
@@ -36,6 +42,7 @@ class Store:
         import services.api.security
         import services.api.data_explorer
         import services.api.council_research
+        import services.api.simulation
         metadata.create_all(self.engine)
         if self.engine.dialect.name=='postgresql':
             from sqlalchemy import inspect,text
@@ -51,10 +58,10 @@ class Store:
         if current is not None:
             yield current
         else:
-            with (self.engine.begin() if write else self.engine.connect()) as c:yield c
+            with self._serialization,(self.engine.begin() if write else self.engine.connect()) as c:yield c
     @contextmanager
     def transaction(self,tenant=None):
-        with self.engine.begin() as c:
+        with self._serialization,self.engine.begin() as c:
             token=self._transaction.set(c)
             try:
                 if tenant:c.execute(select(tenants.c.id).where(tenants.c.id==tenant).with_for_update())
@@ -92,6 +99,9 @@ class Store:
             if old:
                 if old['request_hash']!=request_hash:raise ValueError('Idempotency key reused with changed inputs')
                 return old['payload'],False
+            from sqlalchemy import func
+            if c.execute(select(func.count()).select_from(runs).where(runs.c.tenant_id==tenant)).scalar_one()>=64:
+                raise ValueError('Session planning history limit reached (64 missions)')
             active=c.execute(select(runs.c.id).where(runs.c.tenant_id==tenant,runs.c.status.in_(['CREATED','RUNNING']))).first()
             if active:raise ValueError('A planning mission is already running')
             c.execute(runs.insert().values(id=payload['id'],tenant_id=tenant,idempotency_key=key,request_hash=request_hash,status=payload['status'],payload=payload))
@@ -108,8 +118,10 @@ class Store:
         return event
     def get_events(self,tenant,id,after=0):
         with self.connection() as c:return list(c.execute(select(events.c.payload).where(events.c.tenant_id==tenant,events.c.run_id==id,events.c.sequence>after).order_by(events.c.sequence)).scalars())
-    def pending(self):
-        with self.connection() as c:return c.execute(select(runs.c.tenant_id,runs.c.id).where(runs.c.status=='CREATED')).all()
+    def pending(self,council_requested=None):
+        query=select(runs.c.tenant_id,runs.c.id).where(runs.c.status=='CREATED')
+        if council_requested is not None:query=query.where(runs.c.payload['council_requested'].as_boolean()==council_requested)
+        with self.connection() as c:return c.execute(query.order_by(runs.c.id).limit(200)).all()
     def claim(self,tenant,id):
         with self.connection(write=True) as c:return c.execute(update(runs).where(runs.c.id==id,runs.c.tenant_id==tenant,runs.c.status=='CREATED').values(status='RUNNING')).rowcount==1
     def interrupt_abandoned(self):
