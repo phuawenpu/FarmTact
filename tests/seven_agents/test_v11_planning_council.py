@@ -49,6 +49,7 @@ def test_claims_compute_direction_shortfall_and_crop_composition_independently()
     assert by_metric["crop_allocation_area_m2"]["direction"] == "changed"
     assert by_metric["crop_allocation_count"]["direction"] == "unchanged"
     assert all(claim["snapshot_hash"] == "frozen-v11" for claim in claims)
+    assert "crop waste or remaining stock" in planning_council._RATIONALE_TEXT["balance_service_waste_margin"]
 
 
 def test_claim_ids_are_stable_and_nan_metrics_are_not_admitted():

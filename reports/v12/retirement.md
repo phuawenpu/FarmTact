@@ -34,6 +34,11 @@ process count was successfully captured (`ps` was absent in the application imag
 The Machine remains 4 shared vCPUs / 4096 MB and one 3-GB volume. No reduced hosting
 bill is claimed. Fly manages image layers outside the mounted application volume;
 no broad image prune or registry deletion was attempted. Historical image pins remain.
+The available Fly tooling did not provide a verified exact-digest inventory and
+reference/deletion boundary sufficient to prove that an artifact was unused by
+every retained or staged container. Image cleanup remains blocked rather than
+guessing from tags or broadly pruning the registry. Retirement-plan image rows
+are advisory until a provider-supported exact inventory is available.
 
 Public route checks: all ten retired GET and POST paths returned 410, without
 redirecting mutation requests. Public listing contains only V11; V12 is 404 to

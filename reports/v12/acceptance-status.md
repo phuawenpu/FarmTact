@@ -36,3 +36,29 @@ review narrowed the final Council V4 contract: margin-only findings cannot pass
 Capacity & Cost, balanced findings need all service/waste/margin groups, and valid
 provider abstentions show partial. Eleven focused Council tests pass. Exact-source
 full regression and live final Council review remain publication gates.
+
+The actual V4 Council/workflow trial at 8dc760d passed: five numerical roles had
+validated findings, with Weather and Market correctly partial for absent sources.
+Seven actual requests included two repairs; the daily shared ledger was 31/48.
+Independent semantic review found no numerical contradictions, while recording
+limits on capacity/optimality inference. Its stock-backed balanced rationale exposed
+a display-only reference to expired waste; the final wording now explicitly permits
+crop waste or remaining stock, matching the already-validated evidence groups.
+
+The 8dc760d full suite finished with 723 passes, one skip and one failure caused by
+accumulated abuse counters in a reused test database. The adversarial PostgreSQL
+test now uses a unique schema while retaining real rate-limit enforcement and
+restart persistence. The corrected adversarial, abuse-limit and Council regression passed 40 tests. Staged upload, reviewed
+discussion provenance and restart replay passed at 8dc760d.
+
+The live state-changing specialist trial used one additional request (32/48 daily).
+Its exact 80% labour action, reviewed draft, explicit Apply/recalculation and unchanged
+orders/main farm passed. Its model-authored causal margin explanation is unsupported;
+backend marks qualitative interpretation unverified, and the farmer view is being
+updated to expose that distinction with code-rendered facts. This is action-boundary
+evidence, not a blanket semantic-quality pass.
+
+Final rolling cleanup now reads actual Machine state after snapshot completion and
+requires exact host/container identity before storage deletion. Fifty-five focused
+release/retirement checks passed. Final full regression and exact-source staging
+remain in progress.

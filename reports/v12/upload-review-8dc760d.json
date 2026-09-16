@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": {
+    "manual_csv_xlsx_reviewed": true,
+    "reconciliation_exact": true,
+    "source_preview_exact": true,
+    "upload_replay_exact": true,
+    "tentative_link_withheld": true,
+    "confirmed_provenance_linked": true,
+    "provider_call_contract": true,
+    "cross_tenant_source_isolated": true,
+    "state_has_no_raw_blobs": true
+  },
+  "provider_requests_expected": 0,
+  "vision_requested": false,
+  "candidate_ids": [
+    "fin-f8b4a1b43f568e59ed2675c7",
+    "fin-cc76576e1a836b4b4a07f9e4",
+    "fin-4fcf5cad17427d3dffcb6348",
+    "fin-54491ab4d16dc7c75b4d8857"
+  ],
+  "session_id": "cf0cc52da8eb6969603bf3a2f8fab3f5",
+  "proposal_id": "b44899da5b01986e448fe2c61507c2fb",
+  "started_at": "2026-09-16T14:45:06.467554+00:00",
+  "completed_at": "2026-09-16T14:45:21.604845+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "private_gateway": true
+}

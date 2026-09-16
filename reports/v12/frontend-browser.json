@@ -30,6 +30,10 @@
       }
     },
     {
+      "name": "reference checks do not overstate qualitative interpretation",
+      "pass": true
+    },
+    {
       "name": "validated discussion renders bounded proposed action",
       "pass": true
     },

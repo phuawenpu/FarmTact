@@ -5,6 +5,8 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine, text
+from sqlalchemy.engine import make_url
 
 from services.api import farm_workflow
 from services.api.app import create_app
@@ -15,12 +17,30 @@ from services.api.store import Store
 DATABASE_URL = 'postgresql+psycopg://sprite@/farmtact_review?host=/tmp/farmtact-pg'
 
 
+@pytest.fixture
+def isolated_database_url():
+    # Durable restart coverage needs PostgreSQL, but repeated acceptance runs must
+    # not inherit earlier tenants or their durable abuse counters.
+    schema = 'v12_acceptance_' + uuid4().hex
+    engine = create_engine(DATABASE_URL)
+    with engine.begin() as connection:
+        connection.execute(text(f'CREATE SCHEMA {schema}'))
+    url = make_url(DATABASE_URL).update_query_dict({'options': f'-csearch_path={schema}'})
+    try:
+        yield url.render_as_string(hide_password=False)
+    finally:
+        with engine.begin() as connection:
+            connection.execute(text(f'DROP SCHEMA {schema} CASCADE'))
+        engine.dispose()
+
+
 def post(client, path, body, key=None):
     return client.post('/api/v1' + path, json=body, headers={'Idempotency-Key': key or uuid4().hex})
 
 
 def calculated_workflow(store, client):
-    client.get('/api/v1/bootstrap')
+    bootstrap = client.get('/api/v1/bootstrap')
+    assert bootstrap.status_code == 200, bootstrap.text
     tenant = store.authenticate(client.cookies.get('farmtact_session'))
     created = post(client, '/planning-sessions', {'name': 'Adversarial acceptance', 'workflow': True})
     assert created.status_code == 201, created.text
@@ -59,8 +79,8 @@ def apply_and_approve(store, client, tenant, session, draft):
     return response.json()
 
 
-def test_stale_approval_results_corrections_restart_and_tenant_isolation():
-    store = Store(DATABASE_URL)
+def test_stale_approval_results_corrections_restart_and_tenant_isolation(isolated_database_url):
+    store = Store(isolated_database_url)
     app = create_app(store, start_worker=False)
     with TestClient(app) as client:
         tenant, path, session = calculated_workflow(store, client)
@@ -110,13 +130,15 @@ def test_stale_approval_results_corrections_restart_and_tenant_isolation():
         assert harvest['id'] not in {row['id'] for row in other['tasks']}
         assert stale['id'] not in {row['id'] for row in other['proposals']}
 
-    restarted = Store(DATABASE_URL)
+    restarted = Store(isolated_database_url)
     with TestClient(create_app(restarted, start_worker=False)) as client:
         client.cookies.set('farmtact_session', token)
         persisted = client.get('/api/v1/farm-workflow').json()
         assert any(row['id'] == harvest['id'] and row['event_revision'] == 2 for row in persisted['tasks'])
         replay_session = client.get('/api/v1' + path).json()
         assert replay_session['reported_forecast']['source_task_events']
+    restarted.engine.dispose()
+    store.engine.dispose()
 
 
 def test_task_result_rolls_back_when_event_append_fails(monkeypatch):

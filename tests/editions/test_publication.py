@@ -188,6 +188,11 @@ def test_rolling_retirement_stops_oldest_then_snapshots_and_applies(tmp_path, mo
                         lambda _settings, config: events.append(('update', [r['name'] for r in config['containers']])))
     monkeypatch.setattr(publication, 'create_recovery_snapshot',
                         lambda _settings: events.append(('snapshot', None)) or 'snapshot-rolling-13')
+    actual_runtime = {'id': settings['machine_id'], 'config': {'containers': [
+        {'name': name, 'env': {}} for name in ('gateway', 'v12', 'v13', 'retirement-operator')
+    ]}}
+    monkeypatch.setattr(publication, 'readback_shared_runtime',
+                        lambda _settings, _config: events.append(('readback', None)) or actual_runtime)
     monkeypatch.setattr(publication, 'deploy_shared',
                         lambda _history, _active: events.append(('finalize', None)))
 
@@ -201,10 +206,10 @@ def test_rolling_retirement_stops_oldest_then_snapshots_and_applies(tmp_path, mo
     monkeypatch.setattr(publication, 'command', fake_command)
     result = publication.retire_oldest_shared(history, active)
 
-    assert [event[0] for event in events] == ['update', 'snapshot', 'runtime', 'apply', 'finalize']
+    assert [event[0] for event in events] == ['update', 'snapshot', 'readback', 'runtime', 'apply', 'finalize']
     assert set(events[0][1]) == {'gateway', 'v12', 'v13', 'retirement-operator'}
     assert 'v11' not in events[0][1]
-    assert '--snapshot-id snapshot-rolling-13' in events[3][1]
+    assert '--snapshot-id snapshot-rolling-13' in events[4][1]
     assert result['status'] == 'retired'
 
 
@@ -218,6 +223,9 @@ def test_rolling_retirement_failure_leaves_operator_for_safe_resume(monkeypatch)
     monkeypatch.setattr(publication, 'guard_shared_cleanup_runtime', lambda *_args: {})
     monkeypatch.setattr(publication, 'update_shared_machine', lambda *_args: None)
     monkeypatch.setattr(publication, 'create_recovery_snapshot', lambda *_args: 'snapshot-rolling-03')
+    monkeypatch.setattr(publication, 'readback_shared_runtime', lambda *_args: {
+        'id': settings['machine_id'], 'config': {'containers': []},
+    })
     monkeypatch.setattr(publication, 'deploy_shared', lambda *_args: finalized.append(True))
     calls = 0
 
@@ -330,3 +338,38 @@ def test_cleanup_allows_post_cutover_staged_marker_equal_to_latest(monkeypatch):
     assert publication.guard_shared_cleanup_runtime(
         {'app': 'farmtact', 'machine_id': '1234567890abcd'}, history, active,
     ) == runtime
+
+
+@pytest.mark.parametrize('drift', ['retired_worker', 'future_candidate', 'staged_marker'])
+def test_post_snapshot_machine_readback_rejects_actual_runtime_drift(monkeypatch, drift):
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd'}
+    expected = {'containers': [
+        {'name': 'gateway', 'env': {}}, {'name': 'v12', 'env': {}},
+        {'name': 'v13', 'env': {}}, {'name': 'retirement-operator'},
+    ]}
+    actual = json.loads(json.dumps(expected))
+    if drift == 'retired_worker':
+        actual['containers'].append({'name': 'v11', 'env': {}})
+    elif drift == 'future_candidate':
+        actual['containers'].append({'name': 'v14', 'env': {'FARMTACT_STAGED_EDITION': 'v14'}})
+    else:
+        actual['containers'][0]['env']['FARMTACT_STAGED_EDITION'] = 'v14'
+    calls = []
+    monkeypatch.setattr(publication, 'command', lambda args, **_kwargs:
+                        calls.append(args) or type('Result', (), {'stdout': json.dumps({
+                            'id': settings['machine_id'], 'config': actual,
+                        })})())
+    with pytest.raises(publication.PublicationError, match='containers differ|unexpected candidate'):
+        publication.readback_shared_runtime(settings, expected)
+    assert len(calls) == 1 and calls[0][:3] == ['fly', 'machine', 'status']
+
+
+def test_post_snapshot_machine_readback_requires_exact_machine_identity(monkeypatch):
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd'}
+    expected = {'containers': [{'name': 'gateway', 'env': {}}]}
+    monkeypatch.setattr(publication, 'command', lambda *_args, **_kwargs:
+                        type('Result', (), {'stdout': json.dumps({
+                            'id': 'ffffffffffffff', 'config': expected,
+                        })})())
+    with pytest.raises(publication.PublicationError, match='identity'):
+        publication.readback_shared_runtime(settings, expected)

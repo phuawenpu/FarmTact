@@ -1,0 +1,10 @@
+{
+  "source_commit": "8dc760d86c3fedddfdd4a97da315d4adec4592f1",
+  "session_hash": "85c48c51ab69c872676f824792f821c8bdaed8aa5c90e59d31a179ff6e580ae8",
+  "task_hash": "15d01baa29830493415f92d80208e4580e8f08432c7539004d6cd135c742a17c",
+  "messages_hash": "b3679af5b8ce19a2fd5d189b3f58eca8b9174f85be966f973ffbad1ee8a7cde9",
+  "review_history_hash": "4acf2e6b2b6d7d21f50a20633f4cc7d7bfdc8b35711899321a356d197a06d503",
+  "task_status": "completed",
+  "event_revision": 2,
+  "new_inference": false
+}

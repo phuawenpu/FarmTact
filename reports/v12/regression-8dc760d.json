@@ -1,0 +1,9 @@
+{
+  "source_commit": "8dc760d86c3fedddfdd4a97da315d4adec4592f1",
+  "status": "FAIL",
+  "passed": 723,
+  "failed": 1,
+  "skipped": 1,
+  "seconds": 642.49,
+  "failure": "PostgreSQL adversarial acceptance reused durable new_session_ip counters from prior test runs, bootstrap was rate limited before workflow creation. Repaired with a unique PostgreSQL schema per test; production limits unchanged."
+}

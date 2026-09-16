@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "source_commit": "8dc760d86c3fedddfdd4a97da315d4adec4592f1",
+  "checks": {
+    "reviewed_draft_only": true,
+    "source_message_bound": true,
+    "reviewed_changes_hash": true,
+    "idempotent": true,
+    "planning_unchanged": true,
+    "tasks_unchanged": true
+  },
+  "proposal_id": "d2bfd2dedacc7763f832fc6aebca2be5",
+  "source_conversation": {
+    "conversation_id": "feae448e84d57f46e0717b86891197f8",
+    "message_id": "aad4fc754ee3c78448e30dd11a15f414",
+    "snapshot_ref": {
+      "kind": "planning",
+      "id": "e6c70e96f60acf7fe02df0fd40c8cfe6:f1797d00b70d29854b3fcaae426d7cbf",
+      "hash": "c741d4d732a51ecd8626394b78c3ae5d0126571c3772b06a21e7c4cdc1f845cd",
+      "version": 1,
+      "data_mode": "synthetic_demo",
+      "frozen_at": "2026-09-16T14:14:01.561316+00:00"
+    },
+    "message_hash": "f73d4543ed46df7c13983bbeca1f11c0b5bb6c16f998b0aadb3064e7c5f35f25",
+    "proposed_actions": [],
+    "translation": "farmer_reviewed_assumptions",
+    "reviewed_changes_hash": "092162a3903eee1c20646c95a9a289bf1705b60373fa393fe6672ebbf2fa7a69",
+    "authority": "reviewed_advisory_context"
+  },
+  "reviewed_changes": [
+    {
+      "kind": "planning_assumptions",
+      "assumptions": {
+        "capacity": {
+          "labour_hours_per_week": 25.6
+        }
+      }
+    }
+  ],
+  "inference_requests": 0
+}

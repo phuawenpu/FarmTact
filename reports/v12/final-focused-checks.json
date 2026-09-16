@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "command": ".venv/bin/python -m pytest tests/gameplay/test_v12_acceptance_adversarial.py tests/review/test_abuse_limits.py tests/seven_agents/test_v11_planning_council.py -q",
+      "passed": 40,
+      "seconds": 54.51
+    },
+    {
+      "scope": "publication/retention/operator/deployment specialist suite",
+      "passed": 55,
+      "seconds": 0.34
+    }
+  ],
+  "production_abuse_limits_changed": false
+}

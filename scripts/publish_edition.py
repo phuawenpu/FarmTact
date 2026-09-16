@@ -409,6 +409,37 @@ def guard_shared_cleanup_runtime(settings: dict, history: dict, active: dict) ->
     return runtime
 
 
+def readback_shared_runtime(settings: dict, expected_config: dict) -> dict:
+    """Read and verify the applied Machine configuration immediately before cleanup."""
+    result = command(['fly', 'machine', 'status', settings['machine_id'],
+                      '--app', settings['app'], '--json'])
+    try:
+        runtime = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise PublicationError('Applied shared Machine configuration is invalid') from error
+    if not isinstance(runtime, dict) or runtime.get('id') != settings['machine_id']:
+        raise PublicationError('Applied shared Machine identity does not match the configured host')
+    actual = runtime.get('config')
+    actual_containers = actual.get('containers') if isinstance(actual, dict) else None
+    expected_containers = expected_config.get('containers')
+    if not isinstance(actual_containers, list) or not isinstance(expected_containers, list):
+        raise PublicationError('Applied shared Machine container inventory is required')
+    actual_names = [row.get('name') for row in actual_containers if isinstance(row, dict)]
+    expected_names = [row.get('name') for row in expected_containers if isinstance(row, dict)]
+    if (len(actual_names) != len(actual_containers) or len(set(actual_names)) != len(actual_names)
+            or set(actual_names) != set(expected_names)):
+        raise PublicationError('Applied shared Machine containers differ from the retirement configuration')
+    expected_editions = {name for name in expected_names if isinstance(name, str) and EDITION.fullmatch(name)}
+    for row in actual_containers:
+        env = row.get('env', {})
+        if not isinstance(env, dict):
+            raise PublicationError('Applied shared Machine container environment is invalid')
+        staged = env.get('FARMTACT_STAGED_EDITION')
+        if staged and staged not in expected_editions:
+            raise PublicationError(f'Cleanup refused while unexpected candidate {staged} is staged')
+    return runtime
+
+
 def wait_for_snapshot(settings: dict, snapshot_id: str, *, attempts: int = 30, interval: float = 2) -> None:
     """Require Fly to report a usable recovery point before deletion can start."""
     pending = {'pending', 'queued', 'creating', 'processing'}
@@ -465,9 +496,13 @@ def retire_oldest_shared(history: dict, active: dict) -> dict:
     # touched until Fly has recorded a recovery snapshot of the shared volume.
     update_shared_machine(settings, operator_config)
     snapshot_id = create_recovery_snapshot(settings)
+    # Read Fly's applied state after the update and completed snapshot. This is
+    # the runtime evidence consumed by apply_plan, rather than the desired local
+    # JSON, and is fetched as close to deletion as the operator upload permits.
+    applied_runtime = readback_shared_runtime(settings, operator_config)
     with tempfile.TemporaryDirectory(prefix='farmtact-retirement-') as directory:
         runtime_path = Path(directory) / 'runtime.json'
-        runtime_path.write_text(json.dumps(operator_config))
+        runtime_path.write_text(json.dumps(applied_runtime))
         command(
             ['fly', 'ssh', 'sftp', 'shell', '--app', settings['app'], '--machine',
              settings['machine_id'], '--container', 'retirement-operator'],

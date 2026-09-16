@@ -188,7 +188,7 @@ _RATIONALE_TEXT = {
     "preserve_margin": "Protect projected margin while respecting the declared planning constraints.",
     "preserve_crop_variety": "Preserve a useful crop mix within the available growing space.",
     "respect_capacity_cost": "Review projected cost and resource use in the frozen plan.",
-    "balance_service_waste_margin": "Balance customer service, expired waste, and projected margin.",
+    "balance_service_waste_margin": "Balance customer service, crop waste or remaining stock, and projected margin.",
     "insufficient_external_evidence": "The required external evidence is unavailable, so no finding is asserted.",
 }
 

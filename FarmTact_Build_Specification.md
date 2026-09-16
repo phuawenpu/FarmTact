@@ -1,6 +1,6 @@
 ## V12 implementation amendment — 16 September 2026
 
-Final audit contracts: functional Council V3 requires crop composition evidence
+Final audit contracts: functional Council V4 requires crop composition evidence
 for crop-mix findings and cost/resource evidence for Capacity & Cost findings.
 Discussion-linked proposals retain original message/actions, frozen result reference,
 message hash and the hash of farmer-reviewed assumptions. Applying them remains an
