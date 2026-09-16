@@ -1,3 +1,15 @@
+# V12 is published; final cleanup verification in progress
+
+V12 source9fd5789 and exact staged image are public, with active V11/V12.
+728 backend tests passed (one skip), final UI25mock/30real checks passed, and
+public navigation28/edition18 checks passed. V1–V10 remain retired.
+
+Postpublication host-tool compatibility and edition-local metadata repair are
+recorded separately. The adapter now appends only published history; snapshot
+scheduling requires a newly completed recovery point. Focused tooling checks
+passed58 lifecycle and24 deployment assertions. Final cleanup/preservation probes
+remain pending. Historical acceptance progression below is retained for traceability.
+
 # V12 final acceptance remains in progress
 
 V11 is the sole public edition; V12 is private. V1–V10 workers/storage are retired

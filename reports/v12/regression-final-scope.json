@@ -1,0 +1,10 @@
+{
+  "full_run_base": "dde385d",
+  "final_source": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "changed_python_files_after_start": [
+    "scripts/publish_edition.py",
+    "tests/editions/test_publication.py"
+  ],
+  "final_changed_files_verification": "55 publication/retention/operator/deployment focused tests passed; changes only shell invocation quoting and EOF-only SFTP upload",
+  "frontend_verification": "25 mocked and 30 real browser assertions, typecheck/build passed"
+}

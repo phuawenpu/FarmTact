@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "checks": {
+    "session_hash": true,
+    "task_hash": true,
+    "messages_hash": true,
+    "review_history_hash": true,
+    "task_status": true,
+    "event_revision": true,
+    "new_inference": true,
+    "assets_match_local": true,
+    "three_uncached_pairs": true
+  },
+  "capacity_trials": [
+    {
+      "trial": 1,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.15461325900000134,
+      "browse_samples": 18,
+      "v12_seconds": 12.127882084,
+      "v11_seconds": 12.353663803000003,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 2,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.1780673379999982,
+      "browse_samples": 18,
+      "v12_seconds": 12.050403279000008,
+      "v11_seconds": 12.183681809999996,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 1,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.14698641199998974,
+      "browse_samples": 18,
+      "v12_seconds": 12.562222028000008,
+      "v11_seconds": 12.773276623000015,
+      "errors": [],
+      "inference_requests": 0
+    }
+  ],
+  "capacity_scope": "Three uncached pairs (two private/private, one authenticated private V12/public V11). Two subsequent cached pairs excluded; prior session-rate-limit failures retained.",
+  "full_regression": {
+    "passed": 728,
+    "skipped": 1,
+    "seconds": 695.9,
+    "scope": {
+      "full_run_base": "dde385d",
+      "final_source": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+      "changed_python_files_after_start": [
+        "scripts/publish_edition.py",
+        "tests/editions/test_publication.py"
+      ],
+      "final_changed_files_verification": "55 publication/retention/operator/deployment focused tests passed; changes only shell invocation quoting and EOF-only SFTP upload",
+      "frontend_verification": "25 mocked and 30 real browser assertions, typecheck/build passed"
+    }
+  }
+}

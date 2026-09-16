@@ -9,12 +9,12 @@ invariants and recompute recovery status; they cannot create unreported history.
 Accounting corrections name a unique reviewed sale/expense target and apply a
 signed delta to its category. Unsupported crop records remain accounting-only.
 
-V12 is under implementation, not yet published or accepted. The current user scope
+V12 is published from source `9fd5789`, with V11 retained as the previous edition. The user scope
 is [the V12 farmer workflow and two-version retention plan](docs/v12-implementation-plan.md).
 It supersedes the historical requirement to run every published edition. Preserve
 all immutable publication history, but expose only previous/latest active editions;
-retired mutation routes return 410 without redirect. V11 remains the retained image
-and state; V12 must pass private candidate checks before atomic activation.
+retired mutation routes return 410 without redirect. V11 retains its frozen image and state. V12 passed private candidate checks before
+atomic activation; dated acceptance and limitations are in reports/v12.
 
 V12 adds reviewed Inbox candidates, explicit revision-bound proposals and approvals,
 idempotent sandbox tasks and auditable result corrections. Local numerical authority

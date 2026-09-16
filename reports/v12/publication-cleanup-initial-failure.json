@@ -1,0 +1,13 @@
+{
+  "publication": "PASS",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "manifest_commit": "26dde74",
+  "active": {
+    "previous": "v11",
+    "latest": "v12"
+  },
+  "cleanup": "published_cleanup_pending",
+  "error": "Installed Fly CLI rejects machine status --json; fail-closed before deletion. Supported machine list --json supplies full host configuration.",
+  "remedy": "Operator tooling only: select exact host from actual machine list; resume same publication cleanup. Do not rebuild or republish V12.",
+  "second_resume_failure": "Snapshot create --json returns a plain scheduled acknowledgement, not a snapshot ID. Snapshot inventory separately confirms newly completed recovery snapshot; deletion again remained gated."
+}

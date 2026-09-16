@@ -9,10 +9,11 @@ wastage. The farm board and adviser Council make those decisions tangible.
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**Play:** [guided V11 production planning](https://farmtact.fly.dev/v11/) ·
+**Play:** [V12 guided farmer workflow](https://farmtact.fly.dev/v12/) ·
+[previous V11](https://farmtact.fly.dev/v11/) ·
 [active edition chooser](https://farmtact.fly.dev/)
 
-V12 is undergoing private acceptance. V1–V10 applications are retired; their
+V12 is published; V11 is the retained previous edition. V1–V10 applications are retired; their
 URLs return 410 and their release history remains in Git. See the
 [V12 acceptance status](reports/v12/acceptance-status.md) and
 [retirement evidence](reports/v12/retirement.md).
@@ -24,13 +25,14 @@ URLs return 410 and their release history remains in Git. See the
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
 [V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
 
-The latest public edition is **v11**, pinned to source
-[`37802ad`](https://github.com/phuawenpu/FarmTact/commit/37802adbc9010bc80a50869ef725285a119af3f3)
-and immutable image
-`sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d`.
-At the original V11 publication, all eleven edition health/source checks and
-captured V1–V10 preservation passed; those older workers are now retired.
-See the [implementation and acceptance report](reports/v11/implementation.md).
+The latest public edition is **V12**, pinned to source
+[`9fd5789`](https://github.com/phuawenpu/FarmTact/commit/9fd57898b8a4e3b69a40c3abf03895f0fcb05daf)
+and immutable image `sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56`. Only V11 and V12 run publicly.
+The guided workflow adds reviewed imports and proposals, explicit sandbox approvals,
+reported tasks and recovery planning. Numerical facts and unverified AI interpretation
+remain distinct. See the [V12 implementation report](reports/v12/implementation.md)
+and [requirement evidence](reports/v12/requirements-evidence.md).
+
 
 ## V11 guided production planning
 

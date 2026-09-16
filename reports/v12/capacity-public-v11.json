@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "trials": [
+    {
+      "trial": 1,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.14698641199998974,
+      "browse_samples": 18,
+      "v12_seconds": 12.562222028000008,
+      "v11_seconds": 12.773276623000015,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 2,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.17013449200001673,
+      "browse_samples": 2,
+      "v12_seconds": 0.8992012999999872,
+      "v11_seconds": 1.1098399450000045,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 3,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.11954739899999822,
+      "browse_samples": 2,
+      "v12_seconds": 0.7440230400000019,
+      "v11_seconds": 1.018537078999998,
+      "errors": [],
+      "inference_requests": 0
+    }
+  ],
+  "protocol": "Three paired V11/V12 numerical jobs; browse p95<5s and both terminal under 180s; zero inference.",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "authentication_scope": "Existing authenticated private V12 tenant; V11 through its real public gateway route with one normal public session. Three fresh paired planning jobs. No rate-limit changes, counter resets, or forged public client identity.",
+  "inference_requests": 0
+}

@@ -10,7 +10,8 @@ in the dated trial evidence.
 Planning Council context V4 adds initial-plan crop identity, per-crop allocation
 counts and area as snapshot facts. These are not retained-plan comparisons. The
 V3 live trial correctly withheld Crop Planner when only aggregate area was present;
-that failed trial remains evidence, and V4 requires a fresh bounded review.
+that failed trial remains evidence. The actual V4 review passed its five numerical
+roles, with Weather/Market partial for absent sources; semantic limits remain dated.
 
 Final audit contracts: functional Council V3 requires crop composition evidence
 for crop-mix findings and cost/resource evidence for Capacity & Cost findings.
@@ -28,12 +29,12 @@ are named all_demand. A confirmed/booked claim citing broader shortfall or fill
 facts is withheld. This bounded guard addresses the observed V12 trial failure;
 it is not a general semantic-entailment proof. Mission contracts remain unchanged.
 
-V12 is under implementation, not yet published or accepted. The current user scope
+V12 is published from source `9fd5789`, with V11 retained as the previous edition. The user scope
 is [the V12 farmer workflow and two-version retention plan](docs/v12-implementation-plan.md).
 It supersedes the historical requirement to run every published edition. Preserve
 all immutable publication history, but expose only previous/latest active editions;
-retired mutation routes return 410 without redirect. V11 remains the retained image
-and state; V12 must pass private candidate checks before atomic activation.
+retired mutation routes return 410 without redirect. V11 retains its frozen image and state. V12 passed private candidate checks before
+atomic activation; dated acceptance and limitations are in reports/v12.
 
 V12 adds reviewed Inbox candidates, explicit revision-bound proposals and approvals,
 idempotent sandbox tasks and auditable result corrections. Local numerical authority

@@ -7,7 +7,7 @@ Publication never resolves a mutable tag while deploying.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import ipaddress
 import json
 import os
@@ -367,27 +367,72 @@ def probe_shared_edition(settings: dict, entry: dict) -> None:
 
 
 def create_recovery_snapshot(settings: dict) -> str:
+    before = snapshot_inventory(settings)
+    previous_completed = {row['id'] for row in before if snapshot_ready(row)}
+    scheduled_at = datetime.now(timezone.utc)
     result = command(['fly', 'volumes', 'snapshots', 'create', settings['volume_id'],
                       '--app', settings['app'], '--json'])
     try:
         payload = json.loads(result.stdout)
-    except json.JSONDecodeError as error:
-        raise PublicationError('Fly recovery snapshot response is invalid') from error
+    except json.JSONDecodeError:
+        payload = None
     snapshot_id = payload.get('id') if isinstance(payload, dict) else None
-    if not isinstance(snapshot_id, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:-]{7,127}', snapshot_id):
-        raise PublicationError('Fly recovery snapshot did not return a valid identifier')
-    wait_for_snapshot(settings, snapshot_id)
-    return snapshot_id
+    if isinstance(snapshot_id, str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:-]{7,127}', snapshot_id):
+        wait_for_snapshot(settings, snapshot_id, earliest=scheduled_at - timedelta(minutes=5))
+        return snapshot_id
+    acknowledgement = result.stdout.strip()
+    expected = f"Scheduled to snapshot volume {settings['volume_id']}"
+    if acknowledgement != expected:
+        raise PublicationError('Fly recovery snapshot did not return an identifier or exact scheduling acknowledgement')
+    return wait_for_new_snapshot(settings, previous_completed, earliest=scheduled_at - timedelta(minutes=5))
+
+
+def snapshot_inventory(settings: dict) -> list[dict]:
+    result = command(['fly', 'volumes', 'snapshots', 'list', settings['volume_id'],
+                      '--app', settings['app'], '--json'])
+    try:
+        rows = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise PublicationError('Fly recovery snapshot inventory is invalid') from error
+    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+        raise PublicationError('Fly recovery snapshot inventory is invalid')
+    return rows
+
+
+def snapshot_ready(row: dict, *, earliest: datetime | None = None) -> bool:
+    if str(row.get('status', '')).lower() not in {'created', 'complete', 'completed'}:
+        return False
+    if not isinstance(row.get('size'), int) or row['size'] <= 0:
+        return False
+    if not isinstance(row.get('digest'), str) or not re.fullmatch(r'[0-9a-f]{64}', row['digest']):
+        return False
+    try:
+        created = datetime.fromisoformat(str(row.get('created_at', '')).replace('Z', '+00:00'))
+    except ValueError:
+        return False
+    if created.tzinfo is None or created.year <= 1:
+        return False
+    return earliest is None or created.astimezone(timezone.utc) >= earliest
+
+
+def shared_machine_runtime(settings: dict) -> dict:
+    """Select the exact configured host from the supported Fly Machine inventory."""
+    result = command(['fly', 'machine', 'list', '--app', settings['app'], '--json'])
+    try:
+        inventory = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise PublicationError('Current shared Machine configuration is invalid') from error
+    if not isinstance(inventory, list):
+        raise PublicationError('Current shared Machine inventory is invalid')
+    matches = [row for row in inventory if isinstance(row, dict) and row.get('id') == settings['machine_id']]
+    if len(matches) != 1:
+        raise PublicationError('Configured shared Machine is missing or duplicated in Fly inventory')
+    return matches[0]
 
 
 def guard_shared_cleanup_runtime(settings: dict, history: dict, active: dict) -> dict:
     """Refuse to replace a Machine configuration containing a future candidate."""
-    result = command(['fly', 'machine', 'status', settings['machine_id'],
-                      '--app', settings['app'], '--json'])
-    try:
-        runtime = json.loads(result.stdout)
-    except json.JSONDecodeError as error:
-        raise PublicationError('Current shared Machine configuration is invalid') from error
+    runtime = shared_machine_runtime(settings)
     config = runtime.get('config') if isinstance(runtime, dict) else None
     containers = config.get('containers') if isinstance(config, dict) else None
     if not isinstance(containers, list):
@@ -411,14 +456,7 @@ def guard_shared_cleanup_runtime(settings: dict, history: dict, active: dict) ->
 
 def readback_shared_runtime(settings: dict, expected_config: dict) -> dict:
     """Read and verify the applied Machine configuration immediately before cleanup."""
-    result = command(['fly', 'machine', 'status', settings['machine_id'],
-                      '--app', settings['app'], '--json'])
-    try:
-        runtime = json.loads(result.stdout)
-    except json.JSONDecodeError as error:
-        raise PublicationError('Applied shared Machine configuration is invalid') from error
-    if not isinstance(runtime, dict) or runtime.get('id') != settings['machine_id']:
-        raise PublicationError('Applied shared Machine identity does not match the configured host')
+    runtime = shared_machine_runtime(settings)
     actual = runtime.get('config')
     actual_containers = actual.get('containers') if isinstance(actual, dict) else None
     expected_containers = expected_config.get('containers')
@@ -440,36 +478,42 @@ def readback_shared_runtime(settings: dict, expected_config: dict) -> dict:
     return runtime
 
 
-def wait_for_snapshot(settings: dict, snapshot_id: str, *, attempts: int = 30, interval: float = 2) -> None:
+def wait_for_snapshot(settings: dict, snapshot_id: str, *, attempts: int = 30, interval: float = 2,
+                      earliest: datetime | None = None) -> None:
     """Require Fly to report a usable recovery point before deletion can start."""
-    pending = {'pending', 'queued', 'creating', 'processing'}
-    ready = {'created', 'complete', 'completed'}
+    pending = {'pending', 'queued', 'creating', 'processing', 'running'}
     for attempt in range(attempts):
-        result = command([
-            'fly', 'volumes', 'snapshots', 'list', settings['volume_id'],
-            '--app', settings['app'], '--json',
-        ])
-        try:
-            payload = json.loads(result.stdout)
-        except json.JSONDecodeError as error:
-            raise PublicationError('Fly recovery snapshot inventory is invalid') from error
-        rows = payload.get('snapshots') if isinstance(payload, dict) else payload
-        if not isinstance(rows, list):
-            raise PublicationError('Fly recovery snapshot inventory is invalid')
-        row = next((item for item in rows if isinstance(item, dict)
-                    and (item.get('id') or item.get('snapshot_id')) == snapshot_id), None)
-        if row is not None:
+        matches = [row for row in snapshot_inventory(settings)
+                   if (row.get('id') or row.get('snapshot_id')) == snapshot_id]
+        if any(snapshot_ready(row, earliest=earliest) for row in matches):
+            return
+        for row in matches:
             status = row.get('status')
             if not isinstance(status, str):
                 raise PublicationError('Fly recovery snapshot status is invalid')
             normalized = status.lower()
-            if normalized in ready:
-                return
-            if normalized not in pending:
+            if normalized not in pending and normalized not in {'created', 'complete', 'completed'}:
                 raise PublicationError(f'Fly recovery snapshot failed with status {normalized}')
         if attempt + 1 < attempts:
             time.sleep(interval)
     raise PublicationError('Fly recovery snapshot did not become ready before timeout')
+
+
+def wait_for_new_snapshot(settings: dict, previous_completed: set[str], *, earliest: datetime,
+                          attempts: int = 30, interval: float = 2) -> str:
+    for attempt in range(attempts):
+        ready = {row['id'] for row in snapshot_inventory(settings)
+                 if isinstance(row.get('id'), str)
+                 and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:-]{7,127}', row['id'])
+                 and row['id'] not in previous_completed
+                 and snapshot_ready(row, earliest=earliest)}
+        if len(ready) == 1:
+            return ready.pop()
+        if len(ready) > 1:
+            raise PublicationError('Fly recovery snapshot scheduling produced ambiguous completed snapshots')
+        if attempt + 1 < attempts:
+            time.sleep(interval)
+    raise PublicationError('Fly scheduled recovery snapshot did not become ready before timeout')
 
 
 def retire_oldest_shared(history: dict, active: dict) -> dict:

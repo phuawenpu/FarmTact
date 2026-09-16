@@ -12,6 +12,67 @@ import stat
 import subprocess
 
 
+def _validate_registry(value: dict, label: str) -> None:
+    if set(value) != {'latest', 'editions'} or not isinstance(value['editions'], list):
+        raise RuntimeError(f'Invalid {label} release registry')
+    ids = [row.get('id') for row in value['editions'] if isinstance(row, dict)]
+    if (len(ids) != len(value['editions']) or len(set(ids)) != len(ids)
+            or ids != [f'v{i}' for i in range(1, len(ids) + 1)]
+            or value['latest'] != (ids[-1] if ids else None)):
+        raise RuntimeError(f'Invalid {label} release registry')
+
+
+def _validated_registry_action(previous: dict | None, incoming: dict, name: str) -> str:
+    """Choose a registry write without allowing published history replacement."""
+    _validate_registry(incoming, 'incoming')
+    if previous is None:
+        return 'write'
+    _validate_registry(previous, 'existing')
+    if (len(incoming['editions']) < len(previous['editions'])
+            or incoming['editions'][:len(previous['editions'])] != previous['editions']):
+        raise RuntimeError('Published edition history cannot be replaced')
+    if len(incoming['editions']) == len(previous['editions']):
+        if incoming != previous:
+            raise RuntimeError('Published edition history cannot be replaced')
+        return 'preserve'
+    # The gateway owns atomic public cutover and must retain its current history
+    # until publish_remote updates it. Edition containers need the verified full
+    # history so their middleware can resolve the newly active edition on restart.
+    return 'preserve' if name == 'gateway' else 'write'
+
+
+def _registry_for_container(incoming: dict, incoming_active: dict, name: str) -> dict:
+    """Exclude unpublished staged metadata from edition-local history."""
+    if name == 'gateway':
+        return incoming
+    if set(incoming_active) != {'previous', 'latest'} or not re.fullmatch(r'v[1-9][0-9]?', str(incoming_active['latest'])):
+        raise RuntimeError('Invalid active-edition manifest')
+    ids = [row.get('id') for row in incoming.get('editions', []) if isinstance(row, dict)]
+    try:
+        cutoff = ids.index(incoming_active['latest']) + 1
+    except ValueError as exc:
+        raise RuntimeError('Active edition is absent from incoming release history') from exc
+    editions = incoming['editions'][:cutoff]
+    return {'latest': incoming_active['latest'], 'editions': editions}
+
+
+def _atomic_json(path: Path, payload: dict) -> None:
+    pending = path.with_suffix('.next')
+    if pending.exists():
+        pending.unlink()
+    fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+    with os.fdopen(fd, 'w') as output:
+        output.write(json.dumps(payload, indent=2) + '\n')
+        output.flush()
+        os.fsync(output.fileno())
+    pending.replace(path)
+    fd = os.open(path.parent, os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def prepare(name: str):
     if os.geteuid() != 0:
         raise RuntimeError('Shared storage preparation requires root')
@@ -37,6 +98,8 @@ def prepare(name: str):
     if parent.is_mount() or any(parent.iterdir()) or not data.is_mount():
         raise RuntimeError('Shared storage parent remains visible')
     incoming = json.loads(Path('/opt/farmtact-shared-registry.json').read_text())
+    incoming_active = json.loads(Path('/opt/farmtact-active.json').read_text())
+    local_incoming = _registry_for_container(incoming, incoming_active, name)
     releases = data / 'releases'
     if releases.is_symlink():
         raise RuntimeError('Release directory must not be a symlink')
@@ -47,37 +110,17 @@ def prepare(name: str):
     manifest = releases / 'registry.json'
     if manifest.is_symlink():
         raise RuntimeError('Release registry must not be a symlink')
+    previous = None
     if manifest.exists():
         info = manifest.lstat()
         if not stat.S_ISREG(info.st_mode) or info.st_uid != 0 or info.st_mode & 0o022:
             raise RuntimeError('Release registry must be protected and root-owned')
         previous = json.loads(manifest.read_text())
-        if incoming['editions'][:len(previous['editions'])] != previous['editions']:
-            raise RuntimeError('Published edition history cannot be replaced')
-    if not manifest.exists():
-        pending = manifest.with_suffix('.next')
-        fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
-        with os.fdopen(fd, 'w') as output:
-            output.write(json.dumps(incoming, indent=2) + '\n')
-            output.flush()
-            os.fsync(output.fileno())
-        pending.replace(manifest)
-        fd = os.open(releases, os.O_DIRECTORY)
-        try:
-            os.fsync(fd)
-        finally:
-            os.close(fd)
+    if _validated_registry_action(previous, local_incoming, name) == 'write':
+        _atomic_json(manifest, local_incoming)
     active = releases / 'active.json'
-    incoming_active = json.loads(Path('/opt/farmtact-active.json').read_text())
     if not active.exists() or json.loads(active.read_text()) != incoming_active:
-        pending = active.with_suffix('.next')
-        if pending.exists():
-            pending.unlink()
-        fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
-        with os.fdopen(fd, 'w') as output:
-            output.write(json.dumps(incoming_active, indent=2) + '\n')
-            output.flush(); os.fsync(output.fileno())
-        pending.replace(active)
+        _atomic_json(active, incoming_active)
     # Deployment aliases preserve old images' private-host allowlists and keep
     # edition/control traffic on localhost. Names and ports are not user input.
     aliases = ['farmtact-local-control.flycast'] + [f'farmtact-local-v{i}.flycast' for i in range(1, 100)]

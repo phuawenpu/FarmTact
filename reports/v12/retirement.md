@@ -1,5 +1,23 @@
 # V1–V10 retirement — 16 September 2026
 
+Post-publication rolling cleanup initially remained pending because the installed
+Fly CLI does not support `fly machine status --json`. The supported readback is
+`fly machine list --app farmtact --json`; cleanup tooling now selects exactly one
+row matching the configured Machine ID and rejects a missing or duplicated host
+before inspecting its applied container configuration. No storage deletion was
+attempted by the incompatible status command.
+
+The next resume reached snapshot scheduling. This Fly CLI returned exit zero with
+plain text (`Scheduled to snapshot volume …`) despite `--json`, rather than a
+snapshot ID. The safe fallback now captures the completed-snapshot inventory
+before scheduling and accepts only one newly completed, nonempty, digest-bearing,
+recent snapshot absent from that baseline. It does not select an older snapshot;
+a transient `running` alias cannot hide a valid completed row with the same ID,
+and multiple new completed rows fail as ambiguous. The JSON-ID response remains
+the preferred fast path. The newly scheduled recovery snapshot
+`vs_GqKyy47KvAqmSAymJmBD38q8` was independently observed as `created` at
+2026-09-16T15:12:22Z with positive size and digest before cleanup resumed.
+
 V1–V10 application/database workers were removed from the shared Machine configuration.
 The public active manifest is V11 only; the infrastructure V12 candidate remains
 private and unlisted. V11 retains its exact image/source and independently mounted

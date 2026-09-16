@@ -1,0 +1,122 @@
+{
+  "v11": [
+    [
+      "b4c725f06f485d051c78cc22bb995b90",
+      "V11 retained capacity trial 1",
+      "2026-09-16T15:03:48.467910+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.0087,
+        "execution_seconds": 10.7205,
+        "elapsed_seconds": 10.7292
+      }
+    ],
+    [
+      "e4bbd8361f1b7e881ee2cbdfe8294795",
+      "V11 retained capacity trial 2",
+      "2026-09-16T15:04:01.983930+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.021,
+        "execution_seconds": 10.5994,
+        "elapsed_seconds": 10.6204
+      }
+    ],
+    [
+      "d68ad43243661ce85ea155d1e837113f",
+      "V11 retained capacity trial 1",
+      "2026-09-16T15:06:34.531527+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.0093,
+        "execution_seconds": 10.7294,
+        "elapsed_seconds": 10.7387
+      }
+    ],
+    [
+      "502914fa25426698d13bd142ee51af77",
+      "V11 retained capacity trial 2",
+      "2026-09-16T15:06:48.254121+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": true,
+        "queue_seconds": 0.0801,
+        "elapsed_seconds": 0.0801
+      }
+    ],
+    [
+      "bbb87f1eed12dd54064dd4338257bd1d",
+      "V11 retained capacity trial 3",
+      "2026-09-16T15:06:50.364912+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": true,
+        "queue_seconds": 0.0906,
+        "elapsed_seconds": 0.0906
+      }
+    ]
+  ],
+  "v12": [
+    [
+      "f29392b05d876be772e9868f4fb37e06",
+      "V12 capacity trial 1",
+      "2026-09-16T15:03:48.259968+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.0303,
+        "execution_seconds": 10.6567,
+        "elapsed_seconds": 10.687
+      }
+    ],
+    [
+      "0815aee5a44a90c37a600f14ed7c268a",
+      "V12 capacity trial 2",
+      "2026-09-16T15:04:01.804054+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.0081,
+        "execution_seconds": 10.6258,
+        "elapsed_seconds": 10.6339
+      }
+    ],
+    [
+      "04954208e4e5be4e49090ff2d174be9c",
+      "V12 capacity trial 1",
+      "2026-09-16T15:06:34.358029+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": false,
+        "queue_seconds": 0.0106,
+        "execution_seconds": 10.6417,
+        "elapsed_seconds": 10.6524
+      }
+    ],
+    [
+      "17dd5f811baf818ec72c4d1d61061e46",
+      "V12 capacity trial 2",
+      "2026-09-16T15:06:48.077386+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": true,
+        "queue_seconds": 0.0613,
+        "elapsed_seconds": 0.0613
+      }
+    ],
+    [
+      "7faf071e3991e369d5471a01186ec675",
+      "V12 capacity trial 3",
+      "2026-09-16T15:06:50.068935+00:00",
+      "COMPLETED",
+      {
+        "cache_hit": true,
+        "queue_seconds": 0.0757,
+        "elapsed_seconds": 0.0758
+      }
+    ]
+  ]
+}

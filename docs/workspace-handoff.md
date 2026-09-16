@@ -1,7 +1,8 @@
-Current work, 16 September 2026: V12 is in private acceptance; V11 is the sole
-public application. V1–V10 workers and storage are retired with recovery and
-preservation evidence. Read reports/v12/acceptance-status.md and
-docs/v12-implementation-plan.md before the historical handoffs below.
+Current release, 16 September 2026: V12 is published from source 9fd5789;
+V11 is the retained previous edition. V1–V10 workers/storage are retired, while
+immutable release history remains. Read reports/v12/implementation.md,
+reports/v12/acceptance-status.md and reports/v12/requirements-evidence.md before
+the historical handoffs below. The next unused publication number is V13.
 
 # Fresh-workspace handoff — 11 September 2026
 

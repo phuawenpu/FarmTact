@@ -1,0 +1,27 @@
+{
+  "status": "FAIL",
+  "trials": [
+    {
+      "trial": 1,
+      "status": "FAIL",
+      "error": "GET /bootstrap: HTTP 429: {\"detail\":\"Too many requests. Retry in 1622 seconds.\",\"limit\":\"new_session_ip\"}",
+      "inference_requests": 0
+    },
+    {
+      "trial": 2,
+      "status": "FAIL",
+      "error": "GET /bootstrap: HTTP 429: {\"detail\":\"Too many requests. Retry in 1621 seconds.\",\"limit\":\"new_session_ip\"}",
+      "inference_requests": 0
+    },
+    {
+      "trial": 3,
+      "status": "FAIL",
+      "error": "GET /bootstrap: HTTP 429: {\"detail\":\"Too many requests. Retry in 1621 seconds.\",\"limit\":\"new_session_ip\"}",
+      "inference_requests": 0
+    }
+  ],
+  "protocol": "Three paired V11/V12 numerical jobs; browse p95<5s and both terminal under 180s; zero inference.",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "authentication_scope": "One existing V12 tenant and one V11 tenant; three fresh paired planning jobs. Durable abuse limits unchanged, no identity rotation or reset.",
+  "inference_requests": 0
+}

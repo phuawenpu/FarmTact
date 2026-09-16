@@ -1,6 +1,6 @@
 # V12 farmer workflow and two-edition retention
 
-Authorized implementation, 16 September 2026. V11 remains the frozen previous application; V12 is the next unused publication number. Historical release records remain immutable. Real farm operations remain disabled.
+Published 16 September 2026 from source 9fd5789. V11 remains the frozen previous application; V13 is the next unused publication number. Historical release records remain immutable. Real farm operations remain disabled.
 
 ## Ownership
 

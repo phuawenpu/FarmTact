@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "passed": 728,
+  "skipped": 1,
+  "warnings": 3,
+  "seconds": 695.9,
+  "scope": "regression-final-scope.json",
+  "skip": "Generated News cache absent in clean checkout; existing skip retained",
+  "command": "FARMTACT_DATABASE_URL='postgresql+psycopg://sprite@/farmtact_test?host=/tmp/farmtact-pg' .venv/bin/python -m pytest -q"
+}

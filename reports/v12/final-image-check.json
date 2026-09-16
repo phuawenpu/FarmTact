@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "checks": {
+    "source_exact": true,
+    "stock_waste_display_exact": true,
+    "verified_ui_assets": true
+  },
+  "assets": {
+    "index-C0yE1R6F.css": "0923f3af7566fea8822d607eb9b936c2729bc2b83f5fde47b0caf8648d4cc130",
+    "index-COKiYUCA.js": "44566a321362f2a80967d58be4e0e63dad78dd44222fccc95c787754a7cb913d"
+  },
+  "rationale": "Balance customer service, crop waste or remaining stock, and projected margin.",
+  "provider_calls": 0
+}

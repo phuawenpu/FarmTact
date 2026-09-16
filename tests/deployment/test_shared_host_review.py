@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import scripts.publish_edition as publication
+from scripts import shared_container_entrypoint as entrypoint
 from scripts.shared_host_config import GATEWAY_IMAGE, machine_config
 
 
@@ -229,13 +230,44 @@ def test_shared_settings_reject_ignored_fields(tmp_path, monkeypatch):
         publication.shared_settings()
 
 
-def test_shared_registry_is_seeded_only_when_missing_and_existing_history_is_checked():
-    source = (ROOT / "scripts/shared_container_entrypoint.py").read_text()
-    assert "incoming['editions'][:len(previous['editions'])] != previous['editions']" in source
-    assert "if not manifest.exists():" in source
-    assert source.index("if manifest.exists():") < source.index("if not manifest.exists():")
-    seed = source[source.index("if not manifest.exists():"):source.index("# Deployment aliases")]
-    assert "pending.replace(manifest)" in seed
+def test_shared_registry_gateway_preserves_precutover_history():
+    incoming = registry()
+    previous = {"latest": incoming["editions"][-2]["id"], "editions": incoming["editions"][:-1]}
+    assert entrypoint._validated_registry_action(previous, incoming, "gateway") == "preserve"
+
+
+def test_shared_registry_edition_appends_verified_incoming_history(tmp_path):
+    incoming = registry()
+    previous = {"latest": incoming["editions"][-2]["id"], "editions": incoming["editions"][:-1]}
+    local = entrypoint._registry_for_container(incoming, {"previous": previous["latest"], "latest": incoming["latest"]}, incoming["latest"])
+    manifest = tmp_path / "registry.json"
+    manifest.write_text(json.dumps(previous))
+    assert entrypoint._validated_registry_action(previous, local, incoming["latest"]) == "write"
+    entrypoint._atomic_json(manifest, local)
+    assert json.loads(manifest.read_text()) == incoming
+
+
+def test_future_candidate_restage_does_not_pin_unpublished_identity():
+    published = registry()
+    staged = copy.deepcopy(published)
+    candidate = copy.deepcopy(staged["editions"][-1])
+    candidate.update(id=f"v{len(staged['editions']) + 1}", title="candidate first identity")
+    staged["editions"].append(candidate); staged["latest"] = candidate["id"]
+    active = {"previous": published["editions"][-2]["id"], "latest": published["latest"]}
+    first = entrypoint._registry_for_container(staged, active, candidate["id"])
+    staged["editions"][-1]["title"] = "candidate restaged identity"
+    second = entrypoint._registry_for_container(staged, active, candidate["id"])
+    assert first == second == published
+    assert entrypoint._validated_registry_action(published, second, candidate["id"]) == "preserve"
+
+
+def test_shared_registry_rejects_history_rewrite_for_gateway_and_edition():
+    incoming = registry()
+    previous = copy.deepcopy(incoming)
+    previous["editions"][0]["title"] = "rewritten published title"
+    for name in ("gateway", incoming["latest"]):
+        with pytest.raises(RuntimeError, match="history cannot be replaced"):
+            entrypoint._validated_registry_action(previous, incoming, name)
 
 
 def test_shared_atomic_publish_targets_pinned_gateway_container(tmp_path, monkeypatch):

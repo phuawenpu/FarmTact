@@ -296,8 +296,14 @@ Review the exact `v1`–`v10` targets, V11/V12 exclusions, checksums and resourc
 readings. Apply only that unchanged plan after the snapshot is available:
 
 ```bash
-fly machine status 2871575b4544d8 -a farmtact --json \
-  > /tmp/farmtact-runtime.json
+fly machine list -a farmtact --json > /tmp/farmtact-machine-list.json
+python - <<'PY'
+import json
+rows = json.load(open('/tmp/farmtact-machine-list.json'))
+matches = [row for row in rows if row.get('id') == '2871575b4544d8']
+assert len(matches) == 1
+open('/tmp/farmtact-runtime.json', 'w').write(json.dumps(matches[0]))
+PY
 fly ssh sftp shell -a farmtact --machine 2871575b4544d8 --container retirement-operator <<'SFTP'
 put /tmp/farmtact-runtime.json /tmp/farmtact-runtime.json
 quit

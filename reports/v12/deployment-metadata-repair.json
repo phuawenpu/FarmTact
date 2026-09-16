@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+  "trigger": "Post-publication cleanup restart installed active v11/v12 while edition-local history still ended v11",
+  "symptom": "V12 non-health middleware returned500; public video request exposed it",
+  "repair": "Strict append-only update of V12 deployment-owned registry from injected verified published history; source/image/game data untouched",
+  "verification": "All nine public MP4/VTT/poster artifacts match verified local SHA256 after repair",
+  "permanent_remedy": "Deployment adapter appends published history for edition containers while preserving gateway atomic-cutover history and excluding staged candidate metadata"
+}
