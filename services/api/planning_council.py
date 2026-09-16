@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 from pydantic import Field, model_validator
 
-from packages.agents import ROLE_EXPERTISE, ROLES
+from packages.agents import ROLES
 from packages.ai_contracts import InferenceVersions, canonical_hash
 from packages.contracts import Strict
 from packages.planning_claims import VerifiedPlanningClaim, build_claims
@@ -15,22 +15,22 @@ from runtime.deepseek_gateway import DeepSeekGateway, DeepSeekResponseError, Run
 from services.api.views import ROOT
 
 
-VERSION = "planning-council-v2"
+VERSION = "planning-council-v3"
 WORKFLOW = "sequential_specialists_then_chair"
 MAX_REPAIRS = 2
 MAX_REQUESTS = 9
 PLANNING_COUNCIL_VERSIONS = InferenceVersions(
-    prompt_template="farmtact-planning-council-prompt-v2",
+    prompt_template="farmtact-planning-council-prompt-v3",
     output_schema="farmtact-planning-finding-output-v2",
-    validator="farmtact-planning-claim-validator-v2",
-    context="farmtact-planning-comparison-context-v2",
+    validator="farmtact-planning-claim-validator-v3",
+    context="farmtact-planning-comparison-context-v3",
     sources="farmtact-planning-source-context-v2",
 )
 
 # V12 presents seven functional contracts while retaining the proven V11 provider
 # role identifiers and numerical claim scopes.  The mapping is explicit so a UI
 # cannot mistake a display-name change for a new capability.
-FUNCTIONAL_CONTRACT_VERSION = "farmtact-functional-council-v2"
+FUNCTIONAL_CONTRACT_VERSION = "farmtact-functional-council-v3"
 FUNCTIONAL_ROLES = {
     "demand_analyst": {"name": "Demand Planner", "tools": ["booked_orders", "demand_history"], "authority": "advisory"},
     "production_analyst": {"name": "Crop Planner", "tools": ["crop_recipes", "biological_lead_times"], "authority": "advisory"},
@@ -39,6 +39,16 @@ FUNCTIONAL_ROLES = {
     "supply_chain_analyst": {"name": "Capacity & Cost Analyst", "tools": ["inventory_expiry", "space_labour_cash"], "authority": "advisory"},
     "profit_analyst": {"name": "Farm Planner", "tools": ["local_margin_accounting", "strategy_comparison"], "authority": "advisory"},
     "planning_chair": {"name": "Plan Reviewer", "tools": ["validated_findings", "eligible_strategies"], "authority": "advisory_gate"},
+}
+
+_FUNCTIONAL_REMIT = {
+    "demand_analyst": "compare booked-order service and demand evidence",
+    "production_analyst": "compare crop identity, allocation composition, growing area, and biological feasibility",
+    "weather_analyst": "assess only admitted site weather and risk evidence",
+    "market_analyst": "assess only admitted market and price evidence",
+    "supply_chain_analyst": "compare area, labour, inventory, projected cost, margin, and declared capacity constraints",
+    "profit_analyst": "synthesize service, waste, cost, and margin across eligible strategies",
+    "planning_chair": "review validated specialist findings and eligible strategy tradeoffs",
 }
 
 
@@ -123,10 +133,17 @@ def _public_claim(claim: VerifiedPlanningClaim) -> dict[str, Any]:
 
 def _prompt(role: str) -> str:
     contract = FUNCTIONAL_ROLES[role]
+    evidence_requirement = (
+        " A crop-mix or variety rationale must cite crop-specific allocation or crop-identity facts; aggregate area alone is insufficient."
+        if role == "production_analyst" else
+        " A validated Capacity & Cost finding must cite at least one area, labour, cost, or margin fact; service facts alone are insufficient."
+        if role == "supply_chain_analyst" else ""
+    )
     return (
-        f"You are FarmTact {contract['name']} ({role}). Your remit is {ROLE_EXPERTISE[role]}. "
+        f"You are FarmTact {contract['name']} ({role}). Your functional remit is {_FUNCTIONAL_REMIT[role]}. "
         f"Your authority is {contract['authority']}; your admitted tools are {', '.join(contract['tools'])}. "
-        "Return one JSON object matching this schema: "
+        + evidence_requirement
+        + "Return one JSON object matching this schema: "
         + json.dumps(PlanningFinding.model_json_schema(), separators=(",", ":"))
         + ". Select only supplied claim IDs. The claim statement is authoritative and code-rendered. "
         "Choose a tradeoff and rationale code to interpret the selected facts; the server renders their public meaning. "
@@ -197,7 +214,7 @@ _TRADEOFF_RATIONALES = {
 
 
 def _semantic_issues(
-    finding: dict[str, Any], *, selected: list[VerifiedPlanningClaim]
+    finding: dict[str, Any], *, selected: list[VerifiedPlanningClaim], role: str | None = None
 ) -> list[str]:
     issues: list[str] = []
     rationale = finding.get("rationale")
@@ -209,6 +226,14 @@ def _semantic_issues(
     proposed = finding.get("proposed_strategy_id")
     if proposed is not None and proposed not in {claim["strategy_id"] for claim in selected}:
         issues.append("proposed_strategy_not_supported_by_selected_claims")
+    if role == "production_analyst" and rationale == "preserve_crop_variety" and not metrics.intersection(
+        {"crop_allocation_count", "crop_allocation_area_m2", "crop_id_set"}
+    ):
+        issues.append("crop_mix_requires_crop_identity_or_allocation_evidence")
+    if role == "supply_chain_analyst" and finding.get("claim_ids") and not metrics.intersection(
+        {"area_m2", "labour_hours", "cost_sgd", "margin_sgd"}
+    ):
+        issues.append("capacity_cost_evidence_required")
     return issues
 
 
@@ -304,7 +329,7 @@ def review_plan(
                 raw = completion.data.model_dump()
                 selected = [claim_by_id[key] for key in raw["claim_ids"] if key in claim_by_id]
                 validation = _issues(raw, allowed_claims=allowed, eligible=set(eligible))
-                validation += _semantic_issues(raw, selected=selected)
+                validation += _semantic_issues(raw, selected=selected, role=role)
                 if validation and attempt == 0 and repairs < MAX_REPAIRS:
                     repairs += 1
                     rejected.append({"role": role, "raw_provider_output": raw,

@@ -108,9 +108,16 @@ def _request_hash(value: Any) -> str:
     return hashlib.sha256(json.dumps(_json(value), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def reconcile_financial_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+def reconcile_financial_rows(rows: list[dict[str, Any]], *, reviewed_rows: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     revenue = Decimal(0); expense = Decimal(0); quantities: dict[str, Decimal] = {}; seen = set(); duplicates = []
-    corrections = 0
+    corrections = 0; resolved_corrections = []
+    reviewed_references = {str(row.get("reference") or "") for row in (reviewed_rows or []) if row.get("reference")}
+    incoming_correction_references: set[str] = set()
+    targets: dict[str, list[dict[str, Any]]] = {}
+    for source in [*(reviewed_rows or []), *rows]:
+        reference = str(source.get("reference") or "")
+        if reference and source.get("kind") != "correction":
+            targets.setdefault(reference, []).append(source)
     for row in rows:
         reference = str(row.get("reference") or "")
         kind = row.get("kind")
@@ -118,21 +125,46 @@ def reconcile_financial_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
             duplicates.append(reference); continue
         if reference: seen.add(reference)
         amount = Decimal(str(row.get("amount_sgd", row.get("amount", 0))))
+        if not amount.is_finite(): raise ValueError("Financial amounts must be finite")
         if kind == "sale": revenue += amount
         elif kind == "expense": expense += amount
         elif kind == "correction":
             corrections += 1
-            # Corrections are explicit signed deltas. They never replace or replay
-            # the referenced source row implicitly.
-            if amount >= 0: revenue += amount
-            else: expense += -amount
+            if not reference:
+                raise ValueError("Correction reference is required")
+            if reference in reviewed_references or reference in incoming_correction_references:
+                raise ValueError(f"Correction reference is already used: {reference}")
+            incoming_correction_references.add(reference)
+            target_reference = str(row.get("corrects_reference") or "")
+            if not target_reference:
+                raise ValueError("Correction target reference is required")
+            matches = targets.get(target_reference, [])
+            if not matches:
+                raise ValueError(f"Unknown correction target reference: {target_reference}")
+            if len(matches) != 1:
+                raise ValueError(f"Ambiguous correction target reference: {target_reference}")
+            target_kind = matches[0].get("kind")
+            if target_kind == "sale": revenue += amount
+            elif target_kind == "expense": expense += amount
+            else: raise ValueError(f"Correction target is not a sale or expense: {target_reference}")
+            provenance = matches[0].get("provenance") or {}
+            resolved_corrections.append({
+                "reference": reference, "corrects_reference": target_reference,
+                "target_kind": target_kind, "signed_delta_sgd": str(amount),
+                "target_source_sha256": provenance.get("source_sha256"),
+                "target_row_number": matches[0].get("row_number", provenance.get("row_number")),
+            })
         quantity = row.get("quantity")
         unit = row.get("unit")
-        if quantity is not None and unit: quantities[unit] = quantities.get(unit, Decimal(0)) + Decimal(str(quantity))
+        if quantity is not None and unit:
+            quantity_value = Decimal(str(quantity))
+            if not quantity_value.is_finite(): raise ValueError("Financial quantities must be finite")
+            quantities[unit] = quantities.get(unit, Decimal(0)) + quantity_value
     return {"source_row_count": len(rows), "counted_row_count": len(rows) - len(duplicates),
             "duplicate_references": sorted(set(duplicates)), "correction_row_count": corrections,
-            "correction_semantics": "explicit_signed_delta", "revenue_sgd": str(revenue), "expense_sgd": str(expense),
-            "net_sgd": str(revenue - expense), "quantity_by_unit": {key: str(value) for key, value in sorted(quantities.items())}}
+            "correction_semantics": "target_category_signed_delta", "revenue_sgd": str(revenue), "expense_sgd": str(expense),
+            "net_sgd": str(revenue - expense), "quantity_by_unit": {key: str(value) for key, value in sorted(quantities.items())},
+            "resolved_corrections": resolved_corrections}
 
 
 def _receipt(store, tenant: str, key: str, request: Any, create: Callable[[], dict[str, Any]]) -> tuple[dict[str, Any], bool]:
@@ -168,7 +200,6 @@ def save_import(store, tenant: str, candidate: FinancialImport | dict[str, Any],
     if payload.get("tenant_id") != tenant:
         raise ValueError("Import tenant mismatch")
     payload["source_kind"] = source_kind
-    if source_kind != "photo_observation": payload["reconciliation"] = reconcile_financial_rows(payload.get("rows", []))
     payload.setdefault("authority", "review_candidate")
     if source_kind == "photo_observation":
         payload["authority"] = "observation_only"
@@ -182,6 +213,14 @@ def save_import(store, tenant: str, candidate: FinancialImport | dict[str, Any],
         count = c.execute(select(func.count()).select_from(IMPORTS).where(IMPORTS.c.tenant_id == tenant)).scalar_one()
         if count >= 100:
             raise ValueError("Farm Data Inbox limit reached")
+        if source_kind != "photo_observation":
+            reviewed = c.execute(select(IMPORTS.c.payload).where(
+                IMPORTS.c.tenant_id == tenant, IMPORTS.c.status == "confirmed"
+            )).scalars().all()
+            reviewed_rows = [item for record in reviewed for item in record.get("rows", [])]
+            payload["reconciliation"] = reconcile_financial_rows(
+                payload.get("rows", []), reviewed_rows=reviewed_rows
+            )
         c.execute(IMPORTS.insert().values(id=payload["candidate_id"], tenant_id=tenant,
                                           status=payload["status"], payload=payload))
     append_event(store, tenant, payload["candidate_id"], "import_candidate_created", {"source_kind": source_kind, "sha256": payload.get("source_sha256")})
@@ -198,9 +237,31 @@ def review_import(store, tenant: str, candidate_id: str, *, decision: str, revie
         if not row: raise ValueError("Import candidate not found")
         if row["status"] != expected_status: raise ValueError("Import review state changed")
         payload = deepcopy(row["payload"])
+        reviewed = c.execute(select(IMPORTS.c.payload).where(
+            IMPORTS.c.tenant_id == tenant, IMPORTS.c.status == "confirmed", IMPORTS.c.id != candidate_id
+        )).scalars().all()
+        if decision == "confirm" and payload.get("source_kind") != "photo_observation":
+            payload["reconciliation"] = reconcile_financial_rows(
+                payload.get("rows", []),
+                reviewed_rows=[item for record in reviewed for item in record.get("rows", [])],
+            )
         payload.update(status="confirmed" if decision == "confirm" else "rejected", reviewed_at=now(), reviewed_by=reviewer, review_note=note)
         # Observation-only sources remain non-authoritative after review.
-        payload["planning_eligible"] = payload["status"] == "confirmed" and payload.get("authority") != "observation_only"
+        unsupported = {warning.split(":", 1)[1] for warning in payload.get("warnings", [])
+                       if isinstance(warning, str) and warning.startswith("unsupported_crop:")}
+        confirmed = payload["status"] == "confirmed"
+        payload["planning_eligible"] = confirmed and payload.get("authority") != "observation_only" and not unsupported
+        payload["planning_eligibility"] = (
+            "rejected" if not confirmed else "observation_only" if payload.get("authority") == "observation_only"
+            else "accounting_only_unsupported_crop" if unsupported else "eligible"
+        )
+        payload["row_eligibility"] = [{
+            "row_number": item.get("row_number"),
+            "accounting_eligible": confirmed and payload.get("authority") != "observation_only",
+            "planning_eligible": payload["planning_eligible"] or (
+                confirmed and payload.get("authority") != "observation_only" and item.get("crop_id") not in unsupported
+            ),
+        } for item in payload.get("rows", [])]
         c.execute(update(IMPORTS).where(IMPORTS.c.id == candidate_id, IMPORTS.c.tenant_id == tenant)
                   .values(status=payload["status"], payload=payload))
     append_event(store, tenant, candidate_id, "import_reviewed", {"decision": decision, "reviewer": reviewer})
@@ -229,15 +290,36 @@ def calculated_metrics(result: dict[str, Any], strategy_id: str | None = None) -
 @_atomic_mutation
 def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id: str, base_revision: int,
                     changes: list[dict[str, Any]], idempotency_key: str, selected_strategy_id: str | None = None,
-                    source_candidate_ids: list[str] | None = None) -> dict[str, Any]:
+                    source_candidate_ids: list[str] | None = None,
+                    source_conversation_id: str | None = None, source_message_id: str | None = None) -> dict[str, Any]:
     request = {"session_id": session_id, "base_revision": base_revision, "changes": changes,
-               "selected_strategy_id": selected_strategy_id, "source_candidate_ids": source_candidate_ids or []}
+               "selected_strategy_id": selected_strategy_id, "source_candidate_ids": source_candidate_ids or [],
+               "source_conversation_id": source_conversation_id, "source_message_id": source_message_id}
     def create():
         session = adapter.get_session(store, tenant, session_id)
         if not session: raise ValueError("Planning session not found")
         if session["revision"] != base_revision: raise ValueError("Planning revision changed")
         result = adapter.get_result(store, tenant, session.get("result_id"))
         if not result: raise ValueError("Calculate the planning session before proposing changes")
+        discussion = None
+        if source_conversation_id or source_message_id:
+            if not source_conversation_id or not source_message_id:
+                raise ValueError("Discussion provenance requires both conversation and message")
+            from services.api.conversation_store import ConversationStore
+            persistence = ConversationStore(store)
+            conversation = persistence.get_conversation(tenant, source_conversation_id)
+            message = persistence.get_message(tenant, source_conversation_id, source_message_id)
+            if not conversation or not message: raise ValueError("Discussion source not found")
+            frozen = conversation.get("snapshot_ref", {})
+            if frozen.get("kind") != "planning" or frozen.get("id") != session_id + ":" + session["result_id"]:
+                raise ValueError("Discussion planning result changed; ask against the current result")
+            if message.get("speaker") != "advisor" or message.get("validation_status") != "references_verified":
+                raise ValueError("Only a validated advisory message can support a proposal")
+            discussion = {"conversation_id": source_conversation_id, "message_id": source_message_id,
+                          "snapshot_ref": deepcopy(frozen), "message_hash": content_hash(message),
+                          "proposed_actions": deepcopy(message.get("proposed_actions", [])),
+                          "translation": "farmer_reviewed_assumptions", "reviewed_changes_hash": content_hash(changes),
+                          "authority": "reviewed_advisory_context"}
         sources = []
         with store.connection() as c:
             for candidate_id in source_candidate_ids or []:
@@ -253,6 +335,7 @@ def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id:
             "result_hash": content_hash(result), "calculated_metrics": calculated_metrics(result, session.get("selected_strategy_id")),
             "selected_strategy_id": selected_strategy_id or session.get("selected_strategy_id"),
             "source_candidates": sources,
+            "source_conversation": discussion,
             "created_at": now(), "updated_at": now(), "version": VERSION}
         with store.connection(write=True) as c:
             c.execute(PROPOSALS.insert().values(id=proposal["id"], tenant_id=tenant, session_id=session_id, status="draft", payload=proposal))
@@ -385,6 +468,48 @@ def approve_and_create_actions(store, tenant: str, proposal_id: str, *, adapter:
     return _receipt(store, tenant, idempotency_key, request, create)[0]
 
 
+def _validate_and_derive_reported_task(task: dict[str, Any]) -> None:
+    """Validate the complete reported state and derive recovery consistently."""
+    quantity = Decimal(str(task["actual_quantity"])) if task.get("actual_quantity") is not None else None
+    rejected = Decimal(str(task["rejected_quantity"])) if task.get("rejected_quantity") is not None else None
+    planned = Decimal(str(task["planned_quantity"])) if task.get("planned_quantity") is not None else None
+    for value in (quantity, rejected):
+        if value is not None and (not value.is_finite() or value < 0):
+            raise ValueError("Reported quantities must be finite and nonnegative")
+    if quantity is not None and not task.get("unit"):
+        raise ValueError("Actual quantity requires the task quantity unit")
+    outcome = task.get("reported_result_status")
+    if outcome is None:
+        legacy_recovery = task.get("recovery") or {}
+        legacy_reasons = set(legacy_recovery.get("reasons") or [])
+        # Newer recovery payloads distinguish a completed-but-short/rejected
+        # report from a failed attempt. Older ambiguous payloads remain failed.
+        recovered_completion = bool(legacy_reasons.intersection({"quantity_below_plan", "rejected_quantity_reported"}))
+        outcome = "completed" if task.get("status") == "completed" or recovered_completion else "failed"
+    if outcome == "completed":
+        if task.get("action") == "harvest" and quantity is None:
+            raise ValueError("Completed harvest requires an actual quantity")
+        if task.get("action") == "delivery" and (quantity is None or rejected is None):
+            raise ValueError("Completed delivery requires accepted and rejected quantities")
+        if set(task.get("checklist_completed") or []) != set(task.get("checklist") or []):
+            raise ValueError("Complete every checklist item")
+    if task.get("action") == "delivery" and quantity is not None and rejected is not None and planned is not None:
+        if quantity + rejected > planned:
+            raise ValueError("Accepted plus rejected delivery quantity exceeds its allocated lots")
+    short = quantity is not None and planned is not None and quantity < planned
+    recovery = outcome == "failed" or short or bool(rejected)
+    task["status"] = "recovery_required" if recovery else "completed"
+    reasons = (["task_failed"] if outcome == "failed" else []) + (["quantity_below_plan"] if short else []) + (["rejected_quantity_reported"] if rejected else [])
+    task["forecast_feedback"] = {
+        "planned_quantity": str(planned) if planned is not None else None,
+        "actual_quantity": str(quantity) if quantity is not None else None,
+        "delta_quantity": str(quantity - planned) if quantity is not None and planned is not None else None,
+        "unit": task.get("unit"), "basis": "farmer_reported_unverified",
+    }
+    task["recovery"] = ({"required": True, "reasons": reasons, "preserve_completed_work": True}
+                        if recovery else {"required": False})
+
+
 @_atomic_mutation
 def record_task_result(store, tenant: str, task_id: str, *, expected_status: str, result_status: str,
                        actual_quantity: Any = None, unit: str | None = None, photo_reference: str | None = None,
@@ -402,34 +527,17 @@ def record_task_result(store, tenant: str, task_id: str, *, expected_status: str
         if quantity is not None and (not quantity.is_finite() or quantity < 0): raise ValueError("Actual quantity must be finite and nonnegative")
         if rejected is not None and (not rejected.is_finite() or rejected < 0): raise ValueError("Rejected quantity must be finite and nonnegative")
         if quantity is not None and unit != task.get("unit"): raise ValueError("Actual quantity unit must match task unit")
-        if result_status == "completed" and task.get("action") == "harvest" and quantity is None:
-            raise ValueError("Completed harvest requires an actual quantity")
-        if result_status == "completed" and task.get("action") == "delivery" and (quantity is None or rejected is None):
-            raise ValueError("Completed delivery requires accepted and rejected quantities")
-        if (task.get("action") == "delivery" and quantity is not None and rejected is not None
-                and quantity + rejected > Decimal(str(task["planned_quantity"]))):
-            raise ValueError("Accepted plus rejected delivery quantity exceeds its allocated lots")
         completed = checklist_completed or []
-        if result_status == "completed" and set(completed) != set(task["checklist"]): raise ValueError("Complete every checklist item")
         if photo_reference:
             photo = c.execute(select(IMPORTS.c.payload).where(IMPORTS.c.id == photo_reference, IMPORTS.c.tenant_id == tenant)).scalar_one_or_none()
             if not photo or photo.get("source_kind") != "photo_observation" or photo.get("status") != "confirmed":
                 raise ValueError("Photo reference must name an owned reviewed photo observation")
-        short = quantity is not None and task.get("planned_quantity") is not None and quantity < Decimal(str(task["planned_quantity"]))
-        task.update(status="recovery_required" if result_status == "failed" or short or bool(rejected) else "completed",
+        task.update(reported_result_status=result_status,
                     actual_quantity=str(quantity) if quantity is not None else None,
                     rejected_quantity=str(rejected) if rejected is not None else None,
                     result_note=note, photo_reference=photo_reference, checklist_completed=completed,
                     event_revision=task["event_revision"] + 1, updated_at=now())
-        planned = Decimal(str(task["planned_quantity"])) if task.get("planned_quantity") is not None else None
-        task["forecast_feedback"] = {
-            "planned_quantity": str(planned) if planned is not None else None,
-            "actual_quantity": str(quantity) if quantity is not None else None,
-            "delta_quantity": str(quantity - planned) if quantity is not None and planned is not None else None,
-            "unit": task.get("unit"), "basis": "farmer_reported_unverified",
-        }
-        task["recovery"] = ({"required": True, "reason": "task_failed", "preserve_completed_work": True}
-                            if task["status"] == "recovery_required" else {"required": False})
+        _validate_and_derive_reported_task(task)
         c.execute(update(TASKS).where(TASKS.c.id == task_id, TASKS.c.tenant_id == tenant).values(status=task["status"], payload=task))
         append_event(store, tenant, task_id, "task_result_recorded", {"status": task["status"], "actual_quantity": task["actual_quantity"],
             "rejected_quantity": task.get("rejected_quantity"), "order_id": task.get("order_id"), "lot_id": task.get("lot_id"),
@@ -452,6 +560,8 @@ def correct_task_result(store, tenant: str, task_id: str, *, expected_event_revi
             row = c.execute(select(TASKS).where(TASKS.c.id == task_id, TASKS.c.tenant_id == tenant).with_for_update()).mappings().first()
             if not row: raise ValueError("Task not found")
             task = deepcopy(row["payload"])
+            if task.get("event_revision", 0) < 1 or row["status"] in {"pending", "in_progress", "cancelled"}:
+                raise ValueError("Only a previously reported task result can be corrected")
             if task["event_revision"] != expected_event_revision: raise ValueError("Task event revision changed")
             previous = task.get(field)
             normalized = corrected_value
@@ -465,20 +575,16 @@ def correct_task_result(store, tenant: str, task_id: str, *, expected_event_revi
                 raise ValueError("A correction cannot change the task quantity dimension")
             elif field == "status" and corrected_value not in {"completed", "recovery_required", "failed"}:
                 raise ValueError("Unsupported corrected task status")
+            if field == "photo_reference" and corrected_value:
+                photo = c.execute(select(IMPORTS.c.payload).where(IMPORTS.c.id == corrected_value,
+                    IMPORTS.c.tenant_id == tenant)).scalar_one_or_none()
+                if not photo or photo.get("source_kind") != "photo_observation" or photo.get("status") != "confirmed":
+                    raise ValueError("Photo reference must name an owned reviewed photo observation")
             task[field] = normalized
-            if task.get("action") == "delivery" and field in {"actual_quantity", "rejected_quantity"}:
-                accepted = Decimal(str(task.get("actual_quantity") or 0)); rejected = Decimal(str(task.get("rejected_quantity") or 0))
-                if accepted + rejected > Decimal(str(task["planned_quantity"])):
-                    raise ValueError("Accepted plus rejected delivery quantity exceeds its allocated lots")
+            if field == "status":
+                task["reported_result_status"] = "failed" if corrected_value in {"failed", "recovery_required"} else "completed"
+            _validate_and_derive_reported_task(task)
             task.update(event_revision=expected_event_revision + 1, updated_at=now())
-            quantity = Decimal(str(task["actual_quantity"])) if task.get("actual_quantity") is not None else None
-            planned = Decimal(str(task["planned_quantity"])) if task.get("planned_quantity") is not None else None
-            task["forecast_feedback"] = {"planned_quantity": str(planned) if planned is not None else None,
-                "actual_quantity": str(quantity) if quantity is not None else None,
-                "delta_quantity": str(quantity - planned) if quantity is not None and planned is not None else None,
-                "unit": task.get("unit"), "basis": "farmer_reported_unverified"}
-            task["recovery"] = ({"required": True, "reason": "corrected_task_failure", "preserve_completed_work": True}
-                                if task["status"] in {"failed", "recovery_required"} else {"required": False})
             c.execute(update(TASKS).where(TASKS.c.id == task_id, TASKS.c.tenant_id == tenant).values(status=task["status"], payload=task))
             append_event(store, tenant, task_id, "task_result_corrected", {"field": field, "previous": previous, "corrected": task[field], "reason": reason, "event_revision": task["event_revision"]})
             from services.api.planning_sessions import refresh_reported_forecast
@@ -535,6 +641,8 @@ class CreateProposalRequest(Strict):
     changes: list[dict[str, Any]] = Field(min_length=1, max_length=64)
     selected_strategy_id: str | None = Field(default=None, max_length=100)
     source_candidate_ids: list[str] = Field(default_factory=list, max_length=32)
+    source_conversation_id: str | None = Field(default=None, min_length=1, max_length=100)
+    source_message_id: str | None = Field(default=None, min_length=1, max_length=100)
     idempotency_key: str = Field(min_length=1, max_length=128)
 
 

@@ -130,11 +130,15 @@ def run(api: API, vision: bool, on_snapshot=lambda evidence: None) -> dict:
     xlsx_candidate = review(api, upload(api, "synthetic.xlsx", "accounting_export", xlsx_raw,
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
     correction = api.json("POST", "/farm-workflow/imports", body={"source_name": "correction", "import_kind": "correction", "rows": [
-        {"date": "2026-09-02", "kind": "correction", "reference": "SALE-C1", "description": "price correction", "amount": "-2", "currency": "SGD"}]})
+        {"date": "2026-09-02", "kind": "correction", "reference": "SALE-C1-CORR-1",
+         "corrects_reference": "SALE-C1", "description": "price correction", "amount": "-2", "currency": "SGD"}]})
     correction = review(api, correction)
     checks["manual_csv_xlsx_reviewed"] = all(row.get("status") == "confirmed" for row in (manual, csv_candidate, xlsx_candidate, correction))
     checks["reconciliation_exact"] = (csv_candidate["reconciliation"]["revenue_sgd"] == "72" and
-        xlsx_candidate["reconciliation"]["expense_sgd"] == "24.50" and correction["reconciliation"]["correction_row_count"] == 1)
+        xlsx_candidate["reconciliation"]["expense_sgd"] == "24.50" and
+        correction["reconciliation"]["correction_row_count"] == 1 and
+        correction["reconciliation"]["revenue_sgd"] == "-2" and
+        correction["reconciliation"]["expense_sgd"] == "0")
     source = api.request("GET", f'/farm-workflow/imports/{csv_candidate["candidate_id"]}/source')
     xlsx_source = api.request("GET", f'/farm-workflow/imports/{xlsx_candidate["candidate_id"]}/source/download')
     checks["source_preview_exact"] = (source.content == csv_raw and xlsx_source.content == xlsx_raw

@@ -56,6 +56,155 @@ def test_review_is_explicit_tenant_isolated_and_photos_never_gain_yield_authorit
         farm_workflow.review_import(store, other, saved["candidate_id"], decision="confirm", reviewer="other")
 
 
+def test_financial_corrections_resolve_reviewed_target_category_and_signed_delta(setup):
+    store, tenant, _, _ = setup
+    connector = FinancialDataConnector()
+    ledger = connector.from_rows(tenant_id=tenant, source_name="reviewed-ledger", rows=[
+        {"date": "2026-09-01", "kind": "sale", "reference": "SALE-1", "amount": "100"},
+        {"date": "2026-09-01", "kind": "expense", "reference": "EXP-1", "amount": "100"},
+    ])
+    saved = farm_workflow.save_import(store, tenant, ledger)
+    farm_workflow.review_import(store, tenant, saved["candidate_id"], decision="confirm", reviewer="farmer")
+
+    corrections = connector.from_rows(tenant_id=tenant, source_name="signed-corrections", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-SALE-UP",
+         "target_reference": "SALE-1", "amount": "10"},
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-SALE-DOWN",
+         "target_reference": "SALE-1", "amount": "-3"},
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-EXP-UP",
+         "target_reference": "EXP-1", "amount": "10"},
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-EXP-DOWN",
+         "target_reference": "EXP-1", "amount": "-3"},
+    ])
+    candidate = farm_workflow.save_import(store, tenant, corrections, source_kind="correction")
+    summary = candidate["reconciliation"]
+    assert {key: summary[key] for key in (
+        "source_row_count", "counted_row_count", "duplicate_references", "correction_row_count",
+        "correction_semantics", "revenue_sgd", "expense_sgd", "net_sgd", "quantity_by_unit",
+    )} == {
+        "source_row_count": 4, "counted_row_count": 4, "duplicate_references": [],
+        "correction_row_count": 4, "correction_semantics": "target_category_signed_delta",
+        "revenue_sgd": "7", "expense_sgd": "7", "net_sgd": "0", "quantity_by_unit": {},
+    }
+    assert [(row["corrects_reference"], row["target_kind"], row["signed_delta_sgd"])
+            for row in summary["resolved_corrections"]] == [
+        ("SALE-1", "sale", "10"), ("SALE-1", "sale", "-3"),
+        ("EXP-1", "expense", "10"), ("EXP-1", "expense", "-3"),
+    ]
+    assert all(row["target_source_sha256"] == ledger.source_sha256
+               and row["target_row_number"] in {2, 3} for row in summary["resolved_corrections"])
+    reviewed = farm_workflow.review_import(store, tenant, candidate["candidate_id"],
+                                           decision="confirm", reviewer="farmer")
+    assert reviewed["reconciliation"] == candidate["reconciliation"]
+    assert len(reviewed["rows"]) == 4 and all(row["corrects_reference"] for row in reviewed["rows"])
+
+
+def test_financial_correction_rejects_unknown_and_ambiguous_reviewed_targets(setup):
+    store, tenant, _, _ = setup
+    connector = FinancialDataConnector()
+    unknown = connector.from_rows(tenant_id=tenant, source_name="unknown", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-UNKNOWN",
+         "target_reference": "MISSING", "amount": "1"},
+    ])
+    with pytest.raises(ValueError, match="Unknown correction target"):
+        farm_workflow.save_import(store, tenant, unknown, source_kind="correction")
+
+    inventory = connector.from_rows(tenant_id=tenant, source_name="inventory-ledger", rows=[
+        {"date": "2026-09-01", "kind": "inventory", "reference": "STOCK-1",
+         "quantity": "5", "unit": "kg", "amount": "0"},
+    ])
+    saved_inventory = farm_workflow.save_import(store, tenant, inventory)
+    farm_workflow.review_import(store, tenant, saved_inventory["candidate_id"],
+                                decision="confirm", reviewer="farmer")
+    category_mismatch = connector.from_rows(tenant_id=tenant, source_name="inventory-correction",
+                                             import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-STOCK",
+         "target_reference": "STOCK-1", "amount": "1"},
+    ])
+    with pytest.raises(ValueError, match="not a sale or expense"):
+        farm_workflow.save_import(store, tenant, category_mismatch, source_kind="correction")
+
+    for source, amount in (("ledger-a", "10"), ("ledger-b", "20")):
+        item = connector.from_rows(tenant_id=tenant, source_name=source, rows=[
+            {"date": "2026-09-01", "kind": "sale", "reference": "DUP-1",
+             "description": source, "amount": amount},
+        ])
+        saved = farm_workflow.save_import(store, tenant, item)
+        farm_workflow.review_import(store, tenant, saved["candidate_id"], decision="confirm", reviewer="farmer")
+    ambiguous = connector.from_rows(tenant_id=tenant, source_name="ambiguous", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-AMBIG",
+         "target_reference": "DUP-1", "amount": "1"},
+    ])
+    with pytest.raises(ValueError, match="Ambiguous correction target"):
+        farm_workflow.save_import(store, tenant, ambiguous, source_kind="correction")
+
+
+def test_correction_reference_reuse_rejects_changed_delta_but_same_candidate_replays(setup):
+    store, tenant, _, _ = setup
+    connector = FinancialDataConnector()
+    ledger = connector.from_rows(tenant_id=tenant, source_name="ledger", rows=[
+        {"date": "2026-09-01", "kind": "expense", "reference": "EXP-REUSE", "amount": "100"},
+    ])
+    saved = farm_workflow.save_import(store, tenant, ledger)
+    farm_workflow.review_import(store, tenant, saved["candidate_id"], decision="confirm", reviewer="farmer")
+    first = connector.from_rows(tenant_id=tenant, source_name="correction", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-REUSE",
+         "target_reference": "EXP-REUSE", "amount": "10"},
+    ])
+    saved_first = farm_workflow.save_import(store, tenant, first, source_kind="correction")
+    assert farm_workflow.save_import(store, tenant, first, source_kind="correction") == saved_first
+    farm_workflow.review_import(store, tenant, saved_first["candidate_id"], decision="confirm", reviewer="farmer")
+    changed = connector.from_rows(tenant_id=tenant, source_name="correction-changed", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-REUSE",
+         "target_reference": "EXP-REUSE", "amount": "11"},
+    ])
+    with pytest.raises(ValueError, match="Correction reference is already used"):
+        farm_workflow.save_import(store, tenant, changed, source_kind="correction")
+
+
+def test_reject_remains_available_if_correction_target_later_becomes_ambiguous(setup):
+    store, tenant, _, _ = setup
+    connector = FinancialDataConnector()
+    original = connector.from_rows(tenant_id=tenant, source_name="original", rows=[
+        {"date": "2026-09-01", "kind": "sale", "reference": "SALE-LATE-DUP", "amount": "10"},
+    ])
+    saved_original = farm_workflow.save_import(store, tenant, original)
+    farm_workflow.review_import(store, tenant, saved_original["candidate_id"], decision="confirm", reviewer="farmer")
+    correction = connector.from_rows(tenant_id=tenant, source_name="pending-correction", import_kind="correction", rows=[
+        {"date": "2026-09-02", "kind": "correction", "reference": "CORR-LATE-DUP",
+         "target_reference": "SALE-LATE-DUP", "amount": "1"},
+    ])
+    pending = farm_workflow.save_import(store, tenant, correction, source_kind="correction")
+    duplicate = connector.from_rows(tenant_id=tenant, source_name="duplicate", rows=[
+        {"date": "2026-09-01", "kind": "sale", "reference": "SALE-LATE-DUP",
+         "description": "separate transaction using same external reference", "amount": "12"},
+    ])
+    saved_duplicate = farm_workflow.save_import(store, tenant, duplicate)
+    farm_workflow.review_import(store, tenant, saved_duplicate["candidate_id"], decision="confirm", reviewer="farmer")
+    with pytest.raises(ValueError, match="Ambiguous correction target"):
+        farm_workflow.review_import(store, tenant, pending["candidate_id"], decision="confirm", reviewer="farmer")
+    rejected = farm_workflow.review_import(store, tenant, pending["candidate_id"],
+                                           decision="reject", reviewer="farmer")
+    assert rejected["status"] == "rejected" and rejected["planning_eligible"] is False
+
+
+def test_unsupported_crop_review_is_truthfully_accounting_only(setup):
+    store, tenant, _, _ = setup
+    candidate = FinancialDataConnector().from_rows(tenant_id=tenant, source_name="unknown-crop", rows=[
+        {"date": "2026-09-01", "kind": "sale", "reference": "SALE-U1",
+         "crop_id": "garlic_chives", "quantity": "2", "unit": "kg", "amount": "10"},
+    ])
+    saved = farm_workflow.save_import(store, tenant, candidate)
+    reviewed = farm_workflow.review_import(store, tenant, saved["candidate_id"],
+                                           decision="confirm", reviewer="farmer")
+    assert reviewed["status"] == "confirmed"
+    assert reviewed["planning_eligible"] is False
+    assert reviewed["planning_eligibility"] == "accounting_only_unsupported_crop"
+    assert reviewed["row_eligibility"] == [{
+        "row_number": 2, "accounting_eligible": True, "planning_eligible": False,
+    }]
+
+
 def test_stale_proposal_duplicate_approval_and_auditable_correction(setup):
     store, tenant, _, adapter = setup
     with pytest.raises(ValueError, match="revision changed"):
@@ -96,13 +245,50 @@ def test_stale_proposal_duplicate_approval_and_auditable_correction(setup):
     corrected = farm_workflow.correct_task_result(store, tenant, harvest["id"], expected_event_revision=completed["event_revision"],
                                                   field="actual_quantity", corrected_value="6.5", reason="scale transcription",
                                                   idempotency_key="correction")
-    assert corrected["actual_quantity"] == "6.5"
+    assert corrected["actual_quantity"] == "6.5" and corrected["status"] == "recovery_required"
+    assert "quantity_below_plan" in corrected["recovery"]["reasons"]
     assert farm_workflow.correct_task_result(store, tenant, harvest["id"], expected_event_revision=completed["event_revision"],
                                              field="actual_quantity", corrected_value="6.5", reason="scale transcription",
                                              idempotency_key="correction") == corrected
     with pytest.raises(ValueError, match="revision changed"):
         farm_workflow.correct_task_result(store, tenant, harvest["id"], expected_event_revision=completed["event_revision"],
                                           field="actual_quantity", corrected_value="6", reason="again", idempotency_key="other")
+
+
+def test_correction_revalidates_complete_task_and_owned_photo_invariants(setup):
+    store, tenant, _, adapter = setup
+    proposal = farm_workflow.create_proposal(store, tenant, adapter=adapter, session_id="session-1", base_revision=2,
+        changes=[{"kind": "planning_assumptions", "assumptions": {}}], idempotency_key="correct-whole-proposal")
+    applied = farm_workflow.apply_proposal(store, tenant, proposal["id"], adapter=adapter,
+        expected_base_revision=2, idempotency_key="correct-whole-apply")
+    adapter.session.update(result_id="job-1", status="COMPLETED", revision=adapter.session["revision"] + 1,
+                           input_hash="farm-2")
+    adapter.result["id"] = "job-1"
+    tasks = farm_workflow.approve_and_create_actions(store, tenant, proposal["id"], adapter=adapter,
+        proposal_revision=applied["proposal_revision"], idempotency_key="correct-whole-approve")["tasks"]
+
+    harvest = next(task for task in tasks if task["action"] == "harvest")
+    with pytest.raises(ValueError, match="previously reported"):
+        farm_workflow.correct_task_result(store, tenant, harvest["id"], expected_event_revision=0,
+            field="note", corrected_value="premature", reason="no prior result", idempotency_key="pending-correction")
+    failed_harvest = farm_workflow.record_task_result(store, tenant, harvest["id"], expected_status="pending",
+        result_status="failed", actual_quantity=None, unit=None, checklist_completed=[])
+    with pytest.raises(ValueError, match="Completed harvest requires an actual quantity"):
+        farm_workflow.correct_task_result(store, tenant, harvest["id"],
+            expected_event_revision=failed_harvest["event_revision"], field="result_status", corrected_value="completed",
+            reason="incorrect completion", idempotency_key="invalid-harvest-completion")
+
+    delivery = next(task for task in tasks if task["action"] == "delivery")
+    failed_delivery = farm_workflow.record_task_result(store, tenant, delivery["id"], expected_status="pending",
+        result_status="failed", actual_quantity=None, unit=None, rejected_quantity=None, checklist_completed=[])
+    with pytest.raises(ValueError, match="Completed delivery requires accepted and rejected quantities"):
+        farm_workflow.correct_task_result(store, tenant, delivery["id"],
+            expected_event_revision=failed_delivery["event_revision"], field="result_status", corrected_value="completed",
+            reason="incorrect completion", idempotency_key="invalid-delivery-completion")
+    with pytest.raises(ValueError, match="owned reviewed photo"):
+        farm_workflow.correct_task_result(store, tenant, delivery["id"],
+            expected_event_revision=failed_delivery["event_revision"], field="photo_reference", corrected_value="other-tenant-photo",
+            reason="attach evidence", idempotency_key="invalid-correction-photo")
 
 
 def test_http_import_review_is_tenant_scoped_and_waste_rescue_is_dated(setup):

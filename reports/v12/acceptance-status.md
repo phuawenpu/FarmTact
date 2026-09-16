@@ -1,25 +1,26 @@
-# V12 acceptance remains in progress
+# V12 final acceptance remains in progress
 
-Public V11 is preserved. V1–V10 workers/storage are retired, with snapshot,
-checksummed preservation, resource and 410-route evidence in this directory.
-V12 remains private until the final acceptance gates pass.
+V11 is the sole public edition; V12 is private. V1–V10 workers/storage are retired
+with snapshot, preservation, resource and 410 evidence retained here.
 
-The stable full regression passed 690 tests with one skip. Subsequent demand
-semantics, financial null normalization and specialist binding corrections passed
-45 conversation/integration checks and 19 focused ingestion/trial checks. Browser
-acceptance passed 26 real-backend checks and 15 fixture checks at the required
-mobile/desktop widths. Three captioned 48-second MP4s have verified metadata,
-playback controls, transcripts and downloads.
+Independent final audits found gaps in Inbox review/manual entry, the discussion
+proposal handoff, correction invariants and accounting correction categories.
+Implementation fixes and focused tests are complete; the next exact candidate must
+pass the final regression and live review before publication. Original audits and
+failed results remain available rather than being relabeled passes.
 
-Actual gateway-mediated Council inference validated five numerical roles; Weather
-and Market remained explicitly partial because source evidence was unavailable.
-The invoice and synthetic photo trials returned reviewed evidence, with no direct
-planning authority. Original helper failures remain recorded. A live specialist
-reply incorrectly described overall forecast shortfall as confirmed-order shortfall.
-The next candidate adds explicit booked metrics, separates all-demand facts and
-withholds mixed-scope claims; its live quality retest remains required.
+The updated UI passed 30 real-backend and 23 mocked branch checks. Inbox fields,
+provenance and warnings are visible before confirmation. Manual corrections retain
+explicit target references and signed deltas. Specialist findings have a reviewed,
+non-mutating proposal handoff. Reduced motion and partial Council states are tested.
 
-Remaining gates: exact-source restaging, corrected specialist and native-PDF live
-checks, complete workflow/isolation, restart/replay, paired capacity, publication
-and final public source/state/navigation checks. Shared inference limits remain
-unchanged. No actual farm operation is enabled.
+At source 7746b2f, the actual booked-demand specialist, native-PDF extraction,
+complete workflow, upload/review and three paired V11/V12 capacity checks passed.
+The bounded inference ledger records 18 requests under the unchanged 48/day cap.
+The new Council V3 scope rules still require an actual review after staging.
+
+The 7746b2f full suite passed 707 tests with one skip and one failure: a test wrongly
+required identical incumbents from wall-clock-limited recomputation. Its replacement
+checks deterministic inputs/forecast and feasibility/reservations; five focused
+research tests passed, with no production numerical behavior changed. Full final
+regression, exact-image staging, restart/replay and publication checks remain.

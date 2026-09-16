@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "trials": [
+    {
+      "trial": 1,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.1542807689999961,
+      "browse_samples": 18,
+      "v12_seconds": 12.158051880000002,
+      "v11_seconds": 12.334419298,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 2,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.20304669000000786,
+      "browse_samples": 18,
+      "v12_seconds": 12.347287739999999,
+      "v11_seconds": 12.524843087999997,
+      "errors": [],
+      "inference_requests": 0
+    },
+    {
+      "trial": 3,
+      "status": "PASS",
+      "checks": {
+        "browse_p95_under_5s": true,
+        "v12_completed_under_180s": true,
+        "v11_completed_under_180s": true,
+        "farms_unchanged": true,
+        "all_browse_successful": true
+      },
+      "browse_p95_seconds": 0.21902305200001138,
+      "browse_samples": 18,
+      "v12_seconds": 12.398184692000001,
+      "v11_seconds": 12.60675141500002,
+      "errors": [],
+      "inference_requests": 0
+    }
+  ],
+  "protocol": "Three paired V11/V12 numerical jobs; browse p95<5s and both terminal under 180s; zero inference.",
+  "started_at": "2026-09-16T14:14:27.243607+00:00",
+  "completed_at": "2026-09-16T14:15:07.805355+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "old_base_url": "http://127.0.0.1:8091",
+  "private_gateway": true,
+  "review_requested": false,
+  "source_commit": "7746b2fe71102f9cb237eeb3911aadb117b96792"
+}

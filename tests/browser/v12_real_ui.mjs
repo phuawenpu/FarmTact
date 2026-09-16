@@ -124,12 +124,35 @@ try {
     await page.getByText(/remain candidates until explicit review/).isVisible(),
   );
   const uploadName=`acceptance-${Date.now()}.csv`;
-  await page.locator('.sandbox-upload input[type="file"]').setInputFiles({name:uploadName,mimeType:'text/csv',buffer:Buffer.from(`date,kind,amount,currency\n2026-09-01,expense,${Date.now()%100}.50,SGD\n`)});
+  const uploadAmount=`${Date.now()%100}.50`;
+  await page.locator('.sandbox-upload input[type="file"]').setInputFiles({name:uploadName,mimeType:'text/csv',buffer:Buffer.from(`date,kind,amount,currency,reference\n2026-09-01,expense,${uploadAmount},SGD,acceptance-${Date.now()}\n`)});
   await page.getByRole('button',{name:'Upload candidate'}).click();
   await page.getByText(new RegExp(`${uploadName} · candidate`)).waitFor();
+  const uploadCard=page.locator('.upload-review').filter({hasText:uploadName});
+  const reviewText=await uploadCard.locator('.candidate-review').innerText();
+  check('real candidate exposes provenance and extracted fields before confirmation',
+    ['Provenance','Authority','Current Planning Authority','2026-09-01',uploadAmount,'Amount Sgd'].every(value=>reviewText.includes(value)),reviewText);
   await page.getByRole('button',{name:'Confirm reviewed fields'}).last().click();
   await page.getByText(new RegExp(`${uploadName} · confirmed`)).waitFor();
   check('real upload requires and records explicit review',await page.getByText(new RegExp(`${uploadName} · confirmed`)).isVisible());
+  const manualName=`Manual acceptance ${Date.now()}`;
+  const manualAmount=`${20+(Date.now()%70)}.73`;
+  await page.getByRole('button',{name:'Open manual entry'}).click();
+  await page.getByLabel('Source name').fill(manualName);
+  await page.getByLabel('Amount (SGD)').fill(manualAmount);
+  const [manualResponse]=await Promise.all([
+    page.waitForResponse(response=>response.url().endsWith('/farm-workflow/imports')&&response.request().method()==='POST'),
+    page.getByRole('button',{name:'Create review candidate'}).click(),
+  ]);
+  check('manual candidate endpoint accepts tenant-scoped record',manualResponse.status()===201,{status:manualResponse.status(),body:await manualResponse.text()});
+  const manualCard=page.locator('.upload-review').filter({hasText:manualName});
+  await manualCard.getByText(`${manualName} · candidate`).waitFor();
+  const manualReviewText=await manualCard.innerText();
+  check('real manual entry creates reviewable unconfirmed candidate',
+    manualReviewText.includes(manualAmount)&&manualReviewText.includes('Not active; confirmation required')&&manualReviewText.includes(manualName),manualReviewText);
+  await manualCard.getByRole('button',{name:'Confirm reviewed fields'}).click();
+  await page.getByText(`${manualName} · confirmed`).waitFor();
+  check('real manual candidate requires explicit confirmation',await page.getByText(`${manualName} · confirmed`).isVisible());
   await page.getByRole("button", { name: /Close Farm Inbox/ }).click();
   await page.getByRole("button", { name: /Apply & Recalculate/ }).click();
   await page.getByLabel("Expected demand",{exact:true}).fill("105");

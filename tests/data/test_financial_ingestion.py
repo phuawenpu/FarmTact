@@ -27,10 +27,25 @@ def test_negative_quantity_requires_explicit_correction_record():
     rows = [{"date": "2026-09-01", "type": "sale", "amount": "10", "qty": "-2"}]
     with pytest.raises(FinancialDataError, match="negative quantity"):
         FinancialDataConnector().from_rows(tenant_id="t", source_name="manual", rows=rows)
-    rows[0]["type"] = "correction"
+    rows[0].update(type="correction", reference="CORR-1", target_reference="SALE-1")
     candidate = FinancialDataConnector().from_rows(tenant_id="t", source_name="manual", rows=rows,
                                                     import_kind="correction")
     assert candidate.rows[0].kind == "correction"
+    assert candidate.rows[0].reference == "CORR-1"
+    assert candidate.rows[0].corrects_reference == "SALE-1"
+
+
+def test_correction_requires_distinct_explicit_target_reference():
+    connector = FinancialDataConnector()
+    with pytest.raises(FinancialDataError, match="target reference is required"):
+        connector.from_rows(tenant_id="t", source_name="missing-target", import_kind="correction", rows=[
+            {"date": "2026-09-01", "kind": "correction", "reference": "CORR-1", "amount": "10"}
+        ])
+    with pytest.raises(FinancialDataError, match="must differ"):
+        connector.from_rows(tenant_id="t", source_name="same-target", import_kind="correction", rows=[
+            {"date": "2026-09-01", "kind": "correction", "reference": "SALE-1",
+             "target_reference": "SALE-1", "amount": "10"}
+        ])
 
 
 def test_rejects_unknown_schema_and_nonfinite_values():
@@ -74,6 +89,8 @@ def test_unsupported_crop_is_preserved_for_accounting_and_warned_from_planning()
     ])
     assert candidate.rows[0].crop_id == "garlic_chives"
     assert candidate.warnings == ("unsupported_crop:garlic_chives",)
+    confirmed = FinancialDataConnector.confirm(candidate, reviewed_by="farmer")
+    assert confirmed.planning_eligible is False
 
 
 def test_document_json_nulls_remain_null_and_do_not_create_fake_none_crop_warning():

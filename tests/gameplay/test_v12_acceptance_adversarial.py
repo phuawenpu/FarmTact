@@ -143,8 +143,12 @@ def test_reviewed_import_boundary_and_document_failure_are_tenant_scoped():
     with TestClient(create_app(store, start_worker=False)) as client:
         client.get('/api/v1/bootstrap')
         created = post(client, '/farm-workflow/imports', {'source_name': 'manual correction',
-            'import_kind': 'correction', 'rows': [{'date': '2026-09-16', 'kind': 'correction',
-            'reference': 'invoice-1', 'amount': '-2.50', 'currency': 'SGD'}]})
+            'import_kind': 'correction', 'rows': [
+                {'date': '2026-09-15', 'kind': 'sale', 'reference': 'invoice-1',
+                 'amount': '25.00', 'currency': 'SGD'},
+                {'date': '2026-09-16', 'kind': 'correction', 'reference': 'correction-1',
+                 'corrects_reference': 'invoice-1', 'amount': '-2.50', 'currency': 'SGD'},
+            ]})
         assert created.status_code == 201, created.text
         candidate = created.json()
         assert candidate['status'] == 'candidate'

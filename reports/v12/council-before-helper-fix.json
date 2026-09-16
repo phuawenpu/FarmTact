@@ -1,0 +1,989 @@
+{
+  "session_id": "e6c70e96f60acf7fe02df0fd40c8cfe6",
+  "calculation_seconds": 11.8291,
+  "checks": {
+    "workflow_session": true,
+    "calculation_completed": true,
+    "feasible_strategy_selected": true,
+    "actual_council_completed": true,
+    "actual_council_bounded": true,
+    "council_replay_identical": true,
+    "proposal_idempotent": true,
+    "apply_recalculated": true,
+    "approval_idempotent_with_tasks": true,
+    "result_recorded": true,
+    "correction_audited": true,
+    "workflow_replay_identical": true,
+    "operations_disabled": true
+  },
+  "stage": "actions_approved",
+  "council": {
+    "version": "planning-council-v2",
+    "workflow_type": "sequential_specialists_then_chair",
+    "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+    "status": "completed",
+    "eligible_strategy_ids": [
+      "0a85b04997a94a1d091f",
+      "5e8c71a61f7b036f2485",
+      "ee7f26bd61834f1954d6"
+    ],
+    "verified_claims": [
+      {
+        "id": "pc_04ac905ec64dde95fc31",
+        "metric": "labour_hours",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 85.42,
+        "scenario": 85.42,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "hours",
+        "statement": "Resilient's labour is 85.42 hours in this frozen plan."
+      },
+      {
+        "id": "pc_0a4edfb2a701ae51c70e",
+        "metric": "margin_sgd",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 2930.59,
+        "scenario": 2930.59,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Balanced's projected margin is SGD 2,930.59 in this frozen plan."
+      },
+      {
+        "id": "pc_0bd1d3331447e4b680c4",
+        "metric": "booked_shortfall_kg",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 454.0,
+        "scenario": 454.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Lean's booked demand shortfall is 454 kg in this frozen plan."
+      },
+      {
+        "id": "pc_14c80eb5e36947f54287",
+        "metric": "margin_sgd",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 2467.6,
+        "scenario": 2467.6,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Lean's projected margin is SGD 2,467.6 in this frozen plan."
+      },
+      {
+        "id": "pc_163ed8d38c7ea1487584",
+        "metric": "area_m2",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 240.0,
+        "scenario": 240.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "m2",
+        "statement": "Resilient's sown area is 240 m2 in this frozen plan."
+      },
+      {
+        "id": "pc_204647f8d6142ce3cee2",
+        "metric": "fill_rate",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 0.4375,
+        "scenario": 0.4375,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "ratio",
+        "statement": "Lean's overall demand fill rate is 0.4375 in this frozen plan."
+      },
+      {
+        "id": "pc_2285ac03727e1b2f822a",
+        "metric": "booked_delivered_kg",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 370.0,
+        "scenario": 370.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Lean's booked demand delivered is 370 kg in this frozen plan."
+      },
+      {
+        "id": "pc_2bb53157202d6615bde0",
+        "metric": "waste_kg",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 220.98,
+        "scenario": 220.98,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Resilient's expired crop waste is 220.98 kg in this frozen plan."
+      },
+      {
+        "id": "pc_345f2601ced9a831bc70",
+        "metric": "fill_rate",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 0.6213,
+        "scenario": 0.6213,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "ratio",
+        "statement": "Resilient's overall demand fill rate is 0.6213 in this frozen plan."
+      },
+      {
+        "id": "pc_363d548766268c62ab15",
+        "metric": "closing_stock_kg",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 35.0,
+        "scenario": 35.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Lean's remaining terminal stock is 35 kg in this frozen plan."
+      },
+      {
+        "id": "pc_3dadd800b833d878f781",
+        "metric": "area_m2",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 120.0,
+        "scenario": 120.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "m2",
+        "statement": "Lean's sown area is 120 m2 in this frozen plan."
+      },
+      {
+        "id": "pc_40519e4f12e2f69890af",
+        "metric": "revenue_sgd",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 3609.11,
+        "scenario": 3609.11,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Lean's projected revenue is SGD 3,609.11 in this frozen plan."
+      },
+      {
+        "id": "pc_56df7f07d27f8448ef7d",
+        "metric": "margin_sgd",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 3193.15,
+        "scenario": 3193.15,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Resilient's projected margin is SGD 3,193.15 in this frozen plan."
+      },
+      {
+        "id": "pc_5e7c25473d027696ddae",
+        "metric": "revenue_sgd",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 5056.15,
+        "scenario": 5056.15,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Resilient's projected revenue is SGD 5,056.15 in this frozen plan."
+      },
+      {
+        "id": "pc_63b1ca031ea256dca682",
+        "metric": "labour_hours",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 70.82,
+        "scenario": 70.82,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "hours",
+        "statement": "Balanced's labour is 70.82 hours in this frozen plan."
+      },
+      {
+        "id": "pc_67a78f79abf33cce14e5",
+        "metric": "cost_sgd",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 1862.99,
+        "scenario": 1862.99,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Resilient's projected cost is SGD 1,862.99 in this frozen plan."
+      },
+      {
+        "id": "pc_7d2cfe626c64324f9970",
+        "metric": "area_m2",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 180.0,
+        "scenario": 180.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "m2",
+        "statement": "Balanced's sown area is 180 m2 in this frozen plan."
+      },
+      {
+        "id": "pc_8903217a648c066d22ab",
+        "metric": "booked_delivered_kg",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 446.0,
+        "scenario": 446.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Balanced's booked demand delivered is 446 kg in this frozen plan."
+      },
+      {
+        "id": "pc_892a9aa1b39d3bdf6d36",
+        "metric": "booked_delivered_kg",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 518.0,
+        "scenario": 518.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Resilient's booked demand delivered is 518 kg in this frozen plan."
+      },
+      {
+        "id": "pc_8ed6ccc312cae42644d4",
+        "metric": "labour_hours",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 55.8,
+        "scenario": 55.8,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "hours",
+        "statement": "Lean's labour is 55.8 hours in this frozen plan."
+      },
+      {
+        "id": "pc_975f713038bec9ba231a",
+        "metric": "cost_sgd",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 1141.5,
+        "scenario": 1141.5,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Lean's projected cost is SGD 1,141.5 in this frozen plan."
+      },
+      {
+        "id": "pc_ab8672cb4098bac95ddd",
+        "metric": "waste_kg",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 175.99,
+        "scenario": 175.99,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Balanced's expired crop waste is 175.99 kg in this frozen plan."
+      },
+      {
+        "id": "pc_ad552de211231525ca13",
+        "metric": "waste_kg",
+        "policy": "Lean",
+        "strategy_id": "5e8c71a61f7b036f2485",
+        "baseline": 153.99,
+        "scenario": 153.99,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Lean's expired crop waste is 153.99 kg in this frozen plan."
+      },
+      {
+        "id": "pc_b058ab72bce43154772c",
+        "metric": "revenue_sgd",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 4453.13,
+        "scenario": 4453.13,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Balanced's projected revenue is SGD 4,453.13 in this frozen plan."
+      },
+      {
+        "id": "pc_ba9bec8e48cc72fc1a81",
+        "metric": "closing_stock_kg",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 54.0,
+        "scenario": 54.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Resilient's remaining terminal stock is 54 kg in this frozen plan."
+      },
+      {
+        "id": "pc_bf5af831d6564aa3a895",
+        "metric": "booked_shortfall_kg",
+        "policy": "Resilient",
+        "strategy_id": "0a85b04997a94a1d091f",
+        "baseline": 306.0,
+        "scenario": 306.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Resilient's booked demand shortfall is 306 kg in this frozen plan."
+      },
+      {
+        "id": "pc_bfa0d3f8ce8e7098bd18",
+        "metric": "fill_rate",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 0.534,
+        "scenario": 0.534,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "ratio",
+        "statement": "Balanced's overall demand fill rate is 0.534 in this frozen plan."
+      },
+      {
+        "id": "pc_c754554d0390bf14515d",
+        "metric": "booked_shortfall_kg",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 378.0,
+        "scenario": 378.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Balanced's booked demand shortfall is 378 kg in this frozen plan."
+      },
+      {
+        "id": "pc_c8a7b13bdbc6b078245f",
+        "metric": "cost_sgd",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 1522.54,
+        "scenario": 1522.54,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "SGD",
+        "statement": "Balanced's projected cost is SGD 1,522.54 in this frozen plan."
+      },
+      {
+        "id": "pc_e3ee322f89b48bcb0f66",
+        "metric": "closing_stock_kg",
+        "policy": "Balanced",
+        "strategy_id": "ee7f26bd61834f1954d6",
+        "baseline": 54.0,
+        "scenario": 54.0,
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "claim_kind": "strategy_metric",
+        "delta": 0.0,
+        "direction": "unchanged",
+        "unit": "kg",
+        "statement": "Balanced's remaining terminal stock is 54 kg in this frozen plan."
+      }
+    ],
+    "findings": [
+      {
+        "role": "demand_analyst",
+        "claim_ids": [
+          "pc_bf5af831d6564aa3a895",
+          "pc_892a9aa1b39d3bdf6d36",
+          "pc_345f2601ced9a831bc70"
+        ],
+        "tradeoff": "service_over_margin",
+        "rationale": "protect_booked_service",
+        "proposed_strategy_id": "0a85b04997a94a1d091f",
+        "status": "validated",
+        "rendered_facts": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's overall demand fill rate is 0.6213 in this frozen plan."
+        ],
+        "rejection_reasons": [],
+        "rendered_interpretation": "Prioritize reliable service of booked customer commitments.",
+        "raw_provider_output": {
+          "claim_ids": [
+            "pc_bf5af831d6564aa3a895",
+            "pc_892a9aa1b39d3bdf6d36",
+            "pc_345f2601ced9a831bc70"
+          ],
+          "tradeoff": "service_over_margin",
+          "rationale": "protect_booked_service",
+          "proposed_strategy_id": "0a85b04997a94a1d091f"
+        },
+        "audit": {
+          "provider": "deepseek",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "role": "demand_analyst",
+          "capability": "text",
+          "execution_mode": "test",
+          "data_mode": "synthetic_demo",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "f9c170d058ec9f776441373977f9eb9192257fd34afc9739ece2debef2a3b1c2",
+          "request_id": null,
+          "latency_ms": 1284,
+          "usage": {
+            "prompt_tokens": 2082,
+            "completion_tokens": 94,
+            "total_tokens": 2176,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2082,
+            "reasoning_tokens": null
+          },
+          "contract_versions": {
+            "prompt_template": "farmtact-planning-council-prompt-v2",
+            "output_schema": "farmtact-planning-finding-output-v2",
+            "validator": "farmtact-planning-claim-validator-v2",
+            "context": "farmtact-planning-comparison-context-v2",
+            "sources": "farmtact-planning-source-context-v2"
+          },
+          "public_context_sha256": "9f597f7030773c9b94dc11f40912dd41567a543005b01708a02bc1a41a12173a"
+        },
+        "inference_origin": "deepseek_api",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Demand Planner",
+        "role_contract": {
+          "name": "Demand Planner",
+          "tools": [
+            "booked_orders",
+            "demand_history"
+          ],
+          "authority": "advisory"
+        },
+        "truth_status": "validated",
+        "tool_status": "local_calculation_and_inference_completed",
+        "evidence": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's overall demand fill rate is 0.6213 in this frozen plan."
+        ]
+      },
+      {
+        "role": "weather_analyst",
+        "status": "unavailable",
+        "claim_ids": [],
+        "tradeoff": "insufficient_evidence",
+        "proposed_strategy_id": null,
+        "rationale": "insufficient_external_evidence",
+        "rendered_interpretation": "Site weather evidence was not supplied, so this role was not assessed.",
+        "rendered_facts": [],
+        "rejection_reasons": [],
+        "raw_provider_output": null,
+        "audit": null,
+        "inference_origin": "deterministic",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Weather & Risk Monitor",
+        "role_contract": {
+          "name": "Weather & Risk Monitor",
+          "tools": [
+            "reviewed_weather_context"
+          ],
+          "authority": "observation_only"
+        },
+        "truth_status": "partial",
+        "tool_status": "source_absent",
+        "evidence": []
+      },
+      {
+        "role": "market_analyst",
+        "status": "unavailable",
+        "claim_ids": [],
+        "tradeoff": "insufficient_evidence",
+        "proposed_strategy_id": null,
+        "rationale": "insufficient_external_evidence",
+        "rendered_interpretation": "Site market evidence was not supplied, so this role was not assessed.",
+        "rendered_facts": [],
+        "rejection_reasons": [],
+        "raw_provider_output": null,
+        "audit": null,
+        "inference_origin": "deterministic",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Market & Price Analyst",
+        "role_contract": {
+          "name": "Market & Price Analyst",
+          "tools": [
+            "reviewed_market_context",
+            "accounting_prices"
+          ],
+          "authority": "advisory"
+        },
+        "truth_status": "partial",
+        "tool_status": "source_absent",
+        "evidence": []
+      },
+      {
+        "role": "production_analyst",
+        "claim_ids": [
+          "pc_163ed8d38c7ea1487584",
+          "pc_3dadd800b833d878f781",
+          "pc_7d2cfe626c64324f9970"
+        ],
+        "tradeoff": "space_over_variety",
+        "rationale": "preserve_crop_variety",
+        "proposed_strategy_id": "0a85b04997a94a1d091f",
+        "status": "validated",
+        "rendered_facts": [
+          "Resilient's sown area is 240 m2 in this frozen plan.",
+          "Lean's sown area is 120 m2 in this frozen plan.",
+          "Balanced's sown area is 180 m2 in this frozen plan."
+        ],
+        "rejection_reasons": [],
+        "rendered_interpretation": "Preserve a useful crop mix within the available growing space.",
+        "raw_provider_output": {
+          "claim_ids": [
+            "pc_163ed8d38c7ea1487584",
+            "pc_3dadd800b833d878f781",
+            "pc_7d2cfe626c64324f9970"
+          ],
+          "tradeoff": "space_over_variety",
+          "rationale": "preserve_crop_variety",
+          "proposed_strategy_id": "0a85b04997a94a1d091f"
+        },
+        "audit": {
+          "provider": "deepseek",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "role": "production_analyst",
+          "capability": "text",
+          "execution_mode": "test",
+          "data_mode": "synthetic_demo",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "7a305e2aa00265ddb5ee04dbc7f96a9c1b4af6c05595223c11cced716a0ae588",
+          "request_id": null,
+          "latency_ms": 853,
+          "usage": {
+            "prompt_tokens": 1192,
+            "completion_tokens": 107,
+            "total_tokens": 1299,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1192,
+            "reasoning_tokens": null
+          },
+          "contract_versions": {
+            "prompt_template": "farmtact-planning-council-prompt-v2",
+            "output_schema": "farmtact-planning-finding-output-v2",
+            "validator": "farmtact-planning-claim-validator-v2",
+            "context": "farmtact-planning-comparison-context-v2",
+            "sources": "farmtact-planning-source-context-v2"
+          },
+          "public_context_sha256": "4401957f54039f7bcb1da97aa87ec877456cd84528db07c9fba70063ef9abafa"
+        },
+        "inference_origin": "deepseek_api",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Crop Planner",
+        "role_contract": {
+          "name": "Crop Planner",
+          "tools": [
+            "crop_recipes",
+            "biological_lead_times"
+          ],
+          "authority": "advisory"
+        },
+        "truth_status": "validated",
+        "tool_status": "local_calculation_and_inference_completed",
+        "evidence": [
+          "Resilient's sown area is 240 m2 in this frozen plan.",
+          "Lean's sown area is 120 m2 in this frozen plan.",
+          "Balanced's sown area is 180 m2 in this frozen plan."
+        ]
+      },
+      {
+        "role": "supply_chain_analyst",
+        "claim_ids": [
+          "pc_0bd1d3331447e4b680c4",
+          "pc_892a9aa1b39d3bdf6d36",
+          "pc_bf5af831d6564aa3a895"
+        ],
+        "tradeoff": "service_over_margin",
+        "rationale": "protect_booked_service",
+        "proposed_strategy_id": "0a85b04997a94a1d091f",
+        "status": "validated",
+        "rendered_facts": [
+          "Lean's booked demand shortfall is 454 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan."
+        ],
+        "rejection_reasons": [],
+        "rendered_interpretation": "Prioritize reliable service of booked customer commitments.",
+        "raw_provider_output": {
+          "claim_ids": [
+            "pc_0bd1d3331447e4b680c4",
+            "pc_892a9aa1b39d3bdf6d36",
+            "pc_bf5af831d6564aa3a895"
+          ],
+          "tradeoff": "service_over_margin",
+          "rationale": "protect_booked_service",
+          "proposed_strategy_id": "0a85b04997a94a1d091f"
+        },
+        "audit": {
+          "provider": "deepseek",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "role": "supply_chain_analyst",
+          "capability": "text",
+          "execution_mode": "test",
+          "data_mode": "synthetic_demo",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "b35af23468e19a1de8a0cf501ab910e79dc6495cd9f26065a01e06580ffb093d",
+          "request_id": null,
+          "latency_ms": 1072,
+          "usage": {
+            "prompt_tokens": 4272,
+            "completion_tokens": 90,
+            "total_tokens": 4362,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 4272,
+            "reasoning_tokens": null
+          },
+          "contract_versions": {
+            "prompt_template": "farmtact-planning-council-prompt-v2",
+            "output_schema": "farmtact-planning-finding-output-v2",
+            "validator": "farmtact-planning-claim-validator-v2",
+            "context": "farmtact-planning-comparison-context-v2",
+            "sources": "farmtact-planning-source-context-v2"
+          },
+          "public_context_sha256": "e268baaaf5f33ad3d18dab60a41d5927cb4445213e97ad0ef5e620f6f7720a0c"
+        },
+        "inference_origin": "deepseek_api",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Capacity & Cost Analyst",
+        "role_contract": {
+          "name": "Capacity & Cost Analyst",
+          "tools": [
+            "inventory_expiry",
+            "space_labour_cash"
+          ],
+          "authority": "advisory"
+        },
+        "truth_status": "validated",
+        "tool_status": "local_calculation_and_inference_completed",
+        "evidence": [
+          "Lean's booked demand shortfall is 454 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan."
+        ]
+      },
+      {
+        "role": "profit_analyst",
+        "claim_ids": [
+          "pc_bf5af831d6564aa3a895",
+          "pc_892a9aa1b39d3bdf6d36",
+          "pc_56df7f07d27f8448ef7d"
+        ],
+        "tradeoff": "service_over_margin",
+        "rationale": "protect_booked_service",
+        "proposed_strategy_id": "0a85b04997a94a1d091f",
+        "status": "validated",
+        "rendered_facts": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's projected margin is SGD 3,193.15 in this frozen plan."
+        ],
+        "rejection_reasons": [],
+        "rendered_interpretation": "Prioritize reliable service of booked customer commitments.",
+        "raw_provider_output": {
+          "claim_ids": [
+            "pc_bf5af831d6564aa3a895",
+            "pc_892a9aa1b39d3bdf6d36",
+            "pc_56df7f07d27f8448ef7d"
+          ],
+          "tradeoff": "service_over_margin",
+          "rationale": "protect_booked_service",
+          "proposed_strategy_id": "0a85b04997a94a1d091f"
+        },
+        "audit": {
+          "provider": "deepseek",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "role": "profit_analyst",
+          "capability": "text",
+          "execution_mode": "test",
+          "data_mode": "synthetic_demo",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "ff0a9bba6314a1bcf9dc72b5b3cd479cd1e6e03a06b16fdc4992c5e5b62608d6",
+          "request_id": null,
+          "latency_ms": 956,
+          "usage": {
+            "prompt_tokens": 4717,
+            "completion_tokens": 90,
+            "total_tokens": 4807,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 4717,
+            "reasoning_tokens": null
+          },
+          "contract_versions": {
+            "prompt_template": "farmtact-planning-council-prompt-v2",
+            "output_schema": "farmtact-planning-finding-output-v2",
+            "validator": "farmtact-planning-claim-validator-v2",
+            "context": "farmtact-planning-comparison-context-v2",
+            "sources": "farmtact-planning-source-context-v2"
+          },
+          "public_context_sha256": "32960edeadea5bdccfda22606965386593b867a3b0285d944af16078e5876658"
+        },
+        "inference_origin": "deepseek_api",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Farm Planner",
+        "role_contract": {
+          "name": "Farm Planner",
+          "tools": [
+            "local_margin_accounting",
+            "strategy_comparison"
+          ],
+          "authority": "advisory"
+        },
+        "truth_status": "validated",
+        "tool_status": "local_calculation_and_inference_completed",
+        "evidence": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's booked demand delivered is 518 kg in this frozen plan.",
+          "Resilient's projected margin is SGD 3,193.15 in this frozen plan."
+        ]
+      },
+      {
+        "role": "planning_chair",
+        "claim_ids": [
+          "pc_bf5af831d6564aa3a895",
+          "pc_56df7f07d27f8448ef7d",
+          "pc_2bb53157202d6615bde0"
+        ],
+        "tradeoff": "balanced",
+        "rationale": "balance_service_waste_margin",
+        "proposed_strategy_id": "0a85b04997a94a1d091f",
+        "status": "validated",
+        "rendered_facts": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's projected margin is SGD 3,193.15 in this frozen plan.",
+          "Resilient's expired crop waste is 220.98 kg in this frozen plan."
+        ],
+        "rejection_reasons": [],
+        "rendered_interpretation": "Balance customer service, expired waste, and projected margin.",
+        "raw_provider_output": {
+          "claim_ids": [
+            "pc_bf5af831d6564aa3a895",
+            "pc_56df7f07d27f8448ef7d",
+            "pc_2bb53157202d6615bde0"
+          ],
+          "tradeoff": "balanced",
+          "rationale": "balance_service_waste_margin",
+          "proposed_strategy_id": "0a85b04997a94a1d091f"
+        },
+        "audit": {
+          "provider": "deepseek",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "role": "planning_chair",
+          "capability": "text",
+          "execution_mode": "test",
+          "data_mode": "synthetic_demo",
+          "inference_origin": "deepseek_api",
+          "input_sha256": "31541dd9c3f46c00a7bb44556d4ae9226eafb55f69201eb0e2f902bbba3ba3d3",
+          "request_id": null,
+          "latency_ms": 869,
+          "usage": {
+            "prompt_tokens": 5572,
+            "completion_tokens": 104,
+            "total_tokens": 5676,
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 5572,
+            "reasoning_tokens": null
+          },
+          "contract_versions": {
+            "prompt_template": "farmtact-planning-council-prompt-v2",
+            "output_schema": "farmtact-planning-finding-output-v2",
+            "validator": "farmtact-planning-claim-validator-v2",
+            "context": "farmtact-planning-comparison-context-v2",
+            "sources": "farmtact-planning-source-context-v2"
+          },
+          "public_context_sha256": "715c33b06e7b3ef6cca9e10e26dbab1ac398fb6e1bcb40682c5bfd2bb7112888"
+        },
+        "inference_origin": "deepseek_api",
+        "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869",
+        "functional_role": "Plan Reviewer",
+        "role_contract": {
+          "name": "Plan Reviewer",
+          "tools": [
+            "validated_findings",
+            "eligible_strategies"
+          ],
+          "authority": "advisory_gate"
+        },
+        "truth_status": "validated",
+        "tool_status": "local_calculation_and_inference_completed",
+        "evidence": [
+          "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+          "Resilient's projected margin is SGD 3,193.15 in this frozen plan.",
+          "Resilient's expired crop waste is 220.98 kg in this frozen plan."
+        ]
+      }
+    ],
+    "chair": {
+      "role": "planning_chair",
+      "claim_ids": [
+        "pc_bf5af831d6564aa3a895",
+        "pc_56df7f07d27f8448ef7d",
+        "pc_2bb53157202d6615bde0"
+      ],
+      "tradeoff": "balanced",
+      "rationale": "balance_service_waste_margin",
+      "proposed_strategy_id": "0a85b04997a94a1d091f",
+      "status": "validated",
+      "rendered_facts": [
+        "Resilient's booked demand shortfall is 306 kg in this frozen plan.",
+        "Resilient's projected margin is SGD 3,193.15 in this frozen plan.",
+        "Resilient's expired crop waste is 220.98 kg in this frozen plan."
+      ],
+      "rejection_reasons": [],
+      "rendered_interpretation": "Balance customer service, expired waste, and projected margin.",
+      "raw_provider_output": {
+        "claim_ids": [
+          "pc_bf5af831d6564aa3a895",
+          "pc_56df7f07d27f8448ef7d",
+          "pc_2bb53157202d6615bde0"
+        ],
+        "tradeoff": "balanced",
+        "rationale": "balance_service_waste_margin",
+        "proposed_strategy_id": "0a85b04997a94a1d091f"
+      },
+      "audit": {
+        "provider": "deepseek",
+        "requested_model": "deepseek-flash",
+        "returned_model": "deepseek-flash",
+        "role": "planning_chair",
+        "capability": "text",
+        "execution_mode": "test",
+        "data_mode": "synthetic_demo",
+        "inference_origin": "deepseek_api",
+        "input_sha256": "31541dd9c3f46c00a7bb44556d4ae9226eafb55f69201eb0e2f902bbba3ba3d3",
+        "request_id": null,
+        "latency_ms": 869,
+        "usage": {
+          "prompt_tokens": 5572,
+          "completion_tokens": 104,
+          "total_tokens": 5676,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 5572,
+          "reasoning_tokens": null
+        },
+        "contract_versions": {
+          "prompt_template": "farmtact-planning-council-prompt-v2",
+          "output_schema": "farmtact-planning-finding-output-v2",
+          "validator": "farmtact-planning-claim-validator-v2",
+          "context": "farmtact-planning-comparison-context-v2",
+          "sources": "farmtact-planning-source-context-v2"
+        },
+        "public_context_sha256": "715c33b06e7b3ef6cca9e10e26dbab1ac398fb6e1bcb40682c5bfd2bb7112888"
+      },
+      "inference_origin": "deepseek_api",
+      "snapshot_hash": "0ac1004b6dc5ef43ecd051d5e94f6a87922ca94b68a93cff781a74bf51913869"
+    },
+    "missing_roles": [],
+    "rejected_findings": [],
+    "request_count": 5,
+    "contract_version": "farmtact-functional-council-v2",
+    "truth_status": "partial",
+    "review_truth": {
+      "status": "partial",
+      "validated_roles": [
+        "Demand Planner",
+        "Crop Planner",
+        "Capacity & Cost Analyst",
+        "Farm Planner",
+        "Plan Reviewer"
+      ],
+      "partial_roles": [
+        "Weather & Risk Monitor",
+        "Market & Price Analyst"
+      ],
+      "withheld_roles": []
+    },
+    "role_order": [
+      "Demand Planner",
+      "Weather & Risk Monitor",
+      "Market & Price Analyst",
+      "Crop Planner",
+      "Capacity & Cost Analyst",
+      "Farm Planner",
+      "Plan Reviewer"
+    ]
+  },
+  "council_seconds": 5.8934,
+  "proposal_id": "e186fbb93fcad4962c68c0fe5f7a36c3",
+  "recalculation_seconds": 11.9988,
+  "task_id": "task-3c044e6e41d65550aaa610bf",
+  "status": "FAIL",
+  "error": "GET /farm-workflow: HTTP 401: {\"detail\":\"Development session required\"}",
+  "started_at": "2026-09-16T13:53:34.288246+00:00",
+  "completed_at": "2026-09-16T13:54:07.057602+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "old_base_url": "http://127.0.0.1:8091",
+  "private_gateway": true,
+  "review_requested": true
+}

@@ -44,6 +44,11 @@ import { CropArt } from "./Visuals";
 
 type Phase =
   "observe" | "discuss" | "decide" | "approve" | "act" | "verify" | "replan";
+type DiscussionSource = {
+  conversationId: string;
+  messageId: string;
+  actions: NonNullable<ConversationMessage["proposed_actions"]>;
+};
 const phases: Array<[Phase, string, string]> = [
   ["observe", "Observe", "Review records"],
   ["discuss", "Discuss", "Council review"],
@@ -110,6 +115,7 @@ export function FarmerWorkflow({
     [actionsOpen, setActionsOpen] = useState(false),
     [councilOpen, setCouncilOpen] = useState(false),
     [councilAdvisor, setCouncilAdvisor] = useState(ADVISORS[0].id),
+    [discussionSource, setDiscussionSource] = useState<DiscussionSource | null>(null),
     [rescueOpen, setRescueOpen] = useState(false);
   const refreshWorkflow = useCallback(async () => {
     const next = await farmerWorkflowApi.state();
@@ -545,8 +551,10 @@ export function FarmerWorkflow({
           session={session}
           strategy={chosen}
           workflow={workflow}
+          discussionSource={discussionSource}
           onDone={async () => {
             setFormOpen(false);
+            setDiscussionSource(null);
             await refreshWorkflow();
             setSession(await planningApi.get(session.id));
             setPhase("decide");
@@ -575,6 +583,11 @@ export function FarmerWorkflow({
           session={session}
           initialAdvisor={councilAdvisor}
           onError={setError}
+          onHandoff={(source) => {
+            setDiscussionSource(source);
+            setCouncilOpen(false);
+            setFormOpen(true);
+          }}
           onClose={() => setCouncilOpen(false)}
         />
       )}
@@ -594,6 +607,7 @@ function ProposalEditor({
   session,
   strategy,
   workflow,
+  discussionSource,
   onDone,
   onError,
   onClose,
@@ -601,6 +615,7 @@ function ProposalEditor({
   session: PlanningSession;
   strategy: Strategy;
   workflow: FarmerWorkflowState;
+  discussionSource: DiscussionSource | null;
   onDone: () => Promise<void>;
   onError: (v: string) => void;
   onClose: () => void;
@@ -687,6 +702,12 @@ function ProposalEditor({
         strategy.id,
         assumptions,
         sources,
+        discussionSource
+          ? {
+              conversation_id: discussionSource.conversationId,
+              message_id: discussionSource.messageId,
+            }
+          : undefined,
       );
       await farmerWorkflowApi.applyProposal(proposal);
       await onDone();
@@ -702,6 +723,33 @@ function ProposalEditor({
         Explicit edits create a draft proposal. Confirmed imports remain
         evidence; they do not silently rewrite demand or yield.
       </p>
+      {discussionSource && (
+        <section className="discussion-handoff">
+          <strong>Reviewed advisory context</strong>
+          <p>
+            Review and enter the exact crop, batch, dates and quantities below.
+            Specialist actions are context only; nothing is copied, widened or
+            applied automatically.
+          </p>
+          {discussionSource.actions.length ? (
+            <ul>
+              {discussionSource.actions.map((action, index) => (
+                <li key={`${action.control}-${index}`}>
+                  <b>{action.control.replaceAll("_", " ")}</b> · target{" "}
+                  {action.target_id || "not specified"} · {action.value}{" "}
+                  {action.unit} · {action.status}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No structured actions were proposed.</p>
+          )}
+          <small>
+            Conversation {discussionSource.conversationId.slice(0, 8)} ·
+            message {discussionSource.messageId.slice(0, 8)}
+          </small>
+        </section>
+      )}
       <div className="assumption-grid">
         <Range
           label="Expected demand"
@@ -1120,11 +1168,13 @@ function SpecialistDialog({
   session,
   initialAdvisor,
   onError,
+  onHandoff,
   onClose,
 }: {
   session: PlanningSession;
   initialAdvisor: string;
   onError: (v: string) => void;
+  onHandoff: (source: DiscussionSource) => void;
   onClose: () => void;
 }) {
   const [advisor, setAdvisor] = useState<string>(initialAdvisor),
@@ -1133,6 +1183,15 @@ function SpecialistDialog({
     ),
     [conversation, setConversation] = useState<Conversation | null>(null),
     [busy, setBusy] = useState(false);
+  const validatedMessage = [...(conversation?.messages || [])]
+    .reverse()
+    .find(
+      (item) =>
+        item.speaker !== "user" &&
+        ["validated", "references_verified"].includes(
+          String(item.validation_status || item.evidence_status).toLowerCase(),
+        ),
+    );
   const ask = async () => {
     setBusy(true);
     try {
@@ -1208,6 +1267,20 @@ function SpecialistDialog({
       {conversation?.messages.map((item) => (
         <ConversationRow key={item.id} message={item} />
       ))}
+      {validatedMessage && conversation && (
+        <button
+          className="button button--cream"
+          onClick={() =>
+            onHandoff({
+              conversationId: conversation.id,
+              messageId: validatedMessage.id,
+              actions: validatedMessage.proposed_actions || [],
+            })
+          }
+        >
+          <RefreshCw /> Review a proposal from this discussion
+        </button>
+      )}
     </Dialog>
   );
 }
@@ -1352,8 +1425,15 @@ function Inbox({
   onClose: () => void;
 }) {
   const [file, setFile] = useState<File | null>(null),
-    [candidate, setCandidate] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [manualOpen, setManualOpen] = useState(false),
+    [manualName, setManualName] = useState("Farmer manual record"),
+    [manualDate, setManualDate] = useState(session.farm.planning_date),
+    [manualKind, setManualKind] = useState("expense"),
+    [manualReference, setManualReference] = useState(`manual-${Date.now()}`),
+    [manualTarget, setManualTarget] = useState(""),
+    [manualDescription, setManualDescription] = useState(""),
+    [manualAmount, setManualAmount] = useState("");
   const upload = async () => {
     if (!file) return;
     setBusy(true);
@@ -1364,18 +1444,50 @@ function Inbox({
           ? "accounting_export"
           : "document_extraction";
       const saved = await farmerWorkflowApi.upload(file, kind);
-      setCandidate(saved.candidate_id);
+      void saved;
       await onRefresh();
     } finally {
       setBusy(false);
     }
   };
-  const review = async (decision: "confirm" | "reject") => {
+  const review = async (id: string, decision: "confirm" | "reject") => {
     setBusy(true);
     try {
-      await farmerWorkflowApi.reviewImport(candidate, decision);
+      await farmerWorkflowApi.reviewImport(id, decision);
       await onRefresh();
-      setCandidate("");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const createManual = async () => {
+    if (
+      !manualName.trim() ||
+      !manualReference.trim() ||
+      !manualAmount ||
+      (manualKind === "correction" && !manualTarget.trim())
+    )
+      return;
+    setBusy(true);
+    try {
+      await farmerWorkflowApi.manualImport(manualName.trim(), [
+        {
+          date: manualDate,
+          kind: manualKind,
+          reference: manualReference.trim(),
+          corrects_reference:
+            manualKind === "correction" ? manualTarget.trim() : undefined,
+          description: manualDescription.trim(),
+          amount: manualAmount,
+          currency: "SGD",
+          provenance: "farmer_manual_unverified",
+        },
+      ]);
+      await onRefresh();
+      setManualAmount("");
+      setManualTarget("");
+      setManualDescription("");
+      setManualReference(`manual-${Date.now()}`);
+      setManualOpen(false);
     } finally {
       setBusy(false);
     }
@@ -1405,23 +1517,40 @@ function Inbox({
             {item.source_kind} · {item.authority || "review candidate"} ·{" "}
             {item.rows?.length || 0} extracted rows
           </p>
+          <details className="candidate-review" open={item.status === "candidate"}>
+            <summary>Review extracted evidence</summary>
+            <dl>
+              <div><dt>Provenance</dt><dd>{reviewValue(item.provenance || item.source_sha256 || item.sha256 || "Not supplied")}</dd></div>
+              <div><dt>Authority</dt><dd>{String(item.authority || "review candidate")}</dd></div>
+              <div><dt>Current planning authority</dt><dd>{item.status === "candidate" ? "Not active; confirmation required" : item.planning_eligible === true ? "Eligible reviewed evidence" : "Observation only"}</dd></div>
+            </dl>
+            {!!item.warnings?.length && (
+              <div className="candidate-warnings"><strong>Warnings</strong><ul>{item.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div>
+            )}
+            {!!item.rows?.length ? (
+              <div className="candidate-rows" role="region" aria-label={`${item.source_name} extracted fields`}>
+                {item.rows.map((row, rowIndex) => (
+                  <article key={rowIndex}>
+                    <strong>Record {rowIndex + 1}</strong>
+                    <dl>{Object.entries(row).map(([field, value]) => <div key={field}><dt>{field.replaceAll("_", " ")}</dt><dd>{reviewValue(value)}</dd></div>)}</dl>
+                  </article>
+                ))}
+              </div>
+            ) : <p>No structured rows were extracted. Review the observation metadata and warnings before deciding.</p>}
+          </details>
           {item.status === "candidate" && (
             <div className="guided-buttons">
               <button
                 className="button button--cream"
-                onClick={() => {
-                  setCandidate(item.candidate_id);
-                  void review("reject");
-                }}
+                disabled={busy}
+                onClick={() => void review(item.candidate_id, "reject")}
               >
                 Reject
               </button>
               <button
                 className="button button--forest"
-                onClick={() => {
-                  setCandidate(item.candidate_id);
-                  void review("confirm");
-                }}
+                disabled={busy}
+                onClick={() => void review(item.candidate_id, "confirm")}
               >
                 Confirm reviewed fields
               </button>
@@ -1452,9 +1581,24 @@ function Inbox({
         >
           Upload candidate
         </button>
-        <button className="text-button" onClick={onOpenSetup}>
-          Open manual entry <ArrowRight />
+        <button className="text-button" onClick={() => setManualOpen((value) => !value)}>
+          {manualOpen ? "Close manual entry" : "Open manual entry"} <ArrowRight />
         </button>
+        {manualOpen && (
+          <form className="manual-candidate" onSubmit={(event) => { event.preventDefault(); void createManual(); }}>
+            <strong>Create an unverified manual candidate</strong>
+            <p>Review and confirm it in this Inbox before it can support planning.</p>
+            <label>Source name<input required value={manualName} onChange={(event) => setManualName(event.target.value)} /></label>
+            <label>Record date<input required type="date" value={manualDate} onChange={(event) => setManualDate(event.target.value)} /></label>
+            <label>Record kind<select value={manualKind} onChange={(event) => setManualKind(event.target.value)}><option value="expense">Expense</option><option value="sale">Sale</option><option value="correction">Correction</option></select></label>
+            <label>Record reference<input required value={manualReference} onChange={(event) => setManualReference(event.target.value)} /></label>
+            {manualKind === "correction" && <label>Target transaction reference<input required value={manualTarget} onChange={(event) => setManualTarget(event.target.value)} /></label>}
+            <label>Description (optional)<input value={manualDescription} onChange={(event) => setManualDescription(event.target.value)} /></label>
+            <label>{manualKind === "correction" ? "Signed correction amount (SGD)" : "Amount (SGD)"}<input required type="number" min={manualKind === "correction" ? undefined : "0"} step="0.01" value={manualAmount} onChange={(event) => setManualAmount(event.target.value)} /></label>
+            {manualKind === "correction" && <p className="tentative-disclosure">Enter a signed delta. Positive raises the target sale or expense; negative lowers it. The target must be one distinct reviewed sale or expense reference.</p>}
+            <button className="button button--cream" disabled={busy}>Create review candidate</button>
+          </form>
+        )}
       </div>
     </Dialog>
   );
@@ -1955,8 +2099,25 @@ function ConversationRow({ message: item }: { message: ConversationMessage }) {
       {!!item.evidence_refs?.length && (
         <small>Evidence: {item.evidence_refs.join(" · ")}</small>
       )}
+      {!!item.proposed_actions?.length && (
+        <div className="message-actions">
+          <strong>Proposed actions · advisory only</strong>
+          {item.proposed_actions.map((action, index) => (
+            <span key={`${action.control}-${index}`}>
+              {action.control.replaceAll("_", " ")} · target{" "}
+              {action.target_id || "not specified"} · {action.value} {action.unit} ·{" "}
+              {action.status}
+            </span>
+          ))}
+        </div>
+      )}
     </article>
   );
+}
+function reviewValue(value: unknown) {
+  if (value === null || value === undefined || value === "") return "Not supplied";
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
 }
 function Empty({
   icon,

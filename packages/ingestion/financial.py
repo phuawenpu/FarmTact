@@ -32,6 +32,7 @@ _HEADERS = {
     "date": ("date", "transaction_date", "invoice_date", "posting_date"),
     "kind": ("kind", "type", "transaction_type", "record_type"),
     "reference": ("reference", "reference_id", "invoice", "invoice_no", "id"),
+    "corrects_reference": ("corrects_reference", "target_reference", "correction_target", "corrects"),
     "description": ("description", "memo", "item", "product"),
     "quantity": ("quantity", "qty", "quantity_kg"),
     "unit": ("unit", "uom"),
@@ -73,7 +74,9 @@ class FinancialImport:
 
     @property
     def planning_eligible(self) -> bool:
-        return self.status == "confirmed"
+        return self.status == "confirmed" and not any(
+            warning.startswith("unsupported_crop:") for warning in self.warnings
+        )
 
 
 class FinancialDataError(ValueError):
@@ -266,9 +269,14 @@ class FinancialDataConnector:
         raw = list(rows)
         if not raw or len(raw) > _MAX_ROWS:
             raise FinancialDataError("records are empty or exceed row limit")
-        mapping = _mapping(raw[0].keys())
+        # Manual JSON rows may be heterogeneous (for example a source transaction
+        # followed by its correction), while CSV/XLSX rows naturally share one
+        # header set. Build the schema from the bounded union without losing a
+        # correction-only target column that is absent from the first row.
+        mapping = _mapping({key for item in raw for key in item.keys()})
         parsed: list[FinancialRow] = []
         warnings: set[str] = set()
+        canonical = source_sha256 or hashlib.sha256(repr(raw).encode()).hexdigest()
         for number, item in enumerate(raw, 2):
             currency = (_optional_text(item.get(mapping.get("currency", ""))) or "").upper()
             if currency and currency not in {"SGD", "S$"}:
@@ -282,6 +290,14 @@ class FinancialDataConnector:
             if kind not in {"sale", "expense", "inventory", "correction"}:
                 raise FinancialDataError(f"row {number}: unsupported kind {kind_text!r}")
             reference = _optional_text(item.get(mapping.get("reference", ""))) or f"row-{number}"
+            corrects_reference = _optional_text(item.get(mapping.get("corrects_reference", "")))
+            if kind == "correction":
+                if not corrects_reference:
+                    raise FinancialDataError(f"row {number}: correction target reference is required")
+                if corrects_reference == reference:
+                    raise FinancialDataError(f"row {number}: correction reference must differ from its target")
+            elif corrects_reference:
+                raise FinancialDataError(f"row {number}: only correction rows may name a correction target")
             crop_id = _optional_text(item.get(mapping.get("crop_id", "")))
             if crop_id and crop_id not in _PLANNING_CROPS:
                 warnings.add(f"unsupported_crop:{crop_id}")
@@ -294,13 +310,12 @@ class FinancialDataConnector:
                 unit=_optional_text(item.get(mapping.get("unit", ""))),
                 amount_sgd=_decimal(item.get(mapping["amount"])),
                 crop_id=crop_id,
-                corrects_reference=reference if kind == "correction" else None,
-                provenance={"source_name": source_name, "source_sha256": source_sha256, "row_number": number},
+                corrects_reference=corrects_reference,
+                provenance={"source_name": source_name, "source_sha256": canonical, "row_number": number},
             ))
         now = created_at or datetime.now(timezone.utc)
         if now.tzinfo is None:
             raise FinancialDataError("created_at must be timezone-aware")
-        canonical = source_sha256 or hashlib.sha256(repr(raw).encode()).hexdigest()
         candidate_id = "fin-" + hashlib.sha256(f"{tenant_id}:{canonical}:{import_kind}".encode()).hexdigest()[:24]
         return FinancialImport(candidate_id, tenant_id, source_name, canonical, media_type, import_kind, now, tuple(parsed), tuple(sorted(warnings)))
 

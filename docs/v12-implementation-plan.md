@@ -17,3 +17,17 @@ Seven versioned functional Council roles expose validated evidence, tool activit
 Capture live inventory and V11 source/state fingerprints before mutation; take a recovery snapshot before storage deletion. Public active manifest initially retains V11 alone, then atomically V11/V12 only after candidate acceptance. History controls numbering. Retired routes return 410 for every method. Gateway routing, chooser, public releases and inference admission use active membership. Candidate failures preserve the public pair. Cleanup must exclude active/staged editions and gateway/budget/credential controls and remove only verified retired subtrees.
 
 Run focused adversarial contracts, complete demo/upload/browser journeys at 360/390/430/desktop, full regressions, bounded gateway-only DeepSeek checks with unchanged limits, restart/replay checks, V11/V12 staged capacity and exact source/image verification. Keep failures and incomplete capabilities explicit. Publish only the verified candidate. Preserve checkpoints and push meaningful progress at least every 20 minutes.
+
+## Final acceptance audit corrections
+
+Independent review exposed missing Inbox field previews and manual-candidate entry,
+an unconnected discussion-to-proposal handoff, task corrections that could bypass
+completion invariants, and accounting corrections without category-resolved targets.
+These are release gates. Original audit reports remain in reports/v12. Discussion
+proposals retain original validated message/actions, frozen planning reference and
+reviewed-change hashes; farmer-edited assumptions are an explicit reviewed
+interpretation, not an automatic batch-to-crop translation.
+
+The latest bounded specialist and PDF checks passed at source 7746b2f; three paired
+V11/V12 numerical trials completed in 12–13 seconds. Further Council role-scope
+validation fixes require a fresh bounded actual review under the unchanged limit.

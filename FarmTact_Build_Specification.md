@@ -1,5 +1,14 @@
 ## V12 implementation amendment — 16 September 2026
 
+Final audit contracts: functional Council V3 requires crop composition evidence
+for crop-mix findings and cost/resource evidence for Capacity & Cost findings.
+Discussion-linked proposals retain original message/actions, frozen result reference,
+message hash and the hash of farmer-reviewed assumptions. Applying them remains an
+explicit action. Task corrections revalidate complete result/checklist/quantity
+invariants and recompute recovery status; they cannot create unreported history.
+Accounting corrections name a unique reviewed sale/expense target and apply a
+signed delta to its category. Unsupported crop records remain accounting-only.
+
 V12 is under implementation, not yet published or accepted. The current user scope
 is [the V12 farmer workflow and two-version retention plan](docs/v12-implementation-plan.md).
 It supersedes the historical requirement to run every published edition. Preserve

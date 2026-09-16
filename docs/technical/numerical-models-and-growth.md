@@ -376,7 +376,7 @@ The command and outcome from this audit should be read separately from the archi
   tests/planner/test_research_constraints.py
 ```
 
-The targeted suite covers fixture determinism and bounds, EWMA setting/hash behavior, planning feasibility and strategy distinction, impossible early sowing, daily mass balance, cost reconciliation, executed-work locks, independent bed/nursery/labour checks, yield semantics, timeout fallback, zero demand, downside aggregation, research reservations, unconfirmed orders, and a same-environment research repeatability check. That repeatability check is not a guarantee that a time-limited solver returns an identical schedule across environments. The suite does not constitute real-world agronomic validation.
+The targeted suite covers fixture determinism and bounds, EWMA setting/hash behavior, planning feasibility and strategy distinction, impossible early sowing, daily mass balance, cost reconciliation, executed-work locks, independent bed/nursery/labour checks, yield semantics, timeout fallback, zero demand, downside aggregation, research reservations, unconfirmed orders, and research input/forecast repeatability with reservation and feasibility checks. A wall-clock-limited solver can return different feasible incumbents even in the same environment under CPU contention. Exact replay uses the persisted result rather than recomputation. The suite does not constitute real-world agronomic validation.
 
 ## 11. Limitations and factual gaps
 

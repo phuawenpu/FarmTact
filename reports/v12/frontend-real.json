@@ -45,7 +45,29 @@
       "pass": true
     },
     {
+      "name": "real candidate exposes provenance and extracted fields before confirmation",
+      "pass": true,
+      "detail": "Review extracted evidence\nProvenance\n5a19492abc2bf9151f6907b416aaffb3c60bea6fb9c8dc969ca47517ebfbfe7b\nAuthority\nreview_candidate\nCurrent Planning Authority\nNot active; confirmation required\nRecord 1\nRow Number\n2\nOccurred On\n2026-09-01\nKind\nexpense\nReference\nacceptance-1789568739797\nDescription\nNot supplied\nQuantity\nNot supplied\nUnit\nNot supplied\nAmount Sgd\n97.50\nCrop Id\nNot supplied\nCorrects Reference\nNot supplied\nProvenance\n{\"source_name\":\"acceptance-1789568739797.csv\",\"source_sha256\":\"5a19492abc2bf9151f6907b416aaffb3c60bea6fb9c8dc969ca47517ebfbfe7b\",\"row_number\":2}"
+    },
+    {
       "name": "real upload requires and records explicit review",
+      "pass": true
+    },
+    {
+      "name": "manual candidate endpoint accepts tenant-scoped record",
+      "pass": true,
+      "detail": {
+        "status": 201,
+        "body": "{\"candidate_id\":\"fin-9f0b162e267b3c50f710d5e8\",\"tenant_id\":\"405fcb19b17b89777cec968c6389017f\",\"source_name\":\"Manual acceptance 1789568740135\",\"source_sha256\":\"4ac0a146a9787ae20f63065d359148c555efd3b5bb2ee121293cade9e818bf6c\",\"media_type\":\"application/json\",\"import_kind\":\"manual\",\"created_at\":\"2026-09-16 14:25:40.285682+00:00\",\"rows\":[{\"row_number\":2,\"occurred_on\":\"2026-09-08\",\"kind\":\"expense\",\"reference\":\"manual-1789568739755\",\"description\":\"\",\"quantity\":null,\"unit\":null,\"amount_sgd\":\"35.73\",\"crop_id\":null,\"corrects_reference\":null,\"provenance\":{\"source_name\":\"Manual acceptance 1789568740135\",\"source_sha256\":null,\"row_number\":2}}],\"warnings\":[],\"status\":\"candidate\",\"reviewed_at\":null,\"reviewed_by\":null,\"source_kind\":\"manual\",\"reconciliation\":{\"source_row_count\":1,\"counted_row_count\":1,\"duplicate_references\":[],\"correction_row_count\":0,\"correction_semantics\":\"explicit_signed_delta\",\"revenue_sgd\":\"0\",\"expense_sgd\":\"35.73\",\"net_sgd\":\"-35.73\",\"quantity_by_unit\":{}},\"authority\":\"review_candidate\"}"
+      }
+    },
+    {
+      "name": "real manual entry creates reviewable unconfirmed candidate",
+      "pass": true,
+      "detail": "Manual acceptance 1789568740135 · candidate\n\nmanual · review_candidate · 1 extracted rows\n\nReview extracted evidence\nProvenance\n4ac0a146a9787ae20f63065d359148c555efd3b5bb2ee121293cade9e818bf6c\nAuthority\nreview_candidate\nCurrent Planning Authority\nNot active; confirmation required\nRecord 1\nRow Number\n2\nOccurred On\n2026-09-08\nKind\nexpense\nReference\nmanual-1789568739755\nDescription\nNot supplied\nQuantity\nNot supplied\nUnit\nNot supplied\nAmount Sgd\n35.73\nCrop Id\nNot supplied\nCorrects Reference\nNot supplied\nProvenance\n{\"source_name\":\"Manual acceptance 1789568740135\",\"source_sha256\":null,\"row_number\":2}\nReject\nConfirm reviewed fields"
+    },
+    {
+      "name": "real manual candidate requires explicit confirmation",
       "pass": true
     },
     {
@@ -72,19 +94,19 @@
       "name": "reported result and correction survive reload",
       "pass": true,
       "detail": {
-        "id": "task-28da1f9175a6c2cb2a5ede78",
+        "id": "task-52f573006df43a14410675b3",
         "tenant_id": "405fcb19b17b89777cec968c6389017f",
         "session_id": "826ae6fdc82e93a5a62f6117ca92346b",
         "proposal_id": "c3db85471ff8748daf55f836a774f3b4",
         "proposal_revision": 2,
         "action": "harvest",
         "due_date": "2026-09-14",
-        "crop_id": "pak_choi",
-        "batch_id": "batch-02",
-        "location": "bed-02",
+        "crop_id": "lettuce",
+        "batch_id": "batch-04",
+        "location": "bed-04",
         "biological_dates": {
           "sow_date": "2026-08-10",
-          "transplant_date": "2026-08-17",
+          "transplant_date": "2026-08-20",
           "harvest_date": "2026-09-14"
         },
         "checklist": [
@@ -92,13 +114,13 @@
           "Record rejected crop"
         ],
         "photo_required": false,
-        "planned_quantity": 52,
-        "actual_quantity": "51.5",
+        "planned_quantity": 46,
+        "actual_quantity": "45.5",
         "unit": "kg",
         "status": "recovery_required",
         "event_revision": 2,
-        "created_at": "2026-09-16T13:47:09.753180+00:00",
-        "updated_at": "2026-09-16T13:58:51.287593+00:00",
+        "created_at": "2026-09-16T13:47:09.753207+00:00",
+        "updated_at": "2026-09-16T14:25:52.439188+00:00",
         "real_operations_enabled": false,
         "rejected_quantity": null,
         "result_note": "Acceptance-reported short quantity",
@@ -108,8 +130,8 @@
           "Record rejected crop"
         ],
         "forecast_feedback": {
-          "planned_quantity": "52.0",
-          "actual_quantity": "51.5",
+          "planned_quantity": "46.0",
+          "actual_quantity": "45.5",
           "delta_quantity": "-0.5",
           "unit": "kg",
           "basis": "farmer_reported_unverified"

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "checks": {
+    "workflow_session": true,
+    "calculation_completed": true,
+    "feasible_strategy_selected": true,
+    "proposal_idempotent": true,
+    "apply_recalculated": true,
+    "approval_idempotent_with_tasks": true,
+    "result_recorded": true,
+    "correction_audited": true,
+    "workflow_replay_identical": true,
+    "operations_disabled": true,
+    "tenant_isolation": true,
+    "main_farm_unchanged": true
+  },
+  "session_id": "1331c7d34463abc28617073ea3f81cd0",
+  "proposal_id": "c13dbb8f05805e74be9d2b4e41542840",
+  "task_id": "task-ccb6cb18321ab8237632572d",
+  "calculation_seconds": 11.3283,
+  "recalculation_seconds": 21.9598,
+  "council_seconds": null,
+  "council": null,
+  "workflow_revision": 7,
+  "started_at": "2026-09-16T14:15:34.875216+00:00",
+  "completed_at": "2026-09-16T14:16:10.921686+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "old_base_url": "http://127.0.0.1:8091",
+  "private_gateway": true,
+  "review_requested": false,
+  "source_commit": "7746b2fe71102f9cb237eeb3911aadb117b96792"
+}

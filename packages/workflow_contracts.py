@@ -38,6 +38,7 @@ class WorkflowProposal(Strict):
     status: Literal['draft','applied','superseded','approved'] = 'draft'
     changes: list[dict[str,Any]] = Field(default_factory=list,max_length=64)
     calculated_metrics: dict[str,Any] = Field(default_factory=dict)
+    source_conversation: dict[str,Any] | None = None
     created_at: AwareDatetime
 
 class ApplyProposalRequest(Strict):

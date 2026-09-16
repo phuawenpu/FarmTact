@@ -18,6 +18,26 @@
       "pass": true
     },
     {
+      "name": "partial Council role remains explicit",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion media query suppresses UI motion",
+      "pass": true,
+      "detail": {
+        "animation": "1e-06s",
+        "transition": "1e-06s"
+      }
+    },
+    {
+      "name": "validated discussion renders bounded proposed action",
+      "pass": true
+    },
+    {
+      "name": "discussion handoff opens explicit editable proposal review",
+      "pass": true
+    },
+    {
       "name": "approval gate",
       "pass": true
     },
@@ -33,6 +53,23 @@
     },
     {
       "name": "upload families",
+      "pass": true
+    },
+    {
+      "name": "candidate review exposes provenance warnings and extracted observations",
+      "pass": true,
+      "detail": "Review extracted evidence\nProvenance\n{\"origin\":\"farmer_upload\"}\nAuthority\nobservation_only\nCurrent Planning Authority\nObservation only\nWarnings\nPhoto cannot establish yield.\nRecord 1\nObservation\nLeaf colour visible\nCrop Id\ncaixin"
+    },
+    {
+      "name": "manual correction requires target and signed delta",
+      "pass": true
+    },
+    {
+      "name": "manual record remains candidate with reviewable fields",
+      "pass": true
+    },
+    {
+      "name": "manual candidate requires explicit confirmation",
       "pass": true
     },
     {

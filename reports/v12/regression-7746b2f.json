@@ -1,0 +1,10 @@
+{
+  "status": "FAIL",
+  "source_commit": "7746b2fe71102f9cb237eeb3911aadb117b96792",
+  "passed": 707,
+  "failed": 1,
+  "skipped": 1,
+  "seconds": 683.6,
+  "failure": "research repeated wall-clock-limited optimization returned different feasible allocation incumbents",
+  "resolution": "Replace unpromised exact recomputation schedule equality with input/forecast repeatability, feasibility and reservation assertions. Stored-result replay remains separately required. No production numerical behavior changed."
+}

@@ -210,6 +210,12 @@ export const planningApi = {
 
 export const farmerWorkflowApi = {
   state: () => request<FarmerWorkflowState>("/farm-workflow"),
+  manualImport: (sourceName: string, rows: Array<Record<string, unknown>>) =>
+    mutationRequest<FarmerImport>("/farm-workflow/imports", {
+      source_name: sourceName,
+      import_kind: "manual",
+      rows,
+    }),
   upload: (file: File, sourceKind: string) =>
     request<FarmerImport>(
       `/farm-workflow/imports/upload?filename=${encodeURIComponent(file.name)}&source_kind=${encodeURIComponent(sourceKind)}`,
@@ -234,6 +240,7 @@ export const farmerWorkflowApi = {
     strategyId: string,
     assumptions: FarmerAssumptions,
     sourceCandidateIds: string[] = [],
+    sourceConversation?: { conversation_id: string; message_id: string },
   ) =>
     mutationRequest<FarmerProposal>("/farm-workflow/proposals", {
       session_id: session.id,
@@ -241,6 +248,8 @@ export const farmerWorkflowApi = {
       changes: [{ kind: "planning_assumptions", assumptions }],
       selected_strategy_id: strategyId,
       source_candidate_ids: sourceCandidateIds,
+      source_conversation_id: sourceConversation?.conversation_id,
+      source_message_id: sourceConversation?.message_id,
       idempotency_key: crypto.randomUUID(),
     }),
   applyProposal: (proposal: FarmerProposal) =>

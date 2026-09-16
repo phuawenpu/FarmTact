@@ -1,0 +1,33 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "manual_csv_xlsx_reviewed": true,
+    "reconciliation_exact": true,
+    "source_preview_exact": true,
+    "upload_replay_exact": true,
+    "tentative_link_withheld": true,
+    "confirmed_provenance_linked": true,
+    "invoice_truth_match": true,
+    "invoice_actual_inference_audited": false,
+    "photo_actual_inference_audited": false,
+    "photo_no_yield_authority": true,
+    "vision_replay_exact": true,
+    "provider_call_contract": true,
+    "cross_tenant_source_isolated": true,
+    "state_has_no_raw_blobs": true
+  },
+  "provider_requests_expected": 2,
+  "vision_requested": true,
+  "candidate_ids": [
+    "fin-926cdc2379331b633ea9ccba",
+    "fin-43e9ad6a475809ad810bf419",
+    "fin-ff1b84c1bb0617a8349ba1b7",
+    "fin-e895548bd8440508393f9bdc"
+  ],
+  "session_id": "58dbad1c76fc54fca105e475252f42d1",
+  "proposal_id": "a12368c224f0a09519b563bc0c02023a",
+  "started_at": "2026-09-16T13:55:24.317579+00:00",
+  "completed_at": "2026-09-16T13:55:43.138910+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "private_gateway": true
+}

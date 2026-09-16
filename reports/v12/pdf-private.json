@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "checks": {
+    "photo_boundary_preprovider": true,
+    "authored_truth": true,
+    "actual_audit": true,
+    "explicit_review": true,
+    "source_bytes_exact": true,
+    "replay_exact_without_new_inference": true,
+    "main_farm_unchanged": true
+  },
+  "provider_requests_expected": 1,
+  "candidate_id": "fin-1435c20de200f106fbe80015",
+  "rows": [
+    {
+      "row_number": 2,
+      "occurred_on": "2026-09-03",
+      "kind": "sale",
+      "reference": "INV-V12-PDF",
+      "description": "caixin",
+      "quantity": "12",
+      "unit": "kg",
+      "amount_sgd": "96.0",
+      "crop_id": null,
+      "corrects_reference": null,
+      "provenance": {
+        "source_name": "synthetic-invoice.pdf",
+        "source_sha256": "d5a105c197a9206acf1994aad07a75f7dd51690de51a503ef596dd8150a4d2a0",
+        "row_number": 2
+      }
+    }
+  ],
+  "warnings": [
+    "Document is labeled 'SYNTHETIC FARM INVOICE - TEST DATA' and 'NOT A REAL SALE'; treat as test data only.",
+    "No crop_id is explicitly provided."
+  ],
+  "audit": {
+    "provider": "deepseek",
+    "requested_model": "deepseek-flash",
+    "returned_model": "deepseek-flash",
+    "role": "evidence_extractor",
+    "capability": "text",
+    "execution_mode": "test",
+    "data_mode": "historical_replay",
+    "inference_origin": "deepseek_api",
+    "input_sha256": "b81c2643c95e6a3e1df81eb8bee2c64bdc646b20feb6396bdd8e08770154faae",
+    "request_id": null,
+    "latency_ms": 1857,
+    "usage": {
+      "prompt_tokens": 293,
+      "completion_tokens": 98,
+      "total_tokens": 391,
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 293,
+      "reasoning_tokens": null
+    },
+    "contract_versions": {
+      "prompt_template": "inline-prompt-sha256:cc80307bcfcb5b06ddade58ff31e6cbb3c08d000ed612dbbb471633eddf4395a",
+      "output_schema": "output-schema-sha256:b254a7e1b4c52bd1f4feb5853ef655ba910ff475ce9dc1cba0fe4a345aa0713e",
+      "validator": "runtime-deepseek-gateway-v2",
+      "context": "request-messages-sha256:cc80307bcfcb5b06ddade58ff31e6cbb3c08d000ed612dbbb471633eddf4395a",
+      "sources": "caller-unspecified-v1"
+    },
+    "public_context_sha256": "cc80307bcfcb5b06ddade58ff31e6cbb3c08d000ed612dbbb471633eddf4395a"
+  },
+  "request_id_present": false,
+  "started_at": "2026-09-16T14:14:26.408331+00:00",
+  "completed_at": "2026-09-16T14:14:29.999211+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "source_commit": "7746b2fe71102f9cb237eeb3911aadb117b96792"
+}

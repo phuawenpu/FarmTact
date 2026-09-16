@@ -314,3 +314,16 @@ remains a stated performance limit. Eleven health/source checks and captured
 prior-ten preservation passed. Reports retain initial staging-admission failure
 and the corrected smoke-test assumption about automatic empty mission creation.
 No actual farm operations enabled. Next unused publication number is V12.
+
+
+## V12 final independent audit remediation — 16 September 2026
+
+Root integrated discussion-bound reviewed proposals, immutable message/change hashes
+and cross-tenant/stale evidence rejection. The farmer UI specialist added complete
+Inbox previews, manual/correction review and the explicit discussion handoff; 30
+real and 23 mocked browser checks passed. Workflow specialist aligned Council V3
+role claims and task-correction whole-state invariants. Retention specialist fixed
+category-resolved signed accounting corrections, immutable reference uniqueness,
+rejection after target drift, and unsupported-crop accounting-only eligibility.
+Original failed/audit evidence is preserved. Final regression, exact candidate
+staging and bounded actual Council review remain gates before publication.

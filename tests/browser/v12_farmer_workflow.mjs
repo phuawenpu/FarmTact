@@ -101,7 +101,7 @@ const strategy = (id, name, fill, waste, margin) => ({
     role,
     functional_role: role,
     status: i === 1 ? "unavailable" : i === 5 ? "rejected" : "validated",
-    truth_status: i === 1 || i === 5 ? "withheld" : "validated",
+    truth_status: i === 3 ? "partial" : i === 1 || i === 5 ? "withheld" : "validated",
     summary: `${role} reviewed the candidate.`,
     question: `${role} challenge`,
     evidence: i === 1 ? [] : [{ id: `F00${i + 1}` }],
@@ -136,7 +136,7 @@ const session = {
     version: "farmer-workflow-v1",
     phase: "decision",
     revision: 0,
-    inbox: [{candidate_id:"photo-1",source_name:"harvest.jpg",source_kind:"photo_observation",status:"confirmed",authority:"observation_only",planning_eligible:false,rows:[]}],
+    inbox: [{candidate_id:"photo-1",source_name:"harvest.jpg",source_kind:"photo_observation",status:"confirmed",authority:"observation_only",planning_eligible:false,provenance:{origin:"farmer_upload"},warnings:["Photo cannot establish yield."],rows:[{observation:"Leaf colour visible",crop_id:"caixin"}]}],
     proposals: [{id:"proposal-1",session_id:session.id,base_revision:3,proposal_revision:2,status:"applied",selected_strategy_id:"balanced",calculated_metrics:{coverage_kg:600,surplus_kg:14,expiry_kg:7,rejection_kg:null,margin_sgd:202,waste_rescue_kg:0}}],
     tasks: [{id:"task-1",proposal_id:"proposal-1",proposal_revision:2,action:"delivery",due_date:"2026-10-16",crop_id:"caixin",batch_id:"batch-1",location:"customer-1",checklist:["Confirm lot","Record accepted crop","Record rejected crop"],planned_quantity:40,actual_quantity:38,rejected_quantity:2,unit:"kg",status:"recovery_required",event_revision:1}],
     events: [],
@@ -155,7 +155,18 @@ try {
   await page.route("**/api/**", async (route) => {
     const path = new URL(route.request().url()).pathname;
     let body = {};
-    if (path.endsWith("/farm-workflow")) body = workflow;
+    if (path.endsWith('/conversations') && route.request().method()==='POST') body={id:'conversation-1',status:'READY'};
+    else if (path.endsWith('/conversations/conversation-1/messages')) body={id:'request-1',conversation_id:'conversation-1',status:'COMPLETED',message_id:'question-1'};
+    else if (path.endsWith('/conversations/conversation-1')) body={id:'conversation-1',last_request_status:'COMPLETED',messages:[{id:'advisor-message-1',speaker:'advisor',speaker_name:'Idris',content:'Review a bounded demand adjustment.',validation_status:'references_verified',evidence_refs:['F004'],proposed_actions:[{control:'demand_percent',target_id:'caixin',value:8,unit:'percent',status:'hypothesis_only'}]}]};
+    else if (path.endsWith("/farm-workflow/imports") && route.request().method()==="POST") {
+      const input=route.request().postDataJSON();
+      body={candidate_id:"manual-1",source_name:input.source_name,source_kind:"manual",status:"candidate",authority:"review_candidate",planning_eligible:true,provenance:{origin:"farmer_manual_unverified"},warnings:["Requires farmer confirmation."],rows:input.rows};
+      workflow.inbox.push(body);
+    } else if (/\/farm-workflow\/imports\/[^/]+\/review$/.test(path) && route.request().method()==="POST") {
+      const id=path.split('/').at(-2), item=workflow.inbox.find(row=>row.candidate_id===id);
+      if(item)item.status=route.request().postDataJSON().decision==="confirm"?"confirmed":"rejected";
+      body=item;
+    } else if (path.endsWith("/farm-workflow")) body = workflow;
     else if (path.endsWith("/bootstrap"))
       body = {
         farm,
@@ -201,6 +212,18 @@ try {
     "rejected withheld",
     await page.getByText(/Withheld: Claim exceeded/).isVisible(),
   );
+  check('partial Council role remains explicit',(await page.locator('.role-card--partial').count())===1);
+  const reducedMotion=await page.locator('.farmer-flow button').first().evaluate(element=>({animation:getComputedStyle(element).animationDuration,transition:getComputedStyle(element).transitionDuration}));
+  check('reduced-motion media query suppresses UI motion',
+    ['0s','0.000001s','0.00001s','1e-06s'].includes(reducedMotion.animation)&&['0s','0.000001s','0.00001s','1e-06s'].includes(reducedMotion.transition),reducedMotion);
+  await page.locator('.role-card').filter({hasText:'Market & Price Analyst'}).getByRole('button',{name:'Ask this specialist'}).click();
+  await page.getByRole('button',{name:'Ask specialist'}).click();
+  await page.getByRole('button',{name:'Review a proposal from this discussion'}).waitFor();
+  check('validated discussion renders bounded proposed action',await page.getByText(/demand percent · target caixin · 8 percent/).isVisible());
+  await page.getByRole('button',{name:'Review a proposal from this discussion'}).click();
+  check('discussion handoff opens explicit editable proposal review',
+    await page.getByText('Reviewed advisory context').isVisible()&&await page.getByText(/nothing is copied, widened or applied automatically/).isVisible()&&await page.getByRole('dialog',{name:/Challenge constraints/}).getByRole('button',{name:/Apply & Recalculate/}).isVisible());
+  await page.getByRole('button',{name:/Close Challenge constraints/}).click();
   check(
     "approval gate",
     await page
@@ -215,6 +238,24 @@ try {
     "upload families",
     await page.getByText(/CSV, XLSX, document or photo/).isVisible(),
   );
+  await page.getByText('Review extracted evidence').first().click();
+  const evidenceText=await page.locator('.candidate-review').first().innerText();
+  check('candidate review exposes provenance warnings and extracted observations',
+    ['farmer_upload','Photo cannot establish yield','Leaf colour visible'].every(value=>evidenceText.includes(value)),evidenceText);
+  await page.getByRole('button',{name:'Open manual entry'}).click();
+  await page.getByLabel('Record kind').selectOption('correction');
+  check('manual correction requires target and signed delta',
+    await page.getByLabel('Target transaction reference').isVisible()&&await page.getByLabel('Signed correction amount (SGD)').isVisible()&&await page.getByText(/Positive raises the target/).isVisible());
+  await page.getByLabel('Record kind').selectOption('expense');
+  await page.getByLabel('Source name').fill('Mock manual expense');
+  await page.getByLabel('Amount (SGD)').fill('17.25');
+  await page.getByRole('button',{name:'Create review candidate'}).click();
+  await page.getByText('Mock manual expense · candidate').waitFor();
+  check('manual record remains candidate with reviewable fields',
+    (await page.locator('.upload-review').filter({hasText:'Mock manual expense'}).innerText()).includes('17.25'));
+  await page.locator('.upload-review').filter({hasText:'Mock manual expense'}).getByRole('button',{name:'Confirm reviewed fields'}).click();
+  await page.getByText('Mock manual expense · confirmed').waitFor();
+  check('manual candidate requires explicit confirmation',await page.getByText('Mock manual expense · confirmed').isVisible());
   await page.getByRole("button", { name: /Close Farm Inbox/ }).click();
   await page.getByRole("button", { name: /How it works/ }).click();
   check(
