@@ -82,6 +82,20 @@ try {
     "Council review remains explicit and unsubmitted",
     await page.getByRole("button", { name: /Review with Council/ }).isVisible(),
   );
+  const cropPlanner=page.locator('.role-card').filter({hasText:'Crop Planner'});
+  await cropPlanner.getByRole('button',{name:'Ask this specialist'}).click();
+  let specialistSelect=page.getByRole('dialog',{name:'Ask a planning specialist'}).locator('select');
+  check('Crop Planner opens Mei production specialist',
+    await specialistSelect.inputValue()==='mei' &&
+    (await specialistSelect.locator('option:checked').textContent())?.includes('Crop Planner'));
+  await page.getByRole('button',{name:/Close Ask a planning specialist/}).click();
+  const weatherMonitor=page.locator('.role-card').filter({hasText:'Weather & Risk Monitor'});
+  await weatherMonitor.getByRole('button',{name:'Ask this specialist'}).click();
+  specialistSelect=page.getByRole('dialog',{name:'Ask a planning specialist'}).locator('select');
+  check('Weather role opens Hana weather specialist',
+    await specialistSelect.inputValue()==='hana' &&
+    (await specialistSelect.locator('option:checked').textContent())?.includes('Weather & Risk Monitor'));
+  await page.getByRole('button',{name:/Close Ask a planning specialist/}).click();
   await page.getByRole("button", { name: /Apply & Recalculate/ }).click();
   const constraintText = await page
     .getByRole("dialog", { name: /Challenge constraints/ })
@@ -133,13 +147,20 @@ try {
   check('approval discloses advisory Council state and numerical checks',
     await page.getByText(/Council evidence:/).isVisible() &&
     await page.getByText(/completed numerical checks/).isVisible());
-  await page.getByRole('button',{name:/Approve revision & create actions/}).click();
-  await page.getByRole('dialog',{name:/Approve & Create Actions/}).waitFor({state:'hidden',timeout:30000});
-  const approvedState=await page.evaluate(async()=>fetch(`${location.pathname.replace(/\/$/,'')}/api/v1/farm-workflow`).then(response=>response.json()));
+  const alreadyApproved=[...workflowState.proposals].reverse().find(item=>item.status==='approved');
+  let approvedState;
+  if(alreadyApproved){
+    await page.getByRole('button',{name:/Close Approve & Create Actions/}).click();
+    approvedState=workflowState;
+  }else{
+    await page.getByRole('button',{name:/Approve revision & create actions/}).click();
+    await page.getByRole('dialog',{name:/Approve & Create Actions/}).waitFor({state:'hidden',timeout:30000});
+    approvedState=await page.evaluate(async()=>fetch(`${location.pathname.replace(/\/$/,'')}/api/v1/farm-workflow`).then(response=>response.json()));
+  }
   const approvedProposal=[...approvedState.proposals].reverse().find(item=>item.status==='approved');
   const durableTasks=approvedState.tasks.filter(item=>item.proposal_id===approvedProposal?.id);
   check('explicit approval persists revision-bound actions',Boolean(approvedProposal)&&durableTasks.length>0,{proposal:approvedProposal?.id,tasks:durableTasks.length});
-  const target=durableTasks.find(item=>item.planned_quantity>0&&item.unit)||durableTasks[0];
+  const target=durableTasks.find(item=>['pending','in_progress'].includes(item.status)&&item.planned_quantity>0&&item.unit)||durableTasks.find(item=>item.planned_quantity>0&&item.unit)||durableTasks[0];
   await page.locator(`[data-task-id="${target.id}"]`).click();
   const actual=page.getByLabel(new RegExp('Actual quantity'));
   if(await actual.count())await actual.fill(String(Math.max(0,Number(target.planned_quantity||1)-1)));

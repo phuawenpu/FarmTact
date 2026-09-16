@@ -1,0 +1,75 @@
+{
+  "windows_utc": {
+    "before": [
+      "2026-09-16T12:45:00+00:00",
+      "2026-09-16T12:55:00+00:00"
+    ],
+    "after": [
+      "2026-09-16T13:30:00+00:00",
+      "2026-09-16T13:40:00+00:00"
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "fly_instance_load_average",
+      "minutes": "1",
+      "before": {
+        "mean": 6.419090909090909,
+        "samples": 11
+      },
+      "after": {
+        "mean": 0.5754545454545454,
+        "samples": 11
+      }
+    },
+    {
+      "metric": "fly_instance_load_average",
+      "minutes": "15",
+      "before": {
+        "mean": 6.941818181818181,
+        "samples": 11
+      },
+      "after": {
+        "mean": 0.24545454545454545,
+        "samples": 11
+      }
+    },
+    {
+      "metric": "fly_instance_load_average",
+      "minutes": "5",
+      "before": {
+        "mean": 6.652727272727272,
+        "samples": 11
+      },
+      "after": {
+        "mean": 0.4672727272727273,
+        "samples": 11
+      }
+    },
+    {
+      "metric": "fly_instance_memory_active",
+      "minutes": null,
+      "before": {
+        "mean": 982087121.4545455,
+        "samples": 11
+      },
+      "after": {
+        "mean": 246972788.36363637,
+        "samples": 11
+      }
+    },
+    {
+      "metric": "fly_instance_memory_mem_available",
+      "minutes": null,
+      "before": {
+        "mean": 1959720029.090909,
+        "samples": 11
+      },
+      "after": {
+        "mean": 3326807691.6363635,
+        "samples": 11
+      }
+    }
+  ],
+  "caveat": "VM gauges across restarts and differing workload; no per-process RSS baseline exists and no causal performance or cost reduction is inferred."
+}

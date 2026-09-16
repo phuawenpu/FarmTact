@@ -386,7 +386,7 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         from copy import deepcopy
         snapshot = deepcopy(guided_result.get('input_snapshot',guided_session['farm']))
         snapshot_id = guided_session['id'] + ':' + guided_session['result_id']
-        snapshot_hash = content_hash(snapshot)
+        snapshot_hash = content_hash({'farm':snapshot,'planning_result':guided_result})
     elif body.snapshot_kind == "research":
         from services.api.council_research import get_session, result_current
         research = get_session(store, tenant, body.snapshot_id)
@@ -456,6 +456,20 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         tool_results['planning:result_hash'] = content_hash(guided_result)
         tool_results['planning:assumptions'] = guided_result.get('assumptions',{})
         tool_results['planning:authority'] = 'Interpretation only; state changes require reviewed proposal, Apply & Recalculate, and explicit sandbox approval'
+        tool_results['planning:demand_semantics'] = ('booked_* metrics cover confirmed orders only. '
+            'all_demand_* metrics include modeled residual demand and are not confirmed-order metrics. '
+            'Tentative orders and market price signals never become booked commitments implicitly.')
+        for strategy in guided_result.get('strategies',[]):
+            prefix='strategy:'+str(strategy.get('name',strategy['id'])).lower()+'.metrics.'
+            metrics=strategy.get('metrics',{})
+            requested=metrics.get('booked_requested_kg')
+            delivered=metrics.get('booked_delivered_kg')
+            if requested is not None and delivered is not None:
+                tool_results[prefix+'booked_shortfall_kg']=round(max(0,float(requested)-float(delivered)),3)
+                if requested>0:tool_results[prefix+'booked_fill_rate']=float(delivered)/float(requested)
+            for metric in ('shortfall_kg','fill_rate'):
+                if prefix+metric in tool_results:
+                    tool_results[prefix+'all_demand_'+metric]=tool_results.pop(prefix+metric)
     if research_result:
         research_inputs = research_result["inputs"]
         tool_results.update({
@@ -1061,6 +1075,10 @@ def _validate_reply(
         errors.append("Evidence outside supplied frozen context")
     if any(ref not in typed_facts or ref not in allowed_facts for ref in reply.fact_refs):
         errors.append("Unknown frozen typed fact reference")
+    if conversation.get('snapshot_ref',{}).get('kind')=='planning' and re.search(
+        r'\b(?:confirmed|booked)\b',reply.content,re.I
+    ) and any(ref.endswith(('.all_demand_shortfall_kg','.all_demand_fill_rate','.shortfall_kg','.fill_rate')) for ref in reply.fact_refs):
+        errors.append('Confirmed demand cannot be grounded in all-demand metrics')
     if any(ref in typed_facts for ref in reply.tool_refs):
         errors.append("Quantities and dates must use fact_refs")
     if any(ref not in allowed_highlights for ref in reply.highlight_refs):
@@ -1111,6 +1129,7 @@ def _validate_reply(
 
 
 _ERROR_CODES = {
+    'Confirmed demand cannot be grounded in all-demand metrics': 'demand_scope_mismatch',
     "Abstention cannot attach claims, highlights or proposed actions": "abstention_payload",
     "Numerical interpretation requires a supplied typed fact": "missing_typed_fact",
     "Reply must abstain because relevant frozen evidence is unavailable": "required_abstention",
@@ -1189,7 +1208,7 @@ def _system_prompt(
         "Use this compact shape: "
         + json.dumps(compact_example, separators=(",", ":"))
         + ". "
-        "Follow response_requirements. For a numerical answer, select relevant typed facts and name their actual metric; a margin is not booked value, revenue is not profit, and feasibility is not full demand coverage. Discuss only what the question asks; do not introduce literature, biological mechanisms or causes unless requested and supported. Same-policy deltas are caller-applied synthetic comparisons, not causal or observed effects. Use only the supplied frozen tool_results, typed_facts and evidence_context. Use relationship abstention with no references when the frozen context cannot answer. In Council mode, weather and market specialists must follow the supplied required_relationship when their external evidence is absent. Direct or invited questions about a frozen numerical result may still be answered from its typed facts without external observations. Missing optional context cannot justify inventing a finding. Do not put digits, number words, ordinals, counts, percentages, dates, quantities, or numeric literals in content; this explicitly bans words such as zero, one, two, three, first, second, and today. Select quantities and dates only through fact_refs so FarmTact renders the frozen value, unit, entity and period; use tool_refs only for qualitative context. Reference IDs are opaque strings: copy them byte-for-byte from the supplied object and never construct, shorten, or guess an ID. Do not invent a label, cause, trend, ratio, marginal return, ordering, or cross-strategy comparison that is not directly represented by the cited context. State the limitation or abstain when the frozen facts do not establish an interpretation. "
+        "Follow response_requirements. For a numerical answer, select relevant typed facts and name their actual metric; a margin is not booked value, revenue is not profit, and feasibility is not full demand coverage. Confirmed or booked demand must use booked_* facts; all_demand_* and generic shortfall/fill facts also include modeled residual demand and must never be described as confirmed orders. Discuss only what the question asks; do not introduce literature, biological mechanisms or causes unless requested and supported. Same-policy deltas are caller-applied synthetic comparisons, not causal or observed effects. Use only the supplied frozen tool_results, typed_facts and evidence_context. Use relationship abstention with no references when the frozen context cannot answer. In Council mode, weather and market specialists must follow the supplied required_relationship when their external evidence is absent. Direct or invited questions about a frozen numerical result may still be answered from its typed facts without external observations. Missing optional context cannot justify inventing a finding. Do not put digits, number words, ordinals, counts, percentages, dates, quantities, or numeric literals in content; this explicitly bans words such as zero, one, two, three, first, second, and today. Select quantities and dates only through fact_refs so FarmTact renders the frozen value, unit, entity and period; use tool_refs only for qualitative context. Reference IDs are opaque strings: copy them byte-for-byte from the supplied object and never construct, shorten, or guess an ID. Do not invent a label, cause, trend, ratio, marginal return, ordering, or cross-strategy comparison that is not directly represented by the cited context. State the limitation or abstain when the frozen facts do not establish an interpretation. "
         "Action rules: delay_days uses unit days, a value from 0 through 14, and an actual batch target_id; yield_percent uses unit percent, a value from 50 through 100, and an actual batch target_id; demand_percent uses unit percent, a value from 50 through 150, and an actual crop target_id; labour_percent and cash_percent use unit percent, a value from 50 through 150, and target_id null. "
         "You may propose only those declared sandbox controls; proposals are hypotheses and never authorize a farm or scenario change. "
         "Never claim a simulated value is an observation, never permit real farm operations, and keep the answer concise. "
@@ -1250,6 +1269,9 @@ ROLE_CONTEXT_METRICS = {
     "profit_analyst": {"margin_sgd", "revenue_sgd", "cost_sgd", "labour_hours", "waste_kg", "closing_stock_kg", "cash_sgd"},
     "planning_chair": {"fill_rate", "margin_sgd", "shortfall_kg"},
 }
+for _role in ('demand_analyst','supply_chain_analyst','planning_chair'):
+    ROLE_CONTEXT_METRICS[_role].update({'booked_requested_kg','booked_delivered_kg',
+        'booked_shortfall_kg','booked_fill_rate','all_demand_shortfall_kg','all_demand_fill_rate'})
 MAX_PROVIDER_CONTEXT_CHARACTERS = 120_000
 
 
@@ -1280,6 +1302,8 @@ def _bounded_model_context(conversation: dict[str, Any], role: str) -> tuple[dic
 
     def allowed(reference: str) -> bool:
         terminal = reference.rsplit(".", 1)[-1]
+        if reference in {'planning:authority','planning:assumptions','planning:demand_semantics'}:
+            return True
         if research and not reference.startswith("research:") and not (
             selected_bed and reference.startswith(f"bed:{selected_bed}.")
         ):

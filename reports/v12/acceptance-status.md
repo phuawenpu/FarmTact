@@ -2,20 +2,24 @@
 
 Public V11 is preserved. V1–V10 workers/storage are retired, with snapshot,
 checksummed preservation, resource and 410-route evidence in this directory.
-The V12 infrastructure/backend candidate is private, not published.
+V12 remains private until the final acceptance gates pass.
 
-Core contracts, reviewed import/proposal/approval/task routes, numerical constraints,
-source isolation, auditable corrections and reported-forecast feedback have focused
-passing tests. The first full regression failed on compatibility fixtures,
-missing isolated databases and a concurrent frontend build. Focused reruns passed;
-a final full suite on stable assets remains required.
+The stable full regression passed 690 tests with one skip. Subsequent demand
+semantics, financial null normalization and specialist binding corrections passed
+45 conversation/integration checks and 19 focused ingestion/trial checks. Browser
+acceptance passed 26 real-backend checks and 15 fixture checks at the required
+mobile/desktop widths. Three captioned 48-second MP4s have verified metadata,
+playback controls, transcripts and downloads.
 
-The first provider trial is explicitly failed: the acceptance helper used an old
-correction field, and a later photo observation was withheld. The first Council
-reservation used six calls. No provider quality pass is inferred from reaching a
-later workflow step. Trial checkpoints and durable Council review history are now
-being added so recalculation cannot discard acceptance evidence. Shared limits
-remain unchanged.
+Actual gateway-mediated Council inference validated five numerical roles; Weather
+and Market remained explicitly partial because source evidence was unavailable.
+The invoice and synthetic photo trials returned reviewed evidence, with no direct
+planning authority. Original helper failures remain recorded. A live specialist
+reply incorrectly described overall forecast shortfall as confirmed-order shortfall.
+The next candidate adds explicit booked metrics, separates all-demand facts and
+withholds mixed-scope claims; its live quality retest remains required.
 
-Final browser journeys, extraction/Council quality, restart/replay, paired capacity,
-exact-source staging, publication and final live verification remain pending.
+Remaining gates: exact-source restaging, corrected specialist and native-PDF live
+checks, complete workflow/isolation, restart/replay, paired capacity, publication
+and final public source/state/navigation checks. Shared inference limits remain
+unchanged. No actual farm operation is enabled.

@@ -84,6 +84,12 @@ def _header(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_")
 
 
+def _optional_text(value: Any) -> str | None:
+    if value is None: return None
+    text = str(value).strip()
+    return text or None
+
+
 def _mapping(headers: Iterable[str]) -> dict[str, str]:
     actual = {_header(h): h for h in headers if h is not None}
     result = {}
@@ -264,7 +270,7 @@ class FinancialDataConnector:
         parsed: list[FinancialRow] = []
         warnings: set[str] = set()
         for number, item in enumerate(raw, 2):
-            currency = str(item.get(mapping.get("currency", ""), "")).strip().upper()
+            currency = (_optional_text(item.get(mapping.get("currency", ""))) or "").upper()
             if currency and currency not in {"SGD", "S$"}:
                 raise FinancialDataError(f"row {number}: unsupported currency {currency!r}; no conversion is performed")
             amount_text = str(item.get(mapping["amount"], "")).strip()
@@ -275,8 +281,8 @@ class FinancialDataConnector:
             kind = aliases.get(kind_text, kind_text)
             if kind not in {"sale", "expense", "inventory", "correction"}:
                 raise FinancialDataError(f"row {number}: unsupported kind {kind_text!r}")
-            reference = str(item.get(mapping.get("reference", ""), "")).strip() or f"row-{number}"
-            crop_id = str(item.get(mapping.get("crop_id", ""), "")).strip() or None
+            reference = _optional_text(item.get(mapping.get("reference", ""))) or f"row-{number}"
+            crop_id = _optional_text(item.get(mapping.get("crop_id", "")))
             if crop_id and crop_id not in _PLANNING_CROPS:
                 warnings.add(f"unsupported_crop:{crop_id}")
             quantity = _decimal(item.get(mapping.get("quantity", "")), optional=True)
@@ -284,8 +290,8 @@ class FinancialDataConnector:
                 raise FinancialDataError(f"row {number}: negative quantity requires correction kind")
             parsed.append(FinancialRow(
                 row_number=number, occurred_on=_date(item.get(mapping["date"])), kind=kind, reference=reference,
-                description=str(item.get(mapping.get("description", ""), "")).strip()[:500], quantity=quantity,
-                unit=(str(item.get(mapping.get("unit", ""), "")).strip() or None),
+                description=(_optional_text(item.get(mapping.get("description", ""))) or "")[:500], quantity=quantity,
+                unit=_optional_text(item.get(mapping.get("unit", ""))),
                 amount_sgd=_decimal(item.get(mapping["amount"])),
                 crop_id=crop_id,
                 corrects_reference=reference if kind == "correction" else None,

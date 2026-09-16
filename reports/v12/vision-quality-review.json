@@ -1,0 +1,115 @@
+{
+  "review_version": "v12-vision-quality-review-1",
+  "reviewed_at": "2026-09-16T14:10:00Z",
+  "scope": "Review of previously captured private synthetic-fixture evidence only; no inference was run for this review.",
+  "sources": [
+    "/tmp/v12-actual-vision-evidence.json",
+    "/tmp/v12-upload-final.json"
+  ],
+  "overall_assessment": "The captured invoice and photo responses are factually useful within the authored synthetic fixtures and respect the candidate/observation authority boundary. The upload helper's FAIL result does not indicate failed inference: its original audit predicate incorrectly required a non-null provider request_id. A separate application normalization defect converted an extracted null crop_id to the string 'None'; this review does not claim that fix is deployed.",
+  "helper_result_review": {
+    "recorded_status": "FAIL",
+    "recorded_failed_checks": [
+      "invoice_actual_inference_audited",
+      "photo_actual_inference_audited"
+    ],
+    "cause": "The original helper required audit.request_id to be non-null. The provider supplied no request-id header, so both stored audits correctly contain request_id=null.",
+    "reassessed_audit_result": "pass",
+    "reassessment_basis": {
+      "provider": "deepseek",
+      "inference_origin": "deepseek_api",
+      "returned_model": "deepseek-flash",
+      "input_sha256_present": true,
+      "latency_present_and_nonnegative": true,
+      "positive_token_usage": true,
+      "request_id": "optional and absent; no identifier was invented"
+    },
+    "other_recorded_checks": {
+      "provider_call_contract": true,
+      "vision_replay_exact": true,
+      "source_preview_exact": true,
+      "cross_tenant_source_isolated": true,
+      "state_has_no_raw_blobs": true
+    }
+  },
+  "invoice_review": {
+    "fixture": "synthetic-invoice.png",
+    "authored_truth": {
+      "date": "2026-09-03",
+      "reference": "INV-V12-001",
+      "item": "caixin",
+      "quantity": "12",
+      "unit": "kg",
+      "amount_sgd": "96.0",
+      "marked_test_data": true
+    },
+    "factual_result": "pass",
+    "observed_outputs": [
+      {
+        "candidate_id": "fin-9d4bf680331684dd57d82622",
+        "description": "cai xin",
+        "date": "2026-09-03",
+        "reference": "INV-V12-001",
+        "quantity": "12",
+        "unit": "kg",
+        "amount_sgd": "96.0"
+      },
+      {
+        "candidate_id": "fin-5676a981e7ad1527982b477f",
+        "description": "caixin",
+        "date": "2026-09-03",
+        "reference": "INV-V12-001",
+        "quantity": "12",
+        "unit": "kg",
+        "amount_sgd": "96.0"
+      }
+    ],
+    "authority": {
+      "review_required": true,
+      "financial_authority": "candidate_only",
+      "yield_authority": false,
+      "real_operations_enabled": false
+    },
+    "normalization_defect": {
+      "status": "observed; deployment of a fix is not asserted",
+      "detail": "The model warning says crop_id was left null, but the persisted FinancialRow contains crop_id='None'. This is an application null-normalization defect and must not be interpreted as a crop identifier or unsupported crop named None."
+    },
+    "inference_note": "kind='sale' was inferred from invoice context and disclosed in the warning; the document itself was explicitly synthetic and not a real sale."
+  },
+  "photo_review": {
+    "fixture": "synthetic-crop-label.png",
+    "factual_result": "pass for visible synthetic content and abstention",
+    "observed": {
+      "batch_label": "BATCH-V12-PHOTO",
+      "visible_text_identified": true,
+      "green_rectangle_identified": true,
+      "synthetic_image_uncertainty_disclosed": true,
+      "crop_or_yield_estimate_asserted": false
+    },
+    "authority": {
+      "planning_eligible": false,
+      "yield_authority": false,
+      "authority": "observation_only"
+    },
+    "quality_boundary": "This fixture is a labeled synthetic graphic with a solid rectangle, not a real crop or agronomic photograph. It demonstrates text/shape observation and correct abstention only; it provides no evidence of performance on plant identification, disease assessment, maturity, biomass, or yield estimation from real field imagery."
+  },
+  "audit_samples": {
+    "invoice": {
+      "input_sha256": "ba47900b05f1e8b62a2b5575c4f529f5b0969e04071da9634a845dc9432bf68f",
+      "latency_ms": 1293,
+      "prompt_tokens": 772,
+      "completion_tokens": 117,
+      "total_tokens": 889,
+      "request_id": null
+    },
+    "photo": {
+      "input_sha256": "ec244fddf47e2e5dfb052bf27476124a3178002d7f914ed2c31a13e61b1768a0",
+      "latency_ms": 1381,
+      "prompt_tokens": 696,
+      "completion_tokens": 135,
+      "total_tokens": 831,
+      "request_id": null
+    }
+  },
+  "conclusion": "Accept the stored evidence as a successful bounded synthetic invoice extraction and synthetic photo-observation abstention. Do not treat it as evidence for real agronomic vision, and do not treat crop_id='None' as valid normalized data."
+}

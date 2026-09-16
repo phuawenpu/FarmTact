@@ -16,12 +16,12 @@ import re
 from typing import Any, Literal, Mapping, Sequence
 
 
-PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v6"
+PROMPT_TEMPLATE_VERSION = "farmtact-advisor-prompt-v7"
 MISSION_PROMPT_TEMPLATE_VERSION = "farmtact-mission-council-prompt-v7"
 OUTPUT_SCHEMA_VERSION = "farmtact-advisor-output-v3"
 VALIDATOR_VERSION = "farmtact-ai-evidence-validator-v5"
 CONTEXT_VERSION = "farmtact-frozen-ai-context-v3"
-CONVERSATION_CONTEXT_VERSION = "farmtact-conversation-context-v6"
+CONVERSATION_CONTEXT_VERSION = "farmtact-conversation-context-v7"
 MISSION_CONTEXT_VERSION = "farmtact-mission-context-v7"
 SOURCE_CONTEXT_VERSION = "farmtact-source-context-v3"
 RESPONSE_LIMITS = {
@@ -51,6 +51,7 @@ class InferenceVersions:
 CONVERSATION_VERSIONS = InferenceVersions(
     prompt_template=PROMPT_TEMPLATE_VERSION,
     context=CONVERSATION_CONTEXT_VERSION,
+    validator="farmtact-conversation-demand-validator-v6",
 )
 MISSION_VERSIONS = InferenceVersions(
     prompt_template=MISSION_PROMPT_TEMPLATE_VERSION,
@@ -86,6 +87,8 @@ def _unit_for(reference: str) -> str | None:
         "biological_lead_days": "days",
         "delay_days": "days",
         "fill_rate": "ratio",
+        "booked_fill_rate": "ratio",
+        "all_demand_fill_rate": "ratio",
     }
     if terminal in explicit:
         return explicit[terminal]

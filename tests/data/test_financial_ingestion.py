@@ -76,6 +76,18 @@ def test_unsupported_crop_is_preserved_for_accounting_and_warned_from_planning()
     assert candidate.warnings == ("unsupported_crop:garlic_chives",)
 
 
+def test_document_json_nulls_remain_null_and_do_not_create_fake_none_crop_warning():
+    from services.api.document_extraction import DocumentRecords
+    extracted = DocumentRecords.model_validate({"rows": [{"date": "2026-09-03", "kind": "sale",
+        "reference": "INV-NULL", "description": "explicit amount only", "quantity": None, "unit": None,
+        "amount": 96, "crop_id": None}], "warnings": ["crop and quantity left null"]})
+    candidate = FinancialDataConnector().from_rows(tenant_id="t", source_name="invoice.png",
+        rows=extracted.model_dump(mode="json")["rows"], import_kind="accounting_export")
+    row = candidate.rows[0]
+    assert row.crop_id is None and row.quantity is None and row.unit is None
+    assert "unsupported_crop:None" not in candidate.warnings
+
+
 def test_xlsx_rejects_formula_cells_instead_of_accepting_cached_values():
     output = BytesIO()
     with ZipFile(output, "w") as archive:

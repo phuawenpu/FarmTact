@@ -142,6 +142,7 @@ def journey(api, review=False, progress=None, checkpoint=None):
 
     outsider = API(api.base, api.private)
     try:
+        outsider.get('/bootstrap')
         outsider_state = outsider.get('/farm-workflow')
         owned = {proposal['id'], task['id']}
         visible = {row.get('id') for row in outsider_state.get('proposals', []) + outsider_state.get('tasks', [])}

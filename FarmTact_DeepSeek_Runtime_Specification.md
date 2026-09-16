@@ -1,5 +1,12 @@
 ## V12 implementation amendment — 16 September 2026
 
+Conversation prompt/context V7 and conversation demand validator V6 bind the
+planning result into the frozen snapshot hash. Confirmed-order comparisons use
+explicit booked requested/delivered/shortfall facts; broader modeled-demand metrics
+are named all_demand. A confirmed/booked claim citing broader shortfall or fill
+facts is withheld. This bounded guard addresses the observed V12 trial failure;
+it is not a general semantic-entailment proof. Mission contracts remain unchanged.
+
 V12 is under implementation, not yet published or accepted. The current user scope
 is [the V12 farmer workflow and two-version retention plan](docs/v12-implementation-plan.md).
 It supersedes the historical requirement to run every published edition. Preserve

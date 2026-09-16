@@ -17,6 +17,22 @@ import httpx
 class TrialFailure(RuntimeError): pass
 
 
+def valid_actual_audit(audit: dict | None) -> bool:
+    audit = audit or {}
+    model = audit.get("returned_model") or audit.get("model") or audit.get("requested_model")
+    usage = audit.get("usage")
+    positive_usage = isinstance(usage, dict) and any(isinstance(value, (int, float)) and value > 0 for value in usage.values())
+    return (audit.get("provider") == "deepseek" and audit.get("inference_origin") == "deepseek_api"
+            and isinstance(model, str) and bool(model) and isinstance(audit.get("input_sha256"), str)
+            and len(audit["input_sha256"]) == 64 and isinstance(audit.get("latency_ms"), (int, float))
+            and audit["latency_ms"] >= 0 and positive_usage)
+
+
+def merge_terminal_report(snapshot: dict, terminal: dict) -> dict:
+    """Retain paid-call evidence while terminal status/checks remain authoritative."""
+    return {**snapshot, **terminal}
+
+
 class API:
     def __init__(self, base: str, private: bool):
         base = base.rstrip("/")
@@ -148,23 +164,28 @@ def run(api: API, vision: bool, on_snapshot=lambda evidence: None) -> dict:
         row = invoice["rows"][0]
         checks["invoice_truth_match"] = (str(row.get("reference")) == "INV-V12-001" and
             str(row.get("date") or row.get("occurred_on")) == "2026-09-03" and float(row.get("amount_sgd", row.get("amount", -1))) == 96.0)
-        checks["invoice_actual_inference_audited"] = bool(invoice.get("provenance", {}).get("audit", {}).get("request_id"))
+        invoice_audit = invoice.get("provenance", {}).get("audit", {})
+        checks["invoice_actual_inference_audited"] = valid_actual_audit(invoice_audit)
+        invoice_request_id_present = bool(invoice_audit.get("request_id"))
         invoice = review(api, invoice)
         on_snapshot({"status": "IN_PROGRESS", "stage": "invoice_completed", "checks": dict(checks),
             "provider_requests_observed": 1, "invoice_evidence": {"candidate_id": invoice.get("candidate_id"),
                 "rows": invoice.get("rows"), "warnings": invoice.get("warnings"),
-                "audit": invoice.get("provenance", {}).get("audit")}})
+                "audit": invoice.get("provenance", {}).get("audit"), "request_id_present": invoice_request_id_present}})
         photo_raw = png_fixture("photo")
         photo = upload(api, "synthetic-crop-label.png", "photo_observation", photo_raw, "image/png"); provider_calls += 1
         if not photo.get("rows") or not photo["rows"][0].get("visible_findings"): raise TrialFailure("photo observation returned no visible findings")
-        checks["photo_actual_inference_audited"] = bool(photo.get("provenance", {}).get("audit", {}).get("request_id"))
+        photo_audit = photo.get("provenance", {}).get("audit", {})
+        checks["photo_actual_inference_audited"] = valid_actual_audit(photo_audit)
+        photo_request_id_present = bool(photo_audit.get("request_id"))
         photo = review(api, photo)
         checks["photo_no_yield_authority"] = photo.get("yield_authority") is False and photo.get("planning_eligible") is False
         on_snapshot({"status": "IN_PROGRESS", "stage": "photo_completed", "checks": dict(checks),
             "provider_requests_observed": 2, "invoice_evidence": {"candidate_id": invoice.get("candidate_id"),
                 "rows": invoice.get("rows"), "audit": invoice.get("provenance", {}).get("audit")},
             "photo_evidence": {"candidate_id": photo.get("candidate_id"), "rows": photo.get("rows"),
-                "warnings": photo.get("warnings"), "audit": photo.get("provenance", {}).get("audit")}})
+                "warnings": photo.get("warnings"), "audit": photo.get("provenance", {}).get("audit"),
+                "request_id_present": photo_request_id_present}})
         checks["vision_replay_exact"] = (upload(api, "synthetic-invoice.png", "document_extraction", invoice_raw, "image/png")["candidate_id"] == invoice["candidate_id"] and
             upload(api, "synthetic-crop-label.png", "photo_observation", photo_raw, "image/png")["candidate_id"] == photo["candidate_id"])
     checks["provider_call_contract"] = provider_calls == (2 if vision else 0)
@@ -198,7 +219,9 @@ def main(argv=None):
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(last_snapshot, indent=2) + "\n"); args.report.chmod(0o600)
     try:
-        api = API(args.base_url, args.private_gateway); report = run(api, args.vision, persist_snapshot)
+        api = API(args.base_url, args.private_gateway)
+        terminal = run(api, args.vision, persist_snapshot)
+        report = merge_terminal_report(last_snapshot, terminal)
     except Exception as exc: report = {**last_snapshot, "status": "FAIL", "error": f"{type(exc).__name__}: {exc}"}
     finally:
         if api: api.close()

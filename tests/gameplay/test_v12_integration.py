@@ -52,6 +52,13 @@ def test_v12_actual_routes_calculate_propose_approve_task_and_replay():
         conversation=client.get('/api/v1/conversations/'+conversation.json()['id']).json()
         assert conversation['snapshot_ref']['kind']=='planning'
         assert session['result_id'] in conversation['snapshot_ref']['id']
+        for strategy in session['result']['strategies']:
+            prefix='strategy:'+strategy['name'].lower()+'.metrics.'
+            facts=conversation['typed_facts']
+            metrics=strategy['metrics']
+            assert facts[prefix+'booked_shortfall_kg']['value']==pytest.approx(metrics['booked_requested_kg']-metrics['booked_delivered_kg'])
+            assert facts[prefix+'all_demand_shortfall_kg']['value']==metrics['shortfall_kg']
+            assert prefix+'shortfall_kg' not in facts
         assert post(client,path+'/advance',{'revision':session['revision'],'days':1}).status_code==409
         response=post(client,'/farm-workflow/proposals',dict(session_id=session['id'],base_revision=session['revision'],changes=[{'kind':'planning_assumptions','assumptions':{}}],idempotency_key='proposal-1'))
         assert response.status_code==201,response.text

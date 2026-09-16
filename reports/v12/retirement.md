@@ -39,3 +39,13 @@ Public route checks: all ten retired GET and POST paths returned 410, without
 redirecting mutation requests. Public listing contains only V11; V12 is 404 to
 public routing. See the JSON inventory, preservation, snapshot and route evidence
 in this directory. Final post-cleanup V11 verification is recorded separately.
+
+Fly's managed Prometheus also supplied one-minute historical samples for the
+retirement window. In 11 samples from 12:45–12:55 UTC versus 11 from 13:30–13:40,
+mean active VM memory was approximately 936.6 MiB versus 235.5 MiB; mean available
+memory was approximately 1868.9 MiB versus 3172.7 MiB. Mean one-minute load was
+6.42 versus 0.58. These are VM-level gauges across different workloads and
+restarts, not per-process RSS or a causal benchmark. The query and full samples
+are in `host-metrics-retirement-window.json`; `host-metrics-summary.json` retains
+the exact window means. Metric definitions follow the
+[Fly monitoring documentation](https://fly.io/docs/monitoring/metrics/).

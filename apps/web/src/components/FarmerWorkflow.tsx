@@ -62,6 +62,15 @@ const roleFallbacks = [
   "Farm Planner",
   "Plan Reviewer",
 ];
+const functionalRoleIds: Record<string, string> = {
+  "Demand Planner": "demand_analyst",
+  "Crop Planner": "production_analyst",
+  "Weather & Risk Monitor": "weather_analyst",
+  "Market & Price Analyst": "market_analyst",
+  "Capacity & Cost Analyst": "profit_analyst",
+  "Farm Planner": "supply_chain_analyst",
+  "Plan Reviewer": "planning_chair",
+};
 const tutorialKey = editionStorageKey("farmer-tutorial-dismissed");
 const blankWorkflow: FarmerWorkflowState = {
   version: "farmer-workflow-v1",
@@ -100,6 +109,7 @@ export function FarmerWorkflow({
   const [formOpen, setFormOpen] = useState(false),
     [actionsOpen, setActionsOpen] = useState(false),
     [councilOpen, setCouncilOpen] = useState(false),
+    [councilAdvisor, setCouncilAdvisor] = useState(ADVISORS[0].id),
     [rescueOpen, setRescueOpen] = useState(false);
   const refreshWorkflow = useCallback(async () => {
     const next = await farmerWorkflowApi.state();
@@ -369,7 +379,7 @@ export function FarmerWorkflow({
                 <div className="role-card__person">
                   <img
                     src={editionPath(
-                      `/art/advisors/${ADVISORS[index]?.id || "asha"}.svg`,
+                      `/art/advisors/${item.advisor.id}.svg`,
                     )}
                     alt=""
                   />
@@ -402,6 +412,7 @@ export function FarmerWorkflow({
                 <button
                   className="text-button"
                   onClick={() => {
+                    setCouncilAdvisor(item.advisor.id);
                     setCouncilOpen(true);
                     setPhase("discuss");
                   }}
@@ -562,6 +573,7 @@ export function FarmerWorkflow({
       {councilOpen && (
         <SpecialistDialog
           session={session}
+          initialAdvisor={councilAdvisor}
           onError={setError}
           onClose={() => setCouncilOpen(false)}
         />
@@ -1106,14 +1118,16 @@ function TaskWorkspace({
 
 function SpecialistDialog({
   session,
+  initialAdvisor,
   onError,
   onClose,
 }: {
   session: PlanningSession;
+  initialAdvisor: string;
   onError: (v: string) => void;
   onClose: () => void;
 }) {
-  const [advisor, setAdvisor] = useState<string>(ADVISORS[0].id),
+  const [advisor, setAdvisor] = useState<string>(initialAdvisor),
     [question, setQuestion] = useState(
       "What constraint or alternative should I review before approving this plan?",
     ),
@@ -1169,7 +1183,10 @@ function SpecialistDialog({
         >
           {ADVISORS.map((item) => (
             <option key={item.id} value={item.id}>
-              {item.name} · {item.role}
+              {item.name} ·{" "}
+              {roleFallbacks.find(
+                (role) => functionalRoleIds[role] === item.roleId,
+              ) || item.role}
             </option>
           ))}
         </select>
@@ -1965,8 +1982,11 @@ function normalizedFindings(session: PlanningSession | null) {
   const raw = (session?.review?.findings || []) as Array<
     Record<string, unknown>
   >;
-  return roleFallbacks.map((functionalRole, index) => {
-    const advisor = ADVISORS[index],
+  return roleFallbacks.map((functionalRole) => {
+    const advisor =
+        ADVISORS.find(
+          (item) => item.roleId === functionalRoleIds[functionalRole],
+        ) || ADVISORS[0],
       row = raw.find((item) => item.functional_role === functionalRole) || {},
       truth = String(
         row.truth_status ||
@@ -1977,10 +1997,8 @@ function normalizedFindings(session: PlanningSession | null) {
             : "withheld"),
       ).toLowerCase();
     return {
-      name: String(
-        (row.role_contract as Record<string, unknown> | undefined)?.name ||
-          advisor.name,
-      ),
+      name: advisor.name,
+      advisor,
       role: functionalRole,
       truth:
         truth === "validated"
