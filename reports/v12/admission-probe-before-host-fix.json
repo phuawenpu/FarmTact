@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "scope": "Operator acceptance helper",
+  "cause": "Probe used localhost Host rather than the allowlisted private-control Host, so it never reached retired-edition admission.",
+  "provider_calls": 0,
+  "budget_unchanged": true,
+  "remediation": "Use farmtact-local-control.flycast:8080; corrected live probe rejects V1/V10 with HTTP 409 and unchanged shared budget."
+}

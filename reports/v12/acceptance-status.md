@@ -24,3 +24,9 @@ required identical incumbents from wall-clock-limited recomputation. Its replace
 checks deterministic inputs/forecast and feasibility/reservations; five focused
 research tests passed, with no production numerical behavior changed. Full final
 regression, exact-image staging, restart/replay and publication checks remain.
+
+Final staged source 54a86a1 passed the live reviewed-discussion draft boundary and
+restart replay. Its Council V3 trial completed the workflow but correctly withheld
+Crop Planner because initial-plan context lacked per-crop claims. Context V4 now
+adds authoritative crop-composition snapshot facts (nine focused tests passed);
+a fresh exact-source candidate and bounded Council review remain required.

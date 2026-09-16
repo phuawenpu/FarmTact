@@ -23,7 +23,7 @@ PLANNING_COUNCIL_VERSIONS = InferenceVersions(
     prompt_template="farmtact-planning-council-prompt-v3",
     output_schema="farmtact-planning-finding-output-v2",
     validator="farmtact-planning-claim-validator-v3",
-    context="farmtact-planning-comparison-context-v3",
+    context="farmtact-planning-comparison-context-v4",
     sources="farmtact-planning-source-context-v2",
 )
 

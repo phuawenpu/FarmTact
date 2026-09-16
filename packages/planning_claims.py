@@ -28,7 +28,7 @@ class VerifiedPlanningClaim(TypedDict):
     unit: str
     snapshot_hash: str
     statement: str
-    claim_kind: Literal["strategy_metric", "metric_comparison", "crop_mix_comparison"]
+    claim_kind: Literal["strategy_metric", "metric_comparison", "crop_mix_comparison", "crop_mix_snapshot"]
 
 
 _METRICS: dict[str, tuple[str, str]] = {
@@ -199,6 +199,30 @@ def _mix_claims(
     return claims
 
 
+def _snapshot_mix_claims(*, policy: str, strategy_id: str, plan: dict[str, Any],
+                         snapshot_hash: str) -> list[VerifiedPlanningClaim]:
+    """Describe initial composition without inventing a retained-plan comparison."""
+    counts, areas, ids = _allocation_mix(plan)
+    if not counts:
+        return []
+    claims = []
+    for metric, value, unit, label in (
+        ("crop_allocation_count", counts, "allocations", "allocation counts by crop"),
+        ("crop_allocation_area_m2", areas, "m2", "allocation area by crop"),
+        ("crop_id_set", ids, "crop IDs", "allocated crop IDs"),
+    ):
+        if not value:
+            continue
+        identity = dict(metric=metric, policy=policy, strategy_id=strategy_id,
+                        baseline=value, scenario=value, snapshot_hash=snapshot_hash,
+                        claim_kind="crop_mix_snapshot")
+        shown = ", ".join(f"{key}: {amount:g}" for key, amount in value.items()) if isinstance(value, dict) else ", ".join(value)
+        claims.append(dict(id=_claim_id(identity), **identity, delta=None,
+                           direction="unchanged", unit=unit,
+                           statement=f"{policy}'s {label} in this frozen plan: {shown}."))
+    return claims
+
+
 def _pairs(result: dict[str, Any]) -> list[tuple[dict[str, Any], dict[str, Any], str, str]]:
     retained = result.get("retained_strategy") or result.get("retained_plan")
     strategies = [row for row in result.get("strategies", []) if isinstance(row, dict)]
@@ -240,6 +264,8 @@ def build_claims(result: dict[str, Any]) -> list[VerifiedPlanningClaim]:
     if not pairs:
         for strategy in (row for row in result.get("strategies", []) if isinstance(row, dict)):
             policy, strategy_id = _name(strategy, "Candidate"), str(strategy.get("id"))
+            claims.extend(_snapshot_mix_claims(policy=policy, strategy_id=strategy_id,
+                                               plan=strategy, snapshot_hash=snapshot_hash))
             for metric, raw in _metrics(strategy).items():
                 value = _number(raw)
                 if metric in _METRICS and value is not None:

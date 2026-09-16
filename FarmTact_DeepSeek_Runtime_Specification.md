@@ -1,5 +1,10 @@
 ## V12 implementation amendment — 16 September 2026
 
+Planning Council context V4 adds initial-plan crop identity, per-crop allocation
+counts and area as snapshot facts. These are not retained-plan comparisons. The
+V3 live trial correctly withheld Crop Planner when only aggregate area was present;
+that failed trial remains evidence, and V4 requires a fresh bounded review.
+
 Final audit contracts: functional Council V3 requires crop composition evidence
 for crop-mix findings and cost/resource evidence for Capacity & Cost findings.
 Discussion-linked proposals retain original message/actions, frozen result reference,

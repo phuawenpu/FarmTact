@@ -65,11 +65,20 @@ def test_initial_plan_has_authoritative_strategy_metrics_without_fake_baseline()
     result.pop("retained_strategy")
     claims = build_claims(result)
     assert claims
-    assert {row["claim_kind"] for row in claims} == {"strategy_metric"}
+    assert {row["claim_kind"] for row in claims} == {"strategy_metric", "crop_mix_snapshot"}
     margin = next(row for row in claims if row["metric"] == "margin_sgd")
     assert margin["strategy_id"] == "lean"
     assert margin["statement"] == "Lean's projected margin is SGD 2,414.73 in this frozen plan."
     assert "relative" not in margin["statement"]
+    mix = {row["metric"]: row for row in claims if row["claim_kind"] == "crop_mix_snapshot"}
+    assert mix["crop_allocation_count"]["scenario"] == {"caixin": 1, "lettuce": 1}
+    assert mix["crop_allocation_area_m2"]["scenario"] == {"caixin": 30, "lettuce": 10}
+    assert mix["crop_id_set"]["scenario"] == ["caixin", "lettuce"]
+    assert all(row["delta"] is None and "relative" not in row["statement"] for row in mix.values())
+    assert planning_council._semantic_issues({
+        "claim_ids": [mix["crop_id_set"]["id"]], "tradeoff": "space_over_variety",
+        "rationale": "preserve_crop_variety", "proposed_strategy_id": "lean",
+    }, selected=[mix["crop_id_set"]], role="production_analyst") == []
 
 
 def test_claim_context_hash_binds_assumptions_and_outputs_not_farm_hash_alone():
@@ -198,7 +207,7 @@ def test_review_skips_absent_external_roles_and_chair_sees_statuses(monkeypatch)
         "prompt_template": "farmtact-planning-council-prompt-v3",
         "output_schema": "farmtact-planning-finding-output-v2",
         "validator": "farmtact-planning-claim-validator-v3",
-        "context": "farmtact-planning-comparison-context-v3",
+        "context": "farmtact-planning-comparison-context-v4",
         "sources": "farmtact-planning-source-context-v2",
     } for version in FakeGateway.versions)
     assert [role for role, _ in FakeGateway.calls] == [
