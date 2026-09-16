@@ -7,9 +7,9 @@
       "seconds": 54.51
     },
     {
-      "scope": "publication/retention/operator/deployment specialist suite",
+      "scope": "publication/retention/operator/deployment specialist suite including Fly shell argv and EOF-only cleanup SFTP",
       "passed": 55,
-      "seconds": 0.34
+      "seconds": 0.83
     }
   ],
   "production_abuse_limits_changed": false

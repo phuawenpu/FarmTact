@@ -24,7 +24,7 @@ publication before the final public checks.
 | Numerical feasibility, biology, identity, reconciliation, tenant/revision/idempotency | full regression; gameplay/data focused tests; original failure reports retained | Final full rerun in progress |
 | Tentative/reservations/rejections/seedling shortfalls/stale/duplicate/corrections | v12 integration and adversarial tests; upload and workflow trials | Covered through combined scoped tests, not one giant browser script |
 | Council invalid/missing/cancel/replay, bounded real DeepSeek | Council and worker tests; actual V4/vision/PDF/discussion evidence; shared ledger32/48 | No provider fallback; qualitative limitations preserved |
-| Mobile360/390/430/desktop, keyboard, tutorials, exports | frontend reports and media verification | Final visible interpretation-boundary browser assertion pending |
+| Mobile360/390/430/desktop, keyboard, tutorials, exports | frontend reports and media verification | Final visible interpretation-boundary browser assertion passed in 25-check suite |
 | V11/V12 capacity, exact verified source/image publication and final resources | capacity-private-7746b2f.json; staging record; publication tools | Final exact-source capacity and post-publication evidence pending |
 
 Live accounting connectors, public webhooks, full ERP, buyer outreach and actual

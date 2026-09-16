@@ -506,7 +506,7 @@ def retire_oldest_shared(history: dict, active: dict) -> dict:
         command(
             ['fly', 'ssh', 'sftp', 'shell', '--app', settings['app'], '--machine',
              settings['machine_id'], '--container', 'retirement-operator'],
-            input_text=f'put {runtime_path} /tmp/farmtact-runtime.json\nquit\n',
+            input_text=f'put {runtime_path} /tmp/farmtact-runtime.json\n',
         )
     import shlex
     report = f"/persist/gateway/releases/retirement-{active['latest']}.json"
@@ -518,7 +518,7 @@ def retire_oldest_shared(history: dict, active: dict) -> dict:
     command(
         ['fly', 'ssh', 'console', '--app', settings['app'], '--machine',
          settings['machine_id'], '--container', 'retirement-operator',
-         '--command', invocation]
+         '--command', 'sh -c ' + shlex.quote(invocation)]
     )
     # Successful cleanup is followed by an exact active-pair config, removing
     # the privileged operator and re-probing the published latest edition.

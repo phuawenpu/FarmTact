@@ -198,8 +198,13 @@ def test_rolling_retirement_stops_oldest_then_snapshots_and_applies(tmp_path, mo
 
     def fake_command(args, **kwargs):
         if args[:4] == ['fly', 'ssh', 'sftp', 'shell']:
+            assert kwargs['input_text'].endswith('/tmp/farmtact-runtime.json\n')
+            assert 'quit' not in kwargs['input_text']
             events.append(('runtime', kwargs['input_text']))
         elif '--container' in args and args[args.index('--container') + 1] == 'retirement-operator':
+            assert args[-2] == '--command'
+            assert args[-1].startswith("sh -c '")
+            assert 'cd /app && python -m scripts.shared_retirement_operator' in args[-1]
             events.append(('apply', args[-1]))
         return type('Result', (), {'returncode': 0, 'stdout': '', 'stderr': ''})()
 

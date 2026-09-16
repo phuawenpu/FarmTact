@@ -34,6 +34,10 @@
       "pass": true
     },
     {
+      "name": "raw fact identifiers remain available in expandable provenance",
+      "pass": true
+    },
+    {
       "name": "validated discussion renders bounded proposed action",
       "pass": true
     },

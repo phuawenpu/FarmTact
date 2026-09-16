@@ -2087,6 +2087,11 @@ function MetricValues({ values }: { values: Record<string, number | null> }) {
   );
 }
 function ConversationRow({ message: item }: { message: ConversationMessage }) {
+  const referencesChecked =
+    String(item.validation_status).toLowerCase() === "references_verified";
+  const interpretation = String(
+    item.interpretation_status || "not_assessed",
+  ).toLowerCase();
   return (
     <article className={`message-card message-card--${item.speaker}`}>
       <header>
@@ -2096,8 +2101,52 @@ function ConversationRow({ message: item }: { message: ConversationMessage }) {
         </span>
       </header>
       <p>{item.content}</p>
+      {referencesChecked && (
+        <p className="message-truth-boundary">
+          <ShieldCheck size={14} />
+          <span>
+            <strong>
+              Evidence references checked; interpretation{" "}
+              {interpretation === "qualitative_unverified"
+                ? "unverified"
+                : interpretation.replaceAll("_", " ")}
+            </strong>
+            <small>
+              Evidence status{" "}
+              {String(item.evidence_status || "not reported").replaceAll(
+                "_",
+                " ",
+              )}.
+            </small>
+          </span>
+        </p>
+      )}
       {!!item.evidence_refs?.length && (
         <small>Evidence: {item.evidence_refs.join(" · ")}</small>
+      )}
+      {!!item.rendered_facts?.length && (
+        <div className="message-facts">
+          <strong>Typed facts from the frozen snapshot</strong>
+          {item.rendered_facts.map((fact, index) => (
+            <article key={`${fact.reference}-${index}`}>
+              <b>
+                {reviewValue(fact.value)} {fact.unit || ""}
+              </b>
+              <span>
+                {readableFactLabel(fact)}
+              </span>
+              <details>
+                <summary>Fact provenance</summary>
+                <dl>
+                  <div><dt>Reference</dt><dd>{fact.reference}</dd></div>
+                  {fact.entity?.id && <div><dt>Entity</dt><dd>{fact.entity.type || "record"} · {fact.entity.id}</dd></div>}
+                  {fact.snapshot_hash && <div><dt>Snapshot</dt><dd>{fact.snapshot_hash}</dd></div>}
+                  <div><dt>Verification</dt><dd>{fact.verification || "not reported"}</dd></div>
+                </dl>
+              </details>
+            </article>
+          ))}
+        </div>
       )}
       {!!item.proposed_actions?.length && (
         <div className="message-actions">
@@ -2118,6 +2167,19 @@ function reviewValue(value: unknown) {
   if (value === null || value === undefined || value === "") return "Not supplied";
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
+}
+function readableFactLabel(
+  fact: NonNullable<ConversationMessage["rendered_facts"]>[number],
+) {
+  const tail = fact.reference.split(/[.:/]/).at(-1) || "planning fact";
+  const metric = tail
+    .replace(/_(sgd|kg|hours?|percent)$/, "")
+    .replaceAll("_", " ")
+    .replace(/^./, (letter) => letter.toUpperCase());
+  const entity = fact.entity?.id?.replaceAll("_", " ");
+  const context = String(fact.context || "").toLowerCase();
+  const readableContext = context && context !== "strategy" ? fact.context : "";
+  return [metric, entity, readableContext].filter(Boolean).join(" · ");
 }
 function Empty({
   icon,

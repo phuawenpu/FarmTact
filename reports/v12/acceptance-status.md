@@ -62,3 +62,9 @@ Final rolling cleanup now reads actual Machine state after snapshot completion a
 requires exact host/container identity before storage deletion. Fifty-five focused
 release/retirement checks passed. Final full regression and exact-source staging
 remain in progress.
+
+The final farmer view exposes “Evidence references checked; interpretation unverified”
+and separates readable frozen numerical facts from expandable provenance. Its browser
+suite passed 25 checks; the real-backend journey retained 30 passes. Retirement CLI
+compatibility now explicitly shells the operator invocation and ends its upload by
+EOF; the 55 focused release-tooling checks passed again.

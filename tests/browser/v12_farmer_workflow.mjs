@@ -157,7 +157,7 @@ try {
     let body = {};
     if (path.endsWith('/conversations') && route.request().method()==='POST') body={id:'conversation-1',status:'READY'};
     else if (path.endsWith('/conversations/conversation-1/messages')) body={id:'request-1',conversation_id:'conversation-1',status:'COMPLETED',message_id:'question-1'};
-    else if (path.endsWith('/conversations/conversation-1')) body={id:'conversation-1',last_request_status:'COMPLETED',messages:[{id:'advisor-message-1',speaker:'advisor',speaker_name:'Idris',content:'Review a bounded demand adjustment.',validation_status:'references_verified',evidence_refs:['F004'],proposed_actions:[{control:'demand_percent',target_id:'caixin',value:8,unit:'percent',status:'hypothesis_only'}]}]};
+    else if (path.endsWith('/conversations/conversation-1')) body={id:'conversation-1',last_request_status:'COMPLETED',messages:[{id:'advisor-message-1',speaker:'advisor',speaker_name:'Idris',content:'Review a bounded demand adjustment.',validation_status:'references_verified',evidence_status:'partial',interpretation_status:'qualitative_unverified',evidence_refs:['F004'],rendered_facts:[{reference:'strategy.metrics.booked_delivered_kg',value:442,unit:'kg',context:'strategy',entity:{type:'strategy',id:'balanced_strategy'},snapshot_hash:'snapshot-abc',verification:'source_bound'}],proposed_actions:[{control:'demand_percent',target_id:'caixin',value:8,unit:'percent',status:'hypothesis_only'}]}]};
     else if (path.endsWith("/farm-workflow/imports") && route.request().method()==="POST") {
       const input=route.request().postDataJSON();
       body={candidate_id:"manual-1",source_name:input.source_name,source_kind:"manual",status:"candidate",authority:"review_candidate",planning_eligible:true,provenance:{origin:"farmer_manual_unverified"},warnings:["Requires farmer confirmation."],rows:input.rows};
@@ -219,6 +219,15 @@ try {
   await page.locator('.role-card').filter({hasText:'Market & Price Analyst'}).getByRole('button',{name:'Ask this specialist'}).click();
   await page.getByRole('button',{name:'Ask specialist'}).click();
   await page.getByRole('button',{name:'Review a proposal from this discussion'}).waitFor();
+  check('reference checks do not overstate qualitative interpretation',
+    await page.getByText('Evidence references checked; interpretation unverified').isVisible()&&
+    await page.getByText(/Evidence status partial/).isVisible()&&
+    await page.getByText('Typed facts from the frozen snapshot').isVisible()&&
+    await page.getByText('442 kg').isVisible()&&
+    await page.getByText('Booked delivered · balanced strategy').isVisible());
+  await page.getByText('Fact provenance').click();
+  check('raw fact identifiers remain available in expandable provenance',
+    await page.getByText('snapshot-abc').isVisible()&&await page.getByText(/strategy · balanced_strategy/).isVisible()&&await page.getByText('source_bound').isVisible());
   check('validated discussion renders bounded proposed action',await page.getByText(/demand percent · target caixin · 8 percent/).isVisible());
   await page.getByRole('button',{name:'Review a proposal from this discussion'}).click();
   check('discussion handoff opens explicit editable proposal review',
