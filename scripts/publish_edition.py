@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -118,7 +119,14 @@ def remote_registry(origin: str) -> dict:
         raise PublicationError("Publication origin is fixed")
     request = Request(origin + "/api/releases/history", headers={"Accept": "application/json"})
     try:
-        with urlopen(request, timeout=10) as response:
+        try:
+            response = urlopen(request, timeout=10)
+        except HTTPError as error:
+            if error.code != 404: raise
+            # One-time V11 gateway migration: the old public endpoint IS history.
+            # validate_registry below rejects a truncated active-edition response.
+            response = urlopen(Request(origin + "/api/releases", headers={"Accept":"application/json"}), timeout=10)
+        with response:
             if response.status != 200 or int(response.headers.get("Content-Length", "0") or 0) > 1_000_000:
                 raise PublicationError("Remote registry unavailable")
             body = response.read(1_000_001)

@@ -146,3 +146,23 @@ def test_fly_manifest_has_isolated_app_volume_and_control():
     assert 'FARMTACT_CONTROL_URL = "http://farmtact.flycast"' in text
     assert 'source = "farmtact_data"' in text
     assert "DEEPSEEK_API_KEY" not in text and "FARMTACT_CONTROL_SECRET" not in text
+
+
+def test_pre_retention_gateway_history_fallback_is_404_only(monkeypatch):
+    from io import BytesIO
+    from urllib.error import HTTPError
+    class Response(BytesIO):
+        status=200
+        headers={}
+    calls=[]
+    def legacy(request,timeout):
+        calls.append(request.full_url)
+        if request.full_url.endswith('/history'):
+            raise HTTPError(request.full_url,404,'Not Found',{},None)
+        return Response(json.dumps(registry()).encode())
+    monkeypatch.setattr(publication,'urlopen',legacy)
+    assert publication.remote_registry('https://farmtact.fly.dev')==registry()
+    assert calls==['https://farmtact.fly.dev/api/releases/history','https://farmtact.fly.dev/api/releases']
+    def unavailable(request,timeout):raise HTTPError(request.full_url,503,'Unavailable',{},None)
+    monkeypatch.setattr(publication,'urlopen',unavailable)
+    with pytest.raises(publication.PublicationError):publication.remote_registry('https://farmtact.fly.dev')
