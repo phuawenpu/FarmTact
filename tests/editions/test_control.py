@@ -20,7 +20,10 @@ DAY = "2026-09-09"
 
 
 @pytest.fixture
-def control():
+def control(monkeypatch, tmp_path):
+    active = tmp_path / 'active.json'
+    active.write_text('{"previous":"v1","latest":"v2"}')
+    monkeypatch.setenv('FARMTACT_ACTIVE_EDITIONS', str(active))
     store = Store("sqlite://")
     app = FastAPI()
     app.include_router(create_control_router(store, SECRET))

@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
-from services.api.release_registry import ROOT, registry, upstream
+from services.api.release_registry import ROOT, active_registry, history_registry, upstream
 from services.api.security import client_network, is_event_stream
 
 HOP = {'host', 'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'content-length', 'content-encoding'}
@@ -62,7 +62,10 @@ def create_gateway(store=None, transport=None):
     def health(): return {'status': 'ok', 'role': 'edition_gateway'}
 
     @app.get('/api/releases')
-    def releases(): return registry()
+    def releases(): return active_registry()
+
+    @app.get('/api/releases/history')
+    def release_history(): return history_registry()
 
     @app.get('/api/v1/reviews')
     def reviews():
@@ -79,8 +82,13 @@ def create_gateway(store=None, transport=None):
     def index(): return FileResponse(dist / 'index.html')
 
     async def proxy(request, edition, path):
-        entries = registry()['editions']
+        entries = active_registry()['editions']
         if not any(e['id'] == edition and e.get('status') == 'published' for e in entries):
+            published = {e['id'] for e in history_registry()['editions']}
+            if edition in published:
+                choices = active_registry()['editions']
+                links = ''.join(f'<li><a href="/{e["id"]}/">{e["id"]}</a></li>' for e in choices)
+                return HTMLResponse(f'<h1>Edition retired</h1><p>{edition} is preserved in release history but is no longer running.</p><ul>{links}</ul>', 410)
             return HTMLResponse('<h1>Edition unavailable</h1><p>This edition is not published.</p><a href="/">Choose an edition</a>', 404)
         secret = os.environ.get('FARMTACT_CONTROL_SECRET', '')
         if not secret: return JSONResponse({'detail': 'Edition routing unavailable'}, 503)
@@ -151,8 +159,11 @@ def create_gateway(store=None, transport=None):
         if not re.fullmatch(r'v[1-9][0-9]*', edition): return JSONResponse({'detail': 'Not found'}, 404)
         return await proxy(request, edition, path)
 
-    @app.get('/{edition}')
-    def slash(edition: str):
-        if re.fullmatch(r'v[1-9][0-9]*', edition): return RedirectResponse(f'/{edition}/', status_code=307)
+    @app.api_route('/{edition}', methods=['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'])
+    async def slash(request: Request, edition: str):
+        if re.fullmatch(r'v[1-9][0-9]*', edition):
+            if edition not in {e['id'] for e in active_registry()['editions']}:
+                return await proxy(request, edition, '')
+            return RedirectResponse(f'/{edition}/', status_code=307)
         return JSONResponse({'detail': 'Not found'}, 404)
     return app

@@ -1,3 +1,20 @@
+## V12 implementation amendment — 16 September 2026
+
+V12 is under implementation, not yet published or accepted. The current user scope
+is [the V12 farmer workflow and two-version retention plan](docs/v12-implementation-plan.md).
+It supersedes the historical requirement to run every published edition. Preserve
+all immutable publication history, but expose only previous/latest active editions;
+retired mutation routes return 410 without redirect. V11 remains the retained image
+and state; V12 must pass private candidate checks before atomic activation.
+
+V12 adds reviewed Inbox candidates, explicit revision-bound proposals and approvals,
+idempotent sandbox tasks and auditable result corrections. Local numerical authority
+and four supported recipes remain. Optional uploaded evidence is separately labelled;
+photo observations cannot alter yield. Confirmed demand, tentative demand, market
+prices, projected outcomes, simulation and user-reported results remain distinct.
+Real farm operations remain disabled. Tests and live quality evidence remain dated
+and scoped; incomplete acceptance must not be reported as passing.
+
 # FarmTact
 
 ## Implementation audit amendment — 11 September 2026

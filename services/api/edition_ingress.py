@@ -17,6 +17,12 @@ class EditionIngress:
         supplied = headers.get(b'x-farmtact-gateway', b'').decode('ascii', errors='ignore')
         if not expected or not hmac.compare_digest(expected, supplied):
             return await JSONResponse({'detail': 'Edition gateway required'}, 403)(scope, receive, send)
+        from services.api.release_registry import active_ids
+        staged = os.environ.get('FARMTACT_STAGED_EDITION', '')
+        # Shared control validates that staged is the exact next history number.
+        # Candidate-local history may already contain itself.
+        if edition not in active_ids() and edition != staged:
+            return await JSONResponse({'detail': 'Edition retired', 'available_editions': sorted(active_ids())}, 410)(scope, receive, send)
         # Flycast's client is the gateway; only the authenticated gateway can relay
         # the original public peer. Never trust an external forwarded header.
         forwarded = headers.get(b'x-farmtact-client-ip', b'')

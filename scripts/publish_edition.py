@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 REGISTRY = ROOT / "config/releases/registry.json"
+ACTIVE = ROOT / "config/releases/active.json"
 STATE_NAME = "farmtact-publications.json"
 EDITION = re.compile(r"v([1-9][0-9]*)\Z")
 COMMIT = re.compile(r"[0-9a-f]{40}\Z")
@@ -95,10 +96,27 @@ def append_only(old: dict, new: dict) -> None:
         raise PublicationError("Published registry history is immutable")
 
 
+def validate_active(active: dict, history: dict) -> None:
+    if set(active) != {'previous', 'latest'}:
+        raise PublicationError('Invalid active-edition manifest')
+    ids = [item['id'] for item in history['editions']]
+    if active['latest'] not in ids or (active['previous'] is not None and active['previous'] not in ids):
+        raise PublicationError('Active edition is absent from release history')
+    if active['previous'] is not None and int(active['latest'][1:]) != int(active['previous'][1:]) + 1:
+        raise PublicationError('Active editions must be consecutive')
+
+
+def active_from_public(payload: dict) -> dict:
+    active = {'previous': payload.get('previous'), 'latest': payload.get('latest')}
+    if set(payload) < {'previous', 'latest', 'editions'}:
+        raise PublicationError('Remote active manifest unavailable')
+    return active
+
+
 def remote_registry(origin: str) -> dict:
     if origin != "https://farmtact.fly.dev":
         raise PublicationError("Publication origin is fixed")
-    request = Request(origin + "/api/releases", headers={"Accept": "application/json"})
+    request = Request(origin + "/api/releases/history", headers={"Accept": "application/json"})
     try:
         with urlopen(request, timeout=10) as response:
             if response.status != 200 or int(response.headers.get("Content-Length", "0") or 0) > 1_000_000:
@@ -114,6 +132,18 @@ def remote_registry(origin: str) -> dict:
     except json.JSONDecodeError as error: raise PublicationError("Remote registry is not JSON") from error
     validate_registry(result)
     return result
+
+
+def remote_active(origin: str) -> dict:
+    if origin != 'https://farmtact.fly.dev':
+        raise PublicationError('Publication origin is fixed')
+    try:
+        with urlopen(Request(origin + '/api/releases', headers={'Accept': 'application/json'}), timeout=10) as response:
+            payload = json.loads(response.read(1_000_001))
+    except Exception as error:
+        raise PublicationError('Remote active manifest unavailable') from error
+    active = active_from_public(payload)
+    return active
 
 
 def state_path() -> Path:
@@ -298,11 +328,12 @@ def shared_ssh_args():
     return ['--machine', settings['machine_id'], '--container', 'gateway'] if settings else []
 
 
-def deploy_shared(updated):
+def deploy_shared(updated, active, *, staged=None):
     from scripts.shared_host_config import machine_config
     settings = shared_settings()
     if not settings: raise PublicationError('Shared host is not configured')
-    config = machine_config(updated, settings['volume_id'], public=True)
+    validate_active(active, updated)
+    config = machine_config(updated, settings['volume_id'], active=active, staged=staged, public=True)
     with tempfile.TemporaryDirectory(prefix='farmtact-shared-publish-') as directory:
         path = Path(directory) / 'machine.json'
         path.write_text(json.dumps(config))
@@ -316,15 +347,19 @@ def deploy_shared(updated):
     command(['fly','ssh','console','--app','farmtact','--machine',settings['machine_id'],'--container','gateway','--command','python -c '+shlex.quote(probe)])
 
 
-def publish_remote(registry: dict, temporary: Path) -> None:
-    temporary.write_text(json.dumps(registry, sort_keys=False, indent=2) + "\n")
-    remote_tmp = "/data/releases/registry.json.next"
+def publish_remote(registry: dict, active: dict, temporary: Path) -> None:
+    validate_active(active, registry)
+    temporary.write_text(json.dumps({'history': registry, 'active': active}, sort_keys=False, indent=2) + "\n")
+    remote_tmp = "/data/releases/public.json.next"
     command(["fly", "ssh", "sftp", "shell", "--app", "farmtact", *shared_ssh_args()], input_text=f"put {temporary} {remote_tmp}\nquit\n")
     code = (
-        "import json,os,shutil; p='/data/releases/registry.json'; n=p+'.next'; "
-        "a=json.load(open(p)); b=json.load(open(n)); "
+        "import json,os,shutil; p='/data/releases/registry.json'; q='/data/releases/active.json'; u='/data/releases/public.json'; n=u+'.next'; "
+        "x=json.load(open(n)); a=json.load(open(p)); b=x['history']; c=x['active']; "
         "assert b['editions'][:-1]==a['editions'] and len(b['editions'])==len(a['editions'])+1; "
-        "assert b['latest']==b['editions'][-1]['id']; shutil.copy2(p,p+'.previous'); os.replace(n,p)"
+        "assert b['latest']==b['editions'][-1]['id']; assert c=={'previous':a['latest'],'latest':b['latest']}; "
+        "shutil.copy2(p,p+'.previous'); shutil.copy2(q,q+'.previous'); "
+        "os.replace(n,u); t=p+'.next'; open(t,'w').write(json.dumps(b)); os.replace(t,p); "
+        "t=q+'.next'; open(t,'w').write(json.dumps(c)); os.replace(t,q)"
     )
     command(["fly", "ssh", "console", "--app", "farmtact", *shared_ssh_args(), "--command", f"python -c \"{code}\""])
 
@@ -347,6 +382,8 @@ def main(argv: list[str] | None = None) -> int:
             raise PublicationError("Source commit must equal HEAD")
         notes = load_json(args.notes); validate_notes(notes)
         remote = remote_registry("https://farmtact.fly.dev")
+        current_active = remote_active("https://farmtact.fly.dev")
+        validate_active(current_active, remote)
         expected = len(remote["editions"]) + 1
         if int(match.group(1)) != expected:
             raise PublicationError(f"Next edition must be v{expected}")
@@ -369,14 +406,16 @@ def main(argv: list[str] | None = None) -> int:
                 raise PublicationError("Edition Fly manifest exists with different contents")
             if not config.exists(): config.write_text(expected_config)
         try:
-            if shared: deploy_shared(updated)
+            next_active = {'previous': remote['latest'], 'latest': args.edition}
+            if shared: deploy_shared(updated, current_active, staged=args.edition)
             else: deploy(args.edition, image, config)
             with tempfile.TemporaryDirectory(prefix="farmtact-publish-") as directory:
-                publish_remote(updated, Path(directory) / "registry.json")
+                publish_remote(updated, next_active, Path(directory) / "registry.json")
             REGISTRY.write_text(json.dumps(updated, indent=2) + "\n")
+            ACTIVE.write_text(json.dumps(next_active, indent=2) + "\n")
             manifest = ROOT / f"config/releases/{args.edition}.json"
             manifest.write_text(json.dumps(entry, indent=2) + "\n")
-            git("add", str(REGISTRY.relative_to(ROOT)), str(config.relative_to(ROOT)), str(manifest.relative_to(ROOT)))
+            git("add", str(REGISTRY.relative_to(ROOT)), str(ACTIVE.relative_to(ROOT)), str(config.relative_to(ROOT)), str(manifest.relative_to(ROOT)))
             git("commit", "-m", f"Publish immutable FarmTact {args.edition}")
             git("tag", "-a", f"farmtact-{args.edition}", args.source_commit, "-m", f"FarmTact {args.edition} source")
             git("push", "origin", "HEAD", f"refs/tags/farmtact-{args.edition}")

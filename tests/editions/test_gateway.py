@@ -13,7 +13,9 @@ def gateway(monkeypatch, tmp_path):
     releases=json.loads((ROOT/'config/releases/registry.json').read_text())
     fixture=tmp_path/'registry.json'
     fixture.write_text(json.dumps({'latest':'v2','editions':releases['editions'][:2]}))
+    active=tmp_path/'active.json'; active.write_text(json.dumps({'previous':'v1','latest':'v2'}))
     monkeypatch.setenv('FARMTACT_RELEASE_REGISTRY',str(fixture))
+    monkeypatch.setenv('FARMTACT_ACTIVE_EDITIONS',str(active))
     monkeypatch.setenv('FARMTACT_CONTROL_SECRET', 'test-control-secret-long-enough')
     monkeypatch.delenv('FARMTACT_TRUST_FLY_PROXY', raising=False)
     seen = []
@@ -63,6 +65,17 @@ def test_unknown_edition_no_fallback_and_stream(gateway):
     assert response.headers['x-farmtact-edition'] == 'v1'
 
 
+def test_retired_editions_are_gone_for_reads_and_mutations(gateway, monkeypatch, tmp_path):
+    client, seen = gateway
+    active = tmp_path / 'active.json'; active.write_text(json.dumps({'previous': None, 'latest': 'v2'}))
+    monkeypatch.setenv('FARMTACT_ACTIVE_EDITIONS', str(active))
+    for method in ('get', 'post', 'delete'):
+        response = getattr(client, method)('/v1/api/v1/bootstrap')
+        assert response.status_code == 410
+        assert '/v2/' in response.text
+    assert not seen
+
+
 def test_upstream_headers_and_body_guard(gateway):
     client, seen = gateway
     client.get('/v2/api/v1/bootstrap', headers={'x-farmtact-client-ip': '1.2.3.4', 'x-farmtact-gateway': 'attacker', 'authorization': 'Bearer attacker'})
@@ -96,3 +109,14 @@ def test_staged_admission_does_not_publish_route(gateway, monkeypatch):
     assert client.get('/v3/api/v1/bootstrap').status_code == 404
     assert [item['id'] for item in client.get('/api/releases').json()['editions']] == ['v1', 'v2']
     assert not seen
+
+
+def test_single_public_bundle_controls_history_and_active_together(gateway, monkeypatch, tmp_path):
+    client, _seen = gateway
+    history = json.loads(client.get('/api/releases/history').text)
+    bundle = tmp_path / 'public.json'
+    bundle.write_text(json.dumps({'history': history, 'active': {'previous': None, 'latest': 'v2'}}))
+    monkeypatch.setenv('FARMTACT_PUBLIC_RELEASES', str(bundle))
+    assert [item['id'] for item in client.get('/api/releases').json()['editions']] == ['v2']
+    assert client.get('/v1/').status_code == 410
+    assert len(client.get('/api/releases/history').json()['editions']) == 2

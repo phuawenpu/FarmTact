@@ -1,0 +1,8 @@
+{
+  "volume_id": "vol_vdejexpzm8ydn5x4",
+  "snapshot_id": "vs_7PORRqmOvDPGt1a37GGe0J4",
+  "status": "created",
+  "verified_date_utc": "2026-09-16",
+  "retention_days": 7,
+  "purpose": "Recovery snapshot before retirement storage deletion; no restore performed"
+}

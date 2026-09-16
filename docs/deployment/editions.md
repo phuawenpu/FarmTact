@@ -1,6 +1,42 @@
 # Publishing immutable editions
 
-Each numbered edition is a frozen source commit and image digest. Since v6, the gateway and v1–v11 run in separate containers on one Singapore Fly Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB `farmtact_shared_data` volume. Fixed, isolated subtrees preserve each edition’s own database, cache, settings and saved progress. The public `farmtact` gateway owns the chooser, `/api/releases`, the shared 48-call inference budget and shared abuse counters. Edition applications use fixed local destinations and accept application traffic only from the authenticated gateway. Actual farm operations remain disabled.
+## Active editions and immutable history
+
+`config/releases/registry.json` is the append-only publication ledger. It keeps
+every edition number, source commit, pinned image and release evidence. Runtime
+routing is controlled separately by `config/releases/active.json`, whose complete
+shape is `{"previous": "vN", "latest": "vN+1"}`. `previous` may be null before
+the next edition is published. The chooser and `/api/releases` expose only this
+active set; `/api/releases/history` exposes the immutable ledger.
+
+Published routes outside the active set return 410 for reads and mutations and
+list the available editions. Unknown edition numbers return 404. Shared control
+admission accepts only active editions plus the exact explicitly staged next
+number. Backend ingress repeats that check, so a retired worker cannot accept
+authenticated forwarded mutations if it was accidentally left running.
+
+Candidate staging keeps the active manifest unchanged and adds only the next
+pinned worker for private acceptance checks. Publication updates the Machine to
+the intended pair, verifies the candidate, then replaces history and active
+manifests together. A failed candidate leaves the public pair unchanged. Edition
+numbers always follow the history ledger and are never reused.
+
+After recording a recovery snapshot, `scripts/retire_editions.py` inventories
+direct `vN` storage children and reports checksums, disk use, memory, load,
+process count and image references. It defaults to dry run. Apply mode requires a
+snapshot identifier, protects active and staged editions plus gateway/control
+paths, requires the current Machine container set, rejects symlinks, and rereads
+the active manifest and target checksums immediately before deletion. It
+never removes the shared volume. Image rows are candidates only; prove a digest
+is unused by every retained container before removing it.
+
+Each numbered edition remains a frozen source commit and image digest. The gateway
+and only the active edition set run in separate containers on one Singapore Fly
+Machine (4 shared vCPUs, 4096 MB) and one encrypted 3-GB
+`farmtact_shared_data` volume. Retained editions keep fixed, isolated database,
+cache, settings and progress subtrees. The public gateway owns the chooser,
+active release API, shared 48-call inference budget and abuse counters. Actual
+farm operations remain disabled.
 
 The publisher never resolves an image tag. You may supply a previously verified `sha256` digest. When `--image` is omitted, it runs the fixed gateway Fly build with `--build-only --push --remote-only`, labels it from the edition and short source hash, passes the full source commit as a build argument, and accepts only the pinned registry digest reported by Fly. Commit the complete candidate source first. The publisher rejects dirty worktrees, abbreviated commits, non-HEAD commits, mutable image references, skipped edition numbers, changes to existing registry entries, and reuse of a locally reserved number with different inputs.
 
@@ -20,12 +56,14 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
 1. Requires a clean, committed source and the next contiguous edition number.
 2. Reserves that edition/source/image identity under `.git` to prevent reuse.
 3. Builds or accepts the pinned OCI digest, then regenerates the shared Machine
-   configuration with all previous pinned containers plus the new edition.
+   configuration with the retained active container(s) plus the staged edition.
 4. Updates the exact Machine in `config/hosting/shared.json`, reusing its volume
    and existing runtime secrets. It checks the new edition's health, ID and full
    source commit through authenticated operator SSH.
-5. Keeps the previous public registry during startup, then atomically appends
-   the verified edition without changing any previous entry.
+5. Keeps the previous public pair during startup, then atomically replaces one
+   validated public bundle containing the appended history and new active pair.
+   Compatibility copies of `registry.json` and `active.json` are refreshed only
+   after that cutover point.
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
 
@@ -37,7 +75,13 @@ Publication performs no inference calls.
 
 Long release work must still follow the project’s 20-minute Git push cadence: keep implementation and verification commits pushed before starting publication. The publisher makes and pushes the final registry/manifests commit and immutable source tag after the live registry swap.
 
-If a step fails, inspect the reported Fly command and rerun with the same edition, source commit, and digest after repairing the external state. Do not delete the `.git/farmtact-publications.json` reservation or choose a different build under the same number. If failure occurs after remote registry replacement, verify `/api/releases` before retrying; published history remains authoritative. A registry rollback may only restore the exact previous complete file when the new edition was never made public. Never edit or reorder earlier entries.
+If a step fails, inspect the reported Fly command and rerun with the same edition,
+source commit, and digest after repairing the external state. Do not delete the
+`.git/farmtact-publications.json` reservation or choose a different build under
+the same number. Check `/api/releases` and `/api/releases/history`: if the atomic
+`public.json` cutover occurred, treat that pair/history as published and repair
+only the compatibility copies. If it did not occur, the prior public pair remains
+authoritative. Never construct a mixed history/active rollback.
 
 The gateway refreshes its validated destinations and control edition allowlist after atomic publication. Updating the shared Machine can restart the gateway and all edition containers.
 
@@ -45,8 +89,9 @@ The gateway refreshes its validated destinations and control edition allowlist a
 ## Active shared-host deployment (v10)
 
 The verified deployment uses one 4-shared-vCPU/4-GB Machine with one persistent volume.
-The public chooser and every immutable edition run in separate Pilot containers,
-each with its registered exact OCI image. A deployment adapter binds only the
+The public chooser and at most two active editions run in separate containers,
+each with its registered exact OCI image. Historical releases remain in Git and
+release evidence without consuming a running worker. A deployment adapter binds only the
 edition's fixed volume subtree to /data, removes the common parent, and hands off
 to the original image entrypoint. Application code and source/image pins are not
 rewritten. Each image keeps its own PostgreSQL cluster, cache, worker and session
@@ -78,10 +123,11 @@ editions. See [capacity](../../reports/v6/shared_capacity_public.json) and
 Use the immutable publisher for new app releases. Do not run a generic
 `fly deploy` against this shared host: root fly.toml is retained for image
 building and historical bootstrap, and does not describe the active containers.
-To regenerate the active configuration for an operator-reviewed update:
+To regenerate the V11-only configuration before staging V12:
 
 ```bash
 python scripts/shared_host_config.py --registry config/releases/registry.json \
+  --active config/releases/active.json \
   --volume vol_vdejexpzm8ydn5x4 --public --output /tmp/farmtact-shared.json
 fly machine update 2871575b4544d8 -a farmtact \
   --machine-config /tmp/farmtact-shared.json --yes
@@ -172,11 +218,72 @@ No host resource increase or threshold relaxation was made. See the V10 technica
 follow-up and capacity protocol note for exact scope and cleanup.
 
 
-## V11 candidate acceptance before public listing
+## V12 candidate acceptance and retirement
 
-`scripts/stage_edition_candidate.py` builds or accepts an exact committed image and stages the next unused edition on the shared host while preserving the public registry. No publication number is reserved until the normal publisher runs. Candidate requests use authenticated operator access; no public candidate endpoint or secret-bearing diagnostic endpoint is created. Validate the staged image, full source identity, numerical/Council journey and all three prescribed capacity trials before publishing that identical source/image with `scripts.publish_edition`. Unpublished candidate failures may be corrected and restaged; no published edition may be overwritten.
+Stage the exact committed candidate while V11 remains the sole public edition:
 
-Starting with V11, the gateway uses the new candidate image so the root chooser reflects the numeric newest-first ordering. Older edition container images remain unchanged.
+```bash
+.venv/bin/python -m scripts.stage_edition_candidate \
+  --edition v12 --source-commit "$(git rev-parse HEAD)" \
+  --notes /absolute/private/path/v12-notes.json \
+  --image registry.fly.io/farmtact@sha256:<64-hex-digest> \
+  --record /absolute/private/path/v12-stage.json
+```
+
+The command adds only the V12 candidate worker and leaves `active.json`
+unchanged. Candidate requests require authenticated operator access. Validate
+source identity, state isolation, numerical/Council journeys and capacity before
+publishing the identical source and image. Failed candidates do not change the
+public pair and may be restaged with the same identity.
+
+Application containers intentionally hide `/persist`, and a root SSH session in
+the gateway cannot remount the block device. After the recovery snapshot is
+recorded, generate a temporary Machine configuration containing the explicitly
+service-less, secret-free retirement operator. It receives the existing volume
+at `/persist` and only sleeps until an operator invokes the bounded CLI:
+
+```bash
+python scripts/shared_host_config.py --registry config/releases/registry.json \
+  --active config/releases/active.json --staged v12 \
+  --volume vol_vdejexpzm8ydn5x4 --public --retirement-operator \
+  --output /tmp/farmtact-retirement-machine.json
+fly machine update 2871575b4544d8 -a farmtact \
+  --machine-config /tmp/farmtact-retirement-machine.json --yes
+fly ssh console -a farmtact --machine 2871575b4544d8 --container retirement-operator \
+  --user root --command \
+  'cd /app && python -m scripts.shared_retirement_operator --output /tmp/retirement-before.json --staged v12'
+fly ssh sftp shell -a farmtact --machine 2871575b4544d8 --container retirement-operator <<'SFTP'
+get /tmp/retirement-before.json /tmp/retirement-before.json
+quit
+SFTP
+```
+
+Review the exact `v1`–`v10` targets, V11/V12 exclusions, checksums and resource
+readings. Apply only that unchanged plan after the snapshot is available:
+
+```bash
+fly machine status 2871575b4544d8 -a farmtact --json \
+  > /tmp/farmtact-runtime.json
+fly ssh sftp shell -a farmtact --machine 2871575b4544d8 --container retirement-operator <<'SFTP'
+put /tmp/farmtact-runtime.json /tmp/farmtact-runtime.json
+quit
+SFTP
+fly ssh console -a farmtact --machine 2871575b4544d8 --container retirement-operator \
+  --user root --command \
+  'cd /app && python -m scripts.shared_retirement_operator --output /tmp/retirement-after.json --staged v12 --runtime-config /tmp/farmtact-runtime.json --apply --snapshot-id <recorded-fly-snapshot-id>'
+```
+
+Remove the operator immediately afterward by regenerating the same active/staged
+configuration without `--retirement-operator` and updating the Machine again.
+Apply mode removes only direct inactive `vN` subtrees whose checksums still
+match. It cannot delete
+gateway controls, manifests, credentials, budgets, V11, V12, or the shared
+volume. Registry image rows remain advisory until registry/container inspection
+proves a digest unused. Keep the Machine size unchanged until separate capacity
+and billing evidence supports a change.
+
+The staged V12 image supplies the gateway code needed for the active-manifest
+cutover. V11 keeps its frozen application image and independent state.
 
 Staged V11 admission is explicitly configured with `FARMTACT_STAGED_EDITION` on
 the gateway. The control service admits only that exact next unpublished number,

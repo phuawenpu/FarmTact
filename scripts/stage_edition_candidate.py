@@ -14,7 +14,7 @@ import shlex
 
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
-from scripts.publish_edition import (PublicationError,git,remote_registry,load_json,validate_notes,make_entry,append_only,build_image,deploy_shared,IMAGE,COMMIT)
+from scripts.publish_edition import (PublicationError,git,remote_registry,remote_active,load_json,validate_notes,make_entry,append_only,build_image,deploy_shared,IMAGE,COMMIT)
 
 
 def prepare_restage(previous, remote):
@@ -40,6 +40,7 @@ def main():
     if git('status','--porcelain'):raise PublicationError('Stage a clean committed candidate')
     if not COMMIT.fullmatch(args.source_commit) or git('rev-parse','HEAD')!=args.source_commit:raise PublicationError('Candidate source must equal committed HEAD')
     remote=remote_registry('https://farmtact.fly.dev')
+    active=remote_active('https://farmtact.fly.dev')
     if remote!=load_json(ROOT/'config/releases/registry.json'):raise PublicationError('Local and public registries differ')
     if args.edition!='v'+str(len(remote['editions'])+1):raise PublicationError('Only the next unpublished edition may be staged')
     notes=load_json(args.notes);validate_notes(notes)
@@ -53,7 +54,7 @@ def main():
     args.record.write_text(json.dumps(dict(status='BUILT',public_registry_changed=False,entry=entry),indent=2)+'\n')
     for attempt in range(3):
         try:
-            deploy_shared(candidate)
+            deploy_shared(candidate, active, staged=args.edition)
             break
         except subprocess.CalledProcessError as exc:
             # The image identity never changes during registry-readiness retries.

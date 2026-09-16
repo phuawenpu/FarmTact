@@ -94,12 +94,17 @@ def calculate_session(
     parsed.check_farm(original)
     normalized=parsed.model_dump(mode='json',exclude_none=True)
     changed=_changed_farm(original,normalized['order_changes'])
+    if normalized.get('capacity'):
+        payload=changed.model_dump(mode='json')
+        payload['resources'].update(normalized['capacity'])
+        changed=Farm.model_validate(payload)
+    reservations=normalized.get('reservations',[])
     stages.append(dict(stage='validate_and_version_inputs',seconds=_elapsed(stage)))
 
     stage=time.monotonic()
     numerical_stages=[]
     calculated=plan(
-        changed,
+        changed,reservations=reservations,
         locked_allocations=locked_allocations or (),
         candidate_not_before=candidate_not_before,
         excluded_candidate_ids=excluded_candidate_ids or (),
@@ -117,7 +122,7 @@ def calculate_session(
         if not isinstance(raw_allocations,list): raise ValueError('retained_strategy requires an allocations list')
         retained_allocations=apply_seasonal_assumptions(changed,raw_allocations,normalized['seasonal'])
         violations=validate_allocations(
-            changed,retained_allocations,locked_allocations=locked_allocations or (),
+            changed,retained_allocations,reservations=reservations,locked_allocations=locked_allocations or (),
             scenario_set=calculated['scenario_set'],seasonal_assumptions=normalized['seasonal'],
         )
         central,all_simulations=_central_simulations(changed,retained_allocations,calculated['forecast']['demand'],calculated['scenario_set'])

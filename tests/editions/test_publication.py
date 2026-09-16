@@ -130,12 +130,13 @@ def test_public_ip_inventory_stops_before_deploy(tmp_path, monkeypatch):
 def test_remote_publish_uploads_temp_then_runs_fixed_validator(tmp_path, monkeypatch):
     calls = []
     monkeypatch.setattr(publication, "command", lambda args, **kwargs: calls.append((args, kwargs)) or type("Result", (), {"returncode": 0})())
-    publication.publish_remote(registry(3), tmp_path / "next.json")
+    publication.publish_remote(registry(3), {'previous':'v2','latest':'v3'}, tmp_path / "next.json")
     assert calls[0][0][:4] == ["fly", "ssh", "sftp", "shell"]
-    assert "/data/releases/registry.json.next" in calls[0][1]["input_text"]
+    assert "/data/releases/public.json.next" in calls[0][1]["input_text"]
     assert calls[1][0][:4] == ["fly", "ssh", "console", "--app"]
-    assert "os.replace(n,p)" in calls[1][0][-1]
+    assert "os.replace(n,u)" in calls[1][0][-1]
     assert "p+'.previous'" in calls[1][0][-1]
+    assert "q+'.previous'" in calls[1][0][-1]
 
 
 def test_fly_manifest_has_isolated_app_volume_and_control():

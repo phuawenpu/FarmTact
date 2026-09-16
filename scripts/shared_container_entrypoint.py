@@ -67,6 +67,17 @@ def prepare(name: str):
             os.fsync(fd)
         finally:
             os.close(fd)
+    active = releases / 'active.json'
+    incoming_active = json.loads(Path('/opt/farmtact-active.json').read_text())
+    if not active.exists() or json.loads(active.read_text()) != incoming_active:
+        pending = active.with_suffix('.next')
+        if pending.exists():
+            pending.unlink()
+        fd = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+        with os.fdopen(fd, 'w') as output:
+            output.write(json.dumps(incoming_active, indent=2) + '\n')
+            output.flush(); os.fsync(output.fileno())
+        pending.replace(active)
     # Deployment aliases preserve old images' private-host allowlists and keep
     # edition/control traffic on localhost. Names and ports are not user input.
     aliases = ['farmtact-local-control.flycast'] + [f'farmtact-local-v{i}.flycast' for i in range(1, 100)]

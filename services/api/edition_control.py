@@ -155,14 +155,14 @@ class ControlService:
     def _known_edition(self, edition_id: str) -> None:
         # The gateway registry is atomically replaced during publication; read
         # its validated current contents so a new edition needs no process restart.
-        from services.api.release_registry import registry
-        published = registry()["editions"]
-        if edition_id in {item["id"] for item in published}:
+        from services.api.release_registry import active_ids, history_registry
+        if edition_id in active_ids():
             return
         # Operator-configured admission only: public routing still reads the
         # published registry. Candidate requests retain authentication, shared
         # rate limits and the same shared provider budget.
         staged = os.environ.get('FARMTACT_STAGED_EDITION', '')
+        published = history_registry()["editions"]
         if edition_id == staged == f'v{len(published) + 1}':
             return
         raise ValueError("Unknown edition")

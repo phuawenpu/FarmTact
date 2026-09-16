@@ -52,7 +52,21 @@ class OrderChange(Strict):
         return self
 
 
+class BedReservation(Strict):
+    bed_id: str = Field(min_length=1,max_length=100)
+    start_date: date
+    end_date: date
+
+class CapacityChange(Strict):
+    nursery_sites: int | None = Field(default=None,ge=0,le=1000000,strict=True)
+    labour_hours_per_week: Decimal | None = Field(default=None,ge=0,le=100000)
+    cash_sgd: Decimal | None = Field(default=None,ge=0,le=10000000)
+
+
+
 class PlanningAssumptions(Strict):
+    reservations: list[BedReservation] = Field(default_factory=list,max_length=32)
+    capacity: CapacityChange | None = None
     future_demand: list[FutureDemand] = Field(default_factory=list, max_length=16)
     seasonal: list[SeasonalAssumption] = Field(default_factory=list, max_length=16)
     order_changes: list[OrderChange] = Field(default_factory=list, max_length=32)
@@ -76,6 +90,8 @@ class PlanningAssumptions(Strict):
         for item in [*self.future_demand,*self.seasonal]:
             if item.crop_id not in crops or item.start_date<farm.planning_date or item.end_date>end:
                 raise ValueError('Assumption must target a configured crop inside the remaining horizon')
+        from packages.planner.engine import _reservation_windows
+        _reservation_windows(farm,[r.model_dump(mode='json') for r in self.reservations])
         for change in self.order_changes:
             if change.due_date and not farm.planning_date<=change.due_date<=end:
                 raise ValueError('Changed order must be due inside the remaining horizon')

@@ -16,9 +16,14 @@ def registry():
     return json.loads((ROOT / "config/releases/registry.json").read_text())
 
 
+def active(source=None):
+    source = source or registry()
+    return {'previous': None, 'latest': source['latest']}
+
+
 def test_config_retains_registry_images_and_bounds_one_machine():
     source = registry()
-    config = machine_config(source, "vol_review123", public=True)
+    config = machine_config(source, "vol_review123", active=active(source), public=True)
     containers = {row["name"]: row for row in config["containers"]}
 
     assert config["guest"] == {"cpu_kind": "shared", "cpus": 4, "memory_mb": 4096}
@@ -27,16 +32,16 @@ def test_config_retains_registry_images_and_bounds_one_machine():
     expected_gateway = source['editions'][-1]['image_digest'] if int(source['latest'][1:]) >= 11 else GATEWAY_IMAGE
     assert containers["gateway"]["image"] == expected_gateway
     assert {name: row["image"] for name, row in containers.items() if name != "gateway"} == {
-        row["id"]: row["image_digest"] for row in source["editions"]
+        source['latest']: source['editions'][-1]['image_digest']
     }
-    assert len(containers) == len(source["editions"]) + 1
+    assert len(containers) == 2
     assert all(row["entrypoint"] == ["python", "/opt/farmtact-shared-entrypoint.py"] for row in containers.values())
     assert all(row["files"][0]["guest_path"] == "/opt/farmtact-shared-entrypoint.py" for row in containers.values())
 
 
 def test_private_probe_relay_is_service_less_and_never_enters_public_config():
-    private = machine_config(registry(), "vol_review123", public=False, origin="http://127.0.0.1:8088")
-    public = machine_config(registry(), "vol_review123", public=True)
+    private = machine_config(registry(), "vol_review123", active=active(), public=False, origin="http://127.0.0.1:8088")
+    public = machine_config(registry(), "vol_review123", active=active(), public=True)
     private_rows = {row["name"]: row for row in private["containers"]}
 
     assert "services" not in private
@@ -45,7 +50,7 @@ def test_private_probe_relay_is_service_less_and_never_enters_public_config():
     assert private_rows["private-relay"]["entrypoint"] == ["python", "/opt/farmtact-probe-relay.py"]
     assert private_rows["private-relay"]["depends_on"] == [{"name": "gateway", "condition": "healthy"}]
     assert "private-relay" not in {row["name"] for row in public["containers"]}
-    assert len(public["containers"]) == len(registry()["editions"]) + 1
+    assert len(public["containers"]) == 2
     assert all(row["env"]["FARMTACT_TRUST_FLY_PROXY"] == "true" for row in public["containers"])
 
     relay_source = (ROOT / "scripts/shared_probe_relay.py").read_text()
@@ -56,13 +61,24 @@ def test_private_probe_relay_is_service_less_and_never_enters_public_config():
     assert "socket.IPV6_V6ONLY" in relay_source
 
 
+def test_retirement_operator_is_explicit_service_less_and_secret_free():
+    source = registry()
+    config = machine_config(source, 'vol_review123', active=active(source),
+                            retirement_operator=True, public=True)
+    row = next(item for item in config['containers'] if item['name'] == 'retirement-operator')
+    assert row['entrypoint'] == ['sleep', 'infinity']
+    assert 'secrets' not in row and 'env' not in row and 'healthchecks' not in row
+    assert all(service['internal_port'] == 8080 for service in config['services'])
+
+
 def test_ports_aliases_and_local_control_are_fixed_by_edition():
-    config = machine_config(registry(), "vol_review123")
+    source = registry(); current = source['latest']
+    config = machine_config(source, "vol_review123", active=active(source))
     containers = {row["name"]: row for row in config["containers"]}
     upstreams = json.loads(containers["gateway"]["env"]["FARMTACT_EDITION_UPSTREAMS"])
 
     assert containers["gateway"]["env"]["FARMTACT_PORT"] == "8080"
-    for index in range(1, len(registry()["editions"]) + 1):
+    for index in (int(current[1:]),):
         name = f"v{index}"
         assert containers[name]["env"]["FARMTACT_PORT"] == str(8080 + index)
         assert upstreams[name] == f"http://farmtact-local-{name}.flycast:{8080 + index}"
@@ -185,7 +201,7 @@ def test_shared_publisher_updates_exact_machine_then_probes_new_local_port(monke
         return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
 
     monkeypatch.setattr(publication, "command", fake_command)
-    publication.deploy_shared(new)
+    publication.deploy_shared(new, {'previous': source['latest'], 'latest': new['latest']})
 
     assert calls[0][:5] == ["fly", "machine", "update", "1234567890abcd", "--app"]
     assert calls[0][5] == "farmtact"
@@ -231,12 +247,16 @@ def test_shared_atomic_publish_targets_pinned_gateway_container(tmp_path, monkey
         publication, "command",
         lambda args, **kwargs: calls.append((args, kwargs)) or type("Result", (), {"returncode": 0})(),
     )
-    publication.publish_remote(registry(), tmp_path / "registry.json")
+    source = registry()
+    new = copy.deepcopy(source); number = len(source['editions']) + 1
+    new['editions'].append({'id':f'v{number}'}); new['latest'] = f'v{number}'
+    publication.publish_remote(new, {'previous':source['latest'],'latest':new['latest']}, tmp_path / "registry.json")
 
     pinned = ["--machine", "1234567890abcd", "--container", "gateway"]
     assert all(all(item in args for item in pinned) for args, _ in calls)
-    assert "/data/releases/registry.json.next" in calls[0][1]["input_text"]
+    assert "/data/releases/public.json.next" in calls[0][1]["input_text"]
     validator = calls[1][0][-1]
     assert "b['editions'][:-1]==a['editions']" in validator
     assert "len(b['editions'])==len(a['editions'])+1" in validator
-    assert "os.replace(n,p)" in validator
+    assert "os.replace(n,u)" in validator
+    assert "os.replace(t,q)" in validator
