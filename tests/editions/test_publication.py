@@ -166,3 +166,9 @@ def test_pre_retention_gateway_history_fallback_is_404_only(monkeypatch):
     def unavailable(request,timeout):raise HTTPError(request.full_url,503,'Unavailable',{},None)
     monkeypatch.setattr(publication,'urlopen',unavailable)
     with pytest.raises(publication.PublicationError):publication.remote_registry('https://farmtact.fly.dev')
+
+
+def test_legacy_active_migrates_latest_only_and_rejects_truncated_history():
+    assert publication.active_from_public(registry(11))=={'previous':None,'latest':'v11'}
+    with pytest.raises(publication.PublicationError):
+        publication.active_from_public({'latest':'v11','editions':[{'id':'v11'}]})

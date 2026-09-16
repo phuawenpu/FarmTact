@@ -109,8 +109,10 @@ def validate_active(active: dict, history: dict) -> None:
 
 def active_from_public(payload: dict) -> dict:
     active = {'previous': payload.get('previous'), 'latest': payload.get('latest')}
-    if set(payload) < {'previous', 'latest', 'editions'}:
+    if not {'latest','editions'} <= set(payload):
         raise PublicationError('Remote active manifest unavailable')
+    if 'previous' not in payload:
+        validate_registry(payload)  # Legacy full history; migrate to newest-only.
     return active
 
 
