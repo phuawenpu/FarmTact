@@ -46,7 +46,6 @@ class ApplyProposalRequest(Strict):
     idempotency_key: str = Field(min_length=1,max_length=128)
 
 class ApproveActionsRequest(Strict):
-    selected_strategy_id: str | None = Field(default=None,max_length=100)
     proposal_id: str = Field(min_length=1,max_length=100)
     proposal_revision: int = Field(ge=1,strict=True)
     selected_strategy_id: str | None = Field(default=None,min_length=1,max_length=100)
@@ -75,6 +74,7 @@ class FarmActionTask(Strict):
 class TaskResultRequest(Strict):
     expected_status: TaskStatus
     actual_quantity: Decimal | None = Field(default=None,ge=0,le=1000000,allow_inf_nan=False)
+    rejected_quantity: Decimal | None = Field(default=None,ge=0,le=1000000,allow_inf_nan=False)
     unit: Literal['kg','plants','trays','items'] | None = None
     photo_reference: str | None = Field(default=None,max_length=100)
     checklist_completed: list[str] = Field(default_factory=list,max_length=30)
@@ -83,7 +83,7 @@ class TaskResultRequest(Strict):
 
 class CorrectionRequest(Strict):
     expected_event_revision: int = Field(ge=1,strict=True)
-    field: Literal['actual_quantity','unit','note','result_status']
+    field: Literal['actual_quantity','rejected_quantity','unit','note','result_status']
     corrected_value: Any
     reason: str = Field(min_length=1,max_length=1000)
     idempotency_key: str = Field(min_length=1,max_length=128)

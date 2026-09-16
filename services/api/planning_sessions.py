@@ -66,6 +66,7 @@ def public_result(result):
 def public_session(store,tenant,session):
     from services.api.simulation import get_world,public_world
     value={k:deepcopy(v) for k,v in session.items() if not k.startswith('_')}
+    value['workflow']=session.get('workflow_version')=='farmer-workflow-v1'
     value['result']=public_result(get_result(store,tenant,session.get('result_id')))
     value['farm']['planning_date']=str(Farm.model_validate(session['farm']).planning_date)
     world=get_world(store,tenant,session['world_id']) if session.get('world_id') else None
@@ -113,7 +114,7 @@ def _create_world(store,tenant,session,result):
     world=dict(id=secrets.token_hex(16),engine_version=ENGINE,revision=0,status='ACTIVE',run_id='planning-session:'+session['id'],
         created_at=now(),updated_at=now(),clock_date=None,start_date=str(farm.planning_date),end_date=str(farm.planning_date+timedelta(days=farm.horizon_days-1)),
         days_executed=0,segment_days_executed=0,input_hash=session['input_hash'],input_version=farm.version,
-        segment_farm=farm.model_dump(mode='json'),segment_allocations=deepcopy(chosen['allocations']),trace=deepcopy(result['_execution_trace']),
+        segment_farm=farm.model_dump(mode='json'),segment_allocations=deepcopy(chosen['allocations']),trace=deepcopy(session.get('_approved_execution_trace',result['_execution_trace'])),
         scenario=dict(id='execution-central',yield_factor=1.,demand_factor=1.,weight=1.),strategy_id=chosen['id'],strategy_name=chosen['name'],
         plan_history=[],completed_task_ids=[],harvest_lot_origins={},event_sequence=0,
         inventory=[l.model_dump(mode='json') for l in farm.inventory if l.harvested_date<=farm.planning_date],
@@ -134,7 +135,7 @@ def _apply_world_replan(store,tenant,session,result):
     chosen=next((s for s in result['strategies'] if s['id']==session['selected_strategy_id']),None)
     if not chosen:return
     world['plan_history'].append(dict(revision=world['revision'],strategy_id=world['strategy_id'],input_hash=content_hash(world['segment_farm']),allocations_hash=content_hash(world['segment_allocations']),through_date=world['clock_date']))
-    world.update(segment_farm=deepcopy(session['farm']),segment_allocations=deepcopy(chosen['allocations']),trace=deepcopy(result['_execution_trace']),segment_days_executed=0,
+    world.update(segment_farm=deepcopy(session['farm']),segment_allocations=deepcopy(chosen['allocations']),trace=deepcopy(session.get('_approved_execution_trace',result['_execution_trace'])),segment_days_executed=0,
         strategy_id=chosen['id'],strategy_name=chosen['name'],revision=world['revision']+1,updated_at=now())
     append_event(store,tenant,world,'future_replanned',str(Farm.model_validate(session['farm']).planning_date),planning_session_id=session['id'],strategy_hash=content_hash(chosen),inference_triggered=False)
     with store.connection(write=True) as c:c.execute(update(WORLDS).where(WORLDS.c.id==world['id'],WORLDS.c.tenant_id==tenant).values(payload=world))
@@ -201,6 +202,9 @@ def execute_job(store,tenant,id):
             job.update(status='CANCELLED',completed_at=now())
             c.execute(update(JOBS).where(JOBS.c.id==id).values(status='CANCELLED',payload=job))
             return
+        if not error and job['input'].get('workflow_execution_hash') is not None:
+            if _task_execution_hash(store,tenant,current['id'])!=job['input']['workflow_execution_hash']:
+                error='Reported work changed during calculation; refresh the proposal before recalculating'
         if not error and job['kind']=='disrupt' and current.get('world_id'):
             from services.api.simulation import get_world
             world=get_world(store,tenant,current['world_id'])
@@ -338,3 +342,130 @@ def register(app,tenant):
             c.execute(update(JOBS).where(JOBS.c.id==session['job']['id'],JOBS.c.tenant_id==t).values(status='CANCELLED'))
             save_session(store,t,session)
             return finish(t,key,digest,session)
+
+
+def queue_recalculation(store, tenant_id, session, changes):
+    """Queue a reviewed V12 edit using the same numerical worker and input rules."""
+    from packages.planning_contracts import PlanningAssumptions
+    if session['status'] in ('QUEUED','RUNNING'):
+        raise HTTPException(409,'A planning action is already active')
+    if len(changes)!=1 or changes[0].get('kind')!='planning_assumptions':
+        raise HTTPException(422,'A single reviewed planning-assumptions proposal is required')
+    assumptions=PlanningAssumptions.model_validate(changes[0].get('assumptions',{}))
+    snapshot,kwargs=_remaining_input(store,tenant_id,session)
+    assumptions.check_farm(Farm.model_validate(snapshot))
+    # User-reported completed work is an immutable constraint on later proposals.
+    from services.api.farm_workflow import TASKS
+    with store.connection() as c:
+        recorded=list(c.execute(select(TASKS.c.payload).where(TASKS.c.tenant_id==tenant_id,TASKS.c.session_id==session['id'],TASKS.c.status=='completed')).scalars())
+    recorded_ids={t['batch_id'] for t in recorded}
+    approved=get_result(store,tenant_id,session.get('approved_result_id'))
+    approved_strategy=next((s for s in (approved or {}).get('strategies',[]) if s['id']==session.get('selected_strategy_id')),None)
+    if approved_strategy and recorded_ids:
+        locks={a['id']:a for a in kwargs.get('locked_allocations',[])}
+        farm_batch_ids={b['id'] for b in snapshot['batches']}
+        for allocation in approved_strategy['allocations']:
+            if allocation['id'] in recorded_ids and allocation['id'] not in farm_batch_ids and allocation['harvest_date']>=str(Farm.model_validate(snapshot).planning_date):
+                locks[allocation['id']]=dict(deepcopy(allocation),executed=True,completion_basis='user_reported')
+        kwargs['locked_allocations']=list(locks.values())
+        kwargs['excluded_candidate_ids']=sorted(set(kwargs.get('excluded_candidate_ids',[]))|recorded_ids)
+    kwargs['assumptions']=assumptions.model_dump(mode='json',exclude_none=True)
+    from services.api.simulation import get_world
+    world=get_world(store,tenant_id,session['world_id']) if session.get('world_id') else None
+    with store.connection() as c:
+        if c.execute(select(JOBS.c.id).where(JOBS.c.tenant_id==tenant_id,JOBS.c.status.in_(['QUEUED','RUNNING']))).first():
+            raise HTTPException(409,'Another guided planning action is active')
+        if c.execute(select(func.count()).select_from(JOBS).where(JOBS.c.tenant_id==tenant_id,JOBS.c.session_id==session['id'])).scalar_one()>=32:
+            raise HTTPException(429,'Thirty-two planning jobs per mission maximum')
+    job=dict(id=secrets.token_hex(16),kind='disrupt',status='QUEUED',stage='queued',created_at=now(),
+             input=dict(farm=snapshot,kwargs=kwargs,world_revision=world['revision'] if world else None,workflow_execution_hash=_task_execution_hash(store,tenant_id,session['id'])))
+    with store.connection(write=True) as c:
+        c.execute(JOBS.insert().values(id=job['id'],tenant_id=tenant_id,session_id=session['id'],status='QUEUED',kind=job['kind'],created_at=job['created_at'],payload=job))
+    session.update(workflow_version='farmer-workflow-v1',job={k:v for k,v in job.items() if k!='input'},status='QUEUED',revision=session['revision']+1)
+    save_session(store,tenant_id,session)
+    return {k:v for k,v in job.items() if k!='input'}
+
+
+def approve_result(store, tenant_id, session, proposal, result, strategy_id):
+    """Explicit approval alone may replace a sandbox world's future schedule."""
+    job=proposal.get('recalculation_job',{})
+    if (session['status']!='COMPLETED' or session.get('result_id')!=job.get('id')
+            or session.get('input_hash')!=content_hash(result.get('input_snapshot',session['farm']))):
+        raise HTTPException(409,'Proposal recalculation is incomplete or its planning revision changed')
+    selected=next((row for row in result.get('strategies',[]) if row['id']==strategy_id),None)
+    if not selected or selected.get('status')!='FEASIBLE' or selected.get('violations'):
+        raise HTTPException(409,'Only a feasible calculated strategy can be approved')
+    from packages.planner.engine import simulate
+    selected_farm=Farm.model_validate(result.get('input_snapshot',session['farm']))
+    result=deepcopy(result)
+    result['_execution_trace']=simulate(selected_farm,selected['allocations'],result['forecast']['demand'],dict(id='execution-central',yield_factor=1.,demand_factor=1.,weight=1.))
+    session['_approved_execution_trace']=result['_execution_trace']
+    session.update(workflow_version='farmer-workflow-v1',approved_result_id=session['result_id'],
+        approved_result_hash=content_hash(get_result(store,tenant_id,session['result_id'])),selected_strategy_id=strategy_id,approved_at=now(),
+        revision=session['revision']+1,stage='approved')
+    if session.get('world_id'):
+        _apply_world_replan(store,tenant_id,session,result)
+    save_session(store,tenant_id,session)
+    return session
+
+
+def refresh_reported_forecast(store, tenant, session_id):
+    """Recompute a labelled projection from reported quantities without rewriting history."""
+    from services.api.farm_workflow import TASKS, append_event
+    from packages.planner.engine import simulate
+    session=get_session(store,tenant,session_id)
+    if not session:return None
+    result=get_result(store,tenant,session.get('approved_result_id'))
+    if not result:return None
+    strategy=next((s for s in result['strategies'] if s['id']==session.get('selected_strategy_id')),None)
+    if not strategy:return None
+    with store.connection() as c:
+        tasks=list(c.execute(select(TASKS.c.payload).where(TASKS.c.tenant_id==tenant,TASKS.c.session_id==session_id)).scalars())
+    harvested={t['batch_id']:t for t in tasks if t['action']=='harvest' and t.get('actual_quantity') is not None and t['status'] in ('completed','recovery_required')}
+    allocations=deepcopy(strategy['allocations'])
+    for allocation in allocations:
+        if allocation['id'] in harvested:
+            allocation['expected_kg']=float(harvested[allocation['id']]['actual_quantity'])
+    farm=Farm.model_validate(result.get('input_snapshot',session['farm']))
+    forecast=simulate(farm,allocations,result['forecast']['demand'],dict(id='reported-central',yield_factor=1.,demand_factor=1.,weight=1.))
+    # Delivery reports replace the corresponding projected acceptance, not harvest mass.
+    # Rejected quantity stays separately evidenced; it is never renamed shortfall.
+    delivery_reports=[t for t in tasks if t['action']=='delivery' and t.get('actual_quantity') is not None and t.get('event_revision',0)>0]
+    delivery_rows={row.get('order_id'):row for row in forecast.get('order_allocations',[]) if row.get('demand_kind')=='booked'}
+    accepted_delta=Decimal(0);revenue_delta=Decimal(0);rejected_total=Decimal(0)
+    for task in delivery_reports:
+        row=delivery_rows.get(task.get('order_id'))
+        if not row:continue
+        accepted=Decimal(str(task['actual_quantity']))
+        delta=accepted-Decimal(str(row['delivered_kg']))
+        accepted_delta+=delta
+        rejected_total+=Decimal(str(task.get('rejected_quantity') or 0))
+        if row.get('price_sgd_per_kg') is not None:
+            revenue_delta+=delta*Decimal(str(row['price_sgd_per_kg']))
+    if delivery_reports:
+        metric=forecast['metrics']
+        metric['booked_delivered_kg']=float(Decimal(str(metric.get('booked_delivered_kg',0)))+accepted_delta)
+        metric['booked_shortfall_kg']=max(0,float(Decimal(str(metric.get('booked_requested_kg',0)))-Decimal(str(metric['booked_delivered_kg']))))
+        metric['rejected_kg']=float(rejected_total)
+        metric['revenue_sgd']=float(Decimal(str(metric.get('revenue_sgd',0)))+revenue_delta)
+        # Packaging was already incurred for dispatched lots; rejection reduces revenue only.
+        metric['margin_sgd']=float(Decimal(str(metric.get('margin_sgd',0)))+revenue_delta)
+    sources=[dict(task_id=t['id'],event_revision=t['event_revision']) for t in tasks if t.get('event_revision',0)>0]
+    report=dict(version='reported-forecast-v1',basis='user_reported_projection',independently_verified=False,
+        source_result_id=session['approved_result_id'],source_task_events=sources,metrics=forecast['metrics'],
+        recovery_required=any(t['status']=='recovery_required' or (t.get('actual_quantity') is not None and t.get('planned_quantity') is not None and Decimal(str(t['actual_quantity']))<Decimal(str(t['planned_quantity']))) for t in tasks),
+        real_operations_enabled=False)
+    report['hash']=content_hash(report)
+    if session.get('reported_forecast',{}).get('hash')!=report['hash']:
+        session['reported_forecast']=report
+        session['revision']+=1
+        save_session(store,tenant,session)
+        append_event(store,tenant,session_id,'reported_forecast_recalculated',report)
+    return report
+
+
+def _task_execution_hash(store,tenant,session_id):
+    from services.api.farm_workflow import TASKS
+    with store.connection() as c:
+        tasks=list(c.execute(select(TASKS.c.payload).where(TASKS.c.tenant_id==tenant,TASKS.c.session_id==session_id)).scalars())
+    return content_hash(sorted([dict(id=t['id'],event_revision=t.get('event_revision',0),status=t['status'],actual_quantity=t.get('actual_quantity'),rejected_quantity=t.get('rejected_quantity')) for t in tasks if t.get('event_revision',0)>0],key=lambda t:t['id']))

@@ -52,6 +52,15 @@ class OrderChange(Strict):
         return self
 
 
+class TentativeOrder(Strict):
+    order_id: str = Field(min_length=1,max_length=100)
+    crop_id: Crop
+    due_date: date
+    quantity_kg: Decimal = Field(ge=0,le=100000)
+    price_sgd_per_kg: Decimal | None = Field(default=None,ge=0,le=1000)
+    status: Literal['tentative'] = 'tentative'
+
+
 class BedReservation(Strict):
     bed_id: str = Field(min_length=1,max_length=100)
     start_date: date
@@ -65,6 +74,7 @@ class CapacityChange(Strict):
 
 
 class PlanningAssumptions(Strict):
+    tentative_orders: list[TentativeOrder] = Field(default_factory=list,max_length=32)
     reservations: list[BedReservation] = Field(default_factory=list,max_length=32)
     capacity: CapacityChange | None = None
     future_demand: list[FutureDemand] = Field(default_factory=list, max_length=16)
@@ -92,6 +102,9 @@ class PlanningAssumptions(Strict):
                 raise ValueError('Assumption must target a configured crop inside the remaining horizon')
         from packages.planner.engine import _reservation_windows
         _reservation_windows(farm,[r.model_dump(mode='json') for r in self.reservations])
+        for tentative in self.tentative_orders:
+            if not farm.planning_date<=tentative.due_date<=end:
+                raise ValueError('Tentative order must be within the remaining horizon')
         for change in self.order_changes:
             if change.due_date and not farm.planning_date<=change.due_date<=end:
                 raise ValueError('Changed order must be due inside the remaining horizon')

@@ -44,6 +44,7 @@ class Store:
         import services.api.council_research
         import services.api.simulation
         import services.api.planning_sessions
+        import services.api.farm_workflow
         metadata.create_all(self.engine)
         if self.engine.dialect.name=='postgresql':
             from sqlalchemy import inspect,text
@@ -62,6 +63,10 @@ class Store:
             with self._serialization,(self.engine.begin() if write else self.engine.connect()) as c:yield c
     @contextmanager
     def transaction(self,tenant=None):
+        current=self._transaction.get()
+        if current is not None:
+            yield current
+            return
         with self._serialization,self.engine.begin() as c:
             token=self._transaction.set(c)
             try:

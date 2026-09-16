@@ -434,6 +434,8 @@ def create_app(store=None,start_worker=True):
     install_research(app,tenant)
     from services.api.planning_sessions import register as install_planning
     install_planning(app,tenant)
+    from services.api.farm_workflow import register as install_workflow
+    install_workflow(app,tenant)
     from services.api.simulation import register as install_simulations
     install_simulations(app,tenant)
     from services.api.reviews import install_routes as install_reviews
@@ -445,6 +447,7 @@ def create_app(store=None,start_worker=True):
         if (dist/'review-evidence').exists():app.mount('/review-evidence',StaticFiles(directory=dist/'review-evidence'),name='review-evidence')
         if (dist/'research-evidence').exists():app.mount('/research-evidence',StaticFiles(directory=dist/'research-evidence'),name='research-evidence')
         if (dist/'audio').exists():app.mount('/audio',StaticFiles(directory=dist/'audio'),name='audio')
+        if (dist/'explainers').exists():app.mount('/explainers',StaticFiles(directory=dist/'explainers'),name='explainers')
         @app.get('/research/')
         def research_canonical():return RedirectResponse('/research',status_code=307)
         @app.get('/research')

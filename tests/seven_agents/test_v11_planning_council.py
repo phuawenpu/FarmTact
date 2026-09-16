@@ -163,11 +163,11 @@ def test_review_skips_absent_external_roles_and_chair_sees_statuses(monkeypatch)
     assert review["status"] == "completed"
     assert review["request_count"] == 5
     assert all(version == {
-        "prompt_template": "farmtact-planning-council-prompt-v1",
-        "output_schema": "farmtact-planning-finding-output-v1",
-        "validator": "farmtact-planning-claim-validator-v1",
-        "context": "farmtact-planning-comparison-context-v1",
-        "sources": "farmtact-planning-source-context-v1",
+        "prompt_template": "farmtact-planning-council-prompt-v2",
+        "output_schema": "farmtact-planning-finding-output-v2",
+        "validator": "farmtact-planning-claim-validator-v2",
+        "context": "farmtact-planning-comparison-context-v2",
+        "sources": "farmtact-planning-source-context-v2",
     } for version in FakeGateway.versions)
     assert [role for role, _ in FakeGateway.calls] == [
         "demand_analyst", "production_analyst", "supply_chain_analyst",
@@ -198,3 +198,19 @@ def test_review_cancels_without_opening_provider(monkeypatch):
     assert review["request_count"] == 0
     assert review["missing_roles"] == planning_council.ROLES
     assert opened == []
+
+
+def test_functional_view_distinguishes_validated_partial_and_withheld_truth():
+    review = {"status": "partial", "findings": [
+        {"role": "demand_analyst", "status": "validated", "rendered_facts": ["fact"], "rejection_reasons": []},
+        {"role": "weather_analyst", "status": "unavailable", "rendered_facts": [], "rejection_reasons": []},
+        {"role": "planning_chair", "status": "rejected", "rendered_facts": [], "rejection_reasons": ["bad claim"]},
+    ]}
+    public = planning_council.functional_council_view(review)
+    assert public["contract_version"] == "farmtact-functional-council-v2"
+    assert public["truth_status"] == "withheld"
+    assert [(row["functional_role"], row["truth_status"], row["tool_status"]) for row in public["findings"]] == [
+        ("Demand Planner", "validated", "local_calculation_and_inference_completed"),
+        ("Weather & Risk Monitor", "partial", "source_absent"),
+        ("Plan Reviewer", "withheld", "validation_failed"),
+    ]

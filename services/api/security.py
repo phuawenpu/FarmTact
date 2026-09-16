@@ -163,7 +163,8 @@ class AbuseLimits:
             if not tenant:
                 raise PermissionError("Session required")
             self.consume([(PREVIEW_TENANT, tenant)])
-        if AI_PATH.fullmatch(path) and request.method == "POST":
+        extraction = path == "/api/v1/farm-workflow/imports/upload" and request.query_params.get("source_kind") != "accounting_export"
+        if (AI_PATH.fullmatch(path) or extraction) and request.method == "POST":
             # Charge attempts even for missing IDs, invalid payloads and rotated cookies.
             self.consume([(AI_IP_BURST, network), (AI_IP_HOUR, network)])
             if not tenant:

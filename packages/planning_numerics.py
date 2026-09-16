@@ -157,6 +157,8 @@ def calculate_session(
         input_snapshot=changed.model_dump(mode='json'),assumptions=normalized,
         retained_strategy=retained_result,comparisons=comparisons,
         stages=stages,timings=dict(total_seconds=_elapsed(overall),stage_seconds={item['stage']:item['seconds'] for item in stages}),
-        calculation_contract='guided-planning-v11',
+        calculation_contract='guided-planning-v12',
+        tentative_demand=normalized.get('tentative_orders',[]),
+        tentative_demand_policy='Unconfirmed interest is disclosed separately and excluded from booked commitments; explicit confirmation is required',
     )
     return calculated

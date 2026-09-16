@@ -95,14 +95,14 @@ TERMINAL_REQUEST_STATUSES = {
 
 class CreateConversation(Strict):
     advisor: AdvisorId = "asha"
-    snapshot_kind: Literal["farm", "scenario", "research"] = "farm"
+    snapshot_kind: Literal["farm", "scenario", "research", "planning"] = "farm"
     research_version: int | None = Field(default=None, ge=1)
     snapshot_id: str | None = Field(default=None, max_length=100)
     selected_bed_id: str | None = Field(default=None, max_length=100)
 
     @model_validator(mode="after")
     def scenario_requires_id(self) -> "CreateConversation":
-        if self.snapshot_kind in {"scenario", "research"} and not self.snapshot_id:
+        if self.snapshot_kind in {"scenario", "research", "planning"} and not self.snapshot_id:
             raise ValueError("Scenario conversations require a snapshot_id")
         return self
 
@@ -373,7 +373,21 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         frozen_sources = None
     research = None
     research_result = None
-    if body.snapshot_kind == "research":
+    guided_result = None
+    guided_session = None
+    if body.snapshot_kind == "planning":
+        from services.api.planning_sessions import get_session, get_result
+        guided_session = get_session(store, tenant, body.snapshot_id)
+        if not guided_session:
+            raise HTTPException(404, "Planning session not found")
+        guided_result = get_result(store, tenant, guided_session.get('result_id'))
+        if not guided_result or guided_session['status'] != 'COMPLETED':
+            raise HTTPException(409, "Complete the planning calculation before specialist questions")
+        from copy import deepcopy
+        snapshot = deepcopy(guided_result.get('input_snapshot',guided_session['farm']))
+        snapshot_id = guided_session['id'] + ':' + guided_session['result_id']
+        snapshot_hash = content_hash(snapshot)
+    elif body.snapshot_kind == "research":
         from services.api.council_research import get_session, result_current
         research = get_session(store, tenant, body.snapshot_id)
         if not research:
@@ -407,7 +421,9 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         snapshot_id = f"{snapshot.get('id', 'farm')}:v{snapshot.get('version', 1)}"
         snapshot_hash = content_hash(snapshot)
     planning: dict[str, Any] | None = None
-    if research_result is not None:
+    if guided_result is not None:
+        planning = guided_result
+    elif research_result is not None:
         planning = research_result["calculation"]
     elif scenario is None:
         latest_run = store.latest_run(tenant)
@@ -436,6 +452,10 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         market_signals,
         news_context,
     )
+    if guided_result is not None:
+        tool_results['planning:result_hash'] = content_hash(guided_result)
+        tool_results['planning:assumptions'] = guided_result.get('assumptions',{})
+        tool_results['planning:authority'] = 'Interpretation only; state changes require reviewed proposal, Apply & Recalculate, and explicit sandbox approval'
     if research_result:
         research_inputs = research_result["inputs"]
         tool_results.update({

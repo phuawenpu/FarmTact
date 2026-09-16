@@ -15,17 +15,55 @@ from runtime.deepseek_gateway import DeepSeekGateway, DeepSeekResponseError, Run
 from services.api.views import ROOT
 
 
-VERSION = "planning-council-v1"
+VERSION = "planning-council-v2"
 WORKFLOW = "sequential_specialists_then_chair"
 MAX_REPAIRS = 2
 MAX_REQUESTS = 9
 PLANNING_COUNCIL_VERSIONS = InferenceVersions(
-    prompt_template="farmtact-planning-council-prompt-v1",
-    output_schema="farmtact-planning-finding-output-v1",
-    validator="farmtact-planning-claim-validator-v1",
-    context="farmtact-planning-comparison-context-v1",
-    sources="farmtact-planning-source-context-v1",
+    prompt_template="farmtact-planning-council-prompt-v2",
+    output_schema="farmtact-planning-finding-output-v2",
+    validator="farmtact-planning-claim-validator-v2",
+    context="farmtact-planning-comparison-context-v2",
+    sources="farmtact-planning-source-context-v2",
 )
+
+# V12 presents seven functional contracts while retaining the proven V11 provider
+# role identifiers and numerical claim scopes.  The mapping is explicit so a UI
+# cannot mistake a display-name change for a new capability.
+FUNCTIONAL_CONTRACT_VERSION = "farmtact-functional-council-v2"
+FUNCTIONAL_ROLES = {
+    "demand_analyst": {"name": "Demand Planner", "tools": ["booked_orders", "demand_history"], "authority": "advisory"},
+    "production_analyst": {"name": "Crop Planner", "tools": ["crop_recipes", "biological_lead_times"], "authority": "advisory"},
+    "weather_analyst": {"name": "Weather & Risk Monitor", "tools": ["reviewed_weather_context"], "authority": "observation_only"},
+    "market_analyst": {"name": "Market & Price Analyst", "tools": ["reviewed_market_context", "accounting_prices"], "authority": "advisory"},
+    "supply_chain_analyst": {"name": "Capacity & Cost Analyst", "tools": ["inventory_expiry", "space_labour_cash"], "authority": "advisory"},
+    "profit_analyst": {"name": "Farm Planner", "tools": ["local_margin_accounting", "strategy_comparison"], "authority": "advisory"},
+    "planning_chair": {"name": "Plan Reviewer", "tools": ["validated_findings", "eligible_strategies"], "authority": "advisory_gate"},
+}
+
+
+def functional_council_view(review: dict[str, Any]) -> dict[str, Any]:
+    """Expose validation truth separately from transport/tool availability."""
+    findings = []
+    for item in review.get("findings", []):
+        contract = FUNCTIONAL_ROLES[item["role"]]
+        status = item.get("status")
+        tool_status = ("source_absent" if status == "unavailable" else "validation_failed" if status == "rejected"
+                       else "reviewed_context_and_inference_completed" if item["role"] in {"weather_analyst", "market_analyst"}
+                       else "local_calculation_and_inference_completed")
+        findings.append({**item, "functional_role": contract["name"], "role_contract": contract,
+                         "truth_status": "validated" if status == "validated" else "partial" if status == "unavailable" else "withheld",
+                         "tool_status": tool_status,
+                         "evidence": item.get("rendered_facts", [])})
+    statuses = {row["truth_status"] for row in findings}
+    overall = ("withheld" if not findings or review.get("status") in {"cancelled", "blocked", "not_requested"} or "withheld" in statuses
+               else "partial" if review.get("status") == "partial" or "partial" in statuses else "validated")
+    return {**review, "contract_version": FUNCTIONAL_CONTRACT_VERSION, "truth_status": overall,
+            "review_truth": {"status": overall, "validated_roles": [row["functional_role"] for row in findings if row["truth_status"] == "validated"],
+                             "partial_roles": [row["functional_role"] for row in findings if row["truth_status"] == "partial"],
+                             "withheld_roles": [row["functional_role"] for row in findings if row["truth_status"] == "withheld"]},
+            "findings": findings,
+            "role_order": [FUNCTIONAL_ROLES[role]["name"] for role in ROLES]}
 class PlanningFinding(Strict):
     claim_ids: list[str] = Field(default_factory=list, max_length=3)
     tradeoff: Literal[
@@ -49,8 +87,8 @@ class PlanningFinding(Strict):
 _ROLE_METRICS = {
     "demand_analyst": {"booked_delivered_kg", "booked_shortfall_kg", "fill_rate"},
     "production_analyst": {"area_m2", "crop_allocation_count", "crop_allocation_area_m2", "crop_id_set"},
-    "supply_chain_analyst": {"booked_delivered_kg", "booked_shortfall_kg", "waste_kg", "closing_stock_kg"},
-    "profit_analyst": {"margin_sgd", "cost_sgd", "revenue_sgd", "labour_hours"},
+    "supply_chain_analyst": {"booked_delivered_kg", "booked_shortfall_kg", "waste_kg", "closing_stock_kg", "area_m2", "labour_hours", "cost_sgd", "margin_sgd"},
+    "profit_analyst": {"margin_sgd", "cost_sgd", "revenue_sgd", "labour_hours", "booked_delivered_kg", "booked_shortfall_kg", "fill_rate", "waste_kg", "closing_stock_kg"},
     "weather_analyst": set(),
     "market_analyst": set(),
     "planning_chair": set(),
@@ -84,8 +122,10 @@ def _public_claim(claim: VerifiedPlanningClaim) -> dict[str, Any]:
 
 
 def _prompt(role: str) -> str:
+    contract = FUNCTIONAL_ROLES[role]
     return (
-        f"You are FarmTact {role}. Your remit is {ROLE_EXPERTISE[role]}. "
+        f"You are FarmTact {contract['name']} ({role}). Your remit is {ROLE_EXPERTISE[role]}. "
+        f"Your authority is {contract['authority']}; your admitted tools are {', '.join(contract['tools'])}. "
         "Return one JSON object matching this schema: "
         + json.dumps(PlanningFinding.model_json_schema(), separators=(",", ":"))
         + ". Select only supplied claim IDs. The claim statement is authoritative and code-rendered. "
@@ -189,27 +229,27 @@ def review_plan(
         raise ValueError("Planning Council budget may reserve at most nine requests")
     if cancelled():
         budget.cancel()
-        return {
+        return functional_council_view({
             "version": VERSION, "workflow_type": WORKFLOW, "snapshot_hash": snapshot_hash,
             "status": "cancelled", "eligible_strategy_ids": eligible,
             "verified_claims": [_public_claim(c) for c in claims], "findings": [],
             "chair": None, "missing_roles": list(ROLES), "rejected_findings": [],
             "request_count": budget.request_count,
-        }
+        })
 
     with DeepSeekGateway.from_config(ROOT / "config/deepseek_runtime.json", budget=budget,
                                      user_id=provider_user_id) as gateway:
         for role in ROLES:
             if cancelled():
                 budget.cancel()
-                return {
+                return functional_council_view({
                     "version": VERSION, "workflow_type": WORKFLOW, "snapshot_hash": snapshot_hash,
                     "status": "cancelled", "eligible_strategy_ids": eligible,
                     "verified_claims": [_public_claim(c) for c in claims], "findings": findings,
                     "chair": next((row for row in findings if row["role"] == "planning_chair"), None),
                     "missing_roles": [item for item in ROLES if item not in {row["role"] for row in findings}],
                     "rejected_findings": rejected, "request_count": budget.request_count,
-                }
+                })
             if role in {"weather_analyst", "market_analyst"} and not _admitted(news_context, role.split("_")[0]):
                 finding = _deterministic_absence(role, snapshot_hash)
                 findings.append(finding)
@@ -300,11 +340,12 @@ def review_plan(
     chair = next((row for row in findings if row["role"] == "planning_chair"), None)
     completed_roles = {row["role"] for row in findings}
     missing = [role for role in ROLES if role not in completed_roles]
-    status = "completed" if not missing and chair and chair["status"] == "validated" else "partial"
-    return {
+    status = ("completed" if not missing and chair and chair["status"] == "validated"
+              and not any(row.get("status") == "rejected" for row in findings) else "partial")
+    return functional_council_view({
         "version": VERSION, "workflow_type": WORKFLOW, "snapshot_hash": snapshot_hash,
         "status": status, "eligible_strategy_ids": eligible,
         "verified_claims": [_public_claim(c) for c in claims], "findings": findings,
         "chair": chair, "missing_roles": missing, "rejected_findings": rejected,
         "request_count": budget.request_count,
-    }
+    })

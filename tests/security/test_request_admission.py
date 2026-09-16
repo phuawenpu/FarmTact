@@ -6,7 +6,7 @@ from services.api.app import create_app
 from services.api.store import Store
 
 
-@pytest.mark.parametrize("path", ["/api/v1/imports", "/api/v1/scenarios", "/api/v1/conversations"])
+@pytest.mark.parametrize("path", ["/api/v1/imports", "/api/v1/scenarios", "/api/v1/conversations", "/api/v1/farm-workflow/imports/upload", "/api/v1/farm-workflow/proposals"])
 def test_unauthenticated_writes_reject_before_consuming_body(path):
     def body():
         raise AssertionError("Unauthenticated request body was consumed")
@@ -15,3 +15,13 @@ def test_unauthenticated_writes_reject_before_consuming_body(path):
     with TestClient(create_app(Store("sqlite://"), start_worker=False)) as client:
         response = client.post(path, content=body(), headers={"Content-Type": "application/json"})
         assert response.status_code == 401
+
+
+def test_document_extraction_attempts_share_ai_burst_limits():
+    with TestClient(create_app(Store('sqlite://'),start_worker=False)) as client:
+        client.get('/api/v1/bootstrap')
+        for _ in range(6):
+            result=client.post('/api/v1/farm-workflow/imports/upload?filename=bad.pdf&source_kind=invalid',content=b'bad')
+            assert result.status_code==422
+        response=client.post('/api/v1/farm-workflow/imports/upload?filename=bad.pdf&source_kind=document_extraction',content=b'bad')
+        assert response.status_code==429
