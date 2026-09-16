@@ -15,6 +15,15 @@ admission accepts only active editions plus the exact explicitly staged next
 number. Backend ingress repeats that check, so a retired worker cannot accept
 authenticated forwarded mutations if it was accidentally left running.
 
+Generic local tooling follows the same boundary. `serve_editions_local.py`
+starts and maps only `active.json` editions by default, with an optional exact
+next `FARMTACT_STAGED_EDITION`; asking it to run a historical retired worker is
+an error. `verify_editions.py` derives its one- or two-edition journey from
+`/api/releases`, verifies the full append-only ledger separately through
+`/api/releases/history`, and checks both read and mutation routes for a retired
+edition return 410. Version-specific historical release evidence scripts remain
+frozen and are not runtime inventory.
+
 Candidate staging keeps the active manifest unchanged and adds only the next
 pinned worker for private acceptance checks. Publication updates the Machine to
 the intended pair, verifies the candidate, then replaces history and active
@@ -66,6 +75,31 @@ Omit `--image` to use the fixed build-and-push path. Run without `--dry-run` to 
    after that cutover point.
 6. Mirrors the registry and release manifest, commits them, tags the frozen
    source as `farmtact-vN`, and pushes the commit and tag.
+7. Regenerates the Machine from the new active pair, which stops the displaced
+   oldest worker; creates a Fly recovery snapshot and polls the bounded snapshot
+   inventory until Fly reports `created`/`complete`; starts the service-less,
+   secret-free retirement operator; and applies checksum-guarded cleanup using
+   `public.json` as the authoritative history/active bundle. It then removes the
+   operator and re-probes the latest worker. A failed, unknown, or still-pending
+   snapshot prevents every storage deletion. The cleanup report remains under
+   `gateway/releases/retirement-vN.json` on the shared volume.
+
+If post-cutover cleanup fails, publication remains valid and its local reservation
+is marked `published_cleanup_pending`. The operator is deliberately left in the
+Machine configuration for inspection; active and staged storage remains protected.
+After correcting the external failure, resume the same idempotent cleanup without
+republishing or allocating another edition number:
+
+```bash
+.venv/bin/python -m scripts.publish_edition --resume-cleanup
+```
+
+Resume reads the current public pair and immutable history from the gateway,
+removes workers outside that pair, records a new recovery snapshot, and rechecks
+the authoritative public bundle and current container set at the deletion
+boundary. Missing retired directories are treated as already complete. A failed
+candidate before atomic cutover never enters this cleanup path and leaves the
+existing public pair unchanged.
 
 The current next unused number is v12; always check the registry before publishing.
 The legacy separate-app provisioning path remains for environments without a

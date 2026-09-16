@@ -126,18 +126,33 @@ def apply_plan(plan: dict, root: Path, snapshot_id: str, *, active: dict, staged
     return removed
 
 
+def load_public_manifests(public_bundle: Path) -> tuple[dict, dict]:
+    """Read history and active state from the single authoritative cutover file."""
+    try:
+        payload = json.loads(public_bundle.read_text())
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError('authoritative public release bundle is required') from error
+    if set(payload) != {'history', 'active'} or not isinstance(payload['history'], dict) or not isinstance(payload['active'], dict):
+        raise RuntimeError('invalid authoritative public release bundle')
+    return payload['history'], payload['active']
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--history', type=Path, required=True)
     parser.add_argument('--active', type=Path, required=True)
+    parser.add_argument('--public-bundle', type=Path)
     parser.add_argument('--staged')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--apply', action='store_true')
     parser.add_argument('--snapshot-id')
     parser.add_argument('--runtime-config', type=Path)
     args = parser.parse_args(argv)
-    history = json.loads(args.history.read_text()); active = json.loads(args.active.read_text())
+    if args.public_bundle:
+        history, active = load_public_manifests(args.public_bundle)
+    else:
+        history = json.loads(args.history.read_text()); active = json.loads(args.active.read_text())
     plan = build_plan(args.root.resolve(), history, active, args.staged)
     result = {**plan, 'mode': 'dry-run', 'removed': [],
               'resources_before': resource_snapshot(args.root.resolve())}
@@ -146,7 +161,12 @@ def main(argv=None) -> int:
             raise RuntimeError('--runtime-config is required for apply')
         runtime = json.loads(args.runtime_config.read_text())
         # Re-read manifests at the mutation boundary rather than trusting inventory.
-        current_active = json.loads(args.active.read_text())
+        if args.public_bundle:
+            current_history, current_active = load_public_manifests(args.public_bundle)
+            if current_history != history:
+                raise RuntimeError('release history changed after retirement inventory')
+        else:
+            current_active = json.loads(args.active.read_text())
         result.update(mode='applied', removed=apply_plan(plan, args.root.resolve(), args.snapshot_id or '',
                                                         active=current_active, staged=args.staged, runtime=runtime),
                       resources_after=resource_snapshot(args.root.resolve()))

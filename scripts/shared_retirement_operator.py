@@ -14,6 +14,7 @@ def main(argv=None) -> int:
     parser.add_argument('--root', type=Path, default=Path('/persist'))
     parser.add_argument('--history-relative', type=Path, default=Path('gateway/releases/registry.json'))
     parser.add_argument('--active-relative', type=Path, default=Path('gateway/releases/active.json'))
+    parser.add_argument('--public-relative', type=Path, default=Path('gateway/releases/public.json'))
     parser.add_argument('--staged')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--apply', action='store_true')
@@ -25,10 +26,13 @@ def main(argv=None) -> int:
     root = args.root.resolve()
     if root != Path('/persist') or not root.is_mount():
         raise RuntimeError('operator requires the shared volume mounted at /persist')
-    if args.history_relative.is_absolute() or args.active_relative.is_absolute() or '..' in args.history_relative.parts or '..' in args.active_relative.parts:
+    if (args.history_relative.is_absolute() or args.active_relative.is_absolute()
+            or args.public_relative.is_absolute() or '..' in args.history_relative.parts
+            or '..' in args.active_relative.parts or '..' in args.public_relative.parts):
         raise RuntimeError('manifest paths must stay within the shared volume')
     forwarded = ['--root', str(root), '--history', str(root / args.history_relative),
-                 '--active', str(root / args.active_relative), '--output', str(args.output)]
+                 '--active', str(root / args.active_relative),
+                 '--public-bundle', str(root / args.public_relative), '--output', str(args.output)]
     if args.staged: forwarded += ['--staged', args.staged]
     if args.apply:
         if args.runtime_config is None:

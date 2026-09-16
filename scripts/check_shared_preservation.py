@@ -17,6 +17,9 @@ TABLES=[
     'explorer_snapshots','council_research_sessions','council_research_jobs',
     'council_research_actions','council_research_history','council_research_action_receipts',
     'simulation_worlds','simulation_events','simulation_receipts','mutation_receipts',
+    'guided_planning_sessions','guided_planning_jobs','guided_planning_versions',
+    'guided_planning_receipts','farm_workflow_imports','farm_workflow_proposals',
+    'farm_workflow_tasks','farm_workflow_events','farm_workflow_receipts',
 ]
 
 def capture(edition):
@@ -43,7 +46,14 @@ print(json.dumps(result))
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--before',required=True);p.add_argument('--report');a=p.parse_args()
     previous=json.loads(Path(a.before).read_text()) if a.report else None
-    editions=list(previous) if previous else [e['id'] for e in json.loads((ROOT/'config/releases/registry.json').read_text())['editions']]
+    if previous:
+        editions=list(previous)
+    else:
+        from scripts.publish_edition import validate_active
+        history=json.loads((ROOT/'config/releases/registry.json').read_text())
+        active=json.loads((ROOT/'config/releases/active.json').read_text())
+        validate_active(active,history)
+        editions=[edition for edition in (active['previous'],active['latest']) if edition]
     with ThreadPoolExecutor(max_workers=3) as pool:current=dict(pool.map(capture,editions))
     if previous is None:
         Path(a.before).write_text(json.dumps(current,indent=2)+'\n');print('Captured',len(current),'edition fingerprints.')

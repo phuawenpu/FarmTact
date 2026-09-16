@@ -1,0 +1,56 @@
+{
+  "observe-decide": [
+    {
+      "title": "Start with reviewed records",
+      "text": "Open the Farm Data Inbox. Try a synthetic example or upload your own records into this isolated sandbox. Preview the source before confirming extracted rows."
+    },
+    {
+      "title": "Keep demand types separate",
+      "text": "A market quote is a price signal. Tentative demand is uncertain. Only a confirmed order becomes a booked commitment. Review dates, crop, quantity and price before applying changes."
+    },
+    {
+      "title": "Compare calculated options",
+      "text": "Coverage compares deliveries with confirmed demand. Surplus is closing stock. Expiry is projected waste. Contribution margin subtracts modeled variable costs from revenue; it is not net profit."
+    },
+    {
+      "title": "Apply a reviewed proposal",
+      "text": "Challenge an assumption or edit a constraint. Review the proposal, then choose Apply & Recalculate. Local calculations produce new options. This does not approve a plan or create farm actions."
+    }
+  ],
+  "council-evidence": [
+    {
+      "title": "Ask the relevant specialist",
+      "text": "Seven roles cover demand, crops, weather, markets, capacity, farm planning and review. Ask about a constraint, challenge an assumption or compare an alternative strategy."
+    },
+    {
+      "title": "Follow the evidence",
+      "text": "Open each finding to inspect its source and tool activity. Validated means the claim passed its checks against this frozen planning result. It is not a guarantee of a real harvest."
+    },
+    {
+      "title": "Respect missing information",
+      "text": "Partial means some evidence or specialist findings are unavailable. Withheld advice failed checks or lacks support. Missing weather and market sources stay visible; the Council must not invent them."
+    },
+    {
+      "title": "Approval stays explicit",
+      "text": "Choose a feasible calculated strategy and inspect its assumptions. Approve & Create Actions records that revision in the sandbox. Later changes require a new reviewed proposal and approval."
+    }
+  ],
+  "act-replan": [
+    {
+      "title": "Work from the approved revision",
+      "text": "Each task identifies its crop or batch, location, due date and checklist. Tasks belong to the approved sandbox plan. The application does not operate equipment or contact buyers."
+    },
+    {
+      "title": "Report what actually happened",
+      "text": "Complete the checklist and record quantity with its unit. Keep accepted and rejected delivery quantities separate. Optional reviewed photos support observations; photos alone cannot establish yield."
+    },
+    {
+      "title": "Verify differences honestly",
+      "text": "Reported results update a labeled forecast. A short harvest or rejected delivery prompts recovery. User-reported results remain unverified. Corrections append an auditable event instead of erasing the original report."
+    },
+    {
+      "title": "Replan while preserving work",
+      "text": "Review the recovery proposal and recalculate future work. Completed and reported tasks retain their history. Waste Rescue compares dated surplus scenarios; a hypothetical sale is never treated as a confirmed order."
+    }
+  ]
+}

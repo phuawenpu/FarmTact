@@ -8,7 +8,7 @@ authority through this module.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 import csv
 import hashlib
@@ -27,6 +27,7 @@ _MAX_XLSX_MEMBERS = 200
 _MAX_XLSX_EXPANDED = 20 * 1024 * 1024
 _MAX_COLUMNS = 64
 _MAX_CELL_CHARS = 4_000
+_PLANNING_CROPS = {"caixin", "pak_choi", "kailan", "lettuce"}
 _HEADERS = {
     "date": ("date", "transaction_date", "invoice_date", "posting_date"),
     "kind": ("kind", "type", "transaction_type", "record_type"),
@@ -114,7 +115,16 @@ def _decimal(value: Any, *, optional: bool = False) -> Decimal | None:
 
 def _date(value: Any) -> date:
     text = str(value or "").strip()
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y"):
+    try:
+        return datetime.strptime(text, "%Y-%m-%d").date()
+    except ValueError:
+        pass
+    numeric = re.fullmatch(r"(\d{1,2})([/\-])(\d{1,2})\2(\d{4})", text)
+    if numeric:
+        first, second, year = int(numeric.group(1)), int(numeric.group(3)), int(numeric.group(4))
+        if first <= 12 and second <= 12 and first != second:
+            raise FinancialDataError(f"ambiguous date {value!r}; use YYYY-MM-DD")
+        fmt = "%d/%m/%Y" if numeric.group(2) == "/" and first > 12 else "%m/%d/%Y" if numeric.group(2) == "/" else "%d-%m-%Y" if first > 12 else "%m-%d-%Y"
         try:
             return datetime.strptime(text, fmt).date()
         except ValueError:
@@ -149,6 +159,28 @@ def _rows_from_xlsx(payload: bytes) -> list[dict[str, str]]:
         if any(info.filename.lower().endswith(("vbaproject.bin", ".xlsm")) for info in infos):
             raise FinancialDataError("XLSX macros are not accepted")
         shared: list[str] = []
+        excel_epoch = date(1899, 12, 30)
+        minimum_serial = 1
+        if "xl/workbook.xml" in archive.namelist():
+            workbook = ET.fromstring(archive.read("xl/workbook.xml"))
+            ns = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+            properties = workbook.find(ns + "workbookPr")
+            if properties is not None and properties.attrib.get("date1904", "").lower() in {"1", "true"}:
+                excel_epoch = date(1904, 1, 1)
+                minimum_serial = 0
+        date_styles: set[int] = set()
+        if "xl/styles.xml" in archive.namelist():
+            styles = ET.fromstring(archive.read("xl/styles.xml"))
+            ns = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+            custom = {int(node.attrib["numFmtId"]): node.attrib.get("formatCode", "").lower()
+                      for node in styles.iter(ns + "numFmt") if "numFmtId" in node.attrib}
+            cell_xfs = styles.find(ns + "cellXfs")
+            if cell_xfs is not None:
+                for style_index, xf in enumerate(cell_xfs.findall(ns + "xf")):
+                    number_format = int(xf.attrib.get("numFmtId", 0))
+                    code = custom.get(number_format, "")
+                    if number_format in set(range(14, 23)) | {45, 46, 47} or any(token in code for token in ("yy", "dd", "mm")):
+                        date_styles.add(style_index)
         if "xl/sharedStrings.xml" in archive.namelist():
             root = ET.fromstring(archive.read("xl/sharedStrings.xml"))
             shared = ["".join(node.itertext()) for node in root]
@@ -184,6 +216,14 @@ def _rows_from_xlsx(payload: bytes) -> list[dict[str, str]]:
                     raise FinancialDataError("invalid XLSX shared string")
             elif inline is not None:
                 text = "".join(inline.itertext())
+            elif text and cell.attrib.get("t", "n") == "n" and int(cell.attrib.get("s", 0)) in date_styles:
+                try:
+                    serial = Decimal(text)
+                    if serial != serial.to_integral_value() or not minimum_serial <= serial <= 2_958_465:
+                        raise ValueError
+                    text = str(excel_epoch + timedelta(days=int(serial)))
+                except (InvalidOperation, ValueError, OverflowError):
+                    raise FinancialDataError("invalid XLSX date serial; export an ISO YYYY-MM-DD date")
             if len(text) > _MAX_CELL_CHARS:
                 raise FinancialDataError("XLSX cell length limit exceeded")
             cells[index - 1] = text
@@ -236,6 +276,9 @@ class FinancialDataConnector:
             if kind not in {"sale", "expense", "inventory", "correction"}:
                 raise FinancialDataError(f"row {number}: unsupported kind {kind_text!r}")
             reference = str(item.get(mapping.get("reference", ""), "")).strip() or f"row-{number}"
+            crop_id = str(item.get(mapping.get("crop_id", ""), "")).strip() or None
+            if crop_id and crop_id not in _PLANNING_CROPS:
+                warnings.add(f"unsupported_crop:{crop_id}")
             quantity = _decimal(item.get(mapping.get("quantity", "")), optional=True)
             if quantity is not None and quantity < 0 and kind != "correction":
                 raise FinancialDataError(f"row {number}: negative quantity requires correction kind")
@@ -244,7 +287,7 @@ class FinancialDataConnector:
                 description=str(item.get(mapping.get("description", ""), "")).strip()[:500], quantity=quantity,
                 unit=(str(item.get(mapping.get("unit", ""), "")).strip() or None),
                 amount_sgd=_decimal(item.get(mapping["amount"])),
-                crop_id=(str(item.get(mapping.get("crop_id", ""), "")).strip() or None),
+                crop_id=crop_id,
                 corrects_reference=reference if kind == "correction" else None,
                 provenance={"source_name": source_name, "source_sha256": source_sha256, "row_number": number},
             ))

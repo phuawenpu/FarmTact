@@ -53,6 +53,29 @@ def test_undeclared_accounting_currency_is_flagged_for_review():
     assert candidate.warnings == ("currency_not_declared: values are candidate SGD only and require explicit review",)
 
 
+def test_ambiguous_numeric_date_requires_iso_but_unambiguous_dates_parse():
+    connector = FinancialDataConnector()
+    with pytest.raises(FinancialDataError, match="ambiguous date.*YYYY-MM-DD"):
+        connector.from_rows(tenant_id="t", source_name="ambiguous", rows=[
+            {"date": "03/04/2026", "kind": "sale", "amount": "10"}
+        ])
+    day_first = connector.from_rows(tenant_id="t", source_name="day-first", rows=[
+        {"date": "13/04/2026", "kind": "sale", "amount": "10"}
+    ])
+    month_first = connector.from_rows(tenant_id="t", source_name="month-first", rows=[
+        {"date": "04/13/2026", "kind": "sale", "amount": "10"}
+    ])
+    assert str(day_first.rows[0].occurred_on) == str(month_first.rows[0].occurred_on) == "2026-04-13"
+
+
+def test_unsupported_crop_is_preserved_for_accounting_and_warned_from_planning():
+    candidate = FinancialDataConnector().from_rows(tenant_id="t", source_name="mixed-crop", rows=[
+        {"date": "2026-09-01", "kind": "sale", "amount": "10", "crop_id": "garlic_chives"}
+    ])
+    assert candidate.rows[0].crop_id == "garlic_chives"
+    assert candidate.warnings == ("unsupported_crop:garlic_chives",)
+
+
 def test_xlsx_rejects_formula_cells_instead_of_accepting_cached_values():
     output = BytesIO()
     with ZipFile(output, "w") as archive:
@@ -60,3 +83,35 @@ def test_xlsx_rejects_formula_cells_instead_of_accepting_cached_values():
     with pytest.raises(FinancialDataError, match="formulas are not accepted"):
         FinancialDataConnector().parse(tenant_id="t", source_name="unsafe.xlsx", payload=output.getvalue(),
                                        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+def test_xlsx_builtin_date_style_converts_excel_serial_to_iso_date():
+    output = BytesIO()
+    sheet = """<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>
+    <row r="1"><c r="A1" t="inlineStr"><is><t>date</t></is></c><c r="B1" t="inlineStr"><is><t>kind</t></is></c><c r="C1" t="inlineStr"><is><t>amount</t></is></c></row>
+    <row r="2"><c r="A2" s="1"><v>46266</v></c><c r="B2" t="inlineStr"><is><t>expense</t></is></c><c r="C2"><v>10</v></c></row>
+    </sheetData></worksheet>"""
+    styles = """<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cellXfs count="2"><xf numFmtId="0"/><xf numFmtId="14"/></cellXfs></styleSheet>"""
+    with ZipFile(output, "w") as archive:
+        archive.writestr("xl/worksheets/sheet1.xml", sheet)
+        archive.writestr("xl/styles.xml", styles)
+    candidate = FinancialDataConnector().parse(tenant_id="t", source_name="dated.xlsx", payload=output.getvalue(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    assert str(candidate.rows[0].occurred_on) == "2026-09-01"
+
+
+def test_xlsx_1904_workbook_epoch_does_not_silently_use_1899_epoch():
+    output = BytesIO()
+    sheet = """<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>
+    <row r="1"><c r="A1" t="inlineStr"><is><t>date</t></is></c><c r="B1" t="inlineStr"><is><t>kind</t></is></c><c r="C1" t="inlineStr"><is><t>amount</t></is></c></row>
+    <row r="2"><c r="A2" s="1"><v>44804</v></c><c r="B2" t="inlineStr"><is><t>expense</t></is></c><c r="C2"><v>10</v></c></row>
+    </sheetData></worksheet>"""
+    styles = """<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cellXfs count="2"><xf numFmtId="0"/><xf numFmtId="14"/></cellXfs></styleSheet>"""
+    workbook = """<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><workbookPr date1904="1"/></workbook>"""
+    with ZipFile(output, "w") as archive:
+        archive.writestr("xl/worksheets/sheet1.xml", sheet)
+        archive.writestr("xl/styles.xml", styles)
+        archive.writestr("xl/workbook.xml", workbook)
+    candidate = FinancialDataConnector().parse(tenant_id="t", source_name="dated-1904.xlsx", payload=output.getvalue(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    assert str(candidate.rows[0].occurred_on) == "2026-09-01"

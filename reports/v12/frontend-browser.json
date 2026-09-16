@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "seven-stage workflow",
+      "pass": true
+    },
+    {
+      "name": "five metrics",
+      "pass": true
+    },
+    {
+      "name": "seven roles",
+      "pass": true
+    },
+    {
+      "name": "rejected withheld",
+      "pass": true
+    },
+    {
+      "name": "approval gate",
+      "pass": true
+    },
+    {
+      "name": "durable task result controls are visible",
+      "pass": true,
+      "detail": "ACT → VERIFY\n\nSimulation action ledger\n\nPlanned quantities are projected. Actual quantities and notes are farmer-reported and unverified.\n\nSIMULATED ACTIONS\n1\nDelivery · Caixin · Customer-1\nDue 16/10/2026 · 40 kg\nRECOVERY_REQUIRED\nResult\nCompleted\nBlocked or failed\nActual quantity (kg)\nRejected quantity (kg)\nChecklist completed\nConfirm lot\nRecord accepted crop\nRecord rejected crop\nReviewed task photo\nNo photo\nharvest.jpg\nFarmer note\nSave reported result\nCorrect a reported quantity\nCorrected quantity\nReason\nSave auditable correction"
+    },
+    {
+      "name": "auditable correction control is visible",
+      "pass": true,
+      "detail": "ACT → VERIFY\n\nSimulation action ledger\n\nPlanned quantities are projected. Actual quantities and notes are farmer-reported and unverified.\n\nSIMULATED ACTIONS\n1\nDelivery · Caixin · Customer-1\nDue 16/10/2026 · 40 kg\nRECOVERY_REQUIRED\nResult\nCompleted\nBlocked or failed\nActual quantity (kg)\nRejected quantity (kg)\nChecklist completed\nConfirm lot\nRecord accepted crop\nRecord rejected crop\nReviewed task photo\nNo photo\nharvest.jpg\nFarmer note\nSave reported result\nCorrect a reported quantity\nCorrected quantity\nReason\nSave auditable correction"
+    },
+    {
+      "name": "upload families",
+      "pass": true
+    },
+    {
+      "name": "caption tracks",
+      "pass": true
+    },
+    {
+      "name": "downloads",
+      "pass": true
+    },
+    {
+      "name": "360px no overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px no overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px no overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px no overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "no page exceptions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "screenshots": [
+    "apps/web/screenshots/v12-farmer-360.png",
+    "apps/web/screenshots/v12-farmer-390.png",
+    "apps/web/screenshots/v12-farmer-430.png",
+    "apps/web/screenshots/v12-farmer-1280.png"
+  ],
+  "failures": []
+}

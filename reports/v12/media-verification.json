@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "scope": "Three H264 1280x720 48-second exports, four captioned instructional scenes each. Playback and UI transcript acceptance tracked separately.",
+  "files": {
+    "council-evidence.mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "format": {
+        "duration": "48.000000",
+        "size": "378469"
+      }
+    },
+    "observe-decide.mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "format": {
+        "duration": "48.000000",
+        "size": "383280"
+      }
+    },
+    "act-replan.mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "format": {
+        "duration": "48.000000",
+        "size": "407217"
+      }
+    }
+  }
+}

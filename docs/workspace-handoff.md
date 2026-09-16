@@ -1,3 +1,8 @@
+Current work, 16 September 2026: V12 is in private acceptance; V11 is the sole
+public application. V1–V10 workers and storage are retired with recovery and
+preservation evidence. Read reports/v12/acceptance-status.md and
+docs/v12-implementation-plan.md before the historical handoffs below.
+
 # Fresh-workspace handoff — 11 September 2026
 
 This handoff was prepared before deleting the development workspace. GitHub and

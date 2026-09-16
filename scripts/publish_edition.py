@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -344,17 +345,150 @@ def deploy_shared(updated, active, *, staged=None):
     if not settings: raise PublicationError('Shared host is not configured')
     validate_active(active, updated)
     config = machine_config(updated, settings['volume_id'], active=active, staged=staged, public=True)
+    update_shared_machine(settings, config)
+    entry = updated['editions'][-1]
+    probe_shared_edition(settings, entry)
+
+
+def update_shared_machine(settings: dict, config: dict) -> None:
     with tempfile.TemporaryDirectory(prefix='farmtact-shared-publish-') as directory:
         path = Path(directory) / 'machine.json'
         path.write_text(json.dumps(config))
         command(['fly','machine','update',settings['machine_id'],'--app','farmtact','--machine-config',str(path),'--yes'])
-    entry = updated['editions'][-1]
+
+
+def probe_shared_edition(settings: dict, entry: dict) -> None:
     # The public registry is still the previous edition until this probe passes.
     # Pinned server health is read via authenticated operator SSH on localhost.
     port = 8080 + int(entry['id'][1:])
     probe = "import json,time,urllib.request; deadline=time.monotonic()+150\nwhile True:\n try:\n  r=json.load(urllib.request.urlopen('http://127.0.0.1:"+str(port)+"/api/v1/health',timeout=5)); assert r.get('status')=='ok' and r.get('edition')=='"+entry['id']+"' and r.get('source_commit')=='"+entry['source_commit']+"'; break\n except Exception:\n  assert time.monotonic()<deadline; time.sleep(2)"
     import shlex
     command(['fly','ssh','console','--app','farmtact','--machine',settings['machine_id'],'--container','gateway','--command','python -c '+shlex.quote(probe)])
+
+
+def create_recovery_snapshot(settings: dict) -> str:
+    result = command(['fly', 'volumes', 'snapshots', 'create', settings['volume_id'],
+                      '--app', settings['app'], '--json'])
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise PublicationError('Fly recovery snapshot response is invalid') from error
+    snapshot_id = payload.get('id') if isinstance(payload, dict) else None
+    if not isinstance(snapshot_id, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:-]{7,127}', snapshot_id):
+        raise PublicationError('Fly recovery snapshot did not return a valid identifier')
+    wait_for_snapshot(settings, snapshot_id)
+    return snapshot_id
+
+
+def guard_shared_cleanup_runtime(settings: dict, history: dict, active: dict) -> dict:
+    """Refuse to replace a Machine configuration containing a future candidate."""
+    result = command(['fly', 'machine', 'status', settings['machine_id'],
+                      '--app', settings['app'], '--json'])
+    try:
+        runtime = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise PublicationError('Current shared Machine configuration is invalid') from error
+    config = runtime.get('config') if isinstance(runtime, dict) else None
+    containers = config.get('containers') if isinstance(config, dict) else None
+    if not isinstance(containers, list):
+        raise PublicationError('Current shared Machine container inventory is required')
+    history_ids = {entry['id'] for entry in history['editions']}
+    active_ids = {edition for edition in active.values() if edition}
+    for row in containers:
+        if not isinstance(row, dict):
+            raise PublicationError('Current shared Machine container inventory is invalid')
+        name = row.get('name')
+        if isinstance(name, str) and EDITION.fullmatch(name) and name not in history_ids:
+            raise PublicationError(f'Cleanup refused while unpublished candidate {name} is running')
+        env = row.get('env', {})
+        if not isinstance(env, dict):
+            raise PublicationError('Current shared Machine container environment is invalid')
+        staged = env.get('FARMTACT_STAGED_EDITION')
+        if staged and staged not in active_ids:
+            raise PublicationError(f'Cleanup refused while unpublished candidate {staged} is staged')
+    return runtime
+
+
+def wait_for_snapshot(settings: dict, snapshot_id: str, *, attempts: int = 30, interval: float = 2) -> None:
+    """Require Fly to report a usable recovery point before deletion can start."""
+    pending = {'pending', 'queued', 'creating', 'processing'}
+    ready = {'created', 'complete', 'completed'}
+    for attempt in range(attempts):
+        result = command([
+            'fly', 'volumes', 'snapshots', 'list', settings['volume_id'],
+            '--app', settings['app'], '--json',
+        ])
+        try:
+            payload = json.loads(result.stdout)
+        except json.JSONDecodeError as error:
+            raise PublicationError('Fly recovery snapshot inventory is invalid') from error
+        rows = payload.get('snapshots') if isinstance(payload, dict) else payload
+        if not isinstance(rows, list):
+            raise PublicationError('Fly recovery snapshot inventory is invalid')
+        row = next((item for item in rows if isinstance(item, dict)
+                    and (item.get('id') or item.get('snapshot_id')) == snapshot_id), None)
+        if row is not None:
+            status = row.get('status')
+            if not isinstance(status, str):
+                raise PublicationError('Fly recovery snapshot status is invalid')
+            normalized = status.lower()
+            if normalized in ready:
+                return
+            if normalized not in pending:
+                raise PublicationError(f'Fly recovery snapshot failed with status {normalized}')
+        if attempt + 1 < attempts:
+            time.sleep(interval)
+    raise PublicationError('Fly recovery snapshot did not become ready before timeout')
+
+
+def retire_oldest_shared(history: dict, active: dict) -> dict:
+    """Stop the displaced worker, snapshot, reclaim its storage, and remove the operator.
+
+    The authoritative public bundle is read again inside the operator at the
+    mutation boundary. A failed apply leaves the service-less operator present so
+    the same snapshot-backed operation can be inspected and resumed safely.
+    """
+    from scripts.shared_host_config import machine_config
+    settings = shared_settings()
+    if not settings:
+        return {'status': 'not_shared'}
+    validate_active(active, history)
+    guard_shared_cleanup_runtime(settings, history, active)
+    if active['previous'] is None:
+        deploy_shared(history, active)
+        return {'status': 'nothing_to_retire'}
+    operator_config = machine_config(
+        history, settings['volume_id'], active=active,
+        retirement_operator=True, public=True,
+    )
+    # Updating to the active pair first stops the displaced worker. No storage is
+    # touched until Fly has recorded a recovery snapshot of the shared volume.
+    update_shared_machine(settings, operator_config)
+    snapshot_id = create_recovery_snapshot(settings)
+    with tempfile.TemporaryDirectory(prefix='farmtact-retirement-') as directory:
+        runtime_path = Path(directory) / 'runtime.json'
+        runtime_path.write_text(json.dumps(operator_config))
+        command(
+            ['fly', 'ssh', 'sftp', 'shell', '--app', settings['app'], '--machine',
+             settings['machine_id'], '--container', 'retirement-operator'],
+            input_text=f'put {runtime_path} /tmp/farmtact-runtime.json\nquit\n',
+        )
+    import shlex
+    report = f"/persist/gateway/releases/retirement-{active['latest']}.json"
+    invocation = (
+        'cd /app && python -m scripts.shared_retirement_operator '
+        f'--output {shlex.quote(report)} --runtime-config /tmp/farmtact-runtime.json '
+        f'--apply --snapshot-id {shlex.quote(snapshot_id)}'
+    )
+    command(
+        ['fly', 'ssh', 'console', '--app', settings['app'], '--machine',
+         settings['machine_id'], '--container', 'retirement-operator',
+         '--command', invocation]
+    )
+    # Successful cleanup is followed by an exact active-pair config, removing
+    # the privileged operator and re-probing the published latest edition.
+    deploy_shared(history, active)
+    return {'status': 'retired', 'snapshot_id': snapshot_id, 'report': report}
 
 
 def publish_remote(registry: dict, active: dict, temporary: Path) -> None:
@@ -376,13 +510,29 @@ def publish_remote(registry: dict, active: dict, temporary: Path) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--edition", required=True)
-    parser.add_argument("--notes", required=True, type=Path)
+    parser.add_argument("--edition")
+    parser.add_argument("--notes", type=Path)
     parser.add_argument("--image")
-    parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--source-commit")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume-cleanup", action="store_true")
     args = parser.parse_args(argv)
     try:
+        if args.resume_cleanup:
+            if any((args.edition, args.notes, args.image, args.source_commit, args.dry_run)):
+                raise PublicationError('--resume-cleanup does not accept publication arguments')
+            history = remote_registry('https://farmtact.fly.dev')
+            active = remote_active('https://farmtact.fly.dev')
+            result = retire_oldest_shared(history, active)
+            publication_state = load_state(state_path())
+            reservation = publication_state['reservations'].get(active['latest'])
+            if reservation and reservation.get('stage') == 'published_cleanup_pending':
+                reservation['stage'] = 'published'
+                save_state(state_path(), publication_state)
+            print(f"Completed retirement cleanup for {active['latest']}: {result['status']}.")
+            return 0
+        if args.edition is None or args.notes is None or args.source_commit is None:
+            raise PublicationError('Edition, notes and source commit are required')
         match = EDITION.fullmatch(args.edition)
         if not match or not COMMIT.fullmatch(args.source_commit) or (args.image is not None and not IMAGE.fullmatch(args.image)):
             raise PublicationError("Edition, source commit or pinned image digest is invalid")
@@ -415,12 +565,14 @@ def main(argv: list[str] | None = None) -> int:
             if config.exists() and config.read_text() != expected_config:
                 raise PublicationError("Edition Fly manifest exists with different contents")
             if not config.exists(): config.write_text(expected_config)
+        cutover_complete = False
         try:
             next_active = {'previous': remote['latest'], 'latest': args.edition}
             if shared: deploy_shared(updated, current_active, staged=args.edition)
             else: deploy(args.edition, image, config)
             with tempfile.TemporaryDirectory(prefix="farmtact-publish-") as directory:
                 publish_remote(updated, next_active, Path(directory) / "registry.json")
+            cutover_complete = True
             REGISTRY.write_text(json.dumps(updated, indent=2) + "\n")
             ACTIVE.write_text(json.dumps(next_active, indent=2) + "\n")
             manifest = ROOT / f"config/releases/{args.edition}.json"
@@ -429,8 +581,12 @@ def main(argv: list[str] | None = None) -> int:
             git("commit", "-m", f"Publish immutable FarmTact {args.edition}")
             git("tag", "-a", f"farmtact-{args.edition}", args.source_commit, "-m", f"FarmTact {args.edition} source")
             git("push", "origin", "HEAD", f"refs/tags/farmtact-{args.edition}")
+            if shared:
+                retire_oldest_shared(updated, next_active)
         except Exception:
-            state["reservations"][args.edition]["stage"] = "failed"
+            state["reservations"][args.edition]["stage"] = (
+                "published_cleanup_pending" if cutover_complete else "failed"
+            )
             save_state(state_file, state)
             raise
         state["reservations"][args.edition]["stage"] = "published"

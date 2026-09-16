@@ -14,6 +14,7 @@ import type { AppView, Bootstrap, Crop, Run } from './lib/types'
 import { deriveDecisionMission, loadDecisionMission, saveDecisionMission, type DecisionMission } from './components/DecisionJourney'
 import { runSoundOutcome } from './lib/game'
 import { GuidedPlanning } from './components/GuidedPlanning'
+import { FarmerWorkflow } from './components/FarmerWorkflow'
 
 type WorkspaceView = AppView | 'planning'
 const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
@@ -27,7 +28,9 @@ const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = 
 ]
 
 export default function App({ editionId = 'v1', initialView }: { editionId?: string; initialView?: AppView }) {
-  const isGuidedEdition = editionId === 'v11'
+  const editionNumber = Number.parseInt(editionId.replace(/^v/, ''), 10)
+  const isGuidedEdition = editionNumber >= 11
+  const hasFarmerWorkflow = editionNumber >= 12
   const navItems: Array<{ id: WorkspaceView; label: string; icon: typeof Map }> = isGuidedEdition ? [{ id: 'planning', label: 'Plan', icon: Sprout }, ...legacyNavItems] : legacyNavItems
   const initialMission=useRef<DecisionMission|null>(loadDecisionMission())
   const [mission, setMission] = useState<DecisionMission | null>(initialMission.current)
@@ -225,7 +228,7 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
-              {view === 'planning' && <GuidedPlanning crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/>}
+              {view === 'planning' && (hasFarmerWorkflow ? <FarmerWorkflow crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/> : <GuidedPlanning crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/>)}
               {view === 'council' && <CouncilResearch />}
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} capabilities={bootstrap.capabilities} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}

@@ -40,6 +40,9 @@ def test_photo_and_document_authority_are_separate_and_budgeted(boundary):
     photo=extraction.extract_document(store,'tenant',picture(),'crop.png','photo_observation')
     document=extraction.extract_document(store,'tenant',picture(),'invoice.png','document_extraction')
     assert [c['role'] for c in calls]==['visual_observer','document_vision']
+    assert 'visible_findings MUST be a JSON array' in calls[0]['prompt']
+    assert 'uncertainty MUST be one non-empty string' in calls[0]['prompt']
+    assert '"rows":[' in calls[1]['prompt'] and '"warnings":[' in calls[1]['prompt']
     assert photo['provenance']['yield_authority'] is False
     assert document['provenance']['review_required'] is True
     assert photo['rows'][0]['uncertainty']
@@ -61,3 +64,21 @@ def test_upload_size_and_budget_are_enforced_before_provider(boundary):
     with pytest.raises(HTTPException) as exc:extraction.extract_document(store,'tenant',picture(),'photo.png','photo_observation')
     assert exc.value.status_code==429
     assert not calls
+
+
+def test_gateway_failure_logs_only_bounded_safe_diagnostics(monkeypatch, caplog):
+    from contextlib import contextmanager
+    from runtime.deepseek_gateway import DeepSeekBlockedError
+    store=Mock();store.reserve_calls.return_value=True
+    @contextmanager
+    def factory(*args,**kwargs):
+        class Gateway:
+            def normalize_image(self,*args,**kwargs): return SimpleNamespace(source_sha256='hash')
+            def vision_json(self,**kwargs): raise DeepSeekBlockedError('DeepSeek request blocked with HTTP 503',status_code=503)
+        yield Gateway()
+    monkeypatch.setattr(extraction.DeepSeekGateway,'from_config',factory)
+    with caplog.at_level('WARNING'),pytest.raises(HTTPException) as exc:
+        extraction.extract_document(store,'tenant',picture(),'photo.png','photo_observation')
+    assert exc.value.status_code==503
+    assert 'type=DeepSeekBlockedError status=503' in caplog.text
+    assert 'DeepSeek request blocked with HTTP 503' in caplog.text

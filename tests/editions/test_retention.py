@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from scripts.retire_editions import apply_plan, build_plan
+from scripts.retire_editions import apply_plan, build_plan, load_public_manifests
 
 
 def history(count=4):
@@ -16,6 +16,17 @@ def test_inventory_protects_active_and_staged_and_counts_only_retired(tmp_path):
     actions = {row['edition']: row['action'] for row in plan['entries']}
     assert actions == {'v1': 'retire', 'v2': 'retire', 'v3': 'protect', 'v4': 'protect'}
     assert plan['reclaimable_bytes'] == len(b'v1') + len(b'v2')
+
+
+def test_authoritative_public_bundle_is_required_and_loaded_atomically(tmp_path):
+    bundle = tmp_path / 'public.json'
+    history = {'latest': 'v2', 'editions': [{'id': 'v1'}, {'id': 'v2'}]}
+    active = {'previous': 'v1', 'latest': 'v2'}
+    bundle.write_text(json.dumps({'history': history, 'active': active}))
+    assert load_public_manifests(bundle) == (history, active)
+    bundle.write_text(json.dumps({'history': history, 'active': active, 'extra': True}))
+    with pytest.raises(RuntimeError, match='invalid authoritative'):
+        load_public_manifests(bundle)
 
 
 def test_apply_requires_snapshot_and_rechecks_checksum(tmp_path):

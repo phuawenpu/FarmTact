@@ -172,3 +172,161 @@ def test_legacy_active_migrates_latest_only_and_rejects_truncated_history():
     assert publication.active_from_public(registry(11))=={'previous':None,'latest':'v11'}
     with pytest.raises(publication.PublicationError):
         publication.active_from_public({'latest':'v11','editions':[{'id':'v11'}]})
+
+
+def test_rolling_retirement_stops_oldest_then_snapshots_and_applies(tmp_path, monkeypatch):
+    history = registry(13)
+    for entry in history['editions']:
+        entry['image_digest'] = 'registry.fly.io/farmtact@sha256:' + entry['id'][1:].zfill(64)
+        entry['source_commit'] = 'a' * 40
+    active = {'previous': 'v12', 'latest': 'v13'}
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd', 'volume_id': 'vol_review123'}
+    events = []
+    monkeypatch.setattr(publication, 'shared_settings', lambda: settings)
+    monkeypatch.setattr(publication, 'guard_shared_cleanup_runtime', lambda *_args: {})
+    monkeypatch.setattr(publication, 'update_shared_machine',
+                        lambda _settings, config: events.append(('update', [r['name'] for r in config['containers']])))
+    monkeypatch.setattr(publication, 'create_recovery_snapshot',
+                        lambda _settings: events.append(('snapshot', None)) or 'snapshot-rolling-13')
+    monkeypatch.setattr(publication, 'deploy_shared',
+                        lambda _history, _active: events.append(('finalize', None)))
+
+    def fake_command(args, **kwargs):
+        if args[:4] == ['fly', 'ssh', 'sftp', 'shell']:
+            events.append(('runtime', kwargs['input_text']))
+        elif '--container' in args and args[args.index('--container') + 1] == 'retirement-operator':
+            events.append(('apply', args[-1]))
+        return type('Result', (), {'returncode': 0, 'stdout': '', 'stderr': ''})()
+
+    monkeypatch.setattr(publication, 'command', fake_command)
+    result = publication.retire_oldest_shared(history, active)
+
+    assert [event[0] for event in events] == ['update', 'snapshot', 'runtime', 'apply', 'finalize']
+    assert set(events[0][1]) == {'gateway', 'v12', 'v13', 'retirement-operator'}
+    assert 'v11' not in events[0][1]
+    assert '--snapshot-id snapshot-rolling-13' in events[3][1]
+    assert result['status'] == 'retired'
+
+
+def test_rolling_retirement_failure_leaves_operator_for_safe_resume(monkeypatch):
+    history = registry(3)
+    for entry in history['editions']:
+        entry['image_digest'] = 'registry.fly.io/farmtact@sha256:' + entry['id'][1:].zfill(64)
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd', 'volume_id': 'vol_review123'}
+    finalized = []
+    monkeypatch.setattr(publication, 'shared_settings', lambda: settings)
+    monkeypatch.setattr(publication, 'guard_shared_cleanup_runtime', lambda *_args: {})
+    monkeypatch.setattr(publication, 'update_shared_machine', lambda *_args: None)
+    monkeypatch.setattr(publication, 'create_recovery_snapshot', lambda *_args: 'snapshot-rolling-03')
+    monkeypatch.setattr(publication, 'deploy_shared', lambda *_args: finalized.append(True))
+    calls = 0
+
+    def fail_apply(args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise subprocess.CalledProcessError(1, args)
+        return type('Result', (), {'returncode': 0, 'stdout': '', 'stderr': ''})()
+
+    monkeypatch.setattr(publication, 'command', fail_apply)
+    with pytest.raises(subprocess.CalledProcessError):
+        publication.retire_oldest_shared(history, {'previous': 'v2', 'latest': 'v3'})
+    assert finalized == []
+
+
+def test_snapshot_creation_requires_valid_recorded_identifier(monkeypatch):
+    def ready(args, **_kwargs):
+        payload = ([{'id': 'snapshot-good-123', 'status': 'created'}]
+                   if 'list' in args else {'id': 'snapshot-good-123'})
+        return type('Result', (), {'stdout': json.dumps(payload)})()
+    monkeypatch.setattr(publication, 'command', ready)
+    assert publication.create_recovery_snapshot({'volume_id': 'vol_x', 'app': 'farmtact'}) == 'snapshot-good-123'
+    monkeypatch.setattr(publication, 'command', lambda *_args, **_kwargs:
+                        type('Result', (), {'stdout': json.dumps({'status': 'queued'})})())
+    with pytest.raises(publication.PublicationError, match='valid identifier'):
+        publication.create_recovery_snapshot({'volume_id': 'vol_x', 'app': 'farmtact'})
+
+
+def test_snapshot_pending_then_created_is_bounded(monkeypatch):
+    inventories = iter([
+        [{'id': 'snapshot-wait-123', 'status': 'pending'}],
+        [{'id': 'snapshot-wait-123', 'status': 'created'}],
+    ])
+    sleeps = []
+    monkeypatch.setattr(publication, 'command', lambda *_args, **_kwargs:
+                        type('Result', (), {'stdout': json.dumps(next(inventories))})())
+    monkeypatch.setattr(publication.time, 'sleep', lambda seconds: sleeps.append(seconds))
+    publication.wait_for_snapshot({'volume_id': 'vol_x', 'app': 'farmtact'},
+                                  'snapshot-wait-123', attempts=2, interval=.25)
+    assert sleeps == [.25]
+
+
+@pytest.mark.parametrize('inventories, message', [
+    ([[{'id': 'snapshot-bad-123', 'status': 'failed'}]], 'failed with status'),
+    ([[{'id': 'snapshot-bad-123', 'status': 'pending'}],
+      [{'id': 'snapshot-bad-123', 'status': 'pending'}]], 'before timeout'),
+])
+def test_unusable_snapshot_prevents_retirement_apply(monkeypatch, inventories, message):
+    history = registry(3)
+    for entry in history['editions']:
+        entry['image_digest'] = 'registry.fly.io/farmtact@sha256:' + entry['id'][1:].zfill(64)
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd', 'volume_id': 'vol_review123'}
+    inventory = iter(inventories)
+    applied = []
+    monkeypatch.setattr(publication, 'shared_settings', lambda: settings)
+    monkeypatch.setattr(publication, 'guard_shared_cleanup_runtime', lambda *_args: {})
+    monkeypatch.setattr(publication, 'update_shared_machine', lambda *_args: None)
+    monkeypatch.setattr(publication.time, 'sleep', lambda *_args: None)
+
+    def commands(args, **_kwargs):
+        if 'create' in args:
+            return type('Result', (), {'stdout': json.dumps({'id': 'snapshot-bad-123'})})()
+        if 'list' in args:
+            try: payload = next(inventory)
+            except StopIteration: payload = inventories[-1]
+            return type('Result', (), {'stdout': json.dumps(payload)})()
+        applied.append(args)
+        return type('Result', (), {'stdout': ''})()
+
+    monkeypatch.setattr(publication, 'command', commands)
+    with pytest.raises(publication.PublicationError, match=message):
+        publication.retire_oldest_shared(history, {'previous': 'v2', 'latest': 'v3'})
+    assert applied == []
+
+
+@pytest.mark.parametrize('candidate_source', ['container', 'staged_env'])
+def test_cleanup_refuses_future_staged_candidate_before_machine_update(monkeypatch, candidate_source):
+    history = registry(13)
+    active = {'previous': 'v12', 'latest': 'v13'}
+    containers = [{'name': 'gateway', 'env': {}}, {'name': 'v12', 'env': {}}, {'name': 'v13', 'env': {}}]
+    if candidate_source == 'container':
+        containers.append({'name': 'v14', 'env': {'FARMTACT_STAGED_EDITION': 'v14'}})
+    else:
+        containers[0]['env']['FARMTACT_STAGED_EDITION'] = 'v14'
+    calls = []
+
+    def runtime(args, **_kwargs):
+        calls.append(args)
+        return type('Result', (), {'stdout': json.dumps({'config': {'containers': containers}})})()
+
+    monkeypatch.setattr(publication, 'command', runtime)
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd', 'volume_id': 'vol_review123'}
+    monkeypatch.setattr(publication, 'shared_settings', lambda: settings)
+    with pytest.raises(publication.PublicationError, match='unpublished candidate'):
+        publication.retire_oldest_shared(history, active)
+    assert len(calls) == 1 and calls[0][:3] == ['fly', 'machine', 'status']
+
+
+def test_cleanup_allows_post_cutover_staged_marker_equal_to_latest(monkeypatch):
+    history = registry(13)
+    active = {'previous': 'v12', 'latest': 'v13'}
+    runtime = {'config': {'containers': [
+        {'name': 'gateway', 'env': {'FARMTACT_STAGED_EDITION': 'v13'}},
+        {'name': 'v12', 'env': {'FARMTACT_STAGED_EDITION': 'v13'}},
+        {'name': 'v13', 'env': {'FARMTACT_STAGED_EDITION': 'v13'}},
+    ]}}
+    monkeypatch.setattr(publication, 'command', lambda *_args, **_kwargs:
+                        type('Result', (), {'stdout': json.dumps(runtime)})())
+    assert publication.guard_shared_cleanup_runtime(
+        {'app': 'farmtact', 'machine_id': '1234567890abcd'}, history, active,
+    ) == runtime

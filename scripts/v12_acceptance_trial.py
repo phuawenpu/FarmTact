@@ -59,7 +59,9 @@ def wait_session(api, session_id, deadline=180):
     raise TimeoutError(f'planning session exceeded {deadline}s; last status {last.get("status") if last else None}')
 
 
-def journey(api, review=False):
+def journey(api, review=False, progress=None, checkpoint=None):
+    progress = progress if progress is not None else {}
+    checkpoint = checkpoint or (lambda: None)
     initial = api.get('/bootstrap'); farm_before = hashed(initial['farm'])
     session = api.post('/planning-sessions', {'name': 'V12 acceptance workflow', 'workflow': True})
     session_path = '/planning-sessions/' + session['id']
@@ -72,6 +74,9 @@ def journey(api, review=False):
         'calculation_completed': session.get('status') == 'COMPLETED' and len(strategies) == 3,
         'feasible_strategy_selected': bool(selected),
     }
+    progress.update(session_id=session['id'], calculation_seconds=calculation_seconds,
+                    checks=checks, stage='calculated')
+    checkpoint()
     council = None
     if review:
         api.post(session_path + '/review', {'revision': session['revision']})
@@ -82,6 +87,9 @@ def journey(api, review=False):
         council_hash = hashed(council)
         replay = api.get(session_path).get('review')
         checks['council_replay_identical'] = hashed(replay) == council_hash
+        progress.update(council=council, council_seconds=council_seconds,
+                        stage='council_reviewed')
+        checkpoint()
     else:
         council_seconds = None
 
@@ -93,12 +101,16 @@ def journey(api, review=False):
     proposal = api.post('/farm-workflow/proposals', proposal_body, proposal_key)
     duplicate = api.post('/farm-workflow/proposals', proposal_body, proposal_key)
     checks['proposal_idempotent'] = duplicate['id'] == proposal['id']
+    progress.update(proposal_id=proposal['id'], stage='proposal_created')
+    checkpoint()
     apply_key = 'apply-' + uuid.uuid4().hex
     applied = api.post(f'/farm-workflow/proposals/{proposal["id"]}/apply', {
         'proposal_id': proposal['id'], 'expected_base_revision': proposal['base_revision'],
         'idempotency_key': apply_key}, apply_key)
     session, recalculation_seconds = wait_session(api, session['id'])
     checks['apply_recalculated'] = applied['status'] == 'applied' and session['status'] == 'COMPLETED'
+    progress.update(recalculation_seconds=recalculation_seconds, stage='proposal_applied')
+    checkpoint()
     approve_key = 'approve-' + uuid.uuid4().hex
     approved = api.post(f'/farm-workflow/proposals/{proposal["id"]}/approve-actions', {
         'proposal_id': proposal['id'], 'proposal_revision': applied['proposal_revision'],
@@ -110,6 +122,8 @@ def journey(api, review=False):
     checks['approval_idempotent_with_tasks'] = bool(tasks) and hashed(duplicate_approval) == hashed(approved)
     task = next((row for row in tasks if row.get('unit') == 'kg'), tasks[0] if tasks else None)
     if not task: raise RuntimeError('approved strategy created no actions')
+    progress.update(task_id=task['id'], stage='actions_approved')
+    checkpoint()
     result = api.post(f'/farm-workflow/tasks/{task["id"]}/result', {
         'expected_status': task['status'], 'result_status': 'completed',
         'actual_quantity': task.get('planned_quantity') if task.get('unit') else None,
@@ -117,7 +131,7 @@ def journey(api, review=False):
         'checklist_completed': task['checklist'], 'note': 'Acceptance trial user-reported result'})
     correction_key = 'correction-' + uuid.uuid4().hex
     correction = api.post(f'/farm-workflow/tasks/{task["id"]}/corrections', {
-        'expected_event_revision': result['event_revision'], 'field': 'result_note',
+        'expected_event_revision': result['event_revision'], 'field': 'note',
         'corrected_value': 'Acceptance trial corrected report', 'reason': 'Verify auditable correction',
         'idempotency_key': correction_key}, correction_key)
     checks['result_recorded'] = result['status'] == 'completed' and result.get('forecast_feedback', {}).get('basis') == 'farmer_reported_unverified'
@@ -135,6 +149,8 @@ def journey(api, review=False):
     finally:
         outsider.close()
     checks['main_farm_unchanged'] = hashed(api.get('/bootstrap')['farm']) == farm_before
+    progress.update(stage='journey_complete')
+    checkpoint()
     return {'status': 'PASS' if all(checks.values()) else 'FAIL', 'checks': checks,
             'session_id': session['id'], 'proposal_id': proposal['id'], 'task_id': task['id'],
             'calculation_seconds': calculation_seconds, 'recalculation_seconds': recalculation_seconds,
@@ -197,21 +213,35 @@ def main(argv=None):
     parser.add_argument('--capacity', action='store_true')
     parser.add_argument('--report', type=Path, required=True)
     args = parser.parse_args(argv); started = datetime.now(timezone.utc).isoformat()
+    progress = {}
+
+    def persist_partial():
+        partial = {**progress, 'status': 'IN_PROGRESS', 'started_at': started,
+                   'base_url': args.base_url, 'old_base_url': args.old_base_url,
+                   'private_gateway': args.private_gateway, 'review_requested': args.review,
+                   'updated_at': datetime.now(timezone.utc).isoformat()}
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        pending = args.report.with_suffix(args.report.suffix + '.next')
+        pending.write_text(json.dumps(partial, indent=2) + '\n')
+        pending.chmod(0o600)
+        os.replace(pending, args.report)
     try:
         if args.capacity:
             if args.review: raise ValueError('Capacity probes must make zero inference calls')
             report = capacity(args.base_url, args.old_base_url, args.private_gateway)
         else:
             api = API(args.base_url, args.private_gateway)
-            try: report = journey(api, args.review)
+            try: report = journey(api, args.review, progress, persist_partial)
             finally: api.close()
     except Exception as exc:
-        report = {'status': 'FAIL', 'error': str(exc)}
+        report = {**progress, 'status': 'FAIL', 'error': str(exc)}
     report.update(started_at=started, completed_at=datetime.now(timezone.utc).isoformat(),
                   base_url=args.base_url, old_base_url=args.old_base_url,
                   private_gateway=args.private_gateway, review_requested=args.review)
     args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(json.dumps(report, indent=2) + '\n'); args.report.chmod(0o600)
+    pending = args.report.with_suffix(args.report.suffix + '.next')
+    pending.write_text(json.dumps(report, indent=2) + '\n'); pending.chmod(0o600)
+    os.replace(pending, args.report); args.report.chmod(0o600)
     print(json.dumps({key: report[key] for key in ('status', 'error', 'checks', 'trials') if key in report}))
     return 0 if report['status'] == 'PASS' else 1
 

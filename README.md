@@ -10,8 +10,12 @@ Local Python calculations produce quantities and schedules; optional DeepSeek ca
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
 **Play:** [guided V11 production planning](https://farmtact.fly.dev/v11/) ·
-[edition chooser, newest first](https://farmtact.fly.dev/) ·
-[preserved V10](https://farmtact.fly.dev/v10/)
+[active edition chooser](https://farmtact.fly.dev/)
+
+V12 is undergoing private acceptance. V1–V10 applications are retired; their
+URLs return 410 and their release history remains in Git. See the
+[V12 acceptance status](reports/v12/acceptance-status.md) and
+[retirement evidence](reports/v12/retirement.md).
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
@@ -24,7 +28,8 @@ The latest public edition is **v11**, pinned to source
 [`37802ad`](https://github.com/phuawenpu/FarmTact/commit/37802adbc9010bc80a50869ef725285a119af3f3)
 and immutable image
 `sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d`.
-All eleven edition health/source checks and captured V1–V10 preservation passed.
+At the original V11 publication, all eleven edition health/source checks and
+captured V1–V10 preservation passed; those older workers are now retired.
 See the [implementation and acceptance report](reports/v11/implementation.md).
 
 ## V11 guided production planning
