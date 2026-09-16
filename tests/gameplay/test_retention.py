@@ -19,6 +19,20 @@ from services.api.council_research import (
     SESSIONS as research_sessions,
 )
 from services.api.data_explorer import snapshots
+from services.api.farm_workflow import (
+    EVENTS as workflow_events,
+    IMPORTS as workflow_imports,
+    PROPOSALS as workflow_proposals,
+    RECEIPTS as workflow_receipts,
+    SOURCE_BLOBS as workflow_source_blobs,
+    TASKS as workflow_tasks,
+)
+from services.api.planning_sessions import (
+    JOBS as guided_jobs,
+    RECEIPTS as guided_receipts,
+    SESSIONS as guided_sessions,
+    VERSIONS as guided_versions,
+)
 from services.api.retention import (
     MAX_RETAINED_DAYS,
     MAX_TENANTS_PER_INVOCATION,
@@ -73,13 +87,95 @@ def _seed_every_tenant_table(store, tenant_id: str) -> None:
     research_id = f"research-{tenant_id}"
     action_id = f"action-{tenant_id}"
     world_id = f"world-{tenant_id}"
-    from services.api.planning_sessions import SESSIONS as guided_sessions,JOBS as guided_jobs,VERSIONS as guided_versions,RECEIPTS as guided_receipts
     with store.connection(write=True) as connection:
-        guided_id=f'guided-{tenant_id}'
-        connection.execute(guided_sessions.insert().values(id=guided_id,tenant_id=tenant_id,status='COMPLETED',payload={}))
-        connection.execute(guided_jobs.insert().values(id=f'guided-job-{tenant_id}',tenant_id=tenant_id,session_id=guided_id,status='COMPLETED',kind='calculate',created_at=AS_OF.isoformat(),payload={}))
-        connection.execute(guided_versions.insert().values(id=f'guided-version-{tenant_id}',tenant_id=tenant_id,session_id=guided_id,payload={}))
-        connection.execute(guided_receipts.insert().values(tenant_id=tenant_id,key=f'guided-key-{tenant_id}',request_hash='guided-hash',payload={}))
+        guided_id = f"guided-{tenant_id}"
+        connection.execute(
+            guided_sessions.insert().values(
+                id=guided_id, tenant_id=tenant_id, status="COMPLETED", payload={}
+            )
+        )
+        connection.execute(
+            guided_jobs.insert().values(
+                id=f"guided-job-{tenant_id}",
+                tenant_id=tenant_id,
+                session_id=guided_id,
+                status="COMPLETED",
+                kind="calculate",
+                created_at=AS_OF.isoformat(),
+                payload={},
+            )
+        )
+        connection.execute(
+            guided_versions.insert().values(
+                id=f"guided-version-{tenant_id}",
+                tenant_id=tenant_id,
+                session_id=guided_id,
+                payload={},
+            )
+        )
+        connection.execute(
+            guided_receipts.insert().values(
+                tenant_id=tenant_id,
+                key=f"guided-key-{tenant_id}",
+                request_hash="guided-hash",
+                payload={},
+            )
+        )
+        workflow_proposal = f"workflow-proposal-{tenant_id}"
+        workflow_import = f"workflow-import-{tenant_id}"
+        connection.execute(
+            workflow_imports.insert().values(
+                id=workflow_import,
+                tenant_id=tenant_id,
+                status="confirmed",
+                payload={},
+            )
+        )
+        connection.execute(
+            workflow_source_blobs.insert().values(
+                candidate_id=workflow_import,
+                tenant_id=tenant_id,
+                filename="source.csv",
+                media_type="text/csv",
+                sha256="0" * 64,
+                payload=b"source",
+            )
+        )
+        connection.execute(
+            workflow_proposals.insert().values(
+                id=workflow_proposal,
+                tenant_id=tenant_id,
+                session_id=guided_id,
+                status="approved",
+                payload={},
+            )
+        )
+        connection.execute(
+            workflow_tasks.insert().values(
+                id=f"workflow-task-{tenant_id}",
+                tenant_id=tenant_id,
+                session_id=guided_id,
+                proposal_id=workflow_proposal,
+                status="completed",
+                payload={},
+            )
+        )
+        connection.execute(
+            workflow_events.insert().values(
+                tenant_id=tenant_id,
+                subject_id=workflow_proposal,
+                sequence=1,
+                payload={},
+            )
+        )
+        connection.execute(
+            workflow_receipts.insert().values(
+                tenant_id=tenant_id,
+                key=f"workflow-key-{tenant_id}",
+                request_hash="workflow-hash",
+                payload={},
+            )
+        )
         connection.execute(
             farms.insert().values(
                 id=f"farm-{tenant_id}",

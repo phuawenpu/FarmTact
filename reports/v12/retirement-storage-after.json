@@ -1,0 +1,192 @@
+{
+  "schema": "farmtact-retirement-plan-v1",
+  "root": "/persist",
+  "active": [
+    "v11",
+    "v12"
+  ],
+  "entries": [
+    {
+      "edition": "v1",
+      "path": "/persist/v1",
+      "bytes": 72253277,
+      "checksum": "9382ca4f65ddefabb498e17ca6052976a039765e230cafae1bad51ba9501dcc4",
+      "action": "retire"
+    },
+    {
+      "edition": "v10",
+      "path": "/persist/v10",
+      "bytes": 69356792,
+      "checksum": "b94af029c18c7cd157e4f4685690cc99fc8e15fcefbf7d7836da14aa03769669",
+      "action": "retire"
+    },
+    {
+      "edition": "v11",
+      "path": "/persist/v11",
+      "bytes": 68172826,
+      "checksum": null,
+      "action": "protect"
+    },
+    {
+      "edition": "v2",
+      "path": "/persist/v2",
+      "bytes": 69498652,
+      "checksum": "9bb0a041f0f4790c5ca1d8e0eb5ce8f2a8ea0c6825c1379959d48c65620f6eac",
+      "action": "retire"
+    },
+    {
+      "edition": "v3",
+      "path": "/persist/v3",
+      "bytes": 68502205,
+      "checksum": "c6fa84a68821ba738c3ffd586c5ca3ff70dde1cf2c3d8693943bddda1fbd752f",
+      "action": "retire"
+    },
+    {
+      "edition": "v4",
+      "path": "/persist/v4",
+      "bytes": 68431733,
+      "checksum": "cdff365aed20c8168af9e66d46b031b25fc29bfc833270d49909d4ccd8ef4f6d",
+      "action": "retire"
+    },
+    {
+      "edition": "v5",
+      "path": "/persist/v5",
+      "bytes": 69416666,
+      "checksum": "1fdc71951f98c7fd17c92f653c791bc3fd0ad4daef92a23308bda54c46e3f518",
+      "action": "retire"
+    },
+    {
+      "edition": "v6",
+      "path": "/persist/v6",
+      "bytes": 67369905,
+      "checksum": "f760012f70ab900f7333a0abb915e0f3fcb271dbbf66a303730a3fdbc3dfa096",
+      "action": "retire"
+    },
+    {
+      "edition": "v7",
+      "path": "/persist/v7",
+      "bytes": 68474148,
+      "checksum": "86839e74bd36c1eaa90202549338880864c834c0450a562c077cde72f16a2518",
+      "action": "retire"
+    },
+    {
+      "edition": "v8",
+      "path": "/persist/v8",
+      "bytes": 68883650,
+      "checksum": "e07ff9511a7b59b9e262cd99067c4d553451a80745da521bee68c179d7d481bf",
+      "action": "retire"
+    },
+    {
+      "edition": "v9",
+      "path": "/persist/v9",
+      "bytes": 69600823,
+      "checksum": "b777f82c37fef4a4ee005408ac07d00fba75f87ae454c496222e2a0c8c1d43ad",
+      "action": "retire"
+    }
+  ],
+  "reclaimable_bytes": 691787851,
+  "images": [
+    {
+      "edition": "v1",
+      "digest": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v2",
+      "digest": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v3",
+      "digest": "registry.fly.io/farmtact@sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v4",
+      "digest": "registry.fly.io/farmtact@sha256:a676954e2958dbc289c909bbe18289d84aa58ae20af0917d0ae31dff5c6b92b0",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v5",
+      "digest": "registry.fly.io/farmtact@sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v6",
+      "digest": "registry.fly.io/farmtact@sha256:2415d2a861c83dfda71e13fb25c3187d3082c2f49a987ef3e68751208f63d334",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v7",
+      "digest": "registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v8",
+      "digest": "registry.fly.io/farmtact@sha256:8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v9",
+      "digest": "registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v10",
+      "digest": "registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf",
+      "action": "candidate-if-unused"
+    },
+    {
+      "edition": "v11",
+      "digest": "registry.fly.io/farmtact@sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d",
+      "action": "protect"
+    }
+  ],
+  "mode": "applied",
+  "removed": [
+    "v1",
+    "v10",
+    "v2",
+    "v3",
+    "v4",
+    "v5",
+    "v6",
+    "v7",
+    "v8",
+    "v9"
+  ],
+  "resources_before": {
+    "disk": {
+      "total_bytes": 3077595136,
+      "used_bytes": 900390912,
+      "free_bytes": 2000207872
+    },
+    "memory": {
+      "MemTotal": "4010180 kB",
+      "MemAvailable": "3232256 kB"
+    },
+    "load_1_5_15": [
+      "0.31",
+      "0.22",
+      "0.09"
+    ],
+    "process_count": 2
+  },
+  "resources_after": {
+    "disk": {
+      "total_bytes": 3077595136,
+      "used_bytes": 205832192,
+      "free_bytes": 2694766592
+    },
+    "memory": {
+      "MemTotal": "4010180 kB",
+      "MemAvailable": "3271600 kB"
+    },
+    "load_1_5_15": [
+      "0.53",
+      "0.26",
+      "0.11"
+    ],
+    "process_count": 2
+  }
+}

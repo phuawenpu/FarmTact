@@ -136,3 +136,46 @@ def test_http_import_review_is_tenant_scoped_and_waste_rescue_is_dated(setup):
             "decision": "confirm", "reviewer": "other"
         })
         assert response.status_code == 404, response.text
+
+
+def test_action_pack_omits_historical_stages_but_keeps_biological_dates():
+    from datetime import timedelta
+    from packages.fixtures import synthetic_farm
+    farm = synthetic_farm()
+    day = farm.planning_date
+    result = {"input_snapshot": farm.model_dump(mode="json"), "strategies": [{"id": "balanced", "status": "FEASIBLE", "violations": [],
+        "allocations": [{"id": "existing-cycle", "recipe_id": farm.recipes[0].id, "crop_id": farm.recipes[0].crop_id,
+            "bed_id": farm.beds[0].id, "area_m2": float(farm.beds[0].area_m2), "expected_kg": 5,
+            "sow_date": str(day - timedelta(days=10)), "transplant_date": str(day - timedelta(days=4)),
+            "harvest_date": str(day + timedelta(days=5)), "executed": True}], "order_allocations": []}]}
+    proposal = {"id": "p", "session_id": "s", "proposal_revision": 2}
+    tasks = farm_workflow._tasks_from_result("tenant", proposal, result, "balanced")
+    assert [task["action"] for task in tasks] == ["harvest"]
+    assert tasks[0]["biological_dates"] == {"sow_date": str(day - timedelta(days=10)),
+        "transplant_date": str(day - timedelta(days=4)), "harvest_date": str(day + timedelta(days=5))}
+
+
+def test_waste_rescue_uses_terminal_lot_dates_and_conservative_mixed_expiry(setup, monkeypatch):
+    store, tenant, _, _ = setup
+    from packages.fixtures import synthetic_farm
+    farm = synthetic_farm().model_dump(mode="json")
+    session = {"id": "s", "result_id": "r", "approved_result_id": "r", "farm": farm}
+    result = {"id": "r", "input_snapshot": farm, "strategies": [{"id": "balanced",
+        "inventory_snapshots": [{"date": "2026-10-31", "closing_lots": [
+            {"id": "lot-later", "crop_id": "caixin", "quantity_kg": 3, "harvested_date": "2026-10-30", "expires_date": "2026-11-03", "origin": "synthetic"},
+            {"id": "lot-first", "crop_id": "lettuce", "quantity_kg": 2, "harvested_date": "2026-10-29", "expires_date": "2026-11-01", "origin": "synthetic"},
+        ]}]}]}
+    monkeypatch.setattr(planning_sessions, "get_session", lambda *_: session)
+    monkeypatch.setattr(planning_sessions, "get_result", lambda *_: result)
+    app = FastAPI(); app.state.store = store; farm_workflow.register(app, lambda request: tenant)
+    with TestClient(app) as client:
+        response = client.post("/api/v1/farm-workflow/waste-rescue", json={"session_id": "s", "result_id": "r",
+            "strategy_id": "balanced", "sale_price_sgd_per_kg": 4, "rescue_price_sgd_per_kg": 2, "rescue_cost_sgd_per_kg": .5})
+        assert response.status_code == 200, response.text
+        aggregate = response.json()
+        assert aggregate["as_of"] == "2026-10-31" and aggregate["expires_on"] == "2026-11-01"
+        assert aggregate["quantity_kg"] == 5 and len(aggregate["surplus_lots"]) == 2
+        assert aggregate["selection_basis"] == "all_terminal_lots_aggregated_using_earliest_actual_expiry"
+        selected = client.post("/api/v1/farm-workflow/waste-rescue", json={"session_id": "s", "result_id": "r",
+            "strategy_id": "balanced", "lot_id": "lot-later", "sale_price_sgd_per_kg": 4})
+        assert selected.json()["expires_on"] == "2026-11-03" and selected.json()["quantity_kg"] == 3

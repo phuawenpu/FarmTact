@@ -1,0 +1,7 @@
+{
+  "status": "FAIL",
+  "candidate_source": "c178b026d7c0e3a55ff407e16a98e4f7f08088d5",
+  "council_trial": "Reached task reporting; acceptance correction field used obsolete result_note and returned422. Review output not retained after recalculation; no Council quality pass claimed.",
+  "document_trial": "Invoice extracted sufficiently to proceed to photo. Photo returned safe503; no complete extraction pass claimed.",
+  "followup": "Correct runner schema, retain incremental evidence and review history; clarify typed extraction schema then rerun bounded checks."
+}

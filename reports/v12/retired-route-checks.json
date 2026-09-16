@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "checks": {
+    "only_v11_public": true,
+    "candidate_not_public": true,
+    "v1_GET_gone": true,
+    "v1_POST_gone": true,
+    "v2_GET_gone": true,
+    "v2_POST_gone": true,
+    "v3_GET_gone": true,
+    "v3_POST_gone": true,
+    "v4_GET_gone": true,
+    "v4_POST_gone": true,
+    "v5_GET_gone": true,
+    "v5_POST_gone": true,
+    "v6_GET_gone": true,
+    "v6_POST_gone": true,
+    "v7_GET_gone": true,
+    "v7_POST_gone": true,
+    "v8_GET_gone": true,
+    "v8_POST_gone": true,
+    "v9_GET_gone": true,
+    "v9_POST_gone": true,
+    "v10_GET_gone": true,
+    "v10_POST_gone": true,
+    "v11_source_unchanged": true
+  },
+  "inference_calls": 0
+}

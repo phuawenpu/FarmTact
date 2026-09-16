@@ -1,0 +1,86 @@
+{
+  "status": "FAIL",
+  "suite": {
+    "name": "pytest",
+    "errors": "10",
+    "failures": "4",
+    "skipped": "1",
+    "tests": "673",
+    "time": "594.018",
+    "timestamp": "2026-09-16T13:08:11.476833+00:00",
+    "hostname": "wed2026"
+  },
+  "failures": [
+    {
+      "test": "tests.council_research.test_postgres.test_postgres_serializes_concurrent_apply_and_replays_idempotently",
+      "kind": "error",
+      "message": "failed on setup with \"sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server on socket \"/tmp/farmtact-pg/.s.PGSQL.5432\" failed: FATAL:  database \"farmtact_research_test\" does not exist\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\""
+    },
+    {
+      "test": "tests.council_research.test_postgres.test_restart_retains_frozen_job_and_late_result_is_archived",
+      "kind": "error",
+      "message": "failed on setup with \"sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server on socket \"/tmp/farmtact-pg/.s.PGSQL.5432\" failed: FATAL:  database \"farmtact_research_test\" does not exist\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\""
+    },
+    {
+      "test": "tests.council_research.test_postgres.test_fk_tenant_isolation_and_advisor_freezes_current_result_without_provider",
+      "kind": "error",
+      "message": "failed on setup with \"sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server on socket \"/tmp/farmtact-pg/.s.PGSQL.5432\" failed: FATAL:  database \"farmtact_research_test\" does not exist\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\""
+    },
+    {
+      "test": "tests.gameplay.test_retention.test_dry_run_reports_full_schema_without_changing_rows",
+      "kind": "failure",
+      "message": "assert False\n +  where False = all(<generator object test_dry_run_reports_full_schema_without_changing_rows.<locals>.<genexpr> at 0x7f4de59212f0>)"
+    },
+    {
+      "test": "tests.gameplay.test_retention.test_apply_purges_old_inactive_tenant_and_every_child_but_not_shared_state",
+      "kind": "failure",
+      "message": "assert False\n +  where False = all(<generator object test_apply_purges_old_inactive_tenant_and_every_child_but_not_shared_state.<locals>.<genexpr> at 0x7f4de5728e10>)"
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_proposed_experiment_uses_exact_conversation_snapshot",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_quest_requires_its_own_changed_assumption[late_harvest-controls0]",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_quest_requires_its_own_changed_assumption[busy_market-controls1]",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_quest_requires_its_own_changed_assumption[short_handed_week-controls2]",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_quest_requires_its_own_changed_assumption[tight_budget-controls3]",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_scenario_without_imported_farm_returns_recoverable_conflict",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_scenarios.test_no_change_sandbox_reuses_frozen_baseline_exactly",
+      "kind": "error",
+      "message": "failed on setup with \"RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist\""
+    },
+    {
+      "test": "tests.gameplay.test_v8_simulation_postgres.test_postgres_world_advance_is_serialized_isolated_and_durable",
+      "kind": "failure",
+      "message": "sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server on socket \"/tmp/farmtact-pg/.s.PGSQL.5432\" failed: FATAL:  database \"farmtact_simulation_test\" does not exist\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    },
+    {
+      "test": "tests.numerical.test_v11_planning.test_zero_assumptions_preserve_existing_inputs_and_planner_contract",
+      "kind": "failure",
+      "message": "AssertionError: assert {'reservation..._changes': []} == {'future_dema..._changes': []}\n  \n  Omitting 3 identical items, use -vv to show\n  Left contains 1 more item:\n  {'reservations': []}\n  Use -v to get more diff"
+    }
+  ],
+  "note": "First full run. Missing isolated databases and concurrent frontend build affected fixtures; focused reruns passed. Final full regression still pending."
+}

@@ -1,0 +1,29 @@
+{
+  "status": "STAGED",
+  "public_registry_changed": false,
+  "entry": {
+    "id": "v12",
+    "title": "Private V12 retention candidate",
+    "published_at": "2026-09-16",
+    "summary": "Private infrastructure candidate for two-edition retention; farmer workflow acceptance remains pending.",
+    "status": "published",
+    "source_commit": "aa3c96dcef38bcfd8d800610defbb0c5b7eb1db1",
+    "source_url": "https://github.com/phuawenpu/FarmTact/commit/aa3c96dcef38bcfd8d800610defbb0c5b7eb1db1",
+    "compare_url": "https://github.com/phuawenpu/FarmTact/compare/37802adbc9010bc80a50869ef725285a119af3f3...aa3c96dcef38bcfd8d800610defbb0c5b7eb1db1",
+    "image_digest": "registry.fly.io/farmtact@sha256:301960c74d285b887f42487527ba7fc935052789120987af3110e2c1d5d5ef00",
+    "review_url": "/v12/review",
+    "play_url": "/v12/",
+    "changes": [
+      {
+        "title": "Active edition lifecycle",
+        "description": "Keep immutable history separate from the current active pair and return retired routes as Gone.",
+        "feedback_ids": [],
+        "evidence": [
+          "docs/v12-implementation-plan.md",
+          "tests/editions/test_retention.py"
+        ],
+        "status": "implemented"
+      }
+    ]
+  }
+}

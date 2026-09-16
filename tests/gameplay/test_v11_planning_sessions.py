@@ -99,8 +99,21 @@ def test_missing_provider_is_visible_and_does_not_block_numerical_use(env,monkey
     execute_job(store,tenant,r.json()['job']['id'])
     s=client.get('/api/v1/planning-sessions/'+s['id']).json()
     assert s['review']['status']=='blocked' and s['review']['request_count']==0
+    frozen=deepcopy(s['review_history'])
+    assert frozen[-1]['review']==s['review']
+    assert frozen[-1]['result_id']==s['result_id']
+    with store.connection() as c:
+        saved=c.execute(select(JOBS.c.payload).where(JOBS.c.id==r.json()['job']['id'])).scalar_one()
+    assert saved['review_result']==s['review']
+    advanced=post(client,f"/{s['id']}/advance",{'revision':s['revision'],'days':1})
+    assert advanced.status_code==200,advanced.text
+    from services.api.planning_sessions import queue_recalculation
+    recalculation=queue_recalculation(store,tenant,get_session(store,tenant,s['id']),[{'kind':'planning_assumptions','assumptions':{}}])
+    execute_job(store,tenant,recalculation['id'])
+    s=client.get('/api/v1/planning-sessions/'+s['id']).json()
+    assert s['review']['status']=='not_requested'
+    assert s['review_history']==frozen
     assert s['selected_strategy_id']
-    assert post(client,f"/{s['id']}/advance",{'revision':s['revision'],'days':1}).status_code==200
 
 
 def test_guided_world_cannot_be_mutated_through_legacy_routes(env):

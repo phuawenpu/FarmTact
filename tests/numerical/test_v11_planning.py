@@ -19,7 +19,13 @@ def test_zero_assumptions_preserve_existing_inputs_and_planner_contract(base_ses
     farm,result=base_session
     assert result['input_snapshot']==farm.model_dump(mode='json')
     assert result['input_hash']==result['forecast']['input_hash']
-    assert result['assumptions']=={'future_demand':[],'seasonal':[],'order_changes':[]}
+    assert result["assumptions"] == {
+        "future_demand": [],
+        "seasonal": [],
+        "order_changes": [],
+        "reservations": [],
+        "tentative_orders": [],
+    }
     assert [row['name'] for row in result['strategies']]==['Lean','Balanced','Resilient']
     assert result['retained_strategy'] is None and result['comparisons']==[]
     assert result['stages'][0]['stage']=='validate_and_version_inputs'

@@ -8,7 +8,7 @@ checks plus tenant-scoped idempotency receipts.
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from functools import wraps
 import hashlib
@@ -290,6 +290,8 @@ def _tasks_from_result(tenant: str, proposal: dict[str, Any], result: dict[str, 
     if not strategy or strategy.get("status", "FEASIBLE") != "FEASIBLE" or strategy.get("violations"):
         raise ValueError("A feasible calculated strategy is required before action approval")
     recipes = {row.get("id"): row for row in result.get("input_snapshot", {}).get("recipes", [])}
+    snapshot = result.get("input_snapshot", {})
+    planning_day = Farm.model_validate(snapshot).planning_date if snapshot.get("cutoff") and snapshot.get("beds") else None
     tasks = []
     for allocation in strategy.get("allocations", []):
         batch = allocation.get("id")
@@ -297,6 +299,10 @@ def _tasks_from_result(tenant: str, proposal: dict[str, Any], result: dict[str, 
                                          ("transplant", "transplant_date", ["Confirm bed availability", "Record transplant"]),
                                          ("harvest", "harvest_date", ["Weigh accepted crop", "Record rejected crop"])):
             if not allocation.get(field): continue
+            due = date.fromisoformat(str(allocation[field])[:10])
+            # An allocation may carry historical executed stages so the planner can
+            # preserve biology and lot origin. Those stages are evidence, not new work.
+            if planning_day is not None and due < planning_day: continue
             # Stable across replans for the same session/allocation/action. This
             # lets approval retain reported work rather than manufacture it anew.
             task_id = "task-" + hashlib.sha256(f"{tenant}:{proposal['session_id']}:{batch}:{action}".encode()).hexdigest()[:24]
@@ -310,6 +316,7 @@ def _tasks_from_result(tenant: str, proposal: dict[str, Any], result: dict[str, 
             tasks.append({"id": task_id, "tenant_id": tenant, "session_id": proposal["session_id"], "proposal_id": proposal["id"],
                 "proposal_revision": proposal["proposal_revision"], "action": action, "due_date": allocation[field],
                 "crop_id": allocation.get("crop_id"), "batch_id": batch, "location": allocation.get("bed_id"),
+                "biological_dates": {name: allocation.get(name) for name in ("sow_date", "transplant_date", "harvest_date")},
                 "checklist": checklist, "photo_required": False, "planned_quantity": planned_quantity,
                 "actual_quantity": None, "unit": unit, "status": "pending", "event_revision": 0,
                 "created_at": now(), "updated_at": now(), "real_operations_enabled": False})
@@ -355,12 +362,16 @@ def approve_and_create_actions(store, tenant: str, proposal_id: str, *, adapter:
             existing = {row["id"]: row for row in c.execute(select(TASKS.c.payload).where(TASKS.c.tenant_id == tenant, TASKS.c.session_id == proposal["session_id"])).scalars()}
             active_ids = {task["id"] for task in tasks}
             for old in existing.values():
-                if old["id"] not in active_ids and old["status"] in {"pending", "in_progress", "recovery_required"}:
+                if old["id"] not in active_ids and old.get("event_revision", 0) > 0:
+                    old.update(superseded_by_proposal_id=proposal_id, recovery_proposal_id=proposal_id, updated_at=now())
+                    c.execute(update(TASKS).where(TASKS.c.id == old["id"], TASKS.c.tenant_id == tenant).values(payload=old))
+                elif old["id"] not in active_ids and old["status"] in {"pending", "in_progress", "recovery_required"}:
                     old.update(status="cancelled", updated_at=now(), superseded_by_proposal_id=proposal_id)
                     c.execute(update(TASKS).where(TASKS.c.id == old["id"], TASKS.c.tenant_id == tenant).values(status="cancelled", payload=old))
             for task in tasks:
                 old = existing.get(task["id"])
-                if old and old["status"] == "completed":
+                if old and old.get("event_revision", 0) > 0:
+                    old.update(recovery_proposal_id=proposal_id, updated_at=now())
                     task.clear(); task.update(old)
                 elif old:
                     task.update(event_revision=old.get("event_revision", 0))
@@ -686,31 +697,33 @@ def register(app, tenant):
             result = planning_sessions.get_result(app.state.store, t, body.result_id)
             strategy = next((row for row in (result or {}).get("strategies", []) if row.get("id") == body.strategy_id), None)
             if not strategy: raise ValueError("Bound strategy not found")
-            quantity = Decimal(str(strategy.get("terminal_stock", {}).get("quantity_kg", strategy.get("metrics", {}).get("closing_stock_kg", 0))))
-            def find_lot(value):
-                if isinstance(value, dict):
-                    if str(value.get("lot_id") or value.get("id")) == body.lot_id:
-                        return value
-                    for child in value.values():
-                        found = find_lot(child)
-                        if found: return found
-                elif isinstance(value, list):
-                    for child in value:
-                        found = find_lot(child)
-                        if found: return found
-                return None
+            snapshots = strategy.get("inventory_snapshots", [])
+            if not snapshots: raise ValueError("Frozen strategy has no dated terminal inventory snapshot")
+            terminal = snapshots[-1]
+            as_of = date.fromisoformat(terminal["date"])
+            lots = [{"lot_id": row["id"], "crop_id": row.get("crop_id"), "quantity_kg": row["quantity_kg"],
+                     "harvested_date": row.get("harvested_date"), "expires_on": row["expires_date"],
+                     "origin": row.get("origin")} for row in terminal.get("closing_lots", []) if Decimal(str(row.get("quantity_kg", 0))) > 0]
+            if not lots: raise ValueError("Frozen strategy has no terminal surplus lots")
             if body.lot_id:
-                lot = find_lot(strategy.get("inventory_snapshots", [])[-1:] or [])
+                lot = next((row for row in lots if row["lot_id"] == body.lot_id), None)
                 if not lot: raise ValueError("Bound surplus lot not found")
-                quantity = Decimal(str(lot.get("quantity_kg", lot.get("closing_kg", quantity))))
-            farm = Farm.model_validate(result.get("input_snapshot", session["farm"]))
-            expires = farm.planning_date + timedelta(days=farm.horizon_days)
-            comparison = waste_rescue_scenarios(quantity_kg=quantity, expires_on=expires, today=farm.planning_date,
+                selected_lots = [lot]; selection_basis = "selected_exact_terminal_lot"
+            else:
+                selected_lots = lots
+                selection_basis = "all_terminal_lots_aggregated_using_earliest_actual_expiry"
+            quantity = sum((Decimal(str(row["quantity_kg"])) for row in selected_lots), Decimal(0))
+            expires = min(date.fromisoformat(row["expires_on"]) for row in selected_lots)
+            comparison = waste_rescue_scenarios(quantity_kg=quantity, expires_on=expires, today=as_of,
                 sale_price_sgd_per_kg=body.sale_price_sgd_per_kg, rescue_price_sgd_per_kg=body.rescue_price_sgd_per_kg,
                 rescue_cost_sgd_per_kg=body.rescue_cost_sgd_per_kg)
             comparison["binding"] = {"session_id": body.session_id, "result_id": body.result_id,
-                "strategy_id": body.strategy_id, "lot_id": body.lot_id or "terminal_stock", "result_hash": content_hash(result),
+                "strategy_id": body.strategy_id, "lot_id": body.lot_id, "result_hash": content_hash(result),
                 "derived_quantity_kg": float(quantity)}
+            comparison["surplus_lots"] = lots
+            comparison["selected_lot_ids"] = [row["lot_id"] for row in selected_lots]
+            comparison["selection_basis"] = selection_basis
+            comparison["as_of_basis"] = "frozen_terminal_inventory_snapshot_at_horizon_close"
             comparison["basis"] = "hypothetical_local_comparison_of_frozen_projected_terminal_stock"
             return comparison
         except ValueError as exc: _http_error(exc)

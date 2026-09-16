@@ -22,6 +22,19 @@ def post(client,path,body,key=None):
     return client.post('/api/v1'+path,json=body,headers={'Idempotency-Key':key or uuid4().hex})
 
 
+def test_uploaded_preview_keeps_sandbox_policy_through_app_middleware():
+    with TestClient(create_app(Store('sqlite://'),start_worker=False)) as client:
+        client.get('/api/v1/bootstrap')
+        raw=b'date,kind,amount,currency\n2026-09-01,expense,12.50,SGD\n'
+        uploaded=client.post('/api/v1/farm-workflow/imports/upload?filename=ledger.csv&source_kind=accounting_export',
+            content=raw,headers={'content-type':'text/csv','Idempotency-Key':uuid4().hex})
+        assert uploaded.status_code==201,uploaded.text
+        preview=client.get('/api/v1/farm-workflow/imports/'+uploaded.json()['candidate_id']+'/source')
+        assert preview.content==raw
+        assert preview.headers['content-security-policy']=="sandbox; default-src 'none'"
+        assert preview.headers['x-content-type-options']=='nosniff'
+
+
 def test_v12_actual_routes_calculate_propose_approve_task_and_replay():
     store=Store('sqlite://')
     with TestClient(create_app(store,start_worker=False)) as client:

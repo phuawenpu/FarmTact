@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checks": {
+    "manual_csv_xlsx_reviewed": true,
+    "reconciliation_exact": true,
+    "source_preview_exact": true,
+    "upload_replay_exact": true,
+    "tentative_link_withheld": true,
+    "confirmed_provenance_linked": true,
+    "provider_call_contract": true,
+    "cross_tenant_source_isolated": true,
+    "state_has_no_raw_blobs": true
+  },
+  "provider_requests_expected": 0,
+  "vision_requested": false,
+  "started_at": "2026-09-16T13:30:58.414134+00:00",
+  "completed_at": "2026-09-16T13:31:08.910907+00:00",
+  "base_url": "http://127.0.0.1:8092",
+  "private_gateway": false,
+  "sanitization": "Ephemeral candidate, planning-session, proposal and tenant identifiers omitted."
+}
