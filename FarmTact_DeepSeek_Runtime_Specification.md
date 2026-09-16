@@ -1,5 +1,12 @@
 ## V12 implementation amendment — 16 September 2026
 
+Final guided Council contract: prompt/validator/functional V4, output schema V3,
+context V4. Capacity & Cost must cite cost, area or labour under its dedicated
+capacity rationale; margin alone is insufficient. Balanced findings require service,
+waste/stock and margin evidence groups. Provider abstentions are partial and retain
+actual inference audits. Earlier narrower guards and their live limitations remain
+in the dated trial evidence.
+
 Planning Council context V4 adds initial-plan crop identity, per-crop allocation
 counts and area as snapshot facts. These are not retained-plan comparisons. The
 V3 live trial correctly withheld Crop Planner when only aggregate area was present;

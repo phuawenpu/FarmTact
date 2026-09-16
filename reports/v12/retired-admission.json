@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checks": {
+    "v1_admission_rejected": true,
+    "v10_admission_rejected": true,
+    "budget_unchanged": true
+  },
+  "inference_requests": 0,
+  "source_commit": "54a86a1585cec05354b4cfe8e9288e55420d8dec"
+}

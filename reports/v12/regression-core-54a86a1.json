@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "source_commit": "54a86a1585cec05354b4cfe8e9288e55420d8dec",
+  "passed": 722,
+  "skipped": 1,
+  "warnings": 4,
+  "seconds": 681.76,
+  "scope": "Full suite before subsequent narrow initial-crop-context and final Council semantic/abstention changes. Those changes require focused and exact candidate verification."
+}

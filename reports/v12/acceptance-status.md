@@ -30,3 +30,9 @@ restart replay. Its Council V3 trial completed the workflow but correctly withhe
 Crop Planner because initial-plan context lacked per-crop claims. Context V4 now
 adds authoritative crop-composition snapshot facts (nine focused tests passed);
 a fresh exact-source candidate and bounded Council review remain required.
+
+The full 54a86a1 regression passed 722 tests with one skip. Further independent
+review narrowed the final Council V4 contract: margin-only findings cannot pass
+Capacity & Cost, balanced findings need all service/waste/margin groups, and valid
+provider abstentions show partial. Eleven focused Council tests pass. Exact-source
+full regression and live final Council review remain publication gates.

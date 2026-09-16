@@ -126,11 +126,43 @@ def test_functional_roles_require_crop_composition_and_capacity_cost_evidence():
                         "rationale": "protect_booked_service", "proposed_strategy_id": service["strategy_id"]}
     assert "capacity_cost_evidence_required" in planning_council._semantic_issues(
         capacity_finding, selected=[service], role="supply_chain_analyst")
-    capacity_finding.update(claim_ids=[margin["id"]], tradeoff="margin_over_service", rationale="preserve_margin",
-                            proposed_strategy_id=margin["strategy_id"])
-    assert planning_council._semantic_issues(capacity_finding, selected=[margin], role="supply_chain_analyst") == []
+    margin_only = {"claim_ids": [margin["id"]], "tradeoff": "margin_over_service", "rationale": "preserve_margin",
+                   "proposed_strategy_id": margin["strategy_id"]}
+    assert set(planning_council._semantic_issues(margin_only, selected=[margin], role="supply_chain_analyst")) >= {
+        "capacity_cost_rationale_required", "capacity_cost_evidence_required"}
+    capacity_finding.update(claim_ids=[area["id"]], tradeoff="capacity_over_volume", rationale="respect_capacity_cost",
+                            proposed_strategy_id=area["strategy_id"])
+    assert planning_council._semantic_issues(capacity_finding, selected=[area], role="supply_chain_analyst") == []
     assert "crop-specific allocation or crop-identity" in planning_council._prompt("production_analyst")
-    assert "area, labour, cost, or margin" in planning_council._prompt("supply_chain_analyst")
+    assert "area, labour, or projected-cost" in planning_council._prompt("supply_chain_analyst")
+
+
+def test_balanced_rationale_requires_service_waste_and_margin_groups():
+    claims = build_claims(_result())
+    selected = {metric: next(row for row in claims if row["metric"] == metric)
+                for metric in ("booked_delivered_kg", "waste_kg", "margin_sgd")}
+    finding = {"claim_ids": [selected["margin_sgd"]["id"]], "tradeoff": "balanced",
+               "rationale": "balance_service_waste_margin", "proposed_strategy_id": selected["margin_sgd"]["strategy_id"]}
+    assert "rationale_required_metric_groups_missing" in planning_council._semantic_issues(
+        finding, selected=[selected["margin_sgd"]], role="profit_analyst")
+    chosen = list(selected.values())
+    finding["claim_ids"] = [row["id"] for row in chosen]
+    finding["proposed_strategy_id"] = None
+    assert planning_council._semantic_issues(finding, selected=chosen, role="profit_analyst") == []
+
+
+def test_provider_abstention_is_partial_with_completed_inference_not_validated():
+    raw = {"claim_ids": [], "tradeoff": "insufficient_evidence", "rationale": "insufficient_external_evidence",
+           "proposed_strategy_id": None}
+    assert planning_council._finding_status(raw, []) == "abstained"
+    public = planning_council.functional_council_view({"status": "partial", "findings": [{
+        "role": "supply_chain_analyst", "status": "abstained", "rendered_facts": [], "rejection_reasons": [],
+        "audit": {"provider": "deepseek"}, "inference_origin": "deepseek_api",
+    }]})
+    finding = public["findings"][0]
+    assert public["truth_status"] == "partial"
+    assert finding["truth_status"] == "partial" and finding["tool_status"] == "provider_abstained"
+    assert finding["audit"]["provider"] == "deepseek"
 
 
 class FakeGateway:
@@ -148,15 +180,16 @@ class FakeGateway:
         self.calls.append((role, context))
         self.versions.append(kwargs["versions"].public())
         claims = context["verified_claims"]
-        preferred = ({"crop_id_set", "crop_allocation_count", "crop_allocation_area_m2"}
-                     if role == "production_analyst" else
-                     {"area_m2", "labour_hours", "cost_sgd", "margin_sgd"}
-                     if role == "supply_chain_analyst" else set())
-        selected = next((row for row in claims if row["metric"] in preferred), claims[0] if claims else None)
+        preferred = (["crop_id_set", "crop_allocation_count", "crop_allocation_area_m2"]
+                     if role == "production_analyst" else ["cost_sgd", "labour_hours", "area_m2"]
+                     if role == "supply_chain_analyst" else [])
+        selected = next((row for metric in preferred for row in claims if row["metric"] == metric), claims[0] if claims else None)
         ids = [selected["id"]] if selected else []
         strategy = context["eligible_strategy_ids"][0] if ids else None
         metric = selected["metric"] if selected else None
-        if metric in {"crop_allocation_count", "crop_allocation_area_m2", "crop_id_set", "area_m2"}:
+        if role == "supply_chain_analyst" and metric in {"cost_sgd", "labour_hours", "area_m2"}:
+            tradeoff, rationale = "capacity_over_volume", "respect_capacity_cost"
+        elif metric in {"crop_allocation_count", "crop_allocation_area_m2", "crop_id_set", "area_m2"}:
             tradeoff, rationale = "space_over_variety", "preserve_crop_variety"
         elif metric in {"booked_delivered_kg", "booked_shortfall_kg", "fill_rate"}:
             tradeoff, rationale = "service_over_margin", "protect_booked_service"
@@ -204,9 +237,9 @@ def test_review_skips_absent_external_roles_and_chair_sees_statuses(monkeypatch)
     assert review["status"] == "completed"
     assert review["request_count"] == 5
     assert all(version == {
-        "prompt_template": "farmtact-planning-council-prompt-v3",
-        "output_schema": "farmtact-planning-finding-output-v2",
-        "validator": "farmtact-planning-claim-validator-v3",
+        "prompt_template": "farmtact-planning-council-prompt-v4",
+        "output_schema": "farmtact-planning-finding-output-v3",
+        "validator": "farmtact-planning-claim-validator-v4",
         "context": "farmtact-planning-comparison-context-v4",
         "sources": "farmtact-planning-source-context-v2",
     } for version in FakeGateway.versions)
@@ -223,6 +256,9 @@ def test_review_skips_absent_external_roles_and_chair_sees_statuses(monkeypatch)
                for row in chair_context["prior_statuses"])
     assert chair_context["allowed_tradeoff_rationales"]["margin_over_service"] == ["preserve_margin"]
     assert "margin_sgd" in chair_context["rationale_metrics"]["preserve_margin"]
+    assert chair_context["required_rationale_metric_groups"]["balance_service_waste_margin"] == [
+        ["booked_delivered_kg", "booked_shortfall_kg", "fill_rate"],
+        ["closing_stock_kg", "waste_kg"], ["margin_sgd"]]
     assert all("raw_provider_output" in row for row in review["findings"])
     assert any(kind == "planning_council_role_unavailable" for kind, _ in events)
 
@@ -248,7 +284,7 @@ def test_functional_view_distinguishes_validated_partial_and_withheld_truth():
         {"role": "planning_chair", "status": "rejected", "rendered_facts": [], "rejection_reasons": ["bad claim"]},
     ]}
     public = planning_council.functional_council_view(review)
-    assert public["contract_version"] == "farmtact-functional-council-v3"
+    assert public["contract_version"] == "farmtact-functional-council-v4"
     assert public["truth_status"] == "withheld"
     assert [(row["functional_role"], row["truth_status"], row["tool_status"]) for row in public["findings"]] == [
         ("Demand Planner", "validated", "local_calculation_and_inference_completed"),
