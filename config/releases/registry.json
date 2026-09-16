@@ -1,5 +1,5 @@
 {
-  "latest": "v11",
+  "latest": "v12",
   "editions": [
     {
       "id": "v1",
@@ -520,6 +520,72 @@
           "feedback_ids": [],
           "evidence": [
             "reports/v11/frontend-browser.json"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v12",
+      "title": "FarmTact V12 \u2014 Guided Farm Planning",
+      "published_at": "2026-09-16",
+      "summary": "A guided Singapore Demo Farm loop connects reviewed records, evidence-bearing Council advice, calculated proposals, explicit sandbox approval, reported work and recovery planning.",
+      "status": "published",
+      "source_commit": "9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/37802adbc9010bc80a50869ef725285a119af3f3...9fd57898b8a4e3b69a40c3abf03895f0fcb05daf",
+      "image_digest": "registry.fly.io/farmtact@sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56",
+      "review_url": "/v12/review",
+      "play_url": "/v12/",
+      "changes": [
+        {
+          "title": "Observe, discuss and decide",
+          "description": "Seven functional Council roles expose evidence and withheld findings beside a visual farm board. Reviewed proposals keep confirmed orders, tentative demand and price signals separate.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/seven_agents/test_v11_planning_council.py",
+            "tests/gameplay/test_v12_integration.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Review the Farm Data Inbox",
+          "description": "Synthetic examples, CSV/XLSX accounting records, manual corrections and bounded document/photo candidates retain source provenance and require confirmation. Crop photos never independently establish yield.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/gameplay/test_farm_workflow.py",
+            "scripts/v12_upload_trial.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Approve, act, verify and replan",
+          "description": "Explicit approval creates revision-bound sandbox tasks. Quantities, rejected deliveries and corrections produce auditable forecast feedback while preserving reported work. Dated Waste Rescue comparisons remain hypothetical.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/gameplay/test_v12_acceptance_adversarial.py",
+            "tests/gameplay/test_v12_integration.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Keep two editions with recoverable retirement",
+          "description": "V11 and V12 retain independent images and state. Older routes return Gone. Future successful releases advance the active pair and run snapshot-backed cleanup while preserving release history.",
+          "feedback_ids": [],
+          "evidence": [
+            "docs/deployment/editions.md",
+            "reports/v12/retirement.md",
+            "tests/editions/test_retention.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Learn the complete workflow",
+          "description": "Three captioned downloadable guides provide exact transcripts and static reading alternatives. Mission milestones identify projected, simulated and user-reported evidence; real operations remain disabled.",
+          "feedback_ids": [],
+          "evidence": [
+            "reports/v12/media-verification.json",
+            "tests/browser/v12_real_ui.mjs"
           ],
           "status": "implemented"
         }
