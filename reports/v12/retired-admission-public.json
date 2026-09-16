@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "checks": {
+    "v1_admission_rejected": true,
+    "v10_admission_rejected": true,
+    "budget_unchanged": true
+  },
+  "inference_requests": 0
+}

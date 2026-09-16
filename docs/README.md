@@ -1,12 +1,12 @@
 # FarmTact documentation
 
-Documentation updated **11 September 2026**. Latest edition: **V11**, frozen from
-source `37802adbc9010bc80a50869ef725285a119af3f3`. All eleven health/source checks
-and captured V1–V10 preservation passed. The [V11 report](../reports/v11/implementation.md)
-records the guided planning workflow, 643-test regression, subsequent 63-test
-staging correction, 24 browser checks and a 20-check staged live journey using
-five DeepSeek requests. The earlier V8–V10 AI/capacity failures remain historical
-evidence; V11's bounded Council does not certify their free-text workflows.
+Documentation updated **16 September 2026**. Latest edition: **V12**, frozen from
+source `9fd57898b8a4e3b69a40c3abf03895f0fcb05daf`; previous: **V11**. Only this pair
+runs publicly. V1–V10 return 410 while immutable history remains. Start with the
+[V12 implementation/evidence](../reports/v12/implementation.md),
+[workflow and retention contracts](technical/v12-farmer-workflow.md), and
+[requirement map](../reports/v12/requirements-evidence.md). Dated earlier failures
+and bounded AI-quality limitations remain explicit in their original reports.
 
 ## Start here
 

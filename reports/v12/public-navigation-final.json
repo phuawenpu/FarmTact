@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "360: chooser only V12/V11 newest first",
+      "pass": true
+    },
+    {
+      "name": "360: chooser fits",
+      "pass": true
+    },
+    {
+      "name": "360: v11 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "360: v11 fits",
+      "pass": true
+    },
+    {
+      "name": "360: v12 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "360: v12 fits",
+      "pass": true
+    },
+    {
+      "name": "390: chooser only V12/V11 newest first",
+      "pass": true
+    },
+    {
+      "name": "390: chooser fits",
+      "pass": true
+    },
+    {
+      "name": "390: v11 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "390: v11 fits",
+      "pass": true
+    },
+    {
+      "name": "390: v12 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "390: v12 fits",
+      "pass": true
+    },
+    {
+      "name": "430: chooser only V12/V11 newest first",
+      "pass": true
+    },
+    {
+      "name": "430: chooser fits",
+      "pass": true
+    },
+    {
+      "name": "430: v11 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "430: v11 fits",
+      "pass": true
+    },
+    {
+      "name": "430: v12 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "430: v12 fits",
+      "pass": true
+    },
+    {
+      "name": "1280: chooser only V12/V11 newest first",
+      "pass": true
+    },
+    {
+      "name": "1280: chooser fits",
+      "pass": true
+    },
+    {
+      "name": "1280: v11 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "1280: v11 fits",
+      "pass": true
+    },
+    {
+      "name": "v11: real switch navigation",
+      "pass": true
+    },
+    {
+      "name": "1280: v12 switcher active pair",
+      "pass": true
+    },
+    {
+      "name": "1280: v12 fits",
+      "pass": true
+    },
+    {
+      "name": "v12: real switch navigation",
+      "pass": true
+    },
+    {
+      "name": "No uncaught page errors",
+      "pass": true
+    },
+    {
+      "name": "No inference requested",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "inference_requests": []
+}

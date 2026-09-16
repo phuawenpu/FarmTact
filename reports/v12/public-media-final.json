@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T15:28:38.431104+00:00",
+  "scope": "After final cleanup restart: public MP4, captions and posters match verified artifacts.",
+  "files": [
+    {
+      "name": "observe-decide.mp4",
+      "bytes": 383280,
+      "sha256": "dfc8a49f98ebe9c89655c3eda9e6cbeea3add33fb4c3e368b13e8daf0cef1b5d",
+      "match": true
+    },
+    {
+      "name": "observe-decide.vtt",
+      "bytes": 969,
+      "sha256": "7b7af668cda39cd06970cc578664056095802e8d1c79ad755ba4b672528d4f84",
+      "match": true
+    },
+    {
+      "name": "observe-decide.png",
+      "bytes": 46205,
+      "sha256": "9ca714373db4ad8b861844fc4af8f2b55aa217bba4c6b8e84178f6f2ff4e2d21",
+      "match": true
+    },
+    {
+      "name": "council-evidence.mp4",
+      "bytes": 378469,
+      "sha256": "5ab55ae536c052ce5514182ac2dd35a5dd9bf4970a378d14da838538a562ae39",
+      "match": true
+    },
+    {
+      "name": "council-evidence.vtt",
+      "bytes": 976,
+      "sha256": "547f4c25edf296b00d9492bca0256f1f3978b9967245aa99da1c5d2113bb1316",
+      "match": true
+    },
+    {
+      "name": "council-evidence.png",
+      "bytes": 45993,
+      "sha256": "fc996662cd5febc3a1e45b1171826873d98821832e3c4ed783e489b29cadd09c",
+      "match": true
+    },
+    {
+      "name": "act-replan.mp4",
+      "bytes": 407217,
+      "sha256": "7cee9d9c73554db6cab0c29cc145695fcf63bf408091af944320fb5e4db5c2c7",
+      "match": true
+    },
+    {
+      "name": "act-replan.vtt",
+      "bytes": 1065,
+      "sha256": "d083e21c875f669ba32e467a4ca3743638923184cafd10a8c6fc7ae4c85f6b40",
+      "match": true
+    },
+    {
+      "name": "act-replan.png",
+      "bytes": 45072,
+      "sha256": "273e9bbda3744ef8eb9603152e15858a2a03bf48a41518ae1183dbd9bb2ee300",
+      "match": true
+    }
+  ]
+}

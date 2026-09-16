@@ -363,7 +363,16 @@ def probe_shared_edition(settings: dict, entry: dict) -> None:
     port = 8080 + int(entry['id'][1:])
     probe = "import json,time,urllib.request; deadline=time.monotonic()+150\nwhile True:\n try:\n  r=json.load(urllib.request.urlopen('http://127.0.0.1:"+str(port)+"/api/v1/health',timeout=5)); assert r.get('status')=='ok' and r.get('edition')=='"+entry['id']+"' and r.get('source_commit')=='"+entry['source_commit']+"'; break\n except Exception:\n  assert time.monotonic()<deadline; time.sleep(2)"
     import shlex
-    command(['fly','ssh','console','--app','farmtact','--machine',settings['machine_id'],'--container','gateway','--command','python -c '+shlex.quote(probe)])
+    args = ['fly','ssh','console','--app','farmtact','--machine',settings['machine_id'],
+            '--container','gateway','--command','python -c '+shlex.quote(probe)]
+    for attempt in range(3):
+        try:
+            command(args)
+            return
+        except subprocess.CalledProcessError:
+            if attempt == 2:
+                raise
+            time.sleep(2)
 
 
 def create_recovery_snapshot(settings: dict) -> str:

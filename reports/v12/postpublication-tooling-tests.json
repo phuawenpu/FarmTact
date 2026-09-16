@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "command": ".venv/bin/python -m pytest tests/editions tests/deployment -q",
+  "passed": 104,
+  "warnings": 2,
+  "seconds": 2.44,
+  "scope": "Final host-side CLI snapshot/readback/probe and injected adapter fixes; published application source/image unchanged"
+}

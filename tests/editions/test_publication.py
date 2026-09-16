@@ -443,3 +443,44 @@ def test_post_snapshot_machine_readback_requires_one_exact_machine(monkeypatch, 
                         type('Result', (), {'stdout': json.dumps(inventory)})())
     with pytest.raises(publication.PublicationError, match='missing or duplicated'):
         publication.readback_shared_runtime(settings, expected)
+
+
+def test_shared_probe_retries_transient_ssh_transport_then_preserves_exact_predicate(monkeypatch):
+    calls = []; sleeps = []
+    entry = {'id': 'v12', 'source_commit': 'a' * 40}
+    settings = {'machine_id': '1234567890abcd'}
+
+    def transient(args, **_kwargs):
+        calls.append(args)
+        if len(calls) == 1:
+            raise subprocess.CalledProcessError(1, args)
+        return type('Result', (), {'returncode': 0, 'stdout': '', 'stderr': ''})()
+
+    monkeypatch.setattr(publication, 'command', transient)
+    monkeypatch.setattr(publication.time, 'sleep', lambda seconds: sleeps.append(seconds))
+    publication.probe_shared_edition(settings, entry)
+    assert len(calls) == 2 and calls[0] == calls[1]
+    assert sleeps == [2]
+    probe = calls[0][-1]
+    assert '127.0.0.1:8092/api/v1/health' in probe
+    assert 'edition' in probe and 'v12' in probe
+    assert 'source_commit' in probe and 'a' * 40 in probe
+    assert 'status' in probe and 'ok' in probe
+
+
+def test_shared_probe_raises_after_three_ssh_transport_failures(monkeypatch):
+    calls = []; sleeps = []
+
+    def unavailable(args, **_kwargs):
+        calls.append(args)
+        raise subprocess.CalledProcessError(1, args)
+
+    monkeypatch.setattr(publication, 'command', unavailable)
+    monkeypatch.setattr(publication.time, 'sleep', lambda seconds: sleeps.append(seconds))
+    with pytest.raises(subprocess.CalledProcessError):
+        publication.probe_shared_edition(
+            {'machine_id': '1234567890abcd'},
+            {'id': 'v12', 'source_commit': 'b' * 40},
+        )
+    assert len(calls) == 3
+    assert sleeps == [2, 2]

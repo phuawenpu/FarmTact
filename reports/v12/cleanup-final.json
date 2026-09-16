@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "active": {
+    "previous": "v11",
+    "latest": "v12"
+  },
+  "snapshot": {
+    "id": "vs_8A5MM8m5vbA4tozoNwnJqM55",
+    "size": 45539808,
+    "volume_size": 3221225472,
+    "digest": "cd6bcfa50e137c6718f9686402524957d22f9354dd97ffa44c963fe4a807579a",
+    "created_at": "2026-09-16T15:20:42Z",
+    "status": "created",
+    "retention_days": 7
+  },
+  "runtime": {
+    "id": "2871575b4544d8",
+    "state": "started",
+    "region": "sin",
+    "guest": {
+      "cpu_kind": "shared",
+      "cpus": 4,
+      "memory_mb": 4096
+    },
+    "mounts": [
+      {
+        "encrypted": true,
+        "path": "/persist",
+        "size_gb": 3,
+        "volume": "vol_vdejexpzm8ydn5x4",
+        "name": "farmtact_shared_data"
+      }
+    ],
+    "containers": [
+      {
+        "name": "gateway",
+        "image": "registry.fly.io/farmtact@sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56"
+      },
+      {
+        "name": "v11",
+        "image": "registry.fly.io/farmtact@sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d"
+      },
+      {
+        "name": "v12",
+        "image": "registry.fly.io/farmtact@sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56"
+      }
+    ],
+    "health": [
+      {
+        "name": "v11",
+        "state": "healthy"
+      },
+      {
+        "name": "v12",
+        "state": "healthy"
+      },
+      {
+        "name": "gateway",
+        "state": "healthy"
+      }
+    ]
+  },
+  "retirement_report_sha256": "7068768ca5b6ccdffb7a7cb9f790cd415f6c5c22a15540609c8070ec8aeb2b68",
+  "publication_stage": "published",
+  "reconciliation": "Actual cleanup applied and operator removed before final transient SSH probe failure; exact source re-probed and completed state independently verified without redeploy or snapshot recreation."
+}

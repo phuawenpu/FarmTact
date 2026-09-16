@@ -1,5 +1,7 @@
 # FarmTact: scientific implementation report
 
+**Current V12:** [farmer workflow and retention](v12-farmer-workflow.md) · [implementation and acceptance](../../reports/v12/implementation.md). V11 remains the previous running edition; V1–V10 are retired.
+
 > **Historical baseline:** This chapter records the pre-remediation audit of source `a96025e` and published v7. Its implementation findings and measured results describe that baseline. Read [the V8 remediation report](v8-remediation-report.md) for simulation and synthetic model remediation, and [the V9 AI follow-up](v9-ai-followup.md) for corrections prompted by the V8 public trial. Source links below are navigation aids into the maintained repository; use the [frozen baseline](https://github.com/phuawenpu/FarmTact/tree/a96025e) to reproduce the original inspection.
 
 **AI orchestration, numerical planning, crop development and evidence boundaries**

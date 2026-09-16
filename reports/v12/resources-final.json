@@ -1,0 +1,18 @@
+{
+  "volume": {
+    "total_bytes": 3077595136,
+    "available_bytes": 2689699840,
+    "used_bytes": 210898944
+  },
+  "memory": {
+    "MemTotal": "4010180 kB",
+    "MemAvailable": "3253604 kB"
+  },
+  "load_1_5_15": [
+    0.875,
+    0.390625,
+    0.1611328125
+  ],
+  "namespace_process_count": 14,
+  "process_count_scope": "gateway PID namespace only; not whole-host process count"
+}

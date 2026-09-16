@@ -327,3 +327,16 @@ category-resolved signed accounting corrections, immutable reference uniqueness,
 rejection after target drift, and unsupported-crop accounting-only eligibility.
 Original failed/audit evidence is preserved. Final regression, exact candidate
 staging and bounded actual Council review remain gates before publication.
+
+## V12 publication complete — 16 September 2026
+
+V12 source9fd5789 is published; active pair is V11/V12 and next number is V13.
+V1–V10 workers/storage are retired with snapshot and preservation evidence. Final
+backend regression728 passed/one skip; host-side edition/deployment104 passed;
+UI25mock/30real, public navigation28 and authenticated isolation18 passed. Three
+uncached capacity pairs, V11 fingerprints, V12 restart replay, final media hashes
+and retired inference admission passed. Daily provider usage remains32/48.
+Postpublication CLI compatibility and deployment metadata fixes preserve the
+frozen application source/image and are documented in reports/v12/implementation.md.
+Cleanup is reconciled complete, with only gateway/V11/V12 running. Real operations
+remain disabled; source/qualitative/field-validation limits remain explicit.

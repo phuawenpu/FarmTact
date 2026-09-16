@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "editions": {
+    "v11": {
+      "source_unchanged": true,
+      "tables": {
+        "farm_versions": true,
+        "planning_runs": true,
+        "run_events": true,
+        "scenario_branches": true,
+        "quest_progress": true,
+        "conversations": true,
+        "conversation_messages": true,
+        "conversation_requests": true,
+        "conversation_events": true,
+        "explorer_snapshots": true,
+        "council_research_sessions": true,
+        "council_research_jobs": true,
+        "council_research_actions": true,
+        "council_research_history": true,
+        "council_research_action_receipts": true,
+        "simulation_worlds": true,
+        "simulation_events": true,
+        "simulation_receipts": true,
+        "mutation_receipts": true,
+        "guided_planning_sessions": true,
+        "guided_planning_jobs": true,
+        "guided_planning_versions": true,
+        "guided_planning_receipts": true
+      },
+      "captured_rows": 94
+    }
+  },
+  "scope": "Captured game records preserved; additional records allowed. No cookies or raw rows exported."
+}

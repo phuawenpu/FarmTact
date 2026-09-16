@@ -101,7 +101,9 @@ boundary. Missing retired directories are treated as already complete. A failed
 candidate before atomic cutover never enters this cleanup path and leaves the
 existing public pair unchanged.
 
-The current next unused number is v12; always check the registry before publishing.
+The current next unused number is v13; always check the registry before publishing.
+The V12 command examples below document its completed rollout; substitute the next
+unused edition for future publication.
 The legacy separate-app provisioning path remains for environments without a
 shared-host record. Do not remove that record to publish on this deployment.
 No credential values enter generated configuration, command output or manifests.
@@ -325,7 +327,7 @@ and billing evidence supports a change.
 The staged V12 image supplies the gateway code needed for the active-manifest
 cutover. V11 keeps its frozen application image and independent state.
 
-Staged V11 admission is explicitly configured with `FARMTACT_STAGED_EDITION` on
+Staged candidate admission is explicitly configured with `FARMTACT_STAGED_EDITION` on
 the gateway. The control service admits only that exact next unpublished number,
 under the same authentication, rate limits and shared provider cap. Public routing
 continues to require the published registry. When restaging an unlisted candidate,

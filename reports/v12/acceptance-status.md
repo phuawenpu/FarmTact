@@ -1,8 +1,30 @@
+# V12 published and final verification complete
+
+V12 source `9fd57898b8a4e3b69a40c3abf03895f0fcb05daf` and its exact staged image
+are published. Active editions are V11/V12 only; V1–V10 return 410 and remain in
+immutable history. V11 source/state is preserved. Cleanup completed with recovery
+snapshot, exact running-container readback and final operator removal.
+
+- Backend regression: 728 passed/one existing News-cache skip.
+- Final host-side edition/deployment regression: 104 passed.
+- Browser: 25 mocked / 30 real, public navigation: 28, public isolation: 18 passed.
+- Three uncached V11/V12 capacity pairs passed; cached repeats excluded.
+- Final source/assets, nine downloadable media artifacts, V11 fingerprints,
+  V12 restart replay and retired admission passed. Daily provider ledger: 32/48.
+
+See implementation.md and requirements-evidence.md for scope and original failures.
+AI qualitative interpretation remains unverified; Weather/Market are partial when
+sources are absent. Real operations remain disabled.
+
+---
+
+## Historical acceptance progression (not current status)
+
 # V12 is published; final cleanup verification in progress
 
 V12 source9fd5789 and exact staged image are public, with active V11/V12.
 728 backend tests passed (one skip), final UI25mock/30real checks passed, and
-public navigation28/edition18 checks passed. V1–V10 remain retired.
+public navigation: 28/edition18 checks passed. V1–V10 remain retired.
 
 Postpublication host-tool compatibility and edition-local metadata repair are
 recorded separately. The adapter now appends only published history; snapshot

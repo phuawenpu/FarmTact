@@ -1,0 +1,38 @@
+{
+  "status": "FAIL",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Root chooser creates no farm session",
+      "pass": true
+    },
+    {
+      "name": "Public registry exposes exactly the active editions",
+      "pass": true
+    },
+    {
+      "name": "Immutable history remains contiguous through latest",
+      "pass": true
+    },
+    {
+      "name": "Retired edition read returns 410 with active links",
+      "pass": true
+    },
+    {
+      "name": "Retired edition mutation returns 410",
+      "pass": true
+    },
+    {
+      "name": "Private controls are not publicly accessible",
+      "pass": true
+    },
+    {
+      "name": "Unknown edition never falls back",
+      "pass": true
+    },
+    {
+      "name": "v11 bootstrap succeeds",
+      "pass": false
+    }
+  ]
+}

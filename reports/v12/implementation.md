@@ -5,7 +5,7 @@ V12 is published at https://farmtact.fly.dev/v12/ from immutable source
 `registry.fly.io/farmtact@sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56`.
 The publication manifest commit is `26dde74`; tag `farmtact-v12` pins the source.
 Public history contains V1–V12, while active previous/latest are V11/V12 only.
-Post-publication cleanup/preservation evidence is being finalized.
+Post-publication cleanup, source, navigation, isolation, media and preservation checks passed.
 V11 is preserved at source `37802adbc9010bc80a50869ef725285a119af3f3` with its frozen
 image and independent database. V1–V10 running applications and exact storage
 subtrees have been retired after a completed recovery snapshot. Immutable release
@@ -84,7 +84,7 @@ freeing resources does not by itself establish a lower hosting bill.
 The final backend suite passed 728 tests with one skip in 695.90 seconds. Its
 Python tree matches the final application; only host-side publication command
 compatibility changed during/after the run and passed its focused release suite
-(56 tests after the final CLI correction). The skip is the existing absent generated
+(104 edition/deployment tests after all host-side corrections). The skip is the existing absent generated
 News-cache fixture; three library warnings remain. See regression-final-scope.json.
 The final browser suites passed 25 mocked and 30 real-backend assertions, and the
 published navigation check passed 28 assertions at all four widths with no errors
@@ -116,3 +116,25 @@ release tool now uses supported `fly machine list --json`, selects exactly one
 configured Machine and retains all active/staged/runtime exclusions. Cleanup is
 resumed without republishing or changing V12's source/image. The original failure
 and subsequent result are separate evidence.
+
+## Final verified state
+
+Cleanup is complete and its local journal is `published`. A completed recovery
+snapshot, applied no-op retirement report (old subtrees were already removed), exact
+image inventory and successful retry of the final source probe are recorded in
+cleanup-final.json. Only gateway/V11/V12 remain. The deployment adapter now appends
+only published history for edition containers; it preserves gateway atomic cutover
+and excludes unlisted candidate metadata. Its first postpublication restart exposed
+a stale edition-local registry, repaired append-only without changing source/image
+or farm data. All nine public media artifacts match after the final restart.
+
+V11's captured source/state fingerprints passed after final cleanup. V12's original
+session, completed task/event revision, conversation and review history hashes match
+exactly across restarts. Retired inference admission remains rejected; the shared
+daily ledger remains 32/48. Post-restart public authenticated isolation passed all
+18 checks and navigation all 28; repeated anonymous verification correctly reached
+new-session limits, retained as separate failure evidence. No counter was reset.
+
+The final volume reading and VM memory/load are in resources-final.json. Process
+counts there refer only to the gateway namespace. Image artifacts without a verified
+unused ownership boundary were not pruned. Machine allocation/billing is unchanged.
