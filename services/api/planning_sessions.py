@@ -216,7 +216,7 @@ def execute_job(store,tenant,id):
                 current['history'].append(dict(result_id=id,kind=job['kind'],created_at=now(),input_hash=content_hash(output.get('input_snapshot',job['input']['farm']))))
                 current.update(result_id=id,farm=deepcopy(output.get('input_snapshot',job['input']['farm'])),input_hash=content_hash(output.get('input_snapshot',job['input']['farm'])),
                     selected_strategy_id=output.get('selected_strategy_id'),assumptions=job['input']['kwargs'].get('assumptions',{}),review={'status':'not_requested','findings':[]},stage='comparison' if job['kind']=='disrupt' else 'review')
-                if current.get('world_id') and current['selected_strategy_id']:_apply_world_replan(store,tenant,current,output)
+                if current.get('world_id') and current['selected_strategy_id'] and not current.get('workflow_version'):_apply_world_replan(store,tenant,current,output)
         c.execute(update(JOBS).where(JOBS.c.id==id).values(status=job['status'],payload=job))
         save_session(store,tenant,current)
 
@@ -264,6 +264,7 @@ def register(app,tenant):
             farm=store.latest_farm(t)
             if not farm:raise HTTPException(409,'Load farm records first')
             session=dict(id=secrets.token_hex(16),name=body.name,version=VERSION,revision=0,status='DRAFT',stage='records',created_at=now(),updated_at=now(),farm=deepcopy(farm),input_hash=content_hash(farm),result_id=None,selected_strategy_id=None,review={'status':'not_requested','findings':[]},assumptions={},world_id=None,history=[],job=None,data_mode='synthetic_demo',council_policy='advisory',real_operations_enabled=False)
+            if body.workflow:session['workflow_version']='farmer-workflow-v1'
             c.execute(SESSIONS.insert().values(id=session['id'],tenant_id=t,status='DRAFT',payload=session))
             return finish(t,key,digest,session)
     @app.get('/api/v1/planning-sessions/{id}')
@@ -315,6 +316,8 @@ def register(app,tenant):
             session=owned(t,id);ready(session,body)
             result=get_result(store,t,session.get('result_id'))
             if not result or not session.get('selected_strategy_id'):raise HTTPException(409,'A feasible selected schedule is required')
+            if session.get('workflow_version') and session.get('approved_result_id')!=session.get('result_id'):
+                raise HTTPException(409,'Approve the current sandbox plan and create its actions before simulation')
             world=get_world(store,t,session['world_id']) if session.get('world_id') else _create_world(store,t,session,result)
             advance(store,t,world,body.days)
             c.execute(update(WORLDS).where(WORLDS.c.id==world['id'],WORLDS.c.tenant_id==t).values(payload=world))

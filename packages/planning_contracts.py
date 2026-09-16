@@ -83,6 +83,7 @@ class PlanningAssumptions(Strict):
 
 
 class CreatePlanningSession(Strict):
+    workflow: bool = False
     name: str = Field(default='Farm production mission', min_length=1, max_length=100)
 
 

@@ -1,3 +1,7 @@
+# Active work: V12
+
+See [V12 ownership and acceptance plan](v12-implementation-plan.md). V12 is in implementation; V11 remains published. Older status sections below are historical.
+
 # FarmTact implementation status
 
 Current release: **v7, complete**. See the final v7 section and

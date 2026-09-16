@@ -1,0 +1,71 @@
+[
+  {
+    "id": "2871575b4544d8",
+    "state": "started",
+    "region": "sin",
+    "guest": {
+      "cpu_kind": "shared",
+      "cpus": 4,
+      "memory_mb": 4096
+    },
+    "mounts": [
+      {
+        "encrypted": true,
+        "path": "/persist",
+        "size_gb": 3,
+        "volume": "vol_vdejexpzm8ydn5x4",
+        "name": "farmtact_shared_data"
+      }
+    ],
+    "containers": [
+      {
+        "name": "gateway",
+        "image": "registry.fly.io/farmtact@sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d"
+      },
+      {
+        "name": "v1",
+        "image": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+      },
+      {
+        "name": "v2",
+        "image": "registry.fly.io/farmtact@sha256:6dcd86da3a282935c6fc595e36ca8ac140050b23d5ba9480903759d38f8c750b"
+      },
+      {
+        "name": "v3",
+        "image": "registry.fly.io/farmtact@sha256:c71c85442f97ca86a466396439947f417c4ea9267c4eb3b0b1f0eeab4f0cefb6"
+      },
+      {
+        "name": "v4",
+        "image": "registry.fly.io/farmtact@sha256:a676954e2958dbc289c909bbe18289d84aa58ae20af0917d0ae31dff5c6b92b0"
+      },
+      {
+        "name": "v5",
+        "image": "registry.fly.io/farmtact@sha256:65164c323cb733f02434730cd31c2a32d5b478150f7041f12034ef65d539c103"
+      },
+      {
+        "name": "v6",
+        "image": "registry.fly.io/farmtact@sha256:2415d2a861c83dfda71e13fb25c3187d3082c2f49a987ef3e68751208f63d334"
+      },
+      {
+        "name": "v7",
+        "image": "registry.fly.io/farmtact@sha256:6e3145bb60f39a1c0a53c934f5057f837b413b631dc0a521003265697f2403bc"
+      },
+      {
+        "name": "v8",
+        "image": "registry.fly.io/farmtact@sha256:8ed6fc3b1a6632f88bbc2b6a20b200b44bba13d7583c70f40e1c31f85c1e8357"
+      },
+      {
+        "name": "v9",
+        "image": "registry.fly.io/farmtact@sha256:42702ca38566d87c359ae2f92f924b403dbf8fb2ae8166f5377cc829e8d725e4"
+      },
+      {
+        "name": "v10",
+        "image": "registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf"
+      },
+      {
+        "name": "v11",
+        "image": "registry.fly.io/farmtact@sha256:e82ba02912d7a716ec4a4588a6fc83721cb361549d9fbbefc92eae1ce439cf7d"
+      }
+    ]
+  }
+]
