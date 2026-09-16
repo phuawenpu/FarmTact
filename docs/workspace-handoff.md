@@ -1,3 +1,40 @@
+# Exit handoff — 16 September 2026
+
+V12 implementation/publication is complete. Final implementation and verification
+evidence was pushed in commit `00167af`; subsequent exit preparation changes only
+this handoff. The working application is frozen at source
+`9fd57898b8a4e3b69a40c3abf03895f0fcb05daf` (annotated tag `farmtact-v12`) and image
+`registry.fly.io/farmtact@sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56`.
+V11 remains the previous independent edition. The next unused application number
+is V13; never replace V12's source/image or reuse its number.
+
+Read `reports/v12/implementation.md`, `reports/v12/requirements-evidence.md` and
+`reports/v12/cleanup-final.json` first. Final evidence: backend728 passed/one skip,
+operator/deployment104 passed, UI25mock/30real, public navigation28 and isolation18
+passed. V11 fingerprints and V12 restart replay passed. The recorded V12 acceptance
+ledger was32/48 at completion; inspect the current shared budget before any future
+provider call. No live operation is enabled. Qualitative AI/source/field-validation
+limits remain explicit in the report.
+
+Exit preparation stops only local development resources: the `farmtact-v12` Sprite
+HTTP service is removed, the Vite preview on4173 is stopped, and the registered
+`farmtact-postgres` service is stopped with its data preserved. No local database,
+upload, release or credential files are deleted. No Fly service is stopped.
+Restart the existing local database with `sprite-env services start farmtact-postgres`
+and follow README's Sprite service instructions to recreate an API using the desired
+development database. Do not expose secrets or reuse production state in a public
+development endpoint.
+
+GitHub and Fly are the durable records. Temporary `/tmp` tools, authenticated browser
+state, process credentials and local checkpoints are not portable prerequisites.
+Never commit or print private browser state or credentials. For Fly, use normal
+authenticated CLIs; the maintained publisher handles Machine inventory, asynchronous
+snapshot readiness, actual runtime exclusions and SSH startup retry. Its injected
+adapter advances edition-local published history while preserving atomic gateway
+cutover. Cleanup is complete; no cleanup resume or deployment is pending.
+
+---
+
 Current release, 16 September 2026: V12 is published from source 9fd5789;
 V11 is the retained previous edition. V1–V10 workers/storage are retired, while
 immutable release history remains. Read reports/v12/implementation.md,
@@ -15,8 +52,8 @@ credentials and `/tmp` build tools must not be assumed available.
 1. Clone `https://github.com/phuawenpu/FarmTact.git` and check out current `main`.
 2. Read `AGENTS.md`, `CODEX_START_PROMPT.md`, `MASTER_AGENT_PROMPT.md`, the build and
    DeepSeek runtime specifications, and `docs/execution-plan.md`.
-3. Read `reports/v11/implementation.md` and
-   `docs/technical/v11-guided-production-planning.md` for the final evidence and
+3. Read `reports/v12/implementation.md` and
+   `docs/technical/v12-farmer-workflow.md` for the final evidence and
    known limitations. The comprehensive HTML/PDF and screenshots are committed.
 4. Follow README's local setup using `requirements.lock.txt`, `npm ci --prefix
    apps/web`, and a fresh development database. Do not copy production state into
