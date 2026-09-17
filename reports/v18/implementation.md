@@ -7,5 +7,7 @@ the parent-card layout commit and restores the action's visible scroll position.
 The final local browser journey passed 92 checks. It covers 360, 390, 430 and
 desktop widths, keyboard detail return, reduced motion, responsive fit, and the
 complete reservation → inverse → approval → recorded-simulation workflow without
-provider requests. V17 remains public until V18's pinned-image staging, operator
-acceptance, preservation and public checks complete.
+provider requests. The pinned V18 image then passed its 20-check private operator
+trial and 29-check exact-image browser journey, both with zero provider
+submissions. Preservation passed before cutover. V18 is published at `/` and
+`/play`; public health reports its exact source commit.

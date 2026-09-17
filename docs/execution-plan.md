@@ -3,8 +3,8 @@
 V17 published the persona-led full rewrite from `e9528b2`. A public browser
 verification found that a detail-card return could restore focus after a paint;
 V18 makes that restoration synchronous and keeps the user at the action position
-they left. V18 remains private until its exact-image acceptance and preservation
-checks pass. V17 remains the sole public experience in the interim.
+they left. V18 is published as the sole public experience after its exact-image
+operator/browser acceptance and preservation checks passed.
 
 # Completed integrated rewrite: V16 — 17 September 2026
 
