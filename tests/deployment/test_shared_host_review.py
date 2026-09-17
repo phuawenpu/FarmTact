@@ -42,6 +42,8 @@ def test_config_retains_registry_images_and_bounds_one_machine():
 
 def test_v14_config_runs_latest_only_without_historical_upstreams():
     source = copy.deepcopy(registry())
+    source['editions'] = source['editions'][:13]
+    source['latest'] = 'v13'
     candidate = copy.deepcopy(source['editions'][-1])
     candidate.update(id='v14', image_digest='registry.fly.io/farmtact@sha256:' + 'e' * 64)
     source['editions'].append(candidate); source['latest'] = 'v14'
@@ -50,6 +52,10 @@ def test_v14_config_runs_latest_only_without_historical_upstreams():
     assert set(rows) == {'gateway', 'v14'}
     upstreams = json.loads(rows['gateway']['env']['FARMTACT_EDITION_UPSTREAMS'])
     assert set(upstreams) == {'v14'}
+    assert rows['gateway']['healthchecks'][0]['tcp'] == {'port':8080}
+    assert 'http' not in rows['gateway']['healthchecks'][0]
+    assert rows['v14']['healthchecks'][0]['http']['path'] == '/api/v1/health'
+    assert config['services'][0]['checks'][0]['headers'] == [{'name':'Fly-Client-IP','values':['127.0.0.1']}]
     with pytest.raises(ValueError, match='only the latest'):
         machine_config(source, 'vol_review123', active={'previous': 'v13', 'latest': 'v14'}, public=True)
 

@@ -61,7 +61,9 @@ def machine_config(registry, volume, *, active=None, staged=None, retirement_ope
             files=[dict(guest_path='/opt/farmtact-shared-entrypoint.py',raw_value=adapter),dict(guest_path='/opt/farmtact-shared-registry.json',raw_value=base64.b64encode(json.dumps(registry).encode()).decode()),dict(guest_path='/opt/farmtact-active.json',raw_value=base64.b64encode(json.dumps(active).encode()).decode())],
             restart=dict(policy='on-failure',max_retries=5),
             stop=dict(signal='SIGTERM',timeout='30s'),
-            healthchecks=[dict(name=name+'-ready',http=dict(port=port,method='GET',path='/api/v1/health'),interval=15,timeout=5,grace_period=60,success_threshold=1,failure_threshold=3)],
+            # The gateway must become ready before its dependent edition starts.
+            # Its public health URL proxies the edition in latest-only mode.
+            healthchecks=[dict(name=name+'-ready',**({'tcp':dict(port=port)} if gateway and int(ids[-1][1:])>=14 else {'http':dict(port=port,method='GET',path='/api/v1/health')}),interval=15,timeout=5,grace_period=60,success_threshold=1,failure_threshold=3)],
             **({} if gateway else {'depends_on':[dict(name='gateway',condition='healthy')]})))
     if retirement_operator:
         containers.append(dict(
@@ -80,7 +82,8 @@ def machine_config(registry, volume, *, active=None, staged=None, retirement_ope
     if public:
         config['services']=[dict(protocol='tcp',internal_port=8080,autostart=True,autostop='off',min_machines_running=1,
             ports=[dict(port=80,handlers=['http'],force_https=True),dict(port=443,handlers=['http','tls'])],
-            checks=[dict(type='http',interval='30s',timeout='5s',grace_period='1m0s',method='GET',path='/api/v1/health')])]
+            checks=[dict(type='http',interval='30s',timeout='5s',grace_period='1m0s',method='GET',path='/api/v1/health',
+                         **({'headers':[dict(name='Fly-Client-IP',values=['127.0.0.1'])]} if int(ids[-1][1:])>=14 else {}))])]
     return config
 
 
