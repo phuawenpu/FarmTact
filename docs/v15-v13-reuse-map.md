@@ -1,6 +1,7 @@
 # V13 → V15 reuse map: preserve depth, replace navigation
 
-Status: specification only, 17 September 2026. Companion to the
+Status: implemented in published V15, 17 September 2026. Exact verification and
+remaining human-validation limits are in reports/v15/implementation.md. Companion to the
 [integrated card experience](v15-integrated-card-experience.md). Reuse the intellectual
 structure and graphical vocabulary of V13 inside V14's minimal flow; do not mount
 both applications, resurrect edition navigation or copy old state into a new context.
@@ -59,8 +60,9 @@ regex normalizer is not authoritative: `/harvest/` can classify a harvested stat
 ready, and unstaged crops deliberately fall back to mature catalogue art. The new
 scene must explicitly distinguish nursery, growing, ready, harvested, sanitation,
 empty and maintenance. Missing stage assets get a labelled fallback, not guessed art.
-The lesson currently teaches lettuce and then pak choi; the registry also supports
-the existing caixin/kailan model. Art does not broaden numerical model support.
+The ordinary demo includes the existing lettuce, pak choi, caixin and kailan
+models. Guidance selects an initial objective without filtering the other demand.
+Art does not broaden numerical model support.
 
 **REUSE-02** Use external local SVG images or namespace IDs when extracting/inlining
 vectors; repeated gradients/masks must not collide. Audit assets for scripts,
@@ -79,12 +81,12 @@ must be labelled guide text rather than passed off as an AI adviser utterance.
 
 V13's strongest loop is: **scenario → concrete constraint → explicit reservation
 proposal → local recalculation → stored deltas → current-revision inverse/history**.
-Carry that into sandbox play after the tutorial; the original B3 entity remains
-`bed-07` in that fixture. It is not the tutorial's `bed-03`.
+Use that same loop with optional guidance from the first ordinary sandbox session;
+B3 retains canonical identity `bed-07`. No separate tutorial farm is created.
 
 | Source seam | Preserve | Adaptation in the one-card shell |
 | --- | --- | --- |
-| `TacticalCard` / `TacticalPlanningBinding` / provenance types | Stable card/entity IDs, target IDs, frozen snapshot/hash/session/revision/result, proposal/task binding, facts and explicit actions | One shared presentation contract with an explicit lesson/sandbox context; adapters from existing server responses, not a new generic server feed |
+| `TacticalCard` / `TacticalPlanningBinding` / provenance types | Stable card/entity IDs, target IDs, frozen snapshot/hash/session/revision/result, proposal/task binding, facts and explicit actions | One shared presentation contract with one ordinary sandbox context with independent guidance progress; adapters from existing server responses, not a new generic server feed |
 | `TacticalMission` reservation/inverse/job integration | Exact dated reservations, executed-crop/sanitation boundary, persisted jobs, server metric deltas, stale inverse rejection | Review card then action-area apply; active-constraint state becomes a card rather than an extra panel |
 | `ProvenanceStrip` | Real/synthetic/scenario/projected/reported distinction, observed/retrieved time and freshness | Short always-visible label; source-detail cards preserve full fields; Heavy Rainfall keeps exact `SIMULATION · SCENARIO ONLY` |
 | `ActionDock` and swipe intent handling | Active-card-only actions, emphasized primary, disabled reason, job progress, keyboard equivalents | One action area, no independent navigation bar; align with V15 Back/Explain/More grammar |
@@ -122,8 +124,8 @@ matrix. Preserve this distinction when estimating or implementing parity:
 
 ## A concrete integrated sandbox episode
 
-1. Open sandbox through its labelled context-switch card; show current farm/version
-   and pending objective. It is not the saved tutorial farm.
+1. Open the ordinary sandbox; show its current farm/version and pending objective.
+   Skipping or resuming guidance preserves that same farm and planning session.
 2. Swipe to a supported scenario card. Its illustration is secondary to provenance;
    reviewing it cannot mutate assumptions or trigger AI.
 3. Select the B3 constraint. The passive scene frames the exact bed. Details show
@@ -151,7 +153,7 @@ art must not certify crop health, yield or cultivar identity.
 reservation review/apply, jobs/deltas, explanation, compatible comparison, approval,
 task result/correction and eligible/stale inverse. Assert unchanged identities,
 zero provider calls until explicit Ask, admission on every route and no automatic
-movement between teaching and sandbox data. Buttons that only scroll or show generic
+replacement of the ordinary farm during guidance. Buttons that only scroll or show generic
 details do not pass their corresponding workflow check.
 
 **A14 minimalist containment:** all commands stay in the action area; scene/portraits

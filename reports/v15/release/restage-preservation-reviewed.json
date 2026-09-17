@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checks": {
+    "immutable_history_prefix": true,
+    "releases": true,
+    "security": true,
+    "reservations": true,
+    "budget_change_matches_receipts": true,
+    "unexpired_abuse_counters_not_reset": true,
+    "retained_storage_checked": true,
+    "retained_edition_subtrees_present": true,
+    "stable_retired_subtree_hashes": true,
+    "earlier_candidate_session_and_draft_preserved": true,
+    "exact_unpublished_candidate_only_mutable": true
+  },
+  "source_commit": "a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63",
+  "image_digest": "registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4",
+  "public_latest": "v14",
+  "mutable_staged_edition": "v15",
+  "scope": "Original overbroad FAIL remains preserved. Only independently verified unpublished v15 is mutable during its real acceptance workflows; all directory-presence and published-retired hash checks remain. V12/V13 exact byte/file/hash equality and V14 inventory equality checked. Saved earlier candidate session and draft remain readable. Mutable PostgreSQL files are not asserted immutable."
+}

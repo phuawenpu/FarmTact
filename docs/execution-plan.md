@@ -1,4 +1,15 @@
-# V15 implementation — private branch
+# Published V15 — 17 September 2026
+
+Immutable application source: `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63`.
+The public `/` and `/play` now share the ordinary sandbox and five integrated card
+decks. Local regression: 792 passed, one skipped; exact staged browser: 26 checks;
+live read-only browser: 67; release isolation: 13; shared preservation: nine.
+See [release evidence](../reports/v15/implementation.md) and
+[capability checklist](v15-capability-checklist.md). Human usability and new live
+provider quality remain unverified. Actual farm operations remain disabled.
+Earlier dated sections below are historical milestones, not current release status.
+
+# Historical V15 implementation — private branch
 
 User intent is the approved full-parity plan. One ordinary sandbox and its controls
 serve every experience level; the earlier separate lesson/sandbox proposal is
@@ -21,7 +32,7 @@ Specialists edit only their components/tests and their capability-checklist sect
 Root coordinates builds to avoid removing assets during browser verification. Publication
 remains gated on full parity; the audit's newly found gaps are not waived as limitations.
 
-# Current specification work: V15 integrated card experience
+# Historical specification work: V15 integrated card experience
 
 The 17 September live [animation/explanation and capability review](../reports/v14/animation-explanation-review.md)
 is complete. Its [V15 proposal](v15-integrated-card-experience.md) restores earlier
@@ -32,7 +43,7 @@ No app changes or deployment occurred in this
 review. Root owns integration/specifications; a bounded read-only specialist audited
 motion and earlier capability parity. The published release remains V14 below.
 
-# Published: V14 beginner first-season experience
+# Historical publication: V14 beginner first-season experience
 
 The approved V14 plan is [one farm, one decision, one action area](v14-implementation-plan.md).
 V14 is published from `c0e585f`; see [verification](../reports/v14/implementation.md).

@@ -1,16 +1,16 @@
-## Proposed V15 explanation/admission amendment — 17 September 2026
+## Published V15 explanation/admission amendment — 17 September 2026
 
-The [integrated card specification](docs/v15-integrated-card-experience.md) is being
-implemented privately; acceptance and publication remain pending. Deterministic Explain must expose causes, changed allocations,
+The [integrated card specification](docs/v15-integrated-card-experience.md) is published in V15 from `a5ab2a8`; see reports/v15/implementation.md. Deterministic Explain must expose causes, changed allocations,
 tradeoffs and source identity without inference; provenance alone is insufficient.
 Restored Council/conversation cards retain frozen validated focus, complete recorded
 threads, citations and withheld/partial status. Guidance shares the ordinary sandbox planning identity and does not duplicate farm state. Opening/replaying evidence, animation and numerical planning
 remain provider-free. Explicit provider submissions retain every cumulative
 global/IP/tenant/write/inference/concurrency/budget gate, including restored tools.
 Rate-limit backoff, draft preservation and no automatic paid retries are required.
-This amendment neither authorizes provider trials nor claims a new runtime release.
+V15 adds no provider or agricultural model. Release verification made zero provider
+submissions; it makes no new claim about live provider prose quality.
 
-## V14 first-season amendment — 17 September 2026
+## Historical V14 first-season amendment (superseded by V15) — 17 September 2026
 
 The introduction and full beginner season require zero provider calls. Guide tips
 are authored teaching content; numerical explanations come from frozen server facts.

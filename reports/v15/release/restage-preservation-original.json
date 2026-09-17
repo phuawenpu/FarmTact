@@ -1,0 +1,15 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "immutable_history_prefix": true,
+    "releases": true,
+    "security": true,
+    "reservations": true,
+    "budget_change_matches_receipts": true,
+    "unexpired_abuse_counters_not_reset": true,
+    "retained_storage_checked": true,
+    "retained_edition_subtrees_present": true,
+    "stable_retired_subtree_hashes": false
+  },
+  "scope": "No raw rows, principals, cookies or credentials exported; added durable records are allowed."
+}

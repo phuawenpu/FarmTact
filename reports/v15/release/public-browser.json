@@ -1,0 +1,498 @@
+{
+  "started_at": "2026-09-17T15:22:54.746Z",
+  "origin": "https://farmtact.fly.dev",
+  "expected_source": "a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63",
+  "checks": [
+    {
+      "name": "root and play respond successfully",
+      "pass": true,
+      "detail": {
+        "root": 200,
+        "play": 200
+      }
+    },
+    {
+      "name": "root and play serve the same built entry JavaScript",
+      "pass": true,
+      "detail": {
+        "root_entry": "/assets/index-C89Jrp2Y.js",
+        "play_entry": "/assets/index-C89Jrp2Y.js"
+      }
+    },
+    {
+      "name": "root and play health identify exact frozen V15 source",
+      "pass": true,
+      "detail": {
+        "root": {
+          "edition": "v15",
+          "source_commit": "a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63"
+        },
+        "play": {
+          "edition": "v15",
+          "source_commit": "a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63"
+        }
+      }
+    },
+    {
+      "name": "360: exact V15 integrated shell loads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: edition chooser and legacy interfaces are absent",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: saved current card is readable after loading settles",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 360,
+        "innerWidth": 360
+      }
+    },
+    {
+      "name": "360: saved V15 planning session identity is retained",
+      "pass": true,
+      "detail": "0e2ecfc002c76c0ec152da79fcc32731"
+    },
+    {
+      "name": "360: saved current session is readable",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "id": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "360: rendered mission card is bound to remembered session",
+      "pass": true,
+      "detail": {
+        "remembered": "0e2ecfc002c76c0ec152da79fcc32731",
+        "rendered": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "360: navigation normalization preserves remembered session",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: all five V15 tools are readable",
+      "pass": true,
+      "detail": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ]
+    },
+    {
+      "name": "360: tool card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 338,
+        "clientWidth": 338
+      }
+    },
+    {
+      "name": "360: saved plan replay is available",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: replay remains readable and explicitly read-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: replay card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 300,
+        "clientWidth": 300
+      }
+    },
+    {
+      "name": "360: read-only verification attempted zero unsafe methods",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "360: read-only verification made zero provider requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "360: browser emitted no uncaught errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: exact V15 integrated shell loads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: edition chooser and legacy interfaces are absent",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: saved current card is readable after loading settles",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "innerWidth": 390
+      }
+    },
+    {
+      "name": "390: saved V15 planning session identity is retained",
+      "pass": true,
+      "detail": "0e2ecfc002c76c0ec152da79fcc32731"
+    },
+    {
+      "name": "390: saved current session is readable",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "id": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "390: rendered mission card is bound to remembered session",
+      "pass": true,
+      "detail": {
+        "remembered": "0e2ecfc002c76c0ec152da79fcc32731",
+        "rendered": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "390: navigation normalization preserves remembered session",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: all five V15 tools are readable",
+      "pass": true,
+      "detail": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ]
+    },
+    {
+      "name": "390: tool card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 368,
+        "clientWidth": 368
+      }
+    },
+    {
+      "name": "390: saved plan replay is available",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: replay remains readable and explicitly read-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: replay card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 330,
+        "clientWidth": 330
+      }
+    },
+    {
+      "name": "390: read-only verification attempted zero unsafe methods",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: read-only verification made zero provider requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: browser emitted no uncaught errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: exact V15 integrated shell loads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: edition chooser and legacy interfaces are absent",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: saved current card is readable after loading settles",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 430,
+        "innerWidth": 430
+      }
+    },
+    {
+      "name": "430: saved V15 planning session identity is retained",
+      "pass": true,
+      "detail": "0e2ecfc002c76c0ec152da79fcc32731"
+    },
+    {
+      "name": "430: saved current session is readable",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "id": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "430: rendered mission card is bound to remembered session",
+      "pass": true,
+      "detail": {
+        "remembered": "0e2ecfc002c76c0ec152da79fcc32731",
+        "rendered": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "430: navigation normalization preserves remembered session",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: all five V15 tools are readable",
+      "pass": true,
+      "detail": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ]
+    },
+    {
+      "name": "430: tool card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 408,
+        "clientWidth": 408
+      }
+    },
+    {
+      "name": "430: saved plan replay is available",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: replay remains readable and explicitly read-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: replay card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 370,
+        "clientWidth": 370
+      }
+    },
+    {
+      "name": "430: read-only verification attempted zero unsafe methods",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: read-only verification made zero provider requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: browser emitted no uncaught errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: exact V15 integrated shell loads",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: edition chooser and legacy interfaces are absent",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: saved current card is readable after loading settles",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "1280: saved V15 planning session identity is retained",
+      "pass": true,
+      "detail": "0e2ecfc002c76c0ec152da79fcc32731"
+    },
+    {
+      "name": "1280: saved current session is readable",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "id": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "1280: rendered mission card is bound to remembered session",
+      "pass": true,
+      "detail": {
+        "remembered": "0e2ecfc002c76c0ec152da79fcc32731",
+        "rendered": "0e2ecfc002c76c0ec152da79fcc32731"
+      }
+    },
+    {
+      "name": "1280: navigation normalization preserves remembered session",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: all five V15 tools are readable",
+      "pass": true,
+      "detail": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ]
+    },
+    {
+      "name": "1280: tool card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 492,
+        "clientWidth": 492
+      }
+    },
+    {
+      "name": "1280: saved plan replay is available",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: replay remains readable and explicitly read-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: replay card has no horizontal content overflow",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 454,
+        "clientWidth": 454
+      }
+    },
+    {
+      "name": "1280: read-only verification attempted zero unsafe methods",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: read-only verification made zero provider requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: browser emitted no uncaught errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "widths": {
+    "360": {
+      "session_id": "0e2ecfc002c76c0ec152da79fcc32731",
+      "tool_names": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ],
+      "unsafe_methods": 0,
+      "provider_requests": 0,
+      "browser_errors": 0
+    },
+    "390": {
+      "session_id": "0e2ecfc002c76c0ec152da79fcc32731",
+      "tool_names": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ],
+      "unsafe_methods": 0,
+      "provider_requests": 0,
+      "browser_errors": 0
+    },
+    "430": {
+      "session_id": "0e2ecfc002c76c0ec152da79fcc32731",
+      "tool_names": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ],
+      "unsafe_methods": 0,
+      "provider_requests": 0,
+      "browser_errors": 0
+    },
+    "1280": {
+      "session_id": "0e2ecfc002c76c0ec152da79fcc32731",
+      "tool_names": [
+        "Plan",
+        "Records & work",
+        "Knowledge & evidence",
+        "Experiments",
+        "History & preferences"
+      ],
+      "unsafe_methods": 0,
+      "provider_requests": 0,
+      "browser_errors": 0
+    }
+  },
+  "status": "PASS",
+  "finished_at": "2026-09-17T15:23:19.126Z"
+}

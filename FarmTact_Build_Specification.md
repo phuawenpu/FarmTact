@@ -1,14 +1,16 @@
-## Proposed V15 integration amendment — 17 September 2026
+## Published V15 integration amendment — 17 September 2026
 
 The requested live UX/capability review found that V14's teaching-only entrypoint
 makes earlier planning, evidence and workflow capabilities unreachable. The
 [V15 integrated card specification](docs/v15-integrated-card-experience.md) defines
-the next implementation target: one card/action-area shell, one ordinary sandbox farm with resumable guidance, full capability parity, causal explanations and event-bound 2.5D
+the implemented interaction: one card/action-area shell, one ordinary sandbox farm with resumable guidance, full capability parity, causal explanations and event-bound 2.5D
 motion. See [observed evidence](reports/v14/animation-explanation-review.md).
-Implementation is in progress on feature/v15-integrated-cards; acceptance and publication are pending. V14 and
-historical editions remain immutable; old public version navigation stays retired.
+V15 is published from `a5ab2a8` on `feature/v15-integrated-cards`; `/` and `/play`
+serve the same ordinary-farm shell. See reports/v15/implementation.md and the
+capability checklist for scoped verification and unverified human usability. V14
+and historical editions remain immutable; old public navigation stays retired.
 
-## V14 first-season amendment — 17 September 2026
+## Historical V14 first-season amendment (superseded by V15) — 17 September 2026
 
 The approved scope in docs/v14-implementation-plan.md supersedes public edition
 choosers and dashboard navigation. `/` teaches the interaction using clearly labelled

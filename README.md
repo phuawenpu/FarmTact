@@ -1,55 +1,43 @@
-# FarmTact · Grow your first delivery
+# FarmTact · One farm, one card experience
 
-**V11 reading copies:** [PDF](reports/v11/farmtact-report.pdf) · [offline HTML](reports/v11/farmtact-report.html).
+FarmTact V15 presents the ordinary synthetic farm through one integrated card
+shell. The same application is served at
+[the public root](https://farmtact.fly.dev/) and
+[/play](https://farmtact.fly.dev/play): review the current farm, calculate and
+compare plans, inspect records and evidence, explore saved experiments, replay
+history, and manage preferences without switching to a separate dashboard or
+edition chooser. Previous/Next buttons, arrow keys and horizontal swipe provide
+equivalent card navigation; forms and decisions remain inside the active card
+with a bounded action area below it.
 
-FarmTact teaches farm planning through a small playable season. Meet a customer
-order, swipe between calculated growing plans, choose one, and watch recorded
-simulation events unfold on a 2.5D farm. Respond to maintenance, make the delivery,
-and learn what your decisions changed. The cards and the action area below them are
-the controls; there are no buildings to hunt for or dashboards to navigate.
-
-**Start:** [animated introduction](https://farmtact.fly.dev/) ·
-[play or continue your season](https://farmtact.fly.dev/play).
-
-V14 replaces the public edition chooser with one current game. Historical public
-applications are retired; source/image history remains immutable, and prior state
-is archived rather than migrated or deleted. See the
-[V14 implementation plan](docs/v14-implementation-plan.md) and
-[verification report](reports/v14/implementation.md), and
+V15 is published from source
+`a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and immutable image
+`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+Historical application sources and images remain preserved, while the public
+entry points now open V15 directly. The next unused publication number is **V16**;
+never overwrite the V15 image or reuse its number. Read the
+[V15 implementation evidence](reports/v15/implementation.md),
+[V15 capability checklist](docs/v15-capability-checklist.md), and
 [publication policy](docs/deployment/editions.md).
+
+The integrated tools cover **Plan**, **Records & work**, **Knowledge & evidence**,
+**Experiments**, and **History & preferences**. Planning uses the complete ordinary
+farm snapshot and local numerical strategies. Reviewed proposals, imports, task
+results, corrections, recovery plans and simulation advances remain explicit,
+revision-bound actions. Reading saved explanations, evidence and replays makes no
+provider call. Optional adviser and extraction submissions retain the existing
+bounded DeepSeek controls; V15 adds no new provider-quality claim.
+
+All farm records and outcomes in the public application remain synthetic or
+simulated and are labelled by evidence type. Actual planting, purchasing,
+delivery, communication and other physical farm operations are disabled. Automated
+browser, regression, preservation and isolation evidence passed for publication;
+human farmer comprehension and usability have not been verified.
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
-[v10 grounding follow-up](docs/technical/v10-grounding-followup.md) ·
-[v9 AI follow-up](docs/technical/v9-ai-followup.md) ·
-[v8 remediation report](docs/technical/v8-remediation-report.md) ·
-[V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
-
-All farms and deliveries in the lessons are simulations. Local Python calculations
-produce schedules and quantities; optional DeepSeek questions interpret a frozen
-planning snapshot. Browsing, planning, advancing time and completing lessons invoke
-no LLM. Actual planting, purchases and farm communications remain disabled.
-
-## Your first season
-
-1. Open the introduction. Swipe the three examples or press **Start playing**.
-2. Read your first order: 25 kg of lettuce. Find the growing plans and compare
-   delivery, growing space and cost. Swiping is a preview; confirming selects a plan.
-3. Advance explicitly through the season. Simulated time never advances while away.
-4. When B3 needs maintenance, compare the original placement with a recalculated
-   alternative. Choose a feasible recovery before continuing.
-5. Review your recorded delivery and debrief. Replay starts a separate attempt;
-   the next challenge adds a second crop and competing order.
-
-**Explain** helps with the current decision. **More** contains your next step,
-journal, teaching records, crop information, settings, optional adviser and replay,
-all as cards in the same place. Returning players can continue their saved season.
-Previous/Next and arrow keys provide alternatives to swiping. Motion can be paused;
-the system reduced-motion preference is respected. Sound is not required.
-
-The teaching farm has four beds and uses the existing synthetic lettuce and pak
-choi recipes. The follow-on challenge requests 18 kg lettuce and 7 kg pak choi.
-These are authored teaching conditions, not real orders or agronomic predictions.
+[V15 implementation evidence](reports/v15/implementation.md) ·
+[V15 capability checklist](docs/v15-capability-checklist.md)
 
 ## Historical V13 tactical field console
 
@@ -108,8 +96,9 @@ demand unserved. Empirical model calibration and farmer validation remain open.
 ## Earlier planning capabilities and technical background
 
 The capabilities below document the retained planning engine and previous UI
-iterations. V14 presents its beginner workflow through cards; it does not expose
-the historical room-based navigation or public release chooser.
+iterations. Historical V14 presented its beginner workflow through cards and did not
+expose the earlier room-based navigation or public release chooser. V15 supersedes
+that four-bed teaching interface with the ordinary-farm integrated shell.
 
 - Navigate the V13 field deck by swipe, Previous/Next or arrow keys; inspect the
   frozen scenario, reserve B3 through the real planner, compare calculated
@@ -417,16 +406,17 @@ later attempts.
 
 ## Hosting and releases
 
-The `farmtact` app runs in Singapore on one shared 4-vCPU/4-GB Fly Machine and one
-3-GB persistent volume. The gateway and active V12/V13 applications use isolated
-containers with separate databases, caches and progress; abuse and inference spending
-limits are shared. Retired release history remains immutable in Git. One host is a
-shared failure boundary, so healthy endpoints do not establish loaded capacity.
+The `farmtact` app runs in Singapore. V15 is the single current public application;
+its `/` and `/play` entry points share the same shell and ordinary-farm state.
+Historical application sources and images remain immutable, and prior public state
+was preserved according to the cutover records. Abuse and inference spending limits
+remain shared infrastructure boundaries. Healthy endpoints alone do not establish
+loaded capacity.
 
 Every newly published application iteration receives a new immutable edition.
 Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
-does not describe the active container topology. After V13 publication, the next
-contiguous edition is V14; existing numbered source, image and state are never
+does not describe the preserved release workflow. After V15, the next contiguous
+edition is V16; existing numbered source, image and retained state are never
 overwritten. See [Fly operations](docs/deployment/fly.md).
 
 Development scope and provider policy are controlled by the

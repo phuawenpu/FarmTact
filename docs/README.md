@@ -1,12 +1,19 @@
 # FarmTact documentation
 
-Documentation updated **16 September 2026**. Latest edition: **V12**, frozen from
-source `9fd57898b8a4e3b69a40c3abf03895f0fcb05daf`; previous: **V11**. Only this pair
-runs publicly. V1–V10 return 410 while immutable history remains. Start with the
-[V12 implementation/evidence](../reports/v12/implementation.md),
-[workflow and retention contracts](technical/v12-farmer-workflow.md), and
-[requirement map](../reports/v12/requirements-evidence.md). Dated earlier failures
-and bounded AI-quality limitations remain explicit in their original reports.
+Documentation updated **17 September 2026**. Latest public application: **V15**,
+frozen from source `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and image
+`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+The public `/` and `/play` routes now serve the same integrated card shell for one
+ordinary synthetic farm. Historical release artifacts remain immutable; older UI
+and edition descriptions below are evidence of their dated state, not descriptions
+of the current public interface. The next unused application number is **V16**.
+
+Start with the [V15 implementation report](../reports/v15/implementation.md),
+[V15 capability checklist](v15-capability-checklist.md), and
+[current workspace handoff](workspace-handoff.md). V15 publication evidence is
+automated technical evidence. Human usability and farmer comprehension remain
+unverified, no new provider-quality result is claimed, and actual farm operations
+remain disabled.
 
 ## Start here
 
@@ -49,9 +56,9 @@ persona reviews are not human usability studies. Public observations, fictional
 farm inputs, model interpretations and simulated outputs have different provenance.
 
 The v5 plans, consolidation assessment and older execution-log entries preserve
-historical decisions. Use the current deployment runbook for operations. Existing
-numbered editions retain their frozen source/image and independent progress;
-documentation changes do not publish a new application edition.
+historical decisions. Use the current deployment runbook for operations. Historical
+numbered editions retain their frozen source/image records; documentation changes
+do not publish a new application edition or change the current V15 service.
 
 V9's final repository regression passed 606 tests with one skip; its mobile
 typed-fact display check passed 21 assertions with fixture-shaped responses and

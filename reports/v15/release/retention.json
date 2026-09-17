@@ -1,0 +1,33 @@
+{
+  "edition": "v15",
+  "policy": "archive-only",
+  "protected_editions": [
+    "v1",
+    "v2",
+    "v3",
+    "v4",
+    "v5",
+    "v6",
+    "v7",
+    "v8",
+    "v9",
+    "v10",
+    "v11",
+    "v12",
+    "v13",
+    "v14"
+  ],
+  "snapshot_id": "vs_NoKNN3vKO0o7TojeL7w2XzZQ",
+  "storage_deleted": false,
+  "workers_stopped": [
+    "v14"
+  ],
+  "evidence_source": "Read via Fly SSH from /data/releases/archive-v15/retention.json after publisher completed",
+  "snapshot_verification": {
+    "command": "fly volumes snapshots list vol_vdejexpzm8ydn5x4 --app farmtact --json",
+    "status": "created",
+    "created_at": "2026-09-17T15:19:00Z",
+    "retention_days": 7,
+    "digest": "51e6e495cca93903737f651ce5ea34e52336ba63289aece001043514dcf19250"
+  }
+}

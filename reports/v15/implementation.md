@@ -1,7 +1,61 @@
-# V15 private implementation status
+# V15 implementation and publication
 
-Private branch: `feature/v15-integrated-cards`. V14 remains the public immutable
-release. V15 has been privately staged but has not been published or accepted as a complete replacement. The first candidate failed mobile wrapping and slow-response UI acceptance. Corrected local acceptance now passes; the replacement image must still pass private staging before publication.
+V15 is published at **https://farmtact.fly.dev/** and **/play**, which serve the same
+integrated card shell. Immutable source: `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63`;
+image: `registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+Publication commit: `42f3202`; branch: `feature/v15-integrated-cards`. V16 is the
+next unused edition. The first staged candidate (`a3ba834`) was rejected and never
+published. The corrected candidate passed operator and exact-image browser gates
+before public cutover. Source/images and recoverable historical state are retained.
+
+## Published release evidence — 17 September 2026
+
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Full isolated PostgreSQL regression | `regression-final.xml`, `local-acceptance-gate.json` | 792 passed, one skipped; services tree unchanged in accepted image |
+| Generated contracts and clean frontend | `frontend-build.json`, `frontend-build.txt` | Pass; final main bundle `index-C89Jrp2Y.js` |
+| Complete ordinary-farm journeys | `browser-cards-widths.json` and four width reports | 26 checks each at 360/390/430/1280; zero provider submissions |
+| Exact private candidate API | `release/operator-acceptance.json` | 20 checks; real proposal, inverse, approval, task report/correction and replay |
+| Exact private candidate UI | `release/staged-browser.json`, adjacent PNG/video | 26 checks at 390px; 14 acknowledged mutations; zero provider submissions |
+| Public root/play, card tools and replay | `release/public-browser.json` | 67 checks at four widths; zero unsafe methods/provider requests |
+| Public route/session/dataset isolation | `release/public-isolation.json` | 13 checks; one ordinary sandbox/dataset verification; main farm unchanged |
+| Shared admission and retained storage | `release/public-preservation.json` | Nine checks; counters and budgets reconciled, immutable history retained |
+| Historical worker/data retention | `release/retention.json` | Archive-only, V14 worker stopped, no storage deleted, recovery snapshot recorded |
+
+The exact-image browser transport fetched image assets with SHA-256 identities,
+source/health bindings and production document security headers through authenticated
+Fly SSH, without exposing a proxy endpoint. The first corrected run lost SSH
+transport on Calculate. A read-only reconciliation proved that session remained
+DRAFT at revision zero, with no job/result. An explicit resumed attempt reused that
+same session and passed the full episode; it did not retry an uncertain mutation
+without reconciliation. Existing completed and draft candidate sessions survived
+restaging. No production admission counter was reset or limit relaxed.
+
+The original restaging preservation report failed only because its verifier treated
+the running, unpublished V15 database as a retired immutable subtree. Real acceptance
+adds durable records to that database. `release/restage-preservation-original.json`
+retains that failure. The strict supplemental report checks the exact unpublished
+source/image, V14 still public, V15 absent from published history, unchanged earlier
+retained inventories/hashes and earlier candidate session/draft retention. Only the
+staged V15 database was allowed to append records. The unmodified verifier then
+passed all nine checks after public cutover, when V15 is correctly classified active.
+Private salted captures, authenticated browser state and control-table rows remain
+outside Git. Future prepublication use of the generic preservation helper must
+account explicitly for an authenticated active unpublished candidate; its default
+retired-tree classification is not suitable for that case.
+
+`release/polling-rearm.json` adds four read-only checks using a labelled RUNNING
+status overlay on a real saved job. It proves polling resumes after returning from
+a tool; it is not evidence of a newly run numerical job. The portable harnesses are
+`tests/browser/v15_public_release.mjs` and `v15_polling_rearm.mjs`.
+
+No new agricultural model, autonomous inference, custom transcription or real farm
+operation is enabled. Four numerical crop recipes and twelve knowledge profiles
+retain their existing limits. Automated workflow completion does not establish
+representative-user comprehension. Human usability and new live provider prose
+quality remain unverified; existing partial/withheld-answer evidence is retained.
+
+## Implemented experience
 
 The root entry now loads the integrated shell and lazy card decks for Plan,
 Records & work, Knowledge & evidence, Experiments and History & preferences.
@@ -15,7 +69,7 @@ IDs change. Existing mutation validation and cumulative admission remain in plac
 The browser client retains uncertain mutation identity, including body-key APIs,
 and honors Retry-After without automatic paid retries.
 
-## Current verification state — 17 September, before corrected staging
+## Historical local verification — 17 September, before corrected staging
 
 The corrected shell compiles with main JS 235.64 kB / 73.79 kB gzip. Its
 request owners keep loading, mutations and guidance separate, commit terminal
@@ -96,7 +150,7 @@ rate limits. Earlier combined reruns exhausted the local anonymous-session quota
 no public counters were touched and no limit was raised. Runtime provider secrets
 are removed from these local test services. No new provider-quality claim is made.
 
-## Pending release gates
+## Historical release gates (subsequently passed above)
 
 Complete the capability checklist and end-to-end evidence, resolve regression and
 browser findings, inspect all responsive screenshots and causal motion recordings,

@@ -1,14 +1,19 @@
-Current release, 17 September 2026: V14 is published from `c0e585f`.
-Read reports/v14/implementation.md and config/releases/v14.json. Public UX has one
-animated introduction and one card-driven game, with private release history.
-The application image is immutable; subsequent fixes to Fly health-check metadata
-are hosting configuration only. The next unused publication number is V15.
+Current release, 17 September 2026: V15 is published from source
+`a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and immutable image
+`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+The public `/` and `/play` routes serve the same V15 integrated card shell for the
+one ordinary synthetic farm. Plan, Records & work, Knowledge & evidence,
+Experiments, and History & preferences are available through that shell. Public
+edition selection and the V14 four-bed teaching season are historical rather than
+the current interface. Read `reports/v15/implementation.md` and
+`docs/v15-capability-checklist.md` before making current-state claims.
 
-Historical release, 16 September 2026: V12 is published from source 9fd5789;
-V11 is the retained previous edition. V1–V10 workers/storage are retired, while
-immutable release history remains. Read reports/v12/implementation.md,
-reports/v12/acceptance-status.md and reports/v12/requirements-evidence.md before
-the historical handoffs below. The next unused publication number is V13.
+V15 preserves explicit review, revision-bound mutations, read-only replay and the
+existing provider/admission boundaries. It does not establish human usability,
+new provider quality, calibrated agronomy or real-farm performance. Actual farm
+operations remain disabled. Preserve all historical release records. The next
+unused publication number is **V16**; never overwrite V15's source/image or reuse
+its number.
 
 Fresh-workspace restart: read [docs/workspace-handoff.md](docs/workspace-handoff.md).
 

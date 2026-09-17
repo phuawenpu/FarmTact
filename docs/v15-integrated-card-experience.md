@@ -1,12 +1,12 @@
 # V15 proposal: one farm table, full planning depth
 
-Status: implementation in progress, 17 September 2026. Requested after the live V14
-animation/explanation and functionality review. The implementation is on `feature/v15-integrated-cards`;
-[the implementation report](../reports/v15/implementation.md) records actual checks
-and remaining gates. This specification alone does not establish acceptance or
-publication. V14 remains immutable. V15 receives a new numbered release only after
-acceptance. Historical source, images and private state stay
-preserved; old public editions are not restored.
+Status: published 17 September 2026 from immutable source `a5ab2a8` on
+`feature/v15-integrated-cards`. `/` and `/play` serve the same integrated shell.
+[The implementation report](../reports/v15/implementation.md) and
+[capability checklist](v15-capability-checklist.md) identify the acceptance evidence
+and its limits. V14 and earlier source/images remain immutable; recoverable private
+state is retained without automatic cross-edition migration. The next unused
+publication number is V16. Human usability remains unverified.
 
 Evidence: [live review and capability comparison](../reports/v14/animation-explanation-review.md).
 The [V13 asset and workflow reuse map](v15-v13-reuse-map.md) identifies exact reusable
@@ -256,7 +256,8 @@ Invalid/withheld AI leaves deterministic explanation and planning fully usable.
 
 ## 8. Verification and implementation order
 
-Acceptance is pending. Existing V14 test passes do not prove these requirements.
+V15 acceptance evidence is mapped in the capability checklist and implementation report.
+Historical V14 passes are not used as proof of V15 behavior.
 
 1. **P0 — integrity and truthful explanation:** SAFE-01–03, preview/saved distinction,
    dated maintenance/delivery meaning, deterministic Explain, full thread evidence,

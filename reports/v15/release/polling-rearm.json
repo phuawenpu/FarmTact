@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "scope": "Read-only labelled RUNNING status overlay on a saved real session; verifies polling rearm after same-job tool return, not a new numerical job.",
+  "checks": [
+    {
+      "name": "running receipt renders before navigation",
+      "pass": true
+    },
+    {
+      "name": "same running job survives completed tool load",
+      "pass": true,
+      "detail": {
+        "reads": 2
+      }
+    },
+    {
+      "name": "a fresh poll resumes after tool return and reaches terminal state",
+      "pass": true,
+      "detail": {
+        "before": 2,
+        "after": 3
+      }
+    },
+    {
+      "name": "status overlay makes no writes or provider submissions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": []
+}

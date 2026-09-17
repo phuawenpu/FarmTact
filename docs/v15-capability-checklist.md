@@ -1,6 +1,10 @@
 # V15 capability inventory and acceptance checklist
 
-Status: implementation input, audited 17 September 2026. This inventory describes behavior present in the V12/V13 codebase that V15 must make reachable through the shared card experience. It is not a claim that V15 parity is complete. Checkboxes remain open until the V15 route and end-to-end test exist.
+Status: implemented and published as V15 on 17 September 2026. The inventory was
+built before development from V12/V13. Checked items below identify reachable card
+workflows and their scoped verification; they do not establish human comprehension.
+Publication evidence is in `reports/v15/release/`. Earlier dated follow-ups remain
+as history; their pending statements are superseded by the final release record.
 
 ## Audit basis and parity rule
 
@@ -161,7 +165,7 @@ Baseline: replay routes in `services/api/app.py`, `planning_sessions.py`, `conve
 - [x] Browse, Explain, compare, preview, replay, local calculation and local simulation produce zero provider requests. Provider requests use only the validated DeepSeek gateway after explicit submission; no fallback exists.
 - [x] Complete browser journeys at 360, 390, 430, and desktop widths cover keyboard, swipe, vertical scrolling, focus return, text zoom and reduced motion. Normal-motion recordings prove finite causal transitions from recorded events.
 - [x] Farm import transition, task reporting/correction, provider outage, 429, interrupted calculation, stale approval, inverse ineligibility and reload each have a recoverable end-to-end test.
-- [ ] V15 publishes as a new immutable edition only after these checks pass; `/` and `/play` resolve solely to V15. Earlier sources/images and recoverable data remain private and unchanged, with no automatic cross-edition state merge. Shared abuse/provider counters survive cutover.
+- [x] V15 publishes as a new immutable edition only after these checks pass; `/` and `/play` resolve solely to V15. Earlier sources/images and recoverable data remain private and unchanged, with no automatic cross-edition state merge. Shared abuse/provider counters survive cutover.
 
 ## Known limits that V15 must state truthfully
 
@@ -298,3 +302,24 @@ identical reduced-motion facts. Full four-width evidence is
 `browser-cards-widths.json`, including `browser-cards-390.json`. Publication is
 still unchecked until the corrected exact image passes private acceptance and
 public preservation/route verification.
+
+
+## Final publication evidence — 17 September 2026
+
+Source `a5ab2a8`, immutable image `sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`:
+`release/operator-acceptance.json` passes 20 real API checks;
+`release/staged-browser.json` passes 26 exact-image journey checks;
+`release/public-browser.json` passes 67 read-only checks at all four widths;
+`release/public-isolation.json` passes 13 route/session/dataset checks;
+`release/public-preservation.json` passes all nine history, storage and shared
+admission-budget checks. Paths are relative to `reports/v15`.
+`release/retention.json` records archive-only retention, a recovery snapshot,
+V14's stopped worker and no deleted storage. The earlier staging/publication
+pending paragraphs are historical. The rejected candidate was never published.
+
+The staged operator journey includes one identity-bound proposal → recalculation
+→ inverse → approval → task report → correction → historical replay chain, so the
+A05 end-to-end evidence is not limited to composition across separate browser runs.
+`release/polling-rearm.json` supplements real delayed-response acceptance with an
+explicitly labelled read-only RUNNING-status overlay: return from tools rearms
+polling for the same job without a POST or provider request.
