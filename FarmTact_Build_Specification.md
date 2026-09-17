@@ -24,6 +24,41 @@ prices, projected outcomes, simulation and user-reported results remain distinct
 Real farm operations remain disabled. Tests and live quality evidence remain dated
 and scoped; incomplete acceptance must not be reported as passing.
 
+## V13 tactical-card prototype amendment — 17 September 2026
+
+V13 is an unpublished feature-branch prototype; V12's source, image and data remain
+immutable. The farmer workspace uses a compact tactile-card console backed by the
+existing guided planning, proposal, task, conversation and numerical contracts.
+`bed-07` is displayed as grow space B3. The Heavy Rainfall record is a frozen
+synthetic seasonal scenario and must always display `SIMULATION · SCENARIO ONLY`.
+
+Reserve Space submits a reviewed planning-assumptions proposal at the current
+session revision and queues the existing local CP-SAT recalculation worker. Its
+metrics and signed deltas come only from stored planner results. Undo appends a new
+inverse proposal bound to the original completed job and current revision; it never
+deletes the original event and becomes unavailable after any intervening planning
+revision. Contextual Ask accepts a bounded focus identity, resolves its title and
+context from the tenant-owned frozen snapshot, and does not trigger inference until
+the farmer submits a question.
+
+Abuse admission is mandatory for every application API and every inference path.
+All requests retain global and source-IP limits; authenticated requests also consume
+a durable tenant/session allowance, and mutations consume stricter source-IP and
+tenant/session write allowances before body parsing. Explicit LLM submissions also
+retain burst, hourly tenant/IP, concurrency, run-budget, and shared provider-call
+reservations. A V13 route may not bypass these cumulative gates.
+
+At 360/390/430 px, the active card alone is interactive and assistive-technology
+visible, with swipe plus button and keyboard equivalents and 44 px targets. Normal
+flow is the default action dock; development-only inline/sticky comparison modes
+must honor safe areas and not cover content. Desktop retains mobile card proportions
+in a 25–35% left panel, with board and Council context alongside. Selected card and
+stack position use edition-scoped browser storage. Reduced motion replaces transforms
+with immediate state and live text. Human usability findings remain deferred;
+heuristic and scripted evidence must be labelled accordingly. No server-generated
+general card feed, drag-and-drop, streaks, collections, background inference or new
+domain/rack entity is included.
+
 # FarmTact
 
 ## Implementation audit amendment — 11 September 2026

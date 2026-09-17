@@ -73,6 +73,12 @@ def public_session(store,tenant,session):
     value['simulation']=public_world(world) if world else None
     farm = Farm.model_validate(session['farm'])
     target = next((bed for bed in farm.beds if bed.id == 'bed-07'), None)
+    horizon_end = farm.planning_date + timedelta(days=farm.horizon_days - 1)
+    planning_ready = bool(session.get('result_id') and session.get('status') == 'COMPLETED')
+    reservation_active = any(
+        row.get('bed_id') == 'bed-07'
+        for row in (session.get('assumptions') or {}).get('reservations', [])
+    )
     value['tactical_context'] = {
         'version': 'v13-tactical-prototype-v1',
         'planning_snapshot': {'session_id': session['id'], 'result_id': session.get('result_id'),
@@ -80,11 +86,19 @@ def public_session(store,tenant,session):
         'scenario': {'id': 'synthetic-heavy-rainfall-v1', 'entity_kind': 'scenario',
                      'title': 'Heavy rainfall', 'label': 'SIMULATION · SCENARIO ONLY',
                      'source': 'Frozen synthetic seasonal record', 'execution_mode': 'simulation',
-                     'inference_triggered': False},
+                     'inference_triggered': False, 'ask_eligible': planning_ready,
+                     'ask_disabled_reason': None if planning_ready else 'Complete the local baseline calculation first.'},
         'grow_space': ({'id': target.id, 'entity_kind': 'grow_space',
                         'title': f'Keep grow space {target.name} free', 'name': target.name,
                         'area_m2': float(target.area_m2), 'system': target.system,
-                        'source': 'Frozen planning snapshot'} if target else None),
+                        'source': 'Frozen planning snapshot',
+                        'reservation_window': {'start_date': str(farm.planning_date), 'end_date': str(horizon_end)},
+                        'reservation_active': reservation_active,
+                        'reserve_eligible': planning_ready and not reservation_active,
+                        'reserve_disabled_reason': ('This grow space is already reserved.' if reservation_active else
+                            None if planning_ready else 'Complete the local baseline calculation first.'),
+                        'ask_eligible': planning_ready,
+                        'ask_disabled_reason': None if planning_ready else 'Complete the local baseline calculation first.'} if target else None),
     }
     return value
 

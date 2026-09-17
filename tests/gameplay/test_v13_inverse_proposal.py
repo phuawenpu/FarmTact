@@ -101,10 +101,16 @@ def test_planning_session_exposes_server_bound_scenario_and_b3_context(setup):
         "id": "synthetic-heavy-rainfall-v1", "entity_kind": "scenario",
         "title": "Heavy rainfall", "label": "SIMULATION · SCENARIO ONLY",
         "source": "Frozen synthetic seasonal record", "execution_mode": "simulation",
-        "inference_triggered": False,
+        "inference_triggered": False, "ask_eligible": False,
+        "ask_disabled_reason": "Complete the local baseline calculation first.",
     }
     assert context["grow_space"] == {
         "id": "bed-07", "entity_kind": "grow_space", "title": "Keep grow space B3 free",
         "name": "B3", "area_m2": 20.0, "system": "sheltered_hydroponic",
         "source": "Frozen planning snapshot",
+        "reservation_window": {"start_date": "2026-09-08", "end_date": "2026-11-02"},
+        "reservation_active": False, "reserve_eligible": False,
+        "reserve_disabled_reason": "Complete the local baseline calculation first.",
+        "ask_eligible": False,
+        "ask_disabled_reason": "Complete the local baseline calculation first.",
     }

@@ -93,12 +93,45 @@ TERMINAL_REQUEST_STATUSES = {
 }
 
 
+FocusEntityKind = Literal[
+    "bed",
+    "grow_space",
+    "strategy",
+    "order",
+    "crop",
+    "batch",
+    "task",
+    "action",
+    "role",
+    "agent",
+    "evidence",
+    "scenario",
+]
+
+
+class ConversationFocus(Strict):
+    """Untrusted card coordinates; descriptive fields are server-derived."""
+
+    card_id: str = Field(
+        min_length=1,
+        max_length=100,
+        pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,99}$",
+    )
+    entity_kind: FocusEntityKind
+    entity_id: str = Field(
+        min_length=1,
+        max_length=100,
+        pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,99}$",
+    )
+
+
 class CreateConversation(Strict):
     advisor: AdvisorId = "asha"
     snapshot_kind: Literal["farm", "scenario", "research", "planning"] = "farm"
     research_version: int | None = Field(default=None, ge=1)
     snapshot_id: str | None = Field(default=None, max_length=100)
     selected_bed_id: str | None = Field(default=None, max_length=100)
+    focus: ConversationFocus | None = None
 
     @model_validator(mode="after")
     def scenario_requires_id(self) -> "CreateConversation":
@@ -360,6 +393,240 @@ def _highlight_refs(snapshot: dict[str, Any], scenario: dict[str, Any] | None) -
             f"delivery:{row['order_id']}" for row in scenario.get("affected_deliveries", [])
         )
     return refs
+
+
+def _focus_context_base(frozen: dict[str, Any]) -> dict[str, Any]:
+    snapshot_ref = frozen["snapshot_ref"]
+    return {
+        "snapshot_kind": snapshot_ref["kind"],
+        "snapshot_id": snapshot_ref["id"],
+        "snapshot_hash": snapshot_ref["hash"],
+    }
+
+
+def _focus_not_found() -> None:
+    # Do not distinguish a missing entity from one owned by another tenant.
+    raise HTTPException(422, "Focused entity is outside the frozen snapshot")
+
+
+def _derive_focus(
+    frozen: dict[str, Any], requested: ConversationFocus
+) -> dict[str, Any]:
+    """Resolve a client card coordinate to a bounded, trusted frozen entity."""
+
+    snapshot = frozen["snapshot"]
+    planning = frozen.get("planning") or {}
+    scenario = frozen.get("scenario")
+    kind = requested.entity_kind
+    entity_id = requested.entity_id
+    base = _focus_context_base(frozen)
+
+    if kind in {"bed", "grow_space"}:
+        entity = next(
+            (row for row in snapshot.get("beds", []) if row.get("id") == entity_id),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        batches = [
+            row.get("id")
+            for row in snapshot.get("batches", [])
+            if row.get("bed_id") == entity_id
+        ]
+        title = f"Grow space {entity.get('name', entity_id)}"
+        source = "Frozen farm snapshot"
+        context = {
+            **base,
+            "name": entity.get("name"),
+            "area_m2": entity.get("area_m2"),
+            "system": entity.get("system"),
+            "batch_ids": batches,
+        }
+    elif kind == "strategy":
+        entity = next(
+            (row for row in planning.get("strategies", []) if row.get("id") == entity_id),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        name = str(entity.get("name") or entity_id)
+        title = f"{name} strategy"
+        source = "Frozen planning result"
+        context = {
+            **base,
+            "name": entity.get("name"),
+            "status": entity.get("status"),
+            "description": entity.get("description"),
+            "metrics": entity.get("metrics", {}),
+            "violations": entity.get("violations", []),
+            "result_hash": frozen.get("tool_results", {}).get("planning:result_hash"),
+        }
+    elif kind == "order":
+        entity = next(
+            (row for row in snapshot.get("orders", []) if row.get("id") == entity_id),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        crop_id = str(entity.get("crop_id", "crop"))
+        title = f"Order {entity_id} · {crop_id.replace('_', ' ')}"
+        source = "Frozen farm snapshot"
+        context = {
+            **base,
+            "crop_id": entity.get("crop_id"),
+            "due_date": entity.get("due_date"),
+            "quantity_kg": entity.get("quantity_kg"),
+            "price_sgd_per_kg": entity.get("price_sgd_per_kg"),
+            "cancelled_kg": entity.get("cancelled_kg", 0),
+        }
+    elif kind == "batch":
+        entity = next(
+            (row for row in snapshot.get("batches", []) if row.get("id") == entity_id),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        recipes = {row.get("id"): row for row in snapshot.get("recipes", [])}
+        crop_id = (recipes.get(entity.get("recipe_id")) or {}).get("crop_id")
+        title = f"{str(crop_id or 'Crop').replace('_', ' ')} batch {entity_id}"
+        source = "Frozen farm snapshot"
+        context = {
+            **base,
+            "bed_id": entity.get("bed_id"),
+            "recipe_id": entity.get("recipe_id"),
+            "crop_id": crop_id,
+            "sow_date": entity.get("sow_date"),
+            "transplant_date": entity.get("transplant_date"),
+            "harvest_date": entity.get("harvest_date"),
+            "expected_marketable_kg": entity.get("expected_marketable_kg"),
+        }
+    elif kind == "crop":
+        recipes = [
+            row for row in snapshot.get("recipes", []) if row.get("crop_id") == entity_id
+        ]
+        if not recipes:
+            _focus_not_found()
+        title = entity_id.replace("_", " ").title()
+        source = "Frozen farm snapshot"
+        context = {
+            **base,
+            "recipe_ids": [row.get("id") for row in recipes],
+            "batch_ids": [
+                row.get("id")
+                for row in snapshot.get("batches", [])
+                if row.get("recipe_id") in {recipe.get("id") for recipe in recipes}
+            ],
+        }
+    elif kind in {"task", "action"}:
+        # Tasks are supported only when they are actually frozen into the
+        # planning result. Current farm-only conversations therefore fail closed.
+        entity = next(
+            (row for row in planning.get("tasks", []) if row.get("id") == entity_id),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        title = f"{str(entity.get('action') or 'Farm action').replace('_', ' ').title()}"
+        source = "Frozen planning task"
+        context = {
+            **base,
+            **{
+                key: entity.get(key)
+                for key in (
+                    "action",
+                    "status",
+                    "due_date",
+                    "crop_id",
+                    "batch_id",
+                    "order_id",
+                    "location",
+                    "event_revision",
+                )
+                if entity.get(key) is not None
+            },
+        }
+    elif kind in {"role", "agent"}:
+        if kind == "agent":
+            advisor = ADVISORS.get(entity_id)
+        else:
+            advisor_id = ROLE_TO_ADVISOR.get(entity_id)
+            advisor = ADVISORS.get(advisor_id) if advisor_id else None
+        if advisor is None:
+            _focus_not_found()
+        title = f"{advisor['name']} · {advisor['title']}"
+        source = "FarmTact council roster"
+        context = {
+            **base,
+            **{
+                key: advisor[key]
+                for key in ("id", "name", "role", "title", "location", "expertise")
+            },
+        }
+    elif kind == "evidence":
+        entity = next(
+            (
+                row
+                for row in frozen.get("evidence", [])
+                if row.get("evidence_id") == entity_id
+            ),
+            None,
+        )
+        if entity is None:
+            _focus_not_found()
+        title = str(entity.get("title") or f"Evidence {entity_id}")
+        source = "Frozen evidence register record"
+        context = {
+            **base,
+            **{
+                key: entity.get(key)
+                for key in (
+                    "source_url",
+                    "finding",
+                    "scope",
+                    "limit",
+                    "access_review_status",
+                )
+                if entity.get(key) is not None
+            },
+        }
+    elif kind == "scenario":
+        if (
+            frozen["snapshot_ref"]["kind"] == "planning"
+            and entity_id == "synthetic-heavy-rainfall-v1"
+        ):
+            title = "Heavy rainfall"
+            source = "Frozen synthetic seasonal record"
+            context = {
+                **base,
+                "provenance_label": "SIMULATION · SCENARIO ONLY",
+                "simulation_only": True,
+                "observed_weather": False,
+            }
+        elif scenario is not None and scenario.get("id") == entity_id:
+            title = str(scenario.get("name") or "Scenario")
+            source = "Frozen synthetic scenario record"
+            context = {
+                **base,
+                "provenance_label": "SIMULATION · SCENARIO ONLY",
+                "simulation_only": True,
+                "simulation_status": scenario.get("simulation_status"),
+                "controls": scenario.get("controls", {}),
+                "affected_bed_ids": scenario.get("affected_bed_ids", []),
+                "affected_deliveries": scenario.get("affected_deliveries", []),
+            }
+        else:
+            _focus_not_found()
+    else:  # pragma: no cover - the strict Literal rejects this at the API edge.
+        _focus_not_found()
+
+    return {
+        "card_id": requested.card_id,
+        "entity_kind": kind,
+        "entity_id": entity_id,
+        "title": title,
+        "source": source,
+        "context": context,
+    }
 
 
 def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[str, Any]:
@@ -787,13 +1054,22 @@ def build_conversation_router(
                 raise HTTPException(409, "Idempotency key reused with changed conversation inputs")
             return {"id": prior["id"], "status": prior["status"], "reused": True}
         frozen = _freeze_snapshot(request.app.state.store, tenant, body)
+        focus = _derive_focus(frozen, body.focus) if body.focus is not None else None
+        selected_bed_id = body.selected_bed_id
+        if focus and focus["entity_kind"] in {"bed", "grow_space"}:
+            if selected_bed_id is not None and selected_bed_id != focus["entity_id"]:
+                raise HTTPException(
+                    422, "Selected bed does not match the focused grow space"
+                )
+            selected_bed_id = focus["entity_id"]
         payload = {
             "id": secrets.token_hex(16),
             "status": "OPEN",
             "advisor_id": body.advisor,
             "advisor_role": ADVISORS[body.advisor]["role"],
             "snapshot_ref": frozen["snapshot_ref"],
-            "selected_bed_id": body.selected_bed_id,
+            "selected_bed_id": selected_bed_id,
+            "focus": focus,
             "created_at": now(),
             "updated_at": now(),
             "execution_mode": "test",
@@ -832,6 +1108,7 @@ def build_conversation_router(
                 {
                     "advisor_id": result["advisor_id"],
                     "snapshot_ref": result["snapshot_ref"],
+                    "focus": result.get("focus"),
                 },
             )
         return {"id": result["id"], "status": result["status"], "reused": not created}
@@ -1298,7 +1575,20 @@ def _bounded_model_context(conversation: dict[str, Any], role: str) -> tuple[dic
     tools = conversation.get("_tool_results", {})
     metrics = ROLE_CONTEXT_METRICS[role]
     selected_bed = conversation.get("selected_bed_id")
+    focus = conversation.get("focus") or {}
     research = conversation.get("snapshot_ref", {}).get("kind") == "research"
+
+    focused_reference_prefixes: tuple[str, ...] = ()
+    if focus.get("entity_kind") in {"bed", "grow_space"}:
+        focused_reference_prefixes = (f"bed:{focus.get('entity_id')}.",)
+    elif focus.get("entity_kind") == "batch":
+        focused_reference_prefixes = (f"batch:{focus.get('entity_id')}.",)
+    elif focus.get("entity_kind") == "order":
+        focused_reference_prefixes = (f"delivery:{focus.get('entity_id')}.",)
+    elif focus.get("entity_kind") == "strategy":
+        strategy_name = str(focus.get("context", {}).get("name", "")).lower()
+        if strategy_name:
+            focused_reference_prefixes = (f"strategy:{strategy_name}.",)
 
     def allowed(reference: str) -> bool:
         terminal = reference.rsplit(".", 1)[-1]
@@ -1332,6 +1622,10 @@ def _bounded_model_context(conversation: dict[str, Any], role: str) -> tuple[dic
         # Interleave metrics/policies so alphabetically early baseline fields
         # cannot crowd their scenario values and deltas out of the prompt.
         terminal = reference.rsplit(".", 1)[-1]
+        if focused_reference_prefixes and reference.startswith(
+            focused_reference_prefixes
+        ):
+            return (-1, "", "", "", reference)
         if reference.startswith("research:"):
             return (0, "", "", "", reference)
         if reference.startswith("scenario:controls"):
@@ -1456,6 +1750,7 @@ def _provider_messages(
         "response_requirements": response_requirements,
         "snapshot_ref": conversation["snapshot_ref"],
         "selected_bed_id": conversation.get("selected_bed_id"),
+        "focus": _bounded_context_value(conversation.get("focus")),
         "scenario_summary": {
             key: conversation.get("_scenario", {}).get(key)
             for key in (

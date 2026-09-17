@@ -672,13 +672,23 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
     visible_proposals = []
     for proposal in proposals:
         item = deepcopy(proposal)
+        job_id = item.get("recalculation_job", {}).get("id")
+        bound_result = planning_sessions.get_result(store, tenant, job_id) if job_id else None
+        if bound_result:
+            after_metrics = calculated_metrics(bound_result, item.get("selected_strategy_id"))
+            before_metrics = item.get("calculated_metrics", {})
+            item["recalculated_metrics"] = after_metrics
+            item["metric_deltas"] = {
+                key: (None if before_metrics.get(key) is None or value is None
+                      else round(float(value) - float(before_metrics[key]), 6))
+                for key, value in after_metrics.items()
+            }
         undo = {"available": False, "reason": "Only a completed applied constraint can be undone."}
         if item.get("status") == "applied" and item.get("inverse_changes"):
             if item.get("inverse_proposal_id"):
                 undo = {"available": False, "reason": "Undo has already been submitted."}
             else:
                 session = planning_sessions.get_session(store, tenant, item["session_id"])
-                job_id = item.get("recalculation_job", {}).get("id")
                 expected_revision = item.get("applied_session_revision", -2) + 1
                 if session and session.get("status") in {"QUEUED", "RUNNING"} and session.get("job", {}).get("id") == job_id:
                     undo = {"available": False, "reason": "Wait for recalculation to finish."}

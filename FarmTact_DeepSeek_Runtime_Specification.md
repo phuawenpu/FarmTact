@@ -46,6 +46,23 @@ and scoped; incomplete acceptance must not be reported as passing.
 
 # Runtime implementation audit — 11 September 2026
 
+## V13 tactical-card boundary — 17 September 2026
+
+Opening, navigating, reserving, recalculating, comparing, undoing and replaying a
+tactical card are local/server-deterministic operations and make zero provider
+calls. Opening a card-grounded Ask surface also makes zero calls. Only explicit
+submission of a conversation question may enter the existing DeepSeek-only gateway,
+using the frozen planning snapshot and server-validated card focus. Card titles,
+sources and context are server-derived; client focus fields never widen admitted
+context. There is no automatic weather interpretation or background inference.
+
+Every application API request is admitted through durable global/source-IP limits;
+authenticated calls also use a tenant/session limit and all mutations use a stricter
+tenant/session write limit before request-body parsing. Explicit inference retains
+the narrower AI burst/hour limits, tenant isolation, concurrent-run budget, and
+shared 48-call provider reservation. These layers are cumulative: a generic API
+allowance never exempts a provider-bound call from stricter inference gates.
+
 The latest published application edition is **v10**, built from source
 `ec4e29874b2c7408f2bd93d012912e3c0cb8d2f3` and image
 `registry.fly.io/farmtact@sha256:874530e73f481b1197e528bb5f124b958a74be64c9934292c14438b4cdd503bf`.

@@ -30,6 +30,11 @@ h1, h2, h3 { letter-spacing: -.03em; }
 p { line-height: 1.55; }
 
 .app-shell { min-height: 100vh; }
+.app-shell--tactical .side-rail,
+.app-shell--tactical .topbar,
+.app-shell--tactical > .thumb-nav { display: none; }
+.app-shell--tactical .app-content { padding-left: 0; }
+.app-shell--tactical .app-content main { max-width: 1500px; padding: 12px; }
 .app-content { min-height: 100vh; padding-left: 244px; }
 .app-content main { max-width: 1260px; margin: 0 auto; padding: 30px 34px 64px; }
 
@@ -456,6 +461,10 @@ a.source-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
   .world-page { gap: 10px; }.world-heading { align-items: start; }.world-heading h1 { font-size: 2rem; }.world-heading > div:first-child > p:last-child { font-size: .67rem; }.world-heading__actions { display: grid; grid-template-columns: repeat(3,44px); gap: 5px; }.world-chip { width: 44px; min-width: 44px; height: 44px; padding: 0; justify-content: center; }.world-chip span { display: none; }
   .farm-world-shell { margin-inline: -14px; border-inline: 0; border-radius: 21px; }.farm-world-viewport { height: calc(100dvh - 287px); min-height: 430px; }.farm-world-canvas { transform-origin: center; }.resource-hud { left: 8px; right: 57px; top: 8px; overflow-x: auto; }.resource-hud > span, .resource-hud > button { min-width: 67px; padding-inline: 7px; }.resource-hud b { font-size: .68rem; }.resource-hud small { font-size: .48rem; }.world-controls { right: 8px; bottom: 10px; }.world-pan-hint { display: none; }.date-preview { min-height: 70px; padding: 9px 12px; grid-template-columns: 105px 1fr auto; gap: 7px 9px; }.date-preview > div { min-width: 0; }.date-preview > p { grid-column: 1/-1; margin: -3px 0 0; }.date-preview button { width: 39px; padding: 0; justify-content: center; }.date-preview button:not(:disabled) { font-size: 0; }.date-preview button svg { width: 15px; }.world-shortcuts { display: flex; gap: 7px; overflow-x: auto; margin-inline: -14px; padding-inline: 14px; scrollbar-width: none; }.world-shortcuts > button { flex: 0 0 78%; min-height: 62px; }.world-bed { width: 122px; height: 88px; }.world-advisor { width: 100px; min-height: 140px; }.world-advisor__bubble { display: none; }
   .game-panel-layer { padding: 0; align-items: flex-end; }.game-panel, .game-panel--wide { width: 100%; height: min(89dvh,820px); border-radius: 25px 25px 0 0; animation-name: sheet-up; }.game-panel > header { min-height: 64px; padding: 11px 14px; }.game-panel__body { padding: 13px 12px calc(18px + env(safe-area-inset-bottom)); }.conversation-shell { min-height: 540px; }.conversation-transcript { max-height: 34vh; }.scenario-layout { min-height: 0; grid-template-columns: 1fr; }.scenario-brief { padding: 0 0 11px; border: 0; border-bottom: 1px solid var(--line); }.scenario-steps { display: grid; grid-template-columns: repeat(3,1fr); }.scenario-steps button { justify-content: center; }.scenario-brief > label, .scenario-brief .preview-note { display: none; }.brief-card { grid-template-columns: 54px 1fr; }.brief-card img { width: 54px; height: 56px; }.scenario-controls { grid-template-columns: 1fr 1fr; }.scenario-targets { grid-template-columns: 1fr 1fr; }.scenario-targets label:last-child { grid-column: 1/-1; }.branch-cards { display: flex; overflow-x: auto; }.branch-cards article { flex: 0 0 68%; }.quest-list article { grid-template-columns: 32px 1fr; }.quest-list .button { grid-column: 2; width: fit-content; }
+}
+
+@media (max-width: 760px) {
+  .app-shell--tactical .app-content main { padding: 0; }
 }
 
 @media (max-width: 390px) {

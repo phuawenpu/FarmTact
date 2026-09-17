@@ -1,6 +1,13 @@
-# Active work: V12
+# Active work: unpublished V13 tactical-card prototype
 
-See [V12 ownership and acceptance plan](v12-implementation-plan.md). V12 is in implementation; V11 remains published. Older status sections below are historical.
+V12 remains immutable and published. V13 is being developed only on
+`feature/v13-tactical-cards`; it is not published. See
+[the V13 ownership and acceptance plan](v13-implementation-plan.md). Root owns
+shared contracts, proposal/inverse semantics, route wiring, integration and final
+verification. Three bounded gpt-5.6-sol specialists own the new card-shell files,
+contextual-conversation implementation/tests, and documentation/evidence files,
+respectively. They do not delegate. Existing historical sections below remain
+evidence rather than current status.
 
 # FarmTact implementation status
 

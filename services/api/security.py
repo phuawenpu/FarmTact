@@ -44,7 +44,9 @@ class Rule:
 
 API_IP = Rule("api_ip", 600, 60)
 API_GLOBAL = Rule("api_global", 3000, 60)
+API_TENANT = Rule("api_session", 900, 60)
 WRITE_IP = Rule("write_ip", 60, 60)
+WRITE_TENANT = Rule("write_session", 45, 60)
 SESSION_IP = Rule("new_session_ip", 10, 3600)
 SESSION_GLOBAL = Rule("new_session_global", 100, 3600)
 AI_IP_BURST = Rule("ai_ip_minute", 6, 60)
@@ -150,8 +152,12 @@ class AbuseLimits:
         if self.public_origin and request.headers.get("host", "").lower() != urlsplit(self.public_origin).netloc.lower():
             raise PermissionError("Unrecognized application host")
         tenant = self.store.authenticate(request.cookies.get("farmtact_session")) if api else None
+        if api and tenant:
+            self.consume([(API_TENANT, tenant)])
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             self.consume([(WRITE_IP, network)])
+            if tenant:
+                self.consume([(WRITE_TENANT, tenant)])
             origin = request.headers.get("origin")
             expected = self.public_origin or f"{request.url.scheme}://{request.headers.get('host', '')}"
             if request.headers.get("sec-fetch-site") == "cross-site" or (origin and origin != expected):

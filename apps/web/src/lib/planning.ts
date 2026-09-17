@@ -109,6 +109,8 @@ export interface PlanningSession {
       source: string;
       execution_mode: "simulation";
       inference_triggered: false;
+      ask_eligible: boolean;
+      ask_disabled_reason?: string | null;
     };
     grow_space?: {
       id: string;
@@ -118,6 +120,12 @@ export interface PlanningSession {
       area_m2: number;
       system: string;
       source: string;
+      reservation_window: { start_date: string; end_date: string };
+      reservation_active: boolean;
+      reserve_eligible: boolean;
+      reserve_disabled_reason?: string | null;
+      ask_eligible: boolean;
+      ask_disabled_reason?: string | null;
     } | null;
   };
   [key: string]: unknown;
@@ -131,6 +139,8 @@ export interface FarmerProposal {
   status: string;
   selected_strategy_id?: string;
   calculated_metrics: Record<string, number | null>;
+  recalculated_metrics?: Record<string, number | null>;
+  metric_deltas?: Record<string, number | null>;
   recalculation_job?: { id?: string; status?: string };
   inverse_of_proposal_id?: string;
   inverse_proposal_id?: string;
