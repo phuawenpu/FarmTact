@@ -154,12 +154,12 @@ Baseline: replay routes in `services/api/app.py`, `planning_sessions.py`, `conve
 
 ## Cross-cutting release gates
 
-- [x] Generated frontend contracts are current; frontend production build passes and CSS/JS bundle sizes are recorded (V13 baseline JS was 601.77 kB with an over-500 kB warning).
+- [ ] Generated frontend contracts are current; frontend production build passes and CSS/JS bundle sizes are recorded (V13 baseline JS was 601.77 kB with an over-500 kB warning).
 - [x] Full Python regression passes against isolated PostgreSQL, plus focused concurrent create/apply/save/result tests. SQLite-only evidence is insufficient for release.
 - [x] Tenant isolation covers every restored read/write route. Idempotency, stale revisions, concurrent requests, append-only history, transaction rollback, and restart persistence pass.
 - [x] Global/IP/session limits, stricter write limits, anonymous-session admission, provider concurrency/hour/day budgets, and `Retry-After` behavior pass. Drafts survive admission/provider failures and uncertain writes reconcile before retry.
 - [x] Browse, Explain, compare, preview, replay, local calculation and local simulation produce zero provider requests. Provider requests use only the validated DeepSeek gateway after explicit submission; no fallback exists.
-- [x] Complete browser journeys at 360, 390, 430, and desktop widths cover keyboard, swipe, vertical scrolling, focus return, text zoom and reduced motion. Normal-motion recordings prove finite causal transitions from recorded events.
+- [ ] Complete browser journeys at 360, 390, 430, and desktop widths cover keyboard, swipe, vertical scrolling, focus return, text zoom and reduced motion. Normal-motion recordings prove finite causal transitions from recorded events.
 - [x] Farm import transition, task reporting/correction, provider outage, 429, interrupted calculation, stale approval, inverse ineligibility and reload each have a recoverable end-to-end test.
 - [ ] V15 publishes as a new immutable edition only after these checks pass; `/` and `/play` resolve solely to V15. Earlier sources/images and recoverable data remain private and unchanged, with no automatic cross-edition state merge. Shared abuse/provider counters survive cutover.
 
@@ -273,3 +273,9 @@ calculation POST had been sent and the session stayed DRAFT. The harness now wai
 for the intended bound session and pending requests before acting. No backend job
 was restarted or API limit relaxed. Exact staged-image/browser and public cutover
 verification remain outstanding.
+
+Staging reopened the final frontend gates: the actual candidate exposed a mobile
+review-ID overflow and delayed status-poll/readiness race. These are implementation
+defects, not waived test limits. The first image will not be published. Overflow
+assertions now apply to every complete-journey screenshot; delayed-response
+coherence and repeated full-width journeys precede a corrected clean build.

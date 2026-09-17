@@ -1,7 +1,7 @@
 # V15 private implementation status
 
 Private branch: `feature/v15-integrated-cards`. V14 remains the public immutable
-release. V15 has not been staged, published or accepted as a complete replacement.
+release. V15 has been privately staged but has not been published or accepted as a complete replacement. The first candidate failed mobile wrapping and slow-response UI acceptance; fixes are in progress.
 
 The root entry now loads the integrated shell and lazy card decks for Plan,
 Records & work, Knowledge & evidence, Experiments and History & preferences.
@@ -205,3 +205,14 @@ corrected to its actual 4196 service; no quota or server state was reset.
 792-pass PostgreSQL regression and five additional preservation-tool tests.
 Staging and publication are still pending; the next step pins this committed
 candidate for private Fly numerical and browser acceptance before public cutover.
+
+Staged acceptance follow-up (17 September, 14:20 UTC): source `a3ba834` was
+privately staged with public V14 routing unchanged. Shared preservation passed
+nine checks and the real operator numerical trial passed 20 checks with zero
+provider submissions. The browser/visual gate failed: a 32-character proposal ID
+widened the 390 px review screenshot to 468 px, and a late terminal poll could
+clear mutation-owned busy state and expose a result before its workflow facts.
+The candidate is rejected for publication. CSS wrapping and session/workflow
+reconciliation are being fixed; delayed-response regression and repeated full
+width journeys must pass before building a new pinned candidate. No counter was
+reset, no farm operation was enabled, and V14 remains the public application.

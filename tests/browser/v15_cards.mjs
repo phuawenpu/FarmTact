@@ -21,6 +21,7 @@ const browser = await chromium.launch({ headless: true });
 let activePage;
 
 async function shot(page, name) {
+  if (name !== 'failure-current') check(`${name}: document fits the viewport`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   const path = resolve(reportDir, `${name}.png`);
   await page.screenshot({ path, fullPage: true, animations: 'disabled' });
   result.screenshots.push(process.env.REPORT_DIR ? path : `reports/v15/${name}.png`);

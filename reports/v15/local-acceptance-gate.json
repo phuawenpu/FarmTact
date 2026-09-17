@@ -1,5 +1,5 @@
 {
-  "status": "PASS",
+  "status": "REOPENED",
   "scope": "Local implementation acceptance only; exact private staging and public cutover remain pending. Human usability and new live provider prose are not established.",
   "checked_at": "2026-09-17T14:09:14.929985+00:00",
   "reports": [
@@ -112,5 +112,6 @@
   "additional_preservation_tests": 5,
   "backend_tree": "044d4ef765c53a57802cdf8edfcae4cf05172fdc",
   "contracts": "PASS",
-  "clean_build": "PASS"
+  "clean_build": "PASS",
+  "reopened_reason": "Exact staged visual/latency acceptance found mobile proposal-ID overflow and session/workflow readiness race; corrected source requires rerun."
 }
