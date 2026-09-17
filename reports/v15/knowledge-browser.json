@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "V15 direct adviser fixture records partial validated result",
+      "pass": true,
+      "detail": {
+        "creates": 1,
+        "direct": 1
+      }
+    },
+    {
+      "name": "V15 adviser submission uses exact canonical selected focus",
+      "pass": true,
+      "detail": {
+        "card_id": "order-focus-order",
+        "entity_kind": "order",
+        "entity_id": "focus-order"
+      }
+    },
+    {
+      "name": "V15 invite fixture retains withheld specialist finding",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "V15 conversational Council fixture completes through explicit submit",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "V15 adviser fixtures preserve the full recorded transcript",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "uncertain adviser submission retains its draft",
+      "pass": true
+    },
+    {
+      "name": "explicit retry uses the same thread and idempotency identity",
+      "pass": true,
+      "detail": {
+        "direct": 3,
+        "creates": 2,
+        "keysMatch": true
+      }
+    },
+    {
+      "name": "accepted adviser POST clears resend state before transcript refresh",
+      "pass": true,
+      "detail": 4
+    },
+    {
+      "name": "read-only refresh does not resubmit accepted provider work",
+      "pass": true,
+      "detail": 4
+    },
+    {
+      "name": "V15 Knowledge gateway fixture has no browser errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": []
+}

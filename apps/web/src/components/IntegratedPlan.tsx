@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
 import { farmerWorkflowApi, planningApi, rememberPlanningSession, rememberedPlanningSession, type FarmerAssumptions, type FarmerProposal, type PlanningSession } from '../lib/planning'
 import { editionStorageKey } from '../lib/edition'
+import { useCardView } from '../lib/cardNavigation'
 import { RecordFacts, ToolCard } from './ToolCard'
 const blank:FarmerAssumptions={tentative_orders:[],future_demand:[],seasonal:[],order_changes:[],reservations:[]}
 export default function IntegratedPlan({onClose}:{onClose:()=>void}){
- const [session,setSession]=useState<PlanningSession|null>(null),[index,setIndex]=useState(0),[view,setView]=useState('index'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[proposal,setProposal]=useState<FarmerProposal|null>(null)
+ const [session,setSession]=useState<PlanningSession|null>(null),[index,setIndex]=useState(0),[view,setView,restoreView,captureView]=useCardView(),[busy,setBusy]=useState(false),[error,setError]=useState(''),[proposal,setProposal]=useState<FarmerProposal|null>(null)
  const [draft,setDraft]=useState(()=>{try{return localStorage.getItem(editionStorageKey('planning-assumptions-draft'))||JSON.stringify(blank,null,2)}catch{return JSON.stringify(blank,null,2)}}),[strategy,setStrategy]=useState('')
- const act=async(fn:()=>Promise<void>)=>{setBusy(true);setError('');try{await fn()}catch(e){setError(e instanceof Error?e.message:'Request interrupted. Review retained.')}finally{setBusy(false)}}
+ const act=async(fn:()=>Promise<void>)=>{captureView();setBusy(true);setError('');try{await fn()}catch(e){setError(e instanceof Error?e.message:'Request interrupted. Review retained.')}finally{setBusy(false)}}
  useEffect(()=>{void act(async()=>{const list=await planningApi.list();const saved=rememberedPlanningSession();const s=list.sessions.find(s=>s.id===saved&&s.workflow)||list.sessions.find(s=>s.workflow);setSession(s||null);setStrategy(s?.selected_strategy_id||s?.result?.strategies?.[0]?.id||'')})},[])
  useEffect(()=>{try{localStorage.setItem(editionStorageKey('planning-assumptions-draft'),draft)}catch{}},[draft])
  useEffect(()=>{if(!session||!['QUEUED','RUNNING'].includes(session.job?.status||''))return;const timer=window.setInterval(()=>void planningApi.get(session.id).then(setSession).catch(e=>setError(e instanceof Error?e.message:'Status unavailable')),2000);return()=>window.clearInterval(timer)},[session?.id,session?.job?.status])
  const labels=['Objectives & all demand','Strategies & schedules','Resources & assumptions','Proposals & recalculation','New planning attempt']
  const strategies=session?.result?.strategies||[]
- const back=()=>view==='index'?onClose():setView(view==='comparison'?'strategies':view==='review'?'assumptions':'index')
+ const back=()=>view==='index'?onClose():restoreView(view==='comparison'?'strategies':view==='review'?'assumptions':view==='cancel'?'objectives':'index')
  let title=labels[index],body=<p>Calculate from the ordinary farm with all supported local strategies.</p>,label='Open',action=()=>setView(['objectives','strategies','assumptions','proposals','new'][index]),secondary: {label:string;run:()=>void}|undefined
  if(view==='objectives'){title='Objectives and all demand';body=<><p>All confirmed orders and modeled demand stay in the calculation. One introductory objective never filters the plan.</p><RecordFacts value={session?.farm.orders}/><RecordFacts value={session?.farm.resources}/></>;label=session?.result||['QUEUED','RUNNING'].includes(session?.job?.status||'')?'Refresh':'Calculate locally';action=()=>void act(async()=>{if(session)setSession(session.result||['QUEUED','RUNNING'].includes(session.job?.status||'')?await planningApi.get(session.id):await planningApi.calculate(session.id,session.revision))})}
  if(view==='objectives'&&['QUEUED','RUNNING'].includes(session?.job?.status||''))secondary={label:'Review cancellation',run:()=>setView('cancel')}

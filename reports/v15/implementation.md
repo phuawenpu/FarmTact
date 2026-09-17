@@ -76,3 +76,15 @@ Rescue suite passed 8 checks; controlled scenario queued/cancel/retry/quest and
 incompatible-root transport suite passed 6. These transport fixtures are explicitly
 labelled and do not claim real numerical or provider results. The sole Python skip
 is the optional generated News-cache contract because that cache is absent.
+
+Additional recovery verification (17 September, 12:25 UTC): Knowledge's labelled
+gateway fixtures pass 10 assertions, including retained uncertain-request identity
+and read-only refresh after an accepted POST followed by a failed transcript GET.
+Plan/History return navigation passes six real-browser assertions: original focus
+and scroll are restored, including after asynchronous replay loading, with zero
+POST requests. The shared return helper captures focus before disabling a pending
+action. Recorded simulation playback has separate passing evidence in
+`browser-cards-recorded.json`; a complete fresh reservation-to-approval run is still
+being verified. Records extended verification exposed a session-filter mismatch in
+rendered proposals/tasks/events; its corrected rendering is awaiting the full rerun.
+These checks do not establish completed parity or authorize publication.

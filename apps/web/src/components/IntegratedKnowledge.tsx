@@ -146,9 +146,8 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
       let current = conversation;
       let id = current?.id || bindings[bindingKey];
       if (id && !current) { current = await api.conversation(id); setConversation(current); }
-      if (!id) { const [entity_kind, entity_id] = focusKey.split(":"); const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: "planning", snapshot_id: session.id,
-        ...(entity_kind && entity_id ? { focus: { card_id: `${entity_kind}-${entity_id}`, entity_kind, entity_id } } : {}) }); id = created.id; setBindings((saved) => ({ ...saved, [bindingKey]: created.id })); setConversation({ id: created.id, messages: [], last_request_status: created.status }); setConversationFocus(focusKey); }
-      if (current?.messages.some((message) => message.speaker === "user" && message.content.trim() === text)) { setConversation(current); setQuestions((saved) => ({ ...saved, [advisor.id]: "" })); setNeedsRefresh(false); return; }
+      if (!id) { const separator = focusKey.indexOf(":"); const entity_kind = separator < 0 ? "" : focusKey.slice(0, separator), entity_id = separator < 0 ? "" : focusKey.slice(separator + 1); const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: "planning", snapshot_id: session.id,
+        ...(entity_kind && entity_id ? { focus: { card_id: `${entity_kind}-${entity_id}`, entity_kind, entity_id } } : {}) }); id = created.id; const nextBindings = { ...bindings, [bindingKey]: created.id }; try { localStorage.setItem("farmtact-v15-knowledge-bindings", JSON.stringify(nextBindings)); } catch { /* best effort */ } setBindings(nextBindings); setConversation({ id: created.id, messages: [], last_request_status: created.status }); setConversationFocus(focusKey); }
       if (mode === "invite") await api.inviteAdvisor(id, { advisor: inviteAdvisor, question: text, reply_to: replyTo });
       else if (mode === "council") await api.conveneCouncil(id, { question: text, ...(replyTo ? { reply_to: replyTo } : {}) });
       else await api.sendConversationMessage(id, { content: text, ...(replyTo ? { reply_to: replyTo } : {}) });
