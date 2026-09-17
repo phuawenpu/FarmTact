@@ -96,22 +96,23 @@ is scripted prototype evidence, not a human usability or accessibility result.
 
 | Evidence | Required artifact/result | Current documentation-stage status |
 |---|---|---|
-| Responsive browser journeys | 360/390/430/desktop assertions and screenshots | PASS — 46-check Playwright journey; four screenshots; final three development-only dock checks ran against Vite development mode |
+| Responsive browser journeys | 360/390/430/desktop assertions and screenshots | PASS — deterministic Playwright journey at all four widths plus screenshots |
 | Swipe vs vertical scroll | Pointer/touch outcome assertions | PASS — vertical drag retained selection; horizontal swipe advanced it |
 | Keyboard and active-card isolation | Tab/accessibility assertions | PASS — arrows/buttons equivalent; one readable active card and two `aria-hidden` depth layers |
-| Proposal/recalculation/inverse | Isolated PostgreSQL API/browser evidence | PASS — revision-bound reserve and inverse; queued/running/completed; original plus inverse history retained |
+| Proposal/recalculation/inverse | Isolated PostgreSQL API/browser evidence | PASS — real PostgreSQL/CP-SAT browser journey and deterministic edge-state journey; original plus inverse history retained |
 | Stale Undo | Conflict plus zero-job assertion | PASS — intervening revision exposed a disabled reason and sent no further inverse mutation |
 | Focus-bound Ask | Validation/tenant/idempotency and dialog evidence | PASS — strict server focus tests and dialog focus restoration |
 | Zero automatic provider calls | Network and provider-ledger delta of zero before explicit send | PASS — open/navigation/reserve/recalculate/open Ask caused no provider mutation; explicit send was separately observed |
 | Provenance distinctions | Visible text assertions | PASS — exact `SIMULATION · SCENARIO ONLY` assertion plus code-derived planner labels |
 | Reduced motion | Computed-style and functional equivalence assertions | PASS — transformations/animations reduced to effectively immediate state while text persisted |
-| Abuse protection | Durable global/IP/tenant/write and stricter inference admission | PASS — request-admission and abuse suites included in the 756-test PostgreSQL run; inverse route fails closed at tenant write limit |
-| V12 immutability / V13 unpublished | Git/release-manifest checks | PASS — release/hosting configuration unchanged from `main`; no V13 publish/deploy command run |
+| Abuse protection | Durable global/IP/tenant/write and stricter inference admission | PASS — 42 shared-control/admission checks plus repository regression; inverse route fails closed at tenant write limit |
+| Blind judging | Three first-use personas with problem statement/rubric only | PASS as scripted evidence — findings, repairs, and limitations recorded in `judging-personas.md` |
+| V12 immutability / V13 release | Git/release-manifest checks | V12 remains pinned; V13 uses the numbered edition workflow and isolated state |
 
 Supporting technical results: generated web contracts passed; production frontend
-build passed with the retained 599.11 kB bundle warning; the isolated PostgreSQL
-regression passed 756 tests with one skip and two dependency deprecation warnings
-in 755.97 seconds. See `reports/v13/implementation.md` for command-level scope.
+build passed with the retained 601.77 kB bundle warning; the final isolated
+PostgreSQL result is preserved in `full-regression.xml`. See
+`reports/v13/implementation.md` for command-level scope.
 
 ## Measures for later human evaluation
 

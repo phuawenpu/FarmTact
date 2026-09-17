@@ -1,0 +1,36 @@
+{
+  "title": "FarmTact V13 — Tactical Field Console",
+  "summary": "A tactile, responsive mission shell turns a frozen scenario and real farm entities into explicit, revision-bound planning decisions with calculated consequences and auditable recovery.",
+  "changes": [
+    {
+      "title": "Navigate a decision-first field deck",
+      "description": "One active tactical card stays readable across mobile and desktop, with swipe, buttons and keyboard equivalents, compact provenance, a real farm board, strategy tray and secondary tools under More.",
+      "feedback_ids": [],
+      "evidence": ["tests/browser/v13_tactical_cards.mjs", "reports/v13/accessibility-review.md"]
+    },
+    {
+      "title": "Reserve B3 through the real planner",
+      "description": "Grow space B3 maps to bed-07. Reserve Space creates a revision-bound proposal after the recorded crop and sanitation period, runs the local CP-SAT worker, highlights the board and displays selected-strategy values with signed deltas.",
+      "feedback_ids": [],
+      "evidence": ["tests/browser/v13_real_journey.mjs", "tests/gameplay/test_v13_inverse_proposal.py"]
+    },
+    {
+      "title": "Undo with a compensating calculation",
+      "description": "Undo appends an inverse proposal at the current revision and recalculates from its feasible source. Original history remains; stale inverses fail closed with an explicit reason.",
+      "feedback_ids": [],
+      "evidence": ["tests/gameplay/test_v13_inverse_proposal.py", "tests/browser/v13_tactical_cards.mjs"]
+    },
+    {
+      "title": "Ask in validated card context",
+      "description": "Conversation focus binds card, entity and frozen planning snapshot on the server. Opening Ask performs no inference; only explicit submission enters the bounded provider path, and provider failure invents no dialogue.",
+      "feedback_ids": [],
+      "evidence": ["tests/gameplay/test_v13_conversation_focus.py", "reports/v13/judging-personas.md"]
+    },
+    {
+      "title": "Apply layered abuse protection",
+      "description": "Every API receives durable global and source-network admission; authenticated and mutation calls add edition-scoped session quotas; provider-triggering routes add stricter burst, hourly and shared daily limits before inference work.",
+      "feedback_ids": [],
+      "evidence": ["tests/review/test_abuse_limits.py", "tests/security/test_request_admission.py", "tests/editions/test_control.py"]
+    }
+  ]
+}

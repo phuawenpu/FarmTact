@@ -15,6 +15,12 @@ reduced-motion, and 360/390/430/1280 px overflow assertions. These automated pas
 close the prototype's scripted gate only; the manual/screen-reader/physical-device
 items below remain open.
 
+The blind 360 px keyboard review also found that Details updates the contextual
+region farther down the page without disclosure semantics or focus movement. The
+content is present and the action is keyboard-operable, but adding `aria-controls`,
+an appropriate expanded relationship/status announcement, and intentional
+scroll/focus behavior remains a priority before a conformance claim.
+
 ## Acceptance checklist
 
 | Area | Required behavior | Verification |
