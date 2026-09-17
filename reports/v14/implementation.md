@@ -84,7 +84,12 @@ Malformed image preflight now happens before credentials or inference reservatio
   legacy-route bypasses and per-order completion.
 - Initial full regression: 773 passed, one failed, one skipped. The failure was
   invalid-image validation after missing credentials; local preflight fixes it,
-  with two focused tests passing. The final full regression is recorded separately.
+  with two focused tests passing. The final clean full regression passed **780
+  tests, one skipped** (`regression-final.json`). An intermediate run overlapped a
+  frontend rebuild and had 16 missing-assets setup errors plus an outdated upload
+  assertion; all were resolved before that clean run. A final presentation-only
+  pre-start date correction is additionally covered by the focused journey suite:
+  selecting a plan now says “Ready to start on 5 Jan,” without claiming time advanced.
 - Build: approximately 240 kB JavaScript (76.4 kB gzip), 145.58 kB CSS. Removing the old shell
   from the entry bundle removes its previous large-JavaScript warning; CSS remains
   a measured optimization opportunity.

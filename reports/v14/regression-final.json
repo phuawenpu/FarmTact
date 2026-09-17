@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "source_commit": "0bb42cab2f2d3e3b600516fe438bc1a51331bac7",
+  "summary": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "1",
+    "tests": "781",
+    "time": "781.806",
+    "timestamp": "2026-09-17T09:33:00.809246+00:00",
+    "hostname": "thu1033"
+  },
+  "skipped": [
+    {
+      "test": "tests.seven_agents.test_news_review.test_real_cache_contract_is_metadata_only_and_has_no_implicit_effect",
+      "reason": "Generated News cache is absent in this clean checkout"
+    }
+  ]
+}

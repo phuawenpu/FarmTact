@@ -99,6 +99,10 @@ def test_full_first_delivery_uses_real_jobs_events_recovery_and_replay(journey_a
     assert "weighted" not in " ".join(choice["tradeoff"].lower() for choice in journey["choices"])
     selected=next(choice for choice in journey["choices"] if choice["title"]==policy_name)
     journey=_act(client,journey,"select_plan",selected["id"])
+    assert journey["scene"]["clock_date"] is None
+    assert journey["scene"]["event"]["date"] == "2026-01-05"
+    assert journey["cards"][0]["title"] == "Ready to start on 5 Jan"
+    assert "has not advanced yet" in journey["cards"][0]["summary"]
     initial_progress=next(card for card in journey["cards"] if any(action["id"]=="advance" for action in card["actions"]))
     progress_ids={initial_progress["id"]}
 

@@ -349,7 +349,7 @@ def _scene(store, tenant_id: str, session: dict, stage: str) -> dict:
         event={"tone":"neutral","label":"Your teaching farm","date":world.get("clock_date") if world else str(farm.planning_date),"weather":"Simulated farm",
                "summary":"The simulated season is ready for its first bounded advance."}
         if world:
-            current=date.fromisoformat(world["clock_date"]) if world.get("clock_date") else date.fromisoformat(world["start_date"])-timedelta(days=1)
+            current=date.fromisoformat(world["clock_date"] or world["start_date"])
             current_label=current.strftime("%-d %b")
             from services.api.simulation import EVENTS
             with store.connection() as connection:
@@ -374,6 +374,9 @@ def _scene(store, tenant_id: str, session: dict, stage: str) -> dict:
                     labels.append(f'{verbs[row["task"]]} the {cycle} {crop.lower()} crop in {names.get(row.get("bed_id"),row.get("bed_id"))}')
                 label=labels[0] if len(labels)==1 else f"Recorded {len(labels)} crop tasks"
                 event.update(label=label,date=str(current),summary=f'{"; ".join(labels)} on {current_label}.')
+            elif not world.get("clock_date"):
+                event.update(label=f"Ready to start on {current_label}",date=str(current),
+                             summary="Your plan is saved. Advance to the next checkpoint when you are ready; simulated time has not advanced yet.")
             else:
                 event.update(label=f"Farm advanced to {current_label}",date=str(current),
                              summary=f"No sowing, transplanting, harvest, or delivery was due on {current_label}.")
