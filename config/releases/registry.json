@@ -1,5 +1,5 @@
 {
-  "latest": "v13",
+  "latest": "v14",
   "editions": [
     {
       "id": "v1",
@@ -652,6 +652,53 @@
             "tests/review/test_abuse_limits.py",
             "tests/security/test_request_admission.py",
             "tests/editions/test_control.py"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v14",
+      "title": "Grow your first delivery",
+      "published_at": "2026-09-17",
+      "summary": "One animated introduction and one card-driven teaching season replace public edition navigation and dashboard-first play. Compare real calculated plans, respond to maintenance, and record a simulated delivery.",
+      "status": "published",
+      "source_commit": "c0e585f08235c2137577652f590223180b8f71f9",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/c0e585f08235c2137577652f590223180b8f71f9",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/30f4e974cda4e5624d85f66627e7667be91d9a15...c0e585f08235c2137577652f590223180b8f71f9",
+      "image_digest": "registry.fly.io/farmtact@sha256:29e39f61e6dc6734a944c88b8adc812ecd649c892c597c543d849d8cd8970128",
+      "review_url": "/v14/review",
+      "play_url": "/v14/",
+      "changes": [
+        {
+          "title": "One consistent beginner journey",
+          "description": "Swipe decision cards and use the action area below them. A noninteractive 2.5D farm illustrates saved events. Explanation, journal, settings and replay use the same card deck.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/browser/v14_first_season.mjs",
+            "reports/v14/interaction-review.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Real planning and simulated consequences",
+          "description": "Isolated teaching seasons use the local planner and execution ledger, dated B3 maintenance, explicit recovery selection, per-order delivery validation and three closing cards. Nothing advances while away.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/gameplay/test_beginner_journey.py",
+            "scripts/v14_acceptance_trial.py",
+            "tests/gameplay/test_beginner_postgres.py"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "One current public game with protected history",
+          "description": "The root is an introduction and /play is the current game. Old public editions are retired with recoverable private state retained. Durable API admission, provider budgets and explicit-only adviser requests remain enforced.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/security/test_beginner_admission.py",
+            "tests/editions/test_gateway.py",
+            "tests/editions/test_publication.py"
           ],
           "status": "implemented"
         }
