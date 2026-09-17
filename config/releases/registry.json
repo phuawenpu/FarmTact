@@ -1,5 +1,5 @@
 {
-  "latest": "v15",
+  "latest": "v16",
   "editions": [
     {
       "id": "v1",
@@ -750,6 +750,43 @@
             "tests/gameplay/test_v12_acceptance_adversarial.py",
             "tests/browser/v15_terminal_reconciliation.mjs",
             "tests/browser/v15_reservation_eligibility.mjs"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v16",
+      "title": "Explanations for the current decision",
+      "published_at": "2026-09-17",
+      "summary": "The complete integrated farm experience now explains each order, strategy, reservation, approved work record and simulated result using its own saved facts.",
+      "status": "published",
+      "source_commit": "3487faf90ec9205c903f8a6e40fc09aa94614dcc",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/3487faf90ec9205c903f8a6e40fc09aa94614dcc",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63...3487faf90ec9205c903f8a6e40fc09aa94614dcc",
+      "image_digest": "registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493",
+      "review_url": "/v16/review",
+      "play_url": "/v16/",
+      "changes": [
+        {
+          "title": "Stage-specific deterministic explanations",
+          "description": "Replace raw assumption objects and unrelated proposal text with order facts, compatible strategy comparisons, dated reservation changes, recorded task identities and simulation outcomes. Missing evidence stays explicit; reading does not invoke AI.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/browser/v15_final_semantics.mjs",
+            "tests/browser/v16_explanation_layout.mjs",
+            "reports/v15/final-semantics-published-failure.json"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Independent immutable state and retained workflows",
+          "description": "Retain the full integrated card workflows and server admission controls while keeping V16 preferences and sandbox data separate from the preserved V15 edition.",
+          "feedback_ids": [],
+          "evidence": [
+            "apps/web/src/lib/edition.ts",
+            "tests/browser/v15_cards.mjs",
+            "tests/browser/v15_public_release.mjs"
           ],
           "status": "implemented"
         }
