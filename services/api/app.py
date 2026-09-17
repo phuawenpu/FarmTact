@@ -434,6 +434,8 @@ def create_app(store=None,start_worker=True):
     install_research(app,tenant)
     from services.api.planning_sessions import register as install_planning
     install_planning(app,tenant)
+    from services.api.beginner_journey import install_routes as install_beginner
+    install_beginner(app,tenant)
     from services.api.farm_workflow import register as install_workflow
     install_workflow(app,tenant)
     from services.api.simulation import register as install_simulations
@@ -455,6 +457,8 @@ def create_app(store=None,start_worker=True):
         @app.get('/changes/')
         @app.get('/review')
         @app.get('/review/')
+        @app.get('/play')
+        @app.get('/play/')
         @app.get('/')
         def index():return FileResponse(dist/'index.html')
     return app

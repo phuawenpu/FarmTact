@@ -187,6 +187,51 @@ def _apply_world_replan(store,tenant,session,result):
     with store.connection(write=True) as c:c.execute(update(WORLDS).where(WORLDS.c.id==world['id'],WORLDS.c.tenant_id==tenant).values(payload=world))
 
 
+def activate_strategy(store, tenant_id, session, strategy_id, *, replace_future=False):
+    """Bind an explicit player choice to the exact executable trace.
+
+    Guided numerical jobs select a display default. Beginner lessons must not
+    inherit that default after the player chooses another feasible strategy, so
+    this hook recomputes the central trace for the chosen strategy before a
+    world is created or its unexecuted future is replaced.
+    """
+    from packages.planner.engine import simulate
+    result=get_result(store,tenant_id,session.get('result_id'))
+    selected=next((row for row in (result or {}).get('strategies',[]) if row['id']==strategy_id),None)
+    if not selected or selected.get('status')!='FEASIBLE' or selected.get('violations'):
+        raise HTTPException(409,'Only a feasible calculated strategy can be selected')
+    farm=Farm.model_validate(result.get('input_snapshot',session['farm']))
+    trace=simulate(farm,selected['allocations'],result['forecast']['demand'],dict(id='execution-central',yield_factor=1.,demand_factor=1.,weight=1.))
+    session.update(selected_strategy_id=strategy_id,approved_result_id=session['result_id'],
+        approved_result_hash=content_hash(result),_approved_execution_trace=trace)
+    if replace_future:
+        if not session.get('world_id'):raise HTTPException(409,'The teaching simulation has not started')
+        _apply_world_replan(store,tenant_id,session,result)
+    elif not session.get('world_id'):
+        _create_world(store,tenant_id,session,result)
+    return selected
+
+
+def queue_initial_calculation(store, tenant_id, session):
+    """Queue a first local planning job with the guided admission limits."""
+    if session['status'] in ('QUEUED','RUNNING'):
+        raise HTTPException(409,'A planning action is already active')
+    if session.get('result_id'):
+        raise HTTPException(409,'The initial teaching calculation already exists')
+    with store.connection() as c:
+        if c.execute(select(JOBS.c.id).where(JOBS.c.tenant_id==tenant_id,JOBS.c.status.in_(['QUEUED','RUNNING']))).first():
+            raise HTTPException(409,'Another guided planning action is active')
+        if c.execute(select(func.count()).select_from(JOBS).where(JOBS.c.tenant_id==tenant_id,JOBS.c.session_id==session['id'])).scalar_one()>=32:
+            raise HTTPException(429,'Thirty-two planning jobs per mission maximum')
+    job=dict(id=secrets.token_hex(16),kind='calculate',status='QUEUED',stage='queued',created_at=now(),
+             input=dict(farm=deepcopy(session['farm']),kwargs={}))
+    with store.connection(write=True) as c:
+        c.execute(JOBS.insert().values(id=job['id'],tenant_id=tenant_id,session_id=session['id'],status='QUEUED',kind=job['kind'],created_at=job['created_at'],payload=job))
+    session.update(job={k:v for k,v in job.items() if k!='input'},status='QUEUED',revision=session['revision']+1)
+    save_session(store,tenant_id,session)
+    return {k:v for k,v in job.items() if k!='input'}
+
+
 def pending(store,lane):
     condition=JOBS.c.kind=='review' if lane=='provider' else JOBS.c.kind!='review'
     with store.connection() as c:
@@ -294,6 +339,8 @@ def register(app,tenant):
         if value is None:raise HTTPException(404,'Planning session not found')
         return value
     def ready(session,body):
+        if session.get('beginner_journey'):
+            raise HTTPException(409,'Continue through the owning beginner season')
         if session['revision']!=body.revision:raise HTTPException(409,'Planning revision changed; refresh before continuing')
         if session['status'] in ('QUEUED','RUNNING'):raise HTTPException(409,'A planning action is already active')
     def queue(t,session,kind,input):
@@ -387,6 +434,8 @@ def register(app,tenant):
             key,digest,replay=receipt(request,t,body,'cancel:'+id)
             if replay is not None:return replay
             session=owned(t,id)
+            if session.get('beginner_journey'):
+                raise HTTPException(409,'Continue through the owning beginner season')
             if session['revision']!=body.revision:raise HTTPException(409,'Planning revision changed')
             if session['status'] not in ('QUEUED','RUNNING'):raise HTTPException(409,'No active planning job')
             session['job'].update(status='CANCELLED',stage='cancelled',completed_at=now())

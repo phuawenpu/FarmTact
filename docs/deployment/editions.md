@@ -1,5 +1,26 @@
 # Publishing immutable editions
 
+## V14 current-game publication policy
+
+The approved first-season UX replaces the public chooser with an animated
+introduction at `/` and the current game at `/play`. From V14 onward the active
+manifest has `previous: null`; edition numbers remain immutable operational
+identities, not player navigation. Old public routes return a retirement notice
+linking to `/`. Public release-list/history APIs are unavailable in current-game
+mode; authenticated operator tooling reads the retained private manifests.
+
+Stage the exact next image privately and verify its numerical/browser journey.
+After atomic activation and current-game checks, stop older application workers.
+Take a recovery snapshot and retain retired data subtrees; do not apply historical
+destructive retirement cleanup to this scope. Historical source/image manifests and
+archived state are not rewritten or automatically migrated into the new season.
+The shared inference budget and abuse counters survive cutover. Cookie names and
+browser progress remain release-specific even though the public URL is unversioned.
+
+The procedures below describe earlier pair-based releases unless explicitly updated
+for this policy. Use the publisher's current validation and the checked-in registry
+to determine the next number; do not infer it from historical examples.
+
 ## Active editions and immutable history
 
 `config/releases/registry.json` is the append-only publication ledger. It keeps

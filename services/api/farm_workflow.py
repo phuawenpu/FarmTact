@@ -298,6 +298,8 @@ def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id:
     def create():
         session = adapter.get_session(store, tenant, session_id)
         if not session: raise ValueError("Planning session not found")
+        if session.get("beginner_journey"):
+            raise ValueError("Continue through the owning beginner season")
         if session["revision"] != base_revision: raise ValueError("Planning revision changed")
         result = adapter.get_result(store, tenant, session.get("result_id"))
         if not result: raise ValueError("Calculate the planning session before proposing changes")
