@@ -48,7 +48,9 @@ try {
   const tray = await page.locator(".tm-strategy-wrap").innerText();
   check("recalculated plan retains at least one feasible strategy", tray.includes("FEASIBLE") && !tray.includes("NO FEASIBLE OPTION"), tray);
   check("B3 is highlighted after reserve", await page.locator('[data-board-target-id="bed-07"]').getAttribute("data-highlighted") === "true");
-  check("calculated deltas are visible", await page.locator(".tc-metric-changes").isVisible(), await page.locator(".tc-metric-changes").innerText());
+  const deltas = page.locator(".tc-metric-changes");
+  await deltas.scrollIntoViewIfNeeded();
+  check("calculated deltas are visible", await deltas.isVisible(), await deltas.innerText());
   check("reserve and recalculation make no provider request", providerMutations.length === 0, providerMutations);
 
   await page.getByRole("button", { name: "Ask why" }).click();
