@@ -1,6 +1,10 @@
 {
-  "base": "http://127.0.0.1:4192",
+  "base": "http://127.0.0.1:4196",
   "checks": [
+    {
+      "name": "Enter on a read-only tool does not invoke the underlying mission action",
+      "pass": true
+    },
     {
       "name": "date/crop/sort controls remain inside dataset card",
       "pass": true

@@ -1,4 +1,4 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "../../apps/web/node_modules/@playwright/test/index.mjs";
 
@@ -224,5 +224,7 @@ try {
   report.status = "FAIL"; report.failures.push(error instanceof Error ? error.stack : String(error)); process.exitCode = 1;
 } finally {
   if (browser) await browser.close();
+  await mkdir(resolve(root, "reports/v15"), { recursive: true });
+  await writeFile(resolve(root, "reports/v15/tools-browser.json"), `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 }

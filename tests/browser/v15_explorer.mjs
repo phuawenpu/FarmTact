@@ -15,6 +15,8 @@ try{
  await page.getByRole('heading',{name:'Saved datasets',exact:true}).waitFor();await click('Inspect records');
  await page.getByLabel('Dataset',{exact:true}).waitFor();
  const before=mutations.length;
+ await page.locator('.integrated-tool__card').focus();await page.keyboard.press('Enter');await page.waitForTimeout(200);
+ check('Enter on a read-only tool does not invoke the underlying mission action',mutations.length===before&&await page.getByRole('button',{name:'Snapshot actions',exact:true}).isVisible());
  await page.getByLabel('Crop filter').selectOption('caixin');
  await page.getByLabel('From date').fill('2026-08-01');
  await page.getByLabel('Through date').fill('2026-09-01');

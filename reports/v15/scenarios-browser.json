@@ -1,0 +1,42 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "parent scenario completes with frozen result",
+      "pass": true
+    },
+    {
+      "name": "continuation binds explicit parent identity",
+      "pass": true
+    },
+    {
+      "name": "compatible scenario comparison completes inside card",
+      "pass": true
+    },
+    {
+      "name": "comparison contains frozen branch identities",
+      "pass": true
+    },
+    {
+      "name": "real calculation supplies dated surplus prerequisite",
+      "pass": true
+    },
+    {
+      "name": "Waste Rescue binds selected result and strategy",
+      "pass": true
+    },
+    {
+      "name": "Waste Rescue compares all supported local options",
+      "pass": true
+    },
+    {
+      "name": "local experiments preserve main planning result",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "prerequisites": [
+    "Calculated ordinary workflow through existing local API before opening experiments."
+  ],
+  "status": "PASS"
+}

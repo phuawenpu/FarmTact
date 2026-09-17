@@ -45,6 +45,7 @@ function message(error: unknown, fallback: string) {
 }
 
 function num(value: unknown, digits = 1) {
+  if (value === null || value === undefined || value === "") return "—";
   const parsed = Number(value);
   return Number.isFinite(parsed)
     ? new Intl.NumberFormat(undefined, { maximumFractionDigits: digits }).format(parsed)
@@ -52,6 +53,7 @@ function num(value: unknown, digits = 1) {
 }
 
 function signed(value: unknown, unit: string) {
+  if (value === null || value === undefined || value === "") return "Not reported";
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return "Not reported";
   return `${parsed > 0 ? "+" : parsed < 0 ? "−" : "±"}${num(Math.abs(parsed))} ${unit}`;
@@ -190,17 +192,9 @@ export default function IntegratedCards({
   const inverseComplete = Boolean(inverse?.recalculation_job?.id && inverse.recalculation_job.id === (session as { result_id?: string } | null)?.result_id);
   const activeProposal = original && !inverseComplete ? original : undefined;
   const boundProposal = [...proposals].reverse().find((item) => ["applied", "approved"].includes(item.status) && item.recalculation_job?.id === (session as { result_id?: string } | null)?.result_id);
-  const proposalExplanation = boundProposal?.explanation as undefined | {
-    what_changed?: string; why?: string; tradeoff?: string | Record<string, unknown>; next_action?: string;
-    affected_bed_ids?: string[];
-    evidence?: { before_result_id?: string; after_result_id?: string };
-    inference_triggered?: boolean;
-  };
-  const proposalTransition = boundProposal?.scene_transition as undefined | {
-    event_id?: string; entity_ids?: string[]; effective_date?: string; outcome_basis?: string;
-    fact_differences?: Record<string, number | string | null>;
-  };
-  const simulationTransition = (session?.simulation as { scene_transition?: typeof proposalTransition } | null | undefined)?.scene_transition;
+  const proposalExplanation = boundProposal?.explanation;
+  const proposalTransition = boundProposal?.scene_transition;
+  const simulationTransition = session?.simulation?.scene_transition;
   const sceneTransition = simulationTransition || proposalTransition;
   const strategies = session?.result?.strategies || [];
   const feasible = strategies.filter((item) => item.status === "FEASIBLE" && !item.violations?.length);
@@ -222,7 +216,7 @@ export default function IntegratedCards({
     try { seen = localStorage.getItem(key) || ""; } catch { /* storage is optional */ }
     if (seen === eventId) return;
     try { localStorage.setItem(key, eventId); } catch { /* optional */ }
-    if (!reducedMotion) setTransitionLabel(`Saved projection changed · ${sceneTransition.effective_date || "current planning date"}`);
+    if (!reducedMotion) setTransitionLabel(`${sceneTransition.outcome_basis === "recorded_simulation" ? "Recorded simulation" : "Saved projection"} changed · ${sceneTransition.effective_date || "current planning date"}`);
     const timer = window.setTimeout(() => setTransitionLabel(""), 1500);
     return () => window.clearTimeout(timer);
   }, [sceneTransition?.event_id, sceneTransition?.effective_date, reducedMotion]);
@@ -301,7 +295,7 @@ export default function IntegratedCards({
     if (!session) return;
     try {
       await planningApi.guidance(session, step, skipped);
-      // The mutation receipt contains the stored row; refetch to reattach the bound result.
+      // Reconcile after a possibly replayed receipt so an older snapshot cannot replace the bound result/job.
       const next = await planningApi.get(session.id);
       setSession((current) => newerSession(current, next));
     }
@@ -334,6 +328,7 @@ export default function IntegratedCards({
   });
 
   const primary = () => {
+    if (busy || detail || !["mission", "tools"].includes(surface) || ["QUEUED", "RUNNING"].includes(session?.job?.status || "")) return;
     if (surface === "tools") { setSurface(toolCards[activeIndex].id); setIndex(0); return; }
     const card = missionCards[activeIndex];
     if (!strategies.length) void calculate();
@@ -344,6 +339,7 @@ export default function IntegratedCards({
   };
 
   const keyboard = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.defaultPrevented || detail || !["mission", "tools"].includes(surface)) return;
     if ((event.target as HTMLElement).closest("button,a,input,select,textarea")) return;
     if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
     if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
@@ -387,27 +383,50 @@ export default function IntegratedCards({
 
   const current = surface === "tools" ? toolCards[activeIndex] : missionCards[activeIndex];
   const toolOpen = surface !== "mission" && surface !== "tools";
-  const sceneBeds = (session.simulation?.beds?.length ? session.simulation.beds : session.farm.beds).slice(0, 8);
+  const hasSimulationBeds = Boolean(session.simulation?.beds?.length);
+  const sceneBeds = (hasSimulationBeds ? session.simulation!.beds : session.farm.beds).slice(0, 8);
   const raw = session.farm as typeof session.farm & { batches?: Array<Record<string, unknown>> };
   const batches = new Map((raw.batches || []).map((row) => [String(row.bed_id), row]));
   const recipes = new Map(((raw as typeof raw & { recipes?: Array<Record<string, unknown>> }).recipes || [])
     .map((row) => [String(row.id), String(row.crop_id)]));
   const objectiveOrder = session.farm.orders[0];
   const boundCard: FarmCard | null = surface === "mission" && current ? {
-    id: current.id, entityId: current.id === "reservation" ? grow?.id || current.id : current.id,
-    entityKind: current.id.startsWith("strategy-") ? "strategy" : current.id,
+    id: current.id,
+    entityId: current.id === "situation" ? objectiveOrder?.id || session.farm.id
+      : current.id === "reservation" ? grow?.id || current.id
+        : current.id.startsWith("strategy-") ? current.id.slice("strategy-".length)
+          : current.id === "approved" ? session.id
+            : current.id === "simulation-result" ? session.simulation?.id || session.id : current.id,
+    entityKind: current.id === "situation" ? "order" : current.id.startsWith("strategy-") ? "strategy"
+      : current.id === "approved" ? "planning_session" : current.id === "simulation-result" ? "simulation_world" : current.id,
     title: current.title, provenance: ["ordinary farm bootstrap", "stored planning session"],
     binding: { sessionId: session.id, inputHash: session.input_hash, revision: session.revision,
       resultId: (session as { result_id?: string }).result_id || null },
     boardTargets: current.id === "reservation" && grow ? [grow.id] : [],
-    actions: [{ id: "primary", label: "Primary action", eligible: !busy }],
-    outcomeBasis: "projection",
+    actions: [{ id: "primary", label: "Primary action",
+      eligible: !busy && (current.id !== "reservation" || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false)),
+      ...((current.id === "reservation" && activeProposal && approval?.available === false) ? { disabledReason: approval.reason || "Approval is unavailable." }
+        : current.id === "reservation" && grow?.reserve_eligible === false ? { disabledReason: grow.reserve_disabled_reason || "Reservation is unavailable." } : {}) }],
+    outcomeBasis: current.id === "simulation-result" ? "recorded_simulation" : "projection",
   } : null;
 
-  const tradeoffText = proposalExplanation?.tradeoff && typeof proposalExplanation.tradeoff === "object"
+  const tradeoffText: string | undefined = typeof proposalExplanation?.tradeoff === "object"
     ? Object.entries(proposalExplanation.tradeoff).map(([key, value]) => `${key.replaceAll("_", " ")}: ${typeof value === "number" ? signed(value, key.includes("sgd") ? "SGD" : "kg") : String(value)}`).join("; ")
     : proposalExplanation?.tradeoff;
   const transitionEntities = new Set(sceneTransition?.entity_ids || []);
+  const currentStrategy = current?.id.startsWith("strategy-") ? strategies.find((row) => `strategy-${row.id}` === current.id) : undefined;
+  const alternativeStrategy = currentStrategy ? strategies.find((row) => row.id !== currentStrategy.id) : undefined;
+  const strategyWhy = currentStrategy && alternativeStrategy
+    ? `${currentStrategy.name} compared with ${alternativeStrategy.name}: delivery ${signed((Number(currentStrategy.metrics.fill_rate) - Number(alternativeStrategy.metrics.fill_rate)) * 100, "percentage points")}; shortfall ${signed(Number(currentStrategy.metrics.shortfall_kg) - Number(alternativeStrategy.metrics.shortfall_kg), "kg")}; cost ${signed(Number(currentStrategy.metrics.cost_sgd) - Number(alternativeStrategy.metrics.cost_sgd), "SGD")}.`
+    : undefined;
+  const whatChanged = proposalExplanation?.what_changed?.length
+    ? proposalExplanation.what_changed.map((change) => Object.entries(change).map(([key, value]) => `${key.replaceAll("_", " ")} ${typeof value === "object" ? JSON.stringify(value) : String(value)}`).join(" · ")).join("; ")
+    : current.summary;
+  const allocationEvidence = proposalExplanation?.allocation_changes?.slice(0, 3).map((change) => {
+    const before = change.before, after = change.after;
+    const row = after || before;
+    return `${String(row?.bed_id || change.id || "allocation")}: ${before ? `${String(before.crop_id || "crop")} ${String(before.transplant_date || "—")}→${String(before.harvest_date || "—")} ${num(before.expected_kg)} kg` : "none"} → ${after ? `${String(after.crop_id || "crop")} ${String(after.transplant_date || "—")}→${String(after.harvest_date || "—")} ${num(after.expected_kg)} kg` : "none"}`;
+  }).join("; ");
   const previewStrategy = surface === "mission" && current?.id.startsWith("strategy-")
     ? strategies.find((item) => `strategy-${item.id}` === current.id) : undefined;
   const previewAllocations = new Map((previewStrategy?.allocations || []).map((row) => [row.bed_id, row]));
@@ -426,10 +445,10 @@ export default function IntegratedCards({
       <p>Sandbox farm · real operations disabled</p></header>
     <div className="ic-layout">
       <section className={`ic-scene ${transitionLabel ? "is-transitioning" : ""}`} aria-label="Passive farm scene">
-        <div className="ic-scene-head"><span>Farm scene</span><strong>{session.farm.planning_date || session.farm.cutoff}</strong></div>
+        <div className="ic-scene-head"><span>Farm scene</span><strong>{session.simulation?.clock_date || session.farm.planning_date || session.farm.cutoff}</strong></div>
         <div className="ic-beds">{sceneBeds.map((bed) => {
-          const batch = batches.get(bed.id), crop = String(batch?.crop_id || recipes.get(String(batch?.recipe_id)) || bed.crop_id || "");
-          const stage = String(batch?.stage || bed.stage || (crop ? "growing" : "empty"));
+          const batch = batches.get(bed.id), crop = String(hasSimulationBeds ? bed.crop_id || "" : batch?.crop_id || recipes.get(String(batch?.recipe_id)) || bed.crop_id || "");
+          const stage = String(hasSimulationBeds ? bed.stage : batch?.stage || bed.stage || (crop ? "recorded batch" : "empty"));
           const assetStage = stage === "ready" ? "ready" : stage === "nursery" ? "seedling" : stage === "growing" ? "growing" : "";
           const src = crop && assetStage ? `/art/crops/${crop}-${assetStage}.svg` : "";
           const focused = grow?.id === bed.id && current?.id === "reservation";
@@ -455,8 +474,11 @@ export default function IntegratedCards({
           <div className="ic-deck" onPointerDown={(event) => { pointerStart.current = event.clientX; }} onPointerUp={pointerUp}>
             <article ref={cardRef} tabIndex={-1} className="ic-card" data-card-id={boundCard?.id} data-session-revision={boundCard?.binding.revision} aria-live="polite" aria-label={`${surface === "tools" ? "Farm tools" : "Planning"} card ${activeIndex + 1} of ${surface === "tools" ? toolCards.length : missionCards.length}`}>
               {detail === "explain" ? <><span className="ic-eyebrow">{current.title} › Why</span><h1>What this means</h1><p>{current.summary}</p>
-                <dl><div><dt>Why / tradeoff</dt><dd>{current.id === "reservation" && proposalExplanation ? `${proposalExplanation.why || "Reason not available for this saved result"} ${tradeoffText || ""}` : current.id === "reservation" ? "Less available grow space can change future production, cost and shortfall." : current.id.startsWith("strategy-") ? "Each option uses the same baseline while balancing delivery, cost and space differently." : "This card reflects the saved farm and planning state."}</dd></div>
-                  <div><dt>Evidence / limits</dt><dd>{proposalExplanation?.evidence ? `${proposalExplanation.evidence.before_result_id || "baseline"} → ${proposalExplanation.evidence.after_result_id || "current result"}` : boundCard?.provenance.join(" · ") || "Stored farm records"}; no provider call.</dd></div>
+                <dl className="ic-explanation"><div><dt>What changed</dt><dd>{whatChanged}</dd></div>
+                  <div><dt>Why</dt><dd>{proposalExplanation?.why || strategyWhy || "Reason not available for this saved result."}</dd></div>
+                  <div><dt>Tradeoff</dt><dd>{tradeoffText || strategyWhy || "No compatible calculated alternative is available."}</dd></div>
+                  <div><dt>Evidence / limits</dt><dd>{allocationEvidence || (proposalExplanation?.evidence ? `${proposalExplanation.evidence.before_result_id || "baseline"} → ${proposalExplanation.evidence.after_result_id || "current result"}; affected beds ${(proposalExplanation.affected_bed_ids || []).join(", ") || "none"}` : boundCard?.provenance.join(" · ") || "Stored farm records")}; no provider call.</dd></div>
+                  <div><dt>Next action</dt><dd>{proposalExplanation?.next_action || "Return to the card and choose an explicit action."}</dd></div>
                   <div><dt>Record identity</dt><dd>{boundCard ? `${boundCard.entityKind} · ${boundCard.entityId}` : current.id}</dd></div></dl></>
                 : detail === "review" || detail === "inverse" ? <><span className="ic-eyebrow">Review before applying</span><h1>{detail === "inverse" ? "Restore the grow space" : `Reserve ${grow?.name || "grow space"}`}</h1>
                   <p>{detail === "inverse" ? "The inverse preserves the original event and recalculates future work at the current eligible revision." : `${grow?.id} will be unavailable ${grow?.reservation_window.start_date} to ${grow?.reservation_window.end_date}. Existing work remains recorded.`}</p>

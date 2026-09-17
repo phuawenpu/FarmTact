@@ -47,8 +47,9 @@ async function open(page) {
 
 try {
   // Responsive read-only smoke: opening and browsing cards cannot mutate or invoke a provider.
-  const responsiveContext = await browser.newContext({ viewport: { width: 360, height: 844 }, reducedMotion: 'reduce' });
-  for (const width of [360, 390, 430, 1280]) {
+  if (process.env.RESUME !== '1') {
+    const responsiveContext = await browser.newContext({ viewport: { width: 360, height: 844 }, reducedMotion: 'reduce' });
+    for (const width of [360, 390, 430, 1280]) {
     const page = await responsiveContext.newPage();
     await page.setViewportSize({ width, height: width > 500 ? 900 : 844 });
     const traffic = observe(page);
@@ -64,6 +65,9 @@ try {
     const originScroll = await page.evaluate(() => scrollY);
     await page.getByRole('button', { name: 'Explain' }).click();
     check(`${width}: deterministic explanation is available`, await page.getByRole('heading', { name: 'What this means' }).isVisible());
+    const beforeExplainEnter = traffic.mutations.length;
+    await page.locator('.ic-card').focus(); await page.keyboard.press('Enter');
+    check(`${width}: Enter in explanation is read-only`, traffic.mutations.length === beforeExplainEnter && await page.getByRole('heading', { name: 'What this means' }).isVisible());
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     check(`${width}: detail restores original action focus and scroll`, await page.evaluate(({ y }) => document.activeElement?.textContent?.trim() === 'Explain' && Math.abs(scrollY - y) <= 1, { y: originScroll }));
     await page.getByRole('button', { name: 'More', exact: true }).click();
@@ -76,10 +80,11 @@ try {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'More');
     check(`${width}: tool index restores More focus and parent card`, await page.evaluate(() => document.activeElement?.textContent?.trim() === 'More') && (await page.locator('.ic-deck-nav').innerText()).includes('Farm plan'));
-    await page.close();
+      await page.close();
+    }
+    await responsiveContext.storageState({ path: temporaryStorageState });
+    await responsiveContext.close();
   }
-  await responsiveContext.storageState({ path: temporaryStorageState });
-  await responsiveContext.close();
 
   const videoDir = resolve(reportDir, 'video');
   await mkdir(videoDir, { recursive: true });
@@ -115,9 +120,18 @@ try {
   const counterBeforePlan = await page.locator('.ic-deck-nav').innerText();
   if (/1 of 1\b/.test(counterBeforePlan)) {
     await page.locator('.ic-keys .is-primary').click();
-    await page.waitForFunction(() => /of [2-9]\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 180_000 });
+    await page.waitForFunction(() => {
+      const button = document.querySelector('.ic-deck-nav button:last-child');
+      return button && !button.disabled;
+    }, null, { timeout: 210_000 });
   }
-  await page.getByRole('button', { name: 'Next →' }).click();
+  for (let i = 0; i < 8 && !await page.getByText('Preview—not saved', { exact: true }).count(); i++) {
+    const previous = page.getByRole('button', { name: '← Previous' });
+    if (await previous.isEnabled()) await previous.click(); else {
+      const next = page.getByRole('button', { name: 'Next →' });
+      if (await next.isEnabled()) await next.click(); else break;
+    }
+  }
   await page.getByText('Preview—not saved', { exact: true }).waitFor({ timeout: 180_000 });
 
   // Keyboard and swipe change selection without a planning/workflow mutation.
@@ -144,6 +158,8 @@ try {
     await next.click();
   }
   check('Lean Balanced and Resilient are all available', ['Lean', 'Balanced', 'Resilient'].every(name => names.has(name)), [...names]);
+  for (let i = 0; i < 8 && !/Keep .+ available|is reserved/i.test(await card.locator('h1').innerText()); i++)
+    await page.getByRole('button', { name: '← Previous' }).click();
   await page.getByRole('heading', { name: /Keep .+ available|is reserved/ }).waitFor();
   await shot(page, 'reservation-before-review-390');
 
@@ -151,6 +167,7 @@ try {
   const reviewButton = page.getByRole('button', { name: 'Review reservation' });
   if (await reviewButton.count()) {
     await reviewButton.click();
+    await page.waitForFunction(() => /REVIEW BEFORE APPLYING/i.test(document.querySelector('.ic-card')?.textContent || ''), null, { timeout: 30_000 });
     check('reservation opens explicit review before apply', /REVIEW BEFORE APPLYING/i.test(await card.innerText()), await card.innerText());
     check('review retains one card and one three-key action area', await page.locator('.ic-card').count() === 1 && await page.locator('.ic-keys > button').count() === 3);
     await shot(page, 'reservation-review-390');
@@ -159,7 +176,9 @@ try {
   }
   await page.getByRole('button', { name: 'Explain' }).click();
   const explanation = await card.innerText();
-  check('saved recalculation explanation contains why tradeoff and evidence', /Why \/ tradeoff/.test(explanation) && /Evidence \/ limits/.test(explanation) && /→/.test(explanation), explanation);
+  check('saved recalculation explanation contains five structured facts and allocation evidence',
+    ['What changed', 'Why', 'Tradeoff', 'Evidence / limits', 'Next action'].every(label => explanation.includes(label))
+      && /bed-\d+/.test(explanation) && /\d{4}-\d{2}-\d{2}→\d{4}-\d{2}-\d{2}/.test(explanation), explanation);
   check('read/explain triggered no provider request', traffic.providers.length === 0, traffic.providers);
   await shot(page, 'reservation-explanation-390');
 
@@ -171,11 +190,67 @@ try {
     await page.getByRole('button', { name: 'Confirm inverse' }).click();
     await page.getByRole('button', { name: 'Review reservation' }).waitFor({ timeout: 180_000 });
     check('inverse recalculation restores reservation eligibility', true);
+    await page.getByRole('button', { name: 'Review reservation' }).click();
+    await page.waitForFunction(() => /REVIEW BEFORE APPLYING/i.test(document.querySelector('.ic-card')?.textContent || ''), null, { timeout: 30_000 });
+    await page.getByRole('button', { name: 'Apply & recalculate' }).click();
+    await page.getByRole('button', { name: 'Approve actions' }).waitFor({ timeout: 180_000 });
+    await page.getByRole('button', { name: 'Approve actions' }).click();
+    await page.waitForFunction(() => /of 6\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 60_000 });
+    await page.getByRole('button', { name: 'Next →' }).click();
+    await page.getByText(/sandbox task/i).first().waitFor({ timeout: 30_000 });
+    check('approval creates persisted sandbox-only tasks', traffic.mutations.some(path => /\/approve-actions$/.test(path)));
+
+    // Advance the approved simulation through the History cards, then return to the same shell.
+    await page.getByRole('button', { name: 'More', exact: true }).click();
+    for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Next →' }).click();
+    await page.getByRole('button', { name: 'Open tool' }).click();
+    await page.getByRole('heading', { name: 'Saved plans' }).waitFor();
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await page.getByRole('heading', { name: 'Simulations' }).waitFor();
+    await page.getByRole('button', { name: 'Open', exact: true }).click();
+    await page.getByRole('button', { name: 'Read-only replay' }).click();
+    await page.getByRole('button', { name: 'Review time advance' }).click();
+    await page.getByLabel('Days to advance').selectOption('7');
+    const [advanceResponse] = await Promise.all([
+      page.waitForResponse(response => response.request().method() === 'POST' && /\/simulations\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }),
+      page.getByRole('button', { name: 'Advance seven days' }).click(),
+    ]);
+    const advancedWorld = await advanceResponse.json();
+    check('explicit History advance returns recorded simulation facts', advancedWorld.simulation_only === true && advancedWorld.clock_date && advancedWorld.beds?.length, advancedWorld);
+    await page.getByRole('button', { name: 'Back', exact: true }).click(); // replay → list
+    await page.getByRole('button', { name: 'Back', exact: true }).click(); // list → index
+    await page.getByRole('button', { name: 'Back', exact: true }).click(); // history → tools
+    await page.getByRole('button', { name: 'Back', exact: true }).click(); // tools → shell
+    await page.waitForFunction(date => document.querySelector('.ic-scene-head strong')?.textContent === date, advancedWorld.clock_date, { timeout: 30_000 });
+    const sceneText = await page.locator('.ic-scene').innerText();
+    check('scene reloads recorded clock and server simulation bed state', sceneText.includes(advancedWorld.clock_date)
+      && sceneText.toLowerCase().includes(String(advancedWorld.beds[0].stage).toLowerCase())
+      && (!advancedWorld.beds[0].crop_id || sceneText.toLowerCase().includes(String(advancedWorld.beds[0].crop_id).replaceAll('_', ' ').toLowerCase())), { sceneText, bed: advancedWorld.beds[0] });
+    check('recorded consequence transition remains factual and provider-free', /Recorded simulation/.test(sceneText) && traffic.providers.length === 0, sceneText);
   } else {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     const approve = page.getByRole('button', { name: 'Approve actions' });
-    if (await approve.count()) await approve.click();
-    check('approved result records sandbox-only consequence', await page.getByText(/sandbox task/i).first().waitFor({ timeout: 60_000 }).then(() => true));
+    const alreadyHasTask = /of 6\b/.test(await page.locator('.ic-deck-nav').innerText());
+    if (!alreadyHasTask && await approve.count()) { await approve.click(); await page.waitForFunction(() => /of 6\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 60_000 }); }
+    const next = page.getByRole('button', { name: 'Next →' }); if (await next.isEnabled()) await next.click();
+    check('approved result records sandbox-only consequence', await page.getByText(/sandbox task/i).first().waitFor({ timeout: 30_000 }).then(() => true));
+
+    await page.getByRole('button', { name: 'More', exact: true }).click();
+    for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Next →' }).click();
+    await page.getByRole('button', { name: 'Open tool' }).click();
+    await page.getByRole('heading', { name: 'Saved plans' }).waitFor();
+    await page.getByRole('button', { name: 'Next', exact: true }).click(); await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await page.getByRole('button', { name: 'Open', exact: true }).click();
+    await page.getByRole('button', { name: 'Read-only replay' }).click(); await page.getByRole('button', { name: 'Review time advance' }).click();
+    await page.getByLabel('Days to advance').selectOption('7');
+    const [advanceResponse] = await Promise.all([page.waitForResponse(response => response.request().method() === 'POST' && /\/simulations\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }), page.getByRole('button', { name: 'Advance seven days' }).click()]);
+    const advancedWorld = await advanceResponse.json();
+    await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click();
+    await page.waitForFunction(date => document.querySelector('.ic-scene-head strong')?.textContent === date, advancedWorld.clock_date, { timeout: 30_000 });
+    const sceneText = await page.locator('.ic-scene').innerText();
+    check('scene reloads recorded clock and server simulation bed state', sceneText.includes(advancedWorld.clock_date) && sceneText.toLowerCase().includes(String(advancedWorld.beds[0].stage).toLowerCase()), { sceneText, bed: advancedWorld.beds[0] });
+    check('recorded consequence transition remains factual and provider-free', /Recorded simulation/.test(sceneText) && traffic.providers.length === 0, sceneText);
   }
 
   // 200% zoom remains document-scrollable without a nested card trap.

@@ -2,6 +2,7 @@ import type { Farm, Strategy } from "./types";
 import type { SimulationWorld } from "./api";
 import { mutationRequest, request } from "./api";
 import { editionStorageKey } from "./edition";
+import type { SceneTransition, StoredExplanation } from "./cards";
 
 export type PlanningStage =
   | "records"
@@ -133,6 +134,8 @@ export interface PlanningSession {
 }
 
 export interface FarmerProposal {
+  explanation?: StoredExplanation;
+  scene_transition?: SceneTransition;
   approval?: { available: boolean; reason: string | null; strategy_id?: string };
   id: string;
   session_id: string;

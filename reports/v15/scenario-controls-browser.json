@@ -1,0 +1,32 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "fixture": "Controlled scenario transport states, not real numerical results",
+  "checks": [
+    {
+      "name": "queued scenario remains inspectable with refresh",
+      "pass": true
+    },
+    {
+      "name": "explicit cancellation sends one bound mutation",
+      "pass": true
+    },
+    {
+      "name": "retry retains original run idempotency key",
+      "pass": true
+    },
+    {
+      "name": "quest inspection binds exact frozen scenario",
+      "pass": true
+    },
+    {
+      "name": "incompatible comparison retains card with server reason",
+      "pass": true
+    },
+    {
+      "name": "read-only incompatible comparison adds no mutation",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

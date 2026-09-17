@@ -1,4 +1,5 @@
 import type { Bootstrap, Crop, EvidenceRecord, Run } from "./types";
+import type { SceneTransition } from "./cards";
 import type {
   Conversation,
   Quest,
@@ -47,6 +48,7 @@ export interface SimulationBed {
   next_transition?: string;
 }
 export interface SimulationWorld {
+  scene_transition?: SceneTransition;
   id: string;
   engine_version: string;
   revision: number;

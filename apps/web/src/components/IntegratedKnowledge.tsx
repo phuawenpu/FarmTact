@@ -45,10 +45,13 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const [questions, setQuestions] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("farmtact-v15-knowledge-drafts") || "{}"); } catch { return {}; } });
   const [mode, setMode] = useState<"direct" | "invite" | "council">("direct");
   const [inviteAdvisor, setInviteAdvisor] = useState("asha"), [replyTo, setReplyTo] = useState("");
+  const [focusKey, setFocusKey] = useState(""), [conversationFocus, setConversationFocus] = useState("");
+  const [bindings, setBindings] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("farmtact-v15-knowledge-bindings") || "{}"); } catch { return {}; } });
   const [proposalMessage, setProposalMessage] = useState(""), [proposal, setProposal] = useState<FarmerProposal | null>(null);
   const [assumptionsDraft, setAssumptionsDraft] = useState("");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [needsRefresh, setNeedsRefresh] = useState(false);
   const pointer = useRef<number | null>(null);
   const mutation = useRef(false);
 
@@ -83,7 +86,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const active = cards[activeIndex];
 
   useEffect(() => {
-    setConversation(null); setSelectedThread(""); setMode("direct"); setReplyTo(""); setProposalMessage(""); setProposal(null); setError("");
+    setConversation(null); setConversationFocus(""); setNeedsRefresh(false); setSelectedThread(""); setMode("direct"); setReplyTo(""); setProposalMessage(""); setProposal(null); setError("");
     if (active?.kind !== "crop") { setCropDetail(null); return; }
     let cancelled = false;
     setBusy("Loading crop evidence");
@@ -93,6 +96,16 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     return () => { cancelled = true; };
   }, [active?.id]);
   useEffect(() => { try { localStorage.setItem("farmtact-v15-knowledge-drafts", JSON.stringify(questions)); } catch { /* draft persistence is best effort */ } }, [questions]);
+  useEffect(() => { try { localStorage.setItem("farmtact-v15-knowledge-bindings", JSON.stringify(bindings)); } catch { /* binding persistence is best effort */ } }, [bindings]);
+
+  const activeBindingKey = active?.kind === "advisor" && session ? `${session.id}:${active.advisor.id}:${focusKey || "planning"}` : "";
+  useEffect(() => {
+    const id = activeBindingKey && bindings[activeBindingKey];
+    if (!id || conversation) return;
+    let cancelled = false;
+    void api.conversation(id).then((saved) => { if (!cancelled) { setConversation(saved); setConversationFocus(focusKey); } }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [activeBindingKey, bindings, conversation, focusKey]);
 
   useEffect(() => {
     const status = String(conversation?.last_request_status || "").toUpperCase();
@@ -129,16 +142,22 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     const text = (questions[advisor.id] || "").trim();
     if (!session || !text) return;
     void mutate("Submitting explicit adviser question", async () => {
-      let id = conversation?.id;
-      if (!id) { const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: "planning", snapshot_id: session.id,
-        focus: { card_id: `agent-${advisor.id}`, entity_kind: "agent", entity_id: advisor.id } }); id = created.id; }
+      const bindingKey = `${session.id}:${advisor.id}:${focusKey || "planning"}`;
+      let current = conversation;
+      let id = current?.id || bindings[bindingKey];
+      if (id && !current) { current = await api.conversation(id); setConversation(current); }
+      if (!id) { const [entity_kind, entity_id] = focusKey.split(":"); const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: "planning", snapshot_id: session.id,
+        ...(entity_kind && entity_id ? { focus: { card_id: `${entity_kind}-${entity_id}`, entity_kind, entity_id } } : {}) }); id = created.id; setBindings((saved) => ({ ...saved, [bindingKey]: created.id })); setConversation({ id: created.id, messages: [], last_request_status: created.status }); setConversationFocus(focusKey); }
+      if (current?.messages.some((message) => message.speaker === "user" && message.content.trim() === text)) { setConversation(current); setQuestions((saved) => ({ ...saved, [advisor.id]: "" })); setNeedsRefresh(false); return; }
       if (mode === "invite") await api.inviteAdvisor(id, { advisor: inviteAdvisor, question: text, reply_to: replyTo });
       else if (mode === "council") await api.conveneCouncil(id, { question: text, ...(replyTo ? { reply_to: replyTo } : {}) });
       else await api.sendConversationMessage(id, { content: text, ...(replyTo ? { reply_to: replyTo } : {}) });
-      setConversation(await api.conversation(id)); setQuestions((current) => ({ ...current, [advisor.id]: "" }));
+      setQuestions((saved) => ({ ...saved, [advisor.id]: "" })); setNeedsRefresh(true);
+      setConversation(await api.conversation(id)); setNeedsRefresh(false);
       setThreads(await api.conversations());
     });
   };
+  const refreshConversation = () => conversation && void mutate("Refreshing accepted submission", async () => { setConversation(await api.conversation(conversation.id)); setNeedsRefresh(false); });
   const replay = (id: string) => void mutate("Loading saved transcript", async () => {
     setConversation(await api.conversationReplay(id)); setSelectedThread(id);
   });
@@ -162,7 +181,9 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const councilStatus = String(session?.review?.status || session?.job?.status || "not requested");
   const question = active.kind === "advisor" ? questions[active.advisor.id] || "" : "";
   const actionableMessages = conversation?.messages.filter((message) => message.speaker !== "user") || [];
-  const contextual = active.kind === "advisor" ? {
+  const contextual = active.kind === "advisor" && conversation && focusKey !== conversationFocus ? { label: "Start new focused thread", disabled: false, run: () => { if (activeBindingKey) setBindings((saved) => { const next = { ...saved }; delete next[activeBindingKey]; return next; }); setConversation(null); setConversationFocus(""); setReplyTo(""); } }
+    : active.kind === "advisor" && needsRefresh ? { label: "Refresh accepted submission", disabled: false, run: refreshConversation }
+    : active.kind === "advisor" ? {
     label: mode === "invite" ? "Invite specialist" : mode === "council" ? "Convene Council" : "Submit question",
     disabled: !question.trim() || !session || (mode === "invite" && (!conversation || !replyTo)), run: () => ask(active.advisor),
   } : active.kind === "threads" ? proposal ? { label: proposal.status === "draft" ? "Apply reviewed proposal" : "Proposal saved", disabled: proposal.status !== "draft", run: applyReviewedProposal }
@@ -177,7 +198,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
       <article className="ik-card" aria-live="polite" aria-label={`Knowledge card ${activeIndex + 1} of ${cards.length}`}>
         {active.kind === "crop" && <CropCard crop={cropDetail || active.crop} evidence={evidence} />}
         {active.kind === "source" && <SourceCard source={active.source} />}
-        {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} />}
+        {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} focusKey={focusKey} setFocusKey={setFocusKey} session={session} />}
         {active.kind === "threads" && <ThreadsCard threads={threads} selected={selectedThread} setSelected={setSelectedThread} conversation={conversation} proposalMessage={proposalMessage} setProposalMessage={(id) => { setProposalMessage(id); setProposal(null); setAssumptionsDraft(JSON.stringify(editableAssumptions(session), null, 2)); }} assumptionsDraft={assumptionsDraft} setAssumptionsDraft={setAssumptionsDraft} proposal={proposal} />}
         {active.kind === "council" && <CouncilCard session={session} status={councilStatus} />}
       </article>
@@ -203,9 +224,9 @@ function SourceCard({ source }: { source: Source }) {
     <p className="ik-boundary">Source availability and freshness are separate from whether an adviser interpretation is valid.</p></>;
 }
 
-function AdvisorCard({ advisor, conversation, question, setQuestion, mode, setMode, inviteAdvisor, setInviteAdvisor, replyTo, setReplyTo, replyOptions }: { advisor: Advisor; conversation: Conversation | null; question: string; setQuestion: (value: string) => void; mode: "direct" | "invite" | "council"; setMode: (value: "direct" | "invite" | "council") => void; inviteAdvisor: string; setInviteAdvisor: (value: string) => void; replyTo: string; setReplyTo: (value: string) => void; replyOptions: Conversation["messages"] }) {
+function AdvisorCard({ advisor, conversation, question, setQuestion, mode, setMode, inviteAdvisor, setInviteAdvisor, replyTo, setReplyTo, replyOptions, focusKey, setFocusKey, session }: { advisor: Advisor; conversation: Conversation | null; question: string; setQuestion: (value: string) => void; mode: "direct" | "invite" | "council"; setMode: (value: "direct" | "invite" | "council") => void; inviteAdvisor: string; setInviteAdvisor: (value: string) => void; replyTo: string; setReplyTo: (value: string) => void; replyOptions: Conversation["messages"]; focusKey: string; setFocusKey: (value: string) => void; session: PlanningSession | null }) {
   return <><span className="ik-kicker">Specialist · explicit provider submission</span><div className="ik-title-row"><img src={`/art/advisors/${advisor.id}.svg`} alt=""/><div><h2>{advisor.name} · {advisor.role}</h2><p>{advisor.focus}</p></div></div>
-    <div className="ik-composer"><label>Discussion action<select value={mode} onChange={(event) => setMode(event.target.value as typeof mode)}><option value="direct">Ask this specialist</option><option value="invite">Invite another specialist</option><option value="council">Convene full Council</option></select></label>{mode === "invite" && <label>Invited specialist<select value={inviteAdvisor} onChange={(event) => setInviteAdvisor(event.target.value)}>{ADVISORS.filter((item) => item.id !== advisor.id).map((item) => <option key={item.id} value={item.id}>{item.name} · {item.role}</option>)}</select></label>}{mode !== "direct" && <label>Reply to saved specialist finding<select value={replyTo} onChange={(event) => setReplyTo(event.target.value)}><option value="">Select a finding</option>{replyOptions.map((message) => <option key={message.id} value={message.id}>{message.speaker_name || words(message.speaker)} · {message.content.slice(0, 70)}</option>)}</select></label>}<label>Question about the frozen planning session<textarea value={question} maxLength={1000} onChange={(event) => setQuestion(event.target.value)} placeholder={advisor.prompt}/></label></div>
+    <div className="ik-composer"><label>Frozen focus<select value={focusKey} onChange={(event) => setFocusKey(event.target.value)}><option value="">Whole planning result</option>{session?.farm?.orders?.map((item) => <option key={`order:${item.id}`} value={`order:${item.id}`}>Order · {item.id} · {item.crop_id}</option>)}{session?.farm?.beds?.map((item) => <option key={`bed:${item.id}`} value={`bed:${item.id}`}>Bed · {item.name}</option>)}{session?.result?.strategies?.map((item) => <option key={`strategy:${item.id}`} value={`strategy:${item.id}`}>Strategy · {item.name}</option>)}</select></label>{conversation && <p>Current thread keeps its original frozen focus. Changing this selection requires the explicit new-thread action below.</p>}<label>Discussion action<select value={mode} onChange={(event) => setMode(event.target.value as typeof mode)}><option value="direct">Ask this specialist</option><option value="invite">Invite another specialist</option><option value="council">Convene full Council</option></select></label>{mode === "invite" && <label>Invited specialist<select value={inviteAdvisor} onChange={(event) => setInviteAdvisor(event.target.value)}>{ADVISORS.filter((item) => item.id !== advisor.id).map((item) => <option key={item.id} value={item.id}>{item.name} · {item.role}</option>)}</select></label>}{mode !== "direct" && <label>Reply to saved specialist finding<select value={replyTo} onChange={(event) => setReplyTo(event.target.value)}><option value="">Select a finding</option>{replyOptions.map((message) => <option key={message.id} value={message.id}>{message.speaker_name || words(message.speaker)} · {message.content.slice(0, 70)}</option>)}</select></label>}<label>Question about the frozen planning session<textarea value={question} maxLength={1000} onChange={(event) => setQuestion(event.target.value)} placeholder={advisor.prompt}/></label></div>
     <p className="ik-boundary">Opening this card makes no inference call. Submit sends the question through the existing validated gateway; it cannot change farm state.</p>
     {conversation && <Transcript conversation={conversation}/>}</>;
 }
