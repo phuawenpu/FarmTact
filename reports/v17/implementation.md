@@ -1,4 +1,4 @@
-# V17 persona-led rewrite — implementation in progress
+# V17 persona-led rewrite — technical candidate verified
 
 V16 remains the public release. No V17 publication or human-usability result is claimed.
 
@@ -8,9 +8,8 @@ Implemented candidate: scanable tool and category indexes; searchable crop atlas
 
 Agent preservation is tested with an explicitly labelled gateway-response browser fixture, separately from real API GET-only smoke. Direct questions, invitations, Council, cited and withheld findings, saved transcript replay and discussion-to-reviewed-proposal provenance remain real application UI paths. Fixture results are not live provider-quality evidence.
 
-Integration caught genuine defects: category tiles bypassed useful indexes; contextual Back stopped at an intermediate page; adviser focus was not restored after reload; disconnected origin controls lost focus; demonstration keyboard activation could invoke a hidden mission action. Fixes are implemented or under active verification. Initial failures are retained in the corresponding reports.
+Integration caught genuine defects: category tiles bypassed useful indexes; contextual Back stopped at an intermediate page; adviser focus was not restored after reload; disconnected origin controls lost focus; demonstration keyboard activation could invoke a hidden mission action. The final shell run also exposed a keyboard-opened History card that returned to the correct card and scroll position without restoring the primary-action focus. Tool returns now reconcile in the background and restore focus during the parent-card commit. Initial failures are retained in the corresponding reports.
 
-Completed so far: production build and generated-contract check; root category navigation 7 checks with zero API writes; real 390px reservation → review → recalculate → explain → inverse → approval → recorded simulation journey 27 checks, zero provider requests. The full isolated PostgreSQL regression and independent candidate browser checks are still running. Completion requires resolving their findings and checking the final candidate, not carrying forward an earlier green result.
+The frozen final isolated PostgreSQL run passed 804 tests with one skip in 861.21 seconds. The production build and generated-contract check also pass. Final-candidate browser evidence covers root category navigation (7); Knowledge/Data/Research (18); shell, keyboard, reduced-motion and responsive return behavior (30); specialist/adviser transport (10); contextual adapter and draft isolation (16); private staging transport guards (11); and a fresh real 390px reservation → review → recalculate → explain → inverse → approval → seven-day recorded-simulation journey (27). That journey made no provider requests. These are scoped automated checks, not provider-quality or human-comprehension evidence.
 
-
-Latest candidate checks: compact Knowledge/Data/Research 18; shell 29 including live pending-state layout fixtures; adviser transport 10; independent adapter/draft-isolation 16; private transport target/source guards 11. These are scoped automated checks, not provider-quality or human-comprehension evidence. Final full PostgreSQL rerun is in progress with dist frozen. Two final shell source changes (keyboard-primary origin and plain reservation title) are typechecked and await the post-regression build and focused rerun.
+The next gate is private immutable V17 image staging and its exact-image operator/browser acceptance. V16 remains public until that succeeds.

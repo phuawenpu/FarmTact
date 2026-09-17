@@ -34,7 +34,7 @@
     {
       "name": "B3 causal scene focuses the actual target bed",
       "pass": true,
-      "detail": "ic-scene  is-demo-constraint "
+      "detail": "ic-scene is-transitioning is-demo-constraint "
     },
     {
       "name": "saved consequence demo binds highlights to listed event entities",
@@ -99,9 +99,17 @@
       }
     },
     {
-      "name": "simulation primary opens the simulations destination",
+      "name": "simulation keyboard primary opens the simulations destination",
       "pass": true,
       "detail": "Farm tools › History & preferences\n\nSandbox · actual farm operations disabled\nSimulations\n2026-09-14 · ACTIVE\n\nd6a0a2837d64142acec0a9294ae3e0eb\n\ntype\nsimulation\nstatus\nACTIVE\nrevision\n2\neffective date\n2026-09-14\nresult id\n\nNot available\n\nsnapshot\n\nNot available\n\nprovenance\nplanning-session:63c1b1bb786f77833bc71a1ff3ed1479\nBack\nRead-only replay"
+    },
+    {
+      "name": "keyboard primary Back restores its card, action focus and scroll",
+      "pass": true,
+      "detail": {
+        "focused": "Open simulation history",
+        "scrollY": 120
+      }
     },
     {
       "name": "tools index exposes all five categories at once",
@@ -112,7 +120,7 @@
       "name": "category close returns tools index and originating control",
       "pass": true,
       "detail": {
-        "focus": "\n    Objective · selected sample order24 kg caixin by 2026-09-21All 28 order lines remain in the 49-day plan.Sandbox farm · real operations disabledSaved simulation scene · Area 1 of 2 · showing 8 of 162026-09-14A1Harvested residuecaixinharvestedA2Harvested residuepak choiharvestedA3Harvested residuekailanharvestedA4Harvested residuelettuceharvestedB1caixingrowingB2pak choigrowingB3kailangrowingSaved reservation2026-10-01 → 2026-11-02B4lettucegrowingShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kgFarm toolsChoose a toolOpen one category or use Next and Previous to inspect its summary.PlanCalculate, compare and approve revision-bound plans.Records & workReview farm records, imports, tasks and corrections.Knowledge & evidenceInspect crops, sources and saved specialist reviews.ExperimentsOpen scenarios, datasets, forecasts and local studies.History & preferencesReplay saved events and manage display preferences.Replay demonstrationReview the factual decision sequence without saving or inference.Farm tools › Knowledge & evidence← PreviousFarm tools · 3 of 5Next →BackOpen toolResume guide\n  \n\n"
+        "focus": "Knowledge & evidenceInspect crops, sources and saved specialist reviews."
       }
     },
     {

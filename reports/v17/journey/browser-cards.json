@@ -43,7 +43,7 @@
     {
       "name": "reservation opens explicit review before apply",
       "pass": true,
-      "detail": "REVIEW BEFORE APPLYING\nReserve B3\n\nbed-07 will be unavailable 2026-10-01 to 2026-11-02. Existing work remains recorded.\n\nProposal\n742c3403636f6da7485d3688a7a626fe\nRevision\n1\nScope\nFuture simulation work only"
+      "detail": "REVIEW BEFORE APPLYING\nReserve B3\n\nbed-07 will be unavailable 2026-10-01 to 2026-11-02. Existing work remains recorded.\n\nProposal\n7b4cfffc596196e1453c91f95d0ccddd\nRevision\n1\nScope\nFuture simulation work only"
     },
     {
       "name": "review retains one card and one three-key action area",
@@ -56,7 +56,7 @@
     {
       "name": "saved recalculation explanation contains five structured facts and allocation evidence",
       "pass": true,
-      "detail": "B3 IS RESERVED › WHY\nWhat this means\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nWhat changed\nbed-07 changed from no saved reservation to 2026-10-01 to 2026-11-02.\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −4 kg; surplus kg: −13 kg; expiry kg: +17 kg; rejection kg: not available; margin sgd: −199.5 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nProjection · frozen result 5c2e419f8f8a763f1fbe77f6f903cb5c; bed-03: caixin 2026-09-28→2026-10-19 44 kg → none; bed-14: none → lettuce 2026-09-24→2026-10-19 46 kg; bed-01: kailan 2026-10-01→2026-11-02 48 kg → none; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nreservation · bed-07"
+      "detail": "B3 IS RESERVED › WHY\nWhat this means\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nWhat changed\nbed-07 changed from no saved reservation to 2026-10-01 to 2026-11-02.\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −4 kg; surplus kg: −13 kg; expiry kg: +17 kg; rejection kg: not available; margin sgd: −199.5 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nProjection · frozen result 7ce0faf9c775ff4ae14cbb2684aa9fc5; bed-03: caixin 2026-09-28→2026-10-19 44 kg → none; bed-14: none → lettuce 2026-09-24→2026-10-19 46 kg; bed-01: kailan 2026-10-01→2026-11-02 48 kg → none; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nreservation · bed-07"
     },
     {
       "name": "read/explain triggered no provider request",
@@ -83,13 +83,13 @@
       "name": "explicit History advance returns recorded simulation facts",
       "pass": true,
       "detail": {
-        "id": "b805e30adc52a7bb2e64d14c74744b8b",
+        "id": "2b4f2f3a63798d675d96ccb660c67a84",
         "engine_version": "synthetic-execution-v1",
         "revision": 1,
         "status": "ACTIVE",
-        "run_id": "planning-session:baf715cf5f2467eec8587e02f6887ab9",
-        "created_at": "2026-09-17T22:43:15.494452+00:00",
-        "updated_at": "2026-09-17T22:43:15.930476+00:00",
+        "run_id": "planning-session:c790ab3e8ccc07a8f3c2a8283cc50829",
+        "created_at": "2026-09-17T23:14:18.483028+00:00",
+        "updated_at": "2026-09-17T23:14:18.515652+00:00",
         "clock_date": "2026-09-14",
         "start_date": "2026-09-08",
         "end_date": "2026-11-02",
@@ -189,7 +189,7 @@
         "real_operations_enabled": false,
         "state_hash": "492de02cd3b6249d965b0c29a610979cee1ed528eb392bf589c4841e6e36a97f",
         "scene_transition": {
-          "event_id": "simulation:b805e30adc52a7bb2e64d14c74744b8b:event:24",
+          "event_id": "simulation:2b4f2f3a63798d675d96ccb660c67a84:event:24",
           "entity_ids": [
             "bed-01",
             "bed-02",
@@ -1022,7 +1022,7 @@
       "name": "scene reloads recorded clock and server simulation bed state",
       "pass": true,
       "detail": {
-        "sceneText": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
+        "sceneText": "Saved simulation scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
         "bed": {
           "id": "bed-01",
           "name": "A1",
@@ -1049,7 +1049,7 @@
     {
       "name": "recorded consequence transition remains factual and provider-free",
       "pass": true,
-      "detail": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+      "detail": "Saved simulation scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
     },
     {
       "name": "200% zoom uses document scrolling",
@@ -1072,21 +1072,22 @@
       "name": "fresh journey persisted proposal apply inverse and approval mutations",
       "pass": true,
       "detail": [
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/calculate",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
+        "/api/v1/planning-sessions",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/calculate",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
         "/api/v1/farm-workflow/proposals",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/farm-workflow/proposals/742c3403636f6da7485d3688a7a626fe/apply",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/farm-workflow/proposals/742c3403636f6da7485d3688a7a626fe/inverse",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/farm-workflow/proposals/7b4cfffc596196e1453c91f95d0ccddd/apply",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/farm-workflow/proposals/7b4cfffc596196e1453c91f95d0ccddd/inverse",
         "/api/v1/farm-workflow/proposals",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/farm-workflow/proposals/bd4ff4d4fe917343cf374edfa7ac1d51/apply",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/farm-workflow/proposals/bd4ff4d4fe917343cf374edfa7ac1d51/approve-actions",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-        "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/advance"
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/farm-workflow/proposals/c6acf49e4708fdfd0d5749c4e195c81b/apply",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/farm-workflow/proposals/c6acf49e4708fdfd0d5749c4e195c81b/approve-actions",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+        "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/advance"
       ]
     },
     {
@@ -1112,23 +1113,24 @@
     "/home/sprite/workspaces/Code2/reports/v17/journey/recorded-consequence-reduced-390.png",
     "/home/sprite/workspaces/Code2/reports/v17/journey/journey-final-390.png"
   ],
-  "video": "/home/sprite/workspaces/Code2/reports/v17/journey/video/page@b8ba2a969eae4c5234412f7a23330009.webm",
+  "video": "/home/sprite/workspaces/Code2/reports/v17/journey/video/page@d4b3e68f8da7fa146d97155d5f84c60c.webm",
   "mutations": [
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/calculate",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/calculate",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
     "/api/v1/farm-workflow/proposals",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/farm-workflow/proposals/742c3403636f6da7485d3688a7a626fe/apply",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/farm-workflow/proposals/742c3403636f6da7485d3688a7a626fe/inverse",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/farm-workflow/proposals/7b4cfffc596196e1453c91f95d0ccddd/apply",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/farm-workflow/proposals/7b4cfffc596196e1453c91f95d0ccddd/inverse",
     "/api/v1/farm-workflow/proposals",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/farm-workflow/proposals/bd4ff4d4fe917343cf374edfa7ac1d51/apply",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/farm-workflow/proposals/bd4ff4d4fe917343cf374edfa7ac1d51/approve-actions",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/guidance",
-    "/api/v1/planning-sessions/baf715cf5f2467eec8587e02f6887ab9/advance"
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/farm-workflow/proposals/c6acf49e4708fdfd0d5749c4e195c81b/apply",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/farm-workflow/proposals/c6acf49e4708fdfd0d5749c4e195c81b/approve-actions",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/guidance",
+    "/api/v1/planning-sessions/c790ab3e8ccc07a8f3c2a8283cc50829/advance"
   ],
   "providerRequests": []
 }

@@ -1,108 +1,84 @@
 {
-  "main": "/assets/index-CHDAS7Ra.js",
-  "main_asset": {
-    "path": "assets/index-CHDAS7Ra.js",
-    "bytes": 250519,
-    "gzip_bytes": 76653
-  },
-  "total_bytes": 595345,
-  "total_gzip_bytes": 171414,
-  "assets": [
+  "main_file": "index-beqxtkpI.js",
+  "main_bytes": 250627,
+  "main_gzip_bytes_level9": 76666,
+  "total_js_css_bytes": 595453,
+  "files": [
     {
-      "path": "assets/AdvisorEvidence-D2ZK_YfM.js",
-      "bytes": 10941,
-      "gzip_bytes": 4108
+      "name": "AdvisorEvidence-BId4jSCc.js",
+      "bytes": 10941
     },
     {
-      "path": "assets/IntegratedExperiments-Ck-RitZ5.js",
-      "bytes": 31472,
-      "gzip_bytes": 9612
+      "name": "IntegratedExperiments-Db4qP5SK.js",
+      "bytes": 31472
     },
     {
-      "path": "assets/IntegratedExperiments-TCtX-Io8.css",
-      "bytes": 1349,
-      "gzip_bytes": 540
+      "name": "IntegratedExperiments-TCtX-Io8.css",
+      "bytes": 1349
     },
     {
-      "path": "assets/IntegratedHistory-Bpy88piB.css",
-      "bytes": 3204,
-      "gzip_bytes": 1061
+      "name": "IntegratedHistory-BeogNwis.js",
+      "bytes": 17328
     },
     {
-      "path": "assets/IntegratedHistory-C7T0b1FP.js",
-      "bytes": 17328,
-      "gzip_bytes": 6333
+      "name": "IntegratedHistory-Bpy88piB.css",
+      "bytes": 3204
     },
     {
-      "path": "assets/IntegratedKnowledge-B9D-8jPl.js",
-      "bytes": 29656,
-      "gzip_bytes": 8948
+      "name": "IntegratedKnowledge-CaYlq2D1.js",
+      "bytes": 29656
     },
     {
-      "path": "assets/IntegratedKnowledge-OhCff2zS.css",
-      "bytes": 6957,
-      "gzip_bytes": 1875
+      "name": "IntegratedKnowledge-OhCff2zS.css",
+      "bytes": 6957
     },
     {
-      "path": "assets/IntegratedPlan-LOBUjwxF.js",
-      "bytes": 22992,
-      "gzip_bytes": 6690
+      "name": "IntegratedPlan-BZmTCto-.js",
+      "bytes": 22992
     },
     {
-      "path": "assets/IntegratedRecords-Bh-gf3g8.js",
-      "bytes": 47043,
-      "gzip_bytes": 13914
+      "name": "IntegratedRecords-DnrFUODk.css",
+      "bytes": 4204
     },
     {
-      "path": "assets/IntegratedRecords-DnrFUODk.css",
-      "bytes": 4204,
-      "gzip_bytes": 1293
+      "name": "IntegratedRecords-n8h0gOij.js",
+      "bytes": 47043
     },
     {
-      "path": "assets/IntegratedResearch-B-6oxXjR.js",
-      "bytes": 24283,
-      "gzip_bytes": 7694
+      "name": "IntegratedResearch-BLQ4L9y4.js",
+      "bytes": 24283
     },
     {
-      "path": "assets/IntegratedResearch-CmbOu-un.css",
-      "bytes": 2003,
-      "gzip_bytes": 744
+      "name": "IntegratedResearch-CmbOu-un.css",
+      "bytes": 2003
     },
     {
-      "path": "assets/ToolCard-Ct6Zj8WG.js",
-      "bytes": 2146,
-      "gzip_bytes": 967
+      "name": "ToolCard-DhWghSNp.js",
+      "bytes": 2146
     },
     {
-      "path": "assets/cardNavigation-Df5G2NbE.js",
-      "bytes": 860,
-      "gzip_bytes": 481
+      "name": "cardNavigation-AVG951Js.js",
+      "bytes": 860
     },
     {
-      "path": "assets/cardProjection-Cw99jypQ.js",
-      "bytes": 982,
-      "gzip_bytes": 541
+      "name": "cardProjection-Cw99jypQ.js",
+      "bytes": 982
     },
     {
-      "path": "assets/createLucideIcon-BL7REnKV.js",
-      "bytes": 3082,
-      "gzip_bytes": 1479
+      "name": "createLucideIcon-hZRejri0.js",
+      "bytes": 3082
     },
     {
-      "path": "assets/index-CHDAS7Ra.js",
-      "bytes": 250519,
-      "gzip_bytes": 76653
+      "name": "index-beqxtkpI.js",
+      "bytes": 250627
     },
     {
-      "path": "assets/index-dCI3MlGv.css",
-      "bytes": 134102,
-      "gzip_bytes": 27733
+      "name": "index-dCI3MlGv.css",
+      "bytes": 134102
     },
     {
-      "path": "assets/tool-card-CoW2HBZl.css",
-      "bytes": 2222,
-      "gzip_bytes": 748
+      "name": "tool-card-CoW2HBZl.css",
+      "bytes": 2222
     }
-  ],
-  "note": "Production build measurement; lazy chunks are not all loaded at initial entry."
+  ]
 }

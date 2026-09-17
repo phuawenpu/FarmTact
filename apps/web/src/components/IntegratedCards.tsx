@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -220,7 +221,7 @@ export default function IntegratedCards({
     return next;
   }, []);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (quiet = false) => {
     if (loadInFlight.current) {
       loadQueued.current = true;
       ++loadGeneration.current; ++dataGeneration.current; ++pollGeneration.current;
@@ -229,7 +230,7 @@ export default function IntegratedCards({
       return;
     }
     loadInFlight.current = true;
-    setLoadingBusy("Opening sandbox farm");
+    if (!quiet) setLoadingBusy("Opening sandbox farm");
     try {
       do {
         loadQueued.current = false;
@@ -284,7 +285,7 @@ export default function IntegratedCards({
             setError(message(caught, "The sandbox farm could not be opened."));
         }
       } while (loadQueued.current);
-    } finally { setLoadingBusy(""); loadInFlight.current = false; }
+    } finally { if (!quiet) setLoadingBusy(""); loadInFlight.current = false; }
   }, []);
 
   useEffect(() => { void load(); }, [load]);
@@ -335,13 +336,14 @@ export default function IntegratedCards({
     if (!session || !navigationReady.current || detail) return;
     try { localStorage.setItem(editionStorageKey(`integrated-cards-navigation:${session.id}`), JSON.stringify({ surface, index, missionIndex: missionIndex.current, missionScroll: missionScroll.current, directTool: directTool.current, toolTarget, origin: origin.current, missionOrigin: missionOrigin.current })); } catch { /* optional */ }
   }, [session?.id, surface, index, detail, toolTarget]);
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // A tool return refreshes in the background. Restore against the newly
+    // mounted parent card first; the same keyed action remains focused when the
+    // refresh receipt arrives.
     if (loadingBusy || !pendingRestore.current) return;
     const restore = pendingRestore.current; pendingRestore.current = null;
-    afterPaint(() => {
-      window.scrollTo({ top: restore.scroll, behavior: "auto" });
-      [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === restore.label)?.focus();
-    });
+    window.scrollTo({ top: restore.scroll, behavior: "auto" });
+    [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === restore.label)?.focus({ preventScroll: true });
   }, [loadingBusy, surface, index]);
   useEffect(() => {
     if (loadingBusy) return;
@@ -597,12 +599,12 @@ export default function IntegratedCards({
     if (directTool.current) {
       directTool.current = false; setToolTarget(undefined); setSurface("mission"); setIndex(missionIndex.current);
       pendingRestore.current = { label: origin.current?.label || "", scroll: origin.current?.scroll ?? missionScroll.current };
-      void load(); return;
+      void load(true); return;
     }
     const toolIndex = toolCards.findIndex((item) => item.id === surface);
     setToolTarget(undefined); setSurface("tools"); setIndex(Math.max(0, toolIndex));
     pendingRestore.current = { label: origin.current?.label || "", scroll: origin.current?.scroll ?? missionScroll.current };
-    void load();
+    void load(true);
   };
   const openTools = () => { missionIndex.current = activeIndex; missionScroll.current = window.scrollY; missionOrigin.current = { label: "More", scroll: window.scrollY }; setSurface("tools"); setIndex(0); };
   const returnToMission = () => {
