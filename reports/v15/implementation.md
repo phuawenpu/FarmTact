@@ -18,8 +18,8 @@ and honors Retry-After without automatic paid retries.
 ## Evidence so far
 
 - Generated contracts check passed.
-- Frontend TypeScript/production build passed; main JS approximately 222.2 kB
-  (70.5 kB gzip), main CSS 131.2 kB (27.5 kB gzip). Tool decks load separately.
+- Frontend TypeScript/production build passed; main JS approximately 223.6 kB
+  (70.8 kB gzip), main CSS 132.3 kB (27.8 kB gzip). Tool decks load separately.
 - Focused guidance, inverse and workflow suite: 19 passed (SQLite unit checks).
 - Records real browser journey: 13 passed on isolated PostgreSQL, including real
   candidate confirmation/correction and labelled transport fault simulation for
@@ -37,6 +37,16 @@ and honors Retry-After without automatic paid retries.
   replay, stale review, session-cap rejection and rollback after interrupted save.
 - Records one-card refinement and extended Knowledge replay tests are in progress;
   earlier passing browser evidence does not certify these latest revisions.
+- Expanded tools suite passed real presentation/context/scripted discussion and
+  history flows, plus labelled recorded-adviser and provider-503 UI fixtures.
+- Explorer browser suite: 12 passed. Filtered JSON export retains crop/date filters
+  and numeric descending sort; back restores filters, relationships are inspectable,
+  360/390/430/1280 widths and 200% text size fit, and reads cause no mutations.
+- A second local card-test database exhausted anonymous-session admission after
+  repeated development runs (429 `new_session_ip`, Retry-After 1563 seconds).
+  Its counters were retained. The final card suite uses a separate disposable
+  acceptance database and one browser tenant across viewport checks. No production
+  counter was changed or limit raised.
 
 Browser suites use separate disposable databases and retain unchanged production
 rate limits. Earlier combined reruns exhausted the local anonymous-session quota;

@@ -72,6 +72,16 @@ function hasReservation(proposal: FarmerProposal, bedId: string) {
   );
 }
 
+function newerSession(current: PlanningSession | null, next: PlanningSession) {
+  if (!current) return next;
+  if (next.revision !== current.revision) return next.revision > current.revision ? next : current;
+  return next.updated_at >= current.updated_at ? next : current;
+}
+
+function afterPaint(callback: () => void) {
+  window.requestAnimationFrame(() => window.requestAnimationFrame(callback));
+}
+
 export default function IntegratedCards({
   editionId = "v15",
   renderTool,
@@ -96,6 +106,9 @@ export default function IntegratedCards({
   const loadInFlight = useRef(false);
   const cardRef = useRef<HTMLElement>(null);
   const missionIndex = useRef(0);
+  const missionScroll = useRef(0);
+  const origin = useRef<{ label: string; scroll: number } | null>(null);
+  const missionOrigin = useRef<{ label: string; scroll: number } | null>(null);
   const resumedSession = useRef("");
   const transitionReady = useRef(false);
 
@@ -160,7 +173,7 @@ export default function IntegratedCards({
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status)) return;
     const timer = window.setInterval(() => {
       void planningApi.get(session.id).then(async (next) => {
-        setSession(next);
+        setSession((current) => newerSession(current, next));
         if (!["QUEUED", "RUNNING"].includes(next.job?.status || "")) {
           setBusy(""); await refreshWorkflow();
         }
@@ -185,6 +198,7 @@ export default function IntegratedCards({
   };
   const proposalTransition = boundProposal?.scene_transition as undefined | {
     event_id?: string; entity_ids?: string[]; effective_date?: string; outcome_basis?: string;
+    fact_differences?: Record<string, number | string | null>;
   };
   const simulationTransition = (session?.simulation as { scene_transition?: typeof proposalTransition } | null | undefined)?.scene_transition;
   const sceneTransition = simulationTransition || proposalTransition;
@@ -288,7 +302,8 @@ export default function IntegratedCards({
     try {
       await planningApi.guidance(session, step, skipped);
       // The mutation receipt contains the stored row; refetch to reattach the bound result.
-      setSession(await planningApi.get(session.id));
+      const next = await planningApi.get(session.id);
+      setSession((current) => newerSession(current, next));
     }
     catch (caught) { setError(message(caught, "Guide progress was not saved; the planning record is unchanged.")); }
   };
@@ -336,16 +351,29 @@ export default function IntegratedCards({
   };
   const closeDetail = () => {
     setDetail(null); setReviewProposal(null); setReviewInverse(null);
-    window.requestAnimationFrame(() => cardRef.current?.focus());
+    afterPaint(() => {
+      if (origin.current) {
+        window.scrollTo({ top: origin.current.scroll, behavior: "auto" });
+        [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
+      } else cardRef.current?.focus();
+    });
   };
+  const rememberOrigin = (button: HTMLButtonElement) => { origin.current = { label: button.textContent?.trim() || "", scroll: window.scrollY }; };
   const closeTool = () => {
     const toolIndex = toolCards.findIndex((item) => item.id === surface);
     setSurface("tools"); setIndex(Math.max(0, toolIndex)); void load();
+    afterPaint(() => {
+      window.scrollTo({ top: origin.current?.scroll ?? missionScroll.current, behavior: "auto" });
+      [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
+    });
   };
-  const openTools = () => { missionIndex.current = activeIndex; setSurface("tools"); setIndex(0); };
+  const openTools = () => { missionIndex.current = activeIndex; missionScroll.current = window.scrollY; missionOrigin.current = { label: "More", scroll: window.scrollY }; setSurface("tools"); setIndex(0); };
   const returnToMission = () => {
     setSurface("mission"); setIndex(missionIndex.current);
-    window.requestAnimationFrame(() => cardRef.current?.focus());
+    afterPaint(() => {
+      window.scrollTo({ top: missionOrigin.current?.scroll ?? missionScroll.current, behavior: "auto" });
+      [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === missionOrigin.current?.label)?.focus();
+    });
   };
   const pointerUp = (event: PointerEvent<HTMLDivElement>) => {
     if (pointerStart.current == null) return;
@@ -416,12 +444,12 @@ export default function IntegratedCards({
         })}</div>
         <p className="ic-scene-note">Scene reflects saved records. Selecting cards only changes the highlighted preview.</p>
         {transitionLabel && <p className="ic-transition" role="status">{transitionLabel}</p>}
-        {sceneTransition?.event_id && <p className="ic-saved-change">Saved projection · {sceneTransition.effective_date} · {(sceneTransition.entity_ids || []).join(", ") || "planning result"}</p>}
+        {sceneTransition?.event_id && <p className="ic-saved-change">{sceneTransition.outcome_basis === "recorded_simulation" ? "Recorded simulation" : "Saved projection"} · {sceneTransition.effective_date} · {(sceneTransition.entity_ids || []).join(", ") || "planning result"}{sceneTransition.fact_differences && ` · ${Object.entries(sceneTransition.fact_differences).slice(0, 3).map(([key, value]) => `${key.replaceAll("_", " ")} ${typeof value === "number" ? signed(value, key.includes("sgd") ? "SGD" : "kg") : String(value)}`).join(" · ")}`}</p>}
       </section>
 
       <div className="ic-card-column">
         {error && <div className="ic-error" role="alert"><span>{error}</span><button onClick={() => setError("")}>Dismiss</button></div>}
-        {toolOpen ? <section className="ic-tool"><button className="ic-back" onClick={closeTool}>← Farm tools</button>
+        {toolOpen ? <section className="ic-tool"><p className="ic-tool-parent">Farm tools › {toolCards.find((item) => item.id === surface)?.title}</p>
           <div className="ic-tool-body">{renderTool ? renderTool(surface, closeTool) : <><span className="ic-eyebrow">Tool adapter</span>
             <h2>{toolCards.find((item) => item.id === surface)?.title}</h2><p>This tool is unavailable in this build.</p></>}</div></section> : <>
           <div className="ic-deck" onPointerDown={(event) => { pointerStart.current = event.clientX; }} onPointerUp={pointerUp}>
@@ -447,10 +475,10 @@ export default function IntegratedCards({
               <button onClick={() => move(1)} disabled={activeIndex === (surface === "tools" ? toolCards.length : missionCards.length) - 1}>Next →</button></div>
             <div className="ic-keys">
               {detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
-                : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={primary}>Open tool</button><button onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
-                : <><button onClick={() => setDetail("explain")}>Explain</button>
-                  <button className="is-primary" title={approval?.available === false ? approval.reason : undefined} disabled={Boolean(busy || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || (current?.id === "reservation" && activeProposal && approval?.available === false))} onClick={primary}>{busy || (["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? activeProposal ? "Approve actions" : "Review reservation" : "Continue")}</button>
-                  <button onClick={openTools}>More</button></>}
+                : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
+                : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
+                  <button className="is-primary" title={approval?.available === false ? approval.reason : undefined} disabled={Boolean(busy || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || (current?.id === "reservation" && activeProposal && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? activeProposal ? "Approve actions" : "Review reservation" : "Continue")}</button>
+                  <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}
             </div>
           </nav>
         </>}

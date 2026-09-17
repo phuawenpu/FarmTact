@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-17T11:24:37.348Z",
+  "started_at": "2026-09-17T11:49:48.674Z",
   "base_url": "http://127.0.0.1:4194",
   "checks": [
     {
@@ -55,7 +55,7 @@
     {
       "name": "saved plan identity appears in history",
       "pass": true,
-      "detail": "ba410da1efad715c001b96d9f53d2944"
+      "detail": "91eb10b828bb3678dc0b1638151d0a30"
     },
     {
       "name": "saved plan replay is explicitly read-only",
@@ -100,12 +100,12 @@
     {
       "name": "new planning attempt creates a distinct session",
       "pass": true,
-      "detail": "4715ed472c741aa74dd6aab9a40f2bd7"
+      "detail": "387b0eef615a143c87ea733e466d273b"
     },
     {
       "name": "new planning attempt preserves prior session",
       "pass": true,
-      "detail": "ba410da1efad715c001b96d9f53d2944"
+      "detail": "91eb10b828bb3678dc0b1638151d0a30"
     },
     {
       "name": "full JSON import has explicit parsed review",
@@ -115,7 +115,7 @@
     {
       "name": "confirmed import creates a fresh remembered workflow session",
       "pass": true,
-      "detail": "V15 reviewed import 1789644306121"
+      "detail": "V15 reviewed import 1789645817872"
     },
     {
       "name": "confirmed import retains prior sessions",
@@ -123,7 +123,7 @@
       "detail": ""
     },
     {
-      "name": "confirmed import returns to records index",
+      "name": "confirmed import returns to farm setup card",
       "pass": true,
       "detail": ""
     },
@@ -135,9 +135,9 @@
   ],
   "failures": [],
   "prerequisites": [
-    "Approved proposal f75fb3a6675f5782fadd49f144d4375c through the real API so History could test an eligible reviewed time advance."
+    "Approved proposal 62f5ab3e8280fe986a81af93ff1dd006 through the real API so History could test an eligible reviewed time advance."
   ],
   "notes": [],
-  "finished_at": "2026-09-17T11:25:08.920Z",
+  "finished_at": "2026-09-17T11:50:20.594Z",
   "status": "PASSED"
 }

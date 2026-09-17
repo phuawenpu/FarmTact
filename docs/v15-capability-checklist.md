@@ -161,3 +161,27 @@ Keep the existing state machines and put a card projection layer over them. The 
 Implement the reservation episode first against `farm_workflow` and `planning_sessions`, because it exercises the hardest shared contracts: draft versus saved state, revision conflicts, async reconciliation, signed numerical differences, scene transitions, approval and exact inverse. Once that card/result/event vocabulary is stable, adapt imports/tasks, conversations, scenarios, explorer and research through dedicated card adapters.
 
 Extend responses additively for explanation references and semantic transitions. Derive explanations from saved result/event facts and store references, so opening Explain or replay stays zero-call. Preserve the old endpoints during integration; route replacement should happen only after each capability has a reachable V15 card journey and end-to-end test.
+
+## V15 integrated-card browser evidence
+
+The named assertions below are in `tests/browser/v15_tools.mjs` and run through `/` on the real isolated service unless explicitly marked as a transport fixture.
+
+- [x] **More → Knowledge & evidence → crop/source cards:** `crop card exposes recipe and evidence boundary`, `source card exposes freshness and status`, and `knowledge browse remains provider-free` cover the recipe limitation, freshness/status labels and zero-provider browse boundary at 360 px.
+- [x] **Knowledge → Saved discussions → replay → reviewed handoff:** the explicitly labelled recorded-transcript transport fixture proves `recorded adviser handoff preserves exact source IDs` and `linked draft is applied only by the explicit footer action`. It supplies an already-recorded `references_verified` adviser message; it never fabricates or invokes provider inference.
+- [x] **Experiments → Research & reviews → calculation/proposal/challenge:** `research calculation records three strategies`, `research edit is previewed before apply`, `research apply creates a new frozen input version`, and `research challenge records corrected evidence status` exercise real service mutations.
+- [x] **Research → Revision history:** `research append-only revision history is reachable in cards` and `research history endpoint declares zero inference` exercise `/api/v1/council-research/{id}/history` through the V15 card and verify its replay declaration.
+- [x] **Research → Presentation/context/discussion:** `research presentation, context and scripted discussion actions persist` saves checkpoint presentation settings, selects a frozen canonical reference, submits one scripted message, and advances one queued turn.
+- [x] **Research → Actual adviser outage:** the explicitly labelled provider-outage transport fixture proves `explicit provider outage is visible and never auto-retried` and `provider outage retains the saved question draft`; exactly one explicit POST is attempted and the fixture returns 503.
+- [x] **Experiments → Dataset/scenario:** `generated preview saves an immutable snapshot`, `saved dataset export returns CSV`, `scenario branch persisted separately`, and `scenario local run reaches a terminal result` use real APIs. `dataset/scenario workflow makes no provider request` covers the local-only boundary.
+- [x] **Shared shell:** five `tool reachable:` assertions cover every top-level tools-index destination; `360px shell has no horizontal document overflow`, `mobile tool cards retain vertical scrolling`, and `no browser page errors` cover this suite's mobile baseline.
+
+Actionable V15 browser gaps remain open:
+
+- [ ] Research scripted dialogue still needs DOM coverage for **Stop queued turns** and continuous-mode stopping after submission.
+- [ ] Research proposals still need DOM coverage for discard, bed-reservation edits and order-confirmation edits; the labour review/apply path is covered.
+- [ ] Research calculation still needs controlled cancel/retry and interrupted-request recovery coverage.
+- [ ] Research results still need eligible policy selection, stale-version rejection and saved-study reopening coverage.
+- [ ] Research report still needs document/source/screenshot-link card coverage; history needs a fixture exceeding 20 revisions to exercise **Load next history page**.
+- [ ] Successful explicit Research provider create/send/refresh requires a bounded validated-gateway fixture. The outage/no-retry path is covered without a real provider call.
+- [ ] Knowledge direct adviser, invite-specialist and conversational-Council successful submissions need validated-gateway fixtures covering partial and withheld responses. Browse/replay and discussion-linked planning proposal are covered.
+- [ ] Automated completion remains no evidence of comprehension; representative-user usability is unverified.

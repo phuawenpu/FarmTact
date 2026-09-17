@@ -1,0 +1,55 @@
+{
+  "base": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "date/crop/sort controls remain inside dataset card",
+      "pass": true
+    },
+    {
+      "name": "JSON export contains filtered records",
+      "pass": true
+    },
+    {
+      "name": "JSON export preserves descending numeric ordering",
+      "pass": true
+    },
+    {
+      "name": "snapshot action Back restores dataset controls",
+      "pass": true
+    },
+    {
+      "name": "record relationship card exposes canonical references",
+      "pass": true
+    },
+    {
+      "name": "relationship Back restores original filter",
+      "pass": true
+    },
+    {
+      "name": "filter/export/relationship/replay made no mutations or inference",
+      "pass": true
+    },
+    {
+      "name": "dataset fits 360px",
+      "pass": true
+    },
+    {
+      "name": "dataset fits 390px",
+      "pass": true
+    },
+    {
+      "name": "dataset fits 430px",
+      "pass": true
+    },
+    {
+      "name": "dataset fits 1280px",
+      "pass": true
+    },
+    {
+      "name": "dataset supports text zoom without horizontal document overflow",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

@@ -10,7 +10,7 @@ const click = async (page, name) => page.getByRole("button", { name, exact: true
 const openMore = async (page) => { const button = page.getByRole("button", { name: "More", exact: true }); await button.waitFor(); await button.click(); await page.getByRole("heading", { name: "Plan", exact: true }).waitFor(); };
 const toolAt = async (page, offset, heading) => { for (let i = 0; i < offset; i += 1) await click(page, "Next →"); await click(page, "Open tool"); await page.getByRole("heading", { name: heading, exact: true }).waitFor(); };
 const backToShell = async (page) => {
-  for (let depth = 0; depth < 4; depth += 1) {
+  for (let depth = 0; depth < 8; depth += 1) {
     if (await page.getByRole("button", { name: "More", exact: true }).count()) return;
     const close = page.getByRole("button", { name: "Close", exact: true });
     if (await close.count()) await close.click();
@@ -64,7 +64,7 @@ try {
     check(`tool reachable: ${item.heading}`, await page.getByRole("heading", { name: item.heading, exact: true }).isVisible());
     await backToShell(page);
   }
-  check("browsing all tools makes no provider request", report.requests.provider.length === 0, report.requests.provider);
+  check("browsing all tools makes no provider request", report.requests.provider.length === 0, [...report.requests.provider]);
 
   // Knowledge: crop facts, source card and saved threads remain browse-only.
   await openMore(page); await toolAt(page, 2, "Inspect the facts. Ask deliberately.");
@@ -73,7 +73,7 @@ try {
   check("knowledge deck contains crops, source status, advisers and history", knowledgeCount >= 22, knowledgeCount);
   for (let i = 0; i < 12; i += 1) await page.getByRole("button", { name: "Next", exact: true }).click();
   check("source card exposes freshness and status", await page.getByText("Freshness", { exact: true }).isVisible() && await page.getByText("Status", { exact: true }).isVisible());
-  check("knowledge browse remains provider-free", report.requests.provider.length === 0, report.requests.provider);
+  check("knowledge browse remains provider-free", report.requests.provider.length === 0, [...report.requests.provider]);
   await backToShell(page);
 
   // Dataset generation, immutable save, export and scenario local run.
@@ -89,10 +89,11 @@ try {
   const savedSnapshot = await page.evaluate(async (name) => (await (await fetch("/api/v1/data-explorer/snapshots")).json()).snapshots.find((row) => row.name === name), datasetName);
   check("generated preview saves an immutable snapshot", !!savedSnapshot?.id && !!savedSnapshot?.content_hash, savedSnapshot);
   await click(page, "Snapshot actions");
-  const downloadPromise = page.waitForEvent("download");
-  await click(page, "Export CSV");
-  const download = await downloadPromise;
-  check("saved dataset export downloads CSV", (await download.suggestedFilename()).endsWith(".csv"), await download.suggestedFilename());
+  await page.getByLabel("Export format").selectOption("csv");
+  const exportResponse = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/v1/data-explorer/export"));
+  await click(page, "Export records");
+  const exported = await exportResponse;
+  check("saved dataset export returns CSV", exported.ok() && /csv/i.test(exported.headers()["content-type"] || ""), { status: exported.status(), contentType: exported.headers()["content-type"] });
   await page.goto(base, { waitUntil: "domcontentloaded" });
   await page.locator(".ic-shell").waitFor();
 
@@ -113,7 +114,7 @@ try {
   await click(page, "Run locally");
   const completedScenario = await waitForScenario(page, scenario.id);
   check("scenario local run reaches a terminal result", completedScenario.status.toLowerCase() === "completed" && !!completedScenario.result, { status: completedScenario.status, result: !!completedScenario.result });
-  check("dataset/scenario workflow makes no provider request", report.requests.provider.length === 0, report.requests.provider);
+  check("dataset/scenario workflow makes no provider request", report.requests.provider.length === 0, [...report.requests.provider]);
 
   // The integrated research deck must be reachable from Experiments.
   await backToShell(page); await openMore(page); await toolAt(page, 3, "Scenarios & quests");
@@ -123,6 +124,20 @@ try {
   await click(page, "New study");
   await page.getByRole("heading", { name: /Research v1/ }).waitFor();
   const researchId = await page.evaluate(async () => (await (await fetch("/api/v1/council-research")).json()).sessions[0].id);
+  // Configure, select frozen context, and advance one checkpointed scripted turn.
+  await click(page, "Open Presentation"); await page.getByLabel("Participation").selectOption("checkpoints");
+  let researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
+  await click(page, "Save presentation settings"); await researchAction; await click(page, "Back");
+  await click(page, "Next"); await click(page, "Open Frozen context");
+  researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
+  await click(page, "Select context"); await researchAction; await click(page, "Back");
+  await click(page, "Next"); await click(page, "Next"); await click(page, "Open Discussion");
+  await page.getByLabel("Saved draft").fill("Compare the frozen plan and explain the trade-off.");
+  researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
+  await click(page, "Send scripted message"); await researchAction;
+  if (await page.getByRole("button", { name: "Show next turn", exact: true }).count()) { researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`)); await click(page, "Show next turn"); await researchAction; }
+  check("research presentation, context and scripted discussion actions persist", await page.evaluate(async (id) => { const value = await (await fetch(`/api/v1/council-research/${id}`)).json(); return value.steering === "checkpoints" && value.selected_refs.length > 0 && value.messages.some((message) => /Compare the frozen plan/.test(message.text)); }, researchId));
+  await click(page, "Back");
   // Open Calculation card (index 4) and run the local planner.
   for (let i = 0; i < 4; i += 1) await click(page, "Next");
   await click(page, "Open Calculation"); await click(page, "Calculate version");
@@ -155,14 +170,20 @@ try {
   await page.getByRole("heading", { name: /Recorded revision/ }).waitFor();
   check("research append-only revision history is reachable in cards", await page.getByText(/read-only replay · zero inference/i).isVisible());
   check("research history endpoint declares zero inference", await page.evaluate(async (id) => (await (await fetch(`/api/v1/council-research/${id}/history?after=-1&limit=20`)).json()).inference_triggered === false, researchId));
-  check("full local research cycle makes no provider request", report.requests.provider.length === 0, report.requests.provider);
+  const mobileLongCardScroll = await page.evaluate(() => document.documentElement.scrollHeight > document.documentElement.clientHeight && document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1);
+  const researchProviderFixture = await page.evaluate(async (id) => (await (await fetch(`/api/v1/council-research/${id}`)).json()), researchId);
+  check("full local research cycle makes no provider request", report.requests.provider.length === 0, [...report.requests.provider]);
 
   // Explicit transport fixture: the provider is not called. It supplies one already-recorded,
   // references-verified adviser message so the V15 DOM handoff can be exercised deterministically.
+  const livePlanning = await page.evaluate(async () => { const listed = await (await fetch("/api/v1/planning-sessions")).json(); const id = listed.sessions?.[0]?.id; return id ? (await (await fetch(`/api/v1/planning-sessions/${id}`)).json()) : null; });
+  const planningFixture = { ...(livePlanning || {}), id: livePlanning?.id || "v15-fixture-planning", revision: livePlanning?.revision || 1, selected_strategy_id: livePlanning?.selected_strategy_id || livePlanning?.result?.strategies?.[0]?.id || "balanced", result: livePlanning?.result?.strategies?.length ? livePlanning.result : { strategies: [{ id: "balanced", name: "Balanced", status: "FEASIBLE", metrics: {}, allocations: [], violations: [] }] }, assumptions: livePlanning?.assumptions || { tentative_orders: [], future_demand: [], seasonal: [], order_changes: [], reservations: [] } };
   const fixtureConversation = { id: "v15-recorded-thread", title: "Recorded adviser fixture", advisor_id: "idris", status: "COMPLETED", created_at: "2026-09-17T00:00:00Z", updated_at: "2026-09-17T00:00:00Z", replay: true, last_request_status: "COMPLETED", messages: [{ id: "v15-validated-message", speaker: "advisor", speaker_name: "Idris", content: "Review this bounded labour assumption.", validation_status: "references_verified", evidence_status: "partial", proposed_actions: [{ control: "labour_percent", value: 75, unit: "percent", status: "hypothesis_only" }], fact_refs: [], rendered_facts: [] }] };
   let linkedProposalBody, linkedApplyBody;
   await page.route("**/api/v1/conversations", async (route) => route.request().method() === "GET" ? route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ conversations: [fixtureConversation] }) }) : route.continue());
   await page.route("**/api/v1/conversations/v15-recorded-thread/replay", async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(fixtureConversation) }));
+  await page.route("**/api/v1/planning-sessions", async (route) => route.request().method() === "GET" ? route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ sessions: [planningFixture] }) }) : route.continue());
+  await page.route(`**/api/v1/planning-sessions/${planningFixture.id}`, async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(planningFixture) }));
   await page.route("**/api/v1/farm-workflow/proposals", async (route) => { linkedProposalBody = route.request().postDataJSON(); await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ id: "v15-linked-proposal", session_id: linkedProposalBody.session_id, base_revision: linkedProposalBody.base_revision, proposal_revision: 1, status: "draft", selected_strategy_id: linkedProposalBody.selected_strategy_id, calculated_metrics: {}, source_conversation_id: linkedProposalBody.source_conversation_id, source_message_id: linkedProposalBody.source_message_id }) }); });
   await page.route("**/api/v1/farm-workflow/proposals/v15-linked-proposal/apply", async (route) => { linkedApplyBody = route.request().postDataJSON(); await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ id: "v15-linked-proposal", session_id: linkedProposalBody.session_id, base_revision: linkedProposalBody.base_revision, proposal_revision: 2, status: "applied", selected_strategy_id: linkedProposalBody.selected_strategy_id, calculated_metrics: {} }) }); });
   await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor();
@@ -171,14 +192,30 @@ try {
   await page.getByLabel("Saved thread").selectOption("v15-recorded-thread"); await click(page, "Open read-only replay");
   await page.getByText("Review this bounded labour assumption.", { exact: true }).waitFor();
   await page.getByLabel("Validated message").selectOption("v15-validated-message");
-  await click(page, "Create reviewed proposal"); await page.getByText("v15-linked-proposal", { exact: true }).waitFor();
+  await click(page, "Create reviewed proposal"); await page.getByRole("button", { name: "Apply reviewed proposal", exact: true }).waitFor();
   check("recorded adviser handoff preserves exact source IDs", linkedProposalBody?.source_conversation_id === "v15-recorded-thread" && linkedProposalBody?.source_message_id === "v15-validated-message", linkedProposalBody);
   const linkedApplyResponse = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith("/farm-workflow/proposals/v15-linked-proposal/apply"));
   await click(page, "Apply reviewed proposal"); await linkedApplyResponse;
   check("linked draft is applied only by the explicit footer action", linkedApplyBody?.proposal_id === "v15-linked-proposal", linkedApplyBody);
 
+  // Explicit provider-outage transport fixture: expose a completed frozen v2 result, fail the
+  // one user-submitted conversation create request, and verify the UI does not retry it.
+  const priorResult = researchProviderFixture.results.at(-1);
+  const providerResearch = { ...researchProviderFixture, numerical_calculation_status: "completed", results: researchProviderFixture.results.some((row) => row.version === researchProviderFixture.input_version) ? researchProviderFixture.results : [...researchProviderFixture.results, { ...priorResult, version: researchProviderFixture.input_version, status: "COMPLETED" }] };
+  let providerAttempts = 0;
+  await page.route("**/api/v1/council-research", async (route) => route.request().method() === "GET" ? route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ sessions: [{ id: providerResearch.id, created_at: providerResearch.created_at, concept: providerResearch.concept, input_version: providerResearch.input_version, revision: providerResearch.revision }] }) }) : route.continue());
+  await page.route(`**/api/v1/council-research/${providerResearch.id}`, async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(providerResearch) }));
+  await page.route("**/api/v1/conversations", async (route) => { if (route.request().method() !== "POST") return route.fallback(); providerAttempts += 1; await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ detail: "Fixture provider unavailable" }) }); });
+  await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor();
+  await openMore(page); await toolAt(page, 3, "Scenarios & quests"); for (let i = 0; i < 4; i += 1) await click(page, "Next"); await click(page, "Open"); await click(page, "Open research cards");
+  await click(page, "Open saved study"); for (let i = 0; i < 8; i += 1) await click(page, "Next"); await click(page, "Open Actual adviser");
+  await click(page, "Create frozen discussion"); await page.getByRole("alert").filter({ hasText: /provider unavailable/i }).waitFor();
+  await page.waitForTimeout(500);
+  check("explicit provider outage is visible and never auto-retried", providerAttempts === 1, providerAttempts);
+  check("provider outage retains the saved question draft", await page.getByLabel("Saved question draft").inputValue() !== "");
+
   check("no browser page errors", pageErrors.length === 0, pageErrors);
-  check("mobile tool cards retain vertical scrolling", await page.evaluate(() => document.documentElement.scrollHeight > document.documentElement.clientHeight && document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1));
+  check("mobile tool cards retain vertical scrolling", mobileLongCardScroll);
   await mkdir(resolve(root, "apps/web/screenshots"), { recursive: true });
   const screenshot = resolve(root, "apps/web/screenshots/v15-tools-360.png");
   await page.screenshot({ path: screenshot, fullPage: true, animations: "disabled" });

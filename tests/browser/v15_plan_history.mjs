@@ -119,7 +119,8 @@ try {
   check("saved version replay returns recorded result", await page.getByText("Read-only saved replay", { exact: true }).isVisible());
   await page.getByRole("button", { name: "Saved versions", exact: true }).click();
   await page.getByRole("button", { name: "Review time advance", exact: true }).click();
-  check("seven-day advance has explicit review", await page.getByText(/Explicitly advance seven simulated days/).isVisible());
+  await page.getByLabel("Days to advance").selectOption("7");
+  check("seven-day advance has explicit review", await page.getByText(/^Explicitly advance 7 simulated days/).isVisible());
   await page.getByRole("button", { name: "Advance seven days", exact: true }).click();
   await page.getByText("Read-only saved replay", { exact: true }).waitFor({ timeout: 120_000 });
   check("reviewed seven-day advance returns recorded state", true);
@@ -152,21 +153,23 @@ try {
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await openTool("Records & work");
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await page.getByRole("button", { name: "Review farm JSON", exact: true }).click();
   const importedFarm = JSON.parse(await readFile(resolve(root, "data/fixtures/synthetic_farm.json"), "utf8"));
   importedFarm.name = `V15 reviewed import ${Date.now()}`;
   importedFarm.version = Number(importedFarm.version || 0) + 1;
   await page.getByLabel("Farm JSON").fill(JSON.stringify({ farm: importedFarm }, null, 2));
   await page.getByRole("button", { name: "Review parsed farm", exact: true }).click();
+  await page.getByText("Review farm import", { exact: true }).waitFor();
   check("full JSON import has explicit parsed review", await page.getByText("Review farm import", { exact: true }).isVisible());
   const sessionsBeforeImport = (await api("/planning-sessions")).sessions.map(item => item.id);
-  await page.getByRole("button", { name: "Confirm validated import", exact: true }).click();
+  await page.getByRole("button", { name: "Confirm atomic import", exact: true }).click();
   let sessionsAfterImport = [];
   for (let i = 0; i < 40; i++) { sessionsAfterImport = (await api("/planning-sessions")).sessions; if (sessionsAfterImport.some(item => !sessionsBeforeImport.includes(item.id))) break; await page.waitForTimeout(250); }
   const importedSession = sessionsAfterImport.find(item => !sessionsBeforeImport.includes(item.id));
   check("confirmed import creates a fresh remembered workflow session", importedSession?.farm?.name === importedFarm.name, importedSession?.farm?.name || "missing");
   check("confirmed import retains prior sessions", sessionsAfterImport.some(item => item.id === session.id) && sessionsAfterImport.some(item => item.id === newAttempt.id));
-  check("confirmed import returns to records index", await page.getByRole("heading", { name: "Records & work", exact: true }).isVisible().catch(() => false), await page.getByRole("alert").allTextContents().then(rows => rows.join(" | ")));
+  check("confirmed import returns to farm setup card", await page.getByRole("heading", { name: "Farm setup", exact: true }).isVisible().catch(() => false), await page.getByRole("alert").allTextContents().then(rows => rows.join(" | ")));
   check("no uncaught page errors", pageErrors.length === 0, pageErrors.join(" | "));
 } catch (error) {
   report.failures.push({ name: "browser run", detail: error instanceof Error ? error.stack : String(error) });

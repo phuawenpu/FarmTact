@@ -1,6 +1,11 @@
 # Publishing immutable editions
 
-## V14 current-game publication policy
+## Current-game publication policy
+
+V15 is the private full-parity candidate. It replaces the separate introduction
+and teaching fixture with the same integrated card application at `/` and `/play`.
+V14 remains current until V15 completes its functional and release verification.
+The next unused edition is V15; always verify the registry before publication.
 
 The approved first-season UX replaces the public chooser with an animated
 introduction at `/` and the current game at `/play`. From V14 onward the active

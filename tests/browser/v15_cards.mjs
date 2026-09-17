@@ -6,6 +6,7 @@ import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs
 const root = resolve(new URL('../..', import.meta.url).pathname);
 const base = (process.env.BASE_URL || process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:4191').replace(/\/$/, '');
 const reportDir = resolve(root, 'reports/v15');
+const temporaryStorageState = '/tmp/farmtact-v15-cards-storage.json';
 const result = { status: 'RUNNING', base, checks: [], failures: [], screenshots: [], video: null, mutations: [], providerRequests: [] };
 const check = (name, pass, detail) => {
   result.checks.push({ name, pass: Boolean(pass), ...(detail === undefined ? {} : { detail }) });
@@ -34,15 +35,22 @@ function observe(page) {
 }
 
 async function open(page) {
+  let admissionFailure = null;
+  page.on('response', async response => {
+    if (/\/api\/v1\/bootstrap$/.test(new URL(response.url()).pathname) && response.status() === 429)
+      admissionFailure = { status: 429, retryAfter: response.headers()['retry-after'], body: await response.text().catch(() => '') };
+  });
   await page.goto(`${base}/play`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-  await page.locator('.ic-shell').waitFor({ timeout: 30_000 });
+  try { await page.locator('.ic-shell').waitFor({ timeout: 30_000 }); }
+  catch (error) { if (admissionFailure) throw new Error(`Bootstrap admission blocked: ${JSON.stringify(admissionFailure)}`); throw error; }
 }
 
 try {
   // Responsive read-only smoke: opening and browsing cards cannot mutate or invoke a provider.
+  const responsiveContext = await browser.newContext({ viewport: { width: 360, height: 844 }, reducedMotion: 'reduce' });
   for (const width of [360, 390, 430, 1280]) {
-    const context = await browser.newContext({ viewport: { width, height: width > 500 ? 900 : 844 }, reducedMotion: 'reduce' });
-    const page = await context.newPage();
+    const page = await responsiveContext.newPage();
+    await page.setViewportSize({ width, height: width > 500 ? 900 : 844 });
     const traffic = observe(page);
     await open(page);
     const mutationsAfterOpen = traffic.mutations.length;
@@ -53,9 +61,11 @@ try {
     check(`${width}: page has no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     const next = page.getByRole('button', { name: 'Next →' });
     if (await next.isEnabled()) await next.click();
+    const originScroll = await page.evaluate(() => scrollY);
     await page.getByRole('button', { name: 'Explain' }).click();
     check(`${width}: deterministic explanation is available`, await page.getByRole('heading', { name: 'What this means' }).isVisible());
     await page.getByRole('button', { name: 'Back', exact: true }).click();
+    check(`${width}: detail restores original action focus and scroll`, await page.evaluate(({ y }) => document.activeElement?.textContent?.trim() === 'Explain' && Math.abs(scrollY - y) <= 1, { y: originScroll }));
     await page.getByRole('button', { name: 'More', exact: true }).click();
     check(`${width}: five-card tool index`, (await page.locator('.ic-deck-nav').innerText()).includes('1 of 5'));
     check(`${width}: browsing made no mutation`, traffic.mutations.length === mutationsAfterOpen, traffic.mutations.slice(mutationsAfterOpen));
@@ -63,12 +73,17 @@ try {
     check(`${width}: reduced motion disables animation`, await page.locator('.ic-beds').evaluate(node => getComputedStyle(node).animationName === 'none'));
     check(`${width}: no browser exception`, traffic.errors.length === 0, traffic.errors);
     await shot(page, `shell-${width}`);
-    await context.close();
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'More');
+    check(`${width}: tool index restores More focus and parent card`, await page.evaluate(() => document.activeElement?.textContent?.trim() === 'More') && (await page.locator('.ic-deck-nav').innerText()).includes('Farm plan'));
+    await page.close();
   }
+  await responsiveContext.storageState({ path: temporaryStorageState });
+  await responsiveContext.close();
 
   const videoDir = resolve(reportDir, 'video');
   await mkdir(videoDir, { recursive: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, recordVideo: { dir: videoDir, size: { width: 390, height: 844 } } });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, storageState: temporaryStorageState, recordVideo: { dir: videoDir, size: { width: 390, height: 844 } } });
   const page = await context.newPage(); activePage = page;
   const traffic = observe(page);
   await open(page);
@@ -94,19 +109,15 @@ try {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
   const dismiss = page.getByRole('button', { name: 'Dismiss' });
   if (await dismiss.count()) await dismiss.click();
+  await page.waitForTimeout(1200);
 
   // Calculate if this tenant has no saved ordinary result yet.
-  for (let i = 0; i < 12; i++) {
-    if (await page.getByText('Preview—not saved', { exact: true }).count()) break;
-    const calculate = page.getByRole('button', { name: 'Calculate', exact: true });
-    if (await calculate.count()) { await calculate.click(); await page.waitForTimeout(1000); continue; }
-    const next = page.getByRole('button', { name: 'Next →' });
-    if (await next.isEnabled()) {
-      const title = await card.locator('h1').innerText();
-      await next.click();
-      await page.waitForFunction(value => document.querySelector('.ic-card h1')?.textContent !== value, title);
-    } else break;
+  const counterBeforePlan = await page.locator('.ic-deck-nav').innerText();
+  if (/1 of 1\b/.test(counterBeforePlan)) {
+    await page.locator('.ic-keys .is-primary').click();
+    await page.waitForFunction(() => /of [2-9]\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 180_000 });
   }
+  await page.getByRole('button', { name: 'Next →' }).click();
   await page.getByText('Preview—not saved', { exact: true }).waitFor({ timeout: 180_000 });
 
   // Keyboard and swipe change selection without a planning/workflow mutation.

@@ -60,3 +60,42 @@ def test_guidance_concurrent_retry_and_restart_preserve_planning_revision():
             connection.execute(delete(farms).where(farms.c.tenant_id == tenant))
             connection.execute(delete(tenants).where(tenants.c.id == tenant))
         store.engine.dispose()
+
+
+def test_farm_transition_concurrent_receipt_and_conflicting_reviews():
+    store = Store()
+    assert store.engine.dialect.name == 'postgresql'
+    tenant, token = store.new_session()
+    initial = store.save_farm(tenant, synthetic_farm().model_dump(mode='json'))
+    try:
+        with TestClient(create_app(store, start_worker=False)) as client:
+            client.cookies.set('farmtact_session', token)
+            body = {'expected_farm_version': initial['version'], 'fixture':'synthetic_demo'}
+            def send(key, version):
+                return client.post('/api/v1/planning-sessions/import',
+                    json={**body, 'expected_farm_version':version},
+                    headers={'Idempotency-Key':key})
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                responses = list(pool.map(lambda _:send('same-transition',initial['version']),range(4)))
+            assert all(r.status_code == 201 for r in responses)
+            assert all(r.json() == responses[0].json() for r in responses)
+            current = store.latest_farm(tenant)
+            assert current['version'] == initial['version'] + 1
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                responses = list(pool.map(lambda _:send(uuid4().hex,current['version']),range(4)))
+            assert [r.status_code for r in responses].count(201) == 1
+            assert [r.status_code for r in responses].count(409) == 3
+            with store.connection() as c:
+                assert c.execute(select(func.count()).select_from(SESSIONS).where(SESSIONS.c.tenant_id==tenant)).scalar_one() == 2
+            restarted = Store()
+            try:
+                assert restarted.latest_farm(tenant)['version'] == initial['version'] + 2
+            finally:
+                restarted.engine.dispose()
+    finally:
+        with store.connection(write=True) as c:
+            c.execute(delete(RECEIPTS).where(RECEIPTS.c.tenant_id==tenant))
+            c.execute(delete(SESSIONS).where(SESSIONS.c.tenant_id==tenant))
+            c.execute(delete(farms).where(farms.c.tenant_id==tenant))
+            c.execute(delete(tenants).where(tenants.c.id==tenant))
+        store.engine.dispose()

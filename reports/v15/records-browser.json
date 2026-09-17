@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-09-17T11:08:42.456Z",
+  "started_at": "2026-09-17T11:48:24.623Z",
   "base_url": "http://127.0.0.1:4194",
   "checks": [
     {
@@ -9,6 +9,21 @@
     },
     {
       "name": "integrated records tool opens",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "records uses one shared action area",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "form decision controls render outside card body",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "shared action area has at most three controls",
       "pass": true,
       "detail": ""
     },
@@ -30,7 +45,7 @@
     {
       "name": "uncertain retry reuses idempotency key",
       "pass": true,
-      "detail": "e7ce90d8 / e7ce90d8"
+      "detail": "8c3013e2 / 8c3013e2"
     },
     {
       "name": "uncertain retry creates one candidate",
@@ -40,12 +55,12 @@
     {
       "name": "new candidate appears as its own stable card",
       "pass": true,
-      "detail": "V15 browser candidate 1789643326254"
+      "detail": "V15 browser candidate 1789645708224"
     },
     {
       "name": "manual candidate requires and completes explicit confirmation",
       "pass": true,
-      "detail": "v15-browser-1789643326276"
+      "detail": "v15-browser-1789645708280"
     },
     {
       "name": "Retry-After prevents immediate network retry",
@@ -72,8 +87,8 @@
   "notes": [
     "Transport fault check deliberately returned one synthetic 503 after forwarding the real mutation to the isolated API.",
     "Admission test synthesized one 429 before allowing the unchanged draft to reach the real isolated API.",
-    "Created real task prerequisite task-0a32feaeba2c0c32941e68a9."
+    "Created real task prerequisite task-f070139166511bc8dcfc5fe2."
   ],
-  "finished_at": "2026-09-17T11:09:13.252Z",
+  "finished_at": "2026-09-17T11:48:55.636Z",
   "status": "PASSED"
 }

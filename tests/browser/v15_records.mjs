@@ -31,11 +31,17 @@ try {
   await page.getByRole("button", { name: "Open tool", exact: true }).click();
   await page.getByRole("heading", { name: "Records & work", exact: true }).waitFor();
   check("integrated records tool opens", true);
-
-  await page.getByRole("button", { name: /Open farm records/i }).click();
+  const openRecordsCategory = async () => {
+    for (let i = 0; i < 12 && !(await page.getByRole("heading", { name: "Farm records", exact: true }).isVisible().catch(() => false)); i++) await page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first().click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
+  };
+  await openRecordsCategory();
   const add = page.getByRole("button", { name: "Add candidate", exact: true });
   if (await add.count()) { await add.click(); await page.getByRole("button", { name: "Manual instead", exact: true }).click(); }
   else await page.getByRole("button", { name: "Manual record", exact: true }).click();
+  check("records uses one shared action area", await page.locator(".integrated-records > .ir-actions").count() === 1);
+  check("form decision controls render outside card body", await page.locator(".ir-card button, .ir-card a").count() === 0);
+  check("shared action area has at most three controls", await page.locator(".integrated-records > .ir-actions button:visible, .integrated-records > .ir-actions a:visible").count() <= 3);
   const description = page.getByLabel("Description (optional)");
   const draft = `v15 persistent draft ${Date.now()}`;
   await description.fill(draft);
@@ -43,7 +49,7 @@ try {
   await openTools();
   for (let attempt = 0; attempt < 7 && !(await page.getByText("Records & work", { exact: true }).isVisible().catch(() => false)); attempt++) await page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first().click();
   await page.getByRole("button", { name: "Open tool", exact: true }).click();
-  await page.getByRole("button", { name: /Open farm records/i }).click();
+  await openRecordsCategory();
   if (await add.count()) { await add.click(); await page.getByRole("button", { name: "Manual instead", exact: true }).click(); }
   else await page.getByRole("button", { name: "Manual record", exact: true }).click();
   check("manual draft survives reload", await page.getByLabel("Description (optional)").inputValue() === draft);
@@ -71,7 +77,7 @@ try {
   await openTools();
   for (let attempt = 0; attempt < 7 && !(await page.getByText("Records & work", { exact: true }).isVisible().catch(() => false)); attempt++) await page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first().click();
   await page.getByRole("button", { name: "Open tool", exact: true }).click();
-  await page.getByRole("button", { name: /Open farm records/i }).click();
+  await openRecordsCategory();
   if (await add.count()) { await add.click(); await page.getByRole("button", { name: "Manual instead", exact: true }).click(); }
   else await page.getByRole("button", { name: "Manual record", exact: true }).click();
   check("uncertain mutation draft survives reload", await page.getByLabel("Record reference").inputValue() === reference);
@@ -145,7 +151,8 @@ try {
   await openTools();
   for (let attempt = 0; attempt < 7 && !(await page.getByText("Records & work", { exact: true }).isVisible().catch(() => false)); attempt++) await page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first().click();
   await page.getByRole("button", { name: "Open tool", exact: true }).click();
-  await page.getByRole("button", { name: /Open tasks & results/i }).click();
+  for (let i = 0; i < 12 && !(await page.getByRole("heading", { name: "Tasks & results", exact: true }).isVisible().catch(() => false)); i++) await page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first().click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   const correction = page.getByRole("button", { name: "Correct record", exact: true });
   for (let attempt = 0; attempt < 50 && !(await correction.isVisible().catch(() => false)); attempt++) {
     const nextTask = page.getByRole("button", { name: /Next/ }).filter({ visible: true }).first();
@@ -155,7 +162,7 @@ try {
   if (await correction.isVisible().catch(() => false)) {
     await correction.click();
     await page.getByLabel("Reason").fill(`Browser correction ${Date.now()}`);
-    await page.getByRole("button", { name: "Review & save correction", exact: true }).click();
+    await page.getByRole("button", { name: "Save auditable correction", exact: true }).click();
     check("task correction reaches real API", await page.getByText(/event revision/i).isVisible().catch(() => false));
   } else check("real task result exposes correction workflow", false, "No task with an event revision after real API prerequisite setup.");
   check("no uncaught page errors", errors.length === 0, errors.join(" | "));
