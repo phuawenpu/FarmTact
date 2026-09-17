@@ -9,14 +9,16 @@ wastage. The farm board and adviser Council make those decisions tangible.
 Local Python calculations produce quantities and schedules; optional DeepSeek calls
 interpret frozen results. Actual planting, purchases and farm communications are disabled.
 
-**Play:** [V12 guided farmer workflow](https://farmtact.fly.dev/v12/) ·
-[previous V11](https://farmtact.fly.dev/v11/) ·
+**Play:** [V13 tactical field console](https://farmtact.fly.dev/v13/) ·
+[previous V12 guided workflow](https://farmtact.fly.dev/v12/) ·
 [active edition chooser](https://farmtact.fly.dev/)
 
-V12 is published; V11 is the retained previous edition. V1–V10 applications are retired; their
+V13 is the latest edition; V12 is retained unchanged as the previous edition.
+V1–V11 applications are retired; their
 URLs return 410 and their release history remains in Git. See the
-[V12 acceptance status](reports/v12/acceptance-status.md) and
-[retirement evidence](reports/v12/retirement.md).
+[V13 implementation evidence](reports/v13/implementation.md),
+[blind judging report](reports/v13/judging-personas.md), and
+[scripted usability report](reports/v13/scripted-usability.md).
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
@@ -25,13 +27,41 @@ URLs return 410 and their release history remains in Git. See the
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
 [V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
 
-The latest public edition is **V12**, pinned to source
-[`9fd5789`](https://github.com/phuawenpu/FarmTact/commit/9fd57898b8a4e3b69a40c3abf03895f0fcb05daf)
-and immutable image `sha256:d41111021de2b40df9bad75f1ee3c8ccaa910ee5e84584f8887dbefcf40fea56`. Only V11 and V12 run publicly.
-The guided workflow adds reviewed imports and proposals, explicit sandbox approvals,
-reported tasks and recovery planning. Numerical facts and unverified AI interpretation
-remain distinct. See the [V12 implementation report](reports/v12/implementation.md)
-and [requirement evidence](reports/v12/requirements-evidence.md).
+The release registry pins V13 to an exact Git commit and immutable container digest;
+the public edition chooser is the runtime source of truth. Only V12 and V13 run
+publicly, with separate databases, caches and progress. Numerical facts and optional
+AI interpretation remain distinct, and actual farm operations remain disabled.
+
+## V13 tactical field console
+
+V13 reorganizes the full shell around one current decision without replacing the
+farm board or numerical evidence. Mobile uses a compact card stack, normal-flow
+three-action dock, board, Council context, horizontally comparable strategies and
+Mission/Records/Crops/More navigation. Desktop keeps the card panel at roughly
+25–35% of the workspace, with the board centered and contextual Council alongside it.
+
+The opening **Heavy rainfall** card is a frozen synthetic scenario labelled
+`SIMULATION · SCENARIO ONLY`; it is not current weather and does not silently change
+the plan. **Keep grow space B3 free** maps to the real fixture entity `bed-07`.
+Reserve Space creates and applies an existing revision-bound proposal, waits for the
+persisted local CP-SAT job, highlights B3, and replaces the strategy values with the
+selected recalculated result plus signed server-derived deltas. The reservation starts
+only after the recorded crop's harvest and sanitation period.
+
+Undo is not deletion: it appends a compensating proposal and runs another calculation.
+The original event remains auditable, and intervening revisions disable a stale inverse
+with a reason. Ask Why carries a server-validated card/entity/snapshot focus. Merely
+opening the panel makes no provider call; only an explicitly submitted question may
+enter the bounded DeepSeek path. If that optional path is unavailable, the local plan
+remains usable and the interface invents no fallback dialogue.
+
+Three scripted first-use judging personas—farm manager, agent architect, and
+security/evaluation reviewer—tested fresh tenants with only the original problem
+statement and hackathon rubric. Their findings drove fixes to occupancy dates,
+feasibility, inverse recovery, duplicate activation, booked gap, strategy eligibility,
+focus validation, blocked-provider explanation and selected-strategy metric binding.
+This is AI-persona and automated evidence, not human usability research or a claim
+about real-farm outcomes.
 
 
 ## V11 guided production planning
@@ -58,6 +88,9 @@ demand unserved. Empirical model calibration and farmer validation remain open.
 
 ## What you can do
 
+- Navigate the V13 field deck by swipe, Previous/Next or arrow keys; inspect the
+  frozen scenario, reserve B3 through the real planner, compare calculated
+  consequences, ask in validated context and undo through an inverse revision.
 - Follow the guided production mission from records to schedules, Council review,
   simulated progress and comparison under changed conditions.
 - Start the guided council study, calculate a plan, reserve a bed, test an
@@ -101,6 +134,35 @@ FarmTact has three distinct Council workflows:
 3. The **guided research study** uses scripted dialogue and local numerical jobs.
    It stores private versioned inputs and never changes the main farm. An explicit
    separate direct-adviser action may interpret a completed frozen research result.
+
+## API and LLM abuse protection
+
+Request admission runs before request-body parsing, job creation or provider
+reservation. Counters are atomic PostgreSQL records and are shared across processes,
+restarts and active editions through the private control service. If admission
+storage is unavailable, protected requests fail closed with HTTP 503; over-limit
+requests return HTTP 429 with `Retry-After`.
+
+| Boundary | Current limit |
+| --- | --- |
+| Every API, per source network | 600/minute |
+| Every admitted API/application request, global | 3,000/minute |
+| Authenticated API calls, per edition/session | 900/minute |
+| Mutations, per source network | 60/minute |
+| Mutations, per edition/session | 45/minute |
+| Provider-triggering POSTs, per source network | 6/minute and 20/hour |
+| Provider-triggering POSTs, per edition/session | 12/hour |
+| New anonymous sessions | 30/hour per source network; 100/hour global |
+| Shared DeepSeek reservation | 48 calls/day; at most 16 in one reservation |
+
+Provider-triggering admission covers planning Council/review, replanning,
+conversation message/invite/Council routes, vision-backed document extraction and
+all failed or malformed attempts. The DeepSeek runtime also applies caller-specific
+request/output/wall-time budgets, a concurrency ceiling, an allowlisted origin/model,
+and no alternate-provider fallback. Numerical planning routes are local but still
+receive the ordinary API/mutation quotas. Health and fixed static assets are the only
+documented low-cost exemptions. See [security controls](docs/security.md) and the
+[provider/council boundary](docs/technical/ai-provider-and-council.md).
 
 ## How the intelligence works
 
@@ -200,8 +262,8 @@ states. See the [reproduction guide](docs/technical/reproducibility.md)
 for offline checks, generated artifacts and service prerequisites.
 
 Outside Sprite, run `.venv/bin/python scripts/serve.py` to serve the application
-on port 8080. **Inside Sprite**, register that command using `sprite-env services
-create`; follow the Sprite skill for service management. Numerical-only exploration
+on port 8080, then open `/v13/` for the tactical shell. **Inside Sprite**, register
+that command using `sprite-env services create`; follow the Sprite skill for service management. Numerical-only exploration
 does not require a DeepSeek key. Actual adviser calls require `DEEPSEEK_API_KEY`
 in the server environment (or the protected local delivery file supported by
 `serve.py`). Keep credentials out of source, frontend variables, command arguments
@@ -214,6 +276,31 @@ and logs. Key presence does not establish current model availability.
 .venv/bin/python scripts/generate_web_contracts.py --check
 npm run build --prefix apps/web
 ```
+
+V13's release gate includes generated contracts, a production TypeScript/Vite
+build, the full suite against an isolated PostgreSQL 18 database, and two browser
+layers. The deterministic responsive journey covers 360, 390, 430 and 1280 px,
+swipe versus vertical scroll, buttons, keyboard, active-card isolation, reduced
+motion, focus restoration, stale Undo, and zero inference before explicit Ask.
+The separate real-backend journey exercises PostgreSQL, the worker and local CP-SAT
+through baseline → post-sanitation B3 reservation → feasible selected-strategy
+deltas → inverse recalculation. Final evidence is preserved in
+[the V13 implementation report](reports/v13/implementation.md) and
+[`full-regression.xml`](reports/v13/full-regression.xml). The production bundle is
+601.77 kB JavaScript (172.60 kB gzip); the retained over-500 kB warning is a measured
+code-splitting item, not hidden as a pass.
+
+The final isolated PostgreSQL run passed **757 tests with one skip** in 758.42
+seconds. It emitted two test-client deprecations and one Pydantic schema warning;
+there were no failures or errors. Generated web contracts, the frontend build,
+53 focused focus/inverse/admission tests, 42 shared-control/admission tests, the
+real browser journey and the responsive browser journey all passed.
+
+The final real 390 px journey displayed 824 kg booked demand, 446 kg baseline supply
+and a 378 kg booked gap. Reserving B3 from 1 October produced three feasible options;
+the selected Balanced consequences were 442 kg coverage, 41 kg closing surplus,
+193 kg expiry exposure and SGD 2,731.1 margin. Undo restored the baseline. Those are
+synthetic fixture results, not yield forecasts or evidence of agronomic benefit.
 
 `apps/web/src/lib/types.ts` is generated from the authoritative Pydantic view
 models; edit the models and regenerate rather than hand-editing that file. Fixture
@@ -308,15 +395,16 @@ later attempts.
 ## Hosting and releases
 
 The `farmtact` app runs in Singapore on one shared 4-vCPU/4-GB Fly Machine and one
-3-GB persistent volume. The gateway and v1–v11 occupy twelve isolated containers with
-separate application databases/caches/progress; abuse and inference spending limits
-are shared. One host is a shared failure boundary. Read-only checks on 11 September
-2026 found the Machine started with 1/1 health checks passing.
+3-GB persistent volume. The gateway and active V12/V13 applications use isolated
+containers with separate databases, caches and progress; abuse and inference spending
+limits are shared. Retired release history remains immutable in Git. One host is a
+shared failure boundary, so healthy endpoints do not establish loaded capacity.
 
 Every newly published application iteration receives a new immutable edition.
 Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
-does not describe the active container topology. After V11 publication, the next
-contiguous edition is v12. See [Fly operations](docs/deployment/fly.md).
+does not describe the active container topology. After V13 publication, the next
+contiguous edition is V14; existing numbered source, image and state are never
+overwritten. See [Fly operations](docs/deployment/fly.md).
 
 Development scope and provider policy are controlled by the
 [build specification](FarmTact_Build_Specification.md),

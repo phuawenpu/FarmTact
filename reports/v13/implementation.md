@@ -45,7 +45,7 @@ write/session rules, edition-scoped to prevent cross-edition tenant collisions.
 |---|---|
 | Generated web contracts | PASS — `scripts/generate_web_contracts.py --check` |
 | Focused V13/security suites | PASS — 53 focus/inverse/admission tests plus 42 shared-control/admission tests |
-| Full isolated PostgreSQL regression | Final rerun recorded in `reports/v13/full-regression.xml` |
+| Full isolated PostgreSQL regression | PASS — 757 passed, 1 skipped, 3 dependency/model-schema warnings in 758.42 s |
 | Frontend production build | PASS — CSS 172.83 kB; JS 601.77 kB; existing over-500 kB warning retained as an optimization item |
 | Responsive browser journey | PASS — deterministic journey at 360, 390, 430, and 1280 px; swipe, buttons, keyboard, stale Undo, focus, reduced motion, and overflow |
 | Real backend browser journey | PASS — local PostgreSQL/CP-SAT baseline → Reserve → feasible result/deltas → inverse, with zero automatic provider requests |

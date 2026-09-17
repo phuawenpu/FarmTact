@@ -17,7 +17,7 @@ const beds = [
   ["bed-03", "A3", "lettuce", "ready"],
   ["bed-04", "B1", "kailan", "growing"],
   ["bed-05", "B2", null, "empty"],
-  ["bed-07", "B3", null, "empty"],
+  ["bed-07", "B3", "kailan", "growing"],
 ].map(([id, name, crop_id, stage]) => ({
   id,
   name,
@@ -54,6 +54,17 @@ const farm = {
     },
   ],
   beds,
+  batches: [{
+    id: "batch-07",
+    bed_id: "bed-07",
+    crop_id: "kailan",
+    recipe_id: "recipe-kailan",
+    sow_date: "2026-08-29",
+    transplant_date: "2026-09-07",
+    harvest_date: "2026-09-28",
+    expected_marketable_kg: 48,
+    executed: true,
+  }],
 };
 const crops = ["caixin", "pak_choi", "lettuce", "kailan"].map((id) => ({
   id,
@@ -79,6 +90,7 @@ const strategy = (id, name, metrics) => ({
     fill_rate: metrics.fill_rate,
     booked_requested_kg: 617,
     booked_delivered_kg: metrics.booked_delivered_kg,
+    booked_shortfall_kg: Math.max(0, 617 - metrics.booked_delivered_kg),
     margin_sgd: metrics.margin_sgd,
     waste_kg: metrics.waste_kg,
     harvest_kg: metrics.harvest_kg,
@@ -224,7 +236,7 @@ const session = {
       area_m2: 12.5,
       system: "sheltered_hydroponic",
       source: "Frozen planning snapshot",
-      reservation_window: { start_date: "2026-09-17", end_date: "2026-11-11" },
+      reservation_window: { start_date: "2026-10-01", end_date: "2026-11-11" },
       reservation_active: false,
       reserve_eligible: true,
       reserve_disabled_reason: null,
@@ -285,7 +297,7 @@ const proposal = {
         seasonal: [],
         order_changes: [],
         reservations: [
-          { bed_id: "bed-07", start_date: "2026-09-17", end_date: "2026-11-11" },
+          { bed_id: "bed-07", start_date: "2026-10-01", end_date: "2026-11-11" },
         ],
       },
     },

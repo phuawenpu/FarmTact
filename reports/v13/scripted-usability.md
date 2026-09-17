@@ -111,7 +111,8 @@ is scripted prototype evidence, not a human usability or accessibility result.
 
 Supporting technical results: generated web contracts passed; production frontend
 build passed with the retained 601.77 kB bundle warning; the final isolated
-PostgreSQL result is preserved in `full-regression.xml`. See
+PostgreSQL run passed 757 tests with one skip and three warnings in 758.42 seconds,
+preserved in `full-regression.xml`. See
 `reports/v13/implementation.md` for command-level scope.
 
 ## Measures for later human evaluation
