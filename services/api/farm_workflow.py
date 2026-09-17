@@ -702,6 +702,40 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
                       else round(float(value) - float(before_metrics[key]), 6))
                 for key, value in after_metrics.items()
             }
+            before_result = planning_sessions.get_result(store, tenant, item.get('result_id')) or {}
+            before_strategy = next((row for row in before_result.get('strategies', [])
+                                    if row.get('id') == item.get('selected_strategy_id')), {})
+            after_strategy = next((row for row in bound_result.get('strategies', [])
+                                   if row.get('id') == selected_id), {})
+            before_allocations = {row['id']: row for row in before_strategy.get('allocations', [])}
+            after_allocations = {row['id']: row for row in after_strategy.get('allocations', [])}
+            changed = sorted(key for key in before_allocations.keys() | after_allocations.keys()
+                             if before_allocations.get(key) != after_allocations.get(key))
+            affected = sorted({row['bed_id'] for key in changed
+                               for row in (before_allocations.get(key), after_allocations.get(key))
+                               if row and row.get('bed_id')})
+            item['explanation'] = {
+                'version': 'integrated-explanation-v1', 'outcome_basis': 'projection',
+                'what_changed': deepcopy(item.get('changes', [])),
+                'why': 'The local planner recalculated future allocations under the reviewed constraints and all modeled demand.',
+                'tradeoff': deepcopy(item['metric_deltas']),
+                'evidence': {'before_result_id': item.get('result_id'), 'after_result_id': job_id,
+                             'before_strategy_id': before_strategy.get('id'), 'after_strategy_id': after_strategy.get('id')},
+                'affected_bed_ids': affected,
+                'allocation_changes': [{'id': key, 'before': before_allocations.get(key),
+                                        'after': after_allocations.get(key)} for key in changed],
+                'next_action': 'Review the calculated schedule and current approval or inverse eligibility.',
+                'inference_triggered': False,
+            }
+            item['scene_transition'] = {
+                'event_id': f"proposal:{item['id']}:result:{job_id}",
+                'entity_ids': affected,
+                'effective_date': str(Farm.model_validate(bound_result['input_snapshot']).planning_date),
+                'before': {'allocations': list(before_allocations.values()), 'metrics': before_metrics},
+                'after': {'allocations': list(after_allocations.values()), 'metrics': after_metrics},
+                'fact_differences': deepcopy(item['metric_deltas']),
+                'outcome_basis': 'projection',
+            }
         undo = {"available": False, "reason": "Only a completed applied constraint can be undone."}
         if item.get("status") == "applied" and item.get("inverse_changes"):
             if item.get("inverse_proposal_id"):

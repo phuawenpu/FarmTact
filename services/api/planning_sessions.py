@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException, Request
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, JSON, String, Table, UniqueConstraint, select, update, func
 from packages.contracts import Farm, InventoryLot, content_hash
-from packages.planning_contracts import CreatePlanningSession, PlanningRevision, PlanningDisruption, PlanningAdvance
+from packages.planning_contracts import CreatePlanningSession, PlanningRevision, PlanningDisruption, PlanningAdvance, PlanningGuidance
 from services.api.store import metadata, now
 from services.api.numerical_worker import calculate
 
@@ -72,6 +72,7 @@ def public_session(store,tenant,session):
     from services.api.simulation import get_world,public_world
     value={k:deepcopy(v) for k,v in session.items() if not k.startswith('_')}
     value['workflow']=session.get('workflow_version')=='farmer-workflow-v1'
+    value['guidance']=deepcopy(session.get('guidance', dict(version='integrated-guidance-v1',revision=0,step='inspect',skipped=False)))
     value['result']=public_result(get_result(store,tenant,session.get('result_id')))
     value['farm']['planning_date']=str(Farm.model_validate(session['farm']).planning_date)
     world=get_world(store,tenant,session['world_id']) if session.get('world_id') else None
@@ -377,6 +378,21 @@ def register(app,tenant):
     @app.get('/api/v1/planning-sessions/{id}')
     def get(id:str,request:Request):
         t=tenant(request);return public_session(app.state.store,t,owned(t,id))
+    @app.post('/api/v1/planning-sessions/{id}/guidance')
+    def guidance(id:str,body:PlanningGuidance,request:Request):
+        t=tenant(request);store=app.state.store
+        with store.transaction(t):
+            key,digest,replay=receipt(request,t,body,'guidance:'+id)
+            if replay is not None:return replay
+            session=owned(t,id)
+            if session.get('beginner_journey') or session.get('workflow_version')!='farmer-workflow-v1':
+                raise HTTPException(409,'Guidance belongs to an ordinary sandbox workflow')
+            previous=session.get('guidance',{'revision':0})
+            if previous['revision']!=body.revision:
+                raise HTTPException(409,'Guidance changed; reload before continuing')
+            session['guidance']={**body.model_dump(), 'revision':body.revision+1}
+            save_session(store,t,session)
+            return finish(t,key,digest,session)
     @app.post('/api/v1/planning-sessions/{id}/calculate',status_code=202)
     def calculate_route(id:str,body:PlanningRevision,request:Request):
         t=tenant(request);store=app.state.store

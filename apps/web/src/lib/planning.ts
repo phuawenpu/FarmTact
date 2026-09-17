@@ -77,6 +77,7 @@ export interface PlanningResult {
   [key: string]: unknown;
 }
 export interface PlanningSession {
+  guidance?: { version: 'integrated-guidance-v1'; revision: number; step: 'inspect' | 'compare' | 'tradeoff' | 'review' | 'recalculate' | 'approve' | 'results'; skipped: boolean };
   id: string;
   revision: number;
   created_at: string;
@@ -220,6 +221,10 @@ export function rememberPlanningSession(id: string) {
 }
 
 export const planningApi = {
+  guidance: (session: PlanningSession, step: NonNullable<PlanningSession['guidance']>['step'], skipped = false) =>
+    mutationRequest<PlanningSession>(`/planning-sessions/${encodeURIComponent(session.id)}/guidance`, {
+      version: 'integrated-guidance-v1', revision: session.guidance?.revision ?? 0, step, skipped,
+    }),
   list: () => request<{ sessions: PlanningSession[] }>("/planning-sessions"),
   create: (name = "Farm production mission", workflow = false) =>
     mutationRequest<PlanningSession>("/planning-sessions", { name, workflow }),

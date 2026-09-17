@@ -1,3 +1,25 @@
+# V15 implementation — private branch
+
+User intent is the approved full-parity plan. One ordinary sandbox and its controls
+serve every experience level; the earlier separate lesson/sandbox proposal is
+superseded. Public V14 remains unchanged until all release gates pass.
+
+Ownership: root owns contracts, backend, API clients, integration, specs and release
+verification. Bounded specialists: parity owns docs/v15-capability-checklist.md;
+card_shell owns IntegratedCards.tsx/css; workflow_cards owns IntegratedRecords.tsx/css.
+No recursive delegation. Specialists requested the offered gpt-5.6-sol model.
+
+# Current specification work: V15 integrated card experience
+
+The 17 September live [animation/explanation and capability review](../reports/v14/animation-explanation-review.md)
+is complete. Its [V15 proposal](v15-integrated-card-experience.md) restores earlier
+functionality through the one-card/action-area model, uses one sandbox farm and resumable guidance and defines meaningful motion plus deterministic explanations. Implementation
+and A01–A14 acceptance are pending. The [V13 reuse map](v15-v13-reuse-map.md)
+adds exact graphical assets, workflow seams and prior-feature limitations.
+No app changes or deployment occurred in this
+review. Root owns integration/specifications; a bounded read-only specialist audited
+motion and earlier capability parity. The published release remains V14 below.
+
 # Published: V14 beginner first-season experience
 
 The approved V14 plan is [one farm, one decision, one action area](v14-implementation-plan.md).

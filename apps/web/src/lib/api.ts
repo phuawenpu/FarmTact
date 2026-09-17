@@ -102,14 +102,22 @@ const API = () => editionPath("/api/v1");
 export class ApiError extends Error {
   status: number;
   detail?: string;
-  constructor(message: string, status: number, detail?: string) {
+  retryAfterMs: number;
+  constructor(message: string, status: number, detail?: string, retryAfterMs = 0) {
     super(message);
     this.status = status;
     this.detail = detail;
+    this.retryAfterMs = retryAfterMs;
   }
 }
 
+let admissionRetryAt = 0;
+
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  if (Date.now() < admissionRetryAt) {
+    const remaining = admissionRetryAt - Date.now();
+    throw new ApiError(`Please wait ${Math.ceil(remaining / 1000)} seconds before trying again. Your draft is retained.`, 429, undefined, remaining);
+  }
   const response = await fetch(`${API()}${path}`, {
     ...init,
     headers: {
@@ -120,6 +128,10 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
     },
   });
   if (!response.ok) {
+    const retry = response.headers.get('Retry-After');
+    const retryAfterMs = retry === null ? 0 : /^\d+(\.\d+)?$/.test(retry)
+      ? Number(retry) * 1000 : Math.max(0, Date.parse(retry) - Date.now()) || 0;
+    if (response.status === 429) admissionRetryAt = Date.now() + retryAfterMs;
     let detail: string | undefined;
     try {
       const payload = (await response.json()) as { detail?: unknown };
@@ -144,6 +156,7 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
       detail || `Request failed (${response.status})`,
       response.status,
       detail,
+      retryAfterMs,
     );
   }
   return response.json() as Promise<T>;
@@ -183,8 +196,12 @@ export async function mutationRequest<T>(
   init: Omit<RequestInit, "method" | "body"> & { method?: string } = {},
   requiredKey?: string,
 ): Promise<T> {
-  const method = init.method || "POST",
-    encoded = JSON.stringify(body);
+  const method = init.method || "POST";
+  // Body-key APIs and header-key APIs must reuse the same identity after an
+  // interrupted response, even if the caller generated another ephemeral UUID.
+  const hasBodyKey = body !== null && typeof body === 'object' && 'idempotency_key' in body;
+  const identityBody = hasBodyKey ? { ...body, idempotency_key: undefined } : body;
+  const encoded = JSON.stringify(identityBody);
   const identity = mutationIdentity(method, path, encoded),
     pending = pendingMutations();
   const operation = pending[identity] || {
@@ -197,7 +214,7 @@ export async function mutationRequest<T>(
     const result = await request<T>(path, {
       ...init,
       method,
-      body: encoded,
+      body: hasBodyKey ? JSON.stringify({ ...body, idempotency_key: operation.key }) : encoded,
       headers: { ...init.headers, "Idempotency-Key": operation.key },
     });
     const current = pendingMutations();

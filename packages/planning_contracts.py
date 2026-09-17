@@ -8,6 +8,13 @@ from packages.contracts import Strict, Farm
 Crop = Literal['caixin', 'pak_choi', 'kailan', 'lettuce']
 
 
+class PlanningGuidance(Strict):
+    version: Literal['integrated-guidance-v1'] = 'integrated-guidance-v1'
+    revision: int = Field(ge=0, strict=True)
+    step: Literal['inspect', 'compare', 'tradeoff', 'review', 'recalculate', 'approve', 'results']
+    skipped: bool = False
+
+
 class DatedCrop(Strict):
     crop_id: Crop
     start_date: date
