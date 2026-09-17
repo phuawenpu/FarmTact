@@ -52,8 +52,8 @@ def test_v14_config_runs_latest_only_without_historical_upstreams():
     assert set(rows) == {'gateway', 'v14'}
     upstreams = json.loads(rows['gateway']['env']['FARMTACT_EDITION_UPSTREAMS'])
     assert set(upstreams) == {'v14'}
-    assert rows['gateway']['healthchecks'][0]['tcp'] == {'port':8080}
-    assert 'http' not in rows['gateway']['healthchecks'][0]
+    assert rows['gateway']['healthchecks'][0]['http']['headers'] == [{'name':'Fly-Client-IP','values':['127.0.0.1']}]
+    assert rows['v14']['depends_on'] == [{'name':'gateway','condition':'started'}]
     assert rows['v14']['healthchecks'][0]['http']['path'] == '/api/v1/health'
     assert config['services'][0]['checks'][0]['headers'] == [{'name':'Fly-Client-IP','values':['127.0.0.1']}]
     with pytest.raises(ValueError, match='only the latest'):
@@ -104,7 +104,7 @@ def test_ports_aliases_and_local_control_are_fixed_by_edition():
         assert containers[name]["env"]["FARMTACT_PORT"] == str(8080 + index)
         assert upstreams[name] == f"http://farmtact-local-{name}.flycast:{8080 + index}"
         assert containers[name]["env"]["FARMTACT_CONTROL_URL"] == "http://farmtact-local-control.flycast:8080"
-        assert containers[name]["depends_on"] == [{"name": "gateway", "condition": "healthy"}]
+        assert containers[name]["depends_on"] == [{"name": "gateway", "condition": "started" if index >= 14 else "healthy"}]
 
 
 @pytest.mark.parametrize("bad_id", ["v0", "v01", "v100", "../../data", "gateway"])
