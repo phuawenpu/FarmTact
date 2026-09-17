@@ -71,6 +71,21 @@ def public_session(store,tenant,session):
     value['farm']['planning_date']=str(Farm.model_validate(session['farm']).planning_date)
     world=get_world(store,tenant,session['world_id']) if session.get('world_id') else None
     value['simulation']=public_world(world) if world else None
+    farm = Farm.model_validate(session['farm'])
+    target = next((bed for bed in farm.beds if bed.id == 'bed-07'), None)
+    value['tactical_context'] = {
+        'version': 'v13-tactical-prototype-v1',
+        'planning_snapshot': {'session_id': session['id'], 'result_id': session.get('result_id'),
+                              'input_hash': session.get('input_hash'), 'revision': session['revision']},
+        'scenario': {'id': 'synthetic-heavy-rainfall-v1', 'entity_kind': 'scenario',
+                     'title': 'Heavy rainfall', 'label': 'SIMULATION · SCENARIO ONLY',
+                     'source': 'Frozen synthetic seasonal record', 'execution_mode': 'simulation',
+                     'inference_triggered': False},
+        'grow_space': ({'id': target.id, 'entity_kind': 'grow_space',
+                        'title': f'Keep grow space {target.name} free', 'name': target.name,
+                        'area_m2': float(target.area_m2), 'system': target.system,
+                        'source': 'Frozen planning snapshot'} if target else None),
+    }
     return value
 
 

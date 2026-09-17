@@ -23,7 +23,7 @@ from sqlalchemy import LargeBinary, Column, ForeignKey, ForeignKeyConstraint, In
 
 from packages.contracts import Farm, Strict, content_hash
 from packages.ingestion.financial import FinancialDataConnector, FinancialImport
-from packages.workflow_contracts import ApplyProposalRequest, ApproveActionsRequest, CorrectionRequest, ReviewImportRequest, TaskResultRequest
+from packages.workflow_contracts import ApplyProposalRequest, ApproveActionsRequest, CorrectionRequest, InverseProposalRequest, ReviewImportRequest, TaskResultRequest
 from services.api.store import metadata, now
 
 
@@ -329,8 +329,10 @@ def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id:
                     raise ValueError("Only confirmed planning-eligible records can support a proposal")
                 sources.append({"candidate_id": candidate_id, "source_sha256": candidate.get("source_sha256") or candidate.get("sha256"),
                                 "source_kind": candidate.get("source_kind"), "provenance": candidate.get("provenance", {})})
+        prior_assumptions = deepcopy(session.get("assumptions") or {})
         proposal = {"id": secrets.token_hex(16), "tenant_id": tenant, "session_id": session_id,
             "base_revision": base_revision, "proposal_revision": 1, "status": "draft", "changes": deepcopy(changes),
+            "inverse_changes": [{"kind": "planning_assumptions", "assumptions": prior_assumptions}],
             "session_input_hash": session.get("input_hash"), "result_id": session.get("result_id"),
             "result_hash": content_hash(result), "calculated_metrics": calculated_metrics(result, session.get("selected_strategy_id")),
             "selected_strategy_id": selected_strategy_id or session.get("selected_strategy_id"),
@@ -364,6 +366,68 @@ def apply_proposal(store, tenant: str, proposal_id: str, *, adapter: PlanningAda
             c.execute(update(PROPOSALS).where(PROPOSALS.c.id == proposal_id, PROPOSALS.c.tenant_id == tenant).values(status="applied", payload=proposal))
         append_event(store, tenant, proposal_id, "proposal_applied_recalculation_queued", {"job_id": job.get("id"), "proposal_revision": proposal["proposal_revision"]})
         return proposal
+    return _receipt(store, tenant, idempotency_key, request, create)[0]
+
+
+@_atomic_mutation
+def apply_inverse_proposal(store, tenant: str, proposal_id: str, *, adapter: PlanningAdapter,
+                           proposal_revision: int, expected_session_revision: int,
+                           idempotency_key: str) -> dict[str, Any]:
+    """Append and apply a revision-bound inverse without rewriting the original event."""
+    request = {"proposal_id": proposal_id, "proposal_revision": proposal_revision,
+               "expected_session_revision": expected_session_revision}
+
+    def create():
+        with store.connection() as c:
+            original = c.execute(select(PROPOSALS.c.payload).where(
+                PROPOSALS.c.id == proposal_id, PROPOSALS.c.tenant_id == tenant
+            )).scalar_one_or_none()
+        if not original:
+            raise ValueError("Proposal not found")
+        if original.get("status") != "applied" or original.get("proposal_revision") != proposal_revision:
+            raise ValueError("Only the current applied proposal revision can be undone")
+        if original.get("inverse_proposal_id"):
+            raise ValueError("Undo was already submitted for this proposal")
+        inverse_changes = original.get("inverse_changes")
+        if not inverse_changes:
+            raise ValueError("This proposal has no auditable inverse")
+        session = adapter.get_session(store, tenant, original["session_id"])
+        job_id = original.get("recalculation_job", {}).get("id")
+        completed_revision = original.get("applied_session_revision", -2) + 1
+        if (not session or session.get("revision") != expected_session_revision
+                or expected_session_revision != completed_revision
+                or session.get("status") != "COMPLETED" or session.get("result_id") != job_id):
+            raise ValueError("Undo is stale because the planning revision changed")
+        current_result = adapter.get_result(store, tenant, session.get("result_id"))
+        if not current_result:
+            raise ValueError("Current recalculation result not found")
+        inverse = {
+            "id": secrets.token_hex(16), "tenant_id": tenant, "session_id": session["id"],
+            "base_revision": session["revision"], "proposal_revision": 2, "status": "applied",
+            "changes": deepcopy(inverse_changes), "inverse_changes": [],
+            "inverse_of_proposal_id": original["id"], "session_input_hash": session.get("input_hash"),
+            "result_id": session.get("result_id"), "result_hash": content_hash(current_result),
+            "calculated_metrics": calculated_metrics(current_result, session.get("selected_strategy_id")),
+            "selected_strategy_id": original.get("selected_strategy_id") or session.get("selected_strategy_id"),
+            "source_candidates": [], "source_conversation": None, "created_at": now(),
+            "updated_at": now(), "version": VERSION,
+        }
+        job = adapter.queue_recalculation(store, tenant, session, deepcopy(inverse_changes))
+        inverse.update(applied_session_revision=session["revision"], applied_input_hash=session.get("input_hash"),
+                       recalculation_job=job)
+        original.update(inverse_proposal_id=inverse["id"], inverse_submitted_at=now(), updated_at=now())
+        with store.connection(write=True) as c:
+            c.execute(PROPOSALS.insert().values(id=inverse["id"], tenant_id=tenant,
+                session_id=inverse["session_id"], status="applied", payload=inverse))
+            c.execute(update(PROPOSALS).where(PROPOSALS.c.id == original["id"],
+                PROPOSALS.c.tenant_id == tenant).values(payload=original))
+        append_event(store, tenant, original["id"], "inverse_proposal_submitted",
+                     {"inverse_proposal_id": inverse["id"], "job_id": job.get("id"),
+                      "base_revision": inverse["base_revision"]})
+        append_event(store, tenant, inverse["id"], "inverse_proposal_applied_recalculation_queued",
+                     {"inverse_of_proposal_id": original["id"], "job_id": job.get("id")})
+        return inverse
+
     return _receipt(store, tenant, idempotency_key, request, create)[0]
 
 
@@ -604,8 +668,29 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
     if any(x["status"] == "approved" for x in proposals): phase = "acting"
     if tasks and all(x["status"] == "completed" for x in tasks): phase = "verification"
     if any(x["status"] == "recovery_required" for x in tasks): phase = "replanning"
+    from services.api import planning_sessions
+    visible_proposals = []
+    for proposal in proposals:
+        item = deepcopy(proposal)
+        undo = {"available": False, "reason": "Only a completed applied constraint can be undone."}
+        if item.get("status") == "applied" and item.get("inverse_changes"):
+            if item.get("inverse_proposal_id"):
+                undo = {"available": False, "reason": "Undo has already been submitted."}
+            else:
+                session = planning_sessions.get_session(store, tenant, item["session_id"])
+                job_id = item.get("recalculation_job", {}).get("id")
+                expected_revision = item.get("applied_session_revision", -2) + 1
+                if session and session.get("status") in {"QUEUED", "RUNNING"} and session.get("job", {}).get("id") == job_id:
+                    undo = {"available": False, "reason": "Wait for recalculation to finish."}
+                elif (session and session.get("status") == "COMPLETED" and session.get("result_id") == job_id
+                      and session.get("revision") == expected_revision):
+                    undo = {"available": True, "reason": None, "expected_session_revision": session["revision"]}
+                else:
+                    undo = {"available": False, "reason": "Undo is stale because the planning revision changed."}
+        item["undo"] = undo
+        visible_proposals.append(item)
     return {"version": VERSION, "phase": phase, "revision": len(events), "inbox": imports,
-            "proposals": proposals, "tasks": tasks, "events": events, "real_operations_enabled": False}
+            "proposals": visible_proposals, "tasks": tasks, "events": events, "real_operations_enabled": False}
 
 
 def waste_rescue_scenarios(*, quantity_kg: Any, expires_on: date, today: date,
@@ -774,6 +859,16 @@ def register(app, tenant):
         if body.proposal_id != proposal_id: raise HTTPException(422, "Proposal path/body mismatch")
         try: return apply_proposal(app.state.store, tenant(request), proposal_id, adapter=adapter,
                                    expected_base_revision=body.expected_base_revision, idempotency_key=body.idempotency_key)
+        except ValueError as exc: _http_error(exc)
+
+    @app.post("/api/v1/farm-workflow/proposals/{proposal_id}/inverse", status_code=202)
+    def inverse(proposal_id: str, body: InverseProposalRequest, request: Request):
+        if body.proposal_id != proposal_id: raise HTTPException(422, "Proposal path/body mismatch")
+        try:
+            return apply_inverse_proposal(app.state.store, tenant(request), proposal_id, adapter=adapter,
+                proposal_revision=body.proposal_revision,
+                expected_session_revision=body.expected_session_revision,
+                idempotency_key=body.idempotency_key)
         except ValueError as exc: _http_error(exc)
 
     @app.post("/api/v1/farm-workflow/proposals/{proposal_id}/approve-actions")

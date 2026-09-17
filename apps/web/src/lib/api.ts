@@ -266,6 +266,11 @@ export const api = {
     snapshot_kind: "farm" | "scenario" | "planning";
     snapshot_id?: string;
     selected_bed_id?: string;
+    focus?: {
+      card_id: string;
+      entity_kind: string;
+      entity_id: string;
+    };
   }) =>
     mutationRequest<{ id: string; status: string; reused?: boolean }>(
       "/conversations",

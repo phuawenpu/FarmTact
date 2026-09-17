@@ -93,6 +93,33 @@ export interface PlanningSession {
   job?: PlanningJob | null;
   history?: Array<Record<string, unknown>>;
   data_mode: "synthetic_demo";
+  tactical_context?: {
+    version: string;
+    planning_snapshot: {
+      session_id: string;
+      result_id?: string | null;
+      input_hash: string;
+      revision: number;
+    };
+    scenario: {
+      id: string;
+      entity_kind: "scenario";
+      title: string;
+      label: string;
+      source: string;
+      execution_mode: "simulation";
+      inference_triggered: false;
+    };
+    grow_space?: {
+      id: string;
+      entity_kind: "grow_space";
+      title: string;
+      name: string;
+      area_m2: number;
+      system: string;
+      source: string;
+    } | null;
+  };
   [key: string]: unknown;
 }
 
@@ -105,6 +132,13 @@ export interface FarmerProposal {
   selected_strategy_id?: string;
   calculated_metrics: Record<string, number | null>;
   recalculation_job?: { id?: string; status?: string };
+  inverse_of_proposal_id?: string;
+  inverse_proposal_id?: string;
+  undo?: {
+    available: boolean;
+    reason?: string | null;
+    expected_session_revision?: number;
+  };
   [key: string]: unknown;
 }
 export interface FarmerTask {
@@ -258,6 +292,16 @@ export const farmerWorkflowApi = {
       {
         proposal_id: proposal.id,
         expected_base_revision: proposal.base_revision,
+        idempotency_key: crypto.randomUUID(),
+      },
+    ),
+  inverseProposal: (proposal: FarmerProposal) =>
+    mutationRequest<FarmerProposal>(
+      `/farm-workflow/proposals/${encodeURIComponent(proposal.id)}/inverse`,
+      {
+        proposal_id: proposal.id,
+        proposal_revision: proposal.proposal_revision,
+        expected_session_revision: proposal.undo?.expected_session_revision,
         idempotency_key: crypto.randomUUID(),
       },
     ),

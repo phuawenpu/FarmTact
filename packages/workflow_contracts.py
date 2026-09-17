@@ -46,6 +46,12 @@ class ApplyProposalRequest(Strict):
     expected_base_revision: int = Field(ge=0,strict=True)
     idempotency_key: str = Field(min_length=1,max_length=128)
 
+class InverseProposalRequest(Strict):
+    proposal_id: str = Field(min_length=1,max_length=100)
+    proposal_revision: int = Field(ge=1,strict=True)
+    expected_session_revision: int = Field(ge=0,strict=True)
+    idempotency_key: str = Field(min_length=1,max_length=128)
+
 class ApproveActionsRequest(Strict):
     proposal_id: str = Field(min_length=1,max_length=100)
     proposal_revision: int = Field(ge=1,strict=True)
