@@ -1,3 +1,14 @@
+## V14 first-season amendment — 17 September 2026
+
+The approved scope in docs/v14-implementation-plan.md supersedes public edition
+choosers and dashboard navigation. `/` teaches the interaction using clearly labelled
+illustrative animation; `/play` starts or resumes the isolated beginner season.
+One noninteractive 2.5D farm, one contextual card and one consistent action area are
+the entire beginner interaction. Server-owned, revision-bound journey progress wraps
+the existing local numerical planner and saved simulation ledger. Older public
+workers are retired after cutover; immutable history and recoverable state are
+retained privately. All API/provider abuse gates and disabled real operations remain.
+
 ## V12 implementation amendment — 16 September 2026
 
 Final audit contracts: functional Council V4 requires crop composition evidence

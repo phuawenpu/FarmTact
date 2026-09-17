@@ -1,4 +1,9 @@
-Current release, 16 September 2026: V12 is published from source 9fd5789;
+Current work, 17 September 2026: V13 is published; implement V14 on
+`feature/v14-first-season` per docs/v14-implementation-plan.md. The latest user scope
+supersedes public edition navigation and dashboard-first interaction. Preserve
+immutable historical releases and recoverable state; expose one current game.
+
+Historical release, 16 September 2026: V12 is published from source 9fd5789;
 V11 is the retained previous edition. V1–V10 workers/storage are retired, while
 immutable release history remains. Read reports/v12/implementation.md,
 reports/v12/acceptance-status.md and reports/v12/requirements-evidence.md before

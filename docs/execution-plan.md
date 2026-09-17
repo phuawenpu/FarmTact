@@ -1,4 +1,12 @@
-# Active work: unpublished V13 tactical-card prototype
+# Active work: V14 beginner first-season experience
+
+The approved V14 plan is [one farm, one decision, one action area](v14-implementation-plan.md).
+V13 is published and immutable. V14 introduces an animated public introduction,
+unversioned current-game routing, isolated teaching season and latest-only public
+access. Historical release records and recoverable state are preserved privately.
+The ownership map, interaction boundaries and acceptance checks are in that plan.
+
+## Historical V13 kickoff
 
 V12 remains immutable and published. V13 is being developed only on
 `feature/v13-tactical-cards`; it is not published. See

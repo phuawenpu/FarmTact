@@ -1,4 +1,9 @@
-Current release, 16 September 2026: V12 is published from source 9fd5789;
+Current work, 17 September 2026: V13 is published; V14 follows
+docs/v14-implementation-plan.md. The master owns integration and shared contracts;
+three existing specialists own backend, UI and gateway packages. Public UX has one
+animated introduction and one card-driven game, with private release history.
+
+Historical release, 16 September 2026: V12 is published from source 9fd5789;
 V11 is the retained previous edition. V1–V10 workers/storage are retired, while
 immutable release history remains. Read reports/v12/implementation.md,
 reports/v12/acceptance-status.md and reports/v12/requirements-evidence.md before

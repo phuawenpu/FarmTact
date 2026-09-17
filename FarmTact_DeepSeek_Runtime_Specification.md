@@ -1,3 +1,12 @@
+## V14 first-season amendment — 17 September 2026
+
+The introduction and full beginner season require zero provider calls. Guide tips
+are authored teaching content; numerical explanations come from frozen server facts.
+Optional adviser submission retains validated snapshot/entity focus, explicit action,
+the allowlisted DeepSeek gateway and all durable shared/IP/tenant limits. No new
+journey action may bypass admission or silently request inference. Provider outages
+never prevent season completion. Retirement preserves shared abuse counters/budgets.
+
 ## V12 implementation amendment — 16 September 2026
 
 Final guided Council contract: prompt/validator/functional V4, output schema V3,
