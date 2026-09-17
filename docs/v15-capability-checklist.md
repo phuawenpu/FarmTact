@@ -69,7 +69,7 @@ approval and recorded consequences with zero provider requests.
 `plan-recovery-browser.json` (five checks) adds a labelled post-response interruption
 fixture for cancellation and stable-key retry. Server inverse staleness/tenant
 rejection and append-only history are exercised by
-`test_v13_inverse_proposal.py` in the 791-pass PostgreSQL regression. The remaining unchecked
+`test_v13_inverse_proposal.py` in the 792-pass PostgreSQL regression. The remaining unchecked
 rows still require their full listed field/validation coverage to be audited.
 `plan-history-gaps-browser.json` adds seven passing real-service assertions: full
 confirmed totals and tentative/horizon labels, demand-edit review, rejection of

@@ -90,8 +90,31 @@ function isReservationOnly(proposal: FarmerProposal, session: PlanningSession, b
   return Boolean(reservation && JSON.stringify(reservation) !== JSON.stringify(previous ?? null));
 }
 
+function reservationChangeText(proposal: FarmerProposal) {
+  type AssumptionChange = { kind?: string; assumptions?: FarmerAssumptions };
+  const changes = Array.isArray(proposal.changes) ? proposal.changes as AssumptionChange[] : [];
+  const inverse = Array.isArray(proposal.inverse_changes) ? proposal.inverse_changes as AssumptionChange[] : [];
+  if (changes.length !== 1 || inverse.length !== 1 || changes[0].kind !== "planning_assumptions" || inverse[0].kind !== "planning_assumptions") return undefined;
+  const before = inverse[0].assumptions, after = changes[0].assumptions;
+  if (!before || !after) return undefined;
+  const unchanged = ["tentative_orders", "future_demand", "seasonal", "order_changes"] as const;
+  if (unchanged.some((key) => JSON.stringify(before[key] || []) !== JSON.stringify(after[key] || []))) return undefined;
+  if (JSON.stringify(before.capacity ?? null) !== JSON.stringify(after.capacity ?? null)) return undefined;
+  const beforeRows = new Map((before.reservations || []).map((row) => [row.bed_id, row]));
+  const afterRows = new Map((after.reservations || []).map((row) => [row.bed_id, row]));
+  const changedBeds = [...new Set([...beforeRows.keys(), ...afterRows.keys()])]
+    .filter((id) => JSON.stringify(beforeRows.get(id) ?? null) !== JSON.stringify(afterRows.get(id) ?? null));
+  if (changedBeds.length !== 1) return undefined;
+  const bedId = changedBeds[0], previous = beforeRows.get(bedId), saved = afterRows.get(bedId);
+  if (saved && !previous) return `Saved reservation for ${bedId} from ${saved.start_date} to ${saved.end_date}.`;
+  if (!saved && previous) return `Restored ${bedId} by removing the saved reservation from ${previous.start_date} to ${previous.end_date}.`;
+  if (saved && previous) return `Updated reservation for ${bedId} from ${previous.start_date}–${previous.end_date} to ${saved.start_date}–${saved.end_date}.`;
+  return undefined;
+}
+
 function newerSession(current: PlanningSession | null, next: PlanningSession) {
   if (!current) return next;
+  if (current.id !== next.id) return next;
   if (next.revision !== current.revision) return next.revision > current.revision ? next : current;
   return next.updated_at >= current.updated_at ? next : current;
 }
@@ -112,7 +135,9 @@ export default function IntegratedCards({
   const [workflow, setWorkflow] = useState<FarmerWorkflowState>(emptyWorkflow);
   const [surface, setSurface] = useState<Surface>("mission");
   const [index, setIndex] = useState(0);
-  const [busy, setBusy] = useState("");
+  const [loadingBusy, setLoadingBusy] = useState("");
+  const [mutationBusy, setMutationBusy] = useState("");
+  const [guidanceBusy, setGuidanceBusy] = useState("");
   const [error, setError] = useState("");
   const [reviewProposal, setReviewProposal] = useState<FarmerProposal | null>(null);
   const [reviewInverse, setReviewInverse] = useState<FarmerProposal | null>(null);
@@ -121,7 +146,10 @@ export default function IntegratedCards({
   const [reducedMotion, setReducedMotion] = useState(false);
   const pointerStart = useRef<number | null>(null);
   const mutation = useRef(false);
+  const guidanceInFlight = useRef(false);
   const loadInFlight = useRef(false);
+  const loadQueued = useRef(false);
+  const loadGeneration = useRef(0);
   const cardRef = useRef<HTMLElement>(null);
   const missionIndex = useRef(0);
   const missionScroll = useRef(0);
@@ -131,47 +159,97 @@ export default function IntegratedCards({
   const navigationReady = useRef(false);
   const resumedSession = useRef("");
   const transitionReady = useRef(false);
+  const pollGeneration = useRef(0);
+  const dataGeneration = useRef(0);
+  const selectedSession = useRef("");
+  const busy = mutationBusy || guidanceBusy || loadingBusy;
 
   const refreshWorkflow = useCallback(async () => {
+    const generation = ++dataGeneration.current;
     const value = await farmerWorkflowApi.state();
-    setWorkflow({ ...emptyWorkflow, ...value });
+    if (generation === dataGeneration.current) setWorkflow({ ...emptyWorkflow, ...value });
     return value;
   }, []);
 
+  const reconcileSession = useCallback(async (id: string, received?: PlanningSession, stillCurrent: () => boolean = () => true) => {
+    if (selectedSession.current && selectedSession.current !== id) return null;
+    const generation = ++dataGeneration.current;
+    const next = received || await planningApi.get(id);
+    const state = await farmerWorkflowApi.state();
+    if (generation !== dataGeneration.current || selectedSession.current !== id || !stillCurrent()) return null;
+    // React batches these updates. A terminal result therefore cannot render
+    // against proposal/explanation facts from an older workflow receipt.
+    setWorkflow({ ...emptyWorkflow, ...state });
+    setSession((current) => newerSession(current, next));
+    return next;
+  }, []);
+
   const load = useCallback(async () => {
-    if (loadInFlight.current) return;
+    if (loadInFlight.current) {
+      loadQueued.current = true;
+      ++loadGeneration.current; ++dataGeneration.current; ++pollGeneration.current;
+      const intended = rememberedPlanningSession();
+      if (intended) selectedSession.current = intended;
+      return;
+    }
     loadInFlight.current = true;
-    setBusy("Opening sandbox farm");
+    setLoadingBusy("Opening sandbox farm");
     try {
-      // Bootstrap establishes the tenant before any tenant-bound planning request.
-      const farm = await api.bootstrap();
-      const listed = await planningApi.list();
-      let current: PlanningSession | undefined;
-      const remembered = rememberedPlanningSession();
-      if (remembered) {
+      do {
+        loadQueued.current = false;
+        ++pollGeneration.current;
+        const dataOwner = ++dataGeneration.current, generation = ++loadGeneration.current;
+        const intended = rememberedPlanningSession();
+        if (intended) selectedSession.current = intended;
         try {
-          const candidate = await planningApi.get(remembered);
-          if (candidate.workflow === true) current = candidate;
-        } catch { /* stale local pointer; choose an ordinary workflow below */ }
-      }
-      current ||= listed.sessions.find((item) => item.workflow === true);
-      if (!current) current = await planningApi.create("Integrated farm plan", true);
-      rememberPlanningSession(current.id);
-      setBootstrap(farm); setSession(current);
-      const state = await refreshWorkflow();
-      const proposals = state.proposals.filter((item) => item.session_id === current.id);
-      const growSpaceId = current.tactical_context?.grow_space?.id;
-      const reservationDraft = growSpaceId
-        ? [...proposals].reverse().find((item) => item.status === "draft" && isReservationOnly(item, current, growSpaceId))
-        : undefined;
-      // A saved reservation draft remains available from its mission card. Other
-      // Plan proposals belong to Plan and must never replace tool navigation or
-      // inherit the reservation review copy/action.
-      setReviewProposal(reservationDraft || null); setDetail(null);
-    } catch (caught) {
-      setError(message(caught, "The sandbox farm could not be opened."));
-    } finally { setBusy(""); loadInFlight.current = false; }
-  }, [refreshWorkflow]);
+          // Bootstrap establishes the tenant before any tenant-bound planning request.
+          const farm = await api.bootstrap();
+          const listed = await planningApi.list();
+          let current: PlanningSession | undefined;
+          if (intended) {
+            try {
+              const candidate = await planningApi.get(intended);
+              if (candidate.workflow === true) current = candidate;
+            } catch (caught) {
+              if (!(caught instanceof ApiError) || caught.status !== 404) throw caught;
+              /* stale local pointer; choose an ordinary workflow below */
+            }
+          }
+          if (rememberedPlanningSession() !== intended) {
+            loadQueued.current = true; ++loadGeneration.current; ++dataGeneration.current; continue;
+          }
+          current ||= listed.sessions.find((item) => item.workflow === true);
+          if (!current) current = await planningApi.create("Integrated farm plan", true);
+          if (generation !== loadGeneration.current || dataOwner !== dataGeneration.current || rememberedPlanningSession() !== intended) {
+            if (rememberedPlanningSession() !== intended) loadQueued.current = true;
+            continue;
+          }
+          selectedSession.current = current.id;
+          const state = await farmerWorkflowApi.state();
+          if (generation !== loadGeneration.current || dataOwner !== dataGeneration.current || selectedSession.current !== current.id || rememberedPlanningSession() !== intended) {
+            if (rememberedPlanningSession() !== intended) {
+              loadQueued.current = true; ++loadGeneration.current; ++dataGeneration.current;
+              const latest = rememberedPlanningSession();
+              if (latest) selectedSession.current = latest;
+            }
+            continue;
+          }
+          rememberPlanningSession(current.id);
+          setWorkflow({ ...emptyWorkflow, ...state });
+          setBootstrap(farm); setSession((existing) => newerSession(existing, current));
+          const proposals = state.proposals.filter((item) => item.session_id === current.id);
+          const growSpaceId = current.tactical_context?.grow_space?.id;
+          const reservationDraft = growSpaceId
+            ? [...proposals].reverse().find((item) => item.status === "draft" && isReservationOnly(item, current, growSpaceId))
+            : undefined;
+          setReviewProposal(reservationDraft || null); setDetail(null); setError("");
+        } catch (caught) {
+          if (generation === loadGeneration.current && dataOwner === dataGeneration.current)
+            setError(message(caught, "The sandbox farm could not be opened."));
+        }
+      } while (loadQueued.current);
+    } finally { setLoadingBusy(""); loadInFlight.current = false; }
+  }, []);
 
   useEffect(() => { void load(); }, [load]);
   useEffect(() => {
@@ -212,17 +290,34 @@ export default function IntegratedCards({
     try { localStorage.setItem(editionStorageKey(`integrated-cards-navigation:${session.id}`), JSON.stringify({ surface, index, missionIndex: missionIndex.current, missionScroll: missionScroll.current, directTool: directTool.current, origin: origin.current, missionOrigin: missionOrigin.current })); } catch { /* optional */ }
   }, [session?.id, surface, index, detail]);
   useEffect(() => {
+    if (loadingBusy) return;
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status)) return;
-    const timer = window.setInterval(() => {
-      void planningApi.get(session.id).then(async (next) => {
-        setSession((current) => newerSession(current, next));
+    let cancelled = false, timer = 0;
+    const generation = ++pollGeneration.current;
+    const poll = async () => {
+      try {
+        const next = await planningApi.get(session.id);
+        if (cancelled || generation !== pollGeneration.current || selectedSession.current !== session.id) return;
         if (!["QUEUED", "RUNNING"].includes(next.job?.status || "")) {
-          setBusy(""); await refreshWorkflow();
+          // Fetch the workflow after the terminal session receipt. Publish both
+          // together so the result never renders against an older proposal list.
+          const reconciled = await reconcileSession(session.id, next,
+            () => !cancelled && generation === pollGeneration.current && selectedSession.current === session.id);
+          if (!reconciled && !cancelled && generation === pollGeneration.current && selectedSession.current === session.id)
+            timer = window.setTimeout(() => { void poll(); }, 1600);
+          return;
         }
-      }).catch((caught) => setError(message(caught, "The calculation status could not be refreshed.")));
-    }, 1600);
-    return () => window.clearInterval(timer);
-  }, [session?.id, session?.job?.id, session?.job?.status, refreshWorkflow]);
+        setSession((current) => newerSession(current, next));
+        timer = window.setTimeout(() => { void poll(); }, 1600);
+      } catch (caught) {
+        if (cancelled || generation !== pollGeneration.current) return;
+        setError(message(caught, "The calculation status could not be refreshed."));
+        timer = window.setTimeout(() => { void poll(); }, 1600);
+      }
+    };
+    timer = window.setTimeout(() => { void poll(); }, 1600);
+    return () => { cancelled = true; ++pollGeneration.current; window.clearTimeout(timer); };
+  }, [session?.id, session?.job?.id, session?.job?.status, loadingBusy, reconcileSession]);
 
   const tactical = session?.tactical_context;
   const grow = tactical?.grow_space;
@@ -320,51 +415,65 @@ export default function IntegratedCards({
   };
   const run = async (label: string, operation: () => Promise<void>) => {
     if (mutation.current) return;
-    mutation.current = true; setBusy(label); setError("");
+    mutation.current = true; setMutationBusy(label); setError("");
     try { await operation(); }
     catch (caught) {
       if (caught instanceof ApiError && caught.status === 409 && session) {
-        try { setSession(await planningApi.get(session.id)); await refreshWorkflow(); } catch { /* retain original stale error */ }
+        try { await reconcileSession(session.id); } catch { /* retain original stale error */ }
         setError(`${caught.message}. Current saved state was refreshed; review it before trying again.`);
       } else setError(message(caught, `${label} failed. Your current review remains open.`));
     }
-    finally { mutation.current = false; setBusy(""); }
+    finally { mutation.current = false; setMutationBusy(""); }
   };
 
   const guide = async (step: NonNullable<PlanningSession["guidance"]>["step"], skipped = false) => {
-    if (!session) return;
+    if (!session || guidanceInFlight.current) return;
+    const actionSessionId = session.id;
+    guidanceInFlight.current = true; setGuidanceBusy("Saving guide progress");
     try {
       await planningApi.guidance(session, step, skipped);
+      if (selectedSession.current !== actionSessionId) return;
       // Reconcile after a possibly replayed receipt so an older snapshot cannot replace the bound result/job.
-      const next = await planningApi.get(session.id);
-      setSession((current) => newerSession(current, next));
+      await reconcileSession(actionSessionId);
     }
     catch (caught) { setError(message(caught, "Guide progress was not saved; the planning record is unchanged.")); }
+    finally { guidanceInFlight.current = false; setGuidanceBusy(""); }
   };
 
   const calculate = () => session && run("Calculating three plans", async () => {
-    setSession(await planningApi.calculate(session.id, session.revision));
+    const actionSessionId = session.id;
+    const next = await planningApi.calculate(actionSessionId, session.revision);
+    if (selectedSession.current !== actionSessionId) return;
+    setSession((current) => newerSession(current, next));
     await guide("compare");
   });
   const propose = () => session && grow && chosen && run("Preparing reservation review", async () => {
+    const actionSessionId = session.id;
     const next = assumptionsFor(session);
     next.reservations = [...next.reservations.filter((row) => row.bed_id !== grow.id),
       { bed_id: grow.id, ...grow.reservation_window }];
     const proposal = await farmerWorkflowApi.createProposal(session, chosen.id, next);
+    if (selectedSession.current !== actionSessionId) return;
     setReviewProposal(proposal); setDetail("review"); await refreshWorkflow(); await guide("review");
   });
   const apply = () => reviewProposal && session && run("Applying and recalculating", async () => {
+    const actionSessionId = session.id;
     await farmerWorkflowApi.applyProposal(reviewProposal);
-    setReviewProposal(null); setDetail(null); setSession(await planningApi.get(session.id)); await refreshWorkflow(); await guide("recalculate");
+    if (selectedSession.current !== actionSessionId) return;
+    setReviewProposal(null); setDetail(null); await reconcileSession(actionSessionId); await guide("recalculate");
   });
   const approve = () => applied && session && run("Approving simulation actions", async () => {
+    const actionSessionId = session.id;
     await farmerWorkflowApi.approve(applied);
-    await refreshWorkflow(); setSession(await planningApi.get(session.id)); await guide("results");
+    if (selectedSession.current !== actionSessionId) return;
+    await reconcileSession(actionSessionId); await guide("results");
   });
   const prepareInverse = () => { if (original) { setReviewInverse(original); setDetail("inverse"); } };
   const acceptInverse = () => reviewInverse && session && run("Recalculating inverse", async () => {
+    const actionSessionId = session.id;
     await farmerWorkflowApi.inverseProposal(reviewInverse);
-    setReviewInverse(null); setDetail(null); setSession(await planningApi.get(session.id)); await refreshWorkflow();
+    if (selectedSession.current !== actionSessionId) return;
+    setReviewInverse(null); setDetail(null); await reconcileSession(actionSessionId);
   });
 
   const primary = () => {
@@ -453,11 +562,11 @@ export default function IntegratedCards({
   const cardActions = detail ? [
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: detail === "review" ? "apply" : detail === "inverse" ? "confirm-inverse" : "close-detail", label: detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card", eligible: !busy && (detail !== "review" || Boolean(reviewProposal)) && (detail !== "inverse" || Boolean(reviewInverse)), authority: detail === "review" || detail === "inverse" ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
-    { id: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "review-inverse" : detail === "explain" ? "toggle-guide" : "details", label: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "Review inverse" : detail === "explain" ? session.guidance?.skipped ? "Resume guide" : "Skip guide" : "Details", eligible: true, authority: detail === "explain" && !(activeProposal?.undo?.available && current?.id === "reservation") ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
+    { id: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "review-inverse" : detail === "explain" ? "toggle-guide" : "details", label: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "Review inverse" : detail === "explain" ? session.guidance?.skipped ? "Resume guide" : "Skip guide" : "Details", eligible: detail === "explain" && !(activeProposal?.undo?.available && current?.id === "reservation") ? !busy && !jobRunning : true, authority: detail === "explain" && !(activeProposal?.undo?.available && current?.id === "reservation") ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
   ] : surface === "tools" ? [
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "open-tool", label: "Open tool", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
-    { id: "toggle-guide", label: session.guidance?.skipped ? "Resume guide" : "Skip guide", eligible: true, authority: "server_mutation" as const, eligibilitySource: "local" as const },
+    { id: "toggle-guide", label: session.guidance?.skipped ? "Resume guide" : "Skip guide", eligible: !busy && !jobRunning, authority: "server_mutation" as const, eligibilitySource: "local" as const },
   ] : [
     { id: "explain", label: "Explain", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: current?.id === "reservation" ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
@@ -493,9 +602,10 @@ export default function IntegratedCards({
   const strategyWhy = currentStrategy && alternativeStrategy
     ? `${currentStrategy.name} compared with ${alternativeStrategy.name}: delivery ${signed((Number(currentStrategy.metrics.fill_rate) - Number(alternativeStrategy.metrics.fill_rate)) * 100, "percentage points")}; shortfall ${signed(Number(currentStrategy.metrics.shortfall_kg) - Number(alternativeStrategy.metrics.shortfall_kg), "kg")}; cost ${signed(Number(currentStrategy.metrics.cost_sgd) - Number(alternativeStrategy.metrics.cost_sgd), "SGD")}.`
     : undefined;
-  const whatChanged = proposalExplanation?.what_changed?.length
+  const reservationChanged = boundProposal ? reservationChangeText(boundProposal) : undefined;
+  const whatChanged = reservationChanged || (proposalExplanation?.what_changed?.length
     ? proposalExplanation.what_changed.map((change) => Object.entries(change).map(([key, value]) => `${key.replaceAll("_", " ")} ${typeof value === "object" ? JSON.stringify(value) : String(value)}`).join(" · ")).join("; ")
-    : current.summary;
+    : current.summary);
   const allocationEvidence = proposalExplanation?.allocation_changes?.slice(0, 3).map((change) => {
     const before = change.before, after = change.after;
     const row = after || before;
@@ -570,8 +680,8 @@ export default function IntegratedCards({
               <span>{surface === "tools" ? "Farm tools" : "Farm plan"} · {activeIndex + 1} of {surface === "tools" ? toolCards.length : missionCards.length}</span>
               <button onClick={() => move(1)} disabled={activeIndex === (surface === "tools" ? toolCards.length : missionCards.length) - 1}>Next →</button></div>
             <div className="ic-keys">
-              {detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
-                : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
+              {detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
+                : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
                 : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
                   <button className="is-primary" title={approval?.available === false ? approval.reason : undefined} disabled={Boolean(busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue")}</button>
                   <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}

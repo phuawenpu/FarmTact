@@ -15,7 +15,26 @@ IDs change. Existing mutation validation and cumulative admission remain in plac
 The browser client retains uncertain mutation identity, including body-key APIs,
 and honors Retry-After without automatic paid retries.
 
-## Evidence so far
+## Current verification state — 17 September, 14:40 UTC
+
+The corrected shell compiles with main JS 235.57 kB / 73.72 kB gzip. Its
+request owners keep loading, mutations and guidance separate, commit terminal
+session/workflow facts together, and reject stale responses after a reviewed
+context change. Queued loads also detect an imported session remembered while
+an earlier workflow read is pending. Reservation explanations describe saved
+bed/date changes from the frozen proposal.
+
+Twenty repeated read-only browser checks pass on this build: contextual return
+and import cancellation (six), reload/card/focus/scroll recovery (seven), and
+Plan/History return (seven), with no writes or provider requests. The expanded
+delayed-response regression and repeated full-width journeys are still pending.
+The backend matches the frozen services tree used by the final isolated
+PostgreSQL run: **792 passed, one skipped**, zero failures/errors. The dated
+milestones below retain earlier runs and must not be mistaken for release
+acceptance. V14 remains public; V15 staging must be repeated from the corrected
+committed source.
+
+## Earlier implementation evidence
 
 - Generated contracts check passed.
 - Frontend TypeScript/production build passed; main JS approximately 231.81 kB
