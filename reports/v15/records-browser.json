@@ -1,0 +1,79 @@
+{
+  "started_at": "2026-09-17T11:08:42.456Z",
+  "base_url": "http://127.0.0.1:4194",
+  "checks": [
+    {
+      "name": "application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "integrated records tool opens",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "manual draft survives reload",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "uncertain 503 retains manual draft",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "uncertain mutation draft survives reload",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "uncertain retry reuses idempotency key",
+      "pass": true,
+      "detail": "e7ce90d8 / e7ce90d8"
+    },
+    {
+      "name": "uncertain retry creates one candidate",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "new candidate appears as its own stable card",
+      "pass": true,
+      "detail": "V15 browser candidate 1789643326254"
+    },
+    {
+      "name": "manual candidate requires and completes explicit confirmation",
+      "pass": true,
+      "detail": "v15-browser-1789643326276"
+    },
+    {
+      "name": "Retry-After prevents immediate network retry",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "429 retry waits then reaches real API",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "task correction reaches real API",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "notes": [
+    "Transport fault check deliberately returned one synthetic 503 after forwarding the real mutation to the isolated API.",
+    "Admission test synthesized one 429 before allowing the unchanged draft to reach the real isolated API.",
+    "Created real task prerequisite task-0a32feaeba2c0c32941e68a9."
+  ],
+  "finished_at": "2026-09-17T11:09:13.252Z",
+  "status": "PASSED"
+}

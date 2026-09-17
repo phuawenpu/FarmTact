@@ -23,7 +23,7 @@ Cards are different views of real records and decisions, not collectible rewards
 Success means meeting an explicit order/resource objective, understanding its
 tradeoffs and preserving an auditable record. No points, streaks or fabricated wins.
 
-The beginner lesson teaches the same controls used for the full sandbox farm.
+Beginner guidance teaches the controls on the ordinary sandbox farm.
 Completing a tutorial must not be the end of the product. Simplify access to the
 existing capabilities rather than replacing them with explanatory placeholders.
 
@@ -82,26 +82,17 @@ Offscreen consequences remain available as text and through Replay change.
 
 ## 3. Teach the controls and decision, not just the theme
 
-**LEARN-01** Replace the three thematic intro illustrations with an authored,
-clearly marked “Illustrated example · not your farm” demonstration using the actual
-card/action grammar. It must work without creating a session or calling a provider.
+**LEARN-01** Begin on the ordinary isolated demo farm. Name one confirmed order as
+an initial objective, with its quantity and date, while clearly retaining all
+confirmed and modeled demand in every calculation. The introductory guidance is
+part of the actual workflow, not a separate illustration or teaching product.
 
-1. **Promise:** show an example customer order, amount and due date, and the goal
-   “Deliver what you promised.” Explain that saved simulated time advances only by
-   explicit action, not while away.
-2. **Compare:** demonstrate swiping between two genuinely different illustrated
-   layouts, with a visible “Preview—not saved” badge. One plan saves space but falls
-   short; the other covers the example order at greater resource cost. Label all
-   illustrative figures as examples; do not imply they are the player's calculation.
-3. **Act and inspect:** user presses “Try example action.” Show a finite consequence
-   and the Explain key revealing cause/effect. Then offer Start first lesson. This
-   practice is local illustration, not a saved farm action. Skip remains available.
-
-**LEARN-02** The real lesson first card names the customer's request, the starting
-crop, remaining growing time and the immediate next move in plain language. Before
-choosing, the learner can answer “what do I gain, what do I give up, what is uncertain?”
-Feasible means technically allowed, not necessarily enough to fulfil the order.
-Display shortfall directly and never celebrate feasibility as fulfilment.
+**LEARN-02** Guide inspect → compare → tradeoff → review → recalculate → approve
+sandbox work → review results using the same controls and records as returning
+users. Persist versioned guidance independently of planning revisions. Guidance is
+skippable and resumable, unlocks no capability, and gradually recedes. Before
+choosing, show what the user gains, gives up and cannot know. Feasibility does not
+mean order fulfilment: show shortfall and never celebrate feasibility as delivery.
 
 Every advance shows the current date, target date, why the simulation stops there,
 and what can change. A no-event checkpoint says so. Preserve bounded server advances;
@@ -174,10 +165,10 @@ optional for a learner. Backend availability alone is not user-facing completion
 | Data Explorer, generated datasets, forecasts, exports | Experiments → dataset/forecast cards → Preview / Save / Export | Existing charts/tables within cards, dataset provenance, EWMA parameters, immutable snapshots and permitted exports |
 | Research and reviews | Experiments → study/review cards → Run local study / Request interpretation | Study version/hash, source refs and limits; numerical runs separate from explicit optional provider interpretation |
 | Waste Rescue | Plan → eligible surplus card → Compare options | Dated surplus, lot/expiry and numerical result; never authorizes sale, donation or disposal |
-| Saved lessons, plans, scenarios, discussions and audit history | History & preferences → saved entity cards → Open record | Exact identity/version, full event sequence, no recalculation/inference on replay; new attempt distinct from reading old one |
+| Saved plans, scenarios, discussions and audit history | History & preferences → saved entity cards → Open record | Exact identity/version, full event sequence, no recalculation/inference on replay; new attempt distinct from reading old one |
 | Accessibility, motion, intro replay and existing audio preferences | History & preferences → preference cards → Apply / Replay intro | Persistent per-edition preferences; preserve applicable existing audio controls, no new recording/transcription integration |
 
-Optional does not mean hidden behind completing both lessons. Contextual prompts can
+Optional does not mean hidden behind completing guidance. Contextual prompts can
 introduce a tool when useful; the tools index remains available to experienced users.
 No “go to old version” escape hatch. Unsupported tools get an honest unavailable
 card and reason during development, but this does not count as restored parity.
@@ -234,8 +225,7 @@ Play control that cannot override the active system preference. No rapid flashes
 **MOT-05** Fixed-camera readable composition: each bed's friendly label must remain
 unobscured at all tested sizes, with crop/state/date on its detail card. Distinguish
 empty beds from harvested crop residue. Preserve hatch/icon/text distinctions instead
-of color-only targets. The four-bed lesson illustration must not become the general
-farm renderer: larger farms use server-bound bed groups and a swipeable “Area X of Y”
+of color-only targets. The retired four-bed fixture is not the general farm renderer: larger farms use server-bound bed groups and a swipeable “Area X of Y”
 inspection deck; the scene frames the selected group without hiding total scope.
 Do not invent rack/domain entities to support the art.
 
@@ -243,8 +233,7 @@ Do not invent rack/domain entities to support the art.
 
 **SAFE-01** Every card/action retains context kind/ID, entity kind/ID, source label,
 frozen snapshot kind/ID/hash, revision, result ID/hash where applicable, and explicit
-server eligibility/disabled reason. Include farm/version in sandbox and journey ID
-in lessons. Friendly labels never replace identity. Full IDs belong in Record
+server eligibility/disabled reason. Include the ordinary farm/version and planning session identity. Friendly labels never replace identity. Full IDs belong in Record
 identity detail cards, not the introductory headline. Server resolves trusted focus;
 no client-supplied title/context may expand a conversation's data access.
 
@@ -270,7 +259,7 @@ Acceptance is pending. Existing V14 test passes do not prove these requirements.
 
 1. **P0 — integrity and truthful explanation:** SAFE-01–03, preview/saved distinction,
    dated maintenance/delivery meaning, deterministic Explain, full thread evidence,
-   and explicit lesson/sandbox roots. Restore a reachable farm entry without old UI.
+   and the ordinary sandbox root with independent guidance progress. Restore a reachable farm entry without old UI.
 2. **P1 — useful capability parity:** implement the PAR-01 planning/records/work/
    evidence/history adapters, reviewed proposals, task corrections and Council;
    verify each complete user workflow, not only presence of a card.
@@ -282,9 +271,9 @@ Acceptance is pending. Existing V14 test passes do not prove these requirements.
 
 | Check | Required scripted evidence |
 | --- | --- |
-| A01 first use | Fresh intro makes zero API/provider calls until Start; illustrative practice teaches swipe vs save; full real lesson reaches correctly worded debrief |
-| A02 context and reachability | Fresh/returning user can open lesson or sandbox; every PAR-01 path completes; return preserves exact state; no edition menu |
-| A03 domain integrity | Cross-context/tenant IDs rejected; B3 identity checked in each fixture; historic edition data untouched; preview/swipe/replay causes zero mutations |
+| A01 first use | Fresh ordinary demo farm teaches preview versus save through actual planning; no provider calls; guidance reaches recorded results |
+| A02 context and reachability | Fresh/returning users share the ordinary sandbox and controls; every PAR-01 path completes; return preserves exact state; no edition menu |
+| A03 domain integrity | Cross-tenant IDs rejected; canonical bed identity checked; historic edition data untouched; preview/swipe/replay causes zero mutations |
 | A04 explanation | Every core stage answers what/why/tradeoff/source/next; expected vs recorded and units asserted against frozen facts; missing evidence explicitly marked |
 | A05 numerical workflows | Same-baseline comparison, proposal → job → result → approval → task → correction, stale inverse and inverse recalculation, accounting invariants and task history |
 | A06 motion | Normal-motion event clips plus start/mid/end frames; semantic event IDs, no false truck/maintenance, no repeated event on reload; pause/reduced/offscreen equivalent |

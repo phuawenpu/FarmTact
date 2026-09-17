@@ -31,3 +31,28 @@ def test_guidance_is_versioned_isolated_and_does_not_change_planning():
             other.get('/api/v1/bootstrap')
             assert other.post('/api/v1/planning-sessions'+path, json=body,
                              headers={'Idempotency-Key':uuid4().hex}).status_code == 404
+
+
+def test_saved_result_replay_requires_session_membership():
+    from services.api.planning_sessions import SESSIONS, VERSIONS, get_session, save_session
+    store = Store('sqlite://')
+    with TestClient(create_app(store, start_worker=False)) as client:
+        client.get('/api/v1/bootstrap')
+        tenant = store.authenticate(client.cookies.get('farmtact_session'))
+        s = client.post('/api/v1/planning-sessions', json={'workflow': True},
+                        headers={'Idempotency-Key': uuid4().hex}).json()
+        saved = get_session(store, tenant, s['id'])
+        saved['history'] = [{'result_id': 'version-one'}]
+        save_session(store, tenant, saved)
+        with store.connection(write=True) as c:
+            c.execute(VERSIONS.insert().values(id='version-one', tenant_id=tenant,
+                      session_id=s['id'], payload={'id':'version-one','strategies':[], 'input_snapshot': {'private':'excluded'}}))
+        base = '/api/v1/planning-sessions/' + s['id'] + '/results/'
+        result = client.get(base+'version-one')
+        assert result.status_code == 200
+        assert result.json()['replay'] is True
+        assert result.json()['inference_triggered'] is False
+        assert 'input_snapshot' not in result.json()['result']
+        assert client.get(base+'unrelated-version').status_code == 404
+        assert client.get('/api/v1/planning-sessions/other/results/version-one').status_code == 404
+        assert get_session(store, tenant, s['id']) == saved

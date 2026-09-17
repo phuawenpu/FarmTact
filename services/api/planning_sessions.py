@@ -378,6 +378,15 @@ def register(app,tenant):
     @app.get('/api/v1/planning-sessions/{id}')
     def get(id:str,request:Request):
         t=tenant(request);return public_session(app.state.store,t,owned(t,id))
+    @app.get('/api/v1/planning-sessions/{id}/results/{result_id}')
+    def replay_result(id:str,result_id:str,request:Request):
+        t=tenant(request);session=owned(t,id)
+        if not any(row.get('result_id') == result_id for row in session.get('history', [])):
+            raise HTTPException(404,'Saved result does not belong to this planning session')
+        result=get_result(app.state.store,t,result_id)
+        if result is None:raise HTTPException(404,'Saved planning result not found')
+        return dict(session_id=id,result_id=result_id,result=public_result(result),
+                    replay=True,inference_triggered=False,real_operations_enabled=False)
     @app.post('/api/v1/planning-sessions/{id}/guidance')
     def guidance(id:str,body:PlanningGuidance,request:Request):
         t=tenant(request);store=app.state.store

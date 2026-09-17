@@ -303,6 +303,9 @@ def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id:
         if session["revision"] != base_revision: raise ValueError("Planning revision changed")
         result = adapter.get_result(store, tenant, session.get("result_id"))
         if not result: raise ValueError("Calculate the planning session before proposing changes")
+        source_strategy_id = selected_strategy_id or session.get('selected_strategy_id')
+        source_strategy = next((row for row in result.get('strategies', []) if row.get('id') == source_strategy_id), None)
+        if source_strategy is None: raise ValueError('The selected strategy does not belong to this result')
         discussion = None
         if source_conversation_id or source_message_id:
             if not source_conversation_id or not source_message_id:
@@ -336,7 +339,8 @@ def create_proposal(store, tenant: str, *, adapter: PlanningAdapter, session_id:
             "base_revision": base_revision, "proposal_revision": 1, "status": "draft", "changes": deepcopy(changes),
             "inverse_changes": [{"kind": "planning_assumptions", "assumptions": prior_assumptions}],
             "session_input_hash": session.get("input_hash"), "result_id": session.get("result_id"),
-            "result_hash": content_hash(result), "calculated_metrics": calculated_metrics(result, session.get("selected_strategy_id")),
+            "result_hash": content_hash(result), "calculated_metrics": calculated_metrics(result, source_strategy_id),
+            "selected_strategy_name": source_strategy.get('name'),
             "selected_strategy_id": selected_strategy_id or session.get("selected_strategy_id"),
             "source_candidates": sources,
             "source_conversation": discussion,
@@ -690,7 +694,11 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
             # strategy when the proposal's source ID no longer exists.
             bound_session = planning_sessions.get_session(store, tenant, item["session_id"])
             selected_id = item.get("selected_strategy_id")
-            if (bound_session and bound_session.get("result_id") == job_id
+            matching_policy = next((row for row in bound_result.get('strategies', [])
+                                    if item.get('selected_strategy_name') and row.get('name') == item['selected_strategy_name']), None)
+            if matching_policy:
+                selected_id = matching_policy['id']
+            elif (bound_session and bound_session.get("result_id") == job_id
                     and bound_session.get("selected_strategy_id")):
                 selected_id = bound_session["selected_strategy_id"]
             after_metrics = calculated_metrics(bound_result, selected_id)
@@ -730,7 +738,8 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
             item['scene_transition'] = {
                 'event_id': f"proposal:{item['id']}:result:{job_id}",
                 'entity_ids': affected,
-                'effective_date': str(Farm.model_validate(bound_result['input_snapshot']).planning_date),
+                'effective_date': (str(Farm.model_validate(bound_result['input_snapshot']).planning_date)
+                                   if bound_result.get('input_snapshot') else None),
                 'before': {'allocations': list(before_allocations.values()), 'metrics': before_metrics},
                 'after': {'allocations': list(after_allocations.values()), 'metrics': after_metrics},
                 'fact_differences': deepcopy(item['metric_deltas']),
@@ -751,6 +760,20 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
                 else:
                     undo = {"available": False, "reason": "Undo is stale because the planning revision changed."}
         item["undo"] = undo
+        current_session = planning_sessions.get_session(store, tenant, item['session_id'])
+        approval_reason = None
+        if item.get('status') != 'applied':
+            approval_reason = 'Apply the current proposal before approving sandbox work.'
+        elif (not current_session or current_session.get('status') != 'COMPLETED'
+              or current_session.get('result_id') != job_id or not bound_result):
+            approval_reason = 'Wait for the bound recalculation, or review a new proposal after a changed planning result.'
+        else:
+            candidate = next((row for row in bound_result.get('strategies', [])
+                              if row.get('id') == item.get('recalculated_strategy_id')), None)
+            if not candidate or candidate.get('status') != 'FEASIBLE' or candidate.get('violations'):
+                approval_reason = 'Only a feasible calculated strategy can create sandbox work.'
+        item['approval'] = {'available': approval_reason is None, 'reason': approval_reason,
+                            'strategy_id': item.get('recalculated_strategy_id')}
         visible_proposals.append(item)
     return {"version": VERSION, "phase": phase, "revision": len(events), "inbox": imports,
             "proposals": visible_proposals, "tasks": tasks, "events": events, "real_operations_enabled": False}

@@ -133,6 +133,11 @@ def test_recalculated_consequences_follow_the_result_selected_strategy(setup):
     assert visible["recalculated_strategy_id"] == "balanced-recalculated"
     assert visible["recalculated_metrics"]["coverage_kg"] == 7
     assert visible["recalculated_metrics"]["margin_sgd"] == 22
+    assert visible['explanation']['inference_triggered'] is False
+    assert visible['explanation']['evidence']['after_strategy_id'] == 'balanced-recalculated'
+    assert visible['scene_transition']['after']['metrics']['coverage_kg'] == 7
+    assert visible['scene_transition']['fact_differences'] == visible['metric_deltas']
+    assert visible['scene_transition']['effective_date'] is None  # legacy result has no date
 
 
 def test_planning_session_exposes_server_bound_scenario_and_b3_context(setup):
@@ -158,3 +163,31 @@ def test_planning_session_exposes_server_bound_scenario_and_b3_context(setup):
         "ask_eligible": False,
         "ask_disabled_reason": "Complete the local baseline calculation first.",
     }
+
+
+def test_recalculated_comparison_retains_explicit_source_policy(setup):
+    store, tenant, _, adapter = setup
+    adapter.result['strategies'][0]['name'] = 'Balanced'
+    lean = deepcopy(adapter.result['strategies'][0])
+    lean.update(id='lean', name='Lean')
+    lean['metrics']['margin_sgd'] = 13
+    adapter.result['strategies'].append(lean)
+    proposal = farm_workflow.create_proposal(
+        store, tenant, adapter=adapter, session_id='session-1', base_revision=2,
+        changes=reservation(), selected_strategy_id='lean', idempotency_key='source-policy')
+    assert proposal['calculated_metrics']['margin_sgd'] == 13
+    assert proposal['selected_strategy_name'] == 'Lean'
+    farm_workflow.apply_proposal(store, tenant, proposal['id'], adapter=adapter,
+        expected_base_revision=2, idempotency_key='source-policy-apply')
+    result = {'id':'job-1', 'strategies':[
+        {'id':'lean-new','name':'Lean','status':'FEASIBLE','metrics':{'margin_sgd':14}},
+        {'id':'balanced-new','name':'Balanced','status':'FEASIBLE','metrics':{'margin_sgd':25}}]}
+    adapter.session.update(result_id='job-1', selected_strategy_id='balanced-new',status='COMPLETED',revision=4)
+    with store.connection(write=True) as connection:
+        connection.execute(planning_sessions.VERSIONS.insert().values(id='job-1',tenant_id=tenant,session_id='session-1',payload=result))
+        connection.execute(update(planning_sessions.SESSIONS).where(planning_sessions.SESSIONS.c.id=='session-1').values(payload=deepcopy(adapter.session)))
+    visible = farm_workflow.workflow_state(store,tenant)['proposals'][0]
+    assert visible['recalculated_strategy_id'] == 'lean-new'
+    assert visible['metric_deltas']['margin_sgd'] == 1
+    assert visible['approval']['strategy_id'] == 'lean-new'
+    assert visible['approval']['available'] is True

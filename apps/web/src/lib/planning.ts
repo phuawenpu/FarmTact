@@ -133,6 +133,7 @@ export interface PlanningSession {
 }
 
 export interface FarmerProposal {
+  approval?: { available: boolean; reason: string | null; strategy_id?: string };
   id: string;
   session_id: string;
   base_revision: number;
@@ -221,6 +222,8 @@ export function rememberPlanningSession(id: string) {
 }
 
 export const planningApi = {
+  replayResult: (sessionId: string, resultId: string) => request<{session_id:string;result_id:string;result:PlanningResult;replay:true}>(
+    `/planning-sessions/${encodeURIComponent(sessionId)}/results/${encodeURIComponent(resultId)}`),
   guidance: (session: PlanningSession, step: NonNullable<PlanningSession['guidance']>['step'], skipped = false) =>
     mutationRequest<PlanningSession>(`/planning-sessions/${encodeURIComponent(session.id)}/guidance`, {
       version: 'integrated-guidance-v1', revision: session.guidance?.revision ?? 0, step, skipped,
@@ -326,6 +329,7 @@ export const farmerWorkflowApi = {
       {
         proposal_id: proposal.id,
         proposal_revision: proposal.proposal_revision,
+        selected_strategy_id: typeof proposal.recalculated_strategy_id === 'string' ? proposal.recalculated_strategy_id : proposal.selected_strategy_id,
         idempotency_key: crypto.randomUUID(),
       },
     ),
