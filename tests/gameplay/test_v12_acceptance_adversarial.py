@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from uuid import uuid4
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 from fastapi.testclient import TestClient
@@ -77,6 +78,55 @@ def apply_and_approve(store, client, tenant, session, draft):
     assert response.status_code == 200, response.text
     assert post(client, endpoint, body, approve_key).json() == response.json()
     return response.json()
+
+
+def test_v15_concurrent_proposal_apply_inverse_and_approval_are_exactly_once(isolated_database_url):
+    """Exercise the restored card mutations through real HTTP and PostgreSQL locks."""
+    store = Store(isolated_database_url)
+    with TestClient(create_app(store, start_worker=False)) as client:
+        tenant, path, session = calculated_workflow(store, client)
+
+        def concurrent(endpoint, body, status):
+            key = body['idempotency_key']
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                replies = list(pool.map(lambda _: post(client, endpoint, body, key), range(4)))
+            assert all(reply.status_code == status for reply in replies), [reply.text for reply in replies]
+            assert all(reply.json() == replies[0].json() for reply in replies)
+            return replies[0].json()
+
+        grow = session['tactical_context']['grow_space']
+        draft = concurrent('/farm-workflow/proposals', {
+            'session_id': session['id'], 'base_revision': session['revision'],
+            'changes': [{'kind': 'planning_assumptions', 'assumptions': {
+                'reservations': [{'bed_id': grow['id'], **grow['reservation_window']}]}}],
+            'selected_strategy_id': session['selected_strategy_id'],
+            'idempotency_key': uuid4().hex}, 201)
+        applied = concurrent(f'/farm-workflow/proposals/{draft["id"]}/apply', {
+            'proposal_id': draft['id'], 'expected_base_revision': draft['base_revision'],
+            'idempotency_key': uuid4().hex}, 202)
+        execute_job(store, tenant, applied['recalculation_job']['id'])
+        session = client.get('/api/v1' + path).json()
+        inverse = concurrent(f'/farm-workflow/proposals/{draft["id"]}/inverse', {
+            'proposal_id': draft['id'], 'proposal_revision': applied['proposal_revision'],
+            'expected_session_revision': session['revision'], 'idempotency_key': uuid4().hex}, 202)
+        execute_job(store, tenant, inverse['recalculation_job']['id'])
+        session = client.get('/api/v1' + path).json()
+        ready = proposal(client, session, uuid4().hex)
+        applied_ready = post(client, f'/farm-workflow/proposals/{ready["id"]}/apply', {
+            'proposal_id': ready['id'], 'expected_base_revision': ready['base_revision'],
+            'idempotency_key': uuid4().hex}).json()
+        execute_job(store, tenant, applied_ready['recalculation_job']['id'])
+        approved = concurrent(f'/farm-workflow/proposals/{ready["id"]}/approve-actions', {
+            'proposal_id': ready['id'], 'proposal_revision': applied_ready['proposal_revision'],
+            'selected_strategy_id': ready['selected_strategy_id'], 'idempotency_key': uuid4().hex}, 200)
+        state = client.get('/api/v1/farm-workflow').json()
+        assert len(state['proposals']) == 3
+        assert len(state['tasks']) == len(approved['tasks'])
+        assert len({task['id'] for task in state['tasks']}) == len(state['tasks'])
+        assert len([event for event in state['events'] if event['subject_id'] == draft['id']
+                    and event['event_type'] == 'proposal_applied_recalculation_queued']) == 1
+        assert len([item for item in state['proposals'] if item.get('inverse_of_proposal_id') == draft['id']]) == 1
+    store.engine.dispose()
 
 
 def test_stale_approval_results_corrections_restart_and_tenant_isolation(isolated_database_url):

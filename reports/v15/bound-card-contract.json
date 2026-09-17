@@ -1,0 +1,2369 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "mission canonical entity matches shown ordinary order",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "entityId": "order-0-0",
+        "entityKind": "order",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "10",
+        "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+        "snapshotId": null,
+        "provenance": [
+          "Frozen synthetic seasonal record"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "explain",
+            "label": "Explain",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Continue",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "more",
+            "label": "More",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "explain": "local_navigation",
+          "primary": "local_navigation",
+          "more": "local_navigation"
+        },
+        "eligibility": {
+          "explain": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "more": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "mission frozen planning binding matches server",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "entityId": "order-0-0",
+        "entityKind": "order",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "10",
+        "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+        "snapshotId": null,
+        "provenance": [
+          "Frozen synthetic seasonal record"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "explain",
+            "label": "Explain",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Continue",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "more",
+            "label": "More",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "explain": "local_navigation",
+          "primary": "local_navigation",
+          "more": "local_navigation"
+        },
+        "eligibility": {
+          "explain": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "more": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "mission: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Explain",
+          "Continue",
+          "More"
+        ],
+        "actual": [
+          "Explain",
+          "Continue",
+          "More"
+        ]
+      }
+    },
+    {
+      "name": "mission: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "explain",
+          "label": "Explain",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Explain",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "mission: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Continue",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Continue",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "mission: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "more",
+          "label": "More",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "More",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan strategy canonical identity and board targets match server result",
+      "pass": true,
+      "detail": {
+        "id": "plan:strategies:c47848f4e7754becf79d",
+        "entityId": "c47848f4e7754becf79d",
+        "entityKind": "strategy",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "10",
+        "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+        "snapshotId": null,
+        "provenance": [
+          "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "2918673d2612bf368ff1d3eed0496a4c"
+        ],
+        "targets": [
+          "bed-01",
+          "bed-02",
+          "bed-03",
+          "bed-04",
+          "bed-05",
+          "bed-06",
+          "bed-07",
+          "bed-08",
+          "bed-01",
+          "bed-04",
+          "bed-09",
+          "bed-10",
+          "bed-11",
+          "bed-12",
+          "bed-13",
+          "bed-14",
+          "bed-16"
+        ],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Prepare proposal",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "secondary",
+            "label": "Compare retained schedule",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "secondary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Plan strategy: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Prepare proposal",
+          "Compare retained schedule"
+        ],
+        "actual": [
+          "Back",
+          "Prepare proposal",
+          "Compare retained schedule"
+        ]
+      }
+    },
+    {
+      "name": "Plan strategy: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan strategy: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Prepare proposal",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Prepare proposal",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan strategy: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "secondary",
+          "label": "Compare retained schedule",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Compare retained schedule",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan proposal identity/revision matches saved proposal",
+      "pass": true,
+      "detail": {
+        "id": "plan:proposal:783aeb80ee1a5e818d6eb540c9b9ef53",
+        "entityId": "783aeb80ee1a5e818d6eb540c9b9ef53",
+        "entityKind": "proposal",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "2",
+        "resultId": "0200c389d508f4126ce642fd669d715c",
+        "snapshotId": null,
+        "provenance": [
+          "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+          "{\"before_result_id\":\"0200c389d508f4126ce642fd669d715c\",\"after_result_id\":\"2918673d2612bf368ff1d3eed0496a4c\",\"before_strategy_id\":\"ee7f26bd61834f1954d6\",\"after_strategy_id\":\"c47848f4e7754becf79d\"}"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Refresh result",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "secondary",
+            "label": "Review assumptions",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "secondary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Plan proposal: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Refresh result",
+          "Review assumptions"
+        ],
+        "actual": [
+          "Back",
+          "Refresh result",
+          "Review assumptions"
+        ]
+      }
+    },
+    {
+      "name": "Plan proposal: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan proposal: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Refresh result",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Refresh result",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Plan proposal: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "secondary",
+          "label": "Review assumptions",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Review assumptions",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Records task canonical ID/revision matches saved task",
+      "pass": true,
+      "detail": {
+        "id": "records:workflow_task:task-1b6f25903137179e40fcdef7",
+        "entityId": "task-1b6f25903137179e40fcdef7",
+        "entityKind": "workflow_task",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "0",
+        "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+        "snapshotId": "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+        "provenance": [
+          "task-1b6f25903137179e40fcdef7",
+          "783aeb80ee1a5e818d6eb540c9b9ef53",
+          "allocation-7efcabee2717ea8949a12733ed2a343a"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "record-result",
+            "label": "Record result",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "record-result": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "record-result": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Records task uses proposal frozen result binding",
+      "pass": true,
+      "detail": {
+        "taskCard": {
+          "id": "records:workflow_task:task-1b6f25903137179e40fcdef7",
+          "entityId": "task-1b6f25903137179e40fcdef7",
+          "entityKind": "workflow_task",
+          "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "revision": "0",
+          "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+          "snapshotId": "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+          "provenance": [
+            "task-1b6f25903137179e40fcdef7",
+            "783aeb80ee1a5e818d6eb540c9b9ef53",
+            "allocation-7efcabee2717ea8949a12733ed2a343a"
+          ],
+          "targets": [],
+          "basis": "projection",
+          "actions": [
+            {
+              "id": "back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "record-result",
+              "label": "Record result",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            }
+          ],
+          "authority": {
+            "back": "local_navigation",
+            "record-result": "local_navigation"
+          },
+          "eligibility": {
+            "back": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            },
+            "record-result": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            }
+          }
+        },
+        "taskProposal": {
+          "id": "783aeb80ee1a5e818d6eb540c9b9ef53",
+          "tenant_id": "eab26e695ad28ec1eebaa28c4644ed42",
+          "session_id": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "base_revision": 6,
+          "proposal_revision": 2,
+          "status": "approved",
+          "changes": [
+            {
+              "kind": "planning_assumptions",
+              "assumptions": {
+                "tentative_orders": [],
+                "future_demand": [],
+                "seasonal": [],
+                "order_changes": [],
+                "reservations": [
+                  {
+                    "bed_id": "bed-07",
+                    "start_date": "2026-10-01",
+                    "end_date": "2026-11-02"
+                  }
+                ]
+              }
+            }
+          ],
+          "inverse_changes": [
+            {
+              "kind": "planning_assumptions",
+              "assumptions": {
+                "tentative_orders": [],
+                "reservations": [],
+                "future_demand": [],
+                "seasonal": [],
+                "order_changes": []
+              }
+            }
+          ],
+          "session_input_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "result_id": "0200c389d508f4126ce642fd669d715c",
+          "result_hash": "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+          "calculated_metrics": {
+            "coverage_kg": 446,
+            "surplus_kg": 54,
+            "expiry_kg": 175.99,
+            "rejection_kg": null,
+            "margin_sgd": 2930.59,
+            "waste_rescue_kg": 0
+          },
+          "selected_strategy_name": "Balanced",
+          "selected_strategy_id": "ee7f26bd61834f1954d6",
+          "source_candidates": [],
+          "source_conversation": null,
+          "created_at": "2026-09-17T12:25:41.312574+00:00",
+          "updated_at": "2026-09-17T12:25:59.326051+00:00",
+          "version": "farmer-workflow-v1",
+          "applied_session_revision": 7,
+          "applied_input_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "recalculation_job": {
+            "id": "2918673d2612bf368ff1d3eed0496a4c",
+            "kind": "disrupt",
+            "status": "QUEUED",
+            "stage": "queued",
+            "created_at": "2026-09-17T12:25:42.239348+00:00"
+          },
+          "approved_at": "2026-09-17T12:25:59.313953+00:00",
+          "approved_result_id": "2918673d2612bf368ff1d3eed0496a4c",
+          "approved_result_hash": "42260f6a22bc504e0ee4c77aaccce610725637acb9def94d495f2cc936f79404",
+          "recalculated_strategy_id": "c47848f4e7754becf79d",
+          "recalculated_metrics": {
+            "coverage_kg": 442,
+            "surplus_kg": 41,
+            "expiry_kg": 192.99,
+            "rejection_kg": null,
+            "margin_sgd": 2731.07,
+            "waste_rescue_kg": 0
+          },
+          "metric_deltas": {
+            "coverage_kg": -4,
+            "surplus_kg": -13,
+            "expiry_kg": 17,
+            "rejection_kg": null,
+            "margin_sgd": -199.52,
+            "waste_rescue_kg": 0
+          },
+          "explanation": {
+            "version": "integrated-explanation-v1",
+            "outcome_basis": "projection",
+            "what_changed": [
+              {
+                "kind": "planning_assumptions",
+                "assumptions": {
+                  "tentative_orders": [],
+                  "future_demand": [],
+                  "seasonal": [],
+                  "order_changes": [],
+                  "reservations": [
+                    {
+                      "bed_id": "bed-07",
+                      "start_date": "2026-10-01",
+                      "end_date": "2026-11-02"
+                    }
+                  ]
+                }
+              }
+            ],
+            "why": "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+            "tradeoff": {
+              "coverage_kg": -4,
+              "surplus_kg": -13,
+              "expiry_kg": 17,
+              "rejection_kg": null,
+              "margin_sgd": -199.52,
+              "waste_rescue_kg": 0
+            },
+            "evidence": {
+              "before_result_id": "0200c389d508f4126ce642fd669d715c",
+              "after_result_id": "2918673d2612bf368ff1d3eed0496a4c",
+              "before_strategy_id": "ee7f26bd61834f1954d6",
+              "after_strategy_id": "c47848f4e7754becf79d"
+            },
+            "affected_bed_ids": [
+              "bed-01",
+              "bed-02",
+              "bed-03",
+              "bed-04",
+              "bed-08",
+              "bed-09",
+              "bed-10",
+              "bed-11",
+              "bed-12",
+              "bed-13",
+              "bed-14",
+              "bed-15",
+              "bed-16"
+            ],
+            "allocation_changes": [
+              {
+                "id": "allocation-19facfc426e1f517d6b82fcf182e75a1",
+                "before": {
+                  "id": "allocation-19facfc426e1f517d6b82fcf182e75a1",
+                  "bed_id": "bed-03",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-09-28",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-259b30fe0485ce71d5e2ff4077d4f8fb",
+                "before": null,
+                "after": {
+                  "id": "allocation-259b30fe0485ce71d5e2ff4077d4f8fb",
+                  "bed_id": "bed-14",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-26f45a8f19b1a53adfadc9ad7e5b65a0",
+                "before": {
+                  "id": "allocation-26f45a8f19b1a53adfadc9ad7e5b65a0",
+                  "bed_id": "bed-01",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-10-01",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-279cf8dc2e209797c610e216744b888d",
+                "before": {
+                  "id": "allocation-279cf8dc2e209797c610e216744b888d",
+                  "bed_id": "bed-15",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-37a26557a5fc8f2c79b426105ea708b0",
+                "before": null,
+                "after": {
+                  "id": "allocation-37a26557a5fc8f2c79b426105ea708b0",
+                  "bed_id": "bed-16",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-47eba377eb4aa917db2f48634c3d4c46",
+                "before": null,
+                "after": {
+                  "id": "allocation-47eba377eb4aa917db2f48634c3d4c46",
+                  "bed_id": "bed-04",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-54413478bbbb2640013ffa11e1ebe9eb",
+                "before": {
+                  "id": "allocation-54413478bbbb2640013ffa11e1ebe9eb",
+                  "bed_id": "bed-08",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-10-05",
+                  "transplant_date": "2026-10-12",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-5be9ed22e62a32940b4bfcc0ac1118b2",
+                "before": null,
+                "after": {
+                  "id": "allocation-5be9ed22e62a32940b4bfcc0ac1118b2",
+                  "bed_id": "bed-11",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-09-28",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-5d27089d3e95583cd9935c86cc1df936",
+                "before": null,
+                "after": {
+                  "id": "allocation-5d27089d3e95583cd9935c86cc1df936",
+                  "bed_id": "bed-10",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-608147fa67c03fd79b656790b68dfdb2",
+                "before": null,
+                "after": {
+                  "id": "allocation-608147fa67c03fd79b656790b68dfdb2",
+                  "bed_id": "bed-13",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-12",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-6c0c05e7f84b431f21aa2f4bcd248694",
+                "before": {
+                  "id": "allocation-6c0c05e7f84b431f21aa2f4bcd248694",
+                  "bed_id": "bed-02",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-7efcabee2717ea8949a12733ed2a343a",
+                "before": null,
+                "after": {
+                  "id": "allocation-7efcabee2717ea8949a12733ed2a343a",
+                  "bed_id": "bed-01",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-8206ed17b7c1944ce4b22057ae4b08b7",
+                "before": {
+                  "id": "allocation-8206ed17b7c1944ce4b22057ae4b08b7",
+                  "bed_id": "bed-09",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-858683940322a197bb2b10c7dc78cb7a",
+                "before": {
+                  "id": "allocation-858683940322a197bb2b10c7dc78cb7a",
+                  "bed_id": "bed-04",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-08",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-965dea9dcc0688900f2e56ebd92d7655",
+                "before": {
+                  "id": "allocation-965dea9dcc0688900f2e56ebd92d7655",
+                  "bed_id": "bed-16",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-9cbea92c1b9949a6667b109735460aa4",
+                "before": null,
+                "after": {
+                  "id": "allocation-9cbea92c1b9949a6667b109735460aa4",
+                  "bed_id": "bed-12",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-10-05",
+                  "transplant_date": "2026-10-12",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                }
+              },
+              {
+                "id": "allocation-d99bf3259f6a1979d92e036624978352",
+                "before": {
+                  "id": "allocation-d99bf3259f6a1979d92e036624978352",
+                  "bed_id": "bed-12",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-10-01",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                "after": null
+              },
+              {
+                "id": "allocation-f97d7446800c06e018502773e9117668",
+                "before": null,
+                "after": {
+                  "id": "allocation-f97d7446800c06e018502773e9117668",
+                  "bed_id": "bed-09",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-08",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                }
+              }
+            ],
+            "next_action": "Review the calculated schedule and current approval or inverse eligibility.",
+            "inference_triggered": false
+          },
+          "scene_transition": {
+            "event_id": "proposal:783aeb80ee1a5e818d6eb540c9b9ef53:result:2918673d2612bf368ff1d3eed0496a4c",
+            "entity_ids": [
+              "bed-01",
+              "bed-02",
+              "bed-03",
+              "bed-04",
+              "bed-08",
+              "bed-09",
+              "bed-10",
+              "bed-11",
+              "bed-12",
+              "bed-13",
+              "bed-14",
+              "bed-15",
+              "bed-16"
+            ],
+            "effective_date": "2026-09-08",
+            "before": {
+              "allocations": [
+                {
+                  "id": "batch-01",
+                  "bed_id": "bed-01",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-08-17",
+                  "transplant_date": "2026-08-24",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": true
+                },
+                {
+                  "id": "batch-02",
+                  "bed_id": "bed-02",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-08-10",
+                  "transplant_date": "2026-08-17",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": true
+                },
+                {
+                  "id": "batch-03",
+                  "bed_id": "bed-03",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-08-03",
+                  "transplant_date": "2026-08-13",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": true
+                },
+                {
+                  "id": "batch-04",
+                  "bed_id": "bed-04",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-08-10",
+                  "transplant_date": "2026-08-20",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": true
+                },
+                {
+                  "id": "batch-05",
+                  "bed_id": "bed-05",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-08-31",
+                  "transplant_date": "2026-09-07",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": true
+                },
+                {
+                  "id": "batch-06",
+                  "bed_id": "bed-06",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-08-24",
+                  "transplant_date": "2026-08-31",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": true
+                },
+                {
+                  "id": "batch-07",
+                  "bed_id": "bed-07",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-08-17",
+                  "transplant_date": "2026-08-27",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": true
+                },
+                {
+                  "id": "batch-08",
+                  "bed_id": "bed-08",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-08-24",
+                  "transplant_date": "2026-09-03",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": true
+                },
+                {
+                  "id": "allocation-26f45a8f19b1a53adfadc9ad7e5b65a0",
+                  "bed_id": "bed-01",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-10-01",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-6c0c05e7f84b431f21aa2f4bcd248694",
+                  "bed_id": "bed-02",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-19facfc426e1f517d6b82fcf182e75a1",
+                  "bed_id": "bed-03",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-09-28",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-858683940322a197bb2b10c7dc78cb7a",
+                  "bed_id": "bed-04",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-08",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-54413478bbbb2640013ffa11e1ebe9eb",
+                  "bed_id": "bed-08",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-10-05",
+                  "transplant_date": "2026-10-12",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-8206ed17b7c1944ce4b22057ae4b08b7",
+                  "bed_id": "bed-09",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-d99bf3259f6a1979d92e036624978352",
+                  "bed_id": "bed-12",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-10-01",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-279cf8dc2e209797c610e216744b888d",
+                  "bed_id": "bed-15",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-965dea9dcc0688900f2e56ebd92d7655",
+                  "bed_id": "bed-16",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                }
+              ],
+              "metrics": {
+                "coverage_kg": 446,
+                "surplus_kg": 54,
+                "expiry_kg": 175.99,
+                "rejection_kg": null,
+                "margin_sgd": 2930.59,
+                "waste_rescue_kg": 0
+              }
+            },
+            "after": {
+              "allocations": [
+                {
+                  "id": "batch-01",
+                  "bed_id": "bed-01",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-08-17",
+                  "transplant_date": "2026-08-24",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": true
+                },
+                {
+                  "id": "batch-02",
+                  "bed_id": "bed-02",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-08-10",
+                  "transplant_date": "2026-08-17",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": true
+                },
+                {
+                  "id": "batch-03",
+                  "bed_id": "bed-03",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-08-03",
+                  "transplant_date": "2026-08-13",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": true
+                },
+                {
+                  "id": "batch-04",
+                  "bed_id": "bed-04",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-08-10",
+                  "transplant_date": "2026-08-20",
+                  "harvest_date": "2026-09-14",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": true
+                },
+                {
+                  "id": "batch-05",
+                  "bed_id": "bed-05",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-08-31",
+                  "transplant_date": "2026-09-07",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": true
+                },
+                {
+                  "id": "batch-06",
+                  "bed_id": "bed-06",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-08-24",
+                  "transplant_date": "2026-08-31",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": true
+                },
+                {
+                  "id": "batch-07",
+                  "bed_id": "bed-07",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-08-17",
+                  "transplant_date": "2026-08-27",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": true
+                },
+                {
+                  "id": "batch-08",
+                  "bed_id": "bed-08",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-08-24",
+                  "transplant_date": "2026-09-03",
+                  "harvest_date": "2026-09-28",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": true
+                },
+                {
+                  "id": "allocation-7efcabee2717ea8949a12733ed2a343a",
+                  "bed_id": "bed-01",
+                  "crop_id": "kailan",
+                  "recipe_id": "kailan-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 48,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-47eba377eb4aa917db2f48634c3d4c46",
+                  "bed_id": "bed-04",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-10-26",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-f97d7446800c06e018502773e9117668",
+                  "bed_id": "bed-09",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-08",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-5d27089d3e95583cd9935c86cc1df936",
+                  "bed_id": "bed-10",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-5be9ed22e62a32940b4bfcc0ac1118b2",
+                  "bed_id": "bed-11",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-21",
+                  "transplant_date": "2026-09-28",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-9cbea92c1b9949a6667b109735460aa4",
+                  "bed_id": "bed-12",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-10-05",
+                  "transplant_date": "2026-10-12",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-608147fa67c03fd79b656790b68dfdb2",
+                  "bed_id": "bed-13",
+                  "crop_id": "caixin",
+                  "recipe_id": "caixin-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-21",
+                  "harvest_date": "2026-10-12",
+                  "area_m2": 20,
+                  "expected_kg": 44,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-259b30fe0485ce71d5e2ff4077d4f8fb",
+                  "bed_id": "bed-14",
+                  "crop_id": "lettuce",
+                  "recipe_id": "lettuce-demo-v1",
+                  "sow_date": "2026-09-14",
+                  "transplant_date": "2026-09-24",
+                  "harvest_date": "2026-10-19",
+                  "area_m2": 20,
+                  "expected_kg": 46,
+                  "executed": false
+                },
+                {
+                  "id": "allocation-37a26557a5fc8f2c79b426105ea708b0",
+                  "bed_id": "bed-16",
+                  "crop_id": "pak_choi",
+                  "recipe_id": "pak_choi-demo-v1",
+                  "sow_date": "2026-09-28",
+                  "transplant_date": "2026-10-05",
+                  "harvest_date": "2026-11-02",
+                  "area_m2": 20,
+                  "expected_kg": 52,
+                  "executed": false
+                }
+              ],
+              "metrics": {
+                "coverage_kg": 442,
+                "surplus_kg": 41,
+                "expiry_kg": 192.99,
+                "rejection_kg": null,
+                "margin_sgd": 2731.07,
+                "waste_rescue_kg": 0
+              }
+            },
+            "fact_differences": {
+              "coverage_kg": -4,
+              "surplus_kg": -13,
+              "expiry_kg": 17,
+              "rejection_kg": null,
+              "margin_sgd": -199.52,
+              "waste_rescue_kg": 0
+            },
+            "outcome_basis": "projection"
+          },
+          "undo": {
+            "available": false,
+            "reason": "Only a completed applied constraint can be undone."
+          },
+          "approval": {
+            "available": false,
+            "reason": "Apply the current proposal before approving sandbox work.",
+            "strategy_id": "c47848f4e7754becf79d"
+          }
+        }
+      }
+    },
+    {
+      "name": "Records task: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Record result"
+        ],
+        "actual": [
+          "Back",
+          "Record result"
+        ]
+      }
+    },
+    {
+      "name": "Records task: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Records task: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "record-result",
+          "label": "Record result",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Record result",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Records result form retains exact task identity and frozen proposal binding",
+      "pass": true,
+      "detail": {
+        "taskCard": {
+          "id": "records:workflow_task:task-1b6f25903137179e40fcdef7",
+          "entityId": "task-1b6f25903137179e40fcdef7",
+          "entityKind": "workflow_task",
+          "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "revision": "0",
+          "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+          "snapshotId": "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+          "provenance": [
+            "task-1b6f25903137179e40fcdef7",
+            "783aeb80ee1a5e818d6eb540c9b9ef53",
+            "allocation-7efcabee2717ea8949a12733ed2a343a"
+          ],
+          "targets": [],
+          "basis": "projection",
+          "actions": [
+            {
+              "id": "back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "record-result",
+              "label": "Record result",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            }
+          ],
+          "authority": {
+            "back": "local_navigation",
+            "record-result": "local_navigation"
+          },
+          "eligibility": {
+            "back": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            },
+            "record-result": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            }
+          }
+        },
+        "resultForm": {
+          "id": "records:workflow_task:task-1b6f25903137179e40fcdef7",
+          "entityId": "task-1b6f25903137179e40fcdef7",
+          "entityKind": "workflow_task",
+          "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "revision": "0",
+          "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+          "snapshotId": "054060b0f7a12f19d423abdfb4f0e6f3493516659a1d523f09d23fa6c16d91ec",
+          "provenance": [
+            "task-1b6f25903137179e40fcdef7",
+            "783aeb80ee1a5e818d6eb540c9b9ef53",
+            "allocation-7efcabee2717ea8949a12733ed2a343a"
+          ],
+          "targets": [
+            "bed-01"
+          ],
+          "basis": "projection",
+          "actions": [
+            {
+              "id": "back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "save-result",
+              "label": "Save reported result",
+              "eligible": false,
+              "authority": "server_mutation",
+              "eligibilitySource": "local",
+              "disabledReason": "Complete the required fields or wait for the current request."
+            }
+          ],
+          "authority": {
+            "back": "local_navigation",
+            "save-result": "server_mutation"
+          },
+          "eligibility": {
+            "back": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            },
+            "save-result": {
+              "eligible": false,
+              "source": "local",
+              "reason": "Complete the required fields or wait for the current request."
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Records result form: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Save reported result"
+        ],
+        "actual": [
+          "Back",
+          "Save reported result"
+        ]
+      }
+    },
+    {
+      "name": "Records result form: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Records result form: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "save-result",
+          "label": "Save reported result",
+          "eligible": false,
+          "authority": "server_mutation",
+          "eligibilitySource": "local",
+          "disabledReason": "Complete the required fields or wait for the current request."
+        },
+        "button": {
+          "label": "Save reported result",
+          "disabled": true
+        }
+      }
+    },
+    {
+      "name": "Knowledge crop has no invented planning binding",
+      "pass": true,
+      "detail": {
+        "id": "crop-caixin",
+        "entityId": "caixin",
+        "entityKind": "crop",
+        "sessionId": null,
+        "inputHash": null,
+        "revision": null,
+        "resultId": null,
+        "snapshotId": null,
+        "provenance": [
+          "P01",
+          "P02"
+        ],
+        "targets": [],
+        "basis": null,
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Knowledge source has canonical identity and no invented planning binding",
+      "pass": true,
+      "detail": {
+        "id": "source-source-registry-empty",
+        "entityId": "source-registry-empty",
+        "entityKind": "source",
+        "sessionId": null,
+        "inputHash": null,
+        "revision": null,
+        "resultId": null,
+        "snapshotId": null,
+        "provenance": [
+          "source-registry-empty"
+        ],
+        "targets": [],
+        "basis": null,
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Knowledge source: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back"
+        ],
+        "actual": [
+          "Back"
+        ]
+      }
+    },
+    {
+      "name": "Knowledge source: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Knowledge conversation decodes its historical planning snapshot without inventing a revision",
+      "pass": true,
+      "detail": {
+        "conversationCard": {
+          "id": "saved-threads",
+          "entityId": "bound-contract-conversation",
+          "entityKind": "conversation",
+          "sessionId": "historical-session",
+          "inputHash": "historical-input-hash",
+          "revision": null,
+          "resultId": "historical-result",
+          "snapshotId": "historical-session:historical-result",
+          "provenance": [
+            "bound-contract-conversation"
+          ],
+          "targets": [],
+          "basis": null,
+          "actions": [
+            {
+              "id": "back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "open-read-only-replay",
+              "label": "Open read-only replay",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            }
+          ],
+          "authority": {
+            "back": "local_navigation",
+            "open-read-only-replay": "local_navigation"
+          },
+          "eligibility": {
+            "back": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            },
+            "open-read-only-replay": {
+              "eligible": true,
+              "source": "local",
+              "reason": null
+            }
+          }
+        },
+        "currentSession": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "snapshotRef": {
+          "kind": "planning",
+          "id": "historical-session:historical-result",
+          "hash": "historical-input-hash",
+          "version": "planning-snapshot-v1"
+        }
+      }
+    },
+    {
+      "name": "History saved plan canonical ID matches shown saved record",
+      "pass": true,
+      "detail": {
+        "id": "history:list:planning_session:63c1b1bb786f77833bc71a1ff3ed1479",
+        "entityId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "entityKind": "planning_session",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": "10",
+        "resultId": "2918673d2612bf368ff1d3eed0496a4c",
+        "snapshotId": null,
+        "provenance": [],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Read-only replay",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "History saved plan: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Read-only replay"
+        ],
+        "actual": [
+          "Back",
+          "Read-only replay"
+        ]
+      }
+    },
+    {
+      "name": "History saved plan: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "History saved plan: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Read-only replay",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Read-only replay",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "History frozen replay binds exact requested result with unknown revision",
+      "pass": true,
+      "detail": {
+        "id": "history:replay:planning_result:5f624db8cea7898437810cd90417d918",
+        "entityId": "5f624db8cea7898437810cd90417d918",
+        "entityKind": "planning_result",
+        "sessionId": "63c1b1bb786f77833bc71a1ff3ed1479",
+        "inputHash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "revision": null,
+        "resultId": "5f624db8cea7898437810cd90417d918",
+        "snapshotId": null,
+        "provenance": [
+          "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Saved versions",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "secondary",
+            "label": "New attempt",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "secondary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Experiments scenario ID/hash match shown saved scenario",
+      "pass": true,
+      "detail": {
+        "id": "experiments:scenarios:8553abc8e363ffad4bbf0c12f0b5c608",
+        "entityId": "8553abc8e363ffad4bbf0c12f0b5c608",
+        "entityKind": "scenario",
+        "sessionId": null,
+        "inputHash": "a3e6ecf6e582f8c5a0aac81d6878845a21bd452db71a2f1148ba393d9c7557d8",
+        "revision": null,
+        "resultId": null,
+        "snapshotId": null,
+        "provenance": [
+          "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+          "35345aa2768110f92bb52a5b641c697c"
+        ],
+        "targets": [
+          "bed-01",
+          "bed-02",
+          "bed-03",
+          "bed-04",
+          "bed-05",
+          "bed-06",
+          "bed-07",
+          "bed-08",
+          "bed-09",
+          "bed-10",
+          "bed-11",
+          "bed-12",
+          "bed-13",
+          "bed-15",
+          "bed-16"
+        ],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Inspect scenario",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "secondary",
+            "label": "New branch",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "secondary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Experiments scenario: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Inspect scenario",
+          "New branch"
+        ],
+        "actual": [
+          "Back",
+          "Inspect scenario",
+          "New branch"
+        ]
+      }
+    },
+    {
+      "name": "Experiments scenario: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Experiments scenario: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Inspect scenario",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Inspect scenario",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Experiments scenario: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "secondary",
+          "label": "New branch",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "New branch",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Experiments dataset has canonical snapshot and absent unrelated planning binding",
+      "pass": true,
+      "detail": {
+        "id": "experiments:explorer:reference:history",
+        "entityId": "reference",
+        "entityKind": "dataset_snapshot",
+        "sessionId": null,
+        "inputHash": "0cfaeb9001e02b53da493f67cada937a2728c607bf2a23e4bd579697b267c223",
+        "revision": null,
+        "resultId": null,
+        "snapshotId": "reference",
+        "provenance": [
+          "0cfaeb9001e02b53da493f67cada937a2728c607bf2a23e4bd579697b267c223"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Inspect records",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "secondary",
+            "label": "Public sources",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "secondary": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Experiments record view remains bound to exact frozen dataset",
+      "pass": true,
+      "detail": {
+        "id": "experiments:explorer:reference:history",
+        "entityId": "reference",
+        "entityKind": "dataset_snapshot",
+        "sessionId": null,
+        "inputHash": "0cfaeb9001e02b53da493f67cada937a2728c607bf2a23e4bd579697b267c223",
+        "revision": null,
+        "resultId": null,
+        "snapshotId": "reference",
+        "provenance": [
+          "0cfaeb9001e02b53da493f67cada937a2728c607bf2a23e4bd579697b267c223"
+        ],
+        "targets": [],
+        "basis": "projection",
+        "actions": [
+          {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "primary",
+            "label": "Inspect records",
+            "eligible": false,
+            "authority": "local_navigation",
+            "eligibilitySource": "local",
+            "disabledReason": "Waiting for server confirmation."
+          },
+          {
+            "id": "secondary",
+            "label": "Public sources",
+            "eligible": false,
+            "authority": "local_navigation",
+            "eligibilitySource": "local",
+            "disabledReason": "Waiting for server confirmation."
+          }
+        ],
+        "authority": {
+          "back": "local_navigation",
+          "primary": "local_navigation",
+          "secondary": "local_navigation"
+        },
+        "eligibility": {
+          "back": {
+            "eligible": true,
+            "source": "local",
+            "reason": null
+          },
+          "primary": {
+            "eligible": false,
+            "source": "local",
+            "reason": "Waiting for server confirmation."
+          },
+          "secondary": {
+            "eligible": false,
+            "source": "local",
+            "reason": "Waiting for server confirmation."
+          }
+        }
+      }
+    },
+    {
+      "name": "Experiments record: metadata action labels match visible footer",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Back",
+          "Inspect records",
+          "Public sources"
+        ],
+        "actual": [
+          "Back",
+          "Inspect records",
+          "Public sources"
+        ]
+      }
+    },
+    {
+      "name": "Experiments record: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "button": {
+          "label": "Back",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "name": "Experiments record: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "primary",
+          "label": "Inspect records",
+          "eligible": false,
+          "authority": "local_navigation",
+          "eligibilitySource": "local",
+          "disabledReason": "Waiting for server confirmation."
+        },
+        "button": {
+          "label": "Inspect records",
+          "disabled": true
+        }
+      }
+    },
+    {
+      "name": "Experiments record: action authority, eligibility and visible disabled state agree",
+      "pass": true,
+      "detail": {
+        "action": {
+          "id": "secondary",
+          "label": "Public sources",
+          "eligible": false,
+          "authority": "local_navigation",
+          "eligibilitySource": "local",
+          "disabledReason": "Waiting for server confirmation."
+        },
+        "button": {
+          "label": "Public sources",
+          "disabled": true
+        }
+      }
+    }
+  ],
+  "failures": []
+}

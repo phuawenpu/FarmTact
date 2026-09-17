@@ -1,0 +1,112 @@
+{
+  "base": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "conversation scenario review names the exact frozen source",
+      "pass": true,
+      "detail": "Sandbox · actual farm operations disabled\nReview frozen experiment\nMy frozen experiment\ndelay days\n0\nyield percent\n100\ndemand percent\n100\nlabour percent\n100\ncash percent\n50\n\nFrozen root: conversation 146bb9465c1d473cb12c3f67363b05a6 · Quest: none\n\nCreating this branch preserves the main farm. Run is a separate local calculation."
+    },
+    {
+      "name": "conversation-proposed scenario submits the exact conversation ID",
+      "pass": true,
+      "detail": {
+        "source": "146bb9465c1d473cb12c3f67363b05a6",
+        "conversation": "146bb9465c1d473cb12c3f67363b05a6"
+      }
+    },
+    {
+      "name": "conversation-proposed scenario uses the frozen baseline hash",
+      "pass": true,
+      "detail": {
+        "scenario": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "conversation": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76"
+      }
+    },
+    {
+      "name": "scenario result explicitly presents changed controls and affected entities",
+      "pass": true
+    },
+    {
+      "name": "infeasible learning result remains inspectable with violations",
+      "pass": true,
+      "detail": [
+        {
+          "policy": "Lean",
+          "status": "FEASIBLE",
+          "violations": 0
+        },
+        {
+          "policy": "Balanced",
+          "status": "INFEASIBLE",
+          "violations": 1
+        },
+        {
+          "policy": "Resilient",
+          "status": "FEASIBLE",
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "name": "generated dataset reopens with exact immutable ID hash and facts without regeneration",
+      "pass": true,
+      "detail": {
+        "id": "saved:a38894de09824abc80c6f33c24d084db",
+        "hash": "0cfaeb9001e02b53da493f67cada937a2728c607bf2a23e4bd579697b267c223",
+        "previewPosts": 1,
+        "savePosts": 1
+      }
+    },
+    {
+      "name": "snapshot branch honestly declares all-policy calculation",
+      "pass": true
+    },
+    {
+      "name": "snapshot review retains selected projection context and all-policy boundary",
+      "pass": true
+    },
+    {
+      "name": "snapshot branch sends exact snapshot without invented policy field",
+      "pass": true,
+      "detail": {
+        "name": "Exact reload dataset 1789652027804",
+        "controls": {
+          "delay_days": 0,
+          "yield_percent": 100,
+          "demand_percent": 100,
+          "labour_percent": 100,
+          "cash_percent": 50
+        },
+        "explorer_snapshot_id": "saved:a38894de09824abc80c6f33c24d084db"
+      }
+    },
+    {
+      "name": "snapshot branch creation succeeds",
+      "pass": true,
+      "detail": {
+        "status": 201,
+        "id": "d33b7484c4afd88931a29b04b4119d6c"
+      }
+    },
+    {
+      "name": "snapshot branch completes all supported policy calculations",
+      "pass": true,
+      "detail": {
+        "status": "COMPLETED",
+        "snapshot": "saved:a38894de09824abc80c6f33c24d084db",
+        "policies": [
+          "Lean",
+          "Balanced",
+          "Resilient"
+        ]
+      }
+    },
+    {
+      "name": "experiment gap suite has no browser errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

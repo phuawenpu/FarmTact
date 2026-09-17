@@ -69,10 +69,25 @@ function assumptionsFor(session: PlanningSession): FarmerAssumptions {
   };
 }
 
-function hasReservation(proposal: FarmerProposal, bedId: string) {
-  return (Array.isArray(proposal.changes) ? proposal.changes : []).some((change) =>
-    (change as { assumptions?: FarmerAssumptions }).assumptions?.reservations?.some((row) => row.bed_id === bedId),
-  );
+function isReservationOnly(proposal: FarmerProposal, session: PlanningSession, bedId: string) {
+  const changes = Array.isArray(proposal.changes) ? proposal.changes as Array<{ kind?: string; assumptions?: FarmerAssumptions }> : [];
+  if (changes.length !== 1 || changes[0].kind !== "planning_assumptions" || !changes[0].assumptions) return false;
+  const inverse = Array.isArray(proposal.inverse_changes) ? proposal.inverse_changes as Array<{ kind?: string; assumptions?: FarmerAssumptions }> : [];
+  const frozenBefore = inverse.length === 1 && inverse[0].kind === "planning_assumptions" ? inverse[0].assumptions : undefined;
+  // A draft is still based on the current revision. Once applied, only the
+  // proposal's frozen inverse records the actual before state; never infer it
+  // from the already-mutated current session.
+  const before = proposal.status === "draft" ? assumptionsFor(session) : frozenBefore;
+  if (!before) return false;
+  const after = changes[0].assumptions;
+  const unchangedArrays = ["tentative_orders", "future_demand", "seasonal", "order_changes"] as const;
+  if (unchangedArrays.some((key) => JSON.stringify(before[key] || []) !== JSON.stringify(after[key] || []))) return false;
+  if (JSON.stringify(before.capacity ?? null) !== JSON.stringify(after.capacity ?? null)) return false;
+  const withoutBed = (rows: FarmerAssumptions["reservations"] = []) => rows.filter((row) => row.bed_id !== bedId);
+  if (JSON.stringify(withoutBed(before.reservations)) !== JSON.stringify(withoutBed(after.reservations))) return false;
+  const reservation = after.reservations?.find((row) => row.bed_id === bedId);
+  const previous = before.reservations?.find((row) => row.bed_id === bedId);
+  return Boolean(reservation && JSON.stringify(reservation) !== JSON.stringify(previous ?? null));
 }
 
 function newerSession(current: PlanningSession | null, next: PlanningSession) {
@@ -145,8 +160,14 @@ export default function IntegratedCards({
       setBootstrap(farm); setSession(current);
       const state = await refreshWorkflow();
       const proposals = state.proposals.filter((item) => item.session_id === current.id);
-      const draft = [...proposals].reverse().find((item) => item.status === "draft");
-      setReviewProposal(draft || null); setDetail(draft ? "review" : null);
+      const growSpaceId = current.tactical_context?.grow_space?.id;
+      const reservationDraft = growSpaceId
+        ? [...proposals].reverse().find((item) => item.status === "draft" && isReservationOnly(item, current, growSpaceId))
+        : undefined;
+      // A saved reservation draft remains available from its mission card. Other
+      // Plan proposals belong to Plan and must never replace tool navigation or
+      // inherit the reservation review copy/action.
+      setReviewProposal(reservationDraft || null); setDetail(null);
     } catch (caught) {
       setError(message(caught, "The sandbox farm could not be opened."));
     } finally { setBusy(""); loadInFlight.current = false; }
@@ -206,7 +227,7 @@ export default function IntegratedCards({
   const tactical = session?.tactical_context;
   const grow = tactical?.grow_space;
   const proposals = workflow.proposals.filter((item) => item.session_id === session?.id);
-  const original = grow ? [...proposals].reverse().find((item) => !item.inverse_of_proposal_id && ["applied", "approved"].includes(item.status) && hasReservation(item, grow.id)) : undefined;
+  const original = grow && session ? [...proposals].reverse().find((item) => !item.inverse_of_proposal_id && ["applied", "approved"].includes(item.status) && isReservationOnly(item, session, grow.id)) : undefined;
   const inverse = original ? proposals.find((item) => item.inverse_of_proposal_id === original.id) : undefined;
   const inverseComplete = Boolean(inverse?.recalculation_job?.id && inverse.recalculation_job.id === (session as { result_id?: string } | null)?.result_id);
   const activeProposal = original && !inverseComplete ? original : undefined;
@@ -356,6 +377,7 @@ export default function IntegratedCards({
     if (card?.id === "simulation-result") { missionIndex.current = activeIndex; directTool.current = true; setSurface("history"); return; }
     if (!strategies.length) void calculate();
     else if (card?.id.startsWith("strategy-")) { setIndex(missionCards.findIndex((item) => item.id === "reservation")); void guide("tradeoff"); }
+    else if (card?.id === "reservation" && !activeProposal && reviewProposal) setDetail("review");
     else if (card?.id === "reservation" && !activeProposal) void propose();
     else if (card?.id === "reservation" && activeProposal) void approve();
     else setSurface("tools");

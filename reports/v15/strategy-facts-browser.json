@@ -1,0 +1,55 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "Lean presents every server metric and projected preview label",
+      "pass": true
+    },
+    {
+      "name": "Lean presents dated bed allocations and crop identities",
+      "pass": true
+    },
+    {
+      "name": "Lean keeps the same frozen planning result binding",
+      "pass": true
+    },
+    {
+      "name": "Balanced presents every server metric and projected preview label",
+      "pass": true
+    },
+    {
+      "name": "Balanced presents dated bed allocations and crop identities",
+      "pass": true
+    },
+    {
+      "name": "Balanced keeps the same frozen planning result binding",
+      "pass": true
+    },
+    {
+      "name": "Resilient presents every server metric and projected preview label",
+      "pass": true
+    },
+    {
+      "name": "Resilient presents dated bed allocations and crop identities",
+      "pass": true
+    },
+    {
+      "name": "Resilient keeps the same frozen planning result binding",
+      "pass": true
+    },
+    {
+      "name": "All three supported strategies are inspectable",
+      "pass": true
+    },
+    {
+      "name": "Labelled infeasible-result fixture remains inspectable with explicit status and constraint reason",
+      "pass": true
+    },
+    {
+      "name": "Comparing all schedules creates no farm mutation or inference",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

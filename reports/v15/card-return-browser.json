@@ -2,6 +2,10 @@
   "base": "http://127.0.0.1:4196",
   "checks": [
     {
+      "name": "Demand editor Back restores the originating objective and action focus",
+      "pass": true
+    },
+    {
       "name": "Plan Back restores original action focus",
       "pass": true
     },

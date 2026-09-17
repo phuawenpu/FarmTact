@@ -1,0 +1,195 @@
+{
+  "reference_tag": "farmtact-v13",
+  "source_commit": "30f4e974cda4e5624d85f66627e7667be91d9a15",
+  "assets": [
+    {
+      "group": "crops",
+      "name": "bayam-ready.svg",
+      "path": "apps/web/public/art/crops/bayam-ready.svg",
+      "bytes": 1341,
+      "sha256": "edc33de50fa7b60373b1bea33aee6c7b3abccdbd1e7fb6201f2778e40fece4ca"
+    },
+    {
+      "group": "crops",
+      "name": "caixin-growing.svg",
+      "path": "apps/web/public/art/crops/caixin-growing.svg",
+      "bytes": 1071,
+      "sha256": "9046a12edadaa6e16fe126d48aca3b80cae56ad4acff888a372362ce2e876ae4"
+    },
+    {
+      "group": "crops",
+      "name": "caixin-ready.svg",
+      "path": "apps/web/public/art/crops/caixin-ready.svg",
+      "bytes": 1148,
+      "sha256": "556a86099dc08f5ea76074172d0544547fa0fcbef7adf79dfd29017145ded1cd"
+    },
+    {
+      "group": "crops",
+      "name": "caixin-seedling.svg",
+      "path": "apps/web/public/art/crops/caixin-seedling.svg",
+      "bytes": 778,
+      "sha256": "2aeeab535bea5e1f7d9df626cc0d8a74034f88300fba4953fa73bdeda25e9d77"
+    },
+    {
+      "group": "crops",
+      "name": "garlic_chives-ready.svg",
+      "path": "apps/web/public/art/crops/garlic_chives-ready.svg",
+      "bytes": 2169,
+      "sha256": "eebe829f2d5eb69cb52b123e77c21659f356cedfe44a2608c8e0538977beaadd"
+    },
+    {
+      "group": "crops",
+      "name": "kailan-growing.svg",
+      "path": "apps/web/public/art/crops/kailan-growing.svg",
+      "bytes": 1043,
+      "sha256": "5cdec05a4b22c428a7b8caff30fb255845b9a0822ad073c2398fc2b4c8689c4f"
+    },
+    {
+      "group": "crops",
+      "name": "kailan-ready.svg",
+      "path": "apps/web/public/art/crops/kailan-ready.svg",
+      "bytes": 1102,
+      "sha256": "281c9b419ff62915c5de5c2f2c29529e080d498615817d2472b051299d30956d"
+    },
+    {
+      "group": "crops",
+      "name": "kailan-seedling.svg",
+      "path": "apps/web/public/art/crops/kailan-seedling.svg",
+      "bytes": 810,
+      "sha256": "ffbe5d49565838cc6679a9920c182478c07352e8e7f2170b01819870b6648d58"
+    },
+    {
+      "group": "crops",
+      "name": "kale-ready.svg",
+      "path": "apps/web/public/art/crops/kale-ready.svg",
+      "bytes": 1628,
+      "sha256": "5f3411b2371b3c54e2265dd580bbac88e404e17b58bf6b33081246f77783def0"
+    },
+    {
+      "group": "crops",
+      "name": "kangkong-ready.svg",
+      "path": "apps/web/public/art/crops/kangkong-ready.svg",
+      "bytes": 1065,
+      "sha256": "6e251c4f764621c9d48c74d3a95b94cf6a7fb11044bf6455fa6a44e21b60df61"
+    },
+    {
+      "group": "crops",
+      "name": "lettuce-growing.svg",
+      "path": "apps/web/public/art/crops/lettuce-growing.svg",
+      "bytes": 985,
+      "sha256": "6f8fa3c1689e5186f3f4de344f22240aca3873d9ae4c473a627199bd0c064269"
+    },
+    {
+      "group": "crops",
+      "name": "lettuce-ready.svg",
+      "path": "apps/web/public/art/crops/lettuce-ready.svg",
+      "bytes": 1071,
+      "sha256": "ecd3c91688f4e9303a9c1ec52ffad3215e0eaa69f8c168d2823821cafdd4dbda"
+    },
+    {
+      "group": "crops",
+      "name": "lettuce-seedling.svg",
+      "path": "apps/web/public/art/crops/lettuce-seedling.svg",
+      "bytes": 764,
+      "sha256": "bac2b88747ddf06b7f7e8f6774e905d92edb23acd67ab9cabb40619850176529"
+    },
+    {
+      "group": "crops",
+      "name": "malabar_spinach-ready.svg",
+      "path": "apps/web/public/art/crops/malabar_spinach-ready.svg",
+      "bytes": 1233,
+      "sha256": "a33c87e1cb0df1e813b94c87ebd0ba1823450cc6b3266bc847f7d38baf48b28c"
+    },
+    {
+      "group": "crops",
+      "name": "mustard_greens-ready.svg",
+      "path": "apps/web/public/art/crops/mustard_greens-ready.svg",
+      "bytes": 1801,
+      "sha256": "436ece025ac492be98a1129086a76556a9478ec1ea40feda475d791755b78c54"
+    },
+    {
+      "group": "crops",
+      "name": "pak_choi-growing.svg",
+      "path": "apps/web/public/art/crops/pak_choi-growing.svg",
+      "bytes": 1292,
+      "sha256": "6214dc0dc421a251b439a7e4dfee93b4ed16de2ab02c6c73305ca594c70d4353"
+    },
+    {
+      "group": "crops",
+      "name": "pak_choi-ready.svg",
+      "path": "apps/web/public/art/crops/pak_choi-ready.svg",
+      "bytes": 1578,
+      "sha256": "32d975b52434a01a7253c266e09c276afac284254d60f0c90b551f8e1805e039"
+    },
+    {
+      "group": "crops",
+      "name": "pak_choi-seedling.svg",
+      "path": "apps/web/public/art/crops/pak_choi-seedling.svg",
+      "bytes": 759,
+      "sha256": "b05011cd16532fe500f7df16b076749cf1513cc10dc6c68d1c4820273d371359"
+    },
+    {
+      "group": "crops",
+      "name": "sawtooth_coriander-ready.svg",
+      "path": "apps/web/public/art/crops/sawtooth_coriander-ready.svg",
+      "bytes": 2099,
+      "sha256": "610924048a2f639bb6a3d8c552732a2e2041bcf84d74cc77b3727542cff7d043"
+    },
+    {
+      "group": "crops",
+      "name": "sweet_potato_leaves-ready.svg",
+      "path": "apps/web/public/art/crops/sweet_potato_leaves-ready.svg",
+      "bytes": 1148,
+      "sha256": "8332005055d44bfb885425a5a8ba0657f0e0ffc182261beff8da29d1fad9a667"
+    },
+    {
+      "group": "advisors",
+      "name": "asha.svg",
+      "path": "apps/web/public/art/advisors/asha.svg",
+      "bytes": 1706,
+      "sha256": "ceea68e5a61efc2ea5e989c35fb7a12e1fb5ef117ef515f77a0eed7c23bbe8ca"
+    },
+    {
+      "group": "advisors",
+      "name": "ben.svg",
+      "path": "apps/web/public/art/advisors/ben.svg",
+      "bytes": 1820,
+      "sha256": "b7e9791cabdf926d35dc2ec75621a89c447ec8faf768d048e37bbd0b78a74f22"
+    },
+    {
+      "group": "advisors",
+      "name": "hana.svg",
+      "path": "apps/web/public/art/advisors/hana.svg",
+      "bytes": 1954,
+      "sha256": "f3bab1d6c0b6b02a83e1bc2df441e52aea1e5d392e7298514dec0dbf6a8c92fe"
+    },
+    {
+      "group": "advisors",
+      "name": "idris.svg",
+      "path": "apps/web/public/art/advisors/idris.svg",
+      "bytes": 1999,
+      "sha256": "0efe79ba7ef723d825db6d30ba8c3dfaa867b15e73f47c41070b5e3b46067f2b"
+    },
+    {
+      "group": "advisors",
+      "name": "lina.svg",
+      "path": "apps/web/public/art/advisors/lina.svg",
+      "bytes": 1966,
+      "sha256": "f336348b7b6bd5e2e13bbe40ed2908fa43cc3673985c8ce7ad434cd7f449ab8c"
+    },
+    {
+      "group": "advisors",
+      "name": "mei.svg",
+      "path": "apps/web/public/art/advisors/mei.svg",
+      "bytes": 1922,
+      "sha256": "62d3b57d34edb40f5b8eea479a568d7a2edc8c3ce348bd2dc8abfcd5895563b8"
+    },
+    {
+      "group": "advisors",
+      "name": "ravi.svg",
+      "path": "apps/web/public/art/advisors/ravi.svg",
+      "bytes": 1755,
+      "sha256": "ea5ea8ba2e3335405b531e15d31d40a80182e54c33969babecca68d83f7994b1"
+    }
+  ]
+}

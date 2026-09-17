@@ -26,18 +26,38 @@
       "name": "V15 Research result card publishes frozen server binding and eligibility",
       "pass": true,
       "detail": {
-        "entityId": "ed76f9394a5df0d634228ee1af4a1b2b:result:2",
-        "entityKind": "research_result",
-        "sessionId": "ed76f9394a5df0d634228ee1af4a1b2b",
-        "inputHash": "559b88b28f0e336e3ee95b4012976c2043e724079dac3b209d512f6e947a9e17",
-        "basis": "recorded_simulation",
-        "actions": [
+        "researchBinding": {
+          "entityId": "5e3e9d7788b45f6afcdcbf768ef351e7:result:2",
+          "entityKind": "research_result",
+          "sessionId": "5e3e9d7788b45f6afcdcbf768ef351e7",
+          "inputHash": "559b88b28f0e336e3ee95b4012976c2043e724079dac3b209d512f6e947a9e17",
+          "revision": "9",
+          "basis": "projection",
+          "actions": [
+            {
+              "id": "results-back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "results-primary-choose-simulation-only-result",
+              "label": "Choose simulation-only result",
+              "eligible": true,
+              "authority": "server_mutation",
+              "eligibilitySource": "server"
+            }
+          ]
+        },
+        "resultFooter": [
           {
-            "id": "results-primary-choose-simulation-only-result",
+            "label": "Back",
+            "disabled": false
+          },
+          {
             "label": "Choose simulation-only result",
-            "eligible": true,
-            "authority": "server_mutation",
-            "eligibilitySource": "server"
+            "disabled": false
           }
         ]
       }
@@ -54,6 +74,43 @@
     {
       "name": "V15 research history loads beyond the first 20 revisions",
       "pass": true
+    },
+    {
+      "name": "Research history binding uses exact displayed revision and busy action parity",
+      "pass": true,
+      "detail": {
+        "historyBinding": {
+          "revision": "0",
+          "actions": [
+            {
+              "id": "history-back",
+              "label": "Back",
+              "eligible": true,
+              "authority": "local_navigation",
+              "eligibilitySource": "local"
+            },
+            {
+              "id": "history-primary-load-next-history-page",
+              "label": "Load next history page",
+              "eligible": false,
+              "authority": "local_navigation",
+              "eligibilitySource": "local",
+              "disabledReason": "A server request is already in progress."
+            }
+          ],
+          "heading": "Recorded revision 0"
+        },
+        "historyFooter": [
+          {
+            "label": "Back",
+            "disabled": false
+          },
+          {
+            "label": "Load next history page",
+            "disabled": true
+          }
+        ]
+      }
     },
     {
       "name": "V15 research report exposes documents sources and screenshots",
@@ -77,6 +134,15 @@
       "name": "Research transcript refresh makes no duplicate provider submission",
       "pass": true,
       "detail": 1
+    },
+    {
+      "name": "interrupted Research calculation reconciles by GET without automatic mutation retry",
+      "pass": true,
+      "detail": [
+        "run",
+        "cancel_calculation",
+        "retry_calculation"
+      ]
     },
     {
       "name": "V15 Research calculation exposes explicit run cancel retry sequence",

@@ -9,6 +9,7 @@ const History=lazy(()=>import('./IntegratedHistory'))
 export default function IntegratedApp(){
  const [research,setResearch]=useState(false)
  const [recovery,setRecovery]=useState(false)
+ const [rescue,setRescue]=useState(false)
  const origin=useRef<{element:HTMLElement|null;scroll:number;label:string}|null>(null)
  const enter=(set:(value:boolean)=>void)=>{
   const element=document.activeElement as HTMLElement|null
@@ -33,6 +34,6 @@ export default function IntegratedApp(){
   }
  }
  return <IntegratedCards renderTool={(tool,close)=><Suspense fallback={<p role="status">Opening cards…</p>}>
- {tool==='records'?<><div hidden={recovery}><Records onClose={close} onOpenPlan={()=>enter(setRecovery)}/></div>{recovery&&<Plan onClose={()=>leave(setRecovery)}/>}</>:tool==='knowledge'?<Knowledge onClose={close}/>:tool==='experiments'?<><div hidden={research}><Experiments onClose={close} onResearch={()=>enter(setResearch)}/></div>{research&&<Research onClose={()=>leave(setResearch)}/>}</>:tool==='plan'?<Plan onClose={close}/>:<History onClose={close}/>}
+ {tool==='records'?<><div hidden={recovery||rescue}><Records onClose={close} onOpenPlan={()=>enter(setRecovery)} onOpenWasteRescue={()=>enter(setRescue)}/></div>{recovery&&<Plan onClose={()=>leave(setRecovery)}/>} {rescue&&<Experiments initialView="rescue" onClose={()=>leave(setRescue)}/>}</>:tool==='knowledge'?<Knowledge onClose={close}/>:tool==='experiments'?<><div hidden={research}><Experiments onClose={close} onResearch={()=>enter(setResearch)}/></div>{research&&<Research onClose={()=>leave(setResearch)}/>}</>:tool==='plan'?<Plan onClose={close}/>:<History onClose={close}/>}
  </Suspense>}/>
 }

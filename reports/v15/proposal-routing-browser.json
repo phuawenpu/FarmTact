@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "fixture contains a mixed general draft with a reservation",
+      "pass": true,
+      "detail": [
+        "1e2317621b44e30715edf477ccc926e6"
+      ]
+    },
+    {
+      "name": "mixed draft does not force reservation review",
+      "pass": true,
+      "detail": "FARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Inspect the confirmed order, available space and planning date before calculating.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16"
+    },
+    {
+      "name": "browsing tools with a mixed draft sends no mutation",
+      "pass": true,
+      "detail": {
+        "sessionId": "e808c44dedd26fdbafba783ff5cc0dd3",
+        "writes": []
+      }
+    },
+    {
+      "name": "fixture contains a frozen applied reservation proposal",
+      "pass": true,
+      "detail": "783aeb80ee1a5e818d6eb540c9b9ef53"
+    },
+    {
+      "name": "applied reservation remains recognized from frozen before state",
+      "pass": true,
+      "detail": "APPLIED CONSTRAINT\nB3 is reserved\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nProduction coverage\n−4 kg\nExpiry exposure\n+17 kg\nPlanner margin\n−199.5 SGD"
+    },
+    {
+      "name": "saved reservation barrier remains visible",
+      "pass": true,
+      "detail": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+    }
+  ],
+  "failures": []
+}

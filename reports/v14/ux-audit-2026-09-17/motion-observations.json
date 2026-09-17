@@ -1,0 +1,1652 @@
+[
+  {
+    "name": "intro-choice-300ms",
+    "scrollY": 0,
+    "text": "FarmTact\n\nA FIRST SEASON YOU CAN FINISH\n\nPlan the farm.\nWatch it respond.\n\nLearn production planning through one small order, one clear choice and its recorded consequences.\n\n01 · YOUR GOAL\nKeep one promise\n\nGuide a tiny Singapore farm from a confirmed order to a recorded delivery.\n\nIllustrated example · not a live farm reading\n02 · YOUR CHOICES\nCompare two plans\n\nSee how each growing plan uses the little farm, then make one clear choice.\n\nIllustrated example · your season will show its own choices\n03 · CONSEQUENCES\nSee the farm respond\n\nMaintenance and delivery show what each decision changes without touching real operations.\n\nIllustrated example · simulation only\nPrevious\nNext\nStart playing\nPause illustrations\n\nUse\n←\n→\nto move ·\nEnter\nto start",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "running",
+        "time": 300.05299999674804,
+        "target": "bg-intro-card bg-intro-card--choices is-active is-next"
+      },
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-pop",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": null
+      },
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-delivery-loop",
+        "state": "running",
+        "time": 816.6989999967851,
+        "target": "bg-art-delivery"
+      }
+    ],
+    "primary": {
+      "x": 18,
+      "y": 708.078125,
+      "width": 354,
+      "height": 48,
+      "top": 708.078125,
+      "right": 372,
+      "bottom": 756.078125,
+      "left": 18
+    },
+    "scene": {
+      "x": 19.300933837890625,
+      "y": 313.108154296875,
+      "width": 351.9355163574219,
+      "height": 157.9710693359375,
+      "top": 313.108154296875,
+      "right": 371.2364501953125,
+      "bottom": 471.0792236328125,
+      "left": 19.300933837890625
+    }
+  },
+  {
+    "name": "intro-choice-1200ms",
+    "scrollY": 0,
+    "text": "FarmTact\n\nA FIRST SEASON YOU CAN FINISH\n\nPlan the farm.\nWatch it respond.\n\nLearn production planning through one small order, one clear choice and its recorded consequences.\n\n01 · YOUR GOAL\nKeep one promise\n\nGuide a tiny Singapore farm from a confirmed order to a recorded delivery.\n\nIllustrated example · not a live farm reading\n02 · YOUR CHOICES\nCompare two plans\n\nSee how each growing plan uses the little farm, then make one clear choice.\n\nIllustrated example · your season will show its own choices\n03 · CONSEQUENCES\nSee the farm respond\n\nMaintenance and delivery show what each decision changes without touching real operations.\n\nIllustrated example · simulation only\nPrevious\nNext\nStart playing\nPause illustrations\n\nUse\n←\n→\nto move ·\nEnter\nto start",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 420,
+        "target": "bg-intro-card bg-intro-card--choices is-active is-next"
+      },
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-pop",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": null
+      },
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-sun"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-plants"
+      },
+      {
+        "name": "bg-delivery-loop",
+        "state": "running",
+        "time": 1916.5989999967849,
+        "target": "bg-art-delivery"
+      }
+    ],
+    "primary": {
+      "x": 18,
+      "y": 708.078125,
+      "width": 354,
+      "height": 48,
+      "top": 708.078125,
+      "right": 372,
+      "bottom": 756.078125,
+      "left": 18
+    },
+    "scene": {
+      "x": 19,
+      "y": 313.078125,
+      "width": 352,
+      "height": 158,
+      "top": 313.078125,
+      "right": 371,
+      "bottom": 471.078125,
+      "left": 19
+    }
+  },
+  {
+    "name": "lean-settled",
+    "scrollY": 0,
+    "text": "STEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n1 / 2\nFeasible · 2 Kg Short\nLean plan\n\nUses 62.5% of the growing space and delivers 23 of 25 kg, leaving a 2 kg shortfall.\n\nEXPECTED DELIVERY\n23 kg\nGROWING SPACE USED\n62.5%\nESTIMATED COST\nSGD 73\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 3983.2389999995357,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 3683.251000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 118,
+      "y": 737,
+      "width": 154,
+      "height": 50,
+      "top": 737,
+      "right": 272,
+      "bottom": 787,
+      "left": 118
+    },
+    "scene": {
+      "x": 12,
+      "y": 136,
+      "width": 366,
+      "height": 250,
+      "top": 136,
+      "right": 378,
+      "bottom": 386,
+      "left": 12
+    }
+  },
+  {
+    "name": "resilient-220ms",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 4349.894999999536,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 4049.9070000006877,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 118,
+      "y": 751.359375,
+      "width": 154,
+      "height": 50,
+      "top": 751.359375,
+      "right": 272,
+      "bottom": 801.359375,
+      "left": 118
+    },
+    "scene": {
+      "x": 12,
+      "y": 136,
+      "width": 366,
+      "height": 250,
+      "top": 136,
+      "right": 378,
+      "bottom": 386,
+      "left": 12
+    }
+  },
+  {
+    "name": "resilient-settled",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 5516.514999999536,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5216.527000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 118,
+      "y": 751.359375,
+      "width": 154,
+      "height": 50,
+      "top": 751.359375,
+      "right": 272,
+      "bottom": 801.359375,
+      "left": 118
+    },
+    "scene": {
+      "x": 12,
+      "y": 136,
+      "width": 366,
+      "height": 250,
+      "top": 136,
+      "right": 378,
+      "bottom": 386,
+      "left": 12
+    }
+  },
+  {
+    "name": "explain-settled",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nWHY THIS IS HERE\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 6133.114999999536,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5833.127000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 118,
+      "y": 829.359375,
+      "width": 154,
+      "height": 50,
+      "top": 829.359375,
+      "right": 272,
+      "bottom": 879.359375,
+      "left": 118
+    },
+    "scene": {
+      "x": 12,
+      "y": 136,
+      "width": 366,
+      "height": 250,
+      "top": 136,
+      "right": 378,
+      "bottom": 386,
+      "left": 12
+    }
+  },
+  {
+    "name": "explain-360",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nWHY THIS IS HERE\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 6233.132999999535,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5933.145000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 108.125,
+      "y": 798.359375,
+      "width": 143.734375,
+      "height": 50,
+      "top": 798.359375,
+      "right": 251.859375,
+      "bottom": 848.359375,
+      "left": 108.125
+    },
+    "scene": {
+      "x": 8,
+      "y": 129,
+      "width": 344,
+      "height": 232,
+      "top": 129,
+      "right": 352,
+      "bottom": 361,
+      "left": 8
+    }
+  },
+  {
+    "name": "explain-430",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nWHY THIS IS HERE\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nSimulated farm lesson\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 6299.798999999535,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 5999.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 128.65625,
+      "y": 810.90625,
+      "width": 172.671875,
+      "height": 50,
+      "top": 810.90625,
+      "right": 301.328125,
+      "bottom": 860.90625,
+      "left": 128.65625
+    },
+    "scene": {
+      "x": 12,
+      "y": 136,
+      "width": 406,
+      "height": 250,
+      "top": 136,
+      "right": 418,
+      "bottom": 386,
+      "left": 12
+    }
+  },
+  {
+    "name": "explain-desktop",
+    "scrollY": 0,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\n\nYour customer needs 25 kg of lettuce by 23 February. Compare two ways to grow it, then choose your plan.\n\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nSimulated farm · noninteractive\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nWHY THIS IS HERE\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nSimulated farm lesson\nSwipe or use controls below\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n←\n→\ncards ·\nEnter\nact ·\nE\nexplain ·\nM\nmore\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 6399.798999999535,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 6099.811000000687,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 462.65625,
+      "y": 806.140625,
+      "width": 354.671875,
+      "height": 50,
+      "top": 806.140625,
+      "right": 817.328125,
+      "bottom": 856.140625,
+      "left": 462.65625
+    },
+    "scene": {
+      "x": 242,
+      "y": 154.1875,
+      "width": 796,
+      "height": 302,
+      "top": 154.1875,
+      "right": 1038,
+      "bottom": 456.1875,
+      "left": 242
+    }
+  },
+  {
+    "name": "paused",
+    "scrollY": 16,
+    "text": "Resilient plan. Card 2 of 2.\nSTEP 3 OF 8\nDeliver the confirmed order\n\nYour customer needs 25 kg of lettuce by 23 February. Compare two ways to grow it, then choose your plan.\n\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nSimulated farm · noninteractive\nCALCULATED PLAN\n2 / 2\nFeasible\nResilient plan\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nEXPECTED DELIVERY\n25 kg\nGROWING SPACE USED\n81.2%\nESTIMATED COST\nSGD 92\nWHY THIS IS HERE\n\nUses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.\n\nSimulated farm lesson\nSwipe or use controls below\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPlay motion\n←\n→\ncards ·\nEnter\nact ·\nE\nexplain ·\nM\nmore\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "paused",
+        "time": 6583.100999999536,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "paused",
+        "time": 6283.113000000688,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "paused",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 462.65625,
+      "y": 790.140625,
+      "width": 354.671875,
+      "height": 50,
+      "top": 790.140625,
+      "right": 817.328125,
+      "bottom": 840.140625,
+      "left": 462.65625
+    },
+    "scene": {
+      "x": 242,
+      "y": 138.1875,
+      "width": 796,
+      "height": 302,
+      "top": 138.1875,
+      "right": 1038,
+      "bottom": 440.1875,
+      "left": 242
+    }
+  },
+  {
+    "name": "pause-after-reload",
+    "scrollY": 0,
+    "text": "STEP 3 OF 8\nDeliver the confirmed order\n\nYour customer needs 25 kg of lettuce by 23 February. Compare two ways to grow it, then choose your plan.\n\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nSimulated farm · noninteractive\nCALCULATED PLAN\n1 / 2\nFeasible · 2 Kg Short\nLean plan\n\nUses 62.5% of the growing space and delivers 23 of 25 kg, leaving a 2 kg shortfall.\n\nEXPECTED DELIVERY\n23 kg\nGROWING SPACE USED\n62.5%\nESTIMATED COST\nSGD 73\nSimulated farm lesson\nSwipe or use controls below\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPause motion\n←\n→\ncards ·\nEnter\nact ·\nE\nexplain ·\nM\nmore\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-sun",
+        "state": "running",
+        "time": 1833.270000000438,
+        "target": "bg-scene-sun"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "finished",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-grow",
+        "state": "running",
+        "time": 1483.2839999993566,
+        "target": "bg-scene-plant"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "finished",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 462.65625,
+      "y": 798.1875,
+      "width": 354.671875,
+      "height": 50,
+      "top": 798.1875,
+      "right": 817.328125,
+      "bottom": 848.1875,
+      "left": 462.65625
+    },
+    "scene": {
+      "x": 242,
+      "y": 154.1875,
+      "width": 796,
+      "height": 302,
+      "top": 154.1875,
+      "right": 1038,
+      "bottom": 456.1875,
+      "left": 242
+    }
+  },
+  {
+    "name": "reduced-motion",
+    "scrollY": 0,
+    "text": "STEP 3 OF 8\nDeliver the confirmed order\n\nYour customer needs 25 kg of lettuce by 23 February. Compare two ways to grow it, then choose your plan.\n\nChoose a plan\nFARM VIEW\nYour teaching farm\nA1 · Lettuce\nA2\nB3\nB4\n2026-01-05\nSimulated farm\nSimulated farm · noninteractive\nCALCULATED PLAN\n1 / 2\nFeasible · 2 Kg Short\nLean plan\n\nUses 62.5% of the growing space and delivers 23 of 25 kg, leaving a 2 kg shortfall.\n\nEXPECTED DELIVERY\n23 kg\nGROWING SPACE USED\n62.5%\nESTIMATED COST\nSGD 73\nSimulated farm lesson\nSwipe or use controls below\nPrevious\nNext\nExplain\nChoose this plan\nMore\nPlay motion\n←\n→\ncards ·\nEnter\nact ·\nE\nexplain ·\nM\nmore\n\nPlan Calculation: Completed · Saved Update 2",
+    "animations": [
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--growing "
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty "
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-stage-enter",
+        "state": "paused",
+        "time": 620,
+        "target": "bg-scene-bed bg-scene-bed--empty is-target"
+      },
+      {
+        "name": "bg-card-arrive",
+        "state": "paused",
+        "time": 230,
+        "target": "bg-card is-next"
+      }
+    ],
+    "primary": {
+      "x": 462.65625,
+      "y": 798.1875,
+      "width": 354.671875,
+      "height": 50,
+      "top": 798.1875,
+      "right": 817.328125,
+      "bottom": 848.1875,
+      "left": 462.65625
+    },
+    "scene": {
+      "x": 242,
+      "y": 154.1875,
+      "width": 796,
+      "height": 302,
+      "top": 154.1875,
+      "right": 1038,
+      "bottom": 456.1875,
+      "left": 242
+    }
+  }
+]

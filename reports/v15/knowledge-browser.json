@@ -2,6 +2,122 @@
   "status": "PASS",
   "checks": [
     {
+      "name": "crop profile caixin exposes supported recipe boundary",
+      "pass": true,
+      "detail": "caixin"
+    },
+    {
+      "name": "crop profile pak_choi exposes supported recipe boundary",
+      "pass": true,
+      "detail": "pak_choi"
+    },
+    {
+      "name": "crop profile kailan exposes supported recipe boundary",
+      "pass": true,
+      "detail": "kailan"
+    },
+    {
+      "name": "crop profile bayam exposes supported recipe boundary",
+      "pass": true,
+      "detail": "bayam"
+    },
+    {
+      "name": "crop profile kangkong exposes supported recipe boundary",
+      "pass": true,
+      "detail": "kangkong"
+    },
+    {
+      "name": "crop profile lettuce exposes supported recipe boundary",
+      "pass": true,
+      "detail": "lettuce"
+    },
+    {
+      "name": "crop profile kale exposes supported recipe boundary",
+      "pass": true,
+      "detail": "kale"
+    },
+    {
+      "name": "crop profile mustard_greens exposes supported recipe boundary",
+      "pass": true,
+      "detail": "mustard_greens"
+    },
+    {
+      "name": "crop profile malabar_spinach exposes supported recipe boundary",
+      "pass": true,
+      "detail": "malabar_spinach"
+    },
+    {
+      "name": "crop profile sweet_potato_leaves exposes supported recipe boundary",
+      "pass": true,
+      "detail": "sweet_potato_leaves"
+    },
+    {
+      "name": "crop profile garlic_chives exposes supported recipe boundary",
+      "pass": true,
+      "detail": "garlic_chives"
+    },
+    {
+      "name": "crop profile sawtooth_coriander exposes supported recipe boundary",
+      "pass": true,
+      "detail": "sawtooth_coriander"
+    },
+    {
+      "name": "all 20 representative crop-stage assets are explicitly mapped and reachable",
+      "pass": true,
+      "detail": {
+        "cropProfiles": 12,
+        "assetCount": 20,
+        "statuses": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "labelled source transport fixture exposes complete registry metadata and exact admitted facts",
+      "pass": true,
+      "detail": {
+        "labels": [
+          "Observed",
+          "Retrieved",
+          "Freshness",
+          "Status",
+          "Units",
+          "Licence",
+          "Export policy",
+          "Calculation admission"
+        ],
+        "visibility": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      }
+    },
+    {
       "name": "V15 Knowledge card publishes canonical adviser and planning binding",
       "pass": true,
       "detail": {
@@ -92,6 +208,15 @@
       "name": "read-only refresh does not resubmit accepted provider work",
       "pass": true,
       "detail": 4
+    },
+    {
+      "name": "planning Council budget outage keeps numerical result usable without automatic retry",
+      "pass": true,
+      "detail": {
+        "planningReviews": 1,
+        "numericalBefore": "Session revision\n1\nStrategies\n1\nCouncil status\nnot requested",
+        "numericalAfter": "Session revision\n1\nStrategies\n1\nCouncil status\nnot requested"
+      }
     },
     {
       "name": "V15 Knowledge gateway fixture has no browser errors",

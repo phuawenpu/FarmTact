@@ -18,6 +18,16 @@ type Card =
 
 const terminal = new Set(["COMPLETED", "FAILED", "CANCELLED", "WITHHELD", "BLOCKED", "PARTIAL"]);
 const words = (value: unknown) => String(value ?? "Not recorded").replaceAll("_", " ");
+const cropStageArt: Record<string, string[]> = {
+  caixin: ["caixin-seedling.svg", "caixin-growing.svg", "caixin-ready.svg"],
+  pak_choi: ["pak_choi-seedling.svg", "pak_choi-growing.svg", "pak_choi-ready.svg"],
+  kailan: ["kailan-seedling.svg", "kailan-growing.svg", "kailan-ready.svg"],
+  lettuce: ["lettuce-seedling.svg", "lettuce-growing.svg", "lettuce-ready.svg"],
+  bayam: ["bayam-ready.svg"], kangkong: ["kangkong-ready.svg"], kale: ["kale-ready.svg"],
+  mustard_greens: ["mustard_greens-ready.svg"], malabar_spinach: ["malabar_spinach-ready.svg"],
+  sweet_potato_leaves: ["sweet_potato_leaves-ready.svg"], garlic_chives: ["garlic_chives-ready.svg"],
+  sawtooth_coriander: ["sawtooth_coriander-ready.svg"],
+};
 const date = (value: unknown) => {
   if (!value) return "Not recorded";
   const parsed = new Date(String(value));
@@ -238,17 +248,20 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
 }
 
 function CropCard({ crop, evidence }: { crop: Crop; evidence: EvidenceRecord[] }) {
-  return <><span className="ik-kicker">Crop profile · representative art</span><div className="ik-title-row"><img src={`/art/crops/${crop.id}-growing.svg`} alt="" onError={(event) => { event.currentTarget.hidden = true; }} /><div><h2>{crop.label}</h2><p>{crop.harvested_part ? `Harvested part: ${crop.harvested_part}.` : "Harvested part not recorded."}</p></div></div>
+  const art = cropStageArt[crop.id] || [];
+  return <><span className="ik-kicker">Crop profile · representative art</span><div className="ik-title-row"><div className="ik-crop-art" aria-label={`${crop.label} representative stage artwork`}>{art.map((file) => { const stage = file.slice(file.lastIndexOf("-") + 1, -4); return <figure key={file}><img src={`/art/crops/${file}`} alt={`${crop.label} ${stage} stage illustration`}/><figcaption>{words(stage)}</figcaption></figure>; })}</div><div><h2>{crop.label}</h2><p>{crop.harvested_part ? `Harvested part: ${crop.harvested_part}.` : "Harvested part not recorded."}</p></div></div>
     <dl className="ik-facts"><Fact label="Cycle" value={crop.recipe ? `${crop.recipe.cycle_days} days` : "No supported planning recipe"}/><Fact label="Nursery" value={crop.recipe ? `${crop.recipe.nursery_days} days` : "Not modelled"}/><Fact label="Recipe status" value={crop.recipe?.validation_status || "Unsupported"}/></dl>
-    <p className="ik-boundary">Recipe values are planning assumptions, not a real-farm growth guarantee. Unsupported states must not be shown as harvest-ready.</p>
+    <p className="ik-boundary">Recipe values are planning assumptions, not a real-farm growth guarantee. Stage artwork is a labelled reference library, not the current farm state; a ready-stage illustration does not claim this crop is harvest-ready.</p>
     {!!crop.warnings?.length && <ul>{crop.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>}
     <section className="ik-evidence"><h3>Evidence and limitations</h3>{evidence.length ? evidence.map((item) => <details key={item.evidence_id}><summary>{item.title || item.evidence_id}</summary><p>{item.finding || "No finding recorded."}</p><p><b>Scope:</b> {item.scope || "Not recorded"}</p><p><b>Limit:</b> {item.limit || "Not recorded"}</p><small>{words(item.access_review_status)} · {item.year || "year not recorded"}</small>{item.source_url && <a href={item.source_url} target="_blank" rel="noreferrer">Inspect source ↗</a>}</details>) : <p>No evidence records were returned for this profile.</p>}</section></>;
 }
 
 function SourceCard({ source }: { source: Source }) {
+  const details = source as Source & { export_policy?: unknown; calculation_admission?: unknown; admitted_facts?: unknown };
   const stale = /stale|missing|unavailable|registry/.test(`${source.status} ${source.freshness} ${source.availability_status}`.toLowerCase());
   return <><span className="ik-kicker">Source record · {source.origin}</span><h2>{source.name}</h2><p>{source.summary}</p><div className={`ik-source-state ${stale ? "is-limited" : ""}`}>{stale ? "Limited or stale source" : "Available source"}</div>
-    <dl className="ik-facts"><Fact label="Observed" value={date(source.observed_at)}/><Fact label="Retrieved" value={date(source.retrieved_at)}/><Fact label="Freshness" value={words(source.freshness)}/><Fact label="Status" value={words(source.availability_status || source.status)}/><Fact label="Units" value={Array.isArray(source.unit) ? source.unit.join(", ") : source.unit || "Not recorded"}/><Fact label="Licence" value={words(source.licence_state)}/></dl>
+    <dl className="ik-facts"><Fact label="Observed" value={date(source.observed_at)}/><Fact label="Retrieved" value={date(source.retrieved_at)}/><Fact label="Freshness" value={words(source.freshness)}/><Fact label="Status" value={words(source.availability_status || source.status)}/><Fact label="Units" value={Array.isArray(source.unit) ? source.unit.join(", ") : source.unit || "Not recorded"}/><Fact label="Licence" value={words(source.licence_state)}/><Fact label="Export policy" value={words(details.export_policy)}/><Fact label="Calculation admission" value={words(details.calculation_admission)}/></dl>
+    {details.admitted_facts != null && <details><summary>Exact admitted facts</summary><pre>{JSON.stringify(details.admitted_facts, null, 2)}</pre></details>}
     {source.coverage && <details><summary>Coverage details</summary><pre>{JSON.stringify(source.coverage, null, 2)}</pre></details>}{source.url && <a className="ik-link" href={source.url} target="_blank" rel="noreferrer">Inspect public source ↗</a>}
     <p className="ik-boundary">Source availability and freshness are separate from whether an adviser interpretation is valid.</p></>;
 }

@@ -142,3 +142,19 @@ Card-binding verification found form eligibility metadata out of step with disab
 buttons; final checks are verifying the correction. A resumed shell also needs to
 distinguish general proposals from reservation-specific drafts. These remain
 acceptance work, not waived limitations. No V15 staging or publication has occurred.
+
+Private checkpoint (17 September, 13:33 UTC): the concurrent HTTP/PostgreSQL
+proposal test passes, covering create/apply/inverse/approval exactly-once behavior
+with four simultaneous retries per action. The full suite is rerunning with this
+additional case. Proposal routing passes six checks: mixed drafts never hijack tool
+navigation and a saved reservation remains recognized from its frozen inverse
+assumptions. Bound card metadata passes 46 checks. Knowledge passes 27 checks,
+including all 12 profiles, all 20 crop SVG assets, source fields and an explicitly
+labelled planning-Council budget failure. Strategy inspection passes 12 checks;
+all engine metrics and dated bed allocations are visible for each policy, while
+the infeasible display case is a labelled transport fixture.
+
+The latest retained-assets build succeeds (main JS 232.72 kB / 72.99 kB gzip;
+main CSS 132.35 kB / 27.81 kB gzip). Final source/approval/import/context-return
+checks and exact dataset reload verification remain in progress. A final clean
+build and private staging still precede public cutover.
