@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "review_type": "read-only frame inspection of existing normal-motion recordings",
+  "source_revision": "f50b9e7",
+  "build_asset": "index-D4BrcJWl.js",
+  "no_new_browser_or_server_activity": true,
+  "event": {
+    "effective_date": "2026-09-14",
+    "authoritative_fact_differences": {
+      "harvest_kg": "+190 kg",
+      "delivered_kg": "+136 kg",
+      "disposed_kg": "+5 kg"
+    },
+    "affected_bed_ids": [
+      "bed-01",
+      "bed-02",
+      "bed-03",
+      "bed-04",
+      "bed-05",
+      "bed-06",
+      "bed-07",
+      "bed-08",
+      "bed-10",
+      "bed-13",
+      "bed-14"
+    ],
+    "visible_bed_transitions": {
+      "bed-01": "recorded batch -> Caixin harvested / harvested residue",
+      "bed-02": "recorded batch -> Pak Choi harvested / harvested residue",
+      "bed-03": "recorded batch -> Kailan harvested / harvested residue",
+      "bed-04": "recorded batch -> Lettuce harvested / harvested residue",
+      "bed-05": "recorded batch -> Caixin growing",
+      "bed-06": "recorded batch -> Pak Choi growing",
+      "bed-07": "recorded batch -> Kailan growing; saved reservation remains 2026-10-01 to 2026-11-02",
+      "bed-08": "recorded batch -> Lettuce growing"
+    },
+    "classification": "recorded synthetic simulation result; physical farm operations remain disabled"
+  },
+  "samples": [
+    {
+      "viewport_width": 390,
+      "recording": "reports/v15/video/page@a01bb9f6fe89bfaaf6a4b57c82344d19.webm",
+      "duration_seconds": 42.56,
+      "contact_sheet": "reports/v15/final-motion/final-motion-390-contact.svg",
+      "frames": [
+        {
+          "second": 36.5,
+          "observation": "pre-event scene at 2026-09-08 with recorded batches and saved projection"
+        },
+        {
+          "second": 37.0,
+          "observation": "event begins: clock becomes 2026-09-14; changed banner, affected-bed outlines, harvested/growing stages and authoritative deltas appear"
+        },
+        {
+          "second": 37.5,
+          "observation": "recorded facts remain readable while finite bed highlighting is active"
+        },
+        {
+          "second": 38.0,
+          "observation": "highlight intensity has receded; facts and changed banner remain"
+        },
+        {
+          "second": 42.0,
+          "observation": "settled scene retains recorded facts and crop stages; transient changed banner and outlines are gone"
+        }
+      ]
+    },
+    {
+      "viewport_width": 1280,
+      "recording": "reports/v15/video/page@6167776a891afa2cc20588f89320fd49.webm",
+      "duration_seconds": 54.72,
+      "contact_sheet": "reports/v15/final-motion/final-motion-1280-contact.svg",
+      "frames": [
+        {
+          "second": 48.4,
+          "observation": "pre-event scene at 2026-09-08 with recorded batches"
+        },
+        {
+          "second": 48.8,
+          "observation": "event begins: clock and stages change; affected beds highlighted and recorded delta caption appears"
+        },
+        {
+          "second": 49.2,
+          "observation": "finite highlight and changed banner remain visible"
+        },
+        {
+          "second": 49.6,
+          "observation": "finite scene transition is visibly in progress while recorded facts remain bound to the event"
+        },
+        {
+          "second": 50.0,
+          "observation": "scene is settled at 2026-09-14 with no outlines or changed banner; recorded facts remain"
+        }
+      ]
+    }
+  ],
+  "reduced_motion_correspondence": {
+    "evidence": "reports/v15/recorded-consequence-reduced-390.png",
+    "report": "reports/v15/browser-cards-390.json",
+    "assertion": "reduced motion retains the same recorded consequence facts",
+    "matches": true,
+    "facts": "Recorded simulation \u00b7 2026-09-14 \u00b7 bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 \u00b7 harvest kg +190 kg \u00b7 delivered kg +136 kg \u00b7 disposed kg +5 kg",
+    "behavior": "facts are presented immediately without relying on the transient highlight animation"
+  },
+  "finite_transition_conclusion": "PASS: both recordings visibly move from the 2026-09-08 recorded-batch state through a bounded highlight/change announcement to a stable 2026-09-14 harvested/growing state. The event facts persist after transient visual emphasis finishes.",
+  "limitations": "Frame review verifies the recorded visual sequence and fact consistency. It is not a human comprehension or usability study."
+}

@@ -482,6 +482,7 @@ export default function IntegratedCards({
     if (busy) return;
     if (["QUEUED", "RUNNING"].includes(session?.job?.status || "")) return;
     const card = missionCards[activeIndex];
+    if (card?.id === "reservation" && !taskCount && (activeProposal ? approval?.available === false : grow?.reserve_eligible === false)) return;
     if (card?.id === "approved" || (card?.id === "reservation" && taskCount)) { missionIndex.current = activeIndex; directTool.current = true; setSurface("records"); return; }
     if (card?.id === "simulation-result") { missionIndex.current = activeIndex; directTool.current = true; setSurface("history"); return; }
     if (!strategies.length) void calculate();
@@ -556,9 +557,10 @@ export default function IntegratedCards({
   const snapshotBinding = session.tactical_context?.planning_snapshot;
   const jobRunning = ["QUEUED", "RUNNING"].includes(session.job?.status || "");
   const primaryLabel = !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue";
-  const reservationEligible = current?.id !== "reservation" || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false);
-  const reservationReason = current?.id === "reservation" && activeProposal && approval?.available === false ? approval.reason || "Approval is unavailable."
-    : current?.id === "reservation" && grow?.reserve_eligible === false ? grow.reserve_disabled_reason || "Reservation is unavailable." : undefined;
+  const reservationDecision = current?.id === "reservation" && !taskCount;
+  const reservationEligible = !reservationDecision || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false);
+  const reservationReason = reservationDecision && activeProposal && approval?.available === false ? approval.reason || "Approval is unavailable."
+    : reservationDecision && !activeProposal && grow?.reserve_eligible === false ? grow.reserve_disabled_reason || "Reservation is unavailable." : undefined;
   const cardActions = detail ? [
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: detail === "review" ? "apply" : detail === "inverse" ? "confirm-inverse" : "close-detail", label: detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card", eligible: !busy && (detail !== "review" || Boolean(reviewProposal)) && (detail !== "inverse" || Boolean(reviewInverse)), authority: detail === "review" || detail === "inverse" ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
@@ -569,7 +571,7 @@ export default function IntegratedCards({
     { id: "toggle-guide", label: session.guidance?.skipped ? "Resume guide" : "Skip guide", eligible: !busy && !jobRunning, authority: "server_mutation" as const, eligibilitySource: "local" as const },
   ] : [
     { id: "explain", label: "Explain", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
-    { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: current?.id === "reservation" ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
+    { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: reservationDecision ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
     { id: "more", label: "More", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
   ];
   const boundCard: FarmCard | null = current ? surface === "tools" ? {
@@ -672,6 +674,7 @@ export default function IntegratedCards({
                   {current.id.startsWith("strategy-") && <span className="ic-preview">Preview—not saved</span>}
                   {surface === "mission" && !session.guidance?.skipped && session.guidance?.step !== "results" && <p className="ic-guide-tip"><b>Guide</b> {guideTips[session.guidance?.step || "inspect"]}</p>}
                   {"facts" in current && current.facts && <dl>{current.facts.slice(0, 3).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                  {reservationReason && surface === "mission" && <p role="status">{reservationReason}</p>}
                   {surface === "tools" && <span className="ic-path">Farm tools › {current.title}</span>}</>}
             </BoundCard>}
           </div>
@@ -683,7 +686,7 @@ export default function IntegratedCards({
               {detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
                 : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
                 : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
-                  <button className="is-primary" title={approval?.available === false ? approval.reason : undefined} disabled={Boolean(busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue")}</button>
+                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue")}</button>
                   <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}
             </div>
           </nav>

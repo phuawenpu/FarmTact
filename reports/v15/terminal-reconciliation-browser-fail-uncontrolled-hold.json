@@ -1,0 +1,22 @@
+{
+  "status": "FAIL",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "terminal session is not promoted while matching workflow is delayed",
+      "pass": false,
+      "detail": {
+        "oldResult": "fb493bb0f2cfb8ecfb6cf4f53aa3998c",
+        "terminalResult": "ef3f9f88ef944f2f0ead022e93d23f35",
+        "during": {
+          "resultId": "ef3f9f88ef944f2f0ead022e93d23f35",
+          "fallback": 0,
+          "busy": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nrecorded batch\nLettuce\nRecorded Batch\n\nSaved projection changed · 2026-09-08\n\nSaved projection · 2026-09-08 · bed-01, bed-02, bed-04, bed-08, bed-09, bed-10, bed-13, bed-15, bed-16 · coverage kg +6 kg · surplus kg +19 kg · expiry kg −13 kg\n\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Inspect the confirmed order, available space and planning date before calculating.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 5\nNext →\nExplain\nContinue\nMore"
+        }
+      }
+    }
+  ],
+  "failures": [
+    "Error: terminal session is not promoted while matching workflow is delayed: {\"oldResult\":\"fb493bb0f2cfb8ecfb6cf4f53aa3998c\",\"terminalResult\":\"ef3f9f88ef944f2f0ead022e93d23f35\",\"during\":{\"resultId\":\"ef3f9f88ef944f2f0ead022e93d23f35\",\"fallback\":0,\"busy\":\"OBJECTIVE · DELIVER THE CONFIRMED ORDER\\n22 kg caixin by 2026-09-14\\n\\nSandbox farm · real operations disabled\\n\\nFarm scene · Area 1 of 2 · showing 8 of 16\\n2026-09-08\\nA1\\nrecorded batch\\nCaixin\\nRecorded Batch\\nA2\\nrecorded batch\\nPak Choi\\nRecorded Batch\\nA3\\nrecorded batch\\nKailan\\nRecorded Batch\\nA4\\nrecorded batch\\nLettuce\\nRecorded Batch\\nB1\\nrecorded batch\\nCaixin\\nRecorded Batch\\nB2\\nrecorded batch\\nPak Choi\\nRecorded Batch\\nB3\\nrecorded batch\\nKailan\\nRecorded Batch\\nSaved reservation\\n2026-10-01 → 2026-11-02\\nB4\\nrecorded batch\\nLettuce\\nRecorded Batch\\n\\nSaved projection changed · 2026-09-08\\n\\nSaved projection · 2026-09-08 · bed-01, bed-02, bed-04, bed-08, bed-09, bed-10, bed-13, bed-15, bed-16 · coverage kg +6 kg · surplus kg +19 kg · expiry kg −13 kg\\n\\nFARM SITUATION\\nLittle Plot Collective\\n\\nReview the frozen farm, then calculate three choices from its real planning records.\\n\\nGuide Inspect the confirmed order, available space and planning date before calculating.\\n\\nPlanning date\\n2026-09-08\\nConfirmed orders\\n32\\nGrow spaces\\n16\\n← Previous\\nFarm plan · 1 of 5\\nNext →\\nExplain\\nContinue\\nMore\"}}\n    at check (file:///home/sprite/workspaces/Code2/tests/browser/v15_terminal_reconciliation.mjs:7:102)\n    at file:///home/sprite/workspaces/Code2/tests/browser/v15_terminal_reconciliation.mjs:19:3"
+  ]
+}

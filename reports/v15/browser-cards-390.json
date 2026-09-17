@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "base": "http://127.0.0.1:4196",
-  "width": 1280,
+  "width": 390,
   "checks": [
     {
       "name": "guide skip mutation is accepted before reconciliation",
@@ -33,20 +33,20 @@
       ]
     },
     {
-      "name": "reservation-before-review-1280: document fits the viewport",
+      "name": "reservation-before-review-390: document fits the viewport",
       "pass": true
     },
     {
       "name": "reservation opens explicit review before apply",
       "pass": true,
-      "detail": "REVIEW BEFORE APPLYING\nReserve B3\n\nbed-07 will be unavailable 2026-10-01 to 2026-11-02. Existing work remains recorded.\n\nProposal\n87dede59524dec7692cc342699c81a8e\nRevision\n1\nScope\nFuture simulation work only"
+      "detail": "REVIEW BEFORE APPLYING\nReserve B3\n\nbed-07 will be unavailable 2026-10-01 to 2026-11-02. Existing work remains recorded.\n\nProposal\n42d33c458877ad03bc304bab9c3d6878\nRevision\n1\nScope\nFuture simulation work only"
     },
     {
       "name": "review retains one card and one three-key action area",
       "pass": true
     },
     {
-      "name": "reservation-review-1280: document fits the viewport",
+      "name": "reservation-review-390: document fits the viewport",
       "pass": true
     },
     {
@@ -60,7 +60,7 @@
       "detail": []
     },
     {
-      "name": "reservation-explanation-1280: document fits the viewport",
+      "name": "reservation-explanation-390: document fits the viewport",
       "pass": true
     },
     {
@@ -79,13 +79,13 @@
       "name": "explicit History advance returns recorded simulation facts",
       "pass": true,
       "detail": {
-        "id": "a063f6f9e9da2dcd0125be0991e97a65",
+        "id": "419fd30c079830c4d350cff8996a06a6",
         "engine_version": "synthetic-execution-v1",
         "revision": 1,
         "status": "ACTIVE",
-        "run_id": "planning-session:9ae0581dcfef26049fbed0d13ec3e2d7",
-        "created_at": "2026-09-17T14:47:13.343350+00:00",
-        "updated_at": "2026-09-17T14:47:13.379288+00:00",
+        "run_id": "planning-session:5c125142e01ed68d41fe27d5382911e2",
+        "created_at": "2026-09-17T14:45:30.903834+00:00",
+        "updated_at": "2026-09-17T14:45:30.949647+00:00",
         "clock_date": "2026-09-14",
         "start_date": "2026-09-08",
         "end_date": "2026-11-02",
@@ -185,7 +185,7 @@
         "real_operations_enabled": false,
         "state_hash": "563bc24e6bb9c5dd0e71d4a154ee696dd94faf68db2f7db54e4122ef2ad84fc5",
         "scene_transition": {
-          "event_id": "simulation:a063f6f9e9da2dcd0125be0991e97a65:event:24",
+          "event_id": "simulation:419fd30c079830c4d350cff8996a06a6:event:24",
           "entity_ids": [
             "bed-01",
             "bed-02",
@@ -1018,7 +1018,7 @@
       "name": "scene reloads recorded clock and server simulation bed state",
       "pass": true,
       "detail": {
-        "sceneText": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
+        "sceneText": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
         "bed": {
           "id": "bed-01",
           "name": "A1",
@@ -1045,7 +1045,7 @@
     {
       "name": "recorded consequence transition remains factual and provider-free",
       "pass": true,
-      "detail": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+      "detail": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
     },
     {
       "name": "200% zoom uses document scrolling",
@@ -1061,7 +1061,7 @@
       "detail": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
     },
     {
-      "name": "recorded-consequence-reduced-1280: document fits the viewport",
+      "name": "recorded-consequence-reduced-390: document fits the viewport",
       "pass": true
     },
     {
@@ -1069,21 +1069,21 @@
       "pass": true,
       "detail": [
         "/api/v1/planning-sessions",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/calculate",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/calculate",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
         "/api/v1/farm-workflow/proposals",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/farm-workflow/proposals/87dede59524dec7692cc342699c81a8e/apply",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/farm-workflow/proposals/87dede59524dec7692cc342699c81a8e/inverse",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/farm-workflow/proposals/42d33c458877ad03bc304bab9c3d6878/apply",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/farm-workflow/proposals/42d33c458877ad03bc304bab9c3d6878/inverse",
         "/api/v1/farm-workflow/proposals",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/farm-workflow/proposals/045ac454b024e4e07169413d9d42ad38/apply",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/farm-workflow/proposals/045ac454b024e4e07169413d9d42ad38/approve-actions",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-        "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/advance"
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/farm-workflow/proposals/e7d0ec7c97f7ec71631ae4a80a7b9538/apply",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/farm-workflow/proposals/e7d0ec7c97f7ec71631ae4a80a7b9538/approve-actions",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+        "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/advance"
       ]
     },
     {
@@ -1097,36 +1097,36 @@
       "detail": []
     },
     {
-      "name": "journey-final-1280: document fits the viewport",
+      "name": "journey-final-390: document fits the viewport",
       "pass": true
     }
   ],
   "failures": [],
   "screenshots": [
-    "reports/v15/reservation-before-review-1280.png",
-    "reports/v15/reservation-review-1280.png",
-    "reports/v15/reservation-explanation-1280.png",
-    "reports/v15/recorded-consequence-reduced-1280.png",
-    "reports/v15/journey-final-1280.png"
+    "reports/v15/reservation-before-review-390.png",
+    "reports/v15/reservation-review-390.png",
+    "reports/v15/reservation-explanation-390.png",
+    "reports/v15/recorded-consequence-reduced-390.png",
+    "reports/v15/journey-final-390.png"
   ],
-  "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@6167776a891afa2cc20588f89320fd49.webm",
+  "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@a01bb9f6fe89bfaaf6a4b57c82344d19.webm",
   "mutations": [
     "/api/v1/planning-sessions",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/calculate",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/calculate",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
     "/api/v1/farm-workflow/proposals",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/farm-workflow/proposals/87dede59524dec7692cc342699c81a8e/apply",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/farm-workflow/proposals/87dede59524dec7692cc342699c81a8e/inverse",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/farm-workflow/proposals/42d33c458877ad03bc304bab9c3d6878/apply",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/farm-workflow/proposals/42d33c458877ad03bc304bab9c3d6878/inverse",
     "/api/v1/farm-workflow/proposals",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/farm-workflow/proposals/045ac454b024e4e07169413d9d42ad38/apply",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/farm-workflow/proposals/045ac454b024e4e07169413d9d42ad38/approve-actions",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/guidance",
-    "/api/v1/planning-sessions/9ae0581dcfef26049fbed0d13ec3e2d7/advance"
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/farm-workflow/proposals/e7d0ec7c97f7ec71631ae4a80a7b9538/apply",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/farm-workflow/proposals/e7d0ec7c97f7ec71631ae4a80a7b9538/approve-actions",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/guidance",
+    "/api/v1/planning-sessions/5c125142e01ed68d41fe27d5382911e2/advance"
   ],
   "providerRequests": []
 }

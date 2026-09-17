@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "baselineId": "6284489c14014f7c27430327199fdeae",
+  "alternateId": "f6da20ad6aec3f821b43ce1f31669cad",
+  "checks": [
+    {
+      "name": "existing baseline and alternate require no session creation",
+      "pass": true,
+      "detail": {
+        "baseline": "COMPLETED",
+        "result": "3f3afa7819188c49843632324c1fe0b2",
+        "alternate": "DRAFT"
+      }
+    },
+    {
+      "name": "baseline has no reservation for the tested grow space",
+      "pass": true
+    },
+    {
+      "name": "visible baseline card is bound before any response is held",
+      "pass": true
+    },
+    {
+      "name": "terminal workflow barrier retains the exact visible previous result",
+      "pass": true,
+      "detail": {
+        "held": {
+          "session": "6284489c14014f7c27430327199fdeae",
+          "result": "3f3afa7819188c49843632324c1fe0b2",
+          "busy": "Applying and recalculating",
+          "disabled": true
+        },
+        "terminal": "76a81bb917e6448e9645042a0b8f5d1b",
+        "proposalId": "5cbdfdb9506b3a716aeb43b2f899a3eb",
+        "jobId": "76a81bb917e6448e9645042a0b8f5d1b"
+      }
+    },
+    {
+      "name": "pending mutation remains disabled through tool return",
+      "pass": true,
+      "detail": {
+        "session": "6284489c14014f7c27430327199fdeae",
+        "result": "3f3afa7819188c49843632324c1fe0b2",
+        "busy": "Applying and recalculating",
+        "disabled": true
+      }
+    },
+    {
+      "name": "terminal reconciliation cannot clear mutation-owned busy state",
+      "pass": true
+    },
+    {
+      "name": "explanation binds the exact completed proposal and result immediately",
+      "pass": true,
+      "detail": {
+        "proposalId": "5cbdfdb9506b3a716aeb43b2f899a3eb",
+        "resultId": "76a81bb917e6448e9645042a0b8f5d1b",
+        "explanation": "What changed\nSaved reservation for bed-07 from 2026-10-01 to 2026-11-02.\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −4 kg; surplus kg: −13 kg; expiry kg: +17 kg; rejection kg: not available; margin sgd: −199.5 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nbed-03: caixin 2026-09-28→2026-10-19 44 kg → none; bed-14: none → lettuce 2026-09-24→2026-10-19 46 kg; bed-01: kailan 2026-10-01→2026-11-02 48 kg → none; no provider call.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nreservation · bed-07"
+      }
+    },
+    {
+      "name": "held calculation receipt belongs to the intended alternate",
+      "pass": true
+    },
+    {
+      "name": "late real mutation response preserves selected session and result",
+      "pass": true
+    },
+    {
+      "name": "429 retains the intended session and explicit recoverable error",
+      "pass": true,
+      "detail": "Reconciliation test admission wait; saved session retained.\nDismiss"
+    },
+    {
+      "name": "regression creates no sessions and submits no provider requests",
+      "pass": true,
+      "detail": [
+        {
+          "method": "POST",
+          "path": "/api/v1/farm-workflow/proposals"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions/6284489c14014f7c27430327199fdeae/guidance"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/farm-workflow/proposals/5cbdfdb9506b3a716aeb43b2f899a3eb/apply"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions/6284489c14014f7c27430327199fdeae/guidance"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions/f6da20ad6aec3f821b43ce1f31669cad/calculate"
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/farm-workflow/proposals"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions/6284489c14014f7c27430327199fdeae/guidance"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/farm-workflow/proposals/5cbdfdb9506b3a716aeb43b2f899a3eb/apply"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions/6284489c14014f7c27430327199fdeae/guidance"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions/f6da20ad6aec3f821b43ce1f31669cad/calculate"
+    }
+  ],
+  "sessionReads": [
+    {
+      "phase": "baseline",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "3f3afa7819188c49843632324c1fe0b2",
+      "status": "COMPLETED",
+      "result": "3f3afa7819188c49843632324c1fe0b2"
+    },
+    {
+      "phase": "baseline",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "3f3afa7819188c49843632324c1fe0b2",
+      "status": "COMPLETED",
+      "result": "3f3afa7819188c49843632324c1fe0b2"
+    },
+    {
+      "phase": "tool-return",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "76a81bb917e6448e9645042a0b8f5d1b",
+      "status": "COMPLETED",
+      "result": "76a81bb917e6448e9645042a0b8f5d1b"
+    },
+    {
+      "phase": "tool-return",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "76a81bb917e6448e9645042a0b8f5d1b",
+      "status": "COMPLETED",
+      "result": "76a81bb917e6448e9645042a0b8f5d1b"
+    },
+    {
+      "phase": "tool-return",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "76a81bb917e6448e9645042a0b8f5d1b",
+      "status": "COMPLETED",
+      "result": "76a81bb917e6448e9645042a0b8f5d1b"
+    },
+    {
+      "phase": "alternate",
+      "id": "6284489c14014f7c27430327199fdeae",
+      "job": "76a81bb917e6448e9645042a0b8f5d1b",
+      "status": "COMPLETED",
+      "result": "76a81bb917e6448e9645042a0b8f5d1b"
+    }
+  ]
+}

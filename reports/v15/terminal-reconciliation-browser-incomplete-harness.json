@@ -1,0 +1,22 @@
+{
+  "status": "FAIL",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "terminal session is not promoted while its workflow refresh is held",
+      "pass": true,
+      "detail": {
+        "oldResult": "47d7218175273df305928a2ebee0402a",
+        "terminalResult": "b18505da3472c5a2af929f5158606879",
+        "during": {
+          "resultId": null,
+          "fallback": false
+        },
+        "barrierHeld": true
+      }
+    }
+  ],
+  "failures": [
+    "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'More', exact: true })\u001b[22m\n\n    at /home/sprite/workspaces/Code2/tests/browser/v15_terminal_reconciliation.mjs:20:59"
+  ]
+}

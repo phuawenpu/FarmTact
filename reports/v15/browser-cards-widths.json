@@ -3,6 +3,7 @@
   "base": "http://127.0.0.1:4196",
   "widths": [
     360,
+    390,
     430,
     1280
   ],
@@ -11,41 +12,34 @@
       "width": 360,
       "file": "browser-cards-360.json",
       "status": "PASS",
-      "checks": 20,
-      "mutations": 17,
-      "providerRequests": 0,
-      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@b4a43c73cc711e0ff73e268d3571dd52.webm"
+      "checks": 26,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@0d857f3ae7f4dbcb874068729df30096.webm"
+    },
+    {
+      "width": 390,
+      "file": "browser-cards-390.json",
+      "status": "PASS",
+      "checks": 26,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@a01bb9f6fe89bfaaf6a4b57c82344d19.webm"
     },
     {
       "width": 430,
       "file": "browser-cards-430.json",
       "status": "PASS",
-      "checks": 20,
+      "checks": 26,
       "mutations": 16,
-      "providerRequests": 0,
-      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@8dee3d5dcd75d572e45605adfbd4fa62.webm"
+      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@e8ed5a58a50ad95d167a508c14d53bad.webm"
     },
     {
       "width": 1280,
       "file": "browser-cards-1280.json",
       "status": "PASS",
-      "checks": 20,
+      "checks": 26,
       "mutations": 16,
-      "providerRequests": 0,
-      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@b31cca8df60f79d23a01d4c1af5c5ea6.webm"
+      "video": "/home/sprite/workspaces/Code2/reports/v15/video/page@6167776a891afa2cc20588f89320fd49.webm"
     }
   ],
-  "harnessDiagnostics": [
-    {
-      "classification": "test harness race, not product planner failure",
-      "evidence": "Superseded 430 run clicked before the reloaded shell bound the newly created session; that session remained DRAFT with no job and no calculate POST.",
-      "fix": "Wait for the exact fresh session binding and absence of opening status before interaction; persist the fresh local pointer immediately."
-    },
-    {
-      "classification": "test harness guidance sequencing race",
-      "evidence": "Superseded 430 run attempted Skip while the preceding guidance revision had not reconciled.",
-      "fix": "Wait for the exact guidance POST and following session GET; fixed delays are not used."
-    }
-  ],
-  "humanUsabilityVerified": false
+  "failures": []
 }

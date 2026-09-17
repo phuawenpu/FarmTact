@@ -1,7 +1,7 @@
 # V15 private implementation status
 
 Private branch: `feature/v15-integrated-cards`. V14 remains the public immutable
-release. V15 has been privately staged but has not been published or accepted as a complete replacement. The first candidate failed mobile wrapping and slow-response UI acceptance; fixes are in progress.
+release. V15 has been privately staged but has not been published or accepted as a complete replacement. The first candidate failed mobile wrapping and slow-response UI acceptance. Corrected local acceptance now passes; the replacement image must still pass private staging before publication.
 
 The root entry now loads the integrated shell and lazy card decks for Plan,
 Records & work, Knowledge & evidence, Experiments and History & preferences.
@@ -15,19 +15,41 @@ IDs change. Existing mutation validation and cumulative admission remain in plac
 The browser client retains uncertain mutation identity, including body-key APIs,
 and honors Retry-After without automatic paid retries.
 
-## Current verification state — 17 September, 14:40 UTC
+## Current verification state — 17 September, before corrected staging
 
-The corrected shell compiles with main JS 235.57 kB / 73.72 kB gzip. Its
+The corrected shell compiles with main JS 235.64 kB / 73.79 kB gzip. Its
 request owners keep loading, mutations and guidance separate, commit terminal
 session/workflow facts together, and reject stale responses after a reviewed
 context change. Queued loads also detect an imported session remembered while
 an earlier workflow read is pending. Reservation explanations describe saved
 bed/date changes from the frozen proposal.
 
-Twenty repeated read-only browser checks pass on this build: contextual return
-and import cancellation (six), reload/card/focus/scroll recovery (seven), and
-Plan/History return (seven), with no writes or provider requests. The expanded
-delayed-response regression and repeated full-width journeys are still pending.
+The repeated complete journeys pass **26 checks at each of 360, 390, 430 and
+1280 px**, including viewport containment at every captured step and zero provider
+submissions. Twenty repeated read-only checks cover contextual return/import
+cancellation, reload/card/focus/scroll recovery and Plan/History return.
+
+The corrected controlled-response regression passes **11 checks** using existing
+sessions and no new tenant/session admission. It begins with a visible frozen
+baseline, holds a real Apply receipt and its exact terminal workflow response,
+proves the old result stays visible until paired facts arrive, proves terminal
+loading cannot clear mutation-owned busy state, and checks exact explanations,
+late alternate-session responses and 429 recovery. Independent review found no
+false pass within that scope. Its tool-return reads were already terminal, so it
+does not establish a separate running-job polling rearm; exact staged latency
+acceptance remains required. Earlier uncontrolled/deadlocked harness attempts are
+retained as failures/incomplete evidence and are not counted as passes.
+
+A final eligibility correction aligns disabled buttons, keyboard actions and
+visible reasons with the server while retaining local access to persisted work.
+Its labelled denied/eligible response fixtures at all four widths and real saved
+work navigation pass **34 checks**, with zero POSTs/provider calls. This small
+control-only change follows the full journeys on `index-D4BrcJWl.js`; motion and
+request ownership code are unchanged. The final clean bundle is
+`index-C89Jrp2Y.js`: 408,167 bytes JS across lazy/main chunks and 147,537 bytes CSS.
+Generated contracts pass. `final-motion-review.json` records timed mobile and
+desktop frame inspection: finite recorded stage/fact transitions settle, and
+reduced motion retains identical facts.
 The backend matches the frozen services tree used by the final isolated
 PostgreSQL run: **792 passed, one skipped**, zero failures/errors. The dated
 milestones below retain earlier runs and must not be mistaken for release

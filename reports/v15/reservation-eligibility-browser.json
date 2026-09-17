@@ -1,0 +1,307 @@
+{
+  "started_at": "2026-09-17T14:58:41.130Z",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "fixture uses an existing calculated workflow",
+      "pass": true,
+      "detail": "f6da20ad6aec3f821b43ce1f31669cad"
+    },
+    {
+      "name": "360: denied reservation metadata is server-derived",
+      "pass": true,
+      "detail": {
+        "id": "primary",
+        "label": "Review reservation",
+        "eligible": false,
+        "authority": "server_mutation",
+        "eligibilitySource": "server",
+        "disabledReason": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "360: denied reservation DOM matches metadata",
+      "pass": true,
+      "detail": {
+        "disabled": true,
+        "title": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "360: exact server reason is visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "360: keyboard Enter cannot submit denied reservation",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "360: Explain and swipe remain read-only",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0,
+        "beforeSwipe": "reservation",
+        "afterSwipe": "reservation"
+      }
+    },
+    {
+      "name": "360: eligible control enables DOM and metadata together",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Review reservation",
+          "eligible": true,
+          "authority": "server_mutation",
+          "eligibilitySource": "server"
+        },
+        "disabled": false
+      }
+    },
+    {
+      "name": "360: fixture journey creates no mutation or provider request",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0
+      }
+    },
+    {
+      "name": "390: denied reservation metadata is server-derived",
+      "pass": true,
+      "detail": {
+        "id": "primary",
+        "label": "Review reservation",
+        "eligible": false,
+        "authority": "server_mutation",
+        "eligibilitySource": "server",
+        "disabledReason": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "390: denied reservation DOM matches metadata",
+      "pass": true,
+      "detail": {
+        "disabled": true,
+        "title": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "390: exact server reason is visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390: keyboard Enter cannot submit denied reservation",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "390: Explain and swipe remain read-only",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0,
+        "beforeSwipe": "reservation",
+        "afterSwipe": "reservation"
+      }
+    },
+    {
+      "name": "390: eligible control enables DOM and metadata together",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Review reservation",
+          "eligible": true,
+          "authority": "server_mutation",
+          "eligibilitySource": "server"
+        },
+        "disabled": false
+      }
+    },
+    {
+      "name": "390: denied approval metadata and DOM expose exact server reason",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Approve actions",
+          "eligible": false,
+          "authority": "server_mutation",
+          "eligibilitySource": "server",
+          "disabledReason": "Controlled server reason: approval is unavailable."
+        },
+        "disabled": true
+      }
+    },
+    {
+      "name": "390: keyboard Enter cannot bypass denied approval",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "390: fixture journey creates no mutation or provider request",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0
+      }
+    },
+    {
+      "name": "430: denied reservation metadata is server-derived",
+      "pass": true,
+      "detail": {
+        "id": "primary",
+        "label": "Review reservation",
+        "eligible": false,
+        "authority": "server_mutation",
+        "eligibilitySource": "server",
+        "disabledReason": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "430: denied reservation DOM matches metadata",
+      "pass": true,
+      "detail": {
+        "disabled": true,
+        "title": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "430: exact server reason is visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "430: keyboard Enter cannot submit denied reservation",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "430: Explain and swipe remain read-only",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0,
+        "beforeSwipe": "reservation",
+        "afterSwipe": "reservation"
+      }
+    },
+    {
+      "name": "430: eligible control enables DOM and metadata together",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Review reservation",
+          "eligible": true,
+          "authority": "server_mutation",
+          "eligibilitySource": "server"
+        },
+        "disabled": false
+      }
+    },
+    {
+      "name": "430: fixture journey creates no mutation or provider request",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0
+      }
+    },
+    {
+      "name": "1280: denied reservation metadata is server-derived",
+      "pass": true,
+      "detail": {
+        "id": "primary",
+        "label": "Review reservation",
+        "eligible": false,
+        "authority": "server_mutation",
+        "eligibilitySource": "server",
+        "disabledReason": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "1280: denied reservation DOM matches metadata",
+      "pass": true,
+      "detail": {
+        "disabled": true,
+        "title": "Controlled server reason: no free reservation window remains."
+      }
+    },
+    {
+      "name": "1280: exact server reason is visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1280: keyboard Enter cannot submit denied reservation",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "1280: Explain and swipe remain read-only",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0,
+        "beforeSwipe": "reservation",
+        "afterSwipe": "reservation"
+      }
+    },
+    {
+      "name": "1280: eligible control enables DOM and metadata together",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Review reservation",
+          "eligible": true,
+          "authority": "server_mutation",
+          "eligibilitySource": "server"
+        },
+        "disabled": false
+      }
+    },
+    {
+      "name": "1280: fixture journey creates no mutation or provider request",
+      "pass": true,
+      "detail": {
+        "posts": 0,
+        "providers": 0
+      }
+    },
+    {
+      "name": "positive control uses an existing persisted task proposal",
+      "pass": true,
+      "detail": "045ac454b024e4e07169413d9d42ad38"
+    },
+    {
+      "name": "persisted task navigation remains locally eligible",
+      "pass": true,
+      "detail": {
+        "metadata": {
+          "id": "primary",
+          "label": "Review sandbox work",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        "disabled": false
+      }
+    },
+    {
+      "name": "keyboard opens existing sandbox work without mutation",
+      "pass": true,
+      "detail": "0"
+    }
+  ],
+  "failures": [],
+  "fixture": "Labelled GET response fixture only; no server records or provider calls.",
+  "status": "PASS",
+  "finished_at": "2026-09-17T14:59:04.733Z"
+}

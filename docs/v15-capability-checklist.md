@@ -154,12 +154,12 @@ Baseline: replay routes in `services/api/app.py`, `planning_sessions.py`, `conve
 
 ## Cross-cutting release gates
 
-- [ ] Generated frontend contracts are current; frontend production build passes and CSS/JS bundle sizes are recorded (V13 baseline JS was 601.77 kB with an over-500 kB warning).
+- [x] Generated frontend contracts are current; frontend production build passes and CSS/JS bundle sizes are recorded (V13 baseline JS was 601.77 kB with an over-500 kB warning).
 - [x] Full Python regression passes against isolated PostgreSQL, plus focused concurrent create/apply/save/result tests. SQLite-only evidence is insufficient for release.
 - [x] Tenant isolation covers every restored read/write route. Idempotency, stale revisions, concurrent requests, append-only history, transaction rollback, and restart persistence pass.
 - [x] Global/IP/session limits, stricter write limits, anonymous-session admission, provider concurrency/hour/day budgets, and `Retry-After` behavior pass. Drafts survive admission/provider failures and uncertain writes reconcile before retry.
 - [x] Browse, Explain, compare, preview, replay, local calculation and local simulation produce zero provider requests. Provider requests use only the validated DeepSeek gateway after explicit submission; no fallback exists.
-- [ ] Complete browser journeys at 360, 390, 430, and desktop widths cover keyboard, swipe, vertical scrolling, focus return, text zoom and reduced motion. Normal-motion recordings prove finite causal transitions from recorded events.
+- [x] Complete browser journeys at 360, 390, 430, and desktop widths cover keyboard, swipe, vertical scrolling, focus return, text zoom and reduced motion. Normal-motion recordings prove finite causal transitions from recorded events.
 - [x] Farm import transition, task reporting/correction, provider outage, 429, interrupted calculation, stale approval, inverse ineligibility and reload each have a recoverable end-to-end test.
 - [ ] V15 publishes as a new immutable edition only after these checks pass; `/` and `/play` resolve solely to V15. Earlier sources/images and recoverable data remain private and unchanged, with no automatic cross-edition state merge. Shared abuse/provider counters survive cutover.
 
@@ -279,3 +279,22 @@ review-ID overflow and delayed status-poll/readiness race. These are implementat
 defects, not waived test limits. The first image will not be published. Overflow
 assertions now apply to every complete-journey screenshot; delayed-response
 coherence and repeated full-width journeys precede a corrected clean build.
+
+Final local follow-up (17 September, 14:53 UTC): corrected source `f50b9e7`
+passes all four complete widths (26 checks each) plus 20 read-only return/reload
+checks. The final clean build matches the tested main-chunk hash. The controlled
+response regression passes 11 narrowly stated coherence/busy/context/admission
+checks; it does not claim a separate running-job polling rearm. The original
+staged candidate remains rejected until a newly pinned image passes actual
+private latency/visual acceptance.
+
+Final control delta: `reservation-eligibility-browser.json` passes 34 checks on
+`index-C89Jrp2Y.js`, covering unavailable reservation windows, denied approval,
+keyboard submission prevention, matching action metadata and visible server
+reasons, plus real persisted work navigation. No records are created by this
+suite. `terminal-reconciliation-browser.json` contains the 11 controlled real
+response checks; `final-motion-review.json` records timed finite transitions and
+identical reduced-motion facts. Full four-width evidence is
+`browser-cards-widths.json`, including `browser-cards-390.json`. Publication is
+still unchecked until the corrected exact image passes private acceptance and
+public preservation/route verification.

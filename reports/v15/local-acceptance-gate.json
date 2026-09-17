@@ -1,8 +1,38 @@
 {
-  "status": "REOPENED",
-  "scope": "Local implementation acceptance only; exact private staging and public cutover remain pending. Human usability and new live provider prose are not established.",
-  "checked_at": "2026-09-17T14:09:14.929985+00:00",
+  "status": "PASS",
+  "scope": "Local implementation acceptance; exact corrected private staging and public cutover still pending. Human usability and new live provider prose are not established.",
+  "checked_at": "2026-09-17T15:00:23.559337+00:00",
   "reports": [
+    {
+      "report": "acceptance-local.json",
+      "status": "PASS",
+      "checks": 20
+    },
+    {
+      "report": "bound-card-contract.json",
+      "status": "PASS",
+      "checks": 46
+    },
+    {
+      "report": "browser-cards-1280.json",
+      "status": "PASS",
+      "checks": 26
+    },
+    {
+      "report": "browser-cards-360.json",
+      "status": "PASS",
+      "checks": 26
+    },
+    {
+      "report": "browser-cards-390.json",
+      "status": "PASS",
+      "checks": 26
+    },
+    {
+      "report": "browser-cards-430.json",
+      "status": "PASS",
+      "checks": 26
+    },
     {
       "report": "browser-cards-fresh.json",
       "status": "PASS",
@@ -14,33 +44,48 @@
       "checks": 13
     },
     {
-      "report": "browser-cards-360.json",
+      "report": "browser-cards-widths.json",
       "status": "PASS",
-      "checks": 20
+      "checks": 0
     },
     {
-      "report": "browser-cards-430.json",
+      "report": "card-return-browser.json",
       "status": "PASS",
-      "checks": 20
+      "checks": 7
     },
     {
-      "report": "browser-cards-1280.json",
+      "report": "context-import-browser.json",
       "status": "PASS",
-      "checks": 20
+      "checks": 6
     },
     {
-      "report": "records-browser.json",
-      "status": "PASSED",
-      "checks": 16
+      "report": "crosswidth-interactions.json",
+      "status": "PASS",
+      "checks": 25
     },
     {
-      "report": "records-extended-browser.json",
-      "status": "PASSED",
-      "checks": 20
+      "report": "experiment-gaps-browser.json",
+      "status": "PASS",
+      "checks": 12
     },
     {
-      "report": "records-gaps-browser.json",
-      "status": "PASSED",
+      "report": "explorer-browser.json",
+      "status": "PASS",
+      "checks": 13
+    },
+    {
+      "report": "final-motion-review.json",
+      "status": "PASS",
+      "checks": 0
+    },
+    {
+      "report": "frontend-build.json",
+      "status": "PASS",
+      "checks": 0
+    },
+    {
+      "report": "history-replay-browser.json",
+      "status": "PASS",
       "checks": 12
     },
     {
@@ -49,18 +94,13 @@
       "checks": 27
     },
     {
-      "report": "research-browser.json",
+      "report": "native-assumptions-browser.json",
       "status": "PASS",
-      "checks": 18
-    },
-    {
-      "report": "tools-browser.json",
-      "status": "PASS",
-      "checks": 30
+      "checks": 36
     },
     {
       "report": "plan-history-browser.json",
-      "status": "PASSED",
+      "status": "PASS",
       "checks": 26
     },
     {
@@ -69,9 +109,9 @@
       "checks": 7
     },
     {
-      "report": "native-assumptions-browser.json",
+      "report": "plan-recovery-browser.json",
       "status": "PASS",
-      "checks": 36
+      "checks": 5
     },
     {
       "report": "plan-strategy-selection-browser.json",
@@ -79,9 +119,44 @@
       "checks": 8
     },
     {
+      "report": "records-approval-guard-browser.json",
+      "status": "PASS",
+      "checks": 3
+    },
+    {
+      "report": "records-browser.json",
+      "status": "PASS",
+      "checks": 16
+    },
+    {
+      "report": "records-extended-browser.json",
+      "status": "PASS",
+      "checks": 20
+    },
+    {
+      "report": "records-gaps-browser.json",
+      "status": "PASS",
+      "checks": 12
+    },
+    {
+      "report": "research-browser.json",
+      "status": "PASS",
+      "checks": 18
+    },
+    {
+      "report": "reservation-eligibility-browser.json",
+      "status": "PASS",
+      "checks": 34
+    },
+    {
       "report": "responsive-decks.json",
       "status": "PASS",
       "checks": 101
+    },
+    {
+      "report": "responsive-guide-contract.json",
+      "status": "PASS",
+      "checks": 26
     },
     {
       "report": "responsive-plan-final.json",
@@ -89,19 +164,39 @@
       "checks": 25
     },
     {
-      "report": "crosswidth-interactions.json",
+      "report": "scenario-controls-browser.json",
       "status": "PASS",
-      "checks": 25
+      "checks": 6
     },
     {
-      "report": "frontend-build.json",
+      "report": "scenarios-browser.json",
       "status": "PASS",
-      "checks": 0
+      "checks": 8
     },
     {
-      "report": "acceptance-local.json",
+      "report": "shell-reload-return.json",
       "status": "PASS",
-      "checks": 20
+      "checks": 7
+    },
+    {
+      "report": "simulation-replan-browser.json",
+      "status": "PASS",
+      "checks": 9
+    },
+    {
+      "report": "strategy-facts-browser.json",
+      "status": "PASS",
+      "checks": 12
+    },
+    {
+      "report": "terminal-reconciliation-browser.json",
+      "status": "PASS",
+      "checks": 11
+    },
+    {
+      "report": "tools-browser.json",
+      "status": "PASS",
+      "checks": 30
     }
   ],
   "python_regression": {
@@ -113,5 +208,9 @@
   "backend_tree": "044d4ef765c53a57802cdf8edfcae4cf05172fdc",
   "contracts": "PASS",
   "clean_build": "PASS",
-  "reopened_reason": "Exact staged visual/latency acceptance found mobile proposal-ID overflow and session/workflow readiness race; corrected source requires rerun."
+  "final_bundle": "index-C89Jrp2Y.js",
+  "full_journey_bundle": "index-D4BrcJWl.js",
+  "subsequent_delta": "Server reservation/approval eligibility, visible reason and keyboard guard only; 34 focused cross-width checks pass on final bundle.",
+  "staged_latency_gate": "PENDING: controlled local terminal-load test does not claim a separate running-job poll rearm.",
+  "resolved_local_reopening": "Exact staged visual/latency acceptance found mobile proposal-ID overflow and session/workflow readiness race; corrected source requires rerun."
 }
