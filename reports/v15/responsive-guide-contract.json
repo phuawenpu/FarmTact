@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "360: one card and one three-action area",
+      "pass": true
+    },
+    {
+      "name": "360: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "360: card publishes canonical identity",
+      "pass": true
+    },
+    {
+      "name": "360: passive scene is not four-bed fixture",
+      "pass": true
+    },
+    {
+      "name": "360: read-only open has no mutation",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "360: no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: one card and one three-action area",
+      "pass": true
+    },
+    {
+      "name": "390: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "390: card publishes canonical identity",
+      "pass": true
+    },
+    {
+      "name": "390: passive scene is not four-bed fixture",
+      "pass": true
+    },
+    {
+      "name": "390: read-only open has no mutation",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: one card and one three-action area",
+      "pass": true
+    },
+    {
+      "name": "430: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "430: card publishes canonical identity",
+      "pass": true
+    },
+    {
+      "name": "430: passive scene is not four-bed fixture",
+      "pass": true
+    },
+    {
+      "name": "430: read-only open has no mutation",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: one card and one three-action area",
+      "pass": true
+    },
+    {
+      "name": "1280: no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "1280: card publishes canonical identity",
+      "pass": true
+    },
+    {
+      "name": "1280: passive scene is not four-bed fixture",
+      "pass": true
+    },
+    {
+      "name": "1280: read-only open has no mutation",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "guide resume then skip preserves exact session and planner revision",
+      "pass": true,
+      "detail": {
+        "before": {
+          "id": "situation",
+          "session": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "revision": "10"
+        },
+        "after": {
+          "id": "situation",
+          "session": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "revision": "10"
+        }
+      }
+    },
+    {
+      "name": "guide skip and resume use only guidance mutations",
+      "pass": true,
+      "detail": [
+        "/api/v1/planning-sessions/63c1b1bb786f77833bc71a1ff3ed1479/guidance",
+        "/api/v1/planning-sessions/63c1b1bb786f77833bc71a1ff3ed1479/guidance",
+        "/api/v1/planning-sessions/63c1b1bb786f77833bc71a1ff3ed1479/guidance"
+      ]
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "reports/v15/responsive-contract-360.png",
+    "reports/v15/responsive-contract-390.png",
+    "reports/v15/responsive-contract-430.png",
+    "reports/v15/responsive-contract-1280.png"
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "started_at": "2026-09-17T12:40:28.747Z",
+  "base_url": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "CSV upload creates real candidate",
+      "pass": true,
+      "detail": "{\"candidate_id\":\"fin-632fb7b989e92a08aaa82cb7\",\"tenant_id\":\"52ea3f0d6a9702294edede8a1382eabe\",\"source_name\":\"v15-accounting-1789648832295.csv\",\"source_sha256\":\"6489f888c7a613a94b79ed4626ff56f54475481e4cbfe6dcc438062da354adf1\",\"media_type\":\"text/csv\",\"import_kind\":\"accounting_export\",\"created_at\":\"2026-09-17 12:40:32.384774+00:00\",\"rows\":[{\"row_number\":2,\"occurred_on\":\"2026-09-17\",\"kind\":\"expense\",\"reference\":\"EXT-CSV-1789648832295\",\"description\":\"Nutrients\",\"quantity\":null,\"unit\":null,\"amount_sgd\":\"18.50\",\"crop_id\":null,\"corrects_reference\":null,\"provenance\":{\"source_name\":\"v15-accounting-1789648832295.csv\",\"source_sha256\":\"6489f888c7a613a94b79ed4626ff56f54475481e4cbfe6dcc438062da354adf1\",\"row_number\":2}}],\"warnings\":[],\"status\":\"candidate\",\"reviewed_at\":null,\"reviewed_by\":null,\"source_kind\":\"accounting_export\",\"authority\":\"review_candidate\",\"reconciliation\":{\"source_row_count\":1,\"counted_row_count\":1,\"duplicate_references\":[],\"correction_row_count\":0,\"correction_semantics\":\"target_category_signed_delta\",\"revenue_sgd\":\"0\",\"expense_sgd\":\"18.50\",\"net_sgd\":\"-18.50\",\"quantity_by_unit\":{},\"resolved_corrections\":[]}}"
+    },
+    {
+      "name": "candidate source opens through authenticated endpoint",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "accounting candidate explicitly confirmed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "document card discloses one explicit provider request",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "AI outage retains selected document",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "controlled outage made no provider request",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "controlled extraction retains labelled fields",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "controlled extraction remains non-authoritative candidate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "API prerequisite recalculation completed",
+      "pass": true,
+      "detail": "applied"
+    },
+    {
+      "name": "proposal card binds prerequisite identity",
+      "pass": true,
+      "detail": "3232f820710b7dae3b1c8aaec0b72342"
+    },
+    {
+      "name": "stale approval is rejected and proposal review retained",
+      "pass": true,
+      "detail": "Controlled stale proposal revision; refresh and review again."
+    },
+    {
+      "name": "Records UI approval creates tasks",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "form arrow and swipe keep task binding",
+      "pass": true,
+      "detail": "task-5755c4945f3c20890f8d8cdf: sow"
+    },
+    {
+      "name": "failed task result becomes recovery-required",
+      "pass": true,
+      "detail": "{\"status\":\"recovery_required\",\"revision\":1}"
+    },
+    {
+      "name": "recovery exposes retained-schedule comparison",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "recovery returns focus to originating action",
+      "pass": true,
+      "detail": "Replan future work"
+    },
+    {
+      "name": "recovery restores originating scroll",
+      "pass": true,
+      "detail": "441->441"
+    },
+    {
+      "name": "future-only replan preserves reported work",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new session proposal deck excludes old proposal",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new session task deck excludes old task",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "prerequisites": [
+    "Created/applied proposal 3232f820710b7dae3b1c8aaec0b72342 through real API; approval is tested in UI."
+  ],
+  "controlled_fixtures": [
+    "PDF upload endpoint returned labelled 503 before any backend/provider call.",
+    "Labelled document candidate response supplied retained fields without invoking a provider; no business mutation claim.",
+    "One labelled HTTP 409 approval response verified stale review retention; backend eligibility is covered separately and no task was created."
+  ],
+  "finished_at": "2026-09-17T12:41:04.494Z",
+  "status": "PASSED"
+}

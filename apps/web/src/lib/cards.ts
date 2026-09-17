@@ -1,15 +1,18 @@
 /** Presentation references never grant authority to mutate a domain entity. */
 export type ToolDeck = 'plan' | 'records' | 'knowledge' | 'experiments' | 'history'
 export interface CardBinding {
-  sessionId: string
-  inputHash: string
-  revision: number
+  sessionId: string | null
+  inputHash: string | null
+  revision: number | null
   resultId: string | null
+  snapshotId?: string | null
 }
 export interface CardAction {
   id: string
   label: string
   eligible: boolean
+  authority: 'local_navigation' | 'server_mutation'
+  eligibilitySource: 'local' | 'server'
   disabledReason?: string
 }
 export interface FarmCard {
@@ -21,7 +24,7 @@ export interface FarmCard {
   binding: CardBinding
   boardTargets: string[]
   actions: CardAction[]
-  outcomeBasis: 'projection' | 'recorded_simulation' | 'farmer_reported'
+  outcomeBasis: 'projection' | 'recorded_simulation' | 'farmer_reported' | null
 }
 export interface SceneTransition {
   event_id: string

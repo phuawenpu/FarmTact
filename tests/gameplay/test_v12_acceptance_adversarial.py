@@ -186,3 +186,49 @@ def test_reviewed_import_boundary_and_document_failure_are_tenant_scoped():
         response = post(client, f'/farm-workflow/imports/{candidate["candidate_id"]}/review', {
             'expected_status': 'candidate', 'decision': 'reject', 'reviewer': 'other tenant'})
         assert response.status_code == 404
+
+
+def test_future_replan_preserves_delivery_reports_without_treating_them_as_crop_cycles(isolated_database_url):
+    from sqlalchemy import select
+    from services.api.planning_sessions import JOBS
+
+    store = Store(isolated_database_url)
+    with TestClient(create_app(store, start_worker=False)) as client:
+        tenant, path, session = calculated_workflow(store, client)
+        approved = apply_and_approve(store, client, tenant, session,
+                                     proposal(client, session, 'delivery-replan-initial'))
+        sow = next(row for row in approved['tasks'] if row['action'] == 'sow')
+        delivery = next(row for row in approved['tasks'] if row['action'] == 'delivery')
+        assert sow['batch_id'] and delivery.get('batch_id') is None
+        recorded = []
+        for task in [sow, delivery]:
+            body = {'expected_status': 'pending', 'result_status': 'completed',
+                    'checklist_completed': task['checklist'], 'note': 'Reported work stays recorded'}
+            if task['action'] == 'delivery':
+                body.update(actual_quantity=max(0, float(task['planned_quantity']) - 1), rejected_quantity=0, unit='kg')
+            response = post(client, f'/farm-workflow/tasks/{task["id"]}/result', body)
+            assert response.status_code == 200, response.text
+            recorded.append(response.json())
+        session = client.get('/api/v1' + path).json()
+        draft = proposal(client, session, 'delivery-replan-next')
+        key = 'delivery-replan-apply'
+        body = {'proposal_id': draft['id'], 'expected_base_revision': draft['base_revision'],
+                'idempotency_key': key}
+        response = post(client, f'/farm-workflow/proposals/{draft["id"]}/apply', body, key)
+        assert response.status_code == 202, response.text
+        assert post(client, f'/farm-workflow/proposals/{draft["id"]}/apply', body, key).json() == response.json()
+        job_id = response.json()['recalculation_job']['id']
+        with store.connection() as connection:
+            job = connection.execute(select(JOBS.c.payload).where(JOBS.c.id == job_id)).scalar_one()
+        excluded = job['input']['kwargs']['excluded_candidate_ids']
+        assert sow['batch_id'] in excluded and all(isinstance(value, str) for value in excluded)
+        assert any(row['id'] == sow['batch_id'] for row in job['input']['kwargs']['locked_allocations'])
+        execute_job(store, tenant, job_id)
+        result = client.get('/api/v1' + path).json()
+        assert result['status'] == 'COMPLETED', result.get('job')
+        workflow = client.get('/api/v1/farm-workflow').json()
+        for record in recorded:
+            saved = next(row for row in workflow['tasks'] if row['id'] == record['id'])
+            assert saved == record
+        assert delivery['id'] in {event['task_id'] for event in result['reported_forecast']['source_task_events']}
+    store.engine.dispose()

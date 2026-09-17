@@ -26,5 +26,6 @@
       "pass": true
     }
   ],
-  "failures": []
+  "failures": [],
+  "status": "PASS"
 }

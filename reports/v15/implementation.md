@@ -88,3 +88,27 @@ action. Recorded simulation playback has separate passing evidence in
 being verified. Records extended verification exposed a session-filter mismatch in
 rendered proposals/tasks/events; its corrected rendering is awaiting the full rerun.
 These checks do not establish completed parity or authorize publication.
+
+Further acceptance findings and fixes:
+
+- A complete fresh reservation/apply/inverse/approval/simulation journey passed
+  19 checks (`browser-cards-fresh.json`), with an actual mutation log and normal
+  motion recording. Separate responsive and guide skip/resume checks passed 26
+  assertions (`responsive-guide-contract.json`); they retain the ordinary farm.
+- Queued calculations no longer block opening tools. The controlled planning
+  cancellation suite passes five checks, including an interrupted cancellation
+  retried with the same request key. This is transport recovery evidence, not
+  an additional real numerical run.
+- The extended Records workflow found that batchless delivery reports caused a
+  crop-cycle exclusion sort to mix null and string IDs. Replanning now excludes
+  only real crop-cycle IDs while retaining delivery reports in the forecast and
+  execution hash. A real isolated PostgreSQL test proves recorded sowing and
+  delivery, idempotent recalculation, retained allocation locks and unchanged
+  task reports. A fresh full regression run is in progress after this fix.
+- Shared `BoundCard` metadata now carries canonical entities, nullable frozen
+  bindings, provenance, affected entities and action authority across all decks.
+  Local UI guards are distinguished from server-returned eligibility. Adapter
+  checks are still verifying frozen proposal/task/result identities; a current
+  planning result must not replace an older object's own saved binding.
+- Release notes have been prepared and schema-validated. They are candidate
+  notes only; no staging or public cutover has occurred.

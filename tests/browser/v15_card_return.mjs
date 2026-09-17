@@ -42,4 +42,4 @@ try {
   check('History list Back restores original scroll', Math.abs(await page.evaluate(() => window.scrollY) - historyScroll) < 3);
   check('Reading and returning performs zero writes', writes === 0);
 } catch (error) { report.failures.push(String(error)); if(page) report.last_card = await page.locator('.ic-shell').innerText().catch(() => 'unavailable'); process.exitCode = 1; }
-finally { await browser.close(); await writeFile('reports/v15/card-return-browser.json', JSON.stringify(report, null, 2)); console.log(JSON.stringify(report, null, 2)); }
+finally { report.status = report.failures.length ? 'FAIL' : 'PASS'; await browser.close(); await writeFile('reports/v15/card-return-browser.json', JSON.stringify(report, null, 2)); console.log(JSON.stringify(report, null, 2)); }

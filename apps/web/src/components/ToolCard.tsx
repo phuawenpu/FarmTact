@@ -1,9 +1,11 @@
 import { useRef, type ReactNode } from 'react'
+import type { FarmCard } from '../lib/cards'
+import BoundCard from './BoundCard'
 import './tool-card.css'
-export type ToolAction = {label:string; run:()=>void; disabled?:boolean}
-export function ToolCard({title, children, onBack, primary, secondary, previous, next, position, busy, error}: {
+export type ToolAction = {label:string; run:()=>void; disabled?:boolean;disabledReason?:string;authority?:'local_navigation'|'server_mutation';eligibilitySource?:'local'|'server'}
+export function ToolCard({title, children, onBack, primary, secondary, previous, next, position, busy, error, card}: {
  title:string;children:ReactNode;onBack:()=>void;primary?:ToolAction;secondary?:ToolAction;
- previous?:()=>void;next?:()=>void;position?:string;busy?:boolean;error?:string
+ previous?:()=>void;next?:()=>void;position?:string;busy?:boolean;error?:string;card?:FarmCard
 }) {
  const touch=useRef<{x:number;y:number}|null>(null)
  return <section className="integrated-tool" aria-label={title} onKeyDown={e=>{
@@ -15,10 +17,11 @@ export function ToolCard({title, children, onBack, primary, secondary, previous,
    const dx=e.changedTouches[0].clientX-from.x,dy=e.changedTouches[0].clientY-from.y
    if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0)next?.();else previous?.()}
  }}>
- <article className="integrated-tool__card" tabIndex={0}><small>Sandbox · actual farm operations disabled</small><h2>{title}</h2>{children}</article>
+ {card?<BoundCard card={card} className="integrated-tool__card" tabIndex={0}><small>Sandbox · actual farm operations disabled</small><h2>{title}</h2>{children}</BoundCard>
+ :<article className="integrated-tool__card" tabIndex={0}><small>Sandbox · actual farm operations disabled</small><h2>{title}</h2>{children}</article>}
  {error&&<p role="alert">{error}</p>}{busy&&<p role="status">Waiting for server confirmation…</p>}
  {(previous||next)&&<nav aria-label="Card navigation"><button onClick={previous} disabled={!previous}>Previous</button><span>{position}</span><button onClick={next} disabled={!next}>Next</button></nav>}
- <footer><button onClick={onBack}>Back</button>{primary&&<button className="primary" disabled={busy||primary.disabled} onClick={primary.run}>{primary.label}</button>}{secondary&&<button disabled={busy||secondary.disabled} onClick={secondary.run}>{secondary.label}</button>}</footer>
+ <footer><button onClick={onBack}>Back</button>{primary&&<button className="primary" title={primary.disabledReason} disabled={busy||primary.disabled} onClick={primary.run}>{primary.label}</button>}{secondary&&<button title={secondary.disabledReason} disabled={busy||secondary.disabled} onClick={secondary.run}>{secondary.label}</button>}</footer>
  </section>
 }
 export function RecordFacts({value}:{value:unknown}) {

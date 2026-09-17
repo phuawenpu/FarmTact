@@ -3,6 +3,7 @@ import { ADVISORS } from "../lib/game";
 import { request } from "../lib/api";
 import { editionStorageKey } from "../lib/edition";
 import { researchApi, type ActualConversation, type CouncilConcept, type ResearchActionBody, type ResearchReport, type ResearchResult, type ResearchSession, type SteeringMode } from "../lib/research";
+import type { CardAction, FarmCard } from "../lib/cards";
 import { FrozenFactEvidence, QualitativeContextReferences } from "./AdvisorEvidence";
 import { RecordFacts, ToolCard, type ToolAction } from "./ToolCard";
 import "./IntegratedResearch.css";
@@ -87,5 +88,50 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
 
   const previous = count > 1 && index > 0 ? () => setIndex((value) => value - 1) : undefined;
   const next = count > 1 && index < count - 1 ? () => setIndex((value) => value + 1) : undefined;
-  return <ToolCard title={title} onBack={back} primary={primary} secondary={secondary} previous={previous} next={next} position={count > 1 ? `${index + 1} of ${count}` : undefined} busy={busy} error={error}>{body}</ToolCard>;
+  const displayedResult = view === "results" ? session?.results[index] : currentResult(session);
+  const displayedRevision = view === "history" ? history[index] : undefined;
+  const snapshotRef = actual?.snapshot_ref;
+  const mutationViews = new Set<View>(["configure", "context", "discussion", "proposal", "calculate", "challenge", "results", "actual"]);
+  const bindAction = (action: ToolAction | undefined, suffix: string): CardAction | null => action ? {
+    id: `${view}-${suffix}-${action.label.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+    label: action.label,
+    eligible: !action.disabled,
+    authority: mutationViews.has(view) && !/^(open|load|refresh|question accepted|start new discussion)/i.test(action.label) ? "server_mutation" : "local_navigation",
+    eligibilitySource: mutationViews.has(view) ? "server" : "local",
+    ...(action.disabled ? { disabledReason: action.disabledReason || "The recorded server state or required input makes this action unavailable." } : {}),
+  } : null;
+  const actionBindings = [bindAction(primary, "primary"), bindAction(secondary, "secondary")].filter((item): item is CardAction => item !== null);
+  const entity = view === "sessions"
+    ? { id: sessions[index]?.id || "research-session-index", kind: sessions[index] ? "research_session" : "research_session_index" }
+    : view === "results" && displayedResult
+      ? { id: `${session?.id}:result:${displayedResult.version}`, kind: "research_result" }
+      : view === "history" && displayedRevision
+        ? { id: `${session?.id}:revision:${displayedRevision.revision}`, kind: "research_revision" }
+        : view === "actual" && actualId
+          ? { id: actualId, kind: "conversation" }
+          : view === "report"
+            ? { id: "council-research-report", kind: "research_report" }
+            : { id: session?.id || "research-session", kind: "research_session" };
+  const reportProvenance = view === "report" && report ? [...report.sources.map((source) => source.url), ...report.screenshots.map((shot) => shot.url)] : [];
+  const researchCard: FarmCard = {
+    id: `research:${view}:${entity.id}:${index}`,
+    entityId: entity.id,
+    entityKind: entity.kind,
+    title,
+    provenance: reportProvenance.length ? reportProvenance : view === "actual" && actualId ? [actualId] : displayedResult?.input_hash ? [displayedResult.input_hash] : [],
+    binding: {
+      sessionId: session?.id || null,
+      inputHash: displayedResult?.input_hash || null,
+      revision: session?.revision ?? displayedRevision?.revision ?? null,
+      resultId: null,
+      snapshotId: typeof snapshotRef === "string" ? snapshotRef : snapshotRef && typeof snapshotRef.id === "string" ? snapshotRef.id : null,
+    },
+    boardTargets: session ? [...new Set([
+      ...session.selected_refs.filter((ref) => ref.startsWith("bed:")).map((ref) => ref.slice(4)),
+      ...(session.proposal?.bed_id ? [session.proposal.bed_id] : []),
+    ])] : [],
+    actions: actionBindings,
+    outcomeBasis: view === "results" || view === "calculate" ? "recorded_simulation" : null,
+  };
+  return <ToolCard card={researchCard} title={title} onBack={back} primary={primary} secondary={secondary} previous={previous} next={next} position={count > 1 ? `${index + 1} of ${count}` : undefined} busy={busy} error={error}>{body}</ToolCard>;
 }

@@ -5,6 +5,8 @@ import { farmerWorkflowApi, planningApi, rememberedPlanningSession, type FarmerA
 import type { Bootstrap, Crop, EvidenceRecord, Source } from "../lib/types";
 import { AdvisorEvidence, FrozenFactEvidence } from "./AdvisorEvidence";
 import { RecordFacts } from "./ToolCard";
+import BoundCard from "./BoundCard";
+import type { FarmCard } from "../lib/cards";
 import "./IntegratedKnowledge.css";
 
 type Card =
@@ -189,18 +191,29 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     : proposalMessage ? { label: "Create reviewed proposal", disabled: !assumptionsDraft.trim(), run: createReviewedProposal }
     : { label: "Open read-only replay", disabled: !selectedThread, run: () => replay(selectedThread) }
     : active.kind === "council" ? { label: "Review with Council", disabled: !session?.result?.strategies?.length || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || !!session.review?.findings?.length, run: reviewCouncil } : null;
+  const entity = active.kind === "crop" ? { id: active.crop.id, kind: "crop" } : active.kind === "source" ? { id: active.source.id, kind: "source" } : active.kind === "advisor" ? { id: active.advisor.id, kind: "advisor" } : active.kind === "threads" ? { id: conversation?.id || active.id, kind: conversation ? "conversation" : "conversation_index" } : { id: session?.id || active.id, kind: "planning_council" };
+  const snapshotRef = conversation?.snapshot_ref;
+  const provenance = active.kind === "source" ? [active.source.url || active.source.id] : active.kind === "crop" ? active.crop.evidence_ids || [] : conversation ? [conversation.id] : [];
+  const knowledgeCard: FarmCard = {
+    id: active.id, entityId: entity.id, entityKind: entity.kind,
+    title: active.kind === "crop" ? active.crop.label : active.kind === "source" ? active.source.name : active.kind === "advisor" ? active.advisor.name : active.kind === "threads" ? "Saved adviser transcripts" : "Planning Council review",
+    provenance,
+    binding: { sessionId: session?.id || null, inputHash: typeof session?.input_hash === "string" ? session.input_hash : null, revision: session?.revision ?? null, resultId: typeof session?.result_id === "string" ? session.result_id : null, snapshotId: typeof snapshotRef === "string" ? snapshotRef : snapshotRef && typeof snapshotRef.id === "string" ? snapshotRef.id : null },
+    boardTargets: active.kind === "crop" ? (session?.farm?.beds || []).filter((bed) => (bed as typeof bed & { crop_id?: string }).crop_id === active.crop.id).map((bed) => bed.id) : [], outcomeBasis: active.kind === "council" ? "projection" : null,
+    actions: contextual ? [{ id: contextual.label.toLowerCase().replaceAll(" ", "-"), label: contextual.label, eligible: !contextual.disabled, authority: /submit|invite|council|proposal|apply|review/i.test(contextual.label) ? "server_mutation" : "local_navigation", eligibilitySource: active.kind === "threads" && proposal ? "server" : "local", ...(contextual.disabled ? { disabledReason: "Current server state or required input makes this action unavailable." } : {}) }] : [],
+  };
 
   return <section className="ik-shell" tabIndex={-1} onKeyDown={keyboard}>
     <header className="ik-header"><div><span>Farm tools › Knowledge &amp; evidence</span><h1>Inspect the facts. Ask deliberately.</h1></div><button onClick={onClose}>Close</button></header>
     {error && <div className="ik-error" role="alert"><span>{error}</span><button onClick={() => setError("")}>Dismiss</button></div>}
     <div className="ik-deck" onPointerDown={(event) => { pointer.current = event.clientX; }} onPointerUp={pointerUp}>
-      <article className="ik-card" aria-live="polite" aria-label={`Knowledge card ${activeIndex + 1} of ${cards.length}`}>
+      <BoundCard card={knowledgeCard} className="ik-card" aria-live="polite" aria-label={`Knowledge card ${activeIndex + 1} of ${cards.length}`}>
         {active.kind === "crop" && <CropCard crop={cropDetail || active.crop} evidence={evidence} />}
         {active.kind === "source" && <SourceCard source={active.source} />}
         {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} focusKey={focusKey} setFocusKey={setFocusKey} session={session} />}
         {active.kind === "threads" && <ThreadsCard threads={threads} selected={selectedThread} setSelected={setSelectedThread} conversation={conversation} proposalMessage={proposalMessage} setProposalMessage={(id) => { setProposalMessage(id); setProposal(null); setAssumptionsDraft(JSON.stringify(editableAssumptions(session), null, 2)); }} assumptionsDraft={assumptionsDraft} setAssumptionsDraft={setAssumptionsDraft} proposal={proposal} />}
         {active.kind === "council" && <CouncilCard session={session} status={councilStatus} />}
-      </article>
+      </BoundCard>
     </div>
     <nav className="ik-actions" aria-label="Knowledge card actions"><button onClick={() => move(-1)} disabled={activeIndex === 0}>Previous</button>{contextual ? <button className="is-primary" disabled={contextual.disabled || !!busy} onClick={contextual.run}>{contextual.label}</button> : <span>{activeIndex + 1} / {cards.length}</span>}<button onClick={() => move(1)} disabled={activeIndex === cards.length - 1}>Next</button></nav>
     {busy && <p className="ik-status" role="status">{busy}…</p>}

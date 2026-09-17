@@ -28,7 +28,9 @@ try{
  await page.goto(base,{waitUntil:"domcontentloaded"});await page.locator(".ic-shell").waitFor();await click(page,"More");for(let i=0;i<2;i++)await click(page,"Next →");await click(page,"Open tool");await page.getByRole("heading",{name:"Inspect the facts. Ask deliberately.",exact:true}).waitFor();
  for(let i=0;i<13;i++)await click(page,"Next");
  await page.getByLabel("Frozen focus").selectOption(`order:${planning.farm.orders[0].id}`);
- await page.getByLabel("Question about the frozen planning session").fill("Explain the frozen demand trade-off.");await click(page,"Submit question");await page.getByText(partial.content,{exact:true}).waitFor();
+ const knowledgeBinding=await page.locator(".ik-card").evaluate(card=>({entityId:card.getAttribute("data-entity-id"),entityKind:card.getAttribute("data-entity-kind"),sessionId:card.getAttribute("data-session-id"),actions:JSON.parse(card.getAttribute("data-card-actions")||"[]")}));
+ check("V15 Knowledge card publishes canonical adviser and planning binding",knowledgeBinding.entityId==="ravi"&&knowledgeBinding.entityKind==="advisor"&&knowledgeBinding.sessionId===planning.id&&knowledgeBinding.actions.some(action=>action.label==="Submit question"),knowledgeBinding);
+ await page.locator(".ik-card").getByLabel("Question about the frozen planning session").fill("Explain the frozen demand trade-off.");await page.locator(".ik-actions").getByRole("button",{name:"Submit question",exact:true}).click();await page.getByText(partial.content,{exact:true}).waitFor();
  check("V15 direct adviser fixture records partial validated result",creates===1&&direct===1&&/partial/i.test(await page.locator(".ik-message").last().innerText()),{creates,direct});
  check("V15 adviser submission uses exact canonical selected focus",createBody?.focus?.card_id===`order-${planning.farm.orders[0].id}`&&createBody?.focus?.entity_kind==="order"&&createBody?.focus?.entity_id===planning.farm.orders[0].id,createBody?.focus);
 

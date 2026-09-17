@@ -5,6 +5,7 @@ import { DEFAULT_FORECAST, DEFAULT_GENERATOR, type DatasetKey, type ExplorerDeta
 import type { Quest, Scenario, ScenarioControls } from '../lib/game'
 import { ToolCard, RecordFacts, type ToolAction } from './ToolCard'
 import { ExplorerChart } from './ExplorerChart'
+import { staticToolCard, cardString, cardRevision, cardReferences, toolCardActions } from '../lib/cardProjection'
 import { editionStorageKey } from '../lib/edition'
 const recordDate=(r:ExplorerRecord)=>String(r.date||r.due_date||r.sow_date||r.harvest_date||r.week_start||'')
 const numeric=(v:unknown)=>v!==null&&v!==''&&v!==undefined&&Number.isFinite(Number(v))
@@ -19,7 +20,7 @@ export default function IntegratedExperiments({onClose,onResearch}:{onClose:()=>
  const [snapshots,setSnapshots]=useState<ExplorerSnapshotSummary[]>([]),[detail,setDetail]=useState<ExplorerDetail|null>(null),[dataset,setDataset]=useState<DatasetKey>('history'),[filter,setFilter]=useState(''),[sort,setSort]=useState('id'),[page,setPage]=useState(0),[policy,setPolicy]=useState('Balanced')
  const [generator,setGenerator]=useState(()=>({...DEFAULT_GENERATOR,...readDraft().generator})),[forecast,setForecast]=useState(()=>({...DEFAULT_FORECAST,...readDraft().forecast}))
  const [publicContext,setPublicContext]=useState<PublicContext|null>(null),[publicDataset,setPublicDataset]=useState<keyof PublicContext['datasets']>('weather_observations'),[publicSource,setPublicSource]=useState('')
- const [comparison,setComparison]=useState<unknown>(null),[compareId,setCompareId]=useState(''),[session,setSession]=useState<PlanningSession|null>(null),[rescue,setRescue]=useState<unknown>(null)
+ const [comparison,setComparison]=useState<unknown>(null),[comparisonContext,setComparisonContext]=useState(''),[compareId,setCompareId]=useState(''),[session,setSession]=useState<PlanningSession|null>(null),[rescue,setRescue]=useState<unknown>(null)
  const [crop,setCrop]=useState(''),[start,setStart]=useState(''),[end,setEnd]=useState(''),[descending,setDescending]=useState(false),[format,setFormat]=useState('csv'),[selectedRecord,setSelectedRecord]=useState('')
  const trail=useRef<Array<{view:string;index:number;scroll:number;focus:HTMLElement|null}>>([])
  const [sale,setSale]=useState('3'),[price,setPrice]=useState('1'),[cost,setCost]=useState('0.2'),[lot,setLot]=useState(''),[rescueStrategy,setRescueStrategy]=useState('')
@@ -48,7 +49,7 @@ export default function IntegratedExperiments({onClose,onResearch}:{onClose:()=>
   secondary={label:'Scenario actions',run:()=>open('scenario-actions')}
  }else if(view==='scenario-actions'){
   title='Scenario actions';count=5;const labels=['Compare compatible roots','Continue this branch','Cancel calculation','Retry interrupted calculation','Inspect quest outcome'];body=<><h3>{labels[index]}</h3>{index===0&&<label>Compare with<select value={compareId} onChange={e=>setCompareId(e.target.value)}><option value="">Select scenario</option>{scenarios.filter(s=>s.id!==scenario?.id).map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></label>}<p>Server validates frozen roots, attempts and eligibility.</p></>
-  primary={label:labels[index],disabled:!scenario||(index===0&&!compareId)||(index===3&&!scenario.run_key)||(index===4&&!scenario.quest_id),run:()=>void act(async()=>{if(!scenario)return;if(index===0){setComparison(await api.compareScenarios([scenario.id,compareId]));open('comparison')}if(index===1){setParent(scenario.id);setDraft(scenario.controls);open('scenario-form')}if(index===2){setScenario(await api.cancelScenario(scenario.id));open('scenario')}if(index===3){setScenario(await api.retryScenario(scenario.id,scenario.run_key!));open('scenario')}if(index===4){setComparison(await api.inspectQuest(scenario.quest_id!,scenario.id));open('comparison')}})}
+  primary={label:labels[index],disabled:!scenario||(index===0&&!compareId)||(index===3&&!scenario.run_key)||(index===4&&!scenario.quest_id),run:()=>void act(async()=>{if(!scenario)return;if(index===0){setComparisonContext('scenario');setComparison(await api.compareScenarios([scenario.id,compareId]));open('comparison')}if(index===1){setParent(scenario.id);setDraft(scenario.controls);open('scenario-form')}if(index===2){setScenario(await api.cancelScenario(scenario.id));open('scenario')}if(index===3){setScenario(await api.retryScenario(scenario.id,scenario.run_key!));open('scenario')}if(index===4){setComparisonContext('scenario');setComparison(await api.inspectQuest(scenario.quest_id!,scenario.id));open('comparison')}})}
  }else if(view==='comparison'){
   title='Recorded comparison';count=0;body=<RecordFacts value={comparison}/>;primary=undefined
  }else if(view==='explorer'){
@@ -58,7 +59,7 @@ export default function IntegratedExperiments({onClose,onResearch}:{onClose:()=>
   title='Public source records';count=0
   const records=(publicContext?.datasets[publicDataset]||[]).filter(r=>(!publicSource||r.source_id===publicSource)&&JSON.stringify(r).toLowerCase().includes(filter.toLowerCase()))
   body=<><p>Public source observations retain their date, units, provenance and redistribution limits. Missing data is not a forecast.</p><label>Public dataset<select aria-label="Public dataset" value={publicDataset} onChange={e=>{setPublicDataset(e.target.value as keyof PublicContext['datasets']);setPage(0)}}>{['weather_observations','weather_forecasts','trade_observations'].map(d=><option key={d}>{d}</option>)}</select></label><label>Source<select aria-label="Source" value={publicSource} onChange={e=>{setPublicSource(e.target.value);setPage(0)}}><option value="">All sources</option>{publicContext?.sources.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label><label>Filter<input value={filter} onChange={e=>{setFilter(e.target.value);setPage(0)}}/></label><label>Page<input type="number" min="1" value={page+1} onChange={e=>setPage(Math.max(0,Number(e.target.value)-1))}/></label><p>{records.length} matching records</p><RecordFacts value={publicContext?.sources.filter(s=>!publicSource||s.id===publicSource)}/><RecordFacts value={records.slice(page*8,page*8+8)}/></>
-  primary={label:'Export public CSV',run:()=>void act(async()=>{const params=new URLSearchParams({dataset:publicDataset,format:'csv',q:filter,...(publicSource?{source_id:publicSource}:{})});const url=URL.createObjectURL(await requestBlob('/data-explorer/public/export?'+params));const a=document.createElement('a');a.href=url;a.download='farmtact-public.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)})};secondary={label:'Evaluation evidence',run:()=>void act(async()=>{setComparison(await api.explorerEvaluation());open('comparison')})}
+  primary={label:'Export public CSV',run:()=>void act(async()=>{const params=new URLSearchParams({dataset:publicDataset,format:'csv',q:filter,...(publicSource?{source_id:publicSource}:{})});const url=URL.createObjectURL(await requestBlob('/data-explorer/public/export?'+params));const a=document.createElement('a');a.href=url;a.download='farmtact-public.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)})};secondary={label:'Evaluation evidence',run:()=>void act(async()=>{setComparisonContext('evaluation');setComparison(await api.explorerEvaluation());open('comparison')})}
  }else if(view==='generator'||view==='generator-review'){
   title=view==='generator-review'?'Review generated preview':'Dataset & forecast settings';count=0
   body=view==='generator-review'?<><p>Preview—not saved. Synthetic assumptions only.</p><RecordFacts value={detail?.counts}/><RecordFacts value={{generator,forecast,hash:detail?.content_hash}}/></>:<><label>Snapshot name<input value={name} onChange={e=>setName(e.target.value)}/></label>{Object.keys(generator).map(k=><label key={k}>{k.replaceAll('_',' ')}<input type="number" step="0.05" value={generator[k as keyof typeof generator]} onChange={e=>setGenerator((g:typeof generator)=>({...g,[k]:Number(e.target.value)}))}/></label>)}<label>EWMA alpha<input type="number" min="0.01" max="1" step="0.01" value={forecast.alpha} onChange={e=>setForecast({alpha:Number(e.target.value)})}/></label></>
@@ -81,5 +82,28 @@ export default function IntegratedExperiments({onClose,onResearch}:{onClose:()=>
  }else if(view==='research'){
   title='Council research';count=0;body=<p>Explore scripted discussion and saved numerical experiments in an isolated research session.</p>;primary={label:'Open research cards',disabled:!onResearch,run:()=>onResearch?.()}
  }
- return <ToolCard title={title} onBack={back} primary={primary} secondary={secondary} previous={count>0&&index>0?previous:undefined} next={count>0&&index<count-1?next:undefined} position={count?`${index+1} of ${count}`:undefined} busy={busy} error={error}>{body}</ToolCard>
+ const card=staticToolCard('experiments',view==='index'?menu[index]:view,title)
+ const scenarioCard=view==='scenarios'?scenarios[index]:['scenario','scenario-actions'].includes(view)||(view==='comparison'&&comparisonContext==='scenario')?scenario:null
+ const snapshotCard=view==='explorer'?snapshots[index]:['dataset','dataset-actions','relationships','generator-review'].includes(view)?detail:null
+ if(scenarioCard){
+  card.entityId=scenarioCard.id;card.entityKind='scenario';card.id=`experiments:${view}:${scenarioCard.id}`
+  card.binding={sessionId:null,inputHash:scenarioCard.input_hash||null,revision:cardRevision(scenarioCard.revision),resultId:null,snapshotId:scenarioCard.snapshot_ref||null}
+  card.provenance=cardReferences(scenarioCard.snapshot_ref,scenarioCard.baseline_hash,scenarioCard.parent_scenario_id)
+  card.boardTargets=scenarioCard.affected_bed_ids||[];card.outcomeBasis='projection'
+ }else if(snapshotCard){
+  card.entityId=snapshotCard.id;card.entityKind='dataset_snapshot';card.id=`experiments:${view}:${snapshotCard.id}:${view==='relationships'?selectedRecord:dataset}`
+  card.binding={sessionId:null,inputHash:snapshotCard.content_hash,revision:null,resultId:null,snapshotId:snapshotCard.id}
+  card.provenance=cardReferences('provenance' in snapshotCard?snapshotCard.provenance:null,snapshotCard.content_hash)
+  card.outcomeBasis='projection'
+  if(view==='relationships'&&selectedRecord){card.entityId=selectedRecord;card.entityKind=dataset;const row=detail?.records[dataset].find(record=>record.id===selectedRecord);card.boardTargets=cardString(row?.bed_id)?[String(row?.bed_id)]:dataset==='beds'?[selectedRecord]:[]}
+ }else if(view==='rescue'&&session){
+  card.entityId=lot||rescueStrategy||session.selected_strategy_id||session.id;card.entityKind=lot?'inventory_lot':rescueStrategy||session.selected_strategy_id?'strategy':'planning_session'
+  card.id=`experiments:rescue:${card.entityId}`;card.binding={sessionId:session.id,inputHash:session.input_hash,revision:session.revision,resultId:cardString(session.result_id)}
+  card.provenance=cardReferences(session.result_id,session.input_hash);card.outcomeBasis='projection'
+ }else if(view==='public'){
+  card.entityId=publicSource||publicDataset;card.entityKind=publicSource?'public_source':'public_dataset';card.id=`experiments:public:${card.entityId}`
+  card.provenance=cardReferences(publicContext?.sources.filter(source=>!publicSource||source.id===publicSource))
+ }
+ card.actions=toolCardActions(primary,secondary,busy,['Create frozen branch','Run locally','Cancel calculation','Retry interrupted calculation','Inspect quest outcome','Save frozen dataset'])
+ return <ToolCard card={card} title={title} onBack={back} primary={primary} secondary={secondary} previous={count>0&&index>0?previous:undefined} next={count>0&&index<count-1?next:undefined} position={count?`${index+1} of ${count}`:undefined} busy={busy} error={error}>{body}</ToolCard>
 }

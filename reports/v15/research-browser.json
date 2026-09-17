@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "V15 research stop clears queued scripted turns",
+      "pass": true
+    },
+    {
+      "name": "V15 reservation preview can be discarded without mutation",
+      "pass": true
+    },
+    {
+      "name": "V15 order edit creates a new frozen version",
+      "pass": true
+    },
+    {
+      "name": "historical Research result cannot be chosen as current",
+      "pass": true
+    },
+    {
+      "name": "research fixture has an eligible strategy to choose",
+      "pass": true,
+      "detail": "Lean"
+    },
+    {
+      "name": "V15 Research result card publishes frozen server binding and eligibility",
+      "pass": true,
+      "detail": {
+        "entityId": "ed76f9394a5df0d634228ee1af4a1b2b:result:2",
+        "entityKind": "research_result",
+        "sessionId": "ed76f9394a5df0d634228ee1af4a1b2b",
+        "inputHash": "559b88b28f0e336e3ee95b4012976c2043e724079dac3b209d512f6e947a9e17",
+        "basis": "recorded_simulation",
+        "actions": [
+          {
+            "id": "results-primary-choose-simulation-only-result",
+            "label": "Choose simulation-only result",
+            "eligible": true,
+            "authority": "server_mutation",
+            "eligibilitySource": "server"
+          }
+        ]
+      }
+    },
+    {
+      "name": "eligible result enables explicit choose action",
+      "pass": true,
+      "detail": "Lean"
+    },
+    {
+      "name": "V15 eligible research result is explicitly chosen simulation-only",
+      "pass": true
+    },
+    {
+      "name": "V15 research history loads beyond the first 20 revisions",
+      "pass": true
+    },
+    {
+      "name": "V15 research report exposes documents sources and screenshots",
+      "pass": true
+    },
+    {
+      "name": "V15 saved research study reopens with its current frozen version",
+      "pass": true
+    },
+    {
+      "name": "V15 research actual discussion identity survives reload without provider create",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "accepted Research provider POST is not presented as a resend",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "Research transcript refresh makes no duplicate provider submission",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "V15 Research calculation exposes explicit run cancel retry sequence",
+      "pass": true,
+      "detail": [
+        "run",
+        "cancel_calculation",
+        "retry_calculation"
+      ]
+    },
+    {
+      "name": "V15 research parity suite has no browser errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": []
+}

@@ -508,7 +508,10 @@ def queue_recalculation(store, tenant_id, session, changes):
     from services.api.farm_workflow import TASKS
     with store.connection() as c:
         recorded=list(c.execute(select(TASKS.c.payload).where(TASKS.c.tenant_id==tenant_id,TASKS.c.session_id==session['id'],TASKS.c.status.in_(['completed','recovery_required']))).scalars())
-    recorded_ids={t['batch_id'] for t in recorded if t['status']=='completed' or Decimal(str(t.get('actual_quantity') or 0))>0}
+    # Delivery records have no crop-cycle ID. They remain in the reported forecast
+    # and execution hash, but cannot lock or exclude a planting allocation.
+    recorded_ids={t['batch_id'] for t in recorded if t.get('batch_id') and
+                  (t['status']=='completed' or Decimal(str(t.get('actual_quantity') or 0))>0)}
     approved=get_result(store,tenant_id,session.get('approved_result_id'))
     approved_strategy=next((s for s in (approved or {}).get('strategies',[]) if s['id']==session.get('selected_strategy_id')),None)
     if approved_strategy and recorded_ids:

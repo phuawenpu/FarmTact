@@ -1,0 +1,24 @@
+{
+  "title": "One farm, one card experience",
+  "summary": "Plan, review records, inspect evidence and explore experiments through one card interface. Optional guidance uses the ordinary sandbox farm, with all demand retained and actual farm operations disabled.",
+  "changes": [
+    {
+      "title": "Review decisions and their recorded consequences",
+      "description": "Compare local planning strategies, review dated reservations, recalculate, inspect numerical tradeoffs, reverse eligible changes and approve sandbox work. The passive farm scene shows finite saved events and the same facts with reduced motion.",
+      "feedback_ids": [],
+      "evidence": ["tests/browser/v15_cards.mjs", "tests/browser/v15_plan_recovery.mjs", "tests/gameplay/test_v13_inverse_proposal.py"]
+    },
+    {
+      "title": "Workflows inside five tool decks",
+      "description": "Plan; Records & work; Knowledge & evidence; Experiments; and History & preferences keep forms, evidence, conversations, datasets and replay inside cards. Imports require a reviewed transition; task reports and corrections remain append-only.",
+      "feedback_ids": [],
+      "evidence": ["docs/v15-capability-checklist.md", "tests/browser/v15_records_extended.mjs", "tests/browser/v15_tools.mjs", "tests/browser/v15_card_return.mjs"]
+    },
+    {
+      "title": "Explicit submissions and recoverable state",
+      "description": "Reading explanations and saved answers does not invoke AI. Explicit adviser submissions retain their request identity through uncertain responses. Canonical card bindings, revisions, tenant isolation and existing API/provider budgets remain enforced. Automated checks do not establish representative-user comprehension.",
+      "feedback_ids": [],
+      "evidence": ["tests/browser/v15_knowledge.mjs", "tests/browser/v15_research.mjs", "tests/gameplay/test_v12_acceptance_adversarial.py"]
+    }
+  ]
+}

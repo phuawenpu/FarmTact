@@ -2,6 +2,25 @@
   "status": "PASS",
   "checks": [
     {
+      "name": "V15 Knowledge card publishes canonical adviser and planning binding",
+      "pass": true,
+      "detail": {
+        "entityId": "ravi",
+        "entityKind": "advisor",
+        "sessionId": "v15-knowledge-planning",
+        "actions": [
+          {
+            "id": "submit-question",
+            "label": "Submit question",
+            "eligible": false,
+            "authority": "server_mutation",
+            "eligibilitySource": "local",
+            "disabledReason": "Current server state or required input makes this action unavailable."
+          }
+        ]
+      }
+    },
+    {
       "name": "V15 direct adviser fixture records partial validated result",
       "pass": true,
       "detail": {

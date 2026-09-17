@@ -55,6 +55,7 @@ try {
     const traffic = observe(page);
     await open(page);
     const mutationsAfterOpen = traffic.mutations.length;
+    const parentCardTitle = await page.locator('.ic-card h1').innerText();
     const bedCount = await page.locator('.ic-beds article').count();
     check(`${width}: ordinary farm scene is not the four-bed lesson`, bedCount > 4, { bedCount });
     check(`${width}: objective retains an actual order`, /kg.+by \d{4}-\d{2}-\d{2}/i.test(await page.locator('.ic-heading').innerText()), await page.locator('.ic-heading').innerText());
@@ -77,9 +78,17 @@ try {
     check(`${width}: reduced motion disables animation`, await page.locator('.ic-beds').evaluate(node => getComputedStyle(node).animationName === 'none'));
     check(`${width}: no browser exception`, traffic.errors.length === 0, traffic.errors);
     await shot(page, `shell-${width}`);
+    if (width === 390) {
+      await page.getByRole('button', { name: 'Open tool' }).click();
+      await page.locator('.integrated-tool').waitFor();
+      await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.integrated-tool').waitFor();
+      check('390: reload restores the exact open tool without mutation', traffic.mutations.length === mutationsAfterOpen);
+      await page.locator('.integrated-tool').getByRole('button', { name: 'Back', exact: true }).click();
+    }
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'More');
     check(`${width}: tool index restores More focus and parent card`, await page.evaluate(() => document.activeElement?.textContent?.trim() === 'More') && (await page.locator('.ic-deck-nav').innerText()).includes('Farm plan'));
+    check(`${width}: tool return preserves parent card identity`, (await page.locator('.ic-card h1').innerText()) === parentCardTitle);
       await page.close();
     }
     await responsiveContext.storageState({ path: temporaryStorageState });
@@ -92,6 +101,8 @@ try {
   const page = await context.newPage(); activePage = page;
   const traffic = observe(page);
   await open(page);
+  if (await page.locator('.integrated-tool').count()) await page.locator('.integrated-tool').getByRole('button', { name: 'Back', exact: true }).click();
+  if ((await page.locator('.ic-deck-nav').innerText()).includes('Farm tools')) await page.getByRole('button', { name: 'Back', exact: true }).click();
   const card = page.locator('.ic-card');
 
   // Guide skip is persisted by the server and survives reload independently of planner revision.
@@ -195,7 +206,9 @@ try {
     await page.getByRole('button', { name: 'Apply & recalculate' }).click();
     await page.getByRole('button', { name: 'Approve actions' }).waitFor({ timeout: 180_000 });
     await page.getByRole('button', { name: 'Approve actions' }).click();
-    await page.waitForFunction(() => /of 6\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 60_000 });
+    await page.waitForFunction(() => {
+      const button = document.querySelector('.ic-deck-nav button:last-child'); return button && !button.disabled;
+    }, null, { timeout: 60_000 });
     await page.getByRole('button', { name: 'Next →' }).click();
     await page.getByText(/sandbox task/i).first().waitFor({ timeout: 30_000 });
     check('approval creates persisted sandbox-only tasks', traffic.mutations.some(path => /\/approve-actions$/.test(path)));
@@ -205,18 +218,16 @@ try {
     for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Next →' }).click();
     await page.getByRole('button', { name: 'Open tool' }).click();
     await page.getByRole('heading', { name: 'Saved plans' }).waitFor();
-    await page.getByRole('button', { name: 'Next', exact: true }).click();
-    await page.getByRole('button', { name: 'Next', exact: true }).click();
-    await page.getByRole('heading', { name: 'Simulations' }).waitFor();
     await page.getByRole('button', { name: 'Open', exact: true }).click();
     await page.getByRole('button', { name: 'Read-only replay' }).click();
+    await page.getByRole('button', { name: 'Saved versions' }).click();
     await page.getByRole('button', { name: 'Review time advance' }).click();
     await page.getByLabel('Days to advance').selectOption('7');
     const [advanceResponse] = await Promise.all([
-      page.waitForResponse(response => response.request().method() === 'POST' && /\/simulations\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }),
+      page.waitForResponse(response => response.request().method() === 'POST' && /\/planning-sessions\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }),
       page.getByRole('button', { name: 'Advance seven days' }).click(),
     ]);
-    const advancedWorld = await advanceResponse.json();
+    const advancedSession = await advanceResponse.json(); const advancedWorld = advancedSession.simulation;
     check('explicit History advance returns recorded simulation facts', advancedWorld.simulation_only === true && advancedWorld.clock_date && advancedWorld.beds?.length, advancedWorld);
     await page.getByRole('button', { name: 'Back', exact: true }).click(); // replay → list
     await page.getByRole('button', { name: 'Back', exact: true }).click(); // list → index
@@ -231,8 +242,8 @@ try {
   } else {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     const approve = page.getByRole('button', { name: 'Approve actions' });
-    const alreadyHasTask = /of 6\b/.test(await page.locator('.ic-deck-nav').innerText());
-    if (!alreadyHasTask && await approve.count()) { await approve.click(); await page.waitForFunction(() => /of 6\b/.test(document.querySelector('.ic-deck-nav')?.textContent || ''), null, { timeout: 60_000 }); }
+    const alreadyHasTask = await page.getByRole('button', { name: 'Next →' }).isEnabled();
+    if (!alreadyHasTask && await approve.count()) { await approve.click(); await page.waitForFunction(() => { const button=document.querySelector('.ic-deck-nav button:last-child');return button&&!button.disabled; }, null, { timeout: 60_000 }); }
     const next = page.getByRole('button', { name: 'Next →' }); if (await next.isEnabled()) await next.click();
     check('approved result records sandbox-only consequence', await page.getByText(/sandbox task/i).first().waitFor({ timeout: 30_000 }).then(() => true));
 
@@ -240,12 +251,11 @@ try {
     for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Next →' }).click();
     await page.getByRole('button', { name: 'Open tool' }).click();
     await page.getByRole('heading', { name: 'Saved plans' }).waitFor();
-    await page.getByRole('button', { name: 'Next', exact: true }).click(); await page.getByRole('button', { name: 'Next', exact: true }).click();
     await page.getByRole('button', { name: 'Open', exact: true }).click();
-    await page.getByRole('button', { name: 'Read-only replay' }).click(); await page.getByRole('button', { name: 'Review time advance' }).click();
+    await page.getByRole('button', { name: 'Read-only replay' }).click(); await page.getByRole('button', { name: 'Saved versions' }).click(); await page.getByRole('button', { name: 'Review time advance' }).click();
     await page.getByLabel('Days to advance').selectOption('7');
-    const [advanceResponse] = await Promise.all([page.waitForResponse(response => response.request().method() === 'POST' && /\/simulations\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }), page.getByRole('button', { name: 'Advance seven days' }).click()]);
-    const advancedWorld = await advanceResponse.json();
+    const [advanceResponse] = await Promise.all([page.waitForResponse(response => response.request().method() === 'POST' && /\/planning-sessions\/[^/]+\/advance$/.test(new URL(response.url()).pathname) && response.ok(), { timeout: 60_000 }), page.getByRole('button', { name: 'Advance seven days' }).click()]);
+    const advancedSession = await advanceResponse.json(); const advancedWorld = advancedSession.simulation;
     await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click(); await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.waitForFunction(date => document.querySelector('.ic-scene-head strong')?.textContent === date, advancedWorld.clock_date, { timeout: 30_000 });
     const sceneText = await page.locator('.ic-scene').innerText();
@@ -259,6 +269,19 @@ try {
   await page.evaluate(() => { document.documentElement.style.zoom = '1'; });
   await page.waitForTimeout(1700);
   check('normal-motion transition is finite', await page.locator('.ic-scene.is-transitioning').count() === 0);
+  if (await page.locator('.ic-saved-change').count()) {
+    const recordedFacts = await page.locator('.ic-saved-change').innerText();
+    await page.emulateMedia({ reducedMotion: 'reduce' }); await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
+    check('reduced motion retains the same recorded consequence facts', (await page.locator('.ic-saved-change').innerText()) === recordedFacts && await page.locator('.ic-beds').evaluate(node => getComputedStyle(node).animationName === 'none'), recordedFacts);
+    await shot(page, 'recorded-consequence-reduced-390');
+  }
+  if (process.env.RESUME !== '1') {
+    check('fresh journey persisted proposal apply inverse and approval mutations',
+      traffic.mutations.some(path => /\/farm-workflow\/proposals$/.test(path))
+        && traffic.mutations.some(path => /\/apply$/.test(path))
+        && traffic.mutations.some(path => /\/inverse$/.test(path))
+        && traffic.mutations.some(path => /\/approve-actions$/.test(path)), traffic.mutations);
+  }
   check('full card journey made no automatic provider request', traffic.providers.length === 0, traffic.providers);
   check('no uncaught browser errors', traffic.errors.length === 0, traffic.errors);
   await shot(page, 'journey-final-390');

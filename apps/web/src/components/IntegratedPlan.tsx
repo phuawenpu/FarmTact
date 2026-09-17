@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { farmerWorkflowApi, planningApi, rememberPlanningSession, rememberedPlanningSession, type FarmerAssumptions, type FarmerProposal, type PlanningSession } from '../lib/planning'
 import { editionStorageKey } from '../lib/edition'
+import { staticToolCard, cardString, cardReferences, toolCardActions } from '../lib/cardProjection'
 import { useCardView } from '../lib/cardNavigation'
 import { RecordFacts, ToolCard } from './ToolCard'
 const blank:FarmerAssumptions={tentative_orders:[],future_demand:[],seasonal:[],order_changes:[],reservations:[]}
@@ -25,5 +26,17 @@ export default function IntegratedPlan({onClose}:{onClose:()=>void}){
  if(view==='proposals'){title='Saved proposals';body=<p>Review current proposals and their server-derived metrics. Apply is separate from creating a draft.</p>;label='Load latest proposal';action=()=>void act(async()=>{const state=await farmerWorkflowApi.state();setProposal([...state.proposals].reverse().find(p=>p.session_id===session?.id)||null);setView('proposal')})}
  if(view==='proposal'){title='Proposal and recalculation';body=<><RecordFacts value={proposal}/><p>Only server-confirmed state is saved. Refresh reconciles an interrupted operation.</p></>;label=proposal?.status==='draft'?'Apply & recalculate':'Refresh result';action=()=>void act(async()=>{if(!proposal||!session)return;if(proposal.status==='draft')await farmerWorkflowApi.applyProposal(proposal);setSession(await planningApi.get(session.id));const state=await farmerWorkflowApi.state();setProposal(state.proposals.find(p=>p.id===proposal.id)||null)});secondary={label:'Review assumptions',run:()=>setView('assumptions')}}
  if(view==='new'){title='Review new planning attempt';body=<p>This creates another frozen planning session from the current imported farm. Previous plans, tasks and history remain recorded. The server limits the number of saved sessions.</p>;label='Create new attempt';action=()=>void act(async()=>{const next=await planningApi.create('New integrated planning attempt',true);rememberPlanningSession(next.id);setSession(next);setView('objectives')})}
- return <ToolCard title={title} onBack={back} primary={{label,run:action,disabled:!session}} secondary={secondary} previous={view==='index'&&index>0?()=>setIndex(index-1):undefined} next={view==='index'&&index<labels.length-1?()=>setIndex(index+1):undefined} position={`${index+1} of ${labels.length}`} busy={busy} error={error}>{body}</ToolCard>
+ const card=staticToolCard('plan',view==='index'?labels[index]:view,title)
+ if(session&&view!=='index'){
+  const selected=view==='strategies'?strategies.find(s=>s.id===strategy):null
+  card.entityId=view==='proposal'&&proposal?proposal.id:selected?.id||session.id
+  card.entityKind=view==='proposal'&&proposal?'proposal':selected?'strategy':'planning_session'
+  card.id=`plan:${view}:${card.entityId}`
+  card.binding=view==='proposal'&&proposal?{sessionId:proposal.session_id,inputHash:cardString(proposal.session_input_hash),revision:proposal.proposal_revision,resultId:cardString(proposal.result_id)}:{sessionId:session.id,inputHash:session.input_hash,revision:session.revision,resultId:cardString(session.result_id)}
+  card.provenance=view==='proposal'&&proposal?cardReferences(proposal.session_input_hash,proposal.result_hash,proposal.explanation?.evidence,proposal.discussion):cardReferences(session.input_hash,session.result_id)
+  card.boardTargets=selected?.allocations.map(a=>a.bed_id)||[]
+  card.outcomeBasis='projection'
+ }
+ card.actions=toolCardActions({label,disabled:!session},secondary,busy,['Calculate locally','Cancel active calculation','Create proposal','Apply & recalculate','Create new attempt'])
+ return <ToolCard card={card} title={title} onBack={back} primary={{label,run:action,disabled:!session}} secondary={secondary} previous={view==='index'&&index>0?()=>setIndex(index-1):undefined} next={view==='index'&&index<labels.length-1?()=>setIndex(index+1):undefined} position={`${index+1} of ${labels.length}`} busy={busy} error={error}>{body}</ToolCard>
 }

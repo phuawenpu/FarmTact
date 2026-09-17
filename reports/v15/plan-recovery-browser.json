@@ -1,0 +1,28 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "fixture": "Queued planning and lost cancellation response; no real mutation or inference",
+  "checks": [
+    {
+      "name": "Cancellation has an explicit review before mutation",
+      "pass": true
+    },
+    {
+      "name": "Uncertain cancellation retains its review without automatic retry",
+      "pass": true
+    },
+    {
+      "name": "Cancellation retry retains the original idempotency key",
+      "pass": true
+    },
+    {
+      "name": "Confirmed cancellation enables a separate new local calculation",
+      "pass": true
+    },
+    {
+      "name": "No other mutation was attempted",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}
