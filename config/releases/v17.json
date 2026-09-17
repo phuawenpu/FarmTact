@@ -1,0 +1,47 @@
+{
+  "id": "v17",
+  "title": "FarmTact V17 \u2014 Clear decisions, accessible farm tools",
+  "published_at": "2026-09-17",
+  "summary": "One ordinary sandbox connects a factual first-use demonstration, direct planning controls, a searchable crop library, research and data tools, and evidence-bearing specialist workflows.",
+  "status": "published",
+  "source_commit": "e9528b2dfca98b92d3c5ab25e1c423a8f55da700",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/e9528b2dfca98b92d3c5ab25e1c423a8f55da700",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/3487faf90ec9205c903f8a6e40fc09aa94614dcc...e9528b2dfca98b92d3c5ab25e1c423a8f55da700",
+  "image_digest": "registry.fly.io/farmtact@sha256:e3fc196a25d6f88a19f5c2c1403a9ce19b817aac3983bf322e6815f59f384c19",
+  "review_url": "/v17/review",
+  "play_url": "/v17/",
+  "changes": [
+    {
+      "title": "Understand a decision before saving it",
+      "description": "The skippable demonstration explains the selected order versus all demand, unsaved previews, dated constraints, task approval and recorded simulation. Finite highlights use actual saved facts and preserve reduced-motion access.",
+      "feedback_ids": [],
+      "evidence": [
+        "reports/v17/personas/review.md",
+        "reports/v17/shell/report.json",
+        "reports/v17/journey/browser-cards.json"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Find crops, research and data directly",
+      "description": "Named category indexes and contextual links restore access to crop profiles, public evidence, dated schedules, records, Data Explorer, isolated research studies and saved outcomes. Each path retains its origin and explicit review controls.",
+      "feedback_ids": [],
+      "evidence": [
+        "reports/v17/tools/browser.json",
+        "reports/v17/navigation/checks.json",
+        "reports/v17/adapters.json"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Keep the complete specialist reasoning loop",
+      "description": "Direct questions, invited specialists and Council preserve frozen context, full transcripts, citations, partial or withheld findings, and discussion-linked reviewed proposals. Browsing and replay make no inference calls; every actual submission retains existing provider and API limits.",
+      "feedback_ids": [],
+      "evidence": [
+        "reports/v17/personas/v17-acceptance.json",
+        "docs/v17-persona-rewrite.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
