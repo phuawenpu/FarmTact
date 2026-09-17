@@ -1,5 +1,20 @@
 /** Presentation references never grant authority to mutate a domain entity. */
 export type ToolDeck = 'plan' | 'records' | 'knowledge' | 'experiments' | 'history'
+/** Read-only navigation hints; domain APIs still validate every saved focus. */
+export type KnowledgeTarget = {kind:'crop'|'source'|'advisor';id:string} | {kind:'threads'|'council'|'index'|'crops'|'sources'|'advisers'}
+export type ExperimentTarget = 'index'|'scenarios'|'explorer'|'generator'|'rescue'|'research'
+export type ResearchTarget = 'overview'|'context'|'discussion'|'proposal'|'calculate'|'challenge'|'results'|'history'|'actual'|'report'
+export type HistoryTarget = 'plans'|'discussions'|'simulations'|'events'|'preferences'|'help'
+export type PlanTarget = 'objectives'|'strategies'|'assumptions'|'proposals'|'new'
+export type RecordsTarget = {view:'setup'|'imports'|'orders'|'beds'|'inventory'|'proposals'|'tasks'|'verify'|'history';entityId?:string}
+export interface ToolTarget {
+  plan?: PlanTarget
+  records?: RecordsTarget
+  knowledge?: KnowledgeTarget
+  experiments?: ExperimentTarget
+  research?: ResearchTarget
+  history?: HistoryTarget
+}
 export interface CardBinding {
   sessionId: string | null
   inputHash: string | null

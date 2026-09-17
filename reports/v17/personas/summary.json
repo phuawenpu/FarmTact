@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "artifact": "V15 a5ab2a8 exact preserved frontend bundle",
+  "frontendAsset": "index-C89Jrp2Y.js",
+  "api": "http://127.0.0.1:4196",
+  "disclosure": "Three AI heuristic personas reuse the same existing local acceptance tenant/session cookie. They are not independent humans, a fresh tenant study, or evidence of comprehension. Every API write is blocked.",
+  "rubric": [
+    "Goal & Scope Definition",
+    "Architecture & Reasoning Loop",
+    "Tool Use & Integration",
+    "Autonomy & Human-in-the-Loop",
+    "Safety, Security & Guardrails",
+    "Observability & Evaluation",
+    "Platform & Tooling Usage"
+  ],
+  "personas": [
+    {
+      "id": "novice-mobile",
+      "label": "AI persona: novice farm manager on mobile",
+      "status": "PASS",
+      "observations": 6,
+      "screenshots": 5,
+      "writes": [],
+      "provider": [],
+      "errors": []
+    },
+    {
+      "id": "expert-desktop",
+      "label": "AI persona: expert production planner on desktop",
+      "status": "PASS",
+      "observations": 2,
+      "screenshots": 5,
+      "writes": [],
+      "provider": [],
+      "errors": []
+    },
+    {
+      "id": "architecture-judge",
+      "label": "AI persona: skeptical agent architecture and evaluation judge using keyboard",
+      "status": "PASS",
+      "observations": 4,
+      "screenshots": 4,
+      "writes": [],
+      "provider": [],
+      "errors": []
+    }
+  ],
+  "failures": []
+}

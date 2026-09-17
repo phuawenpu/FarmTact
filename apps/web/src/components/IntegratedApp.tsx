@@ -1,5 +1,6 @@
 import { lazy, Suspense, useRef, useState } from 'react'
 import IntegratedCards from './IntegratedCards'
+import type { ToolTarget } from '../lib/cards'
 const Records=lazy(()=>import('./IntegratedRecords').then(m=>({default:m.IntegratedRecords})))
 const Knowledge=lazy(()=>import('./IntegratedKnowledge'))
 const Experiments=lazy(()=>import('./IntegratedExperiments'))
@@ -33,7 +34,7 @@ export default function IntegratedApp(){
    window.dispatchEvent(new Event('farmtact-workflow-refresh'))
   }
  }
- return <IntegratedCards renderTool={(tool,close)=><Suspense fallback={<p role="status">Opening cards…</p>}>
- {tool==='records'?<><div hidden={recovery||rescue}><Records onClose={close} onOpenPlan={()=>enter(setRecovery)} onOpenWasteRescue={()=>enter(setRescue)}/></div>{recovery&&<Plan onClose={()=>leave(setRecovery)}/>} {rescue&&<Experiments initialView="rescue" onClose={()=>leave(setRescue)}/>}</>:tool==='knowledge'?<Knowledge onClose={close}/>:tool==='experiments'?<><div hidden={research}><Experiments onClose={close} onResearch={()=>enter(setResearch)}/></div>{research&&<Research onClose={()=>leave(setResearch)}/>}</>:tool==='plan'?<Plan onClose={close}/>:<History onClose={close}/>}
+ return <IntegratedCards renderTool={(tool,close,target?:ToolTarget)=><Suspense fallback={<p role="status">Opening cards…</p>}>
+ {tool==='records'?<><div hidden={recovery||rescue}><Records initialTarget={target?.records} onClose={close} onOpenPlan={()=>enter(setRecovery)} onOpenWasteRescue={()=>enter(setRescue)}/></div>{recovery&&<Plan onClose={()=>leave(setRecovery)}/>} {rescue&&<Experiments initialView="rescue" onClose={()=>leave(setRescue)}/>}</>:tool==='knowledge'?<Knowledge onClose={close} initialTarget={target?.knowledge}/>:tool==='experiments'?<><div hidden={research||!!target?.research}><Experiments onClose={close} initialTarget={target?.experiments} onResearch={()=>enter(setResearch)}/></div>{(research||target?.research)&&<Research initialTarget={target?.research} onClose={target?.research?close:()=>leave(setResearch)}/>}</>:tool==='plan'?<Plan initialTarget={target?.plan} onClose={close}/>:<History onClose={close} initialTarget={target?.history}/>}
  </Suspense>}/>
 }

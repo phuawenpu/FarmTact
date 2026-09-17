@@ -1,0 +1,33 @@
+{
+  "status": "FAIL",
+  "build": "/assets/index-9HFQmJws.js",
+  "realApiSmoke": [
+    {
+      "kind": "GET-only existing tenant",
+      "writes": [],
+      "note": "No live inference and no new tenant/session."
+    }
+  ],
+  "checks": [
+    {
+      "name": "real API exposes the V17 Knowledge category index without inference",
+      "pass": true,
+      "detail": "LIBRARY INDEX · READING MAKES NO PROVIDER CALL\nChoose what you need\n\nCrops and sources explain planning assumptions. Specialists answer an explicit question. Planning Council reviews the current frozen alternatives; the separate Council research study is under Experiments.\n\nCrops\n12 profiles\n\nRecipes, representative stage art, cautions and evidence limits.\n\nFind a crop\nCaixin\n28 day cycle\nXiao bai cai / pak choi\n35 day cycle\nKailan\n42 day cycle\nBayam / Chinese spinach\nAccounting profile only\nKangkong / water spinach\nAccounting profile only\nLettuce\n35 day cycle\nKale\nAccounting profile only\nChinese mustard / mustard greens\nAccounting profile only\nCeylon / Malabar spinach\nAccounting profile only\nSweet-potato leaves / shoots\nAccounting profile only\nGarlic chives\nAccounting profile only\nSawtooth coriander\nAccounting profile only\nSources\n1 records\n\nFreshness, coverage, licence and admitted facts.\n\nPublic source registry\nmissing\nSpecialists\n7 roles\n\nOpening is read-only. Only Submit question, Invite specialist or Convene Council invokes the provider.\n\nRavi\nDemand\nHana\nWeather\nIdris\nMarket\nMei\nProduction\nLina\nSupply Chain\nBen\nProfit\nAsha\nPlanner\nSaved discussions\nReplay full transcripts and reviewed handoffs\nPlanning Council review\nAdvisory review of the current frozen plan"
+    },
+    {
+      "name": "real API category smoke performs no writes",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "fixtures": [
+    "Labelled in-browser validated-gateway transport: direct partial+cited reply, withheld invite, validated Council, and discussion-linked draft/apply. No external provider is contacted."
+  ],
+  "requests": {
+    "providerCapable": [],
+    "unexpectedWrites": []
+  },
+  "failures": [
+    "page.waitForFunction: Timeout 30000ms exceeded.\n    at /home/sprite/workspaces/Code2/tests/browser/v17_acceptance.mjs:87:14"
+  ]
+}

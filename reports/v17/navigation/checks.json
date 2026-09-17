@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "name": "plan index restores selected category focus",
+      "pass": true
+    },
+    {
+      "name": "order record includes actual demand",
+      "pass": true
+    },
+    {
+      "name": "records category restore focus",
+      "pass": true
+    },
+    {
+      "name": "help distinguishes planning Council and research",
+      "pass": true
+    },
+    {
+      "name": "history index restores Help focus",
+      "pass": true
+    },
+    {
+      "name": "all root category browsing is provider and mutation free",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no browser errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "status": "PASS"
+}

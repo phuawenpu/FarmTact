@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { ApiError, api } from "../lib/api";
-import type { FarmCard, ToolDeck } from "../lib/cards";
+import type { FarmCard, ToolDeck, ToolTarget } from "../lib/cards";
 import BoundCard from "./BoundCard";
 import { CURRENT_EDITION, editionStorageKey } from "../lib/edition";
 import {
@@ -150,7 +150,7 @@ export default function IntegratedCards({
   renderTool,
 }: {
   editionId?: string;
-  renderTool?: (tool: string, close: () => void) => ReactNode;
+  renderTool?: (tool: ToolDeck, close: () => void, initialTarget?: ToolTarget) => ReactNode;
 }) {
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null);
   const [session, setSession] = useState<PlanningSession | null>(null);
@@ -166,6 +166,8 @@ export default function IntegratedCards({
   const [detail, setDetail] = useState<"explain" | "review" | "inverse" | null>(null);
   const [transitionLabel, setTransitionLabel] = useState("");
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [toolTarget, setToolTarget] = useState<ToolTarget | undefined>();
+  const [demoStep, setDemoStep] = useState<number | null>(null);
   const pointerStart = useRef<number | null>(null);
   const mutation = useRef(false);
   const guidanceInFlight = useRef(false);
@@ -289,10 +291,11 @@ export default function IntegratedCards({
     navigationReady.current = false;
     resumedSession.current = session.id;
     try {
-      const saved = JSON.parse(localStorage.getItem(editionStorageKey(`integrated-cards-navigation:${session.id}`)) || "null") as { surface?: Surface; index?: number; missionIndex?: number; missionScroll?: number; directTool?: boolean; origin?: { label: string; scroll: number }; missionOrigin?: { label: string; scroll: number } } | null;
+      const saved = JSON.parse(localStorage.getItem(editionStorageKey(`integrated-cards-navigation:${session.id}`)) || "null") as { surface?: Surface; index?: number; missionIndex?: number; missionScroll?: number; directTool?: boolean; toolTarget?: ToolTarget; origin?: { label: string; scroll: number }; missionOrigin?: { label: string; scroll: number } } | null;
       if (saved && ["mission", "tools", ...toolCards.map((item) => item.id)].includes(saved.surface as Surface)) {
         setSurface(saved.surface as Surface); setIndex(Math.max(0, Number(saved.index) || 0)); missionIndex.current = Math.max(0, Number(saved.missionIndex) || 0);
         missionScroll.current = Math.max(0, Number(saved.missionScroll) || 0); directTool.current = Boolean(saved.directTool);
+        setToolTarget(saved.toolTarget);
         origin.current = saved.origin || null; missionOrigin.current = saved.missionOrigin || null;
         window.requestAnimationFrame(() => { navigationReady.current = true; });
         return;
@@ -308,9 +311,18 @@ export default function IntegratedCards({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.id]);
   useEffect(() => {
+    if (!session) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(editionStorageKey(`first-use-demo:${session.id}`)) || "null") as { step?: number; done?: boolean; skipped?: boolean } | null;
+      if (!saved) setDemoStep(0);
+      else if (!saved.done && !saved.skipped) setDemoStep(Math.max(0, Number(saved.step) || 0));
+      else setDemoStep(null);
+    } catch { setDemoStep(0); }
+  }, [session?.id]);
+  useEffect(() => {
     if (!session || !navigationReady.current || detail) return;
-    try { localStorage.setItem(editionStorageKey(`integrated-cards-navigation:${session.id}`), JSON.stringify({ surface, index, missionIndex: missionIndex.current, missionScroll: missionScroll.current, directTool: directTool.current, origin: origin.current, missionOrigin: missionOrigin.current })); } catch { /* optional */ }
-  }, [session?.id, surface, index, detail]);
+    try { localStorage.setItem(editionStorageKey(`integrated-cards-navigation:${session.id}`), JSON.stringify({ surface, index, missionIndex: missionIndex.current, missionScroll: missionScroll.current, directTool: directTool.current, toolTarget, origin: origin.current, missionOrigin: missionOrigin.current })); } catch { /* optional */ }
+  }, [session?.id, surface, index, detail, toolTarget]);
   useEffect(() => {
     if (loadingBusy) return;
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status)) return;
@@ -386,11 +398,12 @@ export default function IntegratedCards({
   const missionCards = useMemo(() => {
     if (!session) return [];
     const base = [{
-      id: "situation", eyebrow: "Farm situation", title: session.farm.name,
-      summary: "Review the frozen farm, then calculate three choices from its real planning records.",
+      id: "situation", eyebrow: "Sample farm · current situation", title: session.farm.name,
+      summary: `This selected order is the example. Planning still includes all ${session.farm.orders.length} order lines across the ${session.farm.horizon_days}-day horizon.`,
       facts: [
-        ["Planning date", session.farm.planning_date || session.farm.cutoff],
-        ["Confirmed orders", String(session.farm.orders.length)],
+        ["Sample farm date", session.farm.planning_date || session.farm.cutoff],
+        ["All demand lines", String(session.farm.orders.length)],
+        ["Planning horizon", `${session.farm.horizon_days} days`],
         ["Grow spaces", String(session.farm.beds.length)],
       ],
     }];
@@ -400,17 +413,18 @@ export default function IntegratedCards({
       summary: strategy.description || "A stored local-planner result for the same baseline and horizon.",
       strategy,
       facts: [
-        ["Delivery covered", `${num(strategy.metrics.fill_rate == null ? null : Number(strategy.metrics.fill_rate) * 100)}%`],
-        ["Shortfall", `${num(strategy.metrics.shortfall_kg)} kg`],
-        ["Cost", `SGD ${num(strategy.metrics.cost_sgd)}`],
+        ["All-demand coverage", `${num(strategy.metrics.fill_rate == null ? null : Number(strategy.metrics.fill_rate) * 100)}%`],
+        ["All-demand shortfall", `${num(strategy.metrics.shortfall_kg)} kg`],
+        ["Horizon", `${session.farm.horizon_days} days`],
+        ["Selected order", "Coverage not separately reported"],
       ],
     }));
     const reservation = grow ? [{
-      id: "reservation", eyebrow: activeProposal ? "Applied constraint" : "Planning challenge",
+      id: "reservation", eyebrow: activeProposal ? "Applied constraint" : "Optional sample constraint",
       title: activeProposal ? `${grow.name} is reserved` : `Keep ${grow.name} available`,
       summary: activeProposal
         ? "The saved recalculation includes this reservation. Server deltas show its consequence."
-        : "Reserve this exact grow space after its current crop clears and compare the recalculated plan.",
+        : `Try an optional dated constraint: ask the planner to avoid ${grow.name} from ${grow.reservation_window.start_date} to ${grow.reservation_window.end_date}. No maintenance reason is asserted by the farm record.`,
       facts: activeProposal ? [
         ["Production coverage", signed(activeProposal.metric_deltas?.coverage_kg, "kg")],
         ["Expiry exposure", signed(activeProposal.metric_deltas?.expiry_kg, "kg")],
@@ -422,8 +436,8 @@ export default function IntegratedCards({
       ],
     }] : [];
     const approved = approvedTasks.length ? [{
-      id: "approved", eyebrow: "Recorded consequence", title: `${approvedTasks.length} sandbox task${approvedTasks.length === 1 ? "" : "s"} created`,
-      summary: "Approval created simulation-only work. It did not authorize any physical farm operation.",
+      id: "approved", eyebrow: "Approval record · tasks are not results", title: `${approvedTasks.length} sandbox task${approvedTasks.length === 1 ? "" : "s"} created, not completed`,
+      summary: "Approval created a simulation-only work list. Completion and recorded simulation results are separate; no physical farm operation was authorized.",
       facts: [["Session revision", String(session.revision)], ["Operations", "Disabled"], ["History", `${workflow.events.length} events`]],
     }] : [];
     const recorded = session.simulation ? [{
@@ -505,7 +519,7 @@ export default function IntegratedCards({
 
   const primary = () => {
     if (detail || !["mission", "tools"].includes(surface)) return;
-    if (surface === "tools") { setSurface(toolCards[activeIndex].id); setIndex(0); return; }
+    if (surface === "tools") { setToolTarget(undefined); setSurface(toolCards[activeIndex].id); setIndex(0); return; }
     if (busy) return;
     if (["QUEUED", "RUNNING"].includes(session?.job?.status || "")) return;
     const card = missionCards[activeIndex];
@@ -513,6 +527,7 @@ export default function IntegratedCards({
     if (card?.id === "approved" || (card?.id === "reservation" && taskCount)) { missionIndex.current = activeIndex; directTool.current = true; setSurface("records"); return; }
     if (card?.id === "simulation-result") { missionIndex.current = activeIndex; directTool.current = true; setSurface("history"); return; }
     if (!strategies.length) void calculate();
+    else if (card?.id === "situation") setIndex(Math.max(1, missionCards.findIndex((item) => item.id.startsWith("strategy-"))));
     else if (card?.id.startsWith("strategy-")) { setIndex(missionCards.findIndex((item) => item.id === "reservation")); void guide("tradeoff"); }
     else if (card?.id === "reservation" && !activeProposal && reviewProposal) setDetail("review");
     else if (card?.id === "reservation" && !activeProposal) void propose();
@@ -523,6 +538,12 @@ export default function IntegratedCards({
   const keyboard = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.defaultPrevented || detail || !["mission", "tools"].includes(surface)) return;
     if ((event.target as HTMLElement).closest("button,a,input,select,textarea")) return;
+    if (demoStep != null) {
+      if (event.key === "ArrowLeft") { event.preventDefault(); changeDemo(demoStep - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); changeDemo(demoStep + 1); }
+      if (event.key === "Enter") { event.preventDefault(); demoStep >= demoSteps.length - 1 ? finishDemo(false) : changeDemo(demoStep + 1); }
+      return;
+    }
     if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
     if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
     if (event.key === "Enter") { event.preventDefault(); primary(); }
@@ -537,21 +558,27 @@ export default function IntegratedCards({
     });
   };
   const rememberOrigin = (button: HTMLButtonElement) => { origin.current = { label: button.textContent?.trim() || "", scroll: window.scrollY }; };
+  const openContextTool = (tool: ToolId, target: ToolTarget | undefined, button: HTMLButtonElement) => {
+    rememberOrigin(button); missionIndex.current = activeIndex; missionScroll.current = window.scrollY;
+    directTool.current = true; setToolTarget(target); setSurface(tool); setIndex(0);
+  };
+  const openIndexedTool = (tool: ToolId, target: ToolTarget | undefined, button: HTMLButtonElement) => {
+    rememberOrigin(button); directTool.current = false; setToolTarget(target); setSurface(tool); setIndex(0);
+  };
   const closeTool = () => {
     if (directTool.current) {
-      directTool.current = false; setSurface("mission"); setIndex(missionIndex.current);
-      afterPaint(() => {
+      directTool.current = false; setToolTarget(undefined); setSurface("mission"); setIndex(missionIndex.current);
+      void load().finally(() => afterPaint(() => {
         window.scrollTo({ top: origin.current?.scroll ?? missionScroll.current, behavior: "auto" });
-        [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
-      });
-      void load(); return;
+        [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
+      })); return;
     }
     const toolIndex = toolCards.findIndex((item) => item.id === surface);
-    setSurface("tools"); setIndex(Math.max(0, toolIndex)); void load();
-    afterPaint(() => {
+    setToolTarget(undefined); setSurface("tools"); setIndex(Math.max(0, toolIndex));
+    void load().finally(() => afterPaint(() => {
       window.scrollTo({ top: origin.current?.scroll ?? missionScroll.current, behavior: "auto" });
-      [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
-    });
+      [...document.querySelectorAll<HTMLButtonElement>(".ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
+    }));
   };
   const openTools = () => { missionIndex.current = activeIndex; missionScroll.current = window.scrollY; missionOrigin.current = { label: "More", scroll: window.scrollY }; setSurface("tools"); setIndex(0); };
   const returnToMission = () => {
@@ -564,7 +591,7 @@ export default function IntegratedCards({
   const pointerUp = (event: PointerEvent<HTMLDivElement>) => {
     if (pointerStart.current == null) return;
     const distance = event.clientX - pointerStart.current; pointerStart.current = null;
-    if (Math.abs(distance) > 48) move(distance < 0 ? 1 : -1);
+    if (Math.abs(distance) > 48) demoStep != null ? changeDemo(demoStep + (distance < 0 ? 1 : -1)) : move(distance < 0 ? 1 : -1);
   };
 
   if (!session || !bootstrap) return <section className="ic-state" aria-live="polite"><span className="ic-spinner" />
@@ -582,12 +609,16 @@ export default function IntegratedCards({
   const objectiveOrder = session.farm.orders[0];
   const selectedStrategy = current?.id.startsWith("strategy-") ? strategies.find((row) => `strategy-${row.id}` === current.id) : undefined;
   const jobRunning = ["QUEUED", "RUNNING"].includes(session.job?.status || "");
-  const primaryLabel = !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue";
+  const primaryLabel = !strategies.length ? "Calculate three plans" : current?.id === "situation" ? "View calculated plans" : current?.id?.startsWith("strategy-") ? "Try optional B3 constraint" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Open farm tools";
   const reservationDecision = current?.id === "reservation" && !taskCount;
   const reservationEligible = !reservationDecision || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false);
   const reservationReason = reservationDecision && activeProposal && approval?.available === false ? approval.reason || "Approval is unavailable."
     : reservationDecision && !activeProposal && grow?.reserve_eligible === false ? grow.reserve_disabled_reason || "Reservation is unavailable." : undefined;
-  const cardActions = detail ? [
+  const cardActions = demoStep != null ? [
+    { id: "demo-previous", label: "Previous step", eligible: demoStep > 0, authority: "local_navigation" as const, eligibilitySource: "local" as const },
+    { id: "demo-next", label: "Next step", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
+    { id: "demo-skip", label: "Skip demonstration", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
+  ] : detail ? [
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: detail === "review" ? "apply" : detail === "inverse" ? "confirm-inverse" : "close-detail", label: detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card", eligible: !busy && (detail !== "review" || Boolean(reviewProposal)) && (detail !== "inverse" || Boolean(reviewInverse)), authority: detail === "review" || detail === "inverse" ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
     { id: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "review-inverse" : detail === "explain" ? "toggle-guide" : "details", label: detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? "Review inverse" : detail === "explain" ? session.guidance?.skipped ? "Resume guide" : "Skip guide" : "Details", eligible: detail === "explain" && !(activeProposal?.undo?.available && current?.id === "reservation") ? !busy && !jobRunning : true, authority: detail === "explain" && !(activeProposal?.undo?.available && current?.id === "reservation") ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: "local" as const },
@@ -597,7 +628,7 @@ export default function IntegratedCards({
     { id: "toggle-guide", label: session.guidance?.skipped ? "Resume guide" : "Skip guide", eligible: !busy && !jobRunning, authority: "server_mutation" as const, eligibilitySource: "local" as const },
   ] : [
     { id: "explain", label: "Explain", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
-    { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: reservationDecision ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
+    { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate three plans", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: reservationDecision ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
     { id: "more", label: "More", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
   ];
   const boundCard: FarmCard | null = current ? surface === "tools" ? {
@@ -693,6 +724,53 @@ export default function IntegratedCards({
     }
     return { changed: current.summary, why: "No stage-specific reason was reported.", tradeoff: "No stage-specific tradeoff was reported.", evidence: "Evidence was not reported.", next: "Return to the card." };
   })();
+  const targetBed = grow ? session.farm.beds.find((bed) => bed.id === grow.id) : undefined;
+  const comparisonAlternative = chosen ? feasible.find((item) => item.id !== chosen.id) : undefined;
+  const demoSteps = [
+    {
+      label: "1 · Read the situation", title: "One sample order, all demand retained",
+      body: objectiveOrder ? `The example is ${num(objectiveOrder.quantity_kg)} kg of ${objectiveOrder.crop_id.replaceAll("_", " ")} due ${objectiveOrder.due_date}. The planner includes all ${session.farm.orders.length} order lines across ${session.farm.horizon_days} days.` : `No selected order is reported. The planner still includes all ${session.farm.orders.length} order lines.`,
+      fact: `Sample farm date ${session.farm.planning_date || session.farm.cutoff} · ${session.farm.beds.length} grow spaces`, basis: "Recorded sample-farm input",
+    },
+    ...(chosen && comparisonAlternative ? [{
+      label: "2 · Compare without saving", title: `${chosen.name} and ${comparisonAlternative.name} use the same farm and dates`,
+      body: `Preview—not saved. All-demand coverage differs by ${signed(difference(chosen.metrics.fill_rate, comparisonAlternative.metrics.fill_rate, 100), "percentage points")}; shortfall differs by ${signed(difference(chosen.metrics.shortfall_kg, comparisonAlternative.metrics.shortfall_kg), "kg")}. This does not change the selected strategy.`,
+      fact: `Frozen result ${boundResultId || "not reported"}`, basis: "Planner projection",
+    }] : []),
+    ...(grow ? [{
+      label: "3 · Understand the constraint", title: `Optional sample constraint for ${grow.name}`,
+      body: `The proposed window is ${grow.reservation_window.start_date} to ${grow.reservation_window.end_date}. The recorded bed crop is ${targetBed?.crop_id?.replaceAll("_", " ") || "not reported"}; recorded harvest date ${targetBed?.harvest_date || "not reported"}; sanitation date is not separately reported. No maintenance reason is invented.`,
+      fact: `${grow.id} · ${num(grow.area_m2)} m²`, basis: "Recorded bed facts and server-supplied reservation window",
+    }] : []),
+    ...(proposalTransition?.event_id ? [{
+      label: "4 · Saved after explicit apply", title: "The confirmed recalculation changed the saved projection",
+      body: `Event ${proposalTransition.event_id} affected ${(proposalTransition.entity_ids || []).join(", ") || "no listed beds"} on ${proposalTransition.effective_date || "an unreported date"}. Aggregate differences describe the whole recalculated plan, not B3 alone.`,
+      fact: Object.entries(proposalTransition.fact_differences || {}).slice(0, 3).map(([key, value]) => `${key.replaceAll("_", " ")} ${signed(value, key.includes("sgd") ? "SGD" : "kg")}`).join(" · ") || "No fact differences reported", basis: "Saved projection event",
+    }] : []),
+    ...(approvedTasks.length ? [{
+      label: "5 · Approval creates tasks", title: `${approvedTasks.length} sandbox tasks are saved`,
+      body: "Created tasks are not completed work and do not authorize physical farm activity. Farmer reports and simulated results remain separate records.",
+      fact: `Task-owning proposal ${approvedTasks[0]?.proposal_id || "not reported"}`, basis: "Recorded workflow facts",
+    }] : []),
+    ...(simulationTransition?.event_id ? [{
+      label: "6 · Recorded simulation result", title: `Finite saved event on ${simulationTransition.effective_date || session.simulation?.clock_date || "an unreported date"}`,
+      body: `Only this saved simulation event supports the displayed consequence. Affected entities: ${(simulationTransition.entity_ids || []).join(", ") || "not reported"}.`,
+      fact: Object.entries(simulationTransition.fact_differences || {}).slice(0, 3).map(([key, value]) => `${key.replaceAll("_", " ")} ${signed(value, key.includes("sgd") ? "SGD" : "kg")}`).join(" · ") || "No recorded differences reported", basis: "Recorded simulation",
+    }] : []),
+    { label: "Next · Choose a useful tool", title: "Continue with the evidence you need", body: "Open crop evidence, compare another scenario, inspect research and data, or replay saved history. Opening a reference does not change the farm or invoke an adviser.", fact: "Five tool categories are available from More", basis: "Read-only navigation" },
+  ];
+  const activeDemo = demoStep == null ? null : demoSteps[Math.min(demoStep, demoSteps.length - 1)];
+  const demoRead = activeDemo?.label.startsWith("1 ·") || false;
+  const demoCompare = activeDemo?.label.startsWith("2 ·") || false;
+  const demoConstraint = activeDemo?.label.startsWith("3 ·") || false;
+  const demoSavedProjection = activeDemo?.label.startsWith("4 ·") || false;
+  const demoRecordedEvent = activeDemo?.label.startsWith("6 ·") || false;
+  const renderedPreviewAllocations = demoCompare && chosen ? new Map(chosen.allocations.map((row) => [row.bed_id, row])) : previewAllocations;
+  const saveDemo = (value: { step?: number; done?: boolean; skipped?: boolean }) => {
+    try { localStorage.setItem(editionStorageKey(`first-use-demo:${session.id}`), JSON.stringify(value)); } catch { /* optional */ }
+  };
+  const changeDemo = (next: number) => { const step = Math.max(0, Math.min(demoSteps.length - 1, next)); setDemoStep(step); saveDemo({ step }); };
+  const finishDemo = (skipped = false) => { setDemoStep(null); saveDemo(skipped ? { skipped: true } : { done: true }); afterPaint(() => cardRef.current?.focus()); };
   const guideTips: Record<NonNullable<PlanningSession["guidance"]>["step"], string> = {
     inspect: "Inspect the confirmed order, available space and planning date before calculating.",
     compare: "Swipe through all three previews. Selection alone does not save a plan.",
@@ -703,23 +781,24 @@ export default function IntegratedCards({
     results: "Recorded simulation outcomes and projections stay separately labelled in history.",
   };
   return <section className={`ic-shell ${reducedMotion ? "is-reduced-motion" : ""}`} data-edition={editionId} onKeyDown={keyboard} tabIndex={-1}>
-    <header className="ic-heading"><div><span>Objective · deliver the confirmed order</span><strong>{objectiveOrder ? `${num(objectiveOrder.quantity_kg)} kg ${objectiveOrder.crop_id.replaceAll("_", " ")} by ${objectiveOrder.due_date}` : session.farm.name}</strong></div>
+    <header className={`ic-heading ${demoRead ? "is-demo-focus" : ""}`}><div><span>Objective · selected sample order</span><strong>{objectiveOrder ? `${num(objectiveOrder.quantity_kg)} kg ${objectiveOrder.crop_id.replaceAll("_", " ")} by ${objectiveOrder.due_date}` : session.farm.name}</strong><small>All {session.farm.orders.length} order lines remain in the {session.farm.horizon_days}-day plan.</small></div>
       <p>Sandbox farm · real operations disabled</p></header>
     <div className="ic-layout">
-      <section className={`ic-scene ${transitionLabel ? "is-transitioning" : ""}`} aria-label="Passive farm scene">
-        <div className="ic-scene-head"><span>Farm scene · Area 1 of {Math.ceil((hasSimulationBeds ? session.simulation!.beds.length : session.farm.beds.length) / 8)} · showing {sceneBeds.length} of {hasSimulationBeds ? session.simulation!.beds.length : session.farm.beds.length}</span><strong>{session.simulation?.clock_date || session.farm.planning_date || session.farm.cutoff}</strong></div>
+      <section className={`ic-scene ${transitionLabel ? "is-transitioning" : ""} ${demoConstraint ? "is-demo-constraint" : ""} ${(demoSavedProjection || demoRecordedEvent) ? "is-demo-event" : ""}`} aria-label="Passive farm scene">
+        <div className="ic-scene-head"><span>{hasSimulationBeds ? "Saved simulation scene" : "Sample farm records"} · Area 1 of {Math.ceil((hasSimulationBeds ? session.simulation!.beds.length : session.farm.beds.length) / 8)} · showing {sceneBeds.length} of {hasSimulationBeds ? session.simulation!.beds.length : session.farm.beds.length}</span><strong>{session.simulation?.clock_date || session.farm.planning_date || session.farm.cutoff}</strong></div>
         <div className="ic-beds">{sceneBeds.map((bed) => {
           const batch = batches.get(bed.id), crop = String(hasSimulationBeds ? bed.crop_id || "" : batch?.crop_id || recipes.get(String(batch?.recipe_id)) || bed.crop_id || "");
           const stage = String(hasSimulationBeds ? bed.stage : batch?.stage || bed.stage || (crop ? "recorded batch" : "empty"));
           const assetStage = stage === "ready" ? "ready" : stage === "nursery" ? "seedling" : stage === "growing" ? "growing" : "";
           const src = crop && assetStage ? `/art/crops/${crop}-${assetStage}.svg` : "";
-          const focused = grow?.id === bed.id && current?.id === "reservation";
-          const changing = Boolean(transitionLabel && transitionEntities.has(bed.id));
-          const preview = previewAllocations.get(bed.id);
+          const focused = grow?.id === bed.id && (current?.id === "reservation" || demoConstraint);
+          const demoEntities = demoRecordedEvent ? simulationTransition?.entity_ids : demoSavedProjection ? proposalTransition?.entity_ids : [];
+          const changing = Boolean((transitionLabel && transitionEntities.has(bed.id)) || ((demoSavedProjection || demoRecordedEvent) && demoEntities?.includes(bed.id)));
+          const preview = renderedPreviewAllocations.get(bed.id);
           return <article key={bed.id} className={`${focused ? "is-focus" : ""} ${changing ? "is-changing" : ""}`}><b>{bed.name}</b>
             {src ? <img src={src} alt="" onError={(event) => { event.currentTarget.hidden = true; }} /> : <span className="ic-empty">{stage === "harvested" ? "Harvested residue" : stage === "sanitation" ? "Sanitation" : stage === "empty" ? "Empty" : stage.replaceAll("_", " ")}</span>}
             <small>{crop ? crop.replaceAll("_", " ") : "Available"}</small><em>{stage}</em>
-            {preview && <span className="ic-allocation-preview">Preview—not saved<br/>{preview.crop_id.replaceAll("_", " ")}<br/>{preview.transplant_date} → {preview.harvest_date}</span>}
+            {preview && <span className="ic-allocation-preview">{demoCompare ? "Demonstration preview—not saved" : "Preview—not saved"}<br/>{preview.crop_id.replaceAll("_", " ")}<br/>{preview.transplant_date} → {preview.harvest_date}</span>}
             {savedReservation && activeProposal && bed.id === grow?.id && <span className="ic-reservation-barrier">Saved reservation<br/>{savedReservation.start_date} → {savedReservation.end_date}</span>}
           </article>;
         })}</div>
@@ -731,11 +810,12 @@ export default function IntegratedCards({
       <div className="ic-card-column">
         {error && <div className="ic-error" role="alert"><span>{error}</span><button onClick={() => setError("")}>Dismiss</button></div>}
         {toolOpen ? <section className="ic-tool"><p className="ic-tool-parent">Farm tools › {toolCards.find((item) => item.id === surface)?.title}</p>
-          <div className="ic-tool-body">{renderTool ? renderTool(surface, closeTool) : <><span className="ic-eyebrow">Tool adapter</span>
+          <div className="ic-tool-body">{renderTool ? renderTool(surface, closeTool, toolTarget) : <><span className="ic-eyebrow">Tool adapter</span>
             <h2>{toolCards.find((item) => item.id === surface)?.title}</h2><p>This tool is unavailable in this build.</p></>}</div></section> : <>
           <div className="ic-deck" onPointerDown={(event) => { pointerStart.current = event.clientX; }} onPointerUp={pointerUp}>
             {boundCard && <BoundCard card={boundCard} ref={cardRef} tabIndex={-1} className="ic-card" aria-live="polite" aria-label={`${surface === "tools" ? "Farm tools" : "Planning"} card ${activeIndex + 1} of ${surface === "tools" ? toolCards.length : missionCards.length}`}>
-              {detail === "explain" ? <><span className="ic-eyebrow">{current.title} › Why</span><h1>What this means</h1><p>{current.summary}</p>
+              {activeDemo ? <section className="ic-demo" key={activeDemo.label}><span className="ic-eyebrow">First-use demonstration · {demoStep! + 1} of {demoSteps.length}</span><h1>{activeDemo.title}</h1><strong>{activeDemo.label}</strong><p>{activeDemo.body}</p>{demoConstraint && grow && <ol className="ic-demo-timeline" aria-label="B3 dated lifecycle"><li><b>Recorded crop</b><span>{targetBed?.crop_id?.replaceAll("_", " ") || "Not reported"}</span></li><li><b>Recorded harvest</b><span>{targetBed?.harvest_date || "Not reported"}</span></li><li><b>Sanitation</b><span>Not separately reported</span></li><li><b>Proposed reservation</b><span>{grow.reservation_window.start_date} → {grow.reservation_window.end_date}</span></li></ol>}<dl><div><dt>Authoritative fact</dt><dd>{activeDemo.fact}</dd></div><div><dt>Basis</dt><dd>{activeDemo.basis}</dd></div><div><dt>Motion</dt><dd>{reducedMotion ? "Reduced · final facts shown immediately" : "Finite highlights on authoritative entities"}</dd></div></dl></section>
+                : detail === "explain" ? <><span className="ic-eyebrow">{current.title} › Why</span><h1>What this means</h1><p>{current.summary}</p>
                 <dl className="ic-explanation"><div><dt>What changed</dt><dd>{stageExplanation.changed}</dd></div>
                   <div><dt>Why</dt><dd>{stageExplanation.why}</dd></div>
                   <div><dt>Tradeoff</dt><dd>{stageExplanation.tradeoff}</dd></div>
@@ -746,23 +826,30 @@ export default function IntegratedCards({
                   <p>{detail === "inverse" ? "The inverse preserves the original event and recalculates future work at the current eligible revision." : `${grow?.id} will be unavailable ${grow?.reservation_window.start_date} to ${grow?.reservation_window.end_date}. Existing work remains recorded.`}</p>
                   <dl><div><dt>Proposal</dt><dd>{String((reviewInverse || reviewProposal)?.id)}</dd></div><div><dt>Revision</dt><dd>{(reviewInverse || reviewProposal)?.proposal_revision}</dd></div><div><dt>Scope</dt><dd>Future simulation work only</dd></div></dl></>
                 : <><span className="ic-eyebrow">{"eyebrow" in current ? current.eyebrow : "Farm tools"}</span>
-                  <h1>{current.title}</h1><p>{current.summary}</p>
+                  <h1>{surface === "tools" ? "Choose a tool" : current.title}</h1><p>{surface === "tools" ? "Open one category or use Next and Previous to inspect its summary." : current.summary}</p>
                   {current.id.startsWith("strategy-") && <span className="ic-preview">Preview—not saved</span>}
-                  {surface === "mission" && !session.guidance?.skipped && session.guidance?.step !== "results" && <p className="ic-guide-tip"><b>Guide</b> {guideTips[session.guidance?.step || "inspect"]}</p>}
-                  {"facts" in current && current.facts && <dl>{current.facts.slice(0, 3).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                  {surface === "mission" && !session.guidance?.skipped && session.guidance?.step !== "results" && <p className="ic-guide-tip"><b>Guide · {(session.guidance?.step || "inspect").replaceAll("_", " ")}</b> {guideTips[session.guidance?.step || "inspect"]}</p>}
+                  {"facts" in current && current.facts && <dl>{current.facts.slice(0, 4).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                  {surface === "mission" && <div className="ic-context-links" aria-label="Relevant tools">
+                    {current.id === "situation" && objectiveOrder && <><button onClick={(event) => openContextTool("records", { records: { view: "orders", entityId: objectiveOrder.id } }, event.currentTarget)}>Inspect selected order</button><button onClick={(event) => openContextTool("knowledge", { knowledge: { kind: "crop", id: objectiveOrder.crop_id } }, event.currentTarget)}>Crop evidence</button></>}
+                    {current.id.startsWith("strategy-") && <><button onClick={(event) => openContextTool("plan", { plan: "strategies" }, event.currentTarget)}>Dated schedule</button><button onClick={(event) => openContextTool("knowledge", { knowledge: { kind: "council" } }, event.currentTarget)}>Planning Council</button><button onClick={(event) => openContextTool("experiments", { experiments: "research", research: "overview" }, event.currentTarget)}>Research overview</button></>}
+                    {current.id === "simulation-result" && <button onClick={(event) => openContextTool("history", { history: "simulations" }, event.currentTarget)}>View simulation results</button>}
+                  </div>}
+                  {surface === "tools" && <div className="ic-tool-index" aria-label="Farm tool categories">{toolCards.map((tool) => <button key={tool.id} onClick={(event) => openIndexedTool(tool.id, undefined, event.currentTarget)}><b>{tool.title}</b><span>{tool.summary}</span></button>)}<button onClick={() => { setDemoStep(0); saveDemo({ step: 0 }); }}><b>Replay demonstration</b><span>Review the factual decision sequence without saving or inference.</span></button></div>}
                   {reservationReason && surface === "mission" && <p role="status">{reservationReason}</p>}
                   {surface === "tools" && <span className="ic-path">Farm tools › {current.title}</span>}</>}
             </BoundCard>}
           </div>
           <nav className="ic-actions" aria-label="Card actions">
-            <div className="ic-deck-nav"><button onClick={() => move(-1)} disabled={activeIndex === 0}>← Previous</button>
+            {!activeDemo && <div className="ic-deck-nav"><button onClick={() => move(-1)} disabled={activeIndex === 0}>← Previous</button>
               <span>{surface === "tools" ? "Farm tools" : "Farm plan"} · {activeIndex + 1} of {surface === "tools" ? toolCards.length : missionCards.length}</span>
-              <button onClick={() => move(1)} disabled={activeIndex === (surface === "tools" ? toolCards.length : missionCards.length) - 1}>Next →</button></div>
+              <button onClick={() => move(1)} disabled={activeIndex === (surface === "tools" ? toolCards.length : missionCards.length) - 1}>Next →</button></div>}
             <div className="ic-keys">
-              {detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
+              {activeDemo ? <><button disabled={demoStep === 0} onClick={() => changeDemo((demoStep || 0) - 1)}>Previous step</button><button className="is-primary" onClick={() => demoStep! >= demoSteps.length - 1 ? finishDemo(false) : changeDemo(demoStep! + 1)}>{demoStep! >= demoSteps.length - 1 ? "Finish demonstration" : "Next step"}</button><button onClick={() => finishDemo(true)}>Skip demonstration</button></>
+                : detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
                 : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
                 : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
-                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue")}</button>
+                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : primaryLabel)}</button>
                   <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}
             </div>
           </nav>

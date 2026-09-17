@@ -416,3 +416,11 @@ Postpublication CLI compatibility and deployment metadata fixes preserve the
 frozen application source/image and are documented in reports/v12/implementation.md.
 Cleanup is reconciled complete, with only gateway/V11/V12 running. Real operations
 remain disabled; source/qualitative/field-validation limits remain explicit.
+
+## V17 persona-led workflow rewrite — active
+
+See docs/v17-persona-rewrite.md for user scope, ownership and acceptance. Three
+scripted personas review V15 and the resulting candidate; root integrates typed
+contextual routing and preserves existing numerical/agent boundaries. Specialists
+own shell/demonstration, knowledge/experiments/research, and persona verification.
+V16 remains public until complete candidate acceptance. No human-usability claim.

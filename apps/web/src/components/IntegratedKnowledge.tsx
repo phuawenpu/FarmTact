@@ -6,10 +6,12 @@ import type { Bootstrap, Crop, EvidenceRecord, Source } from "../lib/types";
 import { AdvisorEvidence, FrozenFactEvidence } from "./AdvisorEvidence";
 import { RecordFacts } from "./ToolCard";
 import BoundCard from "./BoundCard";
-import type { FarmCard } from "../lib/cards";
+import type { FarmCard, KnowledgeTarget } from "../lib/cards";
+import { editionStorageKey } from "../lib/edition";
 import "./IntegratedKnowledge.css";
 
 type Card =
+  | { kind: "index"; id: "knowledge-index" }
   | { kind: "crop"; id: string; crop: Crop }
   | { kind: "source"; id: string; source: Source }
   | { kind: "advisor"; id: string; advisor: Advisor }
@@ -46,7 +48,7 @@ const editableAssumptions = (session: PlanningSession | null): FarmerAssumptions
   };
 };
 
-export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
+export function IntegratedKnowledge({ onClose, initialTarget }: { onClose: () => void; initialTarget?: KnowledgeTarget }) {
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null);
   const [session, setSession] = useState<PlanningSession | null>(null);
   const [threads, setThreads] = useState<Conversation[]>([]);
@@ -54,18 +56,22 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const [cropDetail, setCropDetail] = useState<Crop | null>(null);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [selectedThread, setSelectedThread] = useState("");
-  const [questions, setQuestions] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("farmtact-v15-knowledge-drafts") || "{}"); } catch { return {}; } });
+  const [questions, setQuestions] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem(editionStorageKey("knowledge-drafts")) || "{}"); } catch { return {}; } });
   const [mode, setMode] = useState<"direct" | "invite" | "council">("direct");
   const [inviteAdvisor, setInviteAdvisor] = useState("asha"), [replyTo, setReplyTo] = useState("");
   const [focusKey, setFocusKey] = useState(""), [conversationFocus, setConversationFocus] = useState("");
-  const [bindings, setBindings] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("farmtact-v15-knowledge-bindings") || "{}"); } catch { return {}; } });
+  const [focusSelections, setFocusSelections] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem(editionStorageKey("knowledge-focus")) || "{}"); } catch { return {}; } });
+  const [bindings, setBindings] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem(editionStorageKey("knowledge-bindings")) || "{}"); } catch { return {}; } });
   const [proposalMessage, setProposalMessage] = useState(""), [proposal, setProposal] = useState<FarmerProposal | null>(null);
   const [assumptionsDraft, setAssumptionsDraft] = useState("");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [needsRefresh, setNeedsRefresh] = useState(false);
+  const [cropQuery, setCropQuery] = useState("");
   const pointer = useRef<number | null>(null);
+  const indexOrigin = useRef<{ selector: string; scroll: number } | null>(null);
   const mutation = useRef(false);
+  const targetApplied = useRef(false);
 
   const load = useCallback(async () => {
     setBusy("Opening knowledge records"); setError("");
@@ -89,11 +95,24 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     availability_status: "missing", licence_state: "not reviewed",
   }], [bootstrap]);
   const cards = useMemo<Card[]>(() => bootstrap ? [
+    { kind: "index", id: "knowledge-index" },
     ...bootstrap.crops.map((crop): Card => ({ kind: "crop", id: `crop-${crop.id}`, crop })),
     ...sourceCards.map((source): Card => ({ kind: "source", id: `source-${source.id}`, source })),
     ...ADVISORS.map((advisor): Card => ({ kind: "advisor", id: `agent-${advisor.id}`, advisor })),
     { kind: "threads", id: "saved-threads" }, { kind: "council", id: "planning-council" },
   ] : [], [bootstrap, sourceCards]);
+  useEffect(() => {
+    if (!cards.length || targetApplied.current) return;
+    targetApplied.current = true;
+    if (!initialTarget || initialTarget.kind === "index") { setIndex(0); return; }
+    if (initialTarget.kind === "crops" || initialTarget.kind === "sources" || initialTarget.kind === "advisers") {
+      setIndex(0);
+      requestAnimationFrame(() => document.querySelector<HTMLElement>(`[data-knowledge-category="${initialTarget.kind}"]`)?.focus({ preventScroll: false }));
+      return;
+    }
+    const found = cards.findIndex((card) => card.kind === initialTarget.kind && (!("id" in initialTarget) || card.kind === "threads" || card.kind === "council" || (card.kind === "crop" ? card.crop.id : card.kind === "source" ? card.source.id : card.kind === "advisor" ? card.advisor.id : "") === initialTarget.id));
+    setIndex(found >= 0 ? found : 0);
+  }, [cards, initialTarget]);
   const activeIndex = Math.min(index, Math.max(cards.length - 1, 0));
   const active = cards[activeIndex];
 
@@ -107,8 +126,19 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
       .finally(() => { if (!cancelled) setBusy(""); });
     return () => { cancelled = true; };
   }, [active?.id]);
-  useEffect(() => { try { localStorage.setItem("farmtact-v15-knowledge-drafts", JSON.stringify(questions)); } catch { /* draft persistence is best effort */ } }, [questions]);
-  useEffect(() => { try { localStorage.setItem("farmtact-v15-knowledge-bindings", JSON.stringify(bindings)); } catch { /* binding persistence is best effort */ } }, [bindings]);
+  useEffect(() => { try { localStorage.setItem(editionStorageKey("knowledge-drafts"), JSON.stringify(questions)); } catch { /* draft persistence is best effort */ } }, [questions]);
+  useEffect(() => { try { localStorage.setItem(editionStorageKey("knowledge-bindings"), JSON.stringify(bindings)); } catch { /* binding persistence is best effort */ } }, [bindings]);
+  useEffect(() => { try { localStorage.setItem(editionStorageKey("knowledge-focus"), JSON.stringify(focusSelections)); } catch { /* focus persistence is best effort */ } }, [focusSelections]);
+  useEffect(() => {
+    if (active?.kind !== "advisor" || !session) return;
+    const key = `${session.id}:${active.advisor.id}`, saved = focusSelections[key] || "";
+    const valid = !saved || (saved.startsWith("order:") && session.farm.orders.some((item) => `order:${item.id}` === saved)) || (saved.startsWith("bed:") && session.farm.beds.some((item) => `bed:${item.id}` === saved)) || (saved.startsWith("strategy:") && session.result?.strategies?.some((item) => `strategy:${item.id}` === saved));
+    setFocusKey(valid ? saved : "");
+  }, [active?.id, focusSelections, session]);
+  const setAdvisorFocus = (value: string) => {
+    setFocusKey(value);
+    if (active?.kind === "advisor" && session) setFocusSelections((saved) => ({ ...saved, [`${session.id}:${active.advisor.id}`]: value }));
+  };
 
   const activeBindingKey = active?.kind === "advisor" && session ? `${session.id}:${active.advisor.id}:${focusKey || "planning"}` : "";
   useEffect(() => {
@@ -133,6 +163,21 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   }, [session?.id, session?.job?.id, session?.job?.status]);
 
   const move = (amount: number) => setIndex((value) => Math.max(0, Math.min(cards.length - 1, value + amount)));
+  const openFromIndex = (kind: Card["kind"], id: string) => {
+    const found = cards.findIndex((card) => card.kind === kind && (kind === "threads" || kind === "council" || (card.kind === "crop" ? card.crop.id : card.kind === "source" ? card.source.id : card.kind === "advisor" ? card.advisor.id : "") === id));
+    if (found < 0) return;
+    indexOrigin.current = { selector: `[data-knowledge-pick="${kind}:${CSS.escape(id)}"]`, scroll: window.scrollY };
+    setIndex(found);
+  };
+  const back = () => {
+    const origin = indexOrigin.current;
+    if (!origin) { onClose(); return; }
+    indexOrigin.current = null; setIndex(0);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      (document.querySelector<HTMLElement>(origin.selector) || document.querySelector<HTMLElement>(".ik-card"))?.focus({ preventScroll: true });
+      window.scrollTo(0, origin.scroll);
+    }));
+  };
   const keyboard = (event: KeyboardEvent<HTMLElement>) => {
     if ((event.target as HTMLElement).closest("button,a,input,textarea,select,summary")) return;
     if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
@@ -159,7 +204,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
       let id = current?.id || bindings[bindingKey];
       if (id && !current) { current = await api.conversation(id); setConversation(current); }
       if (!id) { const separator = focusKey.indexOf(":"); const entity_kind = separator < 0 ? "" : focusKey.slice(0, separator), entity_id = separator < 0 ? "" : focusKey.slice(separator + 1); const created = await api.createConversation({ advisor: advisor.id, snapshot_kind: "planning", snapshot_id: session.id,
-        ...(entity_kind && entity_id ? { focus: { card_id: `${entity_kind}-${entity_id}`, entity_kind, entity_id } } : {}) }); id = created.id; const nextBindings = { ...bindings, [bindingKey]: created.id }; try { localStorage.setItem("farmtact-v15-knowledge-bindings", JSON.stringify(nextBindings)); } catch { /* best effort */ } setBindings(nextBindings); setConversation({ id: created.id, messages: [], last_request_status: created.status }); setConversationFocus(focusKey); }
+        ...(entity_kind && entity_id ? { focus: { card_id: `${entity_kind}-${entity_id}`, entity_kind, entity_id } } : {}) }); id = created.id; const nextBindings = { ...bindings, [bindingKey]: created.id }; try { localStorage.setItem(editionStorageKey("knowledge-bindings"), JSON.stringify(nextBindings)); } catch { /* best effort */ } setBindings(nextBindings); setConversation({ id: created.id, messages: [], last_request_status: created.status }); setConversationFocus(focusKey); }
       if (mode === "invite") await api.inviteAdvisor(id, { advisor: inviteAdvisor, question: text, reply_to: replyTo });
       else if (mode === "council") await api.conveneCouncil(id, { question: text, ...(replyTo ? { reply_to: replyTo } : {}) });
       else await api.sendConversationMessage(id, { content: text, ...(replyTo ? { reply_to: replyTo } : {}) });
@@ -201,7 +246,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     : proposalMessage ? { label: "Create reviewed proposal", disabled: !assumptionsDraft.trim(), run: createReviewedProposal }
     : { label: "Open read-only replay", disabled: !selectedThread, run: () => replay(selectedThread) }
     : active.kind === "council" ? { label: "Review with Council", disabled: !session?.result?.strategies?.length || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || !!session.review?.findings?.length, run: reviewCouncil } : null;
-  const entity = active.kind === "crop" ? { id: active.crop.id, kind: "crop" } : active.kind === "source" ? { id: active.source.id, kind: "source" } : active.kind === "advisor" ? { id: active.advisor.id, kind: "advisor" } : active.kind === "threads" ? { id: conversation?.id || active.id, kind: conversation ? "conversation" : "conversation_index" } : { id: session?.id || active.id, kind: "planning_council" };
+  const entity = active.kind === "index" ? { id: active.id, kind: "knowledge_index" } : active.kind === "crop" ? { id: active.crop.id, kind: "crop" } : active.kind === "source" ? { id: active.source.id, kind: "source" } : active.kind === "advisor" ? { id: active.advisor.id, kind: "advisor" } : active.kind === "threads" ? { id: conversation?.id || active.id, kind: conversation ? "conversation" : "conversation_index" } : { id: session?.id || active.id, kind: "planning_council" };
   const snapshotRef = conversation?.snapshot_ref;
   const frozenSnapshot = typeof snapshotRef === "object" && snapshotRef ? snapshotRef : null;
   const planningSnapshotDivider = frozenSnapshot?.kind === "planning" ? (frozenSnapshot.id || "").lastIndexOf(":") : -1;
@@ -213,13 +258,13 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     snapshotId: typeof snapshotRef === "string" ? snapshotRef : frozenSnapshot?.id || null,
   } : null;
   const planningBinding = { sessionId: session?.id || null, inputHash: typeof session?.input_hash === "string" ? session.input_hash : null, revision: session?.revision ?? null, resultId: typeof session?.result_id === "string" ? session.result_id : null, snapshotId: null };
-  const binding = active.kind === "crop" || active.kind === "source" || (active.kind === "threads" && !conversation)
+  const binding = active.kind === "index" || active.kind === "crop" || active.kind === "source" || (active.kind === "threads" && !conversation)
     ? { sessionId: null, inputHash: null, revision: null, resultId: null, snapshotId: null }
     : active.kind === "council" ? planningBinding : frozenConversationBinding || planningBinding;
   const provenance = active.kind === "source" ? [active.source.url || active.source.id] : active.kind === "crop" ? active.crop.evidence_ids || [] : conversation ? [conversation.id] : [];
   const knowledgeCard: FarmCard = {
     id: active.id, entityId: entity.id, entityKind: entity.kind,
-    title: active.kind === "crop" ? active.crop.label : active.kind === "source" ? active.source.name : active.kind === "advisor" ? active.advisor.name : active.kind === "threads" ? "Saved adviser transcripts" : "Planning Council review",
+    title: active.kind === "index" ? "Knowledge library" : active.kind === "crop" ? active.crop.label : active.kind === "source" ? active.source.name : active.kind === "advisor" ? active.advisor.name : active.kind === "threads" ? "Saved adviser transcripts" : "Planning Council review",
     provenance,
     binding,
     boardTargets: active.kind === "crop" ? (session?.farm?.beds || []).filter((bed) => (bed as typeof bed & { crop_id?: string }).crop_id === active.crop.id).map((bed) => bed.id) : [], outcomeBasis: active.kind === "council" ? "projection" : null,
@@ -234,17 +279,28 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     {error && <div className="ik-error" role="alert"><span>{error}</span><button onClick={() => setError("")}>Dismiss</button></div>}
     <div className="ik-deck" onPointerDown={(event) => { pointer.current = event.clientX; }} onPointerUp={pointerUp}>
       <BoundCard card={knowledgeCard} className="ik-card" aria-live="polite" aria-label={`Knowledge card ${activeIndex + 1} of ${cards.length}`}>
+        {active.kind === "index" && <KnowledgeIndex crops={bootstrap.crops} sources={sourceCards} query={cropQuery} setQuery={setCropQuery} open={openFromIndex}/>}
         {active.kind === "crop" && <CropCard crop={cropDetail || active.crop} evidence={evidence} />}
         {active.kind === "source" && <SourceCard source={active.source} />}
-        {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} focusKey={focusKey} setFocusKey={setFocusKey} session={session} />}
+        {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} focusKey={focusKey} setFocusKey={setAdvisorFocus} session={session} />}
         {active.kind === "threads" && <ThreadsCard threads={threads} selected={selectedThread} setSelected={setSelectedThread} conversation={conversation} proposalMessage={proposalMessage} setProposalMessage={(id) => { setProposalMessage(id); setProposal(null); setAssumptionsDraft(JSON.stringify(editableAssumptions(session), null, 2)); }} assumptionsDraft={assumptionsDraft} setAssumptionsDraft={setAssumptionsDraft} proposal={proposal} />}
         {active.kind === "council" && <CouncilCard session={session} status={councilStatus} />}
       </BoundCard>
     </div>
     <nav className="ik-navigation" aria-label="Knowledge card navigation"><button onClick={() => move(-1)} disabled={activeIndex === 0}>Previous</button><span>{activeIndex + 1} / {cards.length}</span><button onClick={() => move(1)} disabled={activeIndex === cards.length - 1}>Next</button></nav>
-    <footer className="ik-actions" aria-label="Knowledge card actions"><button onClick={onClose}>Back</button>{contextual && <button className="is-primary" disabled={contextual.disabled || !!busy} onClick={contextual.run}>{contextual.label}</button>}</footer>
+    <footer className="ik-actions" aria-label="Knowledge card actions"><button onClick={back}>Back</button>{contextual && <button className="is-primary" disabled={contextual.disabled || !!busy} onClick={contextual.run}>{contextual.label}</button>}</footer>
     {busy && <p className="ik-status" role="status">{busy}…</p>}
   </section>;
+}
+
+function KnowledgeIndex({ crops, sources, query, setQuery, open }: { crops: Crop[]; sources: Source[]; query: string; setQuery: (value: string) => void; open: (kind: Card["kind"], id: string) => void }) {
+  const matching = crops.filter((crop) => `${crop.label} ${crop.id} ${(crop.aliases || []).join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
+  return <><span className="ik-kicker">Library index · reading makes no provider call</span><h2>Choose what you need</h2><p>Crops and sources explain planning assumptions. Specialists answer an explicit question. Planning Council reviews the current frozen alternatives; the separate Council research study is under Experiments.</p>
+    <section className="ik-category" data-knowledge-category="crops" tabIndex={-1}><header><div><h3>Crops</h3><span>{crops.length} profiles</span></div><p>Recipes, representative stage art, cautions and evidence limits.</p></header><label>Find a crop<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, ID or alias"/></label><div className="ik-picker">{matching.map((crop) => <button key={crop.id} data-knowledge-pick={`crop:${crop.id}`} onClick={() => open("crop", crop.id)}><span>{crop.label}</span><small>{crop.recipe ? `${crop.recipe.cycle_days} day cycle` : "Accounting profile only"}</small></button>)}</div>{!matching.length && <p>No crop profile matches this search.</p>}</section>
+    <section className="ik-category" data-knowledge-category="sources" tabIndex={-1}><header><div><h3>Sources</h3><span>{sources.length} records</span></div><p>Freshness, coverage, licence and admitted facts.</p></header><div className="ik-picker">{sources.map((source) => <button key={source.id} data-knowledge-pick={`source:${source.id}`} onClick={() => open("source", source.id)}><span>{source.name}</span><small>{words(source.availability_status || source.status)}</small></button>)}</div></section>
+    <section className="ik-category" data-knowledge-category="advisers" tabIndex={-1}><header><div><h3>Specialists</h3><span>{ADVISORS.length} roles</span></div><p>Opening is read-only. Only Submit question, Invite specialist or Convene Council invokes the provider.</p></header><div className="ik-picker is-people">{ADVISORS.map((advisor) => <button key={advisor.id} data-knowledge-pick={`advisor:${advisor.id}`} onClick={() => open("advisor", advisor.id)}><img src={`/art/advisors/${advisor.id}.svg`} alt=""/><span>{advisor.name}</span><small>{advisor.role}</small></button>)}</div></section>
+    <div className="ik-index-links"><button data-knowledge-pick="threads:" onClick={() => open("threads", "")}>Saved discussions<span>Replay full transcripts and reviewed handoffs</span></button><button data-knowledge-pick="council:" onClick={() => open("council", "")}>Planning Council review<span>Advisory review of the current frozen plan</span></button></div>
+  </>;
 }
 
 function CropCard({ crop, evidence }: { crop: Crop; evidence: EvidenceRecord[] }) {

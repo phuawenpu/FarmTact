@@ -1,0 +1,95 @@
+{
+  "id": "novice-mobile",
+  "label": "AI persona: novice farm manager on mobile",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "status": "PASS",
+  "observations": [
+    {
+      "name": "arrival: ordinary saved farm and situation card",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nPlanning date\n2026-09-15\nConfirmed orders\n28\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 7\nNext →\nExplain\nContinue\nMore",
+      "cardId": "situation",
+      "focus": {
+        "tag": "BODY",
+        "text": "Objective · deliver the confirmed order24 kg caixin by 2026-09-21Sandbox farm · real operations disabledFarm scene · Area 1 of 2 · showing 8 of 162026-09-14A1Harvested residuecaixinharvestedA2Harvested residuepak choiharvestedA3Harvested residuekailanharvestedA4Harvested residuelettuceharvestedB1caixingrowingB2pak choigrowingB3kailangrowingSaved reservation2026-10-01 → 2026-11-02B4lettucegrowingShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kgFarm situationLittle Plot CollectiveReview the frozen farm, then calculate three choices from its real planning records.Planning date2026-09-15Confirmed orders28Grow spaces16← PreviousFarm plan · 1 of 7Next →ExplainContinueMore",
+        "label": null
+      }
+    },
+    {
+      "name": "first calculated strategy preview",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nPreview—not saved\nkailan\n2026-09-24 → 2026-10-26\nA2\nHarvested residue\nPak Choi\nHarvested\nPreview—not saved\npak choi\n2026-08-17 → 2026-09-14\nA3\nHarvested residue\nKailan\nHarvested\nPreview—not saved\nkailan\n2026-08-13 → 2026-09-14\nA4\nHarvested residue\nLettuce\nHarvested\nPreview—not saved\nlettuce\n2026-10-08 → 2026-11-02\nB1\nCaixin\nGrowing\nPreview—not saved\nlettuce\n2026-10-01 → 2026-10-26\nB2\nPak Choi\nGrowing\nPreview—not saved\npak choi\n2026-08-31 → 2026-09-28\nB3\nKailan\nGrowing\nPreview—not saved\nkailan\n2026-08-27 → 2026-09-28\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\nPreview—not saved\ncaixin\n2026-10-12 → 2026-11-02\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nCALCULATED CHOICE\nLean plan\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nPreview—not saved\nDelivery covered\n46.7%\nShortfall\n507 kg\nCost\nSGD 1,038.6\n← Previous\nFarm plan · 2 of 7\nNext →\nExplain\nContinue\nMore",
+      "cardId": "strategy-0fa0095e5a88cfcbb9ad",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Next →",
+        "label": null
+      }
+    },
+    {
+      "name": "B3 reservation card after strategy comparison",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nAPPLIED CONSTRAINT\nB3 is reserved\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nProduction coverage\n−4 kg\nExpiry exposure\n+17 kg\nPlanner margin\n−199.5 SGD\n← Previous\nFarm plan · 5 of 7\nNext →\nExplain\nReview sandbox work\nMore",
+      "cardId": "reservation",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Next →",
+        "label": null
+      }
+    },
+    {
+      "name": "V15 deterministic B3 explanation",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nB3 IS RESERVED › WHY\nWhat this means\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nWhat changed\nkind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nbed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nreservation · bed-07\n← Previous\nFarm plan · 5 of 7\nNext →\nBack\nBack to card\nResume guide",
+      "cardId": "reservation",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Back",
+        "label": null
+      }
+    },
+    {
+      "name": "More opens first of five tool cards",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFARM TOOLS\nPlan\n\nCalculate, compare and approve revision-bound plans.\n\nFarm tools › Plan\n← Previous\nFarm tools · 1 of 5\nNext →\nBack\nOpen tool\nResume guide",
+      "cardId": "tool-plan",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Resume guide",
+        "label": null
+      }
+    },
+    {
+      "name": "all tool purposes encountered: Plan | Records & work | Knowledge & evidence | Experiments | History & preferences",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFARM TOOLS\nHistory & preferences\n\nReplay saved events and manage display preferences.\n\nFarm tools › History & preferences\n← Previous\nFarm tools · 5 of 5\nNext →\nBack\nOpen tool\nResume guide",
+      "cardId": "tool-history",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Next →",
+        "label": null
+      }
+    }
+  ],
+  "hypotheses": [
+    "The unchanged objective and farm scene above both mission cards and tool cards may make the Tools index look like another planning step.",
+    "Recorded batch, saved projection, preview and recorded simulation are precise but unfamiliar evidence categories for a first-time manager.",
+    "Keep B3 available followed by Reserve B3 / unavailable may sound contradictory without a dated timeline.",
+    "Continue may be interpreted as saving a strategy even though strategy cards are previews."
+  ],
+  "rubricMapping": {
+    "Goal & Scope Definition": "Objective and sandbox boundary are prominent; the immediate learning goal is less explicit when More opens.",
+    "Autonomy & Human-in-the-Loop": "Review before apply and disabled physical operations are visible checkpoints.",
+    "Safety, Security & Guardrails": "Sandbox and real-operations-disabled labels persist.",
+    "Observability & Evaluation": "Evidence type labels exist, but newcomer interpretation is a hypothesis requiring human testing."
+  },
+  "requests": {
+    "writes": [],
+    "provider": []
+  },
+  "errors": [],
+  "screenshots": [
+    "01-arrival.png",
+    "02-strategy-preview.png",
+    "03-b3-challenge.png",
+    "04-b3-explanation.png",
+    "05-tools-index.png"
+  ]
+}

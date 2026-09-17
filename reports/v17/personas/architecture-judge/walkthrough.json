@@ -1,0 +1,95 @@
+{
+  "id": "architecture-judge",
+  "label": "AI persona: skeptical agent architecture and evaluation judge using keyboard",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "status": "PASS",
+  "observations": [
+    {
+      "name": "keyboard ArrowRight advances canonical card",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nPreview—not saved\nkailan\n2026-09-24 → 2026-10-26\nA2\nHarvested residue\nPak Choi\nHarvested\nPreview—not saved\npak choi\n2026-08-17 → 2026-09-14\nA3\nHarvested residue\nKailan\nHarvested\nPreview—not saved\nkailan\n2026-08-13 → 2026-09-14\nA4\nHarvested residue\nLettuce\nHarvested\nPreview—not saved\nlettuce\n2026-10-08 → 2026-11-02\nB1\nCaixin\nGrowing\nPreview—not saved\nlettuce\n2026-10-01 → 2026-10-26\nB2\nPak Choi\nGrowing\nPreview—not saved\npak choi\n2026-08-31 → 2026-09-28\nB3\nKailan\nGrowing\nPreview—not saved\nkailan\n2026-08-27 → 2026-09-28\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\nPreview—not saved\ncaixin\n2026-10-12 → 2026-11-02\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nCALCULATED CHOICE\nLean plan\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nPreview—not saved\nDelivery covered\n46.7%\nShortfall\n507 kg\nCost\nSGD 1,038.6\n← Previous\nFarm plan · 2 of 7\nNext →\nExplain\nContinue\nMore",
+      "cardId": "strategy-0fa0095e5a88cfcbb9ad",
+      "focus": {
+        "tag": "ARTICLE",
+        "text": "Calculated choiceLean planKeep inputs light. Accept more uncovered demand to limit surplus.Preview—not savedDelivery covered46.7%Shortfall507 kgCostSGD 1,038.6",
+        "label": "Planning card 2 of 7"
+      }
+    },
+    {
+      "name": "keyboard opens deterministic explanation",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nPreview—not saved\nkailan\n2026-09-24 → 2026-10-26\nA2\nHarvested residue\nPak Choi\nHarvested\nPreview—not saved\npak choi\n2026-08-17 → 2026-09-14\nA3\nHarvested residue\nKailan\nHarvested\nPreview—not saved\nkailan\n2026-08-13 → 2026-09-14\nA4\nHarvested residue\nLettuce\nHarvested\nPreview—not saved\nlettuce\n2026-10-08 → 2026-11-02\nB1\nCaixin\nGrowing\nPreview—not saved\nlettuce\n2026-10-01 → 2026-10-26\nB2\nPak Choi\nGrowing\nPreview—not saved\npak choi\n2026-08-31 → 2026-09-28\nB3\nKailan\nGrowing\nPreview—not saved\nkailan\n2026-08-27 → 2026-09-28\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\nPreview—not saved\ncaixin\n2026-10-12 → 2026-11-02\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nLEAN PLAN › WHY\nWhat this means\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nWhat changed\nkind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nbed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nstrategy · 0fa0095e5a88cfcbb9ad\n← Previous\nFarm plan · 2 of 7\nNext →\nBack\nBack to card\nResume guide",
+      "cardId": "strategy-0fa0095e5a88cfcbb9ad",
+      "focus": {
+        "tag": "BUTTON",
+        "text": "Back",
+        "label": null
+      }
+    },
+    {
+      "name": "keyboard reaches History and preferences tool",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFARM TOOLS\nHistory & preferences\n\nReplay saved events and manage display preferences.\n\nFarm tools › History & preferences\n← Previous\nFarm tools · 5 of 5\nNext →\nBack\nOpen tool\nResume guide",
+      "cardId": "tool-history",
+      "focus": {
+        "tag": "ARTICLE",
+        "text": "Farm toolsHistory & preferencesReplay saved events and manage display preferences.Farm tools › History & preferences",
+        "label": "Farm tools card 5 of 5"
+      }
+    },
+    {
+      "name": "history opens in integrated card",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n24 kg caixin by 2026-09-21\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFarm tools › History & preferences\n\nSandbox · actual farm operations disabled\nSaved plans\n\nRead saved facts without recalculation or inference.\n\nPrevious\n1 of 6\nNext\nBack\nOpen",
+      "cardId": "history:Saved plans",
+      "focus": {
+        "tag": "BODY",
+        "text": "Objective · deliver the confirmed order24 kg caixin by 2026-09-21Sandbox farm · real operations disabledFarm scene · Area 1 of 2 · showing 8 of 162026-09-14A1Harvested residuecaixinharvestedA2Harvested residuepak choiharvestedA3Harvested residuekailanharvestedA4Harvested residuelettuceharvestedB1caixingrowingB2pak choigrowingB3kailangrowingSaved reservation2026-10-01 → 2026-11-02B4lettucegrowingShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kgFarm tools › History & preferencesSandbox · actual farm operations disabledSaved plansRead saved facts without recalculation or inference.Previous1 of 6NextBackOpen",
+        "label": null
+      }
+    }
+  ],
+  "hypotheses": [
+    "The UI exposes canonical IDs and eligibility metadata in DOM attributes, but most architecture guarantees are invisible without reports or source inspection.",
+    "Explain and replay correctly avoid provider calls; the interface could make the deterministic-versus-provider boundary more prominent before opening Knowledge.",
+    "One active card and focus restoration support keyboard review, while deep tool cards use a second card-navigation component that must retain equivalent semantics.",
+    "A polished golden path does not itself demonstrate tenant, stale-revision, concurrency or outage handling; those remain evaluation-artifact claims."
+  ],
+  "rubricMapping": {
+    "Architecture & Reasoning Loop": "Canonical card binding, frozen snapshots and explicit state transitions are inspectable.",
+    "Tool Use & Integration": "Tool adapters keep forms/transcripts inside cards and publish action authority/eligibility.",
+    "Autonomy & Human-in-the-Loop": "No provider call occurs until explicit Ask/Council submission; writes were blocked in this audit.",
+    "Safety, Security & Guardrails": "Sandbox boundary and server-owned eligibility are visible; adversarial guarantees require regression evidence.",
+    "Observability & Evaluation": "Replay, event identity and metadata are strong; human comprehension remains untested.",
+    "Platform & Tooling Usage": "Single shell and lazy integrated decks are coherent, with keyboard and swipe sharing card order."
+  },
+  "requests": {
+    "writes": [],
+    "provider": []
+  },
+  "errors": [],
+  "screenshots": [
+    "01-keyboard-card.png",
+    "02-deterministic-explain.png",
+    "03-history-tool-card.png",
+    "04-history-integrated.png"
+  ],
+  "cardMetadata": {
+    "data-card-id": "strategy-0fa0095e5a88cfcbb9ad",
+    "data-entity-id": "0fa0095e5a88cfcbb9ad",
+    "data-entity-kind": "strategy",
+    "data-session-id": "63c1b1bb786f77833bc71a1ff3ed1479",
+    "data-input-hash": "2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30",
+    "data-session-revision": "13",
+    "data-result-id": "7aba1ef728a777af7c2582f8ff4ffebf",
+    "data-provenance": "[]",
+    "data-board-targets": "[\"bed-01\",\"bed-02\",\"bed-03\",\"bed-04\",\"bed-05\",\"bed-06\",\"bed-07\",\"bed-08\",\"bed-01\",\"bed-10\",\"bed-13\",\"bed-14\",\"bed-04\",\"bed-05\",\"bed-08\",\"bed-09\",\"bed-12\"]",
+    "data-outcome-basis": "projection",
+    "data-card-actions": "[{\"id\":\"explain\",\"label\":\"Explain\",\"eligible\":true,\"authority\":\"local_navigation\",\"eligibilitySource\":\"local\"},{\"id\":\"primary\",\"label\":\"Continue\",\"eligible\":true,\"authority\":\"local_navigation\",\"eligibilitySource\":\"local\"},{\"id\":\"more\",\"label\":\"More\",\"eligible\":true,\"authority\":\"local_navigation\",\"eligibilitySource\":\"local\"}]",
+    "data-action-authority": "{\"explain\":\"local_navigation\",\"primary\":\"local_navigation\",\"more\":\"local_navigation\"}",
+    "data-action-eligibility": "{\"explain\":{\"eligible\":true,\"source\":\"local\",\"reason\":null},\"primary\":{\"eligible\":true,\"source\":\"local\",\"reason\":null},\"more\":{\"eligible\":true,\"source\":\"local\",\"reason\":null}}"
+  },
+  "returnFocus": {
+    "tag": "BUTTON",
+    "text": "Explain"
+  }
+}

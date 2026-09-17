@@ -3,12 +3,12 @@ import { ADVISORS } from "../lib/game";
 import { request } from "../lib/api";
 import { editionStorageKey } from "../lib/edition";
 import { researchApi, type ActualConversation, type CouncilConcept, type ResearchActionBody, type ResearchReport, type ResearchResult, type ResearchSession, type SteeringMode } from "../lib/research";
-import type { CardAction, FarmCard } from "../lib/cards";
+import type { CardAction, FarmCard, ResearchTarget } from "../lib/cards";
 import { FrozenFactEvidence, QualitativeContextReferences } from "./AdvisorEvidence";
 import { RecordFacts, ToolCard, type ToolAction } from "./ToolCard";
 import "./IntegratedResearch.css";
 
-type View = "sessions" | "session" | "configure" | "context" | "discussion" | "proposal" | "calculate" | "challenge" | "results" | "history" | "actual" | "report";
+type View = "sessions" | "overview" | "session" | "configure" | "context" | "discussion" | "proposal" | "calculate" | "challenge" | "results" | "history" | "actual" | "report";
 type Summary = Awaited<ReturnType<typeof researchApi.list>>["sessions"][number];
 type HistoryPage = { revisions: Array<{ revision: number; payload: Record<string, unknown> }>; next_cursor: number | null; origin: string; inference_triggered: false };
 const policies = ["Lean", "Balanced", "Resilient"] as const;
@@ -22,7 +22,7 @@ function useDraft<T>(key: string, initial: T) {
   return [value, setValue] as const;
 }
 
-export default function IntegratedResearch({ onClose }: { onClose: () => void }) {
+export default function IntegratedResearch({ onClose, initialTarget = "overview" }: { onClose: () => void; initialTarget?: ResearchTarget }) {
   const [view, setView] = useState<View>("sessions"), [index, setIndex] = useState(0), [busy, setBusy] = useState(false), [error, setError] = useState("");
   const [sessions, setSessions] = useState<Summary[]>([]), [session, setSession] = useState<ResearchSession | null>(null), [report, setReport] = useState<ResearchReport | null>(null);
   const [history, setHistory] = useState<HistoryPage["revisions"]>([]), [historyCursor, setHistoryCursor] = useState<number | null>(null);
@@ -47,19 +47,48 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
   useEffect(() => { if (!session || start) return; const raw = session.farm as typeof session.farm & { batches?: Array<Record<string, unknown>> }; const batch = (raw.batches || []).find((row) => row.bed_id === bed); const base = new Date(`${String(batch?.harvest_date || session.farm.planning_date || session.farm.cutoff).slice(0, 10)}T00:00:00Z`); base.setUTCDate(base.getUTCDate() + 3); const last = new Date(`${String(session.farm.planning_date || session.farm.cutoff).slice(0, 10)}T00:00:00Z`); last.setUTCDate(last.getUTCDate() + Number(session.farm.horizon_days) - 1); setStart(base.toISOString().slice(0, 10)); setEnd(last.toISOString().slice(0, 10)); }, [session, bed, start, setStart, setEnd]);
 
   const send = (body: Omit<ResearchActionBody, "revision">) => session && act(async () => update(await researchApi.act(session.id, { ...body, revision: session.revision } as ResearchActionBody)));
-  const openSession = (id: string) => void act(async () => { update(await researchApi.get(id)); setView("session"); setIndex(0); });
-  const create = () => void act(async () => { const next = await researchApi.create(concept, steering); update(next); await refreshList(); setView("session"); setIndex(0); });
+  const targetView = (target: ResearchTarget): View => target === "overview" ? "overview" : target;
+  const enterStudy = async (next: ResearchSession) => {
+    update(next); setIndex(0);
+    if (initialTarget === "history") {
+      const page = await request<HistoryPage>(`/council-research/${encodeURIComponent(next.id)}/history?after=-1&limit=20`);
+      setHistory(page.revisions); setHistoryCursor(page.next_cursor);
+    }
+    setView(targetView(initialTarget));
+  };
+  const openSession = (id: string) => void act(async () => enterStudy(await researchApi.get(id)));
+  const create = () => void act(async () => { const next = await researchApi.create(concept, steering); await enterStudy(next); await refreshList(); });
   const rememberMenuOrigin = () => { menuOrigin.current = { index, scroll: window.scrollY, focus: document.activeElement as HTMLElement }; };
   const openHistory = () => session && void act(async () => { rememberMenuOrigin(); const page = await request<HistoryPage>(`/council-research/${encodeURIComponent(session.id)}/history?after=-1&limit=20`); setHistory(page.revisions); setHistoryCursor(page.next_cursor); setIndex(0); setView("history"); });
   const loadMoreHistory = () => session && historyCursor !== null && void act(async () => { const page = await request<HistoryPage>(`/council-research/${encodeURIComponent(session.id)}/history?after=${historyCursor}&limit=20`); setHistory((currentHistory) => [...currentHistory, ...page.revisions]); setHistoryCursor(page.next_cursor); });
-  const back = () => { setError(""); if (view === "sessions") onClose(); else if (view === "session") { setIndex(0); setView("sessions"); void refreshList(); } else { const origin = menuOrigin.current; setView("session"); setIndex(origin.index); requestAnimationFrame(() => { (origin.focus?.isConnected ? origin.focus : document.querySelector<HTMLElement>(".integrated-tool__card"))?.focus({ preventScroll: true }); window.scrollTo(0, origin.scroll); }); } };
+  const back = () => { setError(""); if (view === "sessions") onClose(); else if (view === "overview") { setIndex(0); setView("sessions"); void refreshList(); } else { const origin = menuOrigin.current; setView("overview"); setIndex(0); requestAnimationFrame(() => { (origin.focus?.isConnected ? origin.focus : document.querySelector<HTMLElement>(".integrated-tool__card"))?.focus({ preventScroll: true }); window.scrollTo(0, origin.scroll); }); } };
 
   const menu = ["Presentation", "Frozen context", "Discussion", "Reviewed proposal", "Calculation", "Challenge", "Results", "Revision history", "Actual adviser", "Research report"];
   let title = "Saved Council research", count = Math.max(1, sessions.length), body: React.ReactNode = sessions[index] ? <><h3>Study created {new Date(sessions[index].created_at).toLocaleString()}</h3><RecordFacts value={sessions[index]}/><p>Opening is read-only and does not calculate or invoke a provider.</p></> : <p>No saved research sessions. Start a fresh isolated study.</p>;
   let primary: ToolAction | undefined = sessions[index] ? { label: "Open saved study", run: () => openSession(sessions[index].id) } : { label: "Start study", run: create };
   let secondary: ToolAction | undefined = { label: "New study", run: create };
 
-  if (view === "session") {
+  if (view === "overview" && session) {
+    title = `Council research v${session.input_version}`; count = 0;
+    const jumps: Array<{ label: string; view: View; note: string }> = [
+      { label: "Frozen context", view: "context", note: "Choose exact farm records for the discussion." },
+      { label: "Scripted discussion", view: "discussion", note: "Read the full local transcript and add a bounded turn." },
+      { label: "Review an edit", view: "proposal", note: "Draft and explicitly apply one typed research change." },
+      { label: "Calculate", view: "calculate", note: "Run the local numerical planner for this version." },
+      { label: "Challenge evidence", view: "challenge", note: "Record whether evidence corrected or left a claim unresolved." },
+      { label: "Compare results", view: "results", note: "Inspect frozen strategies before choosing a simulation-only result." },
+      { label: "Revision history", view: "history", note: "Replay recorded revisions without inference." },
+      { label: "Ask a specialist", view: "actual", note: "An explicit provider action about one completed frozen result." },
+      { label: "Research report", view: "report", note: "Read bundled documents, sources and review screenshots." },
+    ];
+    const openJump = (target: View) => {
+      rememberMenuOrigin(); setIndex(0);
+      if (target === "history") { openHistory(); return; }
+      setView(target);
+    };
+    body = <div className="ix-overview"><p className="ix-lede">A saved Council study is an isolated research workspace. Its edits and chosen result remain simulation-only and never operate the farm.</p><ol className="ix-path"><li>Select frozen records and discuss the question.</li><li>Review any proposed input change before applying it.</li><li>Calculate locally, challenge assumptions, then compare saved results.</li><li>Optionally ask one specialist through an explicit provider action.</li></ol><div className="ix-jump-grid">{jumps.map((jump) => <button type="button" key={jump.view} onClick={() => openJump(jump.view)}><strong>{jump.label}</strong><span>{jump.note}</span></button>)}</div><p>Planning Council review of an ordinary farm proposal lives under Knowledge. This study keeps a separate frozen research history.</p></div>;
+    primary = { label: "Open guided card deck", run: () => { setIndex(0); setView("session"); } }; secondary = undefined;
+  } else if (view === "session") {
     title = session ? `Research v${session.input_version}` : "Research session"; count = menu.length; body = <><h3>{menu[index]}</h3><p>{["Compare interaction settings without changing numerical inputs.", "Select exact frozen beds, orders, batches or crops.", "Use the bounded scripted discussion and inspect its complete transcript.", "Create, review, apply or discard one typed research edit.", "Run, cancel or retry the local numerical planner.", "Challenge an assumption and explicitly record its evidence status.", "Inspect every saved version and choose an eligible simulation-only result.", "Replay append-only research revisions and their recorded events without inference.", "Explicitly ask DeepSeek about one frozen completed research version.", "Read the supplied research documents, sources and review screenshots."][index]}</p><RecordFacts value={{ revision: session?.revision, input_version: session?.input_version, calculation: session?.numerical_calculation_status, chosen: session?.chosen, operational_execution: session?.operational_execution }}/></>;
     primary = { label: `Open ${menu[index]}`, run: index === 7 ? openHistory : () => { const target = (["configure", "context", "discussion", "proposal", "calculate", "challenge", "results", "history", "actual", "report"] as View[])[index]; rememberMenuOrigin(); setIndex(0); setView(target); } }; secondary = undefined;
   } else if (view === "configure") {

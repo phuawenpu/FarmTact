@@ -15,7 +15,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 import { requestBlob } from "../lib/api";
 import BoundCard from "./BoundCard";
-import type { FarmCard } from "../lib/cards";
+import { editionStorageKey } from "../lib/edition";
+import type { FarmCard, RecordsTarget } from "../lib/cards";
 import type { Bed, FarmOrder } from "../lib/types";
 import {
   farmerWorkflowApi,
@@ -29,6 +30,7 @@ import {
   type PlanningSession,
 } from "../lib/planning";
 import "./IntegratedRecords.css";
+import "./tool-card.css";
 
 type View = "home" | "setup" | "imports" | "orders" | "beds" | "inventory" | "proposals" | "tasks" | "verify" | "history";
 type Form = "farmImport" | "seed" | "upload" | "manual" | "candidate" | "source" | "approve" | "recovery" | "result" | "correction" | null;
@@ -46,10 +48,10 @@ const emptyWorkflow: FarmerWorkflowState = {
 const CardMetaContext = createContext<FarmCard | null>(null);
 function CardMeta({ card, children }: { card: FarmCard; children: ReactNode }) { return <CardMetaContext.Provider value={card}>{children}</CardMetaContext.Provider>; }
 
-export function IntegratedRecords({ onClose, onOpenPlan, onOpenWasteRescue }: { onClose: () => void; onOpenPlan?: () => void; onOpenWasteRescue?: () => void }) {
+export function IntegratedRecords({ onClose, onOpenPlan, onOpenWasteRescue, initialTarget }: { initialTarget?: RecordsTarget; onClose: () => void; onOpenPlan?: () => void; onOpenWasteRescue?: () => void }) {
   const [session, setSession] = useState<PlanningSession | null>(null);
   const [workflow, setWorkflow] = useState(emptyWorkflow);
-  const [view, setView] = useState<View>("home");
+  const [view, setView] = useState<View>(initialTarget?.view || "home");
   const [form, setForm] = useState<Form>(null);
   const [index, setIndex] = useState(0);
   const [homeIndex, setHomeIndex] = useState(0);
@@ -97,8 +99,19 @@ export function IntegratedRecords({ onClose, onOpenPlan, onOpenWasteRescue }: { 
     return [];
   }, [view, workflow.inbox, session, currentProposals, currentTasks, currentEvents]);
   useEffect(() => setIndex((old) => Math.min(old, Math.max(0, cards.length - 1))), [cards.length]);
-  const open = (next: View) => { setView(next); setIndex(0); setForm(null); setError(""); };
-  const back = () => { if (form) setForm(null); else if (view !== "home") open("home"); else onClose(); };
+  const targetSelected = useRef(false);
+  useEffect(() => { if (loading || targetSelected.current || !initialTarget?.entityId) return; targetSelected.current = true; const found = cards.findIndex(item => "id" in item && item.id === initialTarget.entityId); if (found >= 0) setIndex(found); }, [loading, cards, initialTarget]);
+  const homeOrigin = useRef<{label:string;scroll:number}|null>(null);
+  const open = (next: View) => {
+    if (view === "home" && next !== "home") homeOrigin.current = {label: document.activeElement?.textContent?.trim() || "", scroll: window.scrollY};
+    setView(next); setIndex(0); setForm(null); setError("");
+    if (next === "home" && homeOrigin.current) requestAnimationFrame(() => requestAnimationFrame(() => {
+      const origin = homeOrigin.current!;
+      Array.from(document.querySelectorAll<HTMLButtonElement>(".integrated-records button")).find(button => button.textContent?.trim() === origin.label)?.focus({preventScroll:true});
+      window.scrollTo(0, origin.scroll);
+    }));
+  };
+  const back = () => { if (form) setForm(null); else if (initialTarget && view === initialTarget.view) onClose(); else if (view !== "home") open("home"); else onClose(); };
   const run = async (action: () => Promise<unknown>, fallback: string) => {
     setBusy(true); setError("");
     try { await action(); await refresh(); const remembered = rememberedPlanningSession(); if (remembered) setSession(await planningApi.get(remembered)); setForm(null); }
@@ -196,7 +209,7 @@ function homeItems(workflow: FarmerWorkflowState, session: PlanningSession | nul
   { view: "verify", name: "Verify & recover", detail: "Compare this session's farmer-reported outcomes with its saved plan, then explicitly replan future work.", count: tasks.filter(item => item.event_revision > 0).length },
   { view: "history", name: "Workflow history", detail: "Read this session's saved event sequence without recalculation. Older sessions remain in History & preferences.", count: events.length },
 ]; }
-function Home({ workflow, session, index, setIndex }: { workflow: FarmerWorkflowState; session: PlanningSession | null; index: number; setIndex: (value: number) => void; open: (view: View) => void }) { const items = homeItems(workflow, session), item = items[index], card = bound(`category:${item.view}`, "records_category", item.name, session, [], [localAction("open", "Open")]); return <><nav className="ir-pager" aria-label="Records and work categories"><button disabled={index === 0} onClick={() => setIndex(index - 1)}><ArrowLeft /> Previous</button><span>Records &amp; work {index + 1} of {items.length}</span><button disabled={index === items.length - 1} onClick={() => setIndex(index + 1)}>Next <ArrowRight /></button></nav><BoundCard card={card} className="ir-card"><div className="ir-card__heading"><div><small>Records &amp; work</small><h3>{item.name}</h3></div><span>{item.count}</span></div><p>{item.detail}</p>{!session && item.view !== "setup" && <p className="ir-note">No planning session is active.</p>}</BoundCard></>; }
+function Home({ workflow, session, index, setIndex, open }: { workflow: FarmerWorkflowState; session: PlanningSession | null; index: number; setIndex: (value: number) => void; open: (view: View) => void }) { const items = homeItems(workflow, session), item = items[index], card = bound(`category:${item.view}`, "records_category", item.name, session, [], [localAction("open", "Open")]); return <><nav className="ir-pager" aria-label="Records and work categories"><button disabled={index === 0} onClick={() => setIndex(index - 1)}><ArrowLeft /> Previous</button><span>Records &amp; work {index + 1} of {items.length}</span><button disabled={index === items.length - 1} onClick={() => setIndex(index + 1)}>Next <ArrowRight /></button></nav><BoundCard card={card} className="ir-card"><div className="ir-card__heading"><div><small>Records &amp; work</small><h3>{item.name}</h3></div><span>{item.count}</span></div><p>{item.detail}</p><div className="tool-category-index" aria-label="Choose records category">{items.map((entry,i)=><button key={entry.view} onClick={()=>{setIndex(i);open(entry.view)}}><strong>{entry.name} · {entry.count}</strong><span>{entry.detail}</span></button>)}</div>{!session && item.view !== "setup" && <p className="ir-note">No planning session is active.</p>}</BoundCard></>; }
 function CandidateCard({ item }: { item: FarmerImport }) { const actions: FarmCard["actions"] = [backAction, localAction(item.status === "candidate" ? "review" : "add", item.status === "candidate" ? "Review candidate" : "Add candidate"), localAction("source", "Source")], card = bound(item.candidate_id, "import_candidate", item.source_name, null, [item.source_kind, item.source_name], actions); return <Card card={card} eyebrow={item.source_kind.replaceAll("_", " ")} title={item.source_name} status={item.status}><dl><Fact k="Record identity" v={item.candidate_id} /><Fact k="Authority" v={String(item.authority || "review candidate")} /><Fact k="Planning use" v={item.status === "candidate" ? "Inactive until reviewed" : item.planning_eligible ? "Eligible reviewed evidence" : "Observation only"} /><Fact k="Extracted rows" v={String(item.rows?.length || 0)} /></dl>{!!item.warnings?.length && <div className="ir-warning"><strong>Warnings</strong><ul>{item.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div>}<Rows rows={item.rows || []} /></Card>; }
 function SourceReview({ item }: { item: FarmerImport }) { const [error, setError] = useState(""), source = `/farm-workflow/imports/${encodeURIComponent(item.candidate_id)}/source`; const open = (download: boolean) => void requestBlob(download ? `${source}/download` : source).then(blob => openBlob(blob, download ? item.source_name : undefined)).catch(caught => setError(problem(caught, "Source could not be opened."))); return <Card eyebrow="Original import source" title={item.source_name} status="read only"><p>Inspect the retained source and its response metadata before downloading. These actions do not change its review state or planning authority.</p><dl><Fact k="Candidate identity" v={item.candidate_id} /><Fact k="Source kind" v={item.source_kind.replaceAll("_", " ")} /><Fact k="Review state" v={item.status} /></dl>{error && <p className="ir-error" role="alert">{error}</p>}<ActionPortal><button onClick={() => open(false)}>Inspect source</button><button onClick={() => open(true)}>Download source</button></ActionPortal></Card>; }
 function CandidateReview({ item, busy, decide }: { item: FarmerImport; busy: boolean; decide: (decision: "confirm" | "reject", note?: string) => void }) { const [note, setNote] = useState(""); return <Card eyebrow="Explicit review" title={item.source_name} status="candidate"><p>Confirm only the extracted fields you have reviewed. Photos and documents remain observations and never gain yield authority.</p><Rows rows={item.rows || []} /><label>Review note (optional)<textarea value={note} onChange={(event) => setNote(event.target.value)} /></label><ActionPortal><button disabled={busy} onClick={() => decide("reject", note)}>Reject candidate</button><button className="is-primary" disabled={busy} onClick={() => decide("confirm", note)}>Confirm reviewed fields</button></ActionPortal></Card>; }
@@ -282,4 +295,4 @@ function InlineSourceReview({ item }: { item: FarmerImport }) {
 }
 
 const FarmImportReviewForm = FarmImportForm;
-function usePersistentState<T>(key: string, initial: T) { const [value, setValue] = useState<T>(() => { try { const saved = localStorage.getItem(key); return saved == null ? initial : JSON.parse(saved) as T; } catch { return initial; } }); useEffect(() => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* draft persistence is best effort */ } }, [key, value]); return [value, setValue] as const; }
+function usePersistentState<T>(name: string, initial: T) { const key = editionStorageKey(`records:${name}`); const [value, setValue] = useState<T>(() => { try { const saved = localStorage.getItem(key); return saved == null ? initial : JSON.parse(saved) as T; } catch { return initial; } }); useEffect(() => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* draft persistence is best effort */ } }, [key, value]); return [value, setValue] as const; }
