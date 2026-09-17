@@ -1,0 +1,238 @@
+{
+  "edition": "V15 a5ab2a8 exact frontend, local API",
+  "steps": [
+    {
+      "name": "01-first-arrival",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Inspect the confirmed order, available space and planning date before calculating.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 1\nNext →\nExplain\nCalculate\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 275.953125
+        },
+        {
+          "element": "ic-keys",
+          "top": 757.734375,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "02-calculated-situation",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Swipe through all three previews. Selection alone does not save a plan.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 5\nNext →\nExplain\nContinue\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 275.953125
+        },
+        {
+          "element": "ic-keys",
+          "top": 757.734375,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "02-first-plan",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nPreview—not saved\ncaixin\n2026-08-24 → 2026-09-14\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nPreview—not saved\ncaixin\n2026-10-12 → 2026-11-02\nA3\nrecorded batch\nKailan\nRecorded Batch\nPreview—not saved\nlettuce\n2026-10-08 → 2026-11-02\nA4\nrecorded batch\nLettuce\nRecorded Batch\nPreview—not saved\nlettuce\n2026-08-20 → 2026-09-14\nB1\nrecorded batch\nCaixin\nRecorded Batch\nPreview—not saved\ncaixin\n2026-09-07 → 2026-09-28\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nPreview—not saved\npak choi\n2026-08-31 → 2026-09-28\nB3\nrecorded batch\nKailan\nRecorded Batch\nPreview—not saved\nkailan\n2026-08-27 → 2026-09-28\nB4\nrecorded batch\nLettuce\nRecorded Batch\nPreview—not saved\nkailan\n2026-10-01 → 2026-11-02\nCALCULATED CHOICE\nLean plan\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nPreview—not saved\n\nGuide Swipe through all three previews. Selection alone does not save a plan.\n\nDelivery covered\n44.5%\nShortfall\n604 kg\nCost\nSGD 1,166.7\n← Previous\nFarm plan · 2 of 5\nNext →\nExplain\nContinue\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 303.34375
+        },
+        {
+          "element": "ic-keys",
+          "top": 785.125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "03-second-plan",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nPreview—not saved\nkailan\n2026-10-01 → 2026-11-02\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nPreview—not saved\nlettuce\n2026-09-24 → 2026-10-19\nA3\nrecorded batch\nKailan\nRecorded Batch\nPreview—not saved\ncaixin\n2026-09-28 → 2026-10-19\nA4\nrecorded batch\nLettuce\nRecorded Batch\nPreview—not saved\nlettuce\n2026-10-08 → 2026-11-02\nB1\nrecorded batch\nCaixin\nRecorded Batch\nPreview—not saved\ncaixin\n2026-09-07 → 2026-09-28\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nPreview—not saved\npak choi\n2026-08-31 → 2026-09-28\nB3\nrecorded batch\nKailan\nRecorded Batch\nPreview—not saved\nkailan\n2026-08-27 → 2026-09-28\nB4\nrecorded batch\nLettuce\nRecorded Batch\nPreview—not saved\ncaixin\n2026-10-12 → 2026-11-02\nCALCULATED CHOICE\nBalanced plan\n\nBalance customer coverage, growing cost and avoidable surplus.\n\nPreview—not saved\n\nGuide Swipe through all three previews. Selection alone does not save a plan.\n\nDelivery covered\n53.4%\nShortfall\n507 kg\nCost\nSGD 1,522.5\n← Previous\nFarm plan · 3 of 5\nNext →\nExplain\nContinue\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 303.34375
+        },
+        {
+          "element": "ic-keys",
+          "top": 785.125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "04-reservation-challenge",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nPLANNING CHALLENGE\nKeep B3 available\n\nReserve this exact grow space after its current crop clears and compare the recalculated plan.\n\nGuide Swipe through all three previews. Selection alone does not save a plan.\n\nRecord identity\nB3 · bed-07\nArea\n20 m²\nWindow\n2026-10-01 → 2026-11-02\n← Previous\nFarm plan · 5 of 5\nNext →\nExplain\nSaving guide progress\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 316
+        },
+        {
+          "element": "ic-keys",
+          "top": 797.78125,
+          "height": 47.59375
+        }
+      ]
+    },
+    {
+      "name": "05-challenge-explanation",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nKEEP B3 AVAILABLE › WHY\nWhat this means\n\nReserve this exact grow space after its current crop clears and compare the recalculated plan.\n\nWhat changed\nReserve this exact grow space after its current crop clears and compare the recalculated plan.\nWhy\nReason not available for this saved result.\nTradeoff\nNo compatible calculated alternative is available.\nEvidence / limits\nFrozen planning snapshot; no provider call.\nNext action\nReturn to the card and choose an explicit action.\nRecord identity\nreservation · bed-07\n← Previous\nFarm plan · 5 of 5\nNext →\nBack\nBack to card\nSkip guide",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 586.1875
+        },
+        {
+          "element": "ic-keys",
+          "top": 1067.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "06-tools-index",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM TOOLS\nPlan\n\nCalculate, compare and approve revision-bound plans.\n\nFarm tools › Plan\n← Previous\nFarm tools · 1 of 5\nNext →\nBack\nOpen tool\nSkip guide",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 238
+        },
+        {
+          "element": "ic-keys",
+          "top": 719.78125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "07-knowledge-entry",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM TOOLS\nKnowledge & evidence\n\nInspect crops, sources and saved specialist reviews.\n\nFarm tools › Knowledge & evidence\n← Previous\nFarm tools · 3 of 5\nNext →\nBack\nOpen tool\nSkip guide",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 238
+        },
+        {
+          "element": "ic-keys",
+          "top": 719.78125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "failure",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\n\nFarm tools › Knowledge & evidence\n\nFARM TOOLS › KNOWLEDGE & EVIDENCE\nInspect the facts. Ask deliberately.\nCROP PROFILE · REPRESENTATIVE ART\nseedling\ngrowing\nready\nCaixin\n\nHarvested part: leaves, stems, flowering_shoots.\n\nCycle\n28 days\nNursery\n7 days\nRecipe status\ndemo_only\n\nRecipe values are planning assumptions, not a real-farm growth guarantee. Stage artwork is a labelled reference library, not the current farm state; a ready-stage illustration does not claim this crop is harvest-ready.\n\nNursery biomass and flowering shoots are different endpoints.\nlocal commercial mature marketable yield\ncultivar-specific cycle duration\nbuyer packout\nshelf life\nEvidence and limitations\nLight-Time-Biomass Response Model for Predicting the Growth of Choy Sum (Brassica rapa var. parachinensis) in Soil-Based LED-Constructed Indoor Plant Factory for Efficient Seedling Production\nWidely-targeted metabolomics and transcriptomics identify metabolites associated with flowering regulation of Choy Sum\nPrevious\n1 / 22\nNext\nBack",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        }
+      ]
+    }
+  ],
+  "writes": [
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions/9afa7448239db8e19388f6cec763d99e/calculate",
+    "/api/v1/planning-sessions/9afa7448239db8e19388f6cec763d99e/guidance",
+    "/api/v1/planning-sessions/9afa7448239db8e19388f6cec763d99e/guidance"
+  ],
+  "errors": [
+    "TimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.integrated-tool') to be visible\u001b[22m\n"
+  ]
+}

@@ -1,0 +1,66 @@
+# V15 first-use and capability review — 17 September 2026
+
+V15 made workflows reachable but made several capabilities much harder to discover. The strongest regression is loss of the crop atlas and other overview surfaces, rather than wholesale removal of their underlying functions. A clearer demo should teach the meaning of a decision and its consequence; animation alone cannot repair hidden navigation.
+
+## Scope and evidence
+
+Reviewed the exact V15 frontend at `a5ab2a8`, rebuilt privately, against the local real API; compared historical `farmtact-v12` (`9fd5789`) and `farmtact-v13` (`30f4e97`) source. The current public application is V16. V16 corrected explanation semantics but retained this navigation structure. This review does not change or publish application code.
+
+The fresh-context 390 × 844 walkthrough, screenshots, request-path record and normal-motion video are in `completed/`. The folder name identifies the second capture attempt, not a passing acceptance test. The crop page loaded, but the capture script then timed out waiting for the wrong CSS selector (`.integrated-tool` rather than `.ik-shell`); `completed/failure.png` and the final text record show the loaded crop page. An earlier capture waited for a preview without navigating off the situation card and is retained separately. These are audit-harness errors, not evidence of application crashes. The second capture recorded only session creation, one local calculation and two guidance writes; no provider submission or reservation/approval mutation occurred. Historical completed-journey screenshots and recordings in `reports/v15` supplement the new walkthrough. Source comparisons cover `App`, `Rooms.CropLibrary`, `DataExplorer`, `CouncilResearch`, `IntegratedCards`, `IntegratedKnowledge`, `IntegratedExperiments`, `IntegratedResearch` and `IntegratedHistory`.
+
+Observed UI behavior is evidence. Statements about what newcomers may misunderstand are design hypotheses, not results from representative users. Prior automated workflow success did not establish discoverability or comprehension. This review also does not re-certify every backend capability.
+
+## Walkthrough: where the experience needs to explain itself
+
+1. **Arrival asks users to inspect things it does not expose directly.** The objective is one 22 kg caixin order; the card reports 32 confirmed orders and 16 grow spaces. The scene shows eight beds, each dominated by “recorded batch.” “Inspect the confirmed order” does not have a corresponding visible inspect action. “Frozen farm” is implementation language. State that this is a sample farm, show the selected order's details, and explain that all 32 orders are included in planning. Give the guide an explicit current step and expected outcome. In the browser, Lean shows 604 kg shortfall and Balanced 507 kg beneath the 22 kg objective: label these as all-demand totals, with horizon, and show the selected order's own coverage separately when available.
+2. **The scene is not self-explanatory.** Eight brown bed tiles with repeated stage labels do not show why the plan matters. Keep the scene passive, but explain its date, area and saved-record status. Distinguish the actual recorded crop from representative reference artwork. Do not invent a growth stage to make the scene attractive.
+3. **Comparison and commitment are too easy to confuse.** Lean, Balanced and Resilient are alternatives from the same baseline. “Continue” can sound like selecting or saving the current plan, but advances to the reservation challenge. After calculation the browser remained on the situation card with “Continue”; the first preview required Next. Make “View calculated plans” explicit at this point. Rename the strategy action to its destination, such as “Try a reservation”; explicitly say comparison has saved nothing. Show side-by-side numerical differences inside a comparison card while retaining swipe navigation.
+4. **B3 is an unexplained exercise.** “Keep B3 available” leads to a reservation that makes the bed unavailable to the planner. The user needs to know *available for what*, and why these dates were chosen. Describe it as an optional sample planning constraint. A hypothetical maintenance reason must be labelled as an example, not asserted as a farm record. Present the recorded crop-clearance and sanitation dates, then the reservation window on one timeline. The fresh V15 pre-reservation Explain card actually says “Reason not available for this saved result” and “No compatible calculated alternative is available”; it does not explain the proposed exercise. This exact explanation defect should not be attributed wholesale to V16, which changed explanation semantics.
+5. **Review content can appear before its action is ready.** Preserved reservation evidence includes a populated review while the button still says “Preparing reservation review.” Distinguish loading from review-ready and saving states. Bed, dates and expected consequences should be prominent; hashes and revisions belong in evidence details.
+6. **A reservation affects a whole recalculated plan.** Do not imply all aggregate differences are B3-specific. V15's explanation examples show changes on other beds. Explain the constraint first, then the server-listed changed allocations, then plan-wide coverage/cost/expiry differences. V16 improved explanation text; the causal visual lesson remains useful.
+7. **Approval and simulation need different chapters.** “Tasks created” is not “tasks completed,” and neither is physical farm activity. Keep approval, farmer-reported records and recorded synthetic results distinct. Only the saved simulation event should animate harvesting, inventory and delivery. The next action should clearly name whether it opens tasks or advances a sandbox simulation.
+8. **The guide teaches the reservation, not the product.** A newcomer can finish the example without discovering Crops, Data Explorer, research or Help. End with relevant next choices: inspect the crop assumptions, explore a different scenario, or review the saved result. Teach More once as a tools index and make the available categories scanable.
+
+## Earlier sections versus V15
+
+All V15 paths below begin from the main card. “Next” means deck navigation, not a workflow submission.
+
+| Earlier section | Actual V15 path | Retained versus lost or degraded | Relevant recovery |
+|---|---|---|---|
+| Crops: scanable atlas and profiles | More → Knowledge & evidence → Open tool → crop cards | Recipes, warnings, evidence and representative art retained. Atlas overview, quick selection and simultaneous scanning lost. The observed crop page is card 1 of a mixed 22-card deck. | Crops category landing with compact picker/search; current order or allocation → its exact crop profile. |
+| Sources / public context | Knowledge deck, after the crop cards; also Data Explorer | Source records/freshness retained. Category boundary and direct source entry obscured. | Evidence link beside the assumption it supports; Sources jump from Knowledge index. |
+| Council / specialist advice | Knowledge deck, after crops and sources → advisers, saved transcripts, Planning Council | Frozen focus and saved conversations retained. Long navigation and two meanings of Council obscure purpose. | Strategy explanation → Planning Council review; distinguish it from the isolated research study. |
+| Council research study | More → Experiments → Open tool → Research & reviews → Open → Open research cards | Scripted discussion, edits, calculations, challenges and saved results retained. Original causal overview and prominent starting point degraded. | Named Research entry plus a study overview card showing discussion → reviewed change → calculation → result. |
+| Data: visual overview and tabs | More → Experiments → Open tool → Data Explorer → Open → Saved datasets → Inspect records | Records, filtering, exports, generation and policies retained. Chart-led overview and relationship map lost/degraded. | First card summarizes snapshot, provenance, records and history/forecast horizon; links into existing detail cards. |
+| Scenarios / experiments | More → Experiments → Scenarios & quests; generation and Explorer are sibling entries | Frozen scenarios, quests, continuation and compatible comparison retained. Recommended sequence and shared dataset context less visible. | Optional “What if?” entry from a plan; carry the relevant frozen snapshot into review, with explicit branch creation. |
+| Outcomes / saved results | More → History & preferences → Open tool → Saved plans / Simulations / Event history | Unified histories and replay improve on fragmented earlier histories. Direct Outcomes affordance is lost. | Saved-consequence card → that exact result; visible History category in tools index. |
+| Help | More → History & preferences → Open tool → sixth card | Help exists but is placed where a newcomer is unlikely to seek it. | Help directly reachable from tools index and guidance, preserving return context. |
+
+The important distinction is between restoring a **visible, meaningful entry** and duplicating an existing workflow. Reuse the integrated crop, research, record and scenario cards; restore the overview and context that explain why to open them.
+
+## Recommended demonstration sequence
+
+Use a skippable, resumable sequence in the ordinary sandbox. Each scene ends at a stable factual state and has Replay. Reduced motion presents the same steps and labels immediately.
+
+1. **Read the situation:** highlight the objective, farm date and all-demand count once. Caption: “This order is our example; the plan includes every confirmed order.”
+2. **Compare without saving:** one guided slide between two calculated alternatives, with a fixed “Same farm and dates” label and “Preview—not saved.” Point to the exact server-derived metric differences. Do not silently change the user's selected alternative.
+3. **Understand the constraint:** show B3's recorded crop period, clearance/sanitation and proposed reservation window. Explain what the planner must avoid. Any movement between beds must come from actual comparison data; otherwise use a static dated constraint, not a fabricated relocation.
+4. **Review, then apply:** stop for an explicit user action. On server confirmation, highlight the saved reservation, affected allocation dates/beds and aggregate differences. Never animate a successful save while a request remains uncertain.
+5. **Separate approval from results:** first show task creation only. After an explicit simulation action and recorded response, show finite crop-stage/inventory/delivery transitions labelled with event date and outcome basis.
+6. **Reveal the useful next tool:** from that result offer crop evidence, another scenario or saved history. Opening a reference or replay has no farm mutation or inference. Any adviser submission remains an explicit separate action.
+
+Do not add continuous growth, clickable scenery, forced tours, or a second teaching farm. Animation should explain an authoritative event, not imply it happened.
+
+## Proposed next implementation order
+
+1. Restore discoverability: scanable five-category tools index; Knowledge category jumps; named Crops, Research, Data and History entries; Help visible. The one-active-card/action-area constraint can coexist with a selectable index **inside** a card.
+2. Repair first-use language and destinations: sample farm, all demand, preview versus save, explicit reservation purpose, distinct approval/simulation actions.
+3. Add contextual links retaining origin, focus and scroll: order/allocation → crop; assumption → source; strategy → Council; result → history; scenario → its dataset. Put these in a contextual More index or replace a secondary action, never add a fourth footer button.
+4. Restore crop and data overview cards, and the research sequence card. Keep actual forms and numerical services intact.
+5. Add the finite demonstration above across the working flows, then run technical and representative-user verification.
+
+Suggested usability tasks: find the crop cycle and its limitation; explain whether swiping saved a plan; explain why B3 is reserved; locate and start the research study; locate a saved simulation; explain the difference between tasks and simulated delivery. Observe hesitation, wrong destinations and interpretations before teaching the answer. Test new and returning users; success means they can find and explain the workflow, not merely complete scripted clicks.
+
+## Historical preservation check
+
+Read-only `git ls-remote --tags origin` confirmed GitHub tags V1–V16, including `farmtact-v12` resolving to `9fd57898b8a4e3b69a40c3abf03895f0fcb05daf`. Its Git tree contains 120 public asset files: 27 SVG, 76 PNG, nine WAV, three MP4, three VTT, one JSON and one Markdown, alongside source, Dockerfile, frontend dependency lockfile and Python project configuration. No Git submodule or Git LFS configuration was found in that tree. The release ledger also records V12's exact source and Fly image digest. This establishes preservation of the tracked source and bundled assets, not a backup of user databases, uploaded files, external source websites or credentials. Image availability was not tested. No historical deployment or state restoration was performed.

@@ -1,0 +1,65 @@
+{
+  "edition": "V15 a5ab2a8 exact frontend, local API",
+  "steps": [
+    {
+      "name": "01-first-arrival",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Inspect the confirmed order, available space and planning date before calculating.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 1\nNext →\nExplain\nCalculate\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 275.953125
+        },
+        {
+          "element": "ic-keys",
+          "top": 757.734375,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "name": "failure",
+      "text": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-08\nA1\nrecorded batch\nCaixin\nRecorded Batch\nA2\nrecorded batch\nPak Choi\nRecorded Batch\nA3\nrecorded batch\nKailan\nRecorded Batch\nA4\nrecorded batch\nLettuce\nRecorded Batch\nB1\nrecorded batch\nCaixin\nRecorded Batch\nB2\nrecorded batch\nPak Choi\nRecorded Batch\nB3\nrecorded batch\nKailan\nRecorded Batch\nB4\nrecorded batch\nLettuce\nRecorded Batch\nFARM SITUATION\nLittle Plot Collective\n\nReview the frozen farm, then calculate three choices from its real planning records.\n\nGuide Swipe through all three previews. Selection alone does not save a plan.\n\nPlanning date\n2026-09-08\nConfirmed orders\n32\nGrow spaces\n16\n← Previous\nFarm plan · 1 of 5\nNext →\nExplain\nContinue\nMore",
+      "geometry": [
+        {
+          "element": "ic-heading",
+          "top": 10,
+          "height": 86.78125
+        },
+        {
+          "element": "ic-scene ",
+          "top": 110.78125,
+          "height": 283
+        },
+        {
+          "element": "ic-card",
+          "top": 403.78125,
+          "height": 275.953125
+        },
+        {
+          "element": "ic-keys",
+          "top": 757.734375,
+          "height": 44
+        }
+      ]
+    }
+  ],
+  "writes": [
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions/2a8788ec7697a2b3e8d2fae241f61950/calculate",
+    "/api/v1/planning-sessions/2a8788ec7697a2b3e8d2fae241f61950/guidance"
+  ],
+  "errors": [
+    "TimeoutError: locator.waitFor: Timeout 210000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Preview—not saved', { exact: true }) to be visible\u001b[22m\n"
+  ]
+}
