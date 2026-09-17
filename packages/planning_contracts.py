@@ -123,6 +123,19 @@ class CreatePlanningSession(Strict):
     name: str = Field(default='Farm production mission', min_length=1, max_length=100)
 
 
+class ImportPlanningSession(Strict):
+    name: str = Field(default='Imported farm workflow', min_length=1, max_length=100)
+    expected_farm_version: int = Field(ge=1, strict=True)
+    farm: Farm | None = None
+    fixture: Literal['synthetic_demo'] | None = None
+
+    @model_validator(mode='after')
+    def one_source(self):
+        if (self.farm is None) == (self.fixture is None):
+            raise ValueError('Supply exactly one farm or fixture')
+        return self
+
+
 class PlanningRevision(Strict):
     revision: int = Field(ge=0, strict=True)
 

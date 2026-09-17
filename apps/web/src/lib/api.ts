@@ -113,7 +113,7 @@ export class ApiError extends Error {
 
 let admissionRetryAt = 0;
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+export async function request<T>(path: string, init?: RequestInit, responseKind: 'json' | 'blob' = 'json'): Promise<T> {
   if (Date.now() < admissionRetryAt) {
     const remaining = admissionRetryAt - Date.now();
     throw new ApiError(`Please wait ${Math.ceil(remaining / 1000)} seconds before trying again. Your draft is retained.`, 429, undefined, remaining);
@@ -159,8 +159,10 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
       retryAfterMs,
     );
   }
-  return response.json() as Promise<T>;
+  return (responseKind === 'blob' ? response.blob() : response.json()) as Promise<T>;
 }
+
+export const requestBlob = (path: string) => request<Blob>(path, undefined, 'blob');
 
 type PendingMutation = { key: string; created_at: string };
 
@@ -409,12 +411,12 @@ export const api = {
     ).simulations,
   simulation: (id: string) =>
     request<SimulationWorld>(`/simulations/${encodeURIComponent(id)}`),
-  simulationEvents: (id: string) =>
+  simulationEvents: (id: string, after = 0) =>
     request<{
       events: SimulationEvent[];
       event_sequence: number;
       next_cursor?: number | null;
-    }>(`/simulations/${encodeURIComponent(id)}/events?after=0&limit=200`),
+    }>(`/simulations/${encodeURIComponent(id)}/events?after=${after}&limit=200`),
   createSimulation: (runId: string) =>
     mutationRequest<SimulationWorld>("/simulations", { run_id: runId }),
   advanceSimulation: (id: string, revision: number, days: 1 | 7) =>
@@ -428,3 +430,17 @@ export const api = {
       { revision },
     ),
 };
+
+/** Exhaust recorded event pages without replaying any simulation action. */
+export async function simulationEventHistory(id: string): Promise<{events: SimulationEvent[]; event_sequence:number}> {
+  const events: SimulationEvent[] = [];
+  let after = 0;
+  for (let page = 0; page < 100; page++) {
+    const result = await api.simulationEvents(id, after);
+    events.push(...result.events);
+    if (result.next_cursor == null) return {events, event_sequence: result.event_sequence};
+    if (result.next_cursor <= after) throw new Error('Event history cursor did not advance. Recorded state is unchanged.');
+    after = result.next_cursor;
+  }
+  throw new Error('This history exceeds the current browsing limit. Recorded state is unchanged.');
+}

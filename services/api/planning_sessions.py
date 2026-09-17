@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException, Request
 from sqlalchemy import Column, ForeignKey, ForeignKeyConstraint, JSON, String, Table, UniqueConstraint, select, update, func
 from packages.contracts import Farm, InventoryLot, content_hash
-from packages.planning_contracts import CreatePlanningSession, PlanningRevision, PlanningDisruption, PlanningAdvance, PlanningGuidance
+from packages.planning_contracts import CreatePlanningSession, PlanningRevision, PlanningDisruption, PlanningAdvance, PlanningGuidance, ImportPlanningSession
 from services.api.store import metadata, now
 from services.api.numerical_worker import calculate
 
@@ -362,6 +362,12 @@ def register(app,tenant):
         t=tenant(request)
         with app.state.store.connection() as c:rows=c.execute(select(SESSIONS.c.payload).where(SESSIONS.c.tenant_id==t).limit(8)).scalars().all()
         return {'sessions':[public_session(app.state.store,t,s) for s in sorted(rows,key=lambda s:s['updated_at'],reverse=True)]}
+    def insert_session(t, farm, name, workflow):
+        store=app.state.store
+        session=dict(id=secrets.token_hex(16),name=name,version=VERSION,revision=0,status='DRAFT',stage='records',created_at=now(),updated_at=now(),farm=deepcopy(farm),input_hash=content_hash(farm),result_id=None,selected_strategy_id=None,review={'status':'not_requested','findings':[]},assumptions={},world_id=None,history=[],job=None,data_mode='synthetic_demo',council_policy='advisory',real_operations_enabled=False)
+        if workflow:session['workflow_version']='farmer-workflow-v1'
+        with store.connection(write=True) as c:c.execute(SESSIONS.insert().values(id=session['id'],tenant_id=t,status='DRAFT',payload=session))
+        return session
     @app.post('/api/v1/planning-sessions',status_code=201)
     def create(body:CreatePlanningSession,request:Request):
         t=tenant(request);store=app.state.store
@@ -371,9 +377,23 @@ def register(app,tenant):
             if c.execute(select(func.count()).select_from(SESSIONS).where(SESSIONS.c.tenant_id==t)).scalar_one()>=8:raise HTTPException(429,'Eight planning sessions per tenant maximum')
             farm=store.latest_farm(t)
             if not farm:raise HTTPException(409,'Load farm records first')
-            session=dict(id=secrets.token_hex(16),name=body.name,version=VERSION,revision=0,status='DRAFT',stage='records',created_at=now(),updated_at=now(),farm=deepcopy(farm),input_hash=content_hash(farm),result_id=None,selected_strategy_id=None,review={'status':'not_requested','findings':[]},assumptions={},world_id=None,history=[],job=None,data_mode='synthetic_demo',council_policy='advisory',real_operations_enabled=False)
-            if body.workflow:session['workflow_version']='farmer-workflow-v1'
-            c.execute(SESSIONS.insert().values(id=session['id'],tenant_id=t,status='DRAFT',payload=session))
+            session=insert_session(t,farm,body.name,body.workflow)
+            return finish(t,key,digest,session)
+    @app.post('/api/v1/planning-sessions/import',status_code=201)
+    def import_session(body:ImportPlanningSession,request:Request):
+        from services.api.app import synthetic_farm
+        t=tenant(request);store=app.state.store
+        with store.transaction(t) as c:
+            key,digest,replay=receipt(request,t,body,'import_session')
+            if replay is not None:return replay
+            if c.execute(select(func.count()).select_from(SESSIONS).where(SESSIONS.c.tenant_id==t)).scalar_one()>=8:
+                raise HTTPException(429,'Eight planning sessions per tenant maximum')
+            current=store.latest_farm(t)
+            if not current or current['version']!=body.expected_farm_version:
+                raise HTTPException(409,'Farm records changed; review the transition again')
+            farm=body.farm or synthetic_farm()
+            saved=store.save_farm(t,farm.model_dump(mode='json'))
+            session=insert_session(t,saved,body.name,True)
             return finish(t,key,digest,session)
     @app.get('/api/v1/planning-sessions/{id}')
     def get(id:str,request:Request):

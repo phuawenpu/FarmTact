@@ -90,14 +90,22 @@ try {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     check('previously skipped guide remains skipped', true);
   }
+  if ((await page.locator('.ic-deck-nav').innerText()).includes('Farm tools'))
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+  const dismiss = page.getByRole('button', { name: 'Dismiss' });
+  if (await dismiss.count()) await dismiss.click();
 
   // Calculate if this tenant has no saved ordinary result yet.
-  await page.getByRole('button', { name: '← Previous' }).click().catch(() => {});
-  for (let i = 0; i < 12 && !await page.getByText('Preview—not saved', { exact: true }).count(); i++) {
+  for (let i = 0; i < 12; i++) {
+    if (await page.getByText('Preview—not saved', { exact: true }).count()) break;
     const calculate = page.getByRole('button', { name: 'Calculate', exact: true });
-    if (await calculate.count()) { await calculate.click(); break; }
+    if (await calculate.count()) { await calculate.click(); await page.waitForTimeout(1000); continue; }
     const next = page.getByRole('button', { name: 'Next →' });
-    if (await next.isEnabled()) await next.click(); else break;
+    if (await next.isEnabled()) {
+      const title = await card.locator('h1').innerText();
+      await next.click();
+      await page.waitForFunction(value => document.querySelector('.ic-card h1')?.textContent !== value, title);
+    } else break;
   }
   await page.getByText('Preview—not saved', { exact: true }).waitFor({ timeout: 180_000 });
 
@@ -115,6 +123,8 @@ try {
 
   // All three policies are selectable cards from the same saved calculation.
   const names = new Set();
+  for (let i = 0; i < 8 && await page.getByRole('button', { name: '← Previous' }).isEnabled(); i++)
+    await page.getByRole('button', { name: '← Previous' }).click();
   for (let i = 0; i < 8; i++) {
     const title = await card.locator('h1').innerText();
     if (/ plan$/.test(title)) names.add(title.replace(/ plan$/, ''));
@@ -130,7 +140,7 @@ try {
   const reviewButton = page.getByRole('button', { name: 'Review reservation' });
   if (await reviewButton.count()) {
     await reviewButton.click();
-    check('reservation opens explicit review before apply', await page.getByText('Review before applying', { exact: true }).isVisible());
+    check('reservation opens explicit review before apply', /REVIEW BEFORE APPLYING/i.test(await card.innerText()), await card.innerText());
     check('review retains one card and one three-key action area', await page.locator('.ic-card').count() === 1 && await page.locator('.ic-keys > button').count() === 3);
     await shot(page, 'reservation-review-390');
     await page.getByRole('button', { name: 'Apply & recalculate' }).click();

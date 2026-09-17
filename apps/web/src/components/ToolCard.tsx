@@ -10,7 +10,7 @@ export function ToolCard({title, children, onBack, primary, secondary, previous,
    if((e.target as HTMLElement).closest('input,textarea,select,button,a'))return
    if(e.key==='ArrowRight'&&next){e.preventDefault();next()}
    if(e.key==='ArrowLeft'&&previous){e.preventDefault();previous()}
- }} onTouchStart={e=>{touch.current={x:e.touches[0].clientX,y:e.touches[0].clientY}}} onTouchEnd={e=>{
+ }} onTouchStart={e=>{touch.current=(e.target as HTMLElement).closest('input,textarea,select,button,a')?null:{x:e.touches[0].clientX,y:e.touches[0].clientY}}} onTouchEnd={e=>{
    const from=touch.current;touch.current=null;if(!from)return
    const dx=e.changedTouches[0].clientX-from.x,dy=e.changedTouches[0].clientY-from.y
    if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0)next?.();else previous?.()}

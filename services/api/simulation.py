@@ -112,6 +112,8 @@ def advance(store, tenant, world, days):
     remaining = len(world['trace']['ledger']) - world['segment_days_executed']
     if days > remaining:
         raise HTTPException(422, f'Only {remaining} unexecuted days remain')
+    before_view = public_world(world)
+    before = {key: before_view[key] for key in ('beds', 'inventory', 'totals', 'cash_sgd', 'clock_date')}
     farm = Farm.model_validate(world['segment_farm'])
     recipes = {r.id: r for r in farm.recipes}
     for index in range(world['segment_days_executed'], world['segment_days_executed'] + days):
@@ -158,6 +160,18 @@ def advance(store, tenant, world, days):
     world['status'] = 'COMPLETED' if world['clock_date'] == world['end_date'] else 'ACTIVE'
     world['updated_at'] = now()
     world['state_hash'] = content_hash({k: world[k] for k in ('revision', 'clock_date', 'inventory', 'completed_task_ids', 'totals', 'cash_sgd')})
+    after_view = public_world(world)
+    after = {key: after_view[key] for key in ('beds', 'inventory', 'totals', 'cash_sgd', 'clock_date')}
+    old_beds = {bed['id']: bed for bed in before['beds']}
+    world['scene_transition'] = dict(
+        event_id=f"simulation:{world['id']}:event:{world['event_sequence']}",
+        entity_ids=[bed['id'] for bed in after['beds'] if bed != old_beds.get(bed['id'])],
+        effective_date=world['clock_date'], before=before, after=after,
+        fact_differences={**{key: round(after['totals'][key] - before['totals'][key], 6)
+                            for key in after['totals']},
+                          'cash_sgd': round(after['cash_sgd'] - before['cash_sgd'], 2)},
+        outcome_basis='recorded_simulation', inference_triggered=False,
+    )
     return world
 
 

@@ -222,6 +222,8 @@ export function rememberPlanningSession(id: string) {
 }
 
 export const planningApi = {
+  importFarm: (expected_farm_version:number, source:{farm:unknown}|{fixture:'synthetic_demo'}, name='Imported farm workflow') =>
+    mutationRequest<PlanningSession>('/planning-sessions/import', {expected_farm_version, ...source, name}),
   replayResult: (sessionId: string, resultId: string) => request<{session_id:string;result_id:string;result:PlanningResult;replay:true}>(
     `/planning-sessions/${encodeURIComponent(sessionId)}/results/${encodeURIComponent(resultId)}`),
   guidance: (session: PlanningSession, step: NonNullable<PlanningSession['guidance']>['step'], skipped = false) =>

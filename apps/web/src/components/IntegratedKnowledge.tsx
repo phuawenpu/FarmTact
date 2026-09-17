@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { api } from "../lib/api";
 import { ADVISORS, type Advisor, type Conversation } from "../lib/game";
-import { planningApi, rememberedPlanningSession, type PlanningSession } from "../lib/planning";
+import { farmerWorkflowApi, planningApi, rememberedPlanningSession, type FarmerAssumptions, type FarmerProposal, type PlanningSession } from "../lib/planning";
 import type { Bootstrap, Crop, EvidenceRecord, Source } from "../lib/types";
 import { AdvisorEvidence, FrozenFactEvidence } from "./AdvisorEvidence";
+import { RecordFacts } from "./ToolCard";
 import "./IntegratedKnowledge.css";
 
 type Card =
@@ -21,6 +22,17 @@ const date = (value: unknown) => {
   return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleString("en-SG", { dateStyle: "medium", timeStyle: String(value).length > 10 ? "short" : undefined });
 };
 const errorText = (error: unknown, fallback: string) => error instanceof Error ? error.message : fallback;
+const editableAssumptions = (session: PlanningSession | null): FarmerAssumptions => {
+  const saved = (session?.assumptions || {}) as Partial<FarmerAssumptions>;
+  return {
+    tentative_orders: saved.tentative_orders || [],
+    future_demand: saved.future_demand || [],
+    seasonal: saved.seasonal || [],
+    order_changes: saved.order_changes || [],
+    reservations: saved.reservations || [],
+    ...(saved.capacity ? { capacity: saved.capacity } : {}),
+  };
+};
 
 export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null);
@@ -33,6 +45,8 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const [questions, setQuestions] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("farmtact-v15-knowledge-drafts") || "{}"); } catch { return {}; } });
   const [mode, setMode] = useState<"direct" | "invite" | "council">("direct");
   const [inviteAdvisor, setInviteAdvisor] = useState("asha"), [replyTo, setReplyTo] = useState("");
+  const [proposalMessage, setProposalMessage] = useState(""), [proposal, setProposal] = useState<FarmerProposal | null>(null);
+  const [assumptionsDraft, setAssumptionsDraft] = useState("");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const pointer = useRef<number | null>(null);
@@ -69,7 +83,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const active = cards[activeIndex];
 
   useEffect(() => {
-    setConversation(null); setSelectedThread(""); setMode("direct"); setReplyTo(""); setError("");
+    setConversation(null); setSelectedThread(""); setMode("direct"); setReplyTo(""); setProposalMessage(""); setProposal(null); setError("");
     if (active?.kind !== "crop") { setCropDetail(null); return; }
     let cancelled = false;
     setBusy("Loading crop evidence");
@@ -131,6 +145,16 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const reviewCouncil = () => session && void mutate("Requesting Council review", async () => {
     setSession(await planningApi.review(session.id, session.revision));
   });
+  const createReviewedProposal = () => session && conversation && proposalMessage && void mutate("Creating reviewed planning proposal", async () => {
+    const assumptions = JSON.parse(assumptionsDraft) as FarmerAssumptions;
+    const strategy = session.selected_strategy_id || session.result?.strategies?.[0]?.id;
+    if (!strategy) throw new Error("Calculate a strategy before preparing a planning proposal.");
+    setProposal(await farmerWorkflowApi.createProposal(session, strategy, assumptions, [], { conversation_id: conversation.id, message_id: proposalMessage }));
+  });
+  const applyReviewedProposal = () => proposal && void mutate("Applying reviewed proposal", async () => {
+    setProposal(await farmerWorkflowApi.applyProposal(proposal));
+    if (session) setSession(await planningApi.get(session.id));
+  });
 
   if (!bootstrap || !active) return <section className="ik-state" aria-live="polite"><h2>{error || "Opening knowledge and evidence…"}</h2>{error && <button onClick={() => void load()}>Try again</button>}</section>;
   const messages = conversation?.messages || [];
@@ -141,7 +165,9 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
   const contextual = active.kind === "advisor" ? {
     label: mode === "invite" ? "Invite specialist" : mode === "council" ? "Convene Council" : "Submit question",
     disabled: !question.trim() || !session || (mode === "invite" && (!conversation || !replyTo)), run: () => ask(active.advisor),
-  } : active.kind === "threads" ? { label: "Open read-only replay", disabled: !selectedThread, run: () => replay(selectedThread) }
+  } : active.kind === "threads" ? proposal ? { label: proposal.status === "draft" ? "Apply reviewed proposal" : "Proposal saved", disabled: proposal.status !== "draft", run: applyReviewedProposal }
+    : proposalMessage ? { label: "Create reviewed proposal", disabled: !assumptionsDraft.trim(), run: createReviewedProposal }
+    : { label: "Open read-only replay", disabled: !selectedThread, run: () => replay(selectedThread) }
     : active.kind === "council" ? { label: "Review with Council", disabled: !session?.result?.strategies?.length || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || !!session.review?.findings?.length, run: reviewCouncil } : null;
 
   return <section className="ik-shell" tabIndex={-1} onKeyDown={keyboard}>
@@ -152,7 +178,7 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
         {active.kind === "crop" && <CropCard crop={cropDetail || active.crop} evidence={evidence} />}
         {active.kind === "source" && <SourceCard source={active.source} />}
         {active.kind === "advisor" && <AdvisorCard advisor={active.advisor} conversation={conversation} question={question} setQuestion={(value) => setQuestions((current) => ({ ...current, [active.advisor.id]: value }))} mode={mode} setMode={setMode} inviteAdvisor={inviteAdvisor} setInviteAdvisor={setInviteAdvisor} replyTo={replyTo} setReplyTo={setReplyTo} replyOptions={actionableMessages} />}
-        {active.kind === "threads" && <ThreadsCard threads={threads} selected={selectedThread} setSelected={setSelectedThread} conversation={conversation} />}
+        {active.kind === "threads" && <ThreadsCard threads={threads} selected={selectedThread} setSelected={setSelectedThread} conversation={conversation} proposalMessage={proposalMessage} setProposalMessage={(id) => { setProposalMessage(id); setProposal(null); setAssumptionsDraft(JSON.stringify(editableAssumptions(session), null, 2)); }} assumptionsDraft={assumptionsDraft} setAssumptionsDraft={setAssumptionsDraft} proposal={proposal} />}
         {active.kind === "council" && <CouncilCard session={session} status={councilStatus} />}
       </article>
     </div>
@@ -184,9 +210,11 @@ function AdvisorCard({ advisor, conversation, question, setQuestion, mode, setMo
     {conversation && <Transcript conversation={conversation}/>}</>;
 }
 
-function ThreadsCard({ threads, selected, setSelected, conversation }: { threads: Conversation[]; selected: string; setSelected: (id: string) => void; conversation: Conversation | null }) {
+function ThreadsCard({ threads, selected, setSelected, conversation, proposalMessage, setProposalMessage, assumptionsDraft, setAssumptionsDraft, proposal }: { threads: Conversation[]; selected: string; setSelected: (id: string) => void; conversation: Conversation | null; proposalMessage: string; setProposalMessage: (id: string) => void; assumptionsDraft: string; setAssumptionsDraft: (value: string) => void; proposal: FarmerProposal | null }) {
+  const candidates = conversation?.messages.filter((message) => message.speaker === "advisor" && message.validation_status === "references_verified" && !!message.proposed_actions?.length) || [];
   return <><span className="ik-kicker">Saved discussions · read-only replay</span><h2>Complete adviser transcripts</h2><p>Opening a saved thread reads its recorded messages and makes no inference request.</p>
     <label className="ik-thread-picker">Saved thread<select value={selected} onChange={(event) => setSelected(event.target.value)}><option value="">Select a thread</option>{threads.map((thread) => <option key={thread.id} value={thread.id}>{thread.title || words(thread.advisor_role || thread.advisor_id || "Adviser thread")} · {date(thread.updated_at || thread.created_at)}</option>)}</select></label>
+    {!!candidates.length && <section className="ik-proposal"><h3>Reviewed adviser handoff</h3><p>Select a validated message, then enter the exact assumptions to review. Adviser actions are displayed as context and are never copied into farm state automatically.</p><label>Validated message<select value={proposalMessage} onChange={(event) => setProposalMessage(event.target.value)}><option value="">Select message</option>{candidates.map((message) => <option key={message.id} value={message.id}>{message.speaker_name || words(message.speaker)} · {message.content.slice(0, 65)}</option>)}</select></label>{proposalMessage && <><RecordFacts value={candidates.find((message) => message.id === proposalMessage)?.proposed_actions}/><label>Exact planning assumptions<textarea value={assumptionsDraft} onChange={(event) => setAssumptionsDraft(event.target.value)} rows={10}/></label></>}{proposal && <RecordFacts value={proposal}/>}</section>}
     {conversation && <Transcript conversation={conversation}/>}</>;
 }
 

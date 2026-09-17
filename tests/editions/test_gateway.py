@@ -134,16 +134,18 @@ def test_single_public_bundle_controls_history_and_active_together(gateway, monk
     assert len(client.get('/api/releases/history').json()['editions']) == 2
 
 
-@pytest.fixture
-def current_gateway(monkeypatch, tmp_path):
+@pytest.fixture(params=[14, 15])
+def current_gateway(monkeypatch, tmp_path, request):
     from services.api.edition_gateway import create_gateway
     from services.api.release_registry import ROOT
     history = json.loads((ROOT / 'config/releases/registry.json').read_text())
+    edition = f'v{request.param}'
+    prior = [entry for entry in history['editions'] if int(entry['id'][1:]) < request.param]
     candidate = dict(history['editions'][-1])
-    candidate.update(id='v14', title='Current', status='published')
-    history = {'latest': 'v14', 'editions': [*history['editions'], candidate]}
+    candidate.update(id=edition, title='Current', status='published')
+    history = {'latest': edition, 'editions': [*prior, candidate]}
     bundle = tmp_path / 'public.json'
-    bundle.write_text(json.dumps({'history': history, 'active': {'previous': None, 'latest': 'v14'}}))
+    bundle.write_text(json.dumps({'history': history, 'active': {'previous': None, 'latest': edition}}))
     monkeypatch.setenv('FARMTACT_PUBLIC_RELEASES', str(bundle))
     monkeypatch.setenv('FARMTACT_CONTROL_SECRET', 'test-control-secret-long-enough')
     monkeypatch.setenv('FARMTACT_PUBLIC_ORIGIN', 'https://farmtact.fly.dev')
@@ -160,6 +162,7 @@ def current_gateway(monkeypatch, tmp_path):
 
     app = create_gateway(Store('sqlite://'), httpx.MockTransport(handle))
     with TestClient(app, client=('127.0.0.1', 5000), base_url='https://farmtact.fly.dev') as client:
+        client.current_edition = edition
         yield client, seen
 
 
@@ -175,10 +178,10 @@ def test_v14_current_routes_proxy_without_version_prefix(current_gateway):
 def test_v14_cookie_origin_and_header_boundaries(current_gateway):
     client, seen = current_gateway
     response = client.get('/api/v1/new')
-    assert 'farmtact_v14_session=' in response.headers['set-cookie']
+    assert f'farmtact_{client.current_edition}_session=' in response.headers['set-cookie']
     assert 'Path=/' in response.headers['set-cookie']
     client.cookies.set('farmtact_v13_session', 'old_session_123456789012345')
-    client.cookies.set('farmtact_v14_session', 'new_session_123456789012345')
+    client.cookies.set(f'farmtact_{client.current_edition}_session', 'new_session_123456789012345')
     client.get('/api/v1/bootstrap', headers={
         'authorization': 'Bearer attacker', 'x-farmtact-gateway': 'attacker',
     })
@@ -199,7 +202,7 @@ def test_v14_hides_history_and_retires_numbered_routes(current_gateway):
         assert response.status_code == 410
         assert response.text.count('<a ') == 1
         assert 'href="/"' in response.text and '<li>' not in response.text
-    response = client.get('/v14/', follow_redirects=False)
+    response = client.get(f'/{client.current_edition}/', follow_redirects=False)
     assert response.status_code == 308 and response.headers['location'] == '/play'
-    assert client.post('/v14/api/v1/bootstrap').status_code == 404
+    assert client.post(f'/{client.current_edition}/api/v1/bootstrap').status_code == 404
     assert not seen

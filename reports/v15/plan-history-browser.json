@@ -1,0 +1,143 @@
+{
+  "started_at": "2026-09-17T11:24:37.348Z",
+  "base_url": "http://127.0.0.1:4194",
+  "checks": [
+    {
+      "name": "application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "objective card shows all confirmed demand",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "objective calculation stores three strategies",
+      "pass": true,
+      "detail": "3"
+    },
+    {
+      "name": "strategy schedule card exposes allocations",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "strategy selection exposes projected schedule",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "assumptions require a distinct review card",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "draft proposal is separate from apply",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "proposal recalculation completes with result strategy",
+      "pass": true,
+      "detail": "{\"status\":\"applied\",\"strategy\":\"07eaa88ef793638ce0cb\"}"
+    },
+    {
+      "name": "applied result remains reviewable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "approved prerequisite creates simulation tasks",
+      "pass": true,
+      "detail": "40"
+    },
+    {
+      "name": "saved plan identity appears in history",
+      "pass": true,
+      "detail": "ba410da1efad715c001b96d9f53d2944"
+    },
+    {
+      "name": "saved plan replay is explicitly read-only",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "frozen versions are selectable",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "saved version replay returns recorded result",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "seven-day advance has explicit review",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reviewed seven-day advance returns recorded state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reduced motion preference persists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "audio controls are reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "help explains swipe and arrow controls",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new planning attempt creates a distinct session",
+      "pass": true,
+      "detail": "4715ed472c741aa74dd6aab9a40f2bd7"
+    },
+    {
+      "name": "new planning attempt preserves prior session",
+      "pass": true,
+      "detail": "ba410da1efad715c001b96d9f53d2944"
+    },
+    {
+      "name": "full JSON import has explicit parsed review",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "confirmed import creates a fresh remembered workflow session",
+      "pass": true,
+      "detail": "V15 reviewed import 1789644306121"
+    },
+    {
+      "name": "confirmed import retains prior sessions",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "confirmed import returns to records index",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "prerequisites": [
+    "Approved proposal f75fb3a6675f5782fadd49f144d4375c through the real API so History could test an eligible reviewed time advance."
+  ],
+  "notes": [],
+  "finished_at": "2026-09-17T11:25:08.920Z",
+  "status": "PASSED"
+}

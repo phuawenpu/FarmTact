@@ -49,6 +49,14 @@ def test_clock_execution_reconciles_projection_and_retry_is_exact(accepted_plan)
         body = dict(revision=0, days=14)
         once = post(client, f"/api/v1/simulations/{state['id']}/advance", body, 'advance-first')
         state = once
+        transition = once['scene_transition']
+        assert transition['outcome_basis'] == 'recorded_simulation'
+        assert transition['inference_triggered'] is False
+        assert transition['effective_date'] == once['clock_date']
+        assert transition['before']['clock_date'] is None
+        assert transition['after']['totals'] == once['totals']
+        assert transition['fact_differences']['delivered_kg'] == once['totals']['delivered_kg']
+        assert transition['event_id'].endswith(f":{once['event_sequence']}")
         for _ in range(3):
             state = post(client, f"/api/v1/simulations/{state['id']}/advance", dict(revision=state['revision'], days=14))
         assert state['status'] == 'COMPLETED' and state['days_executed'] == 56

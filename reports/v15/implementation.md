@@ -18,14 +18,25 @@ and honors Retry-After without automatic paid retries.
 ## Evidence so far
 
 - Generated contracts check passed.
-- Frontend TypeScript/production build passed; main JS approximately 219 kB
-  (69.5 kB gzip), main CSS 131.2 kB (27.5 kB gzip). Tool decks load separately.
+- Frontend TypeScript/production build passed; main JS approximately 222.2 kB
+  (70.5 kB gzip), main CSS 131.2 kB (27.5 kB gzip). Tool decks load separately.
 - Focused guidance, inverse and workflow suite: 19 passed (SQLite unit checks).
 - Records real browser journey: 13 passed on isolated PostgreSQL, including real
   candidate confirmation/correction and labelled transport fault simulation for
   post-commit 503/idempotency and 429/Retry-After.
-- Full isolated PostgreSQL regression and broader real browser acceptance are in
-  progress. Failures are not release acceptance.
+- Initial full isolated PostgreSQL regression: 776 passed, 3 failed, 2 errors,
+  1 skipped. Gateway fixtures duplicated V14 registry entries; fixed and all 16
+  gateway checks pass. Static-asset setup raced a concurrent build; focused
+  simulation/conversation rerun passed 19 checks. Final full rerun is pending.
+- Plan/History real browser: 26 checks passed, including reviewed import/new attempt.
+- Tools real browser passes dataset save/export, scenario execution, research
+  calculate/preview/apply/challenge, mobile overflow and provider-free browsing.
+- PostgreSQL guidance concurrent receipt/stale revision/restart test passes.
+- Atomic reviewed farm transition added: save farm and create workflow in one
+  tenant transaction. Four focused transition/guidance checks pass, including
+  replay, stale review, session-cap rejection and rollback after interrupted save.
+- Records one-card refinement and extended Knowledge replay tests are in progress;
+  earlier passing browser evidence does not certify these latest revisions.
 
 Browser suites use separate disposable databases and retain unchanged production
 rate limits. Earlier combined reruns exhausted the local anonymous-session quota;

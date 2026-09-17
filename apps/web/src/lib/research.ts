@@ -1,5 +1,4 @@
-import { editionPath } from './edition'
-import { mutationRequest } from './api'
+import { mutationRequest, request } from './api'
 import type { Farm, StrategyMetrics } from './types'
 import type { RenderedFact } from './game'
 
@@ -23,11 +22,7 @@ export interface ActualConversationMessage { id:string;speaker:string;speaker_na
 export interface ActualConversation { id:string; snapshot_ref?:string|{kind?:string;id?:string;hash?:string;version?:number}; tool_results?:Record<string,unknown>; typed_facts?:Record<string,RenderedFact>; messages:ActualConversationMessage[]; last_request_status?:string|null }
 export type ResearchActionBody = {action:ResearchAction;revision:number;text?:string;refs?:string[];operation?:ResearchProposal['operation'];bed_id?:string;order_id?:string;start_date?:string;end_date?:string;confirmed?:boolean;labour_percent?:number;policy?:'Lean'|'Balanced'|'Resilient';result_version?:number;concept?:CouncilConcept;steering?:SteeringMode;selection_mode?:'chips'|'cards';animation?:'static'|'transition';resolution?:ResearchChallenge['status'];advisor?:string}
 
-async function call<T>(path:string, init?:RequestInit):Promise<T>{
-  const response=await fetch(editionPath(`/api/v1/council-research${path}`),{...init,headers:{'Content-Type':'application/json',...init?.headers}})
-  if(!response.ok){let detail='';try{detail=String((await response.json()).detail||'')}catch{};const error=Object.assign(new Error(detail||`Request failed (${response.status})`),{status:response.status});throw error}
-  return response.json()
-}
+const call = <T,>(path:string, init?:RequestInit) => request<T>(`/council-research${path}`, init)
 export const researchApi={
   list:()=>call<{sessions:Array<{id:string;created_at:string;concept:CouncilConcept;input_version:number;revision:number}>}>(''),
   create:(concept:CouncilConcept,steering:SteeringMode)=>mutationRequest<ResearchSession>('/council-research',{concept,steering}),
@@ -36,7 +31,5 @@ export const researchApi={
   report:()=>call<ResearchReport>('/report'),
   createActual:(sessionId:string,version:number,advisor:string)=>mutationRequest<{id:string}>('/conversations',{advisor,snapshot_kind:'research',snapshot_id:sessionId,research_version:version}),
   sendActual:(id:string,content:string)=>mutationRequest<unknown>(`/conversations/${encodeURIComponent(id)}/messages`,{content}),
-  getActual:async(id:string)=>{
-    const response=await fetch(editionPath(`/api/v1/conversations/${encodeURIComponent(id)}`));if(!response.ok)throw new Error(`Conversation unavailable (${response.status})`);return response.json() as Promise<ActualConversation>
-  },
+  getActual:(id:string)=>request<ActualConversation>(`/conversations/${encodeURIComponent(id)}`),
 }
