@@ -10,6 +10,13 @@
         "sessionId": "v15-knowledge-planning",
         "actions": [
           {
+            "id": "back",
+            "label": "Back",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
             "id": "submit-question",
             "label": "Submit question",
             "eligible": false,
@@ -26,6 +33,17 @@
       "detail": {
         "creates": 1,
         "direct": 1
+      }
+    },
+    {
+      "name": "historical Knowledge transcript decodes real planning snapshot binding",
+      "pass": true,
+      "detail": {
+        "sessionId": "v15-knowledge-planning",
+        "resultId": "result-fixture",
+        "inputHash": "frozen-planning-hash",
+        "revision": null,
+        "snapshotId": "v15-knowledge-planning:result-fixture"
       }
     },
     {

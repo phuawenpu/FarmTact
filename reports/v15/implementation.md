@@ -18,8 +18,8 @@ and honors Retry-After without automatic paid retries.
 ## Evidence so far
 
 - Generated contracts check passed.
-- Frontend TypeScript/production build passed; main JS approximately 223.6 kB
-  (70.8 kB gzip), main CSS 132.3 kB (27.8 kB gzip). Tool decks load separately.
+- Frontend TypeScript/production build passed; main JS approximately 231.81 kB
+  (72.74 kB gzip), main CSS 132.3 kB (27.8 kB gzip). Tool decks load separately.
 - Focused guidance, inverse and workflow suite: 19 passed (SQLite unit checks).
 - Records real browser journey: 13 passed on isolated PostgreSQL, including real
   candidate confirmation/correction and labelled transport fault simulation for
@@ -104,7 +104,9 @@ Further acceptance findings and fixes:
   only real crop-cycle IDs while retaining delivery reports in the forecast and
   execution hash. A real isolated PostgreSQL test proves recorded sowing and
   delivery, idempotent recalculation, retained allocation locks and unchanged
-  task reports. A fresh full regression run is in progress after this fix.
+  task reports. The fresh full regression run after this fix passed **791 tests,
+  one skipped, three warnings in 835.28 seconds**; `regression-final.xml` is the
+  current authoritative full-suite artifact.
 - Shared `BoundCard` metadata now carries canonical entities, nullable frozen
   bindings, provenance, affected entities and action authority across all decks.
   Local UI guards are distinguished from server-returned eligibility. Adapter
@@ -112,3 +114,14 @@ Further acceptance findings and fixes:
   planning result must not replace an older object's own saved binding.
 - Release notes have been prepared and schema-validated. They are candidate
   notes only; no staging or public cutover has occurred.
+
+Private integration checkpoint (17 September, 13:05 UTC): the combined production
+build passes with the final Knowledge snapshot parser and unified Back/submit
+footer. The parser retains the complete frozen snapshot identity, decodes its
+planning session/result IDs, and does not confuse farm-schema version with
+planning revision. A new real-API operator acceptance script passes 20 checks
+locally (`acceptance-local.json`), including ordinary-farm guidance, reservation,
+inverse, approval, simulation, reported delivery/correction and read-only replay.
+It made zero provider submissions. This is local evidence only; staging and
+publication remain pending. Final focused browser reruns are in progress and
+any failing report remains a release gate until resolved.

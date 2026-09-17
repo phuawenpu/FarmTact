@@ -37,7 +37,7 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
   const current = useRef<ResearchSession | null>(null);
   const menuOrigin = useRef<{ index: number; scroll: number; focus: HTMLElement | null }>({ index: 0, scroll: 0, focus: null });
   const update = useCallback((next: ResearchSession) => { if (current.current?.id === next.id && next.revision < current.current.revision) return; current.current = next; setSession(next); setError(""); }, []);
-  const act = async (run: () => Promise<void>) => { if (busy) return; setBusy(true); setError(""); try { await run(); } catch (caught) { const failure = caught as Error & { status?: number }; setError(problem(caught)); if (failure.status === 409 && session) try { update(await researchApi.get(session.id)); } catch { /* retain original error */ } } finally { setBusy(false); } };
+  const act = async (run: () => Promise<void>) => { if (busy) return; setBusy(true); setError(""); try { await run(); } catch (caught) { const failure = caught as Error & { status?: number }; const message = problem(caught); setError(message); if (session && (failure.status == null || failure.status === 409 || failure.status >= 500)) try { update(await researchApi.get(session.id)); setError(`${message} Server state was refreshed before another action.`); } catch { /* retain original error and draft */ } } finally { setBusy(false); } };
   const refreshList = async () => setSessions((await researchApi.list()).sessions);
   useEffect(() => { void act(refreshList); }, []);
   useEffect(() => { if (!session || !isRunning(session)) return; const timer = window.setInterval(() => void researchApi.get(session.id).then(update).catch(() => {}), 1800); return () => window.clearInterval(timer); }, [session?.id, session?.revision, session?.numerical_calculation_status, update]);
@@ -90,17 +90,17 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
   const next = count > 1 && index < count - 1 ? () => setIndex((value) => value + 1) : undefined;
   const displayedResult = view === "results" ? session?.results[index] : currentResult(session);
   const displayedRevision = view === "history" ? history[index] : undefined;
-  const snapshotRef = actual?.snapshot_ref;
+  const snapshotRef = view === "actual" ? actual?.snapshot_ref : null;
   const mutationViews = new Set<View>(["configure", "context", "discussion", "proposal", "calculate", "challenge", "results", "actual"]);
   const bindAction = (action: ToolAction | undefined, suffix: string): CardAction | null => action ? {
     id: `${view}-${suffix}-${action.label.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
     label: action.label,
-    eligible: !action.disabled,
+    eligible: !action.disabled && !busy,
     authority: mutationViews.has(view) && !/^(open|load|refresh|question accepted|start new discussion)/i.test(action.label) ? "server_mutation" : "local_navigation",
-    eligibilitySource: mutationViews.has(view) ? "server" : "local",
-    ...(action.disabled ? { disabledReason: action.disabledReason || "The recorded server state or required input makes this action unavailable." } : {}),
+    eligibilitySource: view === "calculate" || view === "results" || (view === "proposal" && !!session?.proposal) || (view === "challenge" && !!session?.challenge) ? "server" : "local",
+    ...(action.disabled || busy ? { disabledReason: busy ? "A server request is already in progress." : action.disabledReason || "The recorded server state or required input makes this action unavailable." } : {}),
   } : null;
-  const actionBindings = [bindAction(primary, "primary"), bindAction(secondary, "secondary")].filter((item): item is CardAction => item !== null);
+  const actionBindings = [{ id: `${view}-back`, label: "Back", eligible: true, authority: "local_navigation", eligibilitySource: "local" } as CardAction, bindAction(primary, "primary"), bindAction(secondary, "secondary")].filter((item): item is CardAction => item !== null);
   const entity = view === "sessions"
     ? { id: sessions[index]?.id || "research-session-index", kind: sessions[index] ? "research_session" : "research_session_index" }
     : view === "results" && displayedResult
@@ -120,9 +120,9 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
     title,
     provenance: reportProvenance.length ? reportProvenance : view === "actual" && actualId ? [actualId] : displayedResult?.input_hash ? [displayedResult.input_hash] : [],
     binding: {
-      sessionId: session?.id || null,
+      sessionId: view === "sessions" || view === "report" ? null : session?.id || null,
       inputHash: displayedResult?.input_hash || null,
-      revision: session?.revision ?? displayedRevision?.revision ?? null,
+      revision: view === "history" ? displayedRevision?.revision ?? null : view === "sessions" || view === "report" ? null : session?.revision ?? null,
       resultId: null,
       snapshotId: typeof snapshotRef === "string" ? snapshotRef : snapshotRef && typeof snapshotRef.id === "string" ? snapshotRef.id : null,
     },
@@ -131,7 +131,7 @@ export default function IntegratedResearch({ onClose }: { onClose: () => void })
       ...(session.proposal?.bed_id ? [session.proposal.bed_id] : []),
     ])] : [],
     actions: actionBindings,
-    outcomeBasis: view === "results" || view === "calculate" ? "recorded_simulation" : null,
+    outcomeBasis: view === "results" || view === "calculate" ? "projection" : null,
   };
   return <ToolCard card={researchCard} title={title} onBack={back} primary={primary} secondary={secondary} previous={previous} next={next} position={count > 1 ? `${index + 1} of ${count}` : undefined} busy={busy} error={error}>{body}</ToolCard>;
 }

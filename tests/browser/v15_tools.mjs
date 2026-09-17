@@ -1,8 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { chromium } from "../../apps/web/node_modules/@playwright/test/index.mjs";
 
 const root = resolve(new URL("../..", import.meta.url).pathname);
+const storagePath = "/tmp/farmtact-v15-tools-storage.json";
 const base = (process.env.BASE_URL || process.env.FARMTACT_BASE_URL || "http://127.0.0.1:4191").replace(/\/$/, "");
 const report = { status: "RUNNING", base_url: base, checks: [], requests: { provider: [], mutations: [] }, screenshots: [], failures: [] };
 const check = (name, pass, detail = undefined) => { report.checks.push({ name, pass: Boolean(pass), detail }); if (!pass) throw new Error(`${name}: ${JSON.stringify(detail)}`); };
@@ -11,6 +13,7 @@ const openMore = async (page) => { const button = page.getByRole("button", { nam
 const toolAt = async (page, offset, heading) => { for (let i = 0; i < offset; i += 1) await click(page, "Next →"); await click(page, "Open tool"); await page.getByRole("heading", { name: heading, exact: true }).waitFor(); };
 const backToShell = async (page) => {
   for (let depth = 0; depth < 8; depth += 1) {
+    await page.getByRole("button", { name: /^(More|Back|Close)$/ }).first().waitFor({ timeout: 10_000 });
     if (await page.getByRole("button", { name: "More", exact: true }).count()) return;
     const close = page.getByRole("button", { name: "Close", exact: true });
     if (await close.count()) await close.click();
@@ -38,7 +41,7 @@ const waitForScenario = async (page, id) => {
 let browser;
 try {
   browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 360, height: 800 }, reducedMotion: "reduce", acceptDownloads: true });
+  const context = await browser.newContext({ viewport: { width: 360, height: 800 }, reducedMotion: "reduce", acceptDownloads: true, ...(existsSync(storagePath) ? { storageState: storagePath } : {}) });
   const page = await context.newPage();
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -49,6 +52,7 @@ try {
   });
   await page.goto(base, { waitUntil: "domcontentloaded", timeout: 30_000 });
   await page.locator(".ic-shell").waitFor({ timeout: 30_000 });
+  await context.storageState({ path: storagePath });
   check("360px shell has no horizontal document overflow", await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1), await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth })));
 
   // All five top-level tool cards must open real integrated cards.
@@ -97,6 +101,7 @@ try {
   await page.goto(base, { waitUntil: "domcontentloaded" });
   await page.locator(".ic-shell").waitFor();
 
+  await backToShell(page);
   await openMore(page); await toolAt(page, 3, "Scenarios & quests");
   await click(page, "Open");
   if (await page.getByRole("button", { name: "New branch", exact: true }).count()) await click(page, "New branch");
@@ -131,7 +136,7 @@ try {
   await click(page, "Next"); await click(page, "Open Frozen context");
   researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
   await click(page, "Select context"); await researchAction; await click(page, "Back");
-  await click(page, "Next"); await click(page, "Next"); await click(page, "Open Discussion");
+  await click(page, "Next"); await click(page, "Open Discussion");
   await page.getByLabel("Saved draft").fill("Compare the frozen plan and explain the trade-off.");
   researchAction = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
   await click(page, "Send scripted message"); await researchAction;
@@ -139,13 +144,13 @@ try {
   check("research presentation, context and scripted discussion actions persist", await page.evaluate(async (id) => { const value = await (await fetch(`/api/v1/council-research/${id}`)).json(); return value.steering === "checkpoints" && value.selected_refs.length > 0 && value.messages.some((message) => /Compare the frozen plan/.test(message.text)); }, researchId));
   await click(page, "Back");
   // Open Calculation card (index 4) and run the local planner.
-  for (let i = 0; i < 4; i += 1) await click(page, "Next");
+  for (let i = 0; i < 2; i += 1) await click(page, "Next");
   await click(page, "Open Calculation"); await click(page, "Calculate version");
   await waitForResearchResult(page, researchId);
   check("research calculation records three strategies", await page.evaluate(async (id) => { const s = await (await fetch(`/api/v1/council-research/${id}`)).json(); return s.results.at(-1)?.calculation?.strategies?.length === 3; }, researchId));
   // Review/apply a labour edit.
   await click(page, "Back");
-  for (let i = 0; i < 3; i += 1) await click(page, "Next");
+  await click(page, "Previous");
   await click(page, "Open Reviewed proposal");
   await page.getByLabel("Edit type").selectOption("labour");
   await page.getByLabel("Labour allowance (%)").fill("75");
@@ -157,7 +162,7 @@ try {
   check("research apply creates a new frozen input version", await page.evaluate(async (id) => (await (await fetch(`/api/v1/council-research/${id}`)).json()).input_version === 2, researchId));
   await page.getByRole("heading", { name: "Review proposed edit", exact: true }).waitFor({ state: "detached" });
   // Challenge and resolve the supported sheltered-rainfall boundary.
-  await click(page, "Back"); for (let i = 0; i < 5; i += 1) await click(page, "Next");
+  await click(page, "Back"); for (let i = 0; i < 2; i += 1) await click(page, "Next");
   await click(page, "Open Challenge");
   const challengeResponse = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
   await click(page, "Open challenge"); await challengeResponse;
@@ -165,7 +170,7 @@ try {
   const resolutionResponse = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname.endsWith(`/api/v1/council-research/${researchId}/actions`));
   await click(page, "Record resolution"); await resolutionResponse;
   check("research challenge records corrected evidence status", await page.evaluate(async (id) => (await (await fetch(`/api/v1/council-research/${id}`)).json()).challenge?.status === "corrected", researchId));
-  await click(page, "Back"); for (let i = 0; i < 7; i += 1) await click(page, "Next");
+  await click(page, "Back"); for (let i = 0; i < 2; i += 1) await click(page, "Next");
   await click(page, "Open Revision history");
   await page.getByRole("heading", { name: /Recorded revision/ }).waitFor();
   check("research append-only revision history is reachable in cards", await page.getByText(/read-only replay · zero inference/i).isVisible());
@@ -186,7 +191,7 @@ try {
   await page.route(`**/api/v1/planning-sessions/${planningFixture.id}`, async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(planningFixture) }));
   await page.route("**/api/v1/farm-workflow/proposals", async (route) => { linkedProposalBody = route.request().postDataJSON(); await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ id: "v15-linked-proposal", session_id: linkedProposalBody.session_id, base_revision: linkedProposalBody.base_revision, proposal_revision: 1, status: "draft", selected_strategy_id: linkedProposalBody.selected_strategy_id, calculated_metrics: {}, source_conversation_id: linkedProposalBody.source_conversation_id, source_message_id: linkedProposalBody.source_message_id }) }); });
   await page.route("**/api/v1/farm-workflow/proposals/v15-linked-proposal/apply", async (route) => { linkedApplyBody = route.request().postDataJSON(); await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ id: "v15-linked-proposal", session_id: linkedProposalBody.session_id, base_revision: linkedProposalBody.base_revision, proposal_revision: 2, status: "applied", selected_strategy_id: linkedProposalBody.selected_strategy_id, calculated_metrics: {} }) }); });
-  await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor();
+  await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor(); await backToShell(page);
   await openMore(page); await toolAt(page, 2, "Inspect the facts. Ask deliberately.");
   for (let i = 0; i < 20; i += 1) await click(page, "Next");
   await page.getByLabel("Saved thread").selectOption("v15-recorded-thread"); await click(page, "Open read-only replay");
@@ -206,7 +211,7 @@ try {
   await page.route("**/api/v1/council-research", async (route) => route.request().method() === "GET" ? route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ sessions: [{ id: providerResearch.id, created_at: providerResearch.created_at, concept: providerResearch.concept, input_version: providerResearch.input_version, revision: providerResearch.revision }] }) }) : route.continue());
   await page.route(`**/api/v1/council-research/${providerResearch.id}`, async (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(providerResearch) }));
   await page.route("**/api/v1/conversations", async (route) => { if (route.request().method() !== "POST") return route.fallback(); providerAttempts += 1; await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ detail: "Fixture provider unavailable" }) }); });
-  await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor();
+  await page.goto(base, { waitUntil: "domcontentloaded" }); await page.locator(".ic-shell").waitFor(); await backToShell(page);
   await openMore(page); await toolAt(page, 3, "Scenarios & quests"); for (let i = 0; i < 4; i += 1) await click(page, "Next"); await click(page, "Open"); await click(page, "Open research cards");
   await click(page, "Open saved study"); for (let i = 0; i < 8; i += 1) await click(page, "Next"); await click(page, "Open Actual adviser");
   await click(page, "Create frozen discussion"); await page.getByRole("alert").filter({ hasText: /provider unavailable/i }).waitFor();

@@ -193,18 +193,34 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
     : active.kind === "council" ? { label: "Review with Council", disabled: !session?.result?.strategies?.length || ["QUEUED", "RUNNING"].includes(session.job?.status || "") || !!session.review?.findings?.length, run: reviewCouncil } : null;
   const entity = active.kind === "crop" ? { id: active.crop.id, kind: "crop" } : active.kind === "source" ? { id: active.source.id, kind: "source" } : active.kind === "advisor" ? { id: active.advisor.id, kind: "advisor" } : active.kind === "threads" ? { id: conversation?.id || active.id, kind: conversation ? "conversation" : "conversation_index" } : { id: session?.id || active.id, kind: "planning_council" };
   const snapshotRef = conversation?.snapshot_ref;
+  const frozenSnapshot = typeof snapshotRef === "object" && snapshotRef ? snapshotRef : null;
+  const planningSnapshotDivider = frozenSnapshot?.kind === "planning" ? (frozenSnapshot.id || "").lastIndexOf(":") : -1;
+  const frozenConversationBinding = conversation ? {
+    sessionId: planningSnapshotDivider > 0 ? frozenSnapshot!.id!.slice(0, planningSnapshotDivider) : null,
+    inputHash: frozenSnapshot?.hash || null,
+    revision: null,
+    resultId: planningSnapshotDivider > 0 ? frozenSnapshot!.id!.slice(planningSnapshotDivider + 1) || null : null,
+    snapshotId: typeof snapshotRef === "string" ? snapshotRef : frozenSnapshot?.id || null,
+  } : null;
+  const planningBinding = { sessionId: session?.id || null, inputHash: typeof session?.input_hash === "string" ? session.input_hash : null, revision: session?.revision ?? null, resultId: typeof session?.result_id === "string" ? session.result_id : null, snapshotId: null };
+  const binding = active.kind === "crop" || active.kind === "source" || (active.kind === "threads" && !conversation)
+    ? { sessionId: null, inputHash: null, revision: null, resultId: null, snapshotId: null }
+    : active.kind === "council" ? planningBinding : frozenConversationBinding || planningBinding;
   const provenance = active.kind === "source" ? [active.source.url || active.source.id] : active.kind === "crop" ? active.crop.evidence_ids || [] : conversation ? [conversation.id] : [];
   const knowledgeCard: FarmCard = {
     id: active.id, entityId: entity.id, entityKind: entity.kind,
     title: active.kind === "crop" ? active.crop.label : active.kind === "source" ? active.source.name : active.kind === "advisor" ? active.advisor.name : active.kind === "threads" ? "Saved adviser transcripts" : "Planning Council review",
     provenance,
-    binding: { sessionId: session?.id || null, inputHash: typeof session?.input_hash === "string" ? session.input_hash : null, revision: session?.revision ?? null, resultId: typeof session?.result_id === "string" ? session.result_id : null, snapshotId: typeof snapshotRef === "string" ? snapshotRef : snapshotRef && typeof snapshotRef.id === "string" ? snapshotRef.id : null },
+    binding,
     boardTargets: active.kind === "crop" ? (session?.farm?.beds || []).filter((bed) => (bed as typeof bed & { crop_id?: string }).crop_id === active.crop.id).map((bed) => bed.id) : [], outcomeBasis: active.kind === "council" ? "projection" : null,
-    actions: contextual ? [{ id: contextual.label.toLowerCase().replaceAll(" ", "-"), label: contextual.label, eligible: !contextual.disabled, authority: /submit|invite|council|proposal|apply|review/i.test(contextual.label) ? "server_mutation" : "local_navigation", eligibilitySource: active.kind === "threads" && proposal ? "server" : "local", ...(contextual.disabled ? { disabledReason: "Current server state or required input makes this action unavailable." } : {}) }] : [],
+    actions: [
+      { id: "back", label: "Back", eligible: true, authority: "local_navigation", eligibilitySource: "local" } as const,
+      ...(contextual ? [{ id: contextual.label.toLowerCase().replaceAll(" ", "-"), label: contextual.label, eligible: !contextual.disabled && !busy, authority: /submit|invite|council|proposal|apply|review/i.test(contextual.label) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: active.kind === "threads" && proposal ? "server" as const : "local" as const, ...(contextual.disabled || busy ? { disabledReason: busy ? "A server request is already in progress." : "Current server state or required input makes this action unavailable." } : {}) }] : []),
+    ],
   };
 
   return <section className="ik-shell" tabIndex={-1} onKeyDown={keyboard}>
-    <header className="ik-header"><div><span>Farm tools › Knowledge &amp; evidence</span><h1>Inspect the facts. Ask deliberately.</h1></div><button onClick={onClose}>Close</button></header>
+    <header className="ik-header"><div><span>Farm tools › Knowledge &amp; evidence</span><h1>Inspect the facts. Ask deliberately.</h1></div></header>
     {error && <div className="ik-error" role="alert"><span>{error}</span><button onClick={() => setError("")}>Dismiss</button></div>}
     <div className="ik-deck" onPointerDown={(event) => { pointer.current = event.clientX; }} onPointerUp={pointerUp}>
       <BoundCard card={knowledgeCard} className="ik-card" aria-live="polite" aria-label={`Knowledge card ${activeIndex + 1} of ${cards.length}`}>
@@ -215,7 +231,8 @@ export function IntegratedKnowledge({ onClose }: { onClose: () => void }) {
         {active.kind === "council" && <CouncilCard session={session} status={councilStatus} />}
       </BoundCard>
     </div>
-    <nav className="ik-actions" aria-label="Knowledge card actions"><button onClick={() => move(-1)} disabled={activeIndex === 0}>Previous</button>{contextual ? <button className="is-primary" disabled={contextual.disabled || !!busy} onClick={contextual.run}>{contextual.label}</button> : <span>{activeIndex + 1} / {cards.length}</span>}<button onClick={() => move(1)} disabled={activeIndex === cards.length - 1}>Next</button></nav>
+    <nav className="ik-navigation" aria-label="Knowledge card navigation"><button onClick={() => move(-1)} disabled={activeIndex === 0}>Previous</button><span>{activeIndex + 1} / {cards.length}</span><button onClick={() => move(1)} disabled={activeIndex === cards.length - 1}>Next</button></nav>
+    <footer className="ik-actions" aria-label="Knowledge card actions"><button onClick={onClose}>Back</button>{contextual && <button className="is-primary" disabled={contextual.disabled || !!busy} onClick={contextual.run}>{contextual.label}</button>}</footer>
     {busy && <p className="ik-status" role="status">{busy}…</p>}
   </section>;
 }
