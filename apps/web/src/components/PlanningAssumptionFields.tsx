@@ -117,8 +117,12 @@ export default function PlanningAssumptionFields({ session, value, onChange }: P
         const operation = text(row, "operation") || "add";
         return <>
           <label>Change<select value={operation} onChange={(event) => {
-            const next: Row = { ...row, operation: event.target.value };
-            if (event.target.value === "cancel") for (const field of ["crop_id", "due_date", "quantity_kg", "price_sgd_per_kg"]) delete next[field];
+            const nextOperation = event.target.value;
+            const next: Row = { ...row, operation: nextOperation };
+            if (nextOperation !== operation) {
+              for (const field of ["crop_id", "due_date", "quantity_kg", "price_sgd_per_kg"]) delete next[field];
+              if (operation === "add" || nextOperation === "add") delete next.order_id;
+            }
             updateRows("order_changes", arrays("order_changes").map((item, rowIndex) => rowIndex === index ? next : item));
           }}><option value="add">Add order</option><option value="amend">Amend order</option><option value="cancel">Cancel order</option></select></label>
           <label>Order reference{operation === "add" ? <input value={text(row, "order_id")} onChange={(event) => updateRow("order_changes", index, { order_id: event.target.value })} /> : <select value={text(row, "order_id")} onChange={(event) => updateRow("order_changes", index, { order_id: event.target.value })}><option value="">Select confirmed order</option>{session.farm.orders.map((order) => <option key={order.id} value={order.id}>{order.id}</option>)}</select>}</label>

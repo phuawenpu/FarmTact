@@ -173,3 +173,19 @@ its nine-check browser report and the twelve-check history replay report pass.
 The current motion recording was inspected at seven timestamps, including settled
 recorded quantities after finite consequences. This is automated/visual inspection,
 not a representative-user study. V14 is still public; V15 remains unpublished.
+
+Private verification checkpoint (17 September, 14:02 UTC): the final native form
+suite passes 36 checks after fixing inherited Add → Amend values. A separate
+eight-check real-service journey verifies the uncalculated strategy placeholder,
+valid selection after calculation and preservation of an explicit choice on
+refresh. Cross-width keyboard/swipe/zoom/reduced-motion checks pass 25 assertions.
+The complete 360 px reservation episode passes 20 checks; a 430 px run timed out
+waiting for the initial calculation and is being diagnosed, so the complete
+cross-width release gate remains open.
+
+A new SSH-only browser transport pins the staged source, checks runtime health,
+loads exact image assets with SHA-256 hashes and forwards requests to fixed
+loopback port 8095. It exposes no listening endpoint and keeps gateway credentials
+remote; its staged acceptance awaits deployment. Shared-control and retained-data
+preservation tooling was live-validated read-only and passes five focused tests.
+A private before-staging capture now exists. No V15 Fly mutation has occurred.

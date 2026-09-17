@@ -1,0 +1,228 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "360: keyboard ArrowRight changes the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "keyboard": "tool-records"
+      }
+    },
+    {
+      "name": "360: keyboard ArrowLeft restores the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "restored": "tool-plan"
+      }
+    },
+    {
+      "name": "360: horizontal swipe changes the same ordered card",
+      "pass": true,
+      "detail": {
+        "keyboard": "tool-records",
+        "swiped": "tool-records"
+      }
+    },
+    {
+      "name": "360: 200% text zoom has no horizontal overflow and uses document scrolling",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "scrollHeight": 1968,
+        "viewport": 844,
+        "cardOverflow": "visible"
+      }
+    },
+    {
+      "name": "360: reduced motion is active while recorded facts remain immediately readable",
+      "pass": true,
+      "detail": {
+        "matches": true,
+        "bedsAnimation": "none",
+        "cardText": "Sandbox · actual farm operations disabledResource & demand assumptionsSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.Selected strategyAvailable capacityBlank fields keep the farm's recorded capacity. Enter a value only to test a change.Nursery sitesLabour hours per weekCash available (SGD)Tentative ordersAdd tentative ordersFuture demandAdd future demandSeasonal yield and delayAdd seasonal yield and delayConfirmed order changesAdd confirmed order changesBed reservationsAdd reservationImport saved settingsOptional: paste previously exported planning settings. Review them before creating a proposal.Planning assumptions JSON{\n  \"tentative_orders\": [],\n  \"future_demand\": [],\n  \"seasonal\": [],\n  \"order_changes\": [],\n  \"reservations\": []\n}Farm Little Plot Collective · revision 0. Applying queues a local recalculation.",
+        "savedFacts": null
+      }
+    },
+    {
+      "name": "360: interaction audit has no browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390: keyboard ArrowRight changes the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "keyboard": "tool-records"
+      }
+    },
+    {
+      "name": "390: keyboard ArrowLeft restores the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "restored": "tool-plan"
+      }
+    },
+    {
+      "name": "390: horizontal swipe changes the same ordered card",
+      "pass": true,
+      "detail": {
+        "keyboard": "tool-records",
+        "swiped": "tool-records"
+      }
+    },
+    {
+      "name": "390: 200% text zoom has no horizontal overflow and uses document scrolling",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "scrollHeight": 1932,
+        "viewport": 844,
+        "cardOverflow": "visible"
+      }
+    },
+    {
+      "name": "390: reduced motion is active while recorded facts remain immediately readable",
+      "pass": true,
+      "detail": {
+        "matches": true,
+        "bedsAnimation": "none",
+        "cardText": "Sandbox · actual farm operations disabledResource & demand assumptionsSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.Selected strategyAvailable capacityBlank fields keep the farm's recorded capacity. Enter a value only to test a change.Nursery sitesLabour hours per weekCash available (SGD)Tentative ordersAdd tentative ordersFuture demandAdd future demandSeasonal yield and delayAdd seasonal yield and delayConfirmed order changesAdd confirmed order changesBed reservationsAdd reservationImport saved settingsOptional: paste previously exported planning settings. Review them before creating a proposal.Planning assumptions JSON{\n  \"tentative_orders\": [],\n  \"future_demand\": [],\n  \"seasonal\": [],\n  \"order_changes\": [],\n  \"reservations\": []\n}Farm Little Plot Collective · revision 0. Applying queues a local recalculation.",
+        "savedFacts": null
+      }
+    },
+    {
+      "name": "390: interaction audit has no browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430: keyboard ArrowRight changes the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "keyboard": "tool-records"
+      }
+    },
+    {
+      "name": "430: keyboard ArrowLeft restores the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "restored": "tool-plan"
+      }
+    },
+    {
+      "name": "430: horizontal swipe changes the same ordered card",
+      "pass": true,
+      "detail": {
+        "keyboard": "tool-records",
+        "swiped": "tool-records"
+      }
+    },
+    {
+      "name": "430: 200% text zoom has no horizontal overflow and uses document scrolling",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 430,
+        "clientWidth": 430,
+        "scrollHeight": 1909,
+        "viewport": 844,
+        "cardOverflow": "visible"
+      }
+    },
+    {
+      "name": "430: reduced motion is active while recorded facts remain immediately readable",
+      "pass": true,
+      "detail": {
+        "matches": true,
+        "bedsAnimation": "none",
+        "cardText": "Sandbox · actual farm operations disabledResource & demand assumptionsSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.Selected strategyAvailable capacityBlank fields keep the farm's recorded capacity. Enter a value only to test a change.Nursery sitesLabour hours per weekCash available (SGD)Tentative ordersAdd tentative ordersFuture demandAdd future demandSeasonal yield and delayAdd seasonal yield and delayConfirmed order changesAdd confirmed order changesBed reservationsAdd reservationImport saved settingsOptional: paste previously exported planning settings. Review them before creating a proposal.Planning assumptions JSON{\n  \"tentative_orders\": [],\n  \"future_demand\": [],\n  \"seasonal\": [],\n  \"order_changes\": [],\n  \"reservations\": []\n}Farm Little Plot Collective · revision 0. Applying queues a local recalculation.",
+        "savedFacts": null
+      }
+    },
+    {
+      "name": "430: interaction audit has no browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280: keyboard ArrowRight changes the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "keyboard": "tool-records"
+      }
+    },
+    {
+      "name": "1280: keyboard ArrowLeft restores the ordered card",
+      "pass": true,
+      "detail": {
+        "first": "tool-plan",
+        "restored": "tool-plan"
+      }
+    },
+    {
+      "name": "1280: horizontal swipe changes the same ordered card",
+      "pass": true,
+      "detail": {
+        "keyboard": "tool-records",
+        "swiped": "tool-records"
+      }
+    },
+    {
+      "name": "1280: 200% text zoom has no horizontal overflow and uses document scrolling",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "scrollHeight": 1403,
+        "viewport": 900,
+        "cardOverflow": "visible"
+      }
+    },
+    {
+      "name": "1280: reduced motion is active while recorded facts remain immediately readable",
+      "pass": true,
+      "detail": {
+        "matches": true,
+        "bedsAnimation": "none",
+        "cardText": "Sandbox · actual farm operations disabledResource & demand assumptionsSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.Selected strategyAvailable capacityBlank fields keep the farm's recorded capacity. Enter a value only to test a change.Nursery sitesLabour hours per weekCash available (SGD)Tentative ordersAdd tentative ordersFuture demandAdd future demandSeasonal yield and delayAdd seasonal yield and delayConfirmed order changesAdd confirmed order changesBed reservationsAdd reservationImport saved settingsOptional: paste previously exported planning settings. Review them before creating a proposal.Planning assumptions JSON{\n  \"tentative_orders\": [],\n  \"future_demand\": [],\n  \"seasonal\": [],\n  \"order_changes\": [],\n  \"reservations\": []\n}Farm Little Plot Collective · revision 0. Applying queues a local recalculation.",
+        "savedFacts": null
+      }
+    },
+    {
+      "name": "1280: interaction audit has no browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "cross-width interaction audit sends zero writes",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "writes": [],
+  "coverage": {
+    "mutationJourneyWidths": [
+      390
+    ],
+    "readOnlyInteractionWidths": [
+      360,
+      390,
+      430,
+      1280
+    ],
+    "normalMotionRecordingWidths": [
+      390
+    ],
+    "humanUsabilityVerified": false
+  },
+  "failures": []
+}

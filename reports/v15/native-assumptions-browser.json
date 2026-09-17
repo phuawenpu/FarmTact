@@ -1,0 +1,192 @@
+{
+  "started_at": "2026-09-17T13:55:38.668Z",
+  "base_url": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "test uses actual farm crop, order, and bed",
+      "pass": true,
+      "detail": "{\"crop\":\"caixin\",\"order\":\"order-0-1\",\"bed\":\"bed-07\"}"
+    },
+    {
+      "name": "Tentative orders row can be added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Tentative orders row can be removed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Future demand row can be added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Future demand row can be removed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Seasonal yield and delay row can be added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Seasonal yield and delay row can be removed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Confirmed order changes row can be added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Confirmed order changes row can be removed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Bed reservations row can be added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Bed reservations row can be removed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "all local edits make no POST request",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "capacity draft persists across reload",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "all five row groups persist across reload",
+      "pass": true,
+      "detail": "5"
+    },
+    {
+      "name": "seasonal draft value persists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reload still causes no write",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "review shows 2345",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 41.5",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 4321.25",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows native-tentative-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 12.5",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 123",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 88",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 4",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows Native seasonal review",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows order-0-1",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows 19.25",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review shows bed-07",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "review navigation causes no write",
+      "pass": true,
+      "detail": "0"
+    },
+    {
+      "name": "only explicit Create proposal attempts a POST",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "submitted capacity matches native fields",
+      "pass": true,
+      "detail": "{\"nursery_sites\":2345,\"labour_hours_per_week\":41.5,\"cash_sgd\":4321.25}"
+    },
+    {
+      "name": "submitted arrays retain one reviewed row each",
+      "pass": true,
+      "detail": "{\"tentative_orders\":1,\"future_demand\":1,\"seasonal\":1,\"order_changes\":1,\"reservations\":1}"
+    },
+    {
+      "name": "submitted enum values match the planning contract",
+      "pass": true,
+      "detail": "{\"tentative_status\":\"tentative\",\"seasonal_system\":\"sheltered_hydroponic\",\"seasonal_provenance\":\"synthetic_assumption\",\"crops\":[\"caixin\",\"caixin\",\"caixin\"],\"order_operation\":\"amend\"}"
+    },
+    {
+      "name": "submitted domain semantics are exact",
+      "pass": true,
+      "detail": "{\"tentative_orders\":[{\"order_id\":\"native-tentative-1\",\"crop_id\":\"caixin\",\"due_date\":\"2026-09-21\",\"quantity_kg\":12.5,\"status\":\"tentative\",\"price_sgd_per_kg\":7.75}],\"future_demand\":[{\"crop_id\":\"caixin\",\"start_date\":\"2026-09-15\",\"end_date\":\"2026-09-21\",\"percent\":123}],\"seasonal\":[{\"crop_id\":\"caixin\",\"system\":\"sheltered_hydroponic\",\"start_date\":\"2026-09-15\",\"end_date\":\"2026-09-21\",\"reason\":\"Native seasonal review\",\"provenance\":\"synthetic_assumption\",\"yield_percent\":88,\"delay_days\":4}],\"order_changes\":[{\"operation\":\"amend\",\"order_id\":\"order-0-1\",\"quantity_kg\":19.25}],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-09-15\",\"end_date\":\"2026-09-21\"}],\"capacity\":{\"nursery_sites\":2345,\"labour_hours_per_week\":41.5,\"cash_sgd\":4321.25}}"
+    },
+    {
+      "name": "no page errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "notes": [
+    "Proposal POST was intercepted after the explicit Create proposal action; no server mutation was performed."
+  ],
+  "finished_at": "2026-09-17T13:55:44.693Z",
+  "passed": true
+}

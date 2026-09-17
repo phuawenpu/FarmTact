@@ -58,8 +58,10 @@ an error. `verify_editions.py` derives its one- or two-edition journey from
 edition return 410. Version-specific historical release evidence scripts remain
 frozen and are not runtime inventory.
 
-Candidate staging keeps the active manifest unchanged and adds only the next
-pinned worker for private acceptance checks. Publication updates the Machine to
+Candidate staging keeps the active manifest unchanged and adds the next pinned
+worker for private acceptance checks. It also updates the gateway to the candidate
+image while retaining its shared control database and V14 public routing. Capture
+shared budget/abuse preservation evidence before staging as well as after cutover. Publication updates the Machine to
 the intended pair, verifies the candidate, then replaces history and active
 manifests together. A failed candidate leaves the public pair unchanged. Edition
 numbers always follow the history ledger and are never reused.
@@ -135,7 +137,7 @@ boundary. Missing retired directories are treated as already complete. A failed
 candidate before atomic cutover never enters this cleanup path and leaves the
 existing public pair unchanged.
 
-The current next unused number is v13; always check the registry before publishing.
+The current next unused number is v15; always check the registry before publishing.
 The V12 command examples below document its completed rollout; substitute the next
 unused edition for future publication.
 The legacy separate-app provisioning path remains for environments without a

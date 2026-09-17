@@ -1,0 +1,52 @@
+{
+  "started_at": "2026-09-17T14:01:21.039Z",
+  "base_url": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "application responds",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "name": "uncalculated session shows strategy placeholder",
+      "pass": true,
+      "detail": "Not calculated yet"
+    },
+    {
+      "name": "uncalculated strategy selector is disabled",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "real UI calculation produced strategies",
+      "pass": true,
+      "detail": "3"
+    },
+    {
+      "name": "calculated result defaults to a valid strategy",
+      "pass": true,
+      "detail": "ee7f26bd61834f1954d6"
+    },
+    {
+      "name": "farmer can explicitly select another valid strategy",
+      "pass": true,
+      "detail": "16014a346a66c7ea88dd"
+    },
+    {
+      "name": "valid explicit selection survives result refresh",
+      "pass": true,
+      "detail": "16014a346a66c7ea88dd"
+    },
+    {
+      "name": "no page errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "prerequisites": [
+    "Created ordinary workflow fc378b29feecd17e9442bdf8a77edd16 through the existing planning-session API; calculation itself used the Plan UI."
+  ],
+  "finished_at": "2026-09-17T14:01:38.175Z",
+  "passed": true
+}

@@ -200,11 +200,11 @@ The named assertions below are in `tests/browser/v15_tools.mjs` and run through 
 - [x] **Shared shell:** five `tool reachable:` assertions cover every top-level tools-index destination; `360px shell has no horizontal document overflow`, `mobile tool cards retain vertical scrolling`, and `no browser page errors` cover this suite's mobile baseline.
 - [x] **Broad tools journey:** `reports/v15/tools-browser.json` records 30 passing assertions on the isolated real service, including all five tools, crop/source browse, immutable dataset/export, scenario run, the local research cycle, reviewed adviser handoff and explicit provider-outage recovery.
 
-Actionable V15 browser gaps remain open:
+Verification limits (not claims of live provider quality or human usability):
 
-- [ ] Research stale results are disabled in the DOM and current results are chosen through the real service, but a direct stale-version API rejection remains covered only by backend regression rather than this browser suite.
-- [ ] Successful provider prose remains a transport-fixture validation rather than live inference. No acceptance suite invokes an actual provider.
-- [ ] Automated completion remains no evidence of comprehension; representative-user usability is unverified.
+- Research stale results are disabled in the DOM and current results are chosen through the real service, but a direct stale-version API rejection remains covered only by backend regression rather than this browser suite.
+- Successful provider prose remains a transport-fixture validation rather than live inference. No acceptance suite invokes an actual provider.
+- Automated completion remains no evidence of comprehension; representative-user usability is unverified.
 
 ## Final local acceptance evidence — 17 September 2026
 
@@ -250,3 +250,14 @@ fixtures, `plan-recovery-browser.json`, `knowledge-browser.json`,
 `research-browser.json`, `records-extended-browser.json`, and the real inverse
 journey. None of these claims proves preservation of production counters across
 cutover; that remains in the open publication gate.
+
+Final native form follow-up: `native-assumptions-browser.json` passes 36 checks
+for capacity and every supported demand/seasonal/order/reservation row group.
+It covers add/edit/remove, persistence, exact review payloads and allowed enums.
+The suite found and verified a fix for Add → Amend inheriting an empty crop and
+unintended due date. Native row editing, reload and review make zero writes; the
+explicit Create request is intercepted for payload inspection. Real proposal
+creation and apply/recalculation remain covered by the integrated Plan and
+reservation journeys. Cross-width interaction checks pass 25 assertions for
+keyboard, equivalent swipe targets, 200% zoom and reduced motion. Full mutation
+journeys at the remaining widths and exact staged-image acceptance remain gates.
