@@ -1,10 +1,19 @@
 # V13 tactical interface accessibility review
 
-Review date: 17 September 2026 UTC. Scope: V13 plan and static inspection of the published V12 frontend/contracts. Method: heuristic and code-contract review only. This is not a screen-reader study, physical-device test, or human usability result.
+Review date: 17 September 2026 UTC. Scope: V13 plan, implemented tactical shell,
+and scripted responsive journey. Method: heuristic/code-contract review plus
+headless browser assertions. This is not a screen-reader study, physical-device
+test, accessibility conformance audit, or human usability result.
 
 ## Review conclusion
 
 The card model can preserve V12's keyboard, status, provenance, and dialog foundations, but the stacked presentation introduces four high-risk areas that must be treated as release gates for the prototype: inactive-card exposure, swipe/vertical-scroll conflict, dock occlusion, and focus management for contextual Ask. The safest implementation keeps all state-changing operations available as ordinary buttons and treats motion/gesture as supplemental.
+
+The implemented scripted journey passed its active-card isolation, swipe versus
+vertical scroll, button/keyboard equivalence, 44 px primary target, focus restoration,
+reduced-motion, and 360/390/430/1280 px overflow assertions. These automated passes
+close the prototype's scripted gate only; the manual/screen-reader/physical-device
+items below remain open.
 
 ## Acceptance checklist
 

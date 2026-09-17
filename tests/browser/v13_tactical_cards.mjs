@@ -4,6 +4,7 @@ import { chromium } from "../../apps/web/node_modules/@playwright/test/index.mjs
 
 const root = resolve(new URL("../..", import.meta.url).pathname);
 const base = (process.env.FARMTACT_BASE_URL || "http://127.0.0.1:8080").replace(/\/$/, "");
+const expectDevelopmentDock = process.env.FARMTACT_EXPECT_DEV_DOCK === "1";
 const result = { status: "RUNNING", checks: [], failures: [], screenshots: [] };
 const check = (name, pass, detail) => {
   result.checks.push({ name, pass: Boolean(pass), detail });
@@ -300,6 +301,18 @@ const workflow = {
   events: [],
   real_operations_enabled: false,
 };
+const inverseProposal = {
+  id: "proposal-inverse-bed-07",
+  session_id: session.id,
+  base_revision: 8,
+  proposal_revision: 9,
+  status: "applied",
+  selected_strategy_id: "balanced-revised",
+  calculated_metrics: {},
+  changes: [{ kind: "planning_assumptions", assumptions: { ...session.assumptions, reservations: [] } }],
+  inverse_of_proposal_id: proposal.id,
+  recalculation_job: { id: "result-inverse-bed-07", status: "QUEUED" },
+};
 
 let browser;
 let activePage;
@@ -319,6 +332,7 @@ try {
   let calculationPolls = 0;
   let applied = false;
   let inverseApplied = false;
+  let inversePolls = 0;
   let interveningChange = false;
 
   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -359,7 +373,30 @@ try {
     } else if (path.endsWith("/planning-sessions") && method === "GET") {
       body = { sessions: [session] };
     } else if (path.endsWith(`/planning-sessions/${session.id}`) && method === "GET") {
-      if (applied && !inverseApplied && !interveningChange) {
+      if (inverseApplied) {
+        inversePolls += 1;
+        if (inversePolls === 1) {
+          session.job = { id: "result-inverse-bed-07", kind: "recalculation", status: "RUNNING", stage: "solving" };
+          session.status = "RUNNING";
+        } else {
+          session.revision = 9;
+          session.status = "COMPLETED";
+          session.result_id = "result-inverse-bed-07";
+          session.selected_strategy_id = "balanced";
+          session.result = { strategies: beforeStrategies };
+          session.job = { id: "result-inverse-bed-07", kind: "recalculation", status: "COMPLETED", stage: "completed" };
+          session.tactical_context.planning_snapshot = {
+            ...session.tactical_context.planning_snapshot,
+            result_id: "result-inverse-bed-07",
+            revision: 9,
+            status: "COMPLETED",
+          };
+          session.tactical_context.grow_space.reservation_active = false;
+          session.tactical_context.grow_space.reserve_eligible = true;
+          session.tactical_context.grow_space.reserve_disabled_reason = null;
+          inverseProposal.recalculation_job.status = "COMPLETED";
+        }
+      } else if (applied && !interveningChange) {
         calculationPolls += 1;
         if (calculationPolls === 1) {
           session.job = { id: "job-reserve-bed-07", kind: "recalculation", status: "RUNNING", stage: "solving" };
@@ -399,7 +436,7 @@ try {
             rejection_kg: 0,
             margin_sgd: -31.69,
           };
-          proposal.undo = { available: true, reason: null };
+          proposal.undo = { available: true, reason: null, expected_session_revision: 8 };
         }
       }
       body = session;
@@ -431,15 +468,14 @@ try {
         body = { detail: "The inverse is stale after an intervening revision." };
       } else {
         inverseApplied = true;
-        body = {
-          id: "proposal-inverse-bed-07",
-          session_id: session.id,
-          base_revision: session.revision,
-          proposal_revision: session.revision + 1,
-          status: "applied",
-          inverse_of_proposal_id: proposal.id,
-          recalculation_job: { id: "job-inverse-bed-07", status: "QUEUED" },
-        };
+        inversePolls = 0;
+        proposal.inverse_proposal_id = inverseProposal.id;
+        proposal.undo = { available: false, reason: "Undo has already been submitted." };
+        workflow.proposals = [proposal, inverseProposal];
+        session.status = "QUEUED";
+        session.job = { id: "result-inverse-bed-07", kind: "recalculation", status: "QUEUED", stage: "queued" };
+        body = inverseProposal;
+        status = 202;
       }
     } else if (path.endsWith("/conversations") && method === "POST") {
       providerMutations.push(path);
@@ -619,8 +655,47 @@ try {
   await page.keyboard.press("Escape");
   check("closing the Ask dialog restores focus", await askTrigger.evaluate((element) => element === document.activeElement));
 
+  await page.getByRole("button", { name: "Undo" }).click();
+  await page.locator(".tc-action-dock--progress").waitFor({ timeout: 5000 });
+  check(
+    "Undo appends an inverse at the current revision",
+    inverseBodies.length === 1 &&
+      inverseBodies[0].proposal_id === proposal.id &&
+      inverseBodies[0].proposal_revision === 8 &&
+      inverseBodies[0].expected_session_revision === 8,
+    inverseBodies,
+  );
+  await page.getByRole("button", { name: "Reserve space" }).waitFor({ timeout: 15000 });
+  check(
+    "inverse recalculation returns B3 to the stack without deleting history",
+    (await page.getByRole("heading", { name: "Keep grow space B3 free" }).isVisible()) &&
+      workflow.proposals.length === 2 &&
+      workflow.proposals[0].id === proposal.id &&
+      workflow.proposals[1].inverse_of_proposal_id === proposal.id,
+    workflow.proposals,
+  );
+
+  const inverseCountBeforeStaleCheck = inverseBodies.length;
+  inverseApplied = false;
   interveningChange = true;
   session.revision = 9;
+  session.status = "COMPLETED";
+  session.result_id = "result-after-3109";
+  session.selected_strategy_id = "balanced-revised";
+  session.result = { strategies: afterStrategies };
+  session.job = { id: "job-reserve-bed-07", kind: "recalculation", status: "COMPLETED", stage: "completed" };
+  session.tactical_context.planning_snapshot = {
+    ...session.tactical_context.planning_snapshot,
+    result_id: "result-after-3109",
+    revision: 9,
+    status: "COMPLETED",
+  };
+  session.tactical_context.grow_space.reservation_active = true;
+  session.tactical_context.grow_space.reserve_eligible = false;
+  session.tactical_context.grow_space.reserve_disabled_reason = "This grow space is already reserved.";
+  delete proposal.inverse_proposal_id;
+  workflow.proposals = [proposal];
+  proposal.undo = { available: false, reason: "Undo is stale after an intervening revision." };
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.locator(".tc-shell").waitFor();
   const undo = page.getByRole("button", { name: "Undo" });
@@ -628,7 +703,7 @@ try {
     "intervening revision disables stale Undo with a visible reason",
     await undo.isDisabled() && (await page.getByText(/stale|intervening revision/i).count()) > 0,
   );
-  check("stale Undo sends no inverse mutation", inverseBodies.length === 0, inverseBodies);
+  check("stale Undo sends no inverse mutation", inverseBodies.length === inverseCountBeforeStaleCheck, inverseBodies);
 
   const reducedMotion = await page.locator(".tc-card").evaluate((element) => ({
     transition: getComputedStyle(element).transitionDuration,
@@ -669,6 +744,35 @@ try {
     const screenshot = resolve(root, `apps/web/screenshots/v13-tactical-${width}.png`);
     await page.screenshot({ path: screenshot, fullPage: true, animations: "disabled" });
     result.screenshots.push(screenshot.slice(root.length + 1));
+  }
+
+  if (expectDevelopmentDock) {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${base}/v13?v13Dock=inline`, { waitUntil: "domcontentloaded" });
+    await page.locator(".tc-shell--dock-inline").waitFor();
+    check(
+      "development inline dock flag remains in normal flow",
+      (await page.locator(".tc-action-dock").evaluate((element) => getComputedStyle(element).position)) === "static",
+    );
+    await page.goto(`${base}/v13?v13Dock=sticky`, { waitUntil: "domcontentloaded" });
+    await page.locator(".tc-shell--dock-sticky").waitFor();
+    const stickyDock = await page.locator(".tc-action-dock").evaluate((element) => {
+      const dock = element.getBoundingClientRect();
+      const panel = element.closest(".tc-card-panel");
+      return {
+        position: getComputedStyle(element).position,
+        bottom: dock.bottom,
+        viewportHeight: innerHeight,
+        panelBottomReserve: panel ? Number.parseFloat(getComputedStyle(panel).paddingBottom) : 0,
+        dockHeight: dock.height,
+      };
+    });
+    check("development sticky dock flag uses sticky positioning", stickyDock.position === "sticky", stickyDock);
+    check(
+      "sticky dock reserves space and stays inside the safe viewport",
+      stickyDock.panelBottomReserve >= stickyDock.dockHeight && stickyDock.bottom <= stickyDock.viewportHeight,
+      stickyDock,
+    );
   }
   check("no browser exceptions", pageErrors.length === 0, pageErrors);
   result.status = "PASS";
