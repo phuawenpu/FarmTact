@@ -1,7 +1,7 @@
 # V14 bounded interaction review
 
 Date: 2026-09-17  
-Viewport: 360 × 800, touch enabled, reduced motion enabled  
+Viewport: 360 × 800, touch enabled; normal and reduced-motion media states tested in the same context
 Scope: one fresh isolated browser context; introduction plus the START checkpoint only. The season was not advanced and no provider action was submitted.
 
 ## Browser observations
@@ -17,9 +17,16 @@ Scope: one fresh isolated browser context; introduction plus the START checkpoin
 | Utility deck location | Pass | More replaced the decision card with `utility-next-step` in the same card location. |
 | Back state restoration | Pass | After moving within the utility deck, Back restored the exact prior season card, `lesson-objective`. |
 | Settings discovery | Pass | Settings was reachable using the same Next card control as the rest of the deck. |
-| No automatic planning mutation | Pass | The bounded journey remained at revision 0 throughout these presentation and utility interactions. |
+| Pause and resume | Pass | Pause illustrations changed the shell to `paused`; Play illustrations restored `playing`. The in-game Pause motion control was also local and left revision unchanged. |
+| Reduced motion | Pass | Switching the same page to `prefers-reduced-motion: reduce` changed the shell to `paused`; returning to `no-preference` restored motion. |
+| Replay introduction | Pass | Replay introduction stayed on `/play`, exposed Return to season, and returned to the exact selected card and revision. |
+| Action target size | Pass | Visible targets measured 82.1 × 50 px, 143.7 × 50 px, 82.1 × 50 px, and 95 × 44 px. |
+| Active-only game card | Pass | Exactly one `beginner-card` was exposed in the game and introduction. |
+| Action-area confinement | Pass | Every visible game button, link, input, textarea, and select was inside `beginner-action-area`. |
+| Vertical pan support | Pass | The decision gesture surface reported `touch-action: pan-y`. |
+| No automatic gameplay/provider mutation | Pass | Starting created the expected isolated journey. Explain, More, Back, Settings, pause, replay introduction, and return produced zero `/actions` or conversation mutations; revision remained 0. |
 
-The first browser script stopped at the motion-control click because its locator expected an accessible name ending in “Pause”; the control’s icon/text combination did not provide that stable name. No second fresh context was opened, preserving the requested one-context limit. The control now has explicit `Pause motion` / `Play motion` accessible names. The remaining target-size and replay assertions are therefore implementation/build verified here, not claimed as observations from that browser run.
+The final bounded run completed **23 of 23 checks** with no browser-script error. It used one fresh context and did not advance beyond START.
 
 ## Issues fixed during the review
 
@@ -34,14 +41,14 @@ The first browser script stopped at the motion-control click because its locator
 - Raw entity IDs were removed from the primary card footer; it now shows concise provenance.
 - Admission errors on the introduction are visible inline with a Try again action rather than failing silently.
 
-## Static accessibility checks
+## Accessibility checks
 
-- Action buttons define a minimum height of 44–50 px; the three primary dock controls are 50 px high.
-- The card gesture region uses `touch-action: pan-y`, so vertical page scrolling remains available.
-- The illustrated farm has no controls or focusable hotspots; decisions remain in the action area.
+- All visible action buttons met the 44 px minimum in the live browser measurement.
+- The card gesture region reported `touch-action: pan-y`, and a vertical drag did not trigger horizontal navigation.
+- The introduction and game farm scenes contained no controls or focusable hotspots; all game controls were confined to the action area.
 - Visible focus outlines, live calculation status, disabled reasons, and explicit button labels are present.
-- Reduced motion collapses animation duration and the pause state stops all descendant animations.
+- Reduced-motion and explicit pause behavior were observed in the browser, including state restoration.
 
 ## Verification
 
-`npm run build` passed after the fixes: TypeScript checks completed and Vite produced the production bundle. The existing bundle-size profile remains an optimization item.
+The final bounded presentation run passed 23/23 checks. The preceding `npm run build` passed after the frontend fixes: TypeScript checks completed and Vite produced the production bundle. The existing bundle-size profile remains an optimization item.

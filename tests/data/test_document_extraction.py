@@ -49,11 +49,12 @@ def test_photo_and_document_authority_are_separate_and_budgeted(boundary):
     assert store.reserve_calls.call_count==2
     assert [c.args[0] for c in store.release_unused_calls.call_args_list]==[0,0]
 
-def test_invalid_image_releases_reservation_without_inference(boundary):
+def test_invalid_image_needs_no_reservation_or_inference(boundary):
     store,calls=boundary
     with pytest.raises(Exception):extraction.extract_document(store,'tenant',b'not-image','bad.png','document_extraction')
     assert not calls
-    assert store.release_unused_calls.call_args.args[0]==1
+    store.reserve_calls.assert_not_called()
+    store.release_unused_calls.assert_not_called()
 
 def test_upload_size_and_budget_are_enforced_before_provider(boundary):
     store,calls=boundary

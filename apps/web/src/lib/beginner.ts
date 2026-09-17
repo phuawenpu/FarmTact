@@ -7,6 +7,7 @@ export type BeginnerPhase =
   | "event"
   | "maintenance"
   | "recovery"
+  | "recovery_growing"
   | "delivery"
   | "debrief";
 
@@ -302,9 +303,16 @@ export const beginnerPhaseLabels: Record<BeginnerPhase, string> = {
   event: "Next event",
   maintenance: "Farm maintenance",
   recovery: "Recovery",
+  recovery_growing: "Grow the recovery plan",
   delivery: "Delivery",
   debrief: "Season debrief",
 };
+
+/** Recovery growth shares step 6 so the eight-step teaching arc stays monotonic. */
+export function beginnerPhaseStep(phase: BeginnerPhase) {
+  if (phase === "recovery_growing") return beginnerPhaseOrder.indexOf("recovery") + 1;
+  return Math.max(1, beginnerPhaseOrder.indexOf(phase) + 1);
+}
 
 export const defaultBeginnerUtilities: BeginnerUtilityCard[] = [
   {
@@ -403,12 +411,32 @@ export function clampProgress(value: number | undefined) {
 function journeyPhase(stage: string): BeginnerPhase {
   if (stage === "START") return "order";
   if (stage === "CALCULATING") return "calculate";
-  if (stage === "CHOOSE_PLAN" || stage === "PLAN_SELECTED") return "choose";
+  if (stage === "CHOOSE_PLAN") return "choose";
+  if (stage === "PLAN_SELECTED") return "event";
   if (stage === "MAINTENANCE_DUE") return "maintenance";
   if (stage === "RECALCULATING" || stage === "CHOOSE_RECOVERY" || stage === "RECOVERY_SELECTED") return "recovery";
+  if (stage === "GROWING") return "recovery_growing";
   if (stage === "DELIVERY_DUE") return "delivery";
   if (stage === "COMPLETE") return "debrief";
   return "event";
+}
+
+function pendingActionLabel(action: BeginnerJourneyNextAction, phase: BeginnerPhase) {
+  if (action.id === "advance" || action.kind === "advance") return "Advancing the saved season…";
+  if (action.id === "select_plan" || action.id === "select_recovery" || action.kind === "choose") return "Saving your choice…";
+  if (action.id === "record_b3_maintenance") return "Recording maintenance…";
+  if (action.id === "record_delivery") return "Reviewing recorded delivery…";
+  if (action.kind === "calculate") return phase === "recovery" ? "Recalculating recovery plans…" : "Calculating growing plans…";
+  if (action.kind === "replay") return "Opening a new attempt…";
+  return "Saving your progress…";
+}
+
+function choiceStatus(choice: BeginnerJourneyChoice) {
+  if (!choice.eligible) return "Unavailable";
+  const shortfall = Number(choice.metrics.shortfall_kg);
+  return Number.isFinite(shortfall) && shortfall > 0
+    ? `Feasible · ${shortfall.toLocaleString(undefined, { maximumFractionDigits: 1 })} kg short`
+    : "Feasible";
 }
 
 function metricLabel(key: string) {
@@ -459,10 +487,11 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
     ? serverDecisionCards
     : journey.cards.length ? [journey.cards[journey.cards.length - 1]] : [];
   const choicesAreCurrent = Boolean(nextAction?.requires_option && journey.choices.length);
-  const cards: BeginnerCard[] = (choicesAreCurrent ? [] : contextualCards).map((card) => {
+  const cards: BeginnerCard[] = (choicesAreCurrent ? [] : contextualCards).map((card, cardIndex) => {
     const cardAction = journey.stage === "COMPLETE"
       ? card.actions[0]
       : nextAction && !nextAction.requires_option ? nextAction : undefined;
+    const localClosingNavigation = journey.stage === "COMPLETE" && !cardAction && cardIndex < contextualCards.length - 1;
     return {
       id: card.id,
       phase,
@@ -484,8 +513,13 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
         id: cardAction.id,
         kind: actionKind(cardAction.kind, phase),
         label: cardAction.label,
+        pendingLabel: pendingActionLabel(cardAction, phase),
         disabled: !cardAction.eligible,
         disabledReason: cardAction.disabled_reason || undefined,
+      } : localClosingNavigation ? {
+        id: "local-next-card",
+        kind: "continue",
+        label: "Next card",
       } : undefined,
     };
   });
@@ -499,7 +533,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
         title: choice.title,
         summary: choice.tradeoff,
         explanation: choice.explanation || choice.tradeoff,
-        statusLabel: choice.eligible ? "Eligible" : "Unavailable",
+        statusLabel: choiceStatus(choice),
         facts: ["fulfilled_demand_kg", "land_utilization_pct", "cost_sgd"].filter((key) => choice.metrics[key] != null).map((key) => ({
           id: `${choice.id}-${key}`,
           label: metricLabel(key),
@@ -513,6 +547,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
           id: action.id,
           kind: actionKind(action.kind, phase),
           label: action.label,
+          pendingLabel: pendingActionLabel(action, phase),
           disabled: !action.eligible || !choice.eligible,
           disabledReason: choice.disabled_reason || action.disabled_reason || undefined,
           optionId: choice.id,
@@ -540,6 +575,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
         id: action.id,
         kind: actionKind(action.kind, phase),
         label: action.label,
+        pendingLabel: pendingActionLabel(action, phase),
         disabled: !action.eligible,
         disabledReason: action.disabled_reason || undefined,
       } : undefined,
@@ -556,7 +592,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
     phase,
     objective,
     objectiveDetail,
-    progressLabel: `Step ${Math.min(beginnerPhaseOrder.indexOf(phase) + 1, beginnerPhaseOrder.length)} of ${beginnerPhaseOrder.length}`,
+    progressLabel: `Step ${beginnerPhaseStep(phase)} of ${beginnerPhaseOrder.length}`,
     cards,
     selectedCardId: cards.some((card) => card.id === selectedChoiceCard) ? selectedChoiceCard : cards[0]?.id,
     serverStage: journey.stage,

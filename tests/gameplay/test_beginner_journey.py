@@ -93,8 +93,14 @@ def test_full_first_delivery_uses_real_jobs_events_recovery_and_replay(journey_a
     assert all(choice["result_id"]==journey["result_id"] for choice in journey["choices"])
     assert all(choice["metrics"]["cost_sgd"]>0 and 0<=choice["metrics"]["land_utilization_pct"]<=100
                for choice in journey["choices"])
+    lean_copy=next(choice for choice in journey["choices"] if choice["title"]=="Lean plan")
+    assert lean_copy["status_label"]=="Feasible with 2 kg shortfall"
+    assert "delivers 23 of 25 kg" in lean_copy["tradeoff"]
+    assert "weighted" not in " ".join(choice["tradeoff"].lower() for choice in journey["choices"])
     selected=next(choice for choice in journey["choices"] if choice["title"]==policy_name)
     journey=_act(client,journey,"select_plan",selected["id"])
+    initial_progress=next(card for card in journey["cards"] if any(action["id"]=="advance" for action in card["actions"]))
+    progress_ids={initial_progress["id"]}
 
     session=get_session(store,tenant,journey["id"]);world=get_world(store,tenant,session["world_id"])
     assert world["strategy_id"]==selected["strategy_id"]
@@ -107,6 +113,13 @@ def test_full_first_delivery_uses_real_jobs_events_recovery_and_replay(journey_a
         journey=_act(client,journey,"advance")
         after=journey["metrics"]["clock_date"]
         assert after!=before
+        if journey["stage"]=="PLAN_SELECTED":
+            assert journey["scene"]["event"]["date"]==after
+            progress=next(card for card in journey["cards"] if any(action["id"]=="advance" for action in card["actions"]))
+            assert progress["id"] not in progress_ids
+            assert progress["title"]==journey["scene"]["event"]["label"]
+            assert progress["summary"]==journey["scene"]["event"]["summary"]
+            progress_ids.add(progress["id"])
     assert journey["stage"]=="MAINTENANCE_DUE"
     assert journey["metrics"]["clock_date"]=="2026-01-17"
 
@@ -133,11 +146,20 @@ def test_full_first_delivery_uses_real_jobs_events_recovery_and_replay(journey_a
     assert world["strategy_id"]==recovery["id"]
     assert all(row["bed_id"]!=MAINTENANCE_BED_ID for row in world["segment_allocations"] if not row.get("executed"))
 
-    advances=0
+    advances=0;chronology=[]
     while journey["stage"]=="GROWING":
         journey=_act(client,journey,"advance");advances+=1
         assert advances<20
+        chronology.append((journey["scene"]["event"]["date"],journey["scene"]["event"]["label"]))
+        assert journey["scene"]["event"]["date"]==journey["metrics"]["clock_date"]
+        if journey["stage"]=="GROWING":
+            progress=next(card for card in journey["cards"] if any(action["id"]=="advance" for action in card["actions"]))
+            assert progress["title"]==journey["scene"]["event"]["label"]
+            assert progress["summary"]==journey["scene"]["event"]["summary"]
     assert advances>=5 and journey["stage"]=="DELIVERY_DUE"
+    existing=[date for date,label in chronology if "existing" in label.lower() and "harvest" in label.lower()]
+    recovery_dates=[date for date,label in chronology if "recovery" in label.lower() and "transplant" in label.lower()]
+    if existing and recovery_dates:assert max(existing)<min(recovery_dates)
     assert any(row["event_type"]=="task_completed" for row in journey["timeline"])
     assert any(row["event_type"]=="demand_serviced" for row in journey["timeline"])
     journey=_act(client,journey,"record_delivery")

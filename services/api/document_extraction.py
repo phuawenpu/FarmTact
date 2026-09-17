@@ -6,6 +6,8 @@ from io import BytesIO
 from typing import Literal
 import hashlib
 import logging
+import warnings
+from PIL import Image
 from fastapi import HTTPException
 from pydantic import Field
 from packages.contracts import Strict
@@ -73,6 +75,18 @@ def extract_document(store, tenant, raw: bytes, filename: str, kind: str):
             if len(text)>24000:raise ValueError('PDF text exceeds extraction limit')
         except Exception as exc:
             raise HTTPException(422,'PDF could not be read within the five-page/text bounds; upload a page image or enter records manually') from exc
+    if not is_pdf:
+        # Reject malformed/unbounded input locally, before credentials or a paid
+        # request reservation. The gateway still performs final normalization.
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', Image.DecompressionBombWarning)
+                with Image.open(BytesIO(raw)) as image:
+                    if image.format not in {'PNG', 'JPEG', 'GIF', 'WEBP'} or getattr(image, 'n_frames', 1) != 1 or max(image.size) > 4096:
+                        raise ValueError('Unsupported image')
+                    image.verify()
+        except Exception as exc:
+            raise HTTPException(422, 'Uploaded image could not be decoded within the extraction policy') from exc
     day=now()[:10]
     budget=RunBudget(max_requests=1,max_reserved_output_tokens=4096,max_wall_seconds=90)
     # Shared production control is used automatically by Store.reserve_calls.

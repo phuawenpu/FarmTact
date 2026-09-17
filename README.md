@@ -15,6 +15,7 @@ V14 replaces the public edition chooser with one current game. Historical public
 applications are retired; source/image history remains immutable, and prior state
 is archived rather than migrated or deleted. See the
 [V14 implementation plan](docs/v14-implementation-plan.md) and
+[verification report](reports/v14/implementation.md), and
 [publication policy](docs/deployment/editions.md).
 
 **Read:** [documentation index](docs/README.md) ·

@@ -1,0 +1,445 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "first_delivery: START has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: CHOOSE_PLAN has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: eligible calculated choice exists",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: PLAN_SELECTED has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: PLAN_SELECTED has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: MAINTENANCE_DUE has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: CHOOSE_RECOVERY has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: eligible calculated choice exists",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: DELIVERY_DUE has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: reaches debrief",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: order objective met",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: recorded event history exists",
+      "pass": true
+    },
+    {
+      "name": "first_delivery: operations stay simulated",
+      "pass": true
+    },
+    {
+      "name": "two_orders: START has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: CHOOSE_PLAN has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: eligible calculated choice exists",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: PLAN_SELECTED has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: PLAN_SELECTED has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: MAINTENANCE_DUE has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: CHOOSE_RECOVERY has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: eligible calculated choice exists",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: GROWING has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: DELIVERY_DUE has an eligible next action",
+      "pass": true
+    },
+    {
+      "name": "two_orders: action advances revision",
+      "pass": true
+    },
+    {
+      "name": "two_orders: reaches debrief",
+      "pass": true
+    },
+    {
+      "name": "two_orders: order objective met",
+      "pass": true
+    },
+    {
+      "name": "two_orders: recorded event history exists",
+      "pass": true
+    },
+    {
+      "name": "two_orders: operations stay simulated",
+      "pass": true
+    },
+    {
+      "name": "main farm unchanged",
+      "pass": true
+    }
+  ],
+  "attempts": [
+    {
+      "lesson": "first_delivery",
+      "stages": [
+        "START",
+        "CHOOSE_PLAN",
+        "PLAN_SELECTED",
+        "PLAN_SELECTED",
+        "MAINTENANCE_DUE",
+        "CHOOSE_RECOVERY",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "DELIVERY_DUE",
+        "COMPLETE"
+      ],
+      "revisions": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "metrics": {
+        "planned_harvest_kg": 32.2,
+        "committed_demand_kg": 25.0,
+        "fulfilled_demand_kg": 25.0,
+        "waste_kg": 6.9,
+        "shortfall_kg": 0.0,
+        "land_utilization_pct": 68.8,
+        "cost_sgd": 79.14,
+        "margin_sgd": 120.81,
+        "clock_date": "2026-02-23",
+        "horizon_end": "2026-03-01",
+        "cash_balance": 420.86
+      },
+      "debrief": {
+        "outcome": "delivered",
+        "title": "Teaching season complete",
+        "summary": "25.0 of 25.0 kg in confirmed orders was delivered by the recorded simulation.",
+        "objective_met": true,
+        "highlights": [
+          "You selected a calculated policy.",
+          "B3 maintenance was recorded before its affected transplant.",
+          "The remaining schedule was recalculated rather than edited by hand."
+        ],
+        "orders": [
+          {
+            "order_id": "order-first-delivery",
+            "crop_id": "lettuce",
+            "requested_kg": 25.0,
+            "delivered_kg": 25.0,
+            "fulfilled": true,
+            "event_recorded": true
+          }
+        ],
+        "replay_available": true
+      }
+    },
+    {
+      "lesson": "two_orders",
+      "stages": [
+        "START",
+        "CHOOSE_PLAN",
+        "PLAN_SELECTED",
+        "PLAN_SELECTED",
+        "MAINTENANCE_DUE",
+        "CHOOSE_RECOVERY",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "GROWING",
+        "DELIVERY_DUE",
+        "COMPLETE"
+      ],
+      "revisions": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "metrics": {
+        "planned_harvest_kg": 33.1,
+        "committed_demand_kg": 25.0,
+        "fulfilled_demand_kg": 25.0,
+        "waste_kg": 6.9,
+        "shortfall_kg": 0.0,
+        "land_utilization_pct": 68.8,
+        "cost_sgd": 78.4,
+        "margin_sgd": 114.42,
+        "clock_date": "2026-02-23",
+        "horizon_end": "2026-03-01",
+        "cash_balance": 514.6
+      },
+      "debrief": {
+        "outcome": "delivered",
+        "title": "Teaching season complete",
+        "summary": "25.0 of 25.0 kg in confirmed orders was delivered by the recorded simulation.",
+        "objective_met": true,
+        "highlights": [
+          "You selected a calculated policy.",
+          "B3 maintenance was recorded before its affected transplant.",
+          "The remaining schedule was recalculated rather than edited by hand."
+        ],
+        "orders": [
+          {
+            "order_id": "order-first-delivery",
+            "crop_id": "lettuce",
+            "requested_kg": 18.0,
+            "delivered_kg": 18.0,
+            "fulfilled": true,
+            "event_recorded": true
+          },
+          {
+            "order_id": "order-second-delivery",
+            "crop_id": "pak_choi",
+            "requested_kg": 7.0,
+            "delivered_kg": 7.0,
+            "fulfilled": true,
+            "event_recorded": true
+          }
+        ],
+        "replay_available": true
+      }
+    }
+  ]
+}

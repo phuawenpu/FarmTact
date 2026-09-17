@@ -68,7 +68,17 @@ try {
   const firstId = journey.id;
   await shot(page, 'first-order-390');
 
+  let lastLessonStep = 0;
   for (let step = 0; step < 35; step++) {
+    const stepMatch = (await page.locator('.bg-objective').innerText()).match(/STEP (\d+) OF/i);
+    const lessonStep = Number(stepMatch?.[1] || 0);
+    check(`lesson progress is monotonic at action ${step}`, lessonStep >= lastLessonStep && lessonStep > 0);
+    lastLessonStep = lessonStep;
+    if (await page.getByTestId('beginner-shell').getAttribute('data-stage') === 'COMPLETE') {
+      for (let tries = 0; journey?.stage !== 'COMPLETE' && tries < 30; tries++) await page.waitForTimeout(100);
+      evidence.stages.push('COMPLETE');
+      break;
+    }
     await page.waitForFunction(() => {
       const node = document.querySelector('[data-testid="beginner-primary"]');
       return node && !node.disabled;
@@ -88,6 +98,7 @@ try {
       await shot(page, 'maintenance-390');
     }
     const before = journey?.revision;
+    const beforeCard = await page.getByTestId('beginner-card').innerText();
     process.stdout.write(`Action ${step}: ${stage} · ${await page.getByTestId('beginner-primary').innerText()}\n`);
     const [response] = await Promise.all([
       page.waitForResponse(response => response.request().method() === 'POST' && response.url().endsWith('/actions'), { timeout: 30000 }),
@@ -98,6 +109,8 @@ try {
       const shell = document.querySelector('[data-testid="beginner-shell"]');
       return shell && Number(shell.getAttribute('data-revision')) > before;
     }, { before }, { timeout: 120000 });
+    if (stage === 'PLAN_SELECTED' || stage === 'GROWING')
+      check(`${stage}: advancing visibly changes the checkpoint card`, (await page.getByTestId('beginner-card').innerText()) !== beforeCard);
   }
   check('full season reaches debrief', journey?.stage === 'COMPLETE', journey);
   check('actual delivery fulfils the teaching objective', journey?.debrief?.objective_met === true, journey?.debrief);
@@ -106,6 +119,14 @@ try {
   check('no failed gameplay mutations', failedMutations.length === 0, failedMutations);
   check('no uncaught browser errors', consoleErrors.length === 0, consoleErrors);
   await shot(page, 'delivery-debrief-390');
+  check('three server-provided closing cards', journey.cards.length === 3);
+  const completedRevision = journey.revision;
+  await page.getByTestId('beginner-primary').click();
+  check('closing next action previews without mutation', (await page.getByTestId('beginner-card').innerText()).includes('What your decision changed') && journey.revision === completedRevision);
+  await page.getByRole('button', { name: 'Next card', exact: true }).click();
+  check('follow-on challenge is discoverable', (await page.getByTestId('beginner-card').innerText()).includes('Balance two customer orders'));
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await shot(page, 'delivery-debrief-1280');
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   check('returning player sees continue', await page.getByRole('button', { name: 'Continue my season', exact: true }).isVisible());
   await context.close();

@@ -120,6 +120,14 @@ def _choices(session: dict, stage: str | None = None) -> list[dict]:
                            for allocation in baseline.get("allocations",[])],"inference_triggered":False})
     for row in ordered:
         metric=_metric_view(row,total_area)
+        delivered=float(metric["fulfilled_demand_kg"] or 0);committed=float(metric["committed_demand_kg"] or 0)
+        shortfall=max(0,committed-delivered);space=float(metric["land_utilization_pct"] or 0)
+        if shortfall:
+            status_label=f"Feasible with {shortfall:g} kg shortfall"
+            plain_tradeoff=f"Uses {space:g}% of the growing space and delivers {delivered:g} of {committed:g} kg, leaving a {shortfall:g} kg shortfall."
+        else:
+            status_label="Covers all confirmed demand"
+            plain_tradeoff=f"Uses {space:g}% of the growing space and covers all {committed:g} kg of confirmed demand under the tested conditions."
         deltas={}
         if baseline:
             before=_metric_view(baseline,total_area)
@@ -129,9 +137,8 @@ def _choices(session: dict, stage: str | None = None) -> list[dict]:
             "id": row["id"],
             "strategy_id": row["id"],
             "title": f'{row["name"]} plan',
-            "tradeoff": row.get("description","") if stage=="CHOOSE_PLAN" else (
-                "Rebuild the unexecuted schedule around the recorded B3 maintenance window."
-            ),
+            "tradeoff":plain_tradeoff if stage=="CHOOSE_PLAN" else f"Moves future work around the recorded B3 maintenance window. {plain_tradeoff}",
+            "status_label":status_label,
             "metrics": metric,
             "deltas": deltas,
             "eligible": True,
@@ -185,8 +192,9 @@ def _cards(session: dict, stage: str, choices: list[dict]) -> list[dict]:
         delivered=float(metrics.get("fulfilled_demand_kg") or 0);requested=float(metrics.get("committed_demand_kg") or 0)
         replay=_action("replay","Replay this lesson","replay")
         onward=next_action
-        initial_beds=", ".join(initial.get("board_target_ids",[])) or "the original beds"
-        recovery_beds=", ".join(recovery.get("board_target_ids",[])) or "the recalculated beds"
+        bed_names={bed.id:bed.name for bed in origin.beds}
+        initial_beds=", ".join(bed_names.get(id,id) for id in initial.get("board_target_ids",[])) or "the original beds"
+        recovery_beds=", ".join(bed_names.get(id,id) for id in recovery.get("board_target_ids",[])) or "the recalculated beds"
         return [{
             "id":"debrief-result","type":"result","title":f"Delivered {delivered:g} of {requested:g} kg",
             "summary":f'The recorded season finished with SGD {float(metrics.get("cost_sgd") or 0):.2f} in cost and {float(metrics.get("waste_kg") or 0):g} kg disposed.',
@@ -211,6 +219,14 @@ def _cards(session: dict, stage: str, choices: list[dict]) -> list[dict]:
         "actions":[next_action] if next_action and stage in ("START","PLAN_SELECTED","GROWING","DELIVERY_DUE","COMPLETE","FAILED") else [],
         "inference_triggered":False,
     }]
+    if stage in ("PLAN_SELECTED","GROWING"):
+        scene=_scene(session["_store"],session["_tenant"],session,stage);event=scene["event"]
+        cards[0]["actions"]=[]
+        cards.insert(0,{"id":f'crop-progress:{scene.get("clock_date") or "ready"}',"type":"crop_progress",
+            "title":event["label"],"summary":event.get("summary") or f'The simulated farm is recorded through {event["date"]}.',
+            "state":"active","provenance":{"label":"RECORDED SIMULATION CHECKPOINT","source":"synthetic-execution-v1"},
+            "entity":{"kind":"simulation","id":session.get("world_id")},"actions":[next_action] if next_action else [],
+            "inference_triggered":False})
     if choices:
         cards.append({
             "id":"plan-choice" if stage=="CHOOSE_PLAN" else "recovery-choice","type":"strategy",
@@ -323,23 +339,44 @@ def _scene(store, tenant_id: str, session: dict, stage: str) -> dict:
                      "status_label":"Maintenance constraint" if is_target and maintenance_active else crop_stage.replace("_"," ").title(),
                      "allocation_id":row.get("allocation_id")})
     if stage in ("MAINTENANCE_DUE","RECALCULATING","CHOOSE_RECOVERY"):
-        event={"tone":"warning","label":"B3 maintenance","date":str(MAINTENANCE_START),"weather":"Simulated farm"}
+        event={"tone":"warning","label":"B3 maintenance","date":str(MAINTENANCE_START),"weather":"Simulated farm",
+               "summary":f"B3 is unavailable from {MAINTENANCE_START.strftime('%-d %b')} through {MAINTENANCE_END.strftime('%-d %b')}."}
     elif stage in ("DELIVERY_DUE","COMPLETE"):
-        event={"tone":"success","label":"Customer delivery","date":max(str(order.due_date) for order in Farm.model_validate(_journey(session)["origin_farm"]).orders),"weather":"Simulated farm"}
+        delivery=max(order.due_date for order in Farm.model_validate(_journey(session)["origin_farm"]).orders)
+        event={"tone":"success","label":"Customer delivery","date":str(delivery),"weather":"Simulated farm",
+               "summary":f"The simulated customer delivery was recorded on {delivery.strftime('%-d %b')}."}
     else:
-        event={"tone":"neutral","label":"Your teaching farm","date":world.get("clock_date") if world else str(farm.planning_date),"weather":"Simulated farm"}
+        event={"tone":"neutral","label":"Your teaching farm","date":world.get("clock_date") if world else str(farm.planning_date),"weather":"Simulated farm",
+               "summary":"The simulated season is ready for its first bounded advance."}
         if world:
             current=date.fromisoformat(world["clock_date"]) if world.get("clock_date") else date.fromisoformat(world["start_date"])-timedelta(days=1)
-            upcoming=[]
-            names={bed.id:bed.name for bed in farm.beds}
-            for allocation in world["segment_allocations"]:
-                for task,field in (("Sow","sow_date"),("Transplant","transplant_date"),("Harvest","harvest_date")):
-                    task_day=date.fromisoformat(allocation[field])
-                    if task_day>current:
-                        upcoming.append((task_day,task,f'{crop_labels.get(allocation["crop_id"],allocation["crop_id"])} in {names[allocation["bed_id"]]}'))
-            if upcoming:
-                task_day,task,label=min(upcoming)
-                event.update(label=f"{task} {label}",date=str(task_day))
+            current_label=current.strftime("%-d %b")
+            from services.api.simulation import EVENTS
+            with store.connection() as connection:
+                recorded=list(connection.execute(select(EVENTS.c.payload).where(
+                    EVENTS.c.tenant_id==tenant_id,EVENTS.c.world_id==world["id"]
+                ).order_by(EVENTS.c.sequence)).scalars())
+            today=[row for row in recorded if row.get("date")==str(current)]
+            deliveries=[row for row in today if row.get("type")=="demand_serviced"]
+            tasks=[row for row in today if row.get("type")=="task_completed" and row.get("task") in ("sow","transplant","harvest")]
+            allocations={row["id"]:row for row in world["segment_allocations"]};names={bed.id:bed.name for bed in farm.beds}
+            if deliveries:
+                delivered=sum(float(row.get("delivered_kg",0)) for row in deliveries)
+                event.update(label=f"Delivered {delivered:g} kg to customers",date=str(current),tone="success",
+                             summary=f"Recorded customer deliveries on {current_label}.")
+            elif tasks:
+                labels=[]
+                verbs={"sow":"Sowed","transplant":"Transplanted","harvest":"Harvested"}
+                for row in tasks:
+                    allocation=allocations.get(row.get("allocation_id"),{})
+                    cycle="existing" if allocation.get("executed") else ("recovery" if _journey(session).get("maintenance_recorded") else "planned")
+                    crop=crop_labels.get(row.get("crop_id"),str(row.get("crop_id","")).replace("_"," ").title())
+                    labels.append(f'{verbs[row["task"]]} the {cycle} {crop.lower()} crop in {names.get(row.get("bed_id"),row.get("bed_id"))}')
+                label=labels[0] if len(labels)==1 else f"Recorded {len(labels)} crop tasks"
+                event.update(label=label,date=str(current),summary=f'{"; ".join(labels)} on {current_label}.')
+            else:
+                event.update(label=f"Farm advanced to {current_label}",date=str(current),
+                             summary=f"No sowing, transplanting, harvest, or delivery was due on {current_label}.")
     return {"result_id":session.get("result_id"),"world_id":session.get("world_id"),"clock_date":world.get("clock_date") if world else None,
             "beds":beds,"event":event,"board_target_ids":[MAINTENANCE_BED_ID] if maintenance_active else [],
             "date_label":world.get("clock_date") if world and world.get("clock_date") else event["date"],

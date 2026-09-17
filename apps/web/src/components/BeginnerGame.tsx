@@ -30,6 +30,7 @@ import {
 import {
   beginnerPhaseLabels,
   beginnerPhaseOrder,
+  beginnerPhaseStep,
   beginnerStorageKey,
   clampProgress,
   defaultBeginnerUtilities,
@@ -270,6 +271,10 @@ export default function BeginnerGame({
 
   const runPrimary = async () => {
     if (!activeCard?.primaryAction || activeCard.primaryAction.disabled || !serverSeason || busy || localBusy) return;
+    if (activeCard.primaryAction.id === "local-next-card" && serverSeason.serverStage === "COMPLETE") {
+      selectCard(cardIndex + 1, "next");
+      return;
+    }
     setLocalBusy(true);
     try {
       await onJourneyAction?.({
@@ -361,7 +366,7 @@ export default function BeginnerGame({
         {serverSeason?.objectiveDetail && <p>{serverSeason.objectiveDetail}</p>}
       </div>
       {serverSeason && <div className="bg-progress" aria-label={`${beginnerPhaseLabels[serverSeason.phase]}, ${serverSeason.progressLabel || "season in progress"}`}>
-        <i style={{ "--bg-progress": `${((beginnerPhaseOrder.indexOf(serverSeason.phase) + 1) / beginnerPhaseOrder.length) * 100}%` } as CSSProperties} />
+        <i style={{ "--bg-progress": `${(beginnerPhaseStep(serverSeason.phase) / beginnerPhaseOrder.length) * 100}%` } as CSSProperties} />
         <b>{beginnerPhaseLabels[serverSeason.phase]}</b>
       </div>}
     </section>
@@ -429,7 +434,7 @@ export default function BeginnerGame({
         <span><Keyboard /> <kbd>←</kbd><kbd>→</kbd> cards · <kbd>Enter</kbd> act · <kbd>E</kbd> explain · <kbd>M</kbd> more</span>
       </div>}
       {activeCard?.primaryAction?.disabledReason && !utilityOpen && <p className="bg-disabled-reason" role="status">{activeCard.primaryAction.disabledReason}</p>}
-      {serverSeason?.statusLabel && <p className="bg-server-status" aria-live="polite">{serverSeason.status === "running" && <LoaderCircle className="bg-spin" />} {serverSeason.statusLabel}</p>}
+      {serverSeason?.statusLabel && <p className="bg-server-status" aria-live="polite">{serverSeason.status === "running" && <LoaderCircle className="bg-spin" />} {serverSeason.statusLabel} · saved update {serverSeason.revision}</p>}
     </section>
   </main>;
 }

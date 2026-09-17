@@ -182,11 +182,11 @@ export default function BeginnerApp({ landing }: { landing: boolean }) {
       if (item.kind === 'adviser') return { ...item, summary: adviserNote,
         primaryAction: { id: 'ask-adviser', kind: 'ask', label: 'Prepare a question',
           disabled: !journey?.planning_session || journey.stage === 'START' || pending(journey), disabledReason: 'Calculate your plans before asking about them.' } }
-      if (item.kind === 'replay') return { ...item, summary: 'Start another attempt on the same teaching farm. This season and its recorded events stay in your journal.',
+      if (item.kind === 'replay') return { ...item, summary: 'Start another attempt on the same teaching farm. This season and its recorded events are preserved in saved history.',
         primaryAction: { id: 'replay', kind: 'replay', label: 'Start a new attempt', disabled: pending(journey), disabledReason: pending(journey) ? 'Wait for the current calculation to finish.' : undefined } }
       return item
     })
-    if (journey?.stage === 'COMPLETE') rows.splice(1, 0, { id: 'utility-next-challenge', kind: 'next_step', title: 'Two orders, one farm',
+    if (journey?.stage === 'COMPLETE' && journey.next_action?.id === 'next_challenge' && journey.next_action.eligible) rows.splice(1, 0, { id: 'utility-next-challenge', kind: 'next_step', title: 'Two orders, one farm',
       eyebrow: 'Next challenge', summary: 'Try balancing two crops and two customer orders on the same small farm.',
       primaryAction: { id: 'next_challenge', kind: 'continue', label: 'Start the next challenge' } })
     return rows
