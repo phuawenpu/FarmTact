@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "main_bundle": "/assets/index-C4Jepg7l.js",
+  "js_bytes": 412777,
+  "css_bytes": 147537,
+  "generated_contracts": "PASS",
+  "services_tree": "044d4ef765c53a57802cdf8edfcae4cf05172fdc",
+  "backend_regression": {
+    "report": "../v15/regression-final.xml",
+    "passed": 792,
+    "skipped": 1,
+    "scope": "Backend/packages unchanged from accepted V15 regression; V16 changes frontend explanation/edition identity and operator tests only."
+  },
+  "operator_guard_tests": {
+    "passed": 12,
+    "log": "operator-guards.txt"
+  }
+}

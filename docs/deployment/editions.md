@@ -2,13 +2,13 @@
 
 ## Current-game publication policy
 
-V15 is the private full-parity candidate. It replaces the separate introduction
-and teaching fixture with the same integrated card application at `/` and `/play`.
-V14 remains current until V15 completes its functional and release verification.
-The next unused edition is V15; always verify the registry before publication.
+V15 is published from `a5ab2a8`, with the same ordinary-farm integrated card
+application at `/` and `/play`. A postpublication explanation audit reopened the
+full-rewrite goal; the correction must publish as V16 without overwriting V15.
+The next unused edition is V16; always verify the registry before publication.
 
-The approved first-season UX replaces the public chooser with an animated
-introduction at `/` and the current game at `/play`. From V14 onward the active
+V15 replaces the historical first-season introduction with the same full card
+application at `/` and `/play`. From V14 onward the active
 manifest has `previous: null`; edition numbers remain immutable operational
 identities, not player navigation. Old public routes return a retirement notice
 linking to `/`. Public release-list/history APIs are unavailable in current-game

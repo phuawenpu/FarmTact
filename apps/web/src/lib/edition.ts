@@ -1,4 +1,5 @@
 export type EditionId = `v${number}`
+export const CURRENT_EDITION: EditionId = 'v16'
 
 const EDITION_PATH = /^\/(v[1-9][0-9]*)(?:\/|$)/
 
@@ -20,7 +21,7 @@ export function editionPath(path: string, pathname = window.location.pathname): 
 export function editionStorageKey(key: string, pathname = window.location.pathname): string {
   // The public URL no longer exposes releases, but progress still belongs to an
   // immutable application generation. A future release changes this namespace.
-  return `farmtact:${editionFromPath(pathname) || 'v15'}:${key}`
+  return `farmtact:${editionFromPath(pathname) || CURRENT_EDITION}:${key}`
 }
 
 export function editionHome(edition = editionFromPath()): string {

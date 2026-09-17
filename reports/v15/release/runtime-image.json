@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "machine_id": "2871575b4544d8",
+  "state": "started",
+  "containers": [
+    {
+      "name": "gateway",
+      "image": "registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4"
+    },
+    {
+      "name": "v15",
+      "image": "registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4"
+    }
+  ],
+  "scope": "Selected runtime identity fields only; all environment/config secrets omitted."
+}

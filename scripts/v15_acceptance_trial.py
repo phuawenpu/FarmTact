@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import time
 from uuid import uuid4
@@ -15,9 +16,11 @@ from uuid import uuid4
 import httpx
 
 
-def run(base: str, operator: bool = False, output: Path | None = None) -> dict:
-    if operator and base != 'http://127.0.0.1:8095':
-        raise ValueError('Operator trial permits only the fixed V15 candidate port')
+def run(base: str, operator: bool = False, output: Path | None = None, edition: str = 'v15') -> dict:
+    if not re.fullmatch(r'v[1-9][0-9]*', edition) or not 15 <= int(edition[1:]) <= 1000:
+        raise ValueError('Explicit integrated edition v15 through v1000 required')
+    if operator and base != f'http://127.0.0.1:{8080 + int(edition[1:])}':
+        raise ValueError('Operator trial permits only the fixed candidate loopback port')
     headers = {}
     if operator:
         headers = {'host': 'farmtact.fly.dev', 'origin': 'https://farmtact.fly.dev',
@@ -145,8 +148,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--base-url', default='http://127.0.0.1:4194')
     parser.add_argument('--operator', action='store_true')
+    parser.add_argument('--edition', default='v15')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
-    report = run(args.base_url.rstrip('/'), args.operator, args.output)
+    report = run(args.base_url.rstrip('/'), args.operator, args.output, args.edition)
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report['status'] == 'PASS' else 1)

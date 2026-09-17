@@ -1,0 +1,218 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "storageSource": "/tmp/farmtact-v15-cards-storage.json",
+  "checks": [
+    {
+      "name": "recorded event exposes persistent dated causal facts",
+      "pass": true,
+      "detail": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+    },
+    {
+      "name": "friendly scene semantics include mode date bed name crop and status",
+      "pass": true,
+      "detail": {
+        "label": "Passive farm scene",
+        "text": "Farm scene · Area 1 of 2 · showing 8 of 162026-09-14A1Harvested residuecaixinharvestedA2Harvested residuepak choiharvestedA3Harvested residuekailanharvestedA4Harvested residuelettuceharvestedB1caixingrowingB2pak choigrowingB3kailangrowingSaved reservation2026-10-01 → 2026-11-02B4lettucegrowingShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.Recorded simulation changed · 2026-09-14Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
+        "date": "2026-09-14",
+        "modes": [
+          "A1Harvested residuecaixinharvested",
+          "A2Harvested residuepak choiharvested",
+          "A3Harvested residuekailanharvested",
+          "A4Harvested residuelettuceharvested",
+          "B1caixingrowing",
+          "B2pak choigrowing",
+          "B3kailangrowingSaved reservation2026-10-01 → 2026-11-02",
+          "B4lettucegrowing"
+        ]
+      }
+    },
+    {
+      "name": "normal-motion causal emphasis finishes and leaves persistent facts",
+      "pass": true,
+      "detail": {
+        "initialLive": 1,
+        "settled": 0,
+        "animations": [
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          },
+          {
+            "name": "none",
+            "state": "running"
+          }
+        ]
+      }
+    },
+    {
+      "name": "settled event does not announce or animate again on reload",
+      "pass": true,
+      "detail": {
+        "replayOnReload": 0,
+        "event": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+      }
+    },
+    {
+      "name": "only the active card is exposed with a current polite label",
+      "pass": true,
+      "detail": {
+        "activeCards": 1,
+        "liveCards": [
+          {
+            "label": "Planning card 2 of 7",
+            "live": "polite"
+          }
+        ],
+        "statuses": [],
+        "focused": "Planning card 2 of 7"
+      }
+    },
+    {
+      "name": "card change does not retain a stale accessible card name",
+      "pass": true,
+      "detail": {
+        "activeCards": 1,
+        "liveCards": [
+          {
+            "label": "Planning card 2 of 7",
+            "live": "polite"
+          }
+        ],
+        "statuses": [],
+        "focused": "Planning card 2 of 7"
+      }
+    },
+    {
+      "name": "labelled offscreen viewport fixture settles the real event to identical persistent facts without replay",
+      "pass": true,
+      "detail": {
+        "fixture": "inert 2400px aria-hidden layout spacer; client-only seen marker reset for the existing recorded event",
+        "fixtureStart": {
+          "top": -2349.21875,
+          "bottom": -1948.984375,
+          "viewport": 844,
+          "transition": "Recorded simulation changed · 2026-09-14",
+          "saved": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+        },
+        "fixtureEnd": {
+          "top": -2312.21875,
+          "bottom": -1949.03125,
+          "offscreen": true,
+          "transition": false,
+          "saved": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+        },
+        "fixtureReturn": {
+          "transition": false,
+          "saved": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+        }
+      }
+    },
+    {
+      "name": "visible card controls meet the 44px target minimum",
+      "pass": true,
+      "detail": [
+        {
+          "label": "← Previous",
+          "width": 86.953125,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Next →",
+          "width": 59.890625,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Explain",
+          "width": 109.328125,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "Continue",
+          "width": 109.328125,
+          "height": 44,
+          "disabled": false
+        },
+        {
+          "label": "More",
+          "width": 109.34375,
+          "height": 44,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "name": "existing motion preference persists an explicit immediate-facts mode",
+      "pass": true,
+      "detail": {
+        "stored": [
+          [
+            "farmtact:v15:reduced-motion",
+            "true"
+          ]
+        ],
+        "data": "true",
+        "media": false
+      }
+    },
+    {
+      "name": "focused form control remains visible with simulated keyboard viewport",
+      "pass": true,
+      "detail": {
+        "focused": true,
+        "top": 228.375,
+        "bottom": 272.375,
+        "innerHeight": 500,
+        "documentWidth": 390,
+        "viewportWidth": 390
+      }
+    },
+    {
+      "name": "read-only lifecycle audit sends no API write or provider request",
+      "pass": true,
+      "detail": {
+        "writes": [],
+        "provider": []
+      }
+    }
+  ],
+  "defects": [],
+  "limitations": [
+    "ARIA and focus checks inspect Chromium DOM semantics; they do not claim testing with a real screen reader.",
+    "The software-keyboard check emulates viewport occlusion while a form control is focused; it is not a physical mobile keyboard test.",
+    "The offscreen check inspects persisted facts and animation lifecycle after scrolling; browser scheduling may differ on physical devices."
+  ],
+  "requests": {
+    "writes": [],
+    "provider": []
+  },
+  "failures": [],
+  "build": "/assets/index-C89Jrp2Y.js"
+}

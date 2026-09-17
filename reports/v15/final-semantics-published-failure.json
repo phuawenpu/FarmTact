@@ -1,0 +1,753 @@
+{
+  "status": "FAIL",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "A04 situation has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "title": "Little Plot Collective",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 situation exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "situation",
+        "title": "Little Plot Collective",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "order · order-0-1"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 situation retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "title": "Lean plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "title": "Lean plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · 0fa0095e5a88cfcbb9ad"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "title": "Balanced plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "title": "Balanced plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · e83d020d774715d776b9"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "title": "Resilient plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "title": "Resilient plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · 73e265a286d4b8f8cea6"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 reservation has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "title": "B3 is reserved",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 reservation exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "reservation",
+        "title": "B3 is reserved",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "reservation · bed-07"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 reservation retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 approved has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "title": "79 sandbox tasks created",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 approved exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "approved",
+        "title": "79 sandbox tasks created",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "planning_session · 63c1b1bb786f77833bc71a1ff3ed1479"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 approved retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 simulation-result has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "title": "Farm date 2026-09-14",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 simulation-result exposes facts without invented fallback",
+      "pass": false,
+      "detail": {
+        "id": "simulation-result",
+        "title": "Farm date 2026-09-14",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "simulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "recorded_simulation"
+      }
+    },
+    {
+      "name": "A04 simulation-result retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "recorded_simulation",
+        "evidence": "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call."
+      }
+    },
+    {
+      "name": "A04 enumerated every rendered core mission stage",
+      "pass": true,
+      "detail": {
+        "count": 7,
+        "ids": [
+          "situation",
+          "strategy-0fa0095e5a88cfcbb9ad",
+          "strategy-e83d020d774715d776b9",
+          "strategy-73e265a286d4b8f8cea6",
+          "reservation",
+          "approved",
+          "simulation-result"
+        ]
+      }
+    },
+    {
+      "name": "A14 Enter and click activate the same primary decision action",
+      "pass": true,
+      "detail": {
+        "originId": "situation",
+        "primaryLabel": "Continue",
+        "clickState": "tool-plan",
+        "keyState": "tool-plan"
+      }
+    },
+    {
+      "name": "A14 keyboard/click activation attempted no write",
+      "pass": true,
+      "detail": {
+        "posts": [],
+        "providers": []
+      }
+    },
+    {
+      "name": "A12 seven portrait identities are present",
+      "pass": true,
+      "detail": {
+        "names": [
+          "asha.svg",
+          "ben.svg",
+          "hana.svg",
+          "idris.svg",
+          "lina.svg",
+          "mei.svg",
+          "ravi.svg"
+        ]
+      }
+    },
+    {
+      "name": "A12 asha.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 ben.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 hana.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 idris.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 lina.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 mei.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 ravi.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 crop SVGs are duplicate-ID safe and self-contained",
+      "pass": true,
+      "detail": {
+        "assets": 20,
+        "unsafe": []
+      }
+    },
+    {
+      "name": "A12 unknown and unsupported stages fall back to literal recorded labels",
+      "pass": true,
+      "detail": {
+        "source": "IntegratedCards.tsx stage branch"
+      }
+    },
+    {
+      "name": "A12 scene art retains at least 54px readable sizing",
+      "pass": false,
+      "detail": {
+        "declaredWidths": [
+          74,
+          40,
+          30
+        ]
+      }
+    },
+    {
+      "name": "A12 primary portrait retains at least 64px readable sizing",
+      "pass": true,
+      "detail": {
+        "declaredWidths": [
+          84,
+          64
+        ]
+      }
+    }
+  ],
+  "mission_stages": [
+    {
+      "id": "situation",
+      "title": "Little Plot Collective",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "order · order-0-1"
+      ]
+    },
+    {
+      "id": "strategy-0fa0095e5a88cfcbb9ad",
+      "title": "Lean plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "strategy · 0fa0095e5a88cfcbb9ad"
+      ]
+    },
+    {
+      "id": "strategy-e83d020d774715d776b9",
+      "title": "Balanced plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "strategy · e83d020d774715d776b9"
+      ]
+    },
+    {
+      "id": "strategy-73e265a286d4b8f8cea6",
+      "title": "Resilient plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "strategy · 73e265a286d4b8f8cea6"
+      ]
+    },
+    {
+      "id": "reservation",
+      "title": "B3 is reserved",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "reservation · bed-07"
+      ]
+    },
+    {
+      "id": "approved",
+      "title": "79 sandbox tasks created",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "planning_session · 63c1b1bb786f77833bc71a1ff3ed1479"
+      ]
+    },
+    {
+      "id": "simulation-result",
+      "title": "Farm date 2026-09-14",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "recorded_simulation",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+        "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+        "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+        "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+        "Review the calculated schedule and current approval or inverse eligibility.",
+        "simulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "name": "A04 situation exposes facts without invented fallback",
+      "detail": {
+        "id": "situation",
+        "title": "Little Plot Collective",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "order · order-0-1"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad exposes facts without invented fallback",
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "title": "Lean plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · 0fa0095e5a88cfcbb9ad"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 exposes facts without invented fallback",
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "title": "Balanced plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · e83d020d774715d776b9"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 exposes facts without invented fallback",
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "title": "Resilient plan",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "strategy · 73e265a286d4b8f8cea6"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 reservation exposes facts without invented fallback",
+      "detail": {
+        "id": "reservation",
+        "title": "B3 is reserved",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "reservation · bed-07"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 approved exposes facts without invented fallback",
+      "detail": {
+        "id": "approved",
+        "title": "79 sandbox tasks created",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "planning_session · 63c1b1bb786f77833bc71a1ff3ed1479"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 simulation-result exposes facts without invented fallback",
+      "detail": {
+        "id": "simulation-result",
+        "title": "Farm date 2026-09-14",
+        "values": [
+          "kind planning_assumptions · assumptions {\"tentative_orders\":[],\"future_demand\":[],\"seasonal\":[],\"order_changes\":[],\"reservations\":[{\"bed_id\":\"bed-07\",\"start_date\":\"2026-10-01\",\"end_date\":\"2026-11-02\"}]}",
+          "The local planner recalculated future allocations under the reviewed constraints and all modeled demand.",
+          "coverage kg: −20 kg; surplus kg: +13 kg; expiry kg: +23 kg; rejection kg: not available; margin sgd: −84 SGD; waste rescue kg: ±0 kg",
+          "bed-16: none → caixin 2026-10-05→2026-10-26 44 kg; bed-14: lettuce 2026-09-24→2026-10-19 46 kg → lettuce 2026-09-24→2026-10-19 46 kg; bed-16: pak_choi 2026-10-05→2026-11-02 52 kg → none; no provider call.",
+          "Review the calculated schedule and current approval or inverse eligibility.",
+          "simulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "recorded_simulation"
+      }
+    },
+    {
+      "name": "A12 scene art retains at least 54px readable sizing",
+      "detail": {
+        "declaredWidths": [
+          74,
+          40,
+          30
+        ]
+      }
+    }
+  ],
+  "requests": {
+    "posts": [],
+    "providers": []
+  }
+}

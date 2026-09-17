@@ -1,14 +1,18 @@
-/** Actual V15 integrated-card journey. Planner and workflow responses are never mocked. */
+/** Actual integrated-card journey. Planner and workflow responses are never mocked. */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs';
 
 const root = resolve(new URL('../..', import.meta.url).pathname);
+const expectedEdition = String(process.env.EXPECTED_EDITION || 'v15').toLowerCase().replace(/^v?/, 'v');
+if (!/^v(?:15|16)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15 or v16');
+const editionNumber = expectedEdition.slice(1);
+const planningSessionKey = `farmtact:${expectedEdition}:planning-session`;
 const staged = process.env.STAGED_SOURCE ? await import('./v15_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;
 const base = (staged ? 'http://127.0.0.1:4199' : process.env.BASE_URL || process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:4191').replace(/\/$/, '');
-const reportDir = process.env.REPORT_DIR ? resolve(process.env.REPORT_DIR) : resolve(root, 'reports/v15');
-const temporaryStorageState = process.env.STORAGE_STATE || '/tmp/farmtact-v15-cards-storage.json';
+const reportDir = process.env.REPORT_DIR ? resolve(process.env.REPORT_DIR) : resolve(root, `reports/${expectedEdition}`);
+const temporaryStorageState = process.env.STORAGE_STATE || `/tmp/farmtact-${expectedEdition}-cards-storage.json`;
 const journeyWidth = Number(process.env.JOURNEY_WIDTH || 390), journeyHeight = journeyWidth > 500 ? 900 : 844;
 const reportFile = process.env.REPORT_FILE || 'browser-cards.json';
 const result = { status: 'RUNNING', base, width: journeyWidth, checks: [], failures: [], screenshots: [], video: null, mutations: [], providerRequests: [], ...(staged ? { stagedEvidence: staged.evidence } : {}) };
@@ -24,7 +28,7 @@ async function shot(page, name) {
   if (name !== 'failure-current') check(`${name}: document fits the viewport`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   const path = resolve(reportDir, `${name}.png`);
   await page.screenshot({ path, fullPage: true, animations: 'disabled' });
-  result.screenshots.push(process.env.REPORT_DIR ? path : `reports/v15/${name}.png`);
+  result.screenshots.push(process.env.REPORT_DIR ? path : `reports/${expectedEdition}/${name}.png`);
 }
 
 function observe(page) {
@@ -48,6 +52,7 @@ async function open(page) {
   await page.goto(`${base}/play`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   try { await page.locator('.ic-shell').waitFor({ timeout: 30_000 }); }
   catch (error) { if (admissionFailure) throw new Error(`Bootstrap admission blocked: ${JSON.stringify(admissionFailure)}`); throw error; }
+  check(`shell declares ${expectedEdition}`, await page.locator(`.ic-shell[data-edition="${expectedEdition}"]`).count() === 1);
 }
 
 try {
@@ -109,12 +114,12 @@ try {
   const traffic = observe(page);
   await open(page);
   if (process.env.FRESH_SESSION === '1') {
-    const fresh = await page.evaluate(async width => {
-      const response = await fetch('/api/v1/planning-sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name: `V15 complete ${width}px journey`, workflow: true }) });
+    const fresh = await page.evaluate(async ({ width, edition }) => {
+      const response = await fetch('/api/v1/planning-sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name: `V${edition} complete ${width}px journey`, workflow: true }) });
       if (!response.ok) throw new Error(await response.text());
       return response.json();
-    }, journeyWidth);
-    await page.evaluate(id => localStorage.setItem('farmtact:v15:planning-session', id), fresh.id);
+    }, { width: journeyWidth, edition: editionNumber });
+    await page.evaluate(({ key, id }) => localStorage.setItem(key, id), { key: planningSessionKey, id: fresh.id });
     await context.storageState({ path: temporaryStorageState });
     await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
     await page.waitForFunction(id => document.querySelector('.ic-card')?.getAttribute('data-session-id') === id && !document.querySelector('[role="status"]'), fresh.id, { timeout: 30_000 });
@@ -308,7 +313,7 @@ try {
   if (staged) {
     const health = await page.evaluate(async () => { const response = await fetch('/api/v1/health'); if (!response.ok) throw new Error(`Health ${response.status}`); return response.json(); });
     result.stagedHealth = { edition: health.edition || null, source_commit: health.source_commit || null, status: health.status || null };
-    check('staged health matches the pinned source and declares an edition', health.source_commit === process.env.STAGED_SOURCE && Boolean(health.edition), result.stagedHealth);
+    check('staged health matches the pinned source and expected edition', health.source_commit === process.env.STAGED_SOURCE && health.edition === expectedEdition, result.stagedHealth);
     check('staged private transport completed without failures', staged.evidence.failures.length === 0, staged.evidence.failures);
   }
   await shot(page, `journey-final-${journeyWidth}`);

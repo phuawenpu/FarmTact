@@ -1,0 +1,762 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "A04 situation has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "title": "Little Plot Collective",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 situation exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "title": "Little Plot Collective",
+        "values": [
+          "No plan change is shown here. This is the frozen 2026-09-15 baseline with all 28 order records and 16 grow spaces.",
+          "The objective retains 24 kg of caixin due 2026-09-21.",
+          "No choice is selected on this card; the calculated cards compare service, shortfall and cost against this same baseline.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; planning input 2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30. This explanation uses frozen farm facts, not provider interpretation or an unbound user report.",
+          "Compare each calculated choice without saving it.",
+          "order · order-0-1"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 situation retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; planning input 2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30. This explanation uses frozen farm facts, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 situation explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "situation",
+        "values": [
+          "No plan change is shown here. This is the frozen 2026-09-15 baseline with all 28 order records and 16 grow spaces.",
+          "The objective retains 24 kg of caixin due 2026-09-21.",
+          "No choice is selected on this card; the calculated cards compare service, shortfall and cost against this same baseline.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; planning input 2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30. This explanation uses frozen farm facts, not provider interpretation or an unbound user report.",
+          "Compare each calculated choice without saving it."
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "title": "Lean plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "title": "Lean plan",
+        "values": [
+          "Lean is a preview—not saved. It retains the same frozen demand and shows 17 dated allocations.",
+          "Feasible in this frozen result. Lean compared with feasible Balanced: delivery −10 percentage points; shortfall +95 kg; cost −340.5 SGD.",
+          "Delivery 46.7%; shortfall 507 kg; cost SGD 1,038.6.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation.",
+          "strategy · 0fa0095e5a88cfcbb9ad"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 strategy-0fa0095e5a88cfcbb9ad explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "strategy-0fa0095e5a88cfcbb9ad",
+        "values": [
+          "Lean is a preview—not saved. It retains the same frozen demand and shows 17 dated allocations.",
+          "Feasible in this frozen result. Lean compared with feasible Balanced: delivery −10 percentage points; shortfall +95 kg; cost −340.5 SGD.",
+          "Delivery 46.7%; shortfall 507 kg; cost SGD 1,038.6.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation."
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "title": "Balanced plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "title": "Balanced plan",
+        "values": [
+          "Balanced is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+          "Feasible in this frozen result. Balanced compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+          "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation.",
+          "strategy · e83d020d774715d776b9"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 strategy-e83d020d774715d776b9 explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "strategy-e83d020d774715d776b9",
+        "values": [
+          "Balanced is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+          "Feasible in this frozen result. Balanced compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+          "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation."
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "title": "Resilient plan",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "title": "Resilient plan",
+        "values": [
+          "Resilient is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+          "Feasible in this frozen result. Resilient compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+          "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation.",
+          "strategy · 73e265a286d4b8f8cea6"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 strategy-73e265a286d4b8f8cea6 explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "strategy-73e265a286d4b8f8cea6",
+        "values": [
+          "Resilient is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+          "Feasible in this frozen result. Resilient compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+          "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+          "Compare the other choices, then review the dated grow-space reservation."
+        ]
+      }
+    },
+    {
+      "name": "A04 reservation has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "title": "B3 is reserved",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 reservation exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "title": "B3 is reserved",
+        "values": [
+          "bed-07 remained reserved from 2026-10-01 to 2026-11-02; this proposal did not change that reservation.",
+          "The current bound proposal does not report a target-specific reason for changing bed-07; review the saved dates separately from whole-plan effects.",
+          "No target-specific signed delta is reported for bed-07; whole-proposal differences are not attributed to this reservation.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.",
+          "Open Records to review previously saved sandbox work, or review the current reservation dates.",
+          "reservation · bed-07"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 reservation retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 reservation explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "reservation",
+        "values": [
+          "bed-07 remained reserved from 2026-10-01 to 2026-11-02; this proposal did not change that reservation.",
+          "The current bound proposal does not report a target-specific reason for changing bed-07; review the saved dates separately from whole-plan effects.",
+          "No target-specific signed delta is reported for bed-07; whole-proposal differences are not attributed to this reservation.",
+          "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.",
+          "Open Records to review previously saved sandbox work, or review the current reservation dates."
+        ]
+      }
+    },
+    {
+      "name": "A04 approved has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "title": "52 sandbox tasks created",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 approved exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "title": "52 sandbox tasks created",
+        "values": [
+          "52 current-result sandbox tasks were created; physical farm operations remain disabled.",
+          "The tasks exist because an eligible calculated proposal received explicit sandbox approval.",
+          "Approval records simulation work only; it does not report completed farm work or authorize a physical operation.",
+          "Recorded workflow facts · task-owning proposal IDs 658ca187bc1938c1ee162163fbcabbbe; task IDs task-1b6f25903137179e40fcdef7, task-68cb40ff3cf52a0a311ac96e, task-d3e753c3eeb4bd3eeff5827b, task-1becd1d8d72cd484a46c9808, task-3e0037d21b93fd42aaf60ccc; session revision 13. This explanation does not substitute provider interpretation or an unbound user report.",
+          "Open Records to inspect, report or correct the saved sandbox tasks.",
+          "planning_session · 63c1b1bb786f77833bc71a1ff3ed1479"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection"
+      }
+    },
+    {
+      "name": "A04 approved retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "projection",
+        "evidence": "Recorded workflow facts · task-owning proposal IDs 658ca187bc1938c1ee162163fbcabbbe; task IDs task-1b6f25903137179e40fcdef7, task-68cb40ff3cf52a0a311ac96e, task-d3e753c3eeb4bd3eeff5827b, task-1becd1d8d72cd484a46c9808, task-3e0037d21b93fd42aaf60ccc; session revision 13. This explanation does not substitute provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 approved explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "approved",
+        "values": [
+          "52 current-result sandbox tasks were created; physical farm operations remain disabled.",
+          "The tasks exist because an eligible calculated proposal received explicit sandbox approval.",
+          "Approval records simulation work only; it does not report completed farm work or authorize a physical operation.",
+          "Recorded workflow facts · task-owning proposal IDs 658ca187bc1938c1ee162163fbcabbbe; task IDs task-1b6f25903137179e40fcdef7, task-68cb40ff3cf52a0a311ac96e, task-d3e753c3eeb4bd3eeff5827b, task-1becd1d8d72cd484a46c9808, task-3e0037d21b93fd42aaf60ccc; session revision 13. This explanation does not substitute provider interpretation or an unbound user report.",
+          "Open Records to inspect, report or correct the saved sandbox tasks."
+        ]
+      }
+    },
+    {
+      "name": "A04 simulation-result has five-part Explain",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "title": "Farm date 2026-09-14",
+        "terms": [
+          "What changed",
+          "Why",
+          "Tradeoff",
+          "Evidence / limits",
+          "Next action",
+          "Record identity"
+        ]
+      }
+    },
+    {
+      "name": "A04 simulation-result exposes facts without invented fallback",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "title": "Farm date 2026-09-14",
+        "values": [
+          "Recorded simulation date 2026-09-14; harvest kg +190 kg; delivered kg +136 kg; disposed kg +5 kg; demand kg +136 kg; cash sgd +546.1 SGD.",
+          "These facts come from saved simulation events after approved sandbox work, separate from the planning projection.",
+          "Recorded totals: harvested 190 kg, delivered 136 kg, cash SGD 2,746.1. They are not physical-farm outcomes.",
+          "Recorded simulation · event simulation:d6a0a2837d64142acec0a9294ae3e0eb:event:24; affected entities bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14. This explanation uses the recorded event, not provider interpretation or an unbound user report.",
+          "Open History to inspect the saved event and earlier planning result.",
+          "simulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+        ],
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "recorded_simulation"
+      }
+    },
+    {
+      "name": "A04 simulation-result retains authoritative binding/evidence",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+        "basis": "recorded_simulation",
+        "evidence": "Recorded simulation · event simulation:d6a0a2837d64142acec0a9294ae3e0eb:event:24; affected entities bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14. This explanation uses the recorded event, not provider interpretation or an unbound user report."
+      }
+    },
+    {
+      "name": "A04 simulation-result explanation is stage-specific",
+      "pass": true,
+      "detail": {
+        "id": "simulation-result",
+        "values": [
+          "Recorded simulation date 2026-09-14; harvest kg +190 kg; delivered kg +136 kg; disposed kg +5 kg; demand kg +136 kg; cash sgd +546.1 SGD.",
+          "These facts come from saved simulation events after approved sandbox work, separate from the planning projection.",
+          "Recorded totals: harvested 190 kg, delivered 136 kg, cash SGD 2,746.1. They are not physical-farm outcomes.",
+          "Recorded simulation · event simulation:d6a0a2837d64142acec0a9294ae3e0eb:event:24; affected entities bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14. This explanation uses the recorded event, not provider interpretation or an unbound user report.",
+          "Open History to inspect the saved event and earlier planning result."
+        ]
+      }
+    },
+    {
+      "name": "A04 enumerated every rendered core mission stage",
+      "pass": true,
+      "detail": {
+        "count": 7,
+        "ids": [
+          "situation",
+          "strategy-0fa0095e5a88cfcbb9ad",
+          "strategy-e83d020d774715d776b9",
+          "strategy-73e265a286d4b8f8cea6",
+          "reservation",
+          "approved",
+          "simulation-result"
+        ]
+      }
+    },
+    {
+      "name": "A14 Enter and click activate the same primary decision action",
+      "pass": true,
+      "detail": {
+        "originId": "situation",
+        "primaryLabel": "Continue",
+        "clickState": "tool-plan",
+        "keyState": "tool-plan"
+      }
+    },
+    {
+      "name": "A14 keyboard/click activation attempted no write",
+      "pass": true,
+      "detail": {
+        "posts": [],
+        "providers": []
+      }
+    },
+    {
+      "name": "A04 pre-calculation situation has null outcome basis",
+      "pass": true,
+      "detail": {
+        "basis": null
+      }
+    },
+    {
+      "name": "A04 pre-calculation explanation labels frozen input without fake projection",
+      "pass": true,
+      "detail": "What changed\nNo plan change is shown here. This is the frozen 2026-09-15 baseline with all 28 order records and 16 grow spaces.\nWhy\nThe objective retains 24 kg of caixin due 2026-09-21.\nTradeoff\nNo choice is selected on this card; the calculated cards compare service, shortfall and cost against this same baseline.\nEvidence / limits\nFrozen planning input · no calculated result bound; planning input 2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30. This explanation uses frozen farm facts, not provider interpretation or an unbound user report.\nNext action\nCalculate the three local-planner choices.\nRecord identity\norder · order-0-1"
+    },
+    {
+      "name": "A04 mixed proposal shows exact target dates without attributing whole-proposal deltas",
+      "pass": true,
+      "detail": "What changed\nbed-07 changed from 2026-11-01 to 2026-11-20 to 2026-12-01 to 2026-12-20.\nWhy\nThe current bound proposal does not report a target-specific reason for changing bed-07; review the saved dates separately from whole-plan effects.\nTradeoff\nNo target-specific signed delta is reported for bed-07; whole-proposal differences are not attributed to this reservation.\nEvidence / limits\nProjection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.\nNext action\nOpen Records to review previously saved sandbox work, or review the current reservation dates.\nRecord identity\nreservation · bed-07"
+    },
+    {
+      "name": "A04 missing strategy metrics and allocations stay explicitly unknown",
+      "pass": true,
+      "detail": "What changed\nLean is a preview—not saved. It retains the same frozen demand and shows 0 dated allocations.\nWhy\nFeasible in this frozen result. Lean compared with feasible Balanced: delivery Not reported; shortfall Not reported; cost Not reported.\nTradeoff\nDelivery —%; shortfall — kg; cost SGD —.\nEvidence / limits\nProjection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no dated allocations reported. This explanation uses planner output, not provider interpretation or an unbound user report.\nNext action\nCompare the other choices, then review the dated grow-space reservation.\nRecord identity\nstrategy · 0fa0095e5a88cfcbb9ad"
+    },
+    {
+      "name": "A04 unrelated general proposal cannot supply reservation causality",
+      "pass": true,
+      "detail": "What changed\nbed-07 before/after reservation facts are unavailable in this frozen proposal.\nWhy\nThe current bound proposal does not report a target-specific reason for changing bed-07; review the saved dates separately from whole-plan effects.\nTradeoff\nNo target-specific signed delta is reported for bed-07; whole-proposal differences are not attributed to this reservation.\nEvidence / limits\nProjection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.\nNext action\nOpen Records to review previously saved sandbox work, or review the current reservation dates.\nRecord identity\nreservation · bed-07"
+    },
+    {
+      "name": "A04 simulation without transition reports missing event facts without invention",
+      "pass": true,
+      "detail": "What changed\nRecorded simulation date 2026-09-14; fact differences not reported.\nWhy\nThese facts come from saved simulation events after approved sandbox work, separate from the planning projection.\nTradeoff\nRecorded totals: harvested 190 kg, delivered 136 kg, cash SGD 2,746.1. They are not physical-farm outcomes.\nEvidence / limits\nRecorded simulation · event not reported; affected entities not reported. This explanation uses the recorded event, not provider interpretation or an unbound user report.\nNext action\nOpen History to inspect the saved event and earlier planning result.\nRecord identity\nsimulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+    },
+    {
+      "name": "A12 seven portrait identities are present",
+      "pass": true,
+      "detail": {
+        "names": [
+          "asha.svg",
+          "ben.svg",
+          "hana.svg",
+          "idris.svg",
+          "lina.svg",
+          "mei.svg",
+          "ravi.svg"
+        ]
+      }
+    },
+    {
+      "name": "A12 asha.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 ben.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 hana.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 idris.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 lina.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 mei.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 ravi.svg has unique IDs and no external references",
+      "pass": true,
+      "detail": {
+        "ids": 3,
+        "duplicates": [],
+        "external": []
+      }
+    },
+    {
+      "name": "A12 crop SVGs are duplicate-ID safe and self-contained",
+      "pass": true,
+      "detail": {
+        "assets": 20,
+        "unsafe": []
+      }
+    },
+    {
+      "name": "A12 unknown and unsupported stages fall back to literal recorded labels",
+      "pass": true,
+      "detail": {
+        "source": "IntegratedCards.tsx stage branch"
+      }
+    },
+    {
+      "name": "A12 crop assets and names remain readable at explicit 54px and 64px inspections",
+      "pass": true,
+      "detail": [
+        {
+          "requested": 54,
+          "width": 54,
+          "height": 54,
+          "name": "Caixin",
+          "decoded": true
+        },
+        {
+          "requested": 64,
+          "width": 64,
+          "height": 64,
+          "name": "Kailan",
+          "decoded": true
+        }
+      ]
+    },
+    {
+      "name": "A12 primary portrait retains the specified 64px compact identity",
+      "pass": true,
+      "detail": {
+        "declaredWidths": [
+          84,
+          64
+        ]
+      }
+    }
+  ],
+  "mission_stages": [
+    {
+      "id": "situation",
+      "title": "Little Plot Collective",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "No plan change is shown here. This is the frozen 2026-09-15 baseline with all 28 order records and 16 grow spaces.",
+        "The objective retains 24 kg of caixin due 2026-09-21.",
+        "No choice is selected on this card; the calculated cards compare service, shortfall and cost against this same baseline.",
+        "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; planning input 2407eaf8d52d1cf3b21dbca80673c7ba3acfdaedbfd69ecbe1d93f735c7fab30. This explanation uses frozen farm facts, not provider interpretation or an unbound user report.",
+        "Compare each calculated choice without saving it.",
+        "order · order-0-1"
+      ]
+    },
+    {
+      "id": "strategy-0fa0095e5a88cfcbb9ad",
+      "title": "Lean plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "Lean is a preview—not saved. It retains the same frozen demand and shows 17 dated allocations.",
+        "Feasible in this frozen result. Lean compared with feasible Balanced: delivery −10 percentage points; shortfall +95 kg; cost −340.5 SGD.",
+        "Delivery 46.7%; shortfall 507 kg; cost SGD 1,038.6.",
+        "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+        "Compare the other choices, then review the dated grow-space reservation.",
+        "strategy · 0fa0095e5a88cfcbb9ad"
+      ]
+    },
+    {
+      "id": "strategy-e83d020d774715d776b9",
+      "title": "Balanced plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "Balanced is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+        "Feasible in this frozen result. Balanced compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+        "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+        "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+        "Compare the other choices, then review the dated grow-space reservation.",
+        "strategy · e83d020d774715d776b9"
+      ]
+    },
+    {
+      "id": "strategy-73e265a286d4b8f8cea6",
+      "title": "Resilient plan",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "Resilient is a preview—not saved. It retains the same frozen demand and shows 20 dated allocations.",
+        "Feasible in this frozen result. Resilient compared with feasible Lean: delivery +10 percentage points; shortfall −95 kg; cost +340.5 SGD.",
+        "Delivery 56.7%; shortfall 412 kg; cost SGD 1,379.",
+        "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; bed-01: caixin 2026-08-24 to 2026-09-14, 44 kg; bed-02: pak choi 2026-08-17 to 2026-09-14, 52 kg; bed-03: kailan 2026-08-13 to 2026-09-14, 48 kg. This explanation uses planner output, not provider interpretation or an unbound user report.",
+        "Compare the other choices, then review the dated grow-space reservation.",
+        "strategy · 73e265a286d4b8f8cea6"
+      ]
+    },
+    {
+      "id": "reservation",
+      "title": "B3 is reserved",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "bed-07 remained reserved from 2026-10-01 to 2026-11-02; this proposal did not change that reservation.",
+        "The current bound proposal does not report a target-specific reason for changing bed-07; review the saved dates separately from whole-plan effects.",
+        "No target-specific signed delta is reported for bed-07; whole-proposal differences are not attributed to this reservation.",
+        "Projection · frozen result 7aba1ef728a777af7c2582f8ff4ffebf; no target-specific allocation differences reported; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.",
+        "Open Records to review previously saved sandbox work, or review the current reservation dates.",
+        "reservation · bed-07"
+      ]
+    },
+    {
+      "id": "approved",
+      "title": "52 sandbox tasks created",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "projection",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "52 current-result sandbox tasks were created; physical farm operations remain disabled.",
+        "The tasks exist because an eligible calculated proposal received explicit sandbox approval.",
+        "Approval records simulation work only; it does not report completed farm work or authorize a physical operation.",
+        "Recorded workflow facts · task-owning proposal IDs 658ca187bc1938c1ee162163fbcabbbe; task IDs task-1b6f25903137179e40fcdef7, task-68cb40ff3cf52a0a311ac96e, task-d3e753c3eeb4bd3eeff5827b, task-1becd1d8d72cd484a46c9808, task-3e0037d21b93fd42aaf60ccc; session revision 13. This explanation does not substitute provider interpretation or an unbound user report.",
+        "Open Records to inspect, report or correct the saved sandbox tasks.",
+        "planning_session · 63c1b1bb786f77833bc71a1ff3ed1479"
+      ]
+    },
+    {
+      "id": "simulation-result",
+      "title": "Farm date 2026-09-14",
+      "resultId": "7aba1ef728a777af7c2582f8ff4ffebf",
+      "basis": "recorded_simulation",
+      "terms": [
+        "What changed",
+        "Why",
+        "Tradeoff",
+        "Evidence / limits",
+        "Next action",
+        "Record identity"
+      ],
+      "values": [
+        "Recorded simulation date 2026-09-14; harvest kg +190 kg; delivered kg +136 kg; disposed kg +5 kg; demand kg +136 kg; cash sgd +546.1 SGD.",
+        "These facts come from saved simulation events after approved sandbox work, separate from the planning projection.",
+        "Recorded totals: harvested 190 kg, delivered 136 kg, cash SGD 2,746.1. They are not physical-farm outcomes.",
+        "Recorded simulation · event simulation:d6a0a2837d64142acec0a9294ae3e0eb:event:24; affected entities bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14. This explanation uses the recorded event, not provider interpretation or an unbound user report.",
+        "Open History to inspect the saved event and earlier planning result.",
+        "simulation_world · d6a0a2837d64142acec0a9294ae3e0eb"
+      ]
+    }
+  ],
+  "defects": [],
+  "requests": {
+    "posts": [],
+    "providers": []
+  }
+}

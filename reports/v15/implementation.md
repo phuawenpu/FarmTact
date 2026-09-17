@@ -8,6 +8,19 @@ next unused edition. The first staged candidate (`a3ba834`) was rejected and nev
 published. The corrected candidate passed operator and exact-image browser gates
 before public cutover. Source/images and recoverable historical state are retained.
 
+## Goal remains open: explanation audit finding
+
+The postpublication audit in `final-semantics-published-failure.json` found that a
+general saved proposal can expose raw assumption JSON in What changed, and its
+explanation is reused across unrelated mission stages. Five headings and frozen
+bindings alone do not meet stage-specific explanation acceptance. This is a real
+presentation defect; the full rewrite goal is not complete. V15 remains immutable.
+A corrected follow-up must use V16, preserve V15 data privately without automatic
+migration, and pass focused semantics plus release checks before replacing it.
+The same audit initially inferred a universal 54px scene-art minimum from the asset
+review specification; that minimum is not specified. Actual 54/64px art/name review
+is being added instead of treating compact labelled scene icons as a defect.
+
 ## Published release evidence — 17 September 2026
 
 | Gate | Evidence | Result |
@@ -47,7 +60,8 @@ retired-tree classification is not suitable for that case.
 `release/polling-rearm.json` adds four read-only checks using a labelled RUNNING
 status overlay on a real saved job. It proves polling resumes after returning from
 a tool; it is not evidence of a newly run numerical job. The portable harnesses are
-`tests/browser/v15_public_release.mjs` and `v15_polling_rearm.mjs`.
+`tests/browser/v15_public_release.mjs` and
+`tests/browser/v15_polling_rearm.mjs`.
 
 No new agricultural model, autonomous inference, custom transcription or real farm
 operation is enabled. Four numerical crop recipes and twelve knowledge profiles

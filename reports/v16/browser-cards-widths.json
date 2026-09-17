@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "widths": [
+    360,
+    390,
+    430,
+    1280
+  ],
+  "reports": [
+    {
+      "width": 360,
+      "file": "browser-cards-360.json",
+      "status": "PASS",
+      "checks": 27,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v16/video/page@87c52c26aff8bfc614dd47d760be59c6.webm"
+    },
+    {
+      "width": 390,
+      "file": "browser-cards-390.json",
+      "status": "PASS",
+      "checks": 27,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v16/video/page@2f65d1a08eb9bad80b82b8b9ced51246.webm"
+    },
+    {
+      "width": 430,
+      "file": "browser-cards-430.json",
+      "status": "PASS",
+      "checks": 27,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v16/video/page@5d463b4d94a0b73d496a3153e67d37bd.webm"
+    },
+    {
+      "width": 1280,
+      "file": "browser-cards-1280.json",
+      "status": "PASS",
+      "checks": 27,
+      "mutations": 16,
+      "video": "/home/sprite/workspaces/Code2/reports/v16/video/page@cf373b3655cbaca9cbd66331b2113e6f.webm"
+    }
+  ],
+  "failures": []
+}

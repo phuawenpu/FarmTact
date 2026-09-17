@@ -1,0 +1,26 @@
+{
+  "title": "Explanations for the current decision",
+  "summary": "The complete integrated farm experience now explains each order, strategy, reservation, approved work record and simulated result using its own saved facts.",
+  "changes": [
+    {
+      "title": "Stage-specific deterministic explanations",
+      "description": "Replace raw assumption objects and unrelated proposal text with order facts, compatible strategy comparisons, dated reservation changes, recorded task identities and simulation outcomes. Missing evidence stays explicit; reading does not invoke AI.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/browser/v15_final_semantics.mjs",
+        "tests/browser/v16_explanation_layout.mjs",
+        "reports/v15/final-semantics-published-failure.json"
+      ]
+    },
+    {
+      "title": "Independent immutable state and retained workflows",
+      "description": "Retain the full integrated card workflows and server admission controls while keeping V16 preferences and sandbox data separate from the preserved V15 edition.",
+      "feedback_ids": [],
+      "evidence": [
+        "apps/web/src/lib/edition.ts",
+        "tests/browser/v15_cards.mjs",
+        "tests/browser/v15_public_release.mjs"
+      ]
+    }
+  ]
+}

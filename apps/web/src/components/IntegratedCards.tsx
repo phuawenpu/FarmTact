@@ -11,7 +11,7 @@ import {
 import { ApiError, api } from "../lib/api";
 import type { FarmCard, ToolDeck } from "../lib/cards";
 import BoundCard from "./BoundCard";
-import { editionStorageKey } from "../lib/edition";
+import { CURRENT_EDITION, editionStorageKey } from "../lib/edition";
 import {
   farmerWorkflowApi,
   planningApi,
@@ -58,6 +58,12 @@ function signed(value: unknown, unit: string) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return "Not reported";
   return `${parsed > 0 ? "+" : parsed < 0 ? "−" : "±"}${num(Math.abs(parsed))} ${unit}`;
+}
+
+function difference(left: unknown, right: unknown, multiplier = 1) {
+  if (left === null || left === undefined || right === null || right === undefined) return null;
+  const a = Number(left), b = Number(right);
+  return Number.isFinite(a) && Number.isFinite(b) ? (a - b) * multiplier : null;
 }
 
 function assumptionsFor(session: PlanningSession): FarmerAssumptions {
@@ -112,6 +118,22 @@ function reservationChangeText(proposal: FarmerProposal) {
   return undefined;
 }
 
+function reservationStateText(proposal: FarmerProposal | undefined, bedId: string, fallback?: FarmerAssumptions["reservations"][number]) {
+  type AssumptionChange = { kind?: string; assumptions?: FarmerAssumptions };
+  const change = (Array.isArray(proposal?.changes) ? proposal.changes as AssumptionChange[] : []).find((row) => row.kind === "planning_assumptions");
+  const inverse = (Array.isArray(proposal?.inverse_changes) ? proposal.inverse_changes as AssumptionChange[] : []).find((row) => row.kind === "planning_assumptions");
+  if (!proposal) return fallback ? `${bedId} is currently saved from ${fallback.start_date} to ${fallback.end_date}; no bound proposal comparison is available.` : `${bedId} has no saved reservation and no bound proposal comparison is available.`;
+  if (!change?.assumptions || !inverse?.assumptions) return `${bedId} before/after reservation facts are unavailable in this frozen proposal.`;
+  const before = inverse.assumptions.reservations?.find((row) => row.bed_id === bedId);
+  const after = change.assumptions.reservations?.find((row) => row.bed_id === bedId);
+  const dates = (row: typeof after) => row ? `${row.start_date} to ${row.end_date}` : "no saved reservation";
+  if (before && after && JSON.stringify(before) === JSON.stringify(after)) return `${bedId} remained reserved from ${dates(after)}; this proposal did not change that reservation.`;
+  if (!before && after) return `${bedId} changed from no saved reservation to ${dates(after)}.`;
+  if (before && !after) return `${bedId} changed from ${dates(before)} to no saved reservation.`;
+  if (before && after) return `${bedId} changed from ${dates(before)} to ${dates(after)}.`;
+  return `${bedId} has no reservation dates in the frozen proposal facts.`;
+}
+
 function newerSession(current: PlanningSession | null, next: PlanningSession) {
   if (!current) return next;
   if (current.id !== next.id) return next;
@@ -124,7 +146,7 @@ function afterPaint(callback: () => void) {
 }
 
 export default function IntegratedCards({
-  editionId = "v15",
+  editionId = CURRENT_EDITION,
   renderTool,
 }: {
   editionId?: string;
@@ -320,14 +342,16 @@ export default function IntegratedCards({
   }, [session?.id, session?.job?.id, session?.job?.status, loadingBusy, reconcileSession]);
 
   const tactical = session?.tactical_context;
+  const snapshotBinding = tactical?.planning_snapshot;
+  const boundResultId = snapshotBinding?.result_id || (session as { result_id?: string } | null)?.result_id;
   const grow = tactical?.grow_space;
   const proposals = workflow.proposals.filter((item) => item.session_id === session?.id);
   const original = grow && session ? [...proposals].reverse().find((item) => !item.inverse_of_proposal_id && ["applied", "approved"].includes(item.status) && isReservationOnly(item, session, grow.id)) : undefined;
   const inverse = original ? proposals.find((item) => item.inverse_of_proposal_id === original.id) : undefined;
   const inverseComplete = Boolean(inverse?.recalculation_job?.id && inverse.recalculation_job.id === (session as { result_id?: string } | null)?.result_id);
   const activeProposal = original && !inverseComplete ? original : undefined;
-  const boundProposal = [...proposals].reverse().find((item) => ["applied", "approved"].includes(item.status) && item.recalculation_job?.id === (session as { result_id?: string } | null)?.result_id);
-  const proposalExplanation = boundProposal?.explanation;
+  const boundProposal = [...proposals].reverse().find((item) => ["applied", "approved"].includes(item.status) && item.recalculation_job?.id === boundResultId);
+  const reservationExplanationProposal = grow && session ? [...proposals].reverse().find((item) => ["applied", "approved"].includes(item.status) && item.recalculation_job?.id === boundResultId && isReservationOnly(item, session, grow.id)) : undefined;
   const proposalTransition = boundProposal?.scene_transition;
   const simulationTransition = session?.simulation?.scene_transition;
   const sceneTransition = simulationTransition || proposalTransition;
@@ -337,6 +361,9 @@ export default function IntegratedCards({
   const applied = proposals.find((item) => item.status === "applied" && item.recalculation_job?.id === (session as { result_id?: string } | null)?.result_id);
   const approval = applied?.approval as undefined | { available?: boolean; reason?: string; strategy_id?: string };
   const taskCount = workflow.tasks.filter((item) => proposals.some((proposal) => proposal.id === item.proposal_id)).length;
+  const boundTasks = boundProposal ? workflow.tasks.filter((item) => item.proposal_id === boundProposal.id) : [];
+  const sessionTasks = workflow.tasks.filter((item) => proposals.some((proposal) => proposal.id === item.proposal_id));
+  const approvedTasks = boundTasks.length ? boundTasks : sessionTasks;
 
   useEffect(() => {
     const eventId = sceneTransition?.event_id;
@@ -373,7 +400,7 @@ export default function IntegratedCards({
       summary: strategy.description || "A stored local-planner result for the same baseline and horizon.",
       strategy,
       facts: [
-        ["Delivery covered", `${num(Number(strategy.metrics.fill_rate) * 100)}%`],
+        ["Delivery covered", `${num(strategy.metrics.fill_rate == null ? null : Number(strategy.metrics.fill_rate) * 100)}%`],
         ["Shortfall", `${num(strategy.metrics.shortfall_kg)} kg`],
         ["Cost", `SGD ${num(strategy.metrics.cost_sgd)}`],
       ],
@@ -394,8 +421,8 @@ export default function IntegratedCards({
         ["Window", `${grow.reservation_window.start_date} → ${grow.reservation_window.end_date}`],
       ],
     }] : [];
-    const approved = taskCount ? [{
-      id: "approved", eyebrow: "Recorded consequence", title: `${taskCount} sandbox task${taskCount === 1 ? "" : "s"} created`,
+    const approved = approvedTasks.length ? [{
+      id: "approved", eyebrow: "Recorded consequence", title: `${approvedTasks.length} sandbox task${approvedTasks.length === 1 ? "" : "s"} created`,
       summary: "Approval created simulation-only work. It did not authorize any physical farm operation.",
       facts: [["Session revision", String(session.revision)], ["Operations", "Disabled"], ["History", `${workflow.events.length} events`]],
     }] : [];
@@ -405,7 +432,7 @@ export default function IntegratedCards({
       facts: [["Harvested", `${num(session.simulation.totals.harvest_kg)} kg`], ["Delivered", `${num(session.simulation.totals.delivered_kg)} kg`], ["Cash", `SGD ${num(session.simulation.cash_sgd)}`]],
     }] : [];
     return [...base, ...options, ...reservation, ...approved, ...recorded];
-  }, [session, strategies, grow, activeProposal, taskCount, workflow.events.length]);
+  }, [session, strategies, grow, activeProposal, approvedTasks.length, workflow.events.length]);
 
   const activeIndex = Math.min(index, Math.max(0, (surface === "tools" ? toolCards.length : missionCards.length) - 1));
   const move = (amount: number) => {
@@ -554,7 +581,6 @@ export default function IntegratedCards({
     .map((row) => [String(row.id), String(row.crop_id)]));
   const objectiveOrder = session.farm.orders[0];
   const selectedStrategy = current?.id.startsWith("strategy-") ? strategies.find((row) => `strategy-${row.id}` === current.id) : undefined;
-  const snapshotBinding = session.tactical_context?.planning_snapshot;
   const jobRunning = ["QUEUED", "RUNNING"].includes(session.job?.status || "");
   const primaryLabel = !strategies.length ? "Calculate" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Continue";
   const reservationDecision = current?.id === "reservation" && !taskCount;
@@ -589,34 +615,84 @@ export default function IntegratedCards({
       : current.id === "approved" ? "planning_session" : current.id === "simulation-result" ? "simulation_world" : current.id,
     title: current.title, provenance: current.id === "reservation" && grow?.source ? [grow.source] : current.id === "situation" && session.tactical_context?.scenario.source ? [session.tactical_context.scenario.source] : [],
     binding: { sessionId: session.id, inputHash: snapshotBinding?.input_hash || session.input_hash, revision: snapshotBinding?.revision ?? session.revision,
-      resultId: snapshotBinding?.result_id || null },
+      resultId: boundResultId || null },
     boardTargets: current.id === "reservation" && grow ? [grow.id] : selectedStrategy ? selectedStrategy.allocations.map((allocation) => allocation.bed_id) : [],
     actions: cardActions,
-    outcomeBasis: current.id === "simulation-result" ? "recorded_simulation" : "projection",
+    outcomeBasis: current.id === "simulation-result" ? "recorded_simulation" : boundResultId ? "projection" : null,
   } : null : null;
 
-  const tradeoffText: string | undefined = typeof proposalExplanation?.tradeoff === "object"
-    ? Object.entries(proposalExplanation.tradeoff).map(([key, value]) => `${key.replaceAll("_", " ")}: ${value == null ? "not available" : typeof value === "number" ? signed(value, key.includes("sgd") ? "SGD" : "kg") : String(value)}`).join("; ")
-    : proposalExplanation?.tradeoff;
   const transitionEntities = new Set(sceneTransition?.entity_ids || []);
   const currentStrategy = selectedStrategy;
-  const alternativeStrategy = currentStrategy ? strategies.find((row) => row.id !== currentStrategy.id) : undefined;
+  const alternativeStrategy = currentStrategy ? strategies.find((row) => row.id !== currentStrategy.id && row.status === "FEASIBLE" && !row.violations?.length) : undefined;
+  const strategyStatus = currentStrategy ? currentStrategy.status === "FEASIBLE" && !currentStrategy.violations?.length
+    ? "Feasible in this frozen result."
+    : `${currentStrategy.status.replaceAll("_", " ")}; ${(currentStrategy.violations || []).join("; ") || "no violation detail reported"}.` : "";
   const strategyWhy = currentStrategy && alternativeStrategy
-    ? `${currentStrategy.name} compared with ${alternativeStrategy.name}: delivery ${signed((Number(currentStrategy.metrics.fill_rate) - Number(alternativeStrategy.metrics.fill_rate)) * 100, "percentage points")}; shortfall ${signed(Number(currentStrategy.metrics.shortfall_kg) - Number(alternativeStrategy.metrics.shortfall_kg), "kg")}; cost ${signed(Number(currentStrategy.metrics.cost_sgd) - Number(alternativeStrategy.metrics.cost_sgd), "SGD")}.`
+    ? `${strategyStatus} ${currentStrategy.name} compared with feasible ${alternativeStrategy.name}: delivery ${signed(difference(currentStrategy.metrics.fill_rate, alternativeStrategy.metrics.fill_rate, 100), "percentage points")}; shortfall ${signed(difference(currentStrategy.metrics.shortfall_kg, alternativeStrategy.metrics.shortfall_kg), "kg")}; cost ${signed(difference(currentStrategy.metrics.cost_sgd, alternativeStrategy.metrics.cost_sgd), "SGD")}.`
     : undefined;
-  const reservationChanged = boundProposal ? reservationChangeText(boundProposal) : undefined;
-  const whatChanged = reservationChanged || (proposalExplanation?.what_changed?.length
-    ? proposalExplanation.what_changed.map((change) => Object.entries(change).map(([key, value]) => `${key.replaceAll("_", " ")} ${typeof value === "object" ? JSON.stringify(value) : String(value)}`).join(" · ")).join("; ")
-    : current.summary);
-  const allocationEvidence = proposalExplanation?.allocation_changes?.slice(0, 3).map((change) => {
-    const before = change.before, after = change.after;
-    const row = after || before;
+  const reservationExplanation = reservationExplanationProposal?.explanation;
+  const reservationTradeoff = typeof reservationExplanation?.tradeoff === "object"
+    ? Object.entries(reservationExplanation.tradeoff).map(([key, value]) => `${key.replaceAll("_", " ")}: ${value == null ? "not available" : typeof value === "number" ? signed(value, key.includes("sgd") ? "SGD" : "kg") : typeof value === "string" ? value : "not reported"}`).join("; ")
+    : reservationExplanation?.tradeoff;
+  const reservationAllocationEvidence = reservationExplanation?.allocation_changes?.slice(0, 3).map((change) => {
+    const before = change.before, after = change.after, row = after || before;
     return `${String(row?.bed_id || change.id || "allocation")}: ${before ? `${String(before.crop_id || "crop")} ${String(before.transplant_date || "—")}→${String(before.harvest_date || "—")} ${num(before.expected_kg)} kg` : "none"} → ${after ? `${String(after.crop_id || "crop")} ${String(after.transplant_date || "—")}→${String(after.harvest_date || "—")} ${num(after.expected_kg)} kg` : "none"}`;
   }).join("; ");
   const previewStrategy = surface === "mission" && current?.id.startsWith("strategy-")
     ? strategies.find((item) => `strategy-${item.id}` === current.id) : undefined;
   const previewAllocations = new Map((previewStrategy?.allocations || []).map((row) => [row.bed_id, row]));
   const savedReservation = assumptionsFor(session).reservations.find((row) => row.bed_id === grow?.id);
+  const stageExplanation = (() => {
+    const projectionLabel = boundResultId ? `Projection · frozen result ${boundResultId}` : `Frozen planning input · no calculated result bound`;
+    if (current?.id === "situation") return {
+      changed: `No plan change is shown here. This is the frozen ${session.farm.planning_date || session.farm.cutoff} baseline with all ${session.farm.orders.length} order records and ${session.farm.beds.length} grow spaces.`,
+      why: objectiveOrder ? `The objective retains ${num(objectiveOrder.quantity_kg)} kg of ${objectiveOrder.crop_id.replaceAll("_", " ")} due ${objectiveOrder.due_date}.` : "No objective order was reported in the frozen farm record.",
+      tradeoff: "No choice is selected on this card; the calculated cards compare service, shortfall and cost against this same baseline.",
+      evidence: `${projectionLabel}; planning input ${snapshotBinding?.input_hash || session.input_hash || "hash not reported"}. This explanation uses frozen farm facts, not provider interpretation or an unbound user report.`,
+      next: strategies.length ? "Compare each calculated choice without saving it." : "Calculate the three local-planner choices.",
+    };
+    if (currentStrategy) {
+      const dated = currentStrategy.allocations.slice(0, 3).map((row) => `${row.bed_id}: ${row.crop_id.replaceAll("_", " ")} ${row.transplant_date} to ${row.harvest_date}, ${num(row.expected_kg)} kg`).join("; ");
+      return {
+        changed: `${currentStrategy.name} is a preview—not saved. It retains the same frozen demand and shows ${currentStrategy.allocations.length} dated allocations.`,
+        why: strategyWhy || `${strategyStatus} No compatible feasible alternative from this frozen result was reported for a signed comparison.`,
+        tradeoff: `Delivery ${num(currentStrategy.metrics.fill_rate == null ? null : Number(currentStrategy.metrics.fill_rate) * 100)}%; shortfall ${num(currentStrategy.metrics.shortfall_kg)} kg; cost SGD ${num(currentStrategy.metrics.cost_sgd)}.`,
+        evidence: `${projectionLabel}; ${dated || "no dated allocations reported"}. This explanation uses planner output, not provider interpretation or an unbound user report.`,
+        next: "Compare the other choices, then review the dated grow-space reservation.",
+      };
+    }
+    if (current?.id === "reservation" && grow) return {
+      changed: reservationStateText(boundProposal, grow.id, savedReservation),
+      why: reservationExplanation?.why || `The current bound proposal does not report a target-specific reason for changing ${grow.id}; review the saved dates separately from whole-plan effects.`,
+      tradeoff: reservationTradeoff || `No target-specific signed delta is reported for ${grow.id}; whole-proposal differences are not attributed to this reservation.`,
+      evidence: `${projectionLabel}; ${reservationAllocationEvidence || "no target-specific allocation differences reported"}; target ${grow.id}. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.`,
+      next: reservationExplanation?.next_action || (taskCount ? "Open Records to review previously saved sandbox work, or review the current reservation dates." : activeProposal ? "Review current approval or inverse eligibility." : "Review the exact reservation before applying it."),
+    };
+    if (current?.id === "approved") {
+      const tasks = approvedTasks;
+      const taskProposalIds = [...new Set(tasks.map((item) => item.proposal_id))];
+      return {
+        changed: `${tasks.length} ${boundTasks.length ? "current-result" : "previously saved"} sandbox task${tasks.length === 1 ? " was" : "s were"} created; physical farm operations remain disabled.`,
+        why: "The tasks exist because an eligible calculated proposal received explicit sandbox approval.",
+        tradeoff: "Approval records simulation work only; it does not report completed farm work or authorize a physical operation.",
+        evidence: `Recorded workflow facts · task-owning proposal IDs ${taskProposalIds.join(", ") || "not reported"}; task IDs ${tasks.slice(0, 5).map((item) => item.id).join(", ") || "not reported"}; session revision ${session.revision}. This explanation does not substitute provider interpretation or an unbound user report.`,
+        next: "Open Records to inspect, report or correct the saved sandbox tasks.",
+      };
+    }
+    if (current?.id === "simulation-result" && session.simulation) {
+      const differences = simulationTransition?.fact_differences
+        ? Object.entries(simulationTransition.fact_differences).map(([key, value]) => `${key.replaceAll("_", " ")} ${signed(value, key.includes("sgd") ? "SGD" : "kg")}`).join("; ")
+        : "fact differences not reported";
+      return {
+        changed: `Recorded simulation date ${session.simulation.clock_date || session.simulation.start_date}; ${differences}.`,
+        why: "These facts come from saved simulation events after approved sandbox work, separate from the planning projection.",
+        tradeoff: `Recorded totals: harvested ${num(session.simulation.totals.harvest_kg)} kg, delivered ${num(session.simulation.totals.delivered_kg)} kg, cash SGD ${num(session.simulation.cash_sgd)}. They are not physical-farm outcomes.`,
+        evidence: `Recorded simulation · event ${simulationTransition?.event_id || "not reported"}; affected entities ${(simulationTransition?.entity_ids || []).join(", ") || "not reported"}. This explanation uses the recorded event, not provider interpretation or an unbound user report.`,
+        next: "Open History to inspect the saved event and earlier planning result.",
+      };
+    }
+    return { changed: current.summary, why: "No stage-specific reason was reported.", tradeoff: "No stage-specific tradeoff was reported.", evidence: "Evidence was not reported.", next: "Return to the card." };
+  })();
   const guideTips: Record<NonNullable<PlanningSession["guidance"]>["step"], string> = {
     inspect: "Inspect the confirmed order, available space and planning date before calculating.",
     compare: "Swipe through all three previews. Selection alone does not save a plan.",
@@ -660,11 +736,11 @@ export default function IntegratedCards({
           <div className="ic-deck" onPointerDown={(event) => { pointerStart.current = event.clientX; }} onPointerUp={pointerUp}>
             {boundCard && <BoundCard card={boundCard} ref={cardRef} tabIndex={-1} className="ic-card" aria-live="polite" aria-label={`${surface === "tools" ? "Farm tools" : "Planning"} card ${activeIndex + 1} of ${surface === "tools" ? toolCards.length : missionCards.length}`}>
               {detail === "explain" ? <><span className="ic-eyebrow">{current.title} › Why</span><h1>What this means</h1><p>{current.summary}</p>
-                <dl className="ic-explanation"><div><dt>What changed</dt><dd>{whatChanged}</dd></div>
-                  <div><dt>Why</dt><dd>{proposalExplanation?.why || strategyWhy || "Reason not available for this saved result."}</dd></div>
-                  <div><dt>Tradeoff</dt><dd>{tradeoffText || strategyWhy || "No compatible calculated alternative is available."}</dd></div>
-                  <div><dt>Evidence / limits</dt><dd>{allocationEvidence || (proposalExplanation?.evidence ? `${proposalExplanation.evidence.before_result_id || "baseline"} → ${proposalExplanation.evidence.after_result_id || "current result"}; affected beds ${(proposalExplanation.affected_bed_ids || []).join(", ") || "none"}` : boundCard?.provenance.join(" · ") || "Stored farm records")}; no provider call.</dd></div>
-                  <div><dt>Next action</dt><dd>{proposalExplanation?.next_action || "Return to the card and choose an explicit action."}</dd></div>
+                <dl className="ic-explanation"><div><dt>What changed</dt><dd>{stageExplanation.changed}</dd></div>
+                  <div><dt>Why</dt><dd>{stageExplanation.why}</dd></div>
+                  <div><dt>Tradeoff</dt><dd>{stageExplanation.tradeoff}</dd></div>
+                  <div><dt>Evidence / limits</dt><dd>{stageExplanation.evidence}</dd></div>
+                  <div><dt>Next action</dt><dd>{stageExplanation.next}</dd></div>
                   <div><dt>Record identity</dt><dd>{boundCard ? `${boundCard.entityKind} · ${boundCard.entityId}` : current.id}</dd></div></dl></>
                 : detail === "review" || detail === "inverse" ? <><span className="ic-eyebrow">Review before applying</span><h1>{detail === "inverse" ? "Restore the grow space" : `Reserve ${grow?.name || "grow space"}`}</h1>
                   <p>{detail === "inverse" ? "The inverse preserves the original event and recalculates future work at the current eligible revision." : `${grow?.id} will be unavailable ${grow?.reservation_window.start_date} to ${grow?.reservation_window.end_date}. Existing work remains recorded.`}</p>

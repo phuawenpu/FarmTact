@@ -1,3 +1,13 @@
+## V16 explanation completion — implementation in progress
+
+The full V15 rewrite goal remains active after a postpublication semantic audit.
+V16 replaces raw assumption JSON and unrelated proposal prose with stage-specific
+order, strategy, reservation, task and recorded-simulation explanations. The full
+integrated workflows, local numerical authority, explicit inference submissions,
+shared admission limits and disabled actual operations remain unchanged. V15 is
+immutable and remains public until the new candidate passes acceptance. See
+reports/v16/implementation.md and the retained failing V15 semantic audit.
+
 ## Published V15 integration amendment — 17 September 2026
 
 The requested live UX/capability review found that V14's teaching-only entrypoint

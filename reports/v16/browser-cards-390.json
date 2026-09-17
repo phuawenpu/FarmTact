@@ -1,0 +1,1136 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "width": 390,
+  "checks": [
+    {
+      "name": "shell declares v16",
+      "pass": true
+    },
+    {
+      "name": "guide skip mutation is accepted before reconciliation",
+      "pass": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "server guidance skip resumes after reload",
+      "pass": true
+    },
+    {
+      "name": "ArrowRight changes the active card",
+      "pass": true
+    },
+    {
+      "name": "keyboard and swipe do not mutate farm/planner state",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "Lean Balanced and Resilient are all available",
+      "pass": true,
+      "detail": [
+        "Lean",
+        "Balanced",
+        "Resilient"
+      ]
+    },
+    {
+      "name": "reservation-before-review-390: document fits the viewport",
+      "pass": true
+    },
+    {
+      "name": "reservation opens explicit review before apply",
+      "pass": true,
+      "detail": "REVIEW BEFORE APPLYING\nReserve B3\n\nbed-07 will be unavailable 2026-10-01 to 2026-11-02. Existing work remains recorded.\n\nProposal\n1d7daf2e4ec557d5586cf03a267a40ff\nRevision\n1\nScope\nFuture simulation work only"
+    },
+    {
+      "name": "review retains one card and one three-key action area",
+      "pass": true
+    },
+    {
+      "name": "reservation-review-390: document fits the viewport",
+      "pass": true
+    },
+    {
+      "name": "saved recalculation explanation contains five structured facts and allocation evidence",
+      "pass": true,
+      "detail": "B3 IS RESERVED › WHY\nWhat this means\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nWhat changed\nbed-07 changed from no saved reservation to 2026-10-01 to 2026-11-02.\nWhy\nThe local planner recalculated future allocations under the reviewed constraints and all modeled demand.\nTradeoff\ncoverage kg: −4 kg; surplus kg: −13 kg; expiry kg: +17 kg; rejection kg: not available; margin sgd: −199.5 SGD; waste rescue kg: ±0 kg\nEvidence / limits\nProjection · frozen result 52fb9ab72494b5ea3829ba2c4388ff3d; bed-03: caixin 2026-09-28→2026-10-19 44 kg → none; bed-14: none → lettuce 2026-09-24→2026-10-19 46 kg; bed-01: kailan 2026-10-01→2026-11-02 48 kg → none; target bed-07. This explanation uses frozen reservation facts, not provider interpretation or an unbound user report.\nNext action\nReview the calculated schedule and current approval or inverse eligibility.\nRecord identity\nreservation · bed-07"
+    },
+    {
+      "name": "read/explain triggered no provider request",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "reservation-explanation-390: document fits the viewport",
+      "pass": true
+    },
+    {
+      "name": "inverse has explicit review before mutation",
+      "pass": true
+    },
+    {
+      "name": "inverse recalculation restores reservation eligibility",
+      "pass": true
+    },
+    {
+      "name": "approval creates persisted sandbox-only tasks",
+      "pass": true
+    },
+    {
+      "name": "explicit History advance returns recorded simulation facts",
+      "pass": true,
+      "detail": {
+        "id": "af0802cdb558771209134faf078c6587",
+        "engine_version": "synthetic-execution-v1",
+        "revision": 1,
+        "status": "ACTIVE",
+        "run_id": "planning-session:cc87ca686f8da842ebbbbf1dff0ec4f2",
+        "created_at": "2026-09-17T15:45:26.988505+00:00",
+        "updated_at": "2026-09-17T15:45:27.099283+00:00",
+        "clock_date": "2026-09-14",
+        "start_date": "2026-09-08",
+        "end_date": "2026-11-02",
+        "days_executed": 7,
+        "segment_days_executed": 7,
+        "input_hash": "00286779541fa9ed1245ea2aff65d08c1a05241cdc6a399706aa6601fdbc3f76",
+        "input_version": 1,
+        "scenario": {
+          "id": "execution-central",
+          "yield_factor": 1,
+          "demand_factor": 1,
+          "weight": 1
+        },
+        "strategy_id": "c47848f4e7754becf79d",
+        "strategy_name": "Balanced",
+        "plan_history": [],
+        "completed_task_ids": [
+          "batch-01:sow",
+          "batch-01:transplant",
+          "batch-02:sow",
+          "batch-02:transplant",
+          "batch-03:sow",
+          "batch-03:transplant",
+          "batch-04:sow",
+          "batch-04:transplant",
+          "batch-05:sow",
+          "batch-05:transplant",
+          "batch-06:sow",
+          "batch-06:transplant",
+          "batch-07:sow",
+          "batch-07:transplant",
+          "batch-08:sow",
+          "batch-08:transplant",
+          "batch-01:harvest",
+          "batch-02:harvest",
+          "batch-03:harvest",
+          "batch-04:harvest",
+          "allocation-7efcabee2717ea8949a12733ed2a343a:sow",
+          "allocation-5d27089d3e95583cd9935c86cc1df936:sow",
+          "allocation-608147fa67c03fd79b656790b68dfdb2:sow",
+          "allocation-259b30fe0485ce71d5e2ff4077d4f8fb:sow"
+        ],
+        "harvest_lot_origins": {
+          "harvest-8464e23a68d0409d54c13cfb94cc301b": "batch-01",
+          "harvest-b051bfb1f4c65981b2e05b0aca3aa465": "batch-02",
+          "harvest-573d495e1b794107d6cb5b7bcf1675c1": "batch-03",
+          "harvest-6a53e3e5f298f1dac1cf628605c581c0": "batch-04"
+        },
+        "event_sequence": 24,
+        "inventory": [
+          {
+            "id": "harvest-8464e23a68d0409d54c13cfb94cc301b",
+            "crop_id": "caixin",
+            "quantity_kg": 12.999,
+            "harvested_date": "2026-09-14",
+            "expires_date": "2026-09-17",
+            "origin": "synthetic"
+          },
+          {
+            "id": "harvest-573d495e1b794107d6cb5b7bcf1675c1",
+            "crop_id": "kailan",
+            "quantity_kg": 12.999,
+            "harvested_date": "2026-09-14",
+            "expires_date": "2026-09-17",
+            "origin": "synthetic"
+          },
+          {
+            "id": "harvest-6a53e3e5f298f1dac1cf628605c581c0",
+            "crop_id": "lettuce",
+            "quantity_kg": 8.999,
+            "harvested_date": "2026-09-14",
+            "expires_date": "2026-09-17",
+            "origin": "synthetic"
+          },
+          {
+            "id": "harvest-b051bfb1f4c65981b2e05b0aca3aa465",
+            "crop_id": "pak_choi",
+            "quantity_kg": 18.999,
+            "harvested_date": "2026-09-14",
+            "expires_date": "2026-09-17",
+            "origin": "synthetic"
+          }
+        ],
+        "opening_cash_sgd": "2200",
+        "cash_sgd": 2746.08,
+        "revenue_exact_sgd": "1030.0300",
+        "cost_exact_sgd": "483.95120",
+        "revenue_sgd": 1030.03,
+        "cost_sgd": 483.95,
+        "totals": {
+          "harvest_kg": 190,
+          "delivered_kg": 136.004,
+          "disposed_kg": 5,
+          "demand_kg": 136.004
+        },
+        "outcome_basis": "deterministic_synthetic_schedule_and_scenario",
+        "real_operations_enabled": false,
+        "state_hash": "492de02cd3b6249d965b0c29a610979cee1ed528eb392bf589c4841e6e36a97f",
+        "scene_transition": {
+          "event_id": "simulation:af0802cdb558771209134faf078c6587:event:24",
+          "entity_ids": [
+            "bed-01",
+            "bed-02",
+            "bed-03",
+            "bed-04",
+            "bed-05",
+            "bed-06",
+            "bed-07",
+            "bed-08",
+            "bed-10",
+            "bed-13",
+            "bed-14"
+          ],
+          "effective_date": "2026-09-14",
+          "before": {
+            "beds": [
+              {
+                "id": "bed-01",
+                "name": "A1",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.786,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-01",
+                "crop_id": "caixin",
+                "sow_date": "2026-08-17",
+                "transplant_date": "2026-08-24",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-02",
+                "name": "A2",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.829,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-02",
+                "crop_id": "pak_choi",
+                "sow_date": "2026-08-10",
+                "transplant_date": "2026-08-17",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-03",
+                "name": "A3",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.857,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-03",
+                "crop_id": "kailan",
+                "sow_date": "2026-08-03",
+                "transplant_date": "2026-08-13",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-04",
+                "name": "A4",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.829,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-04",
+                "crop_id": "lettuce",
+                "sow_date": "2026-08-10",
+                "transplant_date": "2026-08-20",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-05",
+                "name": "B1",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.286,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-05",
+                "crop_id": "caixin",
+                "sow_date": "2026-08-31",
+                "transplant_date": "2026-09-07",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-06",
+                "name": "B2",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.429,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-06",
+                "crop_id": "pak_choi",
+                "sow_date": "2026-08-24",
+                "transplant_date": "2026-08-31",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-07",
+                "name": "B3",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.524,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-07",
+                "crop_id": "kailan",
+                "sow_date": "2026-08-17",
+                "transplant_date": "2026-08-27",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-08",
+                "name": "B4",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.429,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-08",
+                "crop_id": "lettuce",
+                "sow_date": "2026-08-24",
+                "transplant_date": "2026-09-03",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-09",
+                "name": "C1",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-10",
+                "name": "C2",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-11",
+                "name": "C3",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-12",
+                "name": "C4",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-13",
+                "name": "D1",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-14",
+                "name": "D2",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-15",
+                "name": "D3",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-16",
+                "name": "D4",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              }
+            ],
+            "inventory": [
+              {
+                "id": "opening-caixin",
+                "crop_id": "caixin",
+                "quantity_kg": "5",
+                "harvested_date": "2026-09-07",
+                "expires_date": "2026-09-10",
+                "origin": "synthetic"
+              }
+            ],
+            "totals": {
+              "harvest_kg": 0,
+              "delivered_kg": 0,
+              "disposed_kg": 0,
+              "demand_kg": 0
+            },
+            "cash_sgd": 2200,
+            "clock_date": null
+          },
+          "after": {
+            "beds": [
+              {
+                "id": "bed-01",
+                "name": "A1",
+                "area_m2": 20,
+                "stage": "harvested",
+                "progress": 1,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "recorded_synthetic_tasks",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-01",
+                "crop_id": "caixin",
+                "sow_date": "2026-08-17",
+                "transplant_date": "2026-08-24",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": [
+                  "allocation-7efcabee2717ea8949a12733ed2a343a"
+                ]
+              },
+              {
+                "id": "bed-02",
+                "name": "A2",
+                "area_m2": 20,
+                "stage": "harvested",
+                "progress": 1,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "recorded_synthetic_tasks",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-02",
+                "crop_id": "pak_choi",
+                "sow_date": "2026-08-10",
+                "transplant_date": "2026-08-17",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-03",
+                "name": "A3",
+                "area_m2": 20,
+                "stage": "harvested",
+                "progress": 1,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "recorded_synthetic_tasks",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-03",
+                "crop_id": "kailan",
+                "sow_date": "2026-08-03",
+                "transplant_date": "2026-08-13",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-04",
+                "name": "A4",
+                "area_m2": 20,
+                "stage": "harvested",
+                "progress": 1,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "recorded_synthetic_tasks",
+                "sanitation_end_date": "2026-09-16",
+                "next_available_date": "2026-09-17",
+                "allocation_id": "batch-04",
+                "crop_id": "lettuce",
+                "sow_date": "2026-08-10",
+                "transplant_date": "2026-08-20",
+                "harvest_date": "2026-09-14",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-05",
+                "name": "B1",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.5,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-05",
+                "crop_id": "caixin",
+                "sow_date": "2026-08-31",
+                "transplant_date": "2026-09-07",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-06",
+                "name": "B2",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.6,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-06",
+                "crop_id": "pak_choi",
+                "sow_date": "2026-08-24",
+                "transplant_date": "2026-08-31",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-07",
+                "name": "B3",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.667,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-07",
+                "crop_id": "kailan",
+                "sow_date": "2026-08-17",
+                "transplant_date": "2026-08-27",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-08",
+                "name": "B4",
+                "area_m2": 20,
+                "stage": "growing",
+                "progress": 0.6,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-09-30",
+                "next_available_date": "2026-10-01",
+                "allocation_id": "batch-08",
+                "crop_id": "lettuce",
+                "sow_date": "2026-08-24",
+                "transplant_date": "2026-09-03",
+                "harvest_date": "2026-09-28",
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-09",
+                "name": "C1",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-10",
+                "name": "C2",
+                "area_m2": 20,
+                "stage": "nursery",
+                "progress": 0,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-10-21",
+                "next_available_date": "2026-10-22",
+                "allocation_id": "allocation-5d27089d3e95583cd9935c86cc1df936",
+                "crop_id": "pak_choi",
+                "sow_date": "2026-09-14",
+                "transplant_date": "2026-09-21",
+                "harvest_date": "2026-10-19",
+                "nursery_allocations": [
+                  "allocation-5d27089d3e95583cd9935c86cc1df936"
+                ]
+              },
+              {
+                "id": "bed-11",
+                "name": "C3",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-12",
+                "name": "C4",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-13",
+                "name": "D1",
+                "area_m2": 20,
+                "stage": "nursery",
+                "progress": 0,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-10-14",
+                "next_available_date": "2026-10-15",
+                "allocation_id": "allocation-608147fa67c03fd79b656790b68dfdb2",
+                "crop_id": "caixin",
+                "sow_date": "2026-09-14",
+                "transplant_date": "2026-09-21",
+                "harvest_date": "2026-10-12",
+                "nursery_allocations": [
+                  "allocation-608147fa67c03fd79b656790b68dfdb2"
+                ]
+              },
+              {
+                "id": "bed-14",
+                "name": "D2",
+                "area_m2": 20,
+                "stage": "nursery",
+                "progress": 0,
+                "progress_basis": "elapsed_schedule_fraction",
+                "growth_model_version": "schedule-state-v2",
+                "physiological_biomass_model": false,
+                "state_basis": "snapshot_schedule",
+                "sanitation_end_date": "2026-10-21",
+                "next_available_date": "2026-10-22",
+                "allocation_id": "allocation-259b30fe0485ce71d5e2ff4077d4f8fb",
+                "crop_id": "lettuce",
+                "sow_date": "2026-09-14",
+                "transplant_date": "2026-09-24",
+                "harvest_date": "2026-10-19",
+                "nursery_allocations": [
+                  "allocation-259b30fe0485ce71d5e2ff4077d4f8fb"
+                ]
+              },
+              {
+                "id": "bed-15",
+                "name": "D3",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              },
+              {
+                "id": "bed-16",
+                "name": "D4",
+                "area_m2": 20,
+                "stage": "empty",
+                "progress": 0,
+                "nursery_allocations": []
+              }
+            ],
+            "inventory": [
+              {
+                "id": "harvest-8464e23a68d0409d54c13cfb94cc301b",
+                "crop_id": "caixin",
+                "quantity_kg": 12.999,
+                "harvested_date": "2026-09-14",
+                "expires_date": "2026-09-17",
+                "origin": "synthetic"
+              },
+              {
+                "id": "harvest-573d495e1b794107d6cb5b7bcf1675c1",
+                "crop_id": "kailan",
+                "quantity_kg": 12.999,
+                "harvested_date": "2026-09-14",
+                "expires_date": "2026-09-17",
+                "origin": "synthetic"
+              },
+              {
+                "id": "harvest-6a53e3e5f298f1dac1cf628605c581c0",
+                "crop_id": "lettuce",
+                "quantity_kg": 8.999,
+                "harvested_date": "2026-09-14",
+                "expires_date": "2026-09-17",
+                "origin": "synthetic"
+              },
+              {
+                "id": "harvest-b051bfb1f4c65981b2e05b0aca3aa465",
+                "crop_id": "pak_choi",
+                "quantity_kg": 18.999,
+                "harvested_date": "2026-09-14",
+                "expires_date": "2026-09-17",
+                "origin": "synthetic"
+              }
+            ],
+            "totals": {
+              "harvest_kg": 190,
+              "delivered_kg": 136.004,
+              "disposed_kg": 5,
+              "demand_kg": 136.004
+            },
+            "cash_sgd": 2746.08,
+            "clock_date": "2026-09-14"
+          },
+          "fact_differences": {
+            "harvest_kg": 190,
+            "delivered_kg": 136.004,
+            "disposed_kg": 5,
+            "demand_kg": 136.004,
+            "cash_sgd": 546.08
+          },
+          "outcome_basis": "recorded_simulation",
+          "inference_triggered": false
+        },
+        "beds": [
+          {
+            "id": "bed-01",
+            "name": "A1",
+            "area_m2": 20,
+            "stage": "harvested",
+            "progress": 1,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "recorded_synthetic_tasks",
+            "sanitation_end_date": "2026-09-16",
+            "next_available_date": "2026-09-17",
+            "allocation_id": "batch-01",
+            "crop_id": "caixin",
+            "sow_date": "2026-08-17",
+            "transplant_date": "2026-08-24",
+            "harvest_date": "2026-09-14",
+            "nursery_allocations": [
+              "allocation-7efcabee2717ea8949a12733ed2a343a"
+            ]
+          },
+          {
+            "id": "bed-02",
+            "name": "A2",
+            "area_m2": 20,
+            "stage": "harvested",
+            "progress": 1,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "recorded_synthetic_tasks",
+            "sanitation_end_date": "2026-09-16",
+            "next_available_date": "2026-09-17",
+            "allocation_id": "batch-02",
+            "crop_id": "pak_choi",
+            "sow_date": "2026-08-10",
+            "transplant_date": "2026-08-17",
+            "harvest_date": "2026-09-14",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-03",
+            "name": "A3",
+            "area_m2": 20,
+            "stage": "harvested",
+            "progress": 1,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "recorded_synthetic_tasks",
+            "sanitation_end_date": "2026-09-16",
+            "next_available_date": "2026-09-17",
+            "allocation_id": "batch-03",
+            "crop_id": "kailan",
+            "sow_date": "2026-08-03",
+            "transplant_date": "2026-08-13",
+            "harvest_date": "2026-09-14",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-04",
+            "name": "A4",
+            "area_m2": 20,
+            "stage": "harvested",
+            "progress": 1,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "recorded_synthetic_tasks",
+            "sanitation_end_date": "2026-09-16",
+            "next_available_date": "2026-09-17",
+            "allocation_id": "batch-04",
+            "crop_id": "lettuce",
+            "sow_date": "2026-08-10",
+            "transplant_date": "2026-08-20",
+            "harvest_date": "2026-09-14",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-05",
+            "name": "B1",
+            "area_m2": 20,
+            "stage": "growing",
+            "progress": 0.5,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-09-30",
+            "next_available_date": "2026-10-01",
+            "allocation_id": "batch-05",
+            "crop_id": "caixin",
+            "sow_date": "2026-08-31",
+            "transplant_date": "2026-09-07",
+            "harvest_date": "2026-09-28",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-06",
+            "name": "B2",
+            "area_m2": 20,
+            "stage": "growing",
+            "progress": 0.6,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-09-30",
+            "next_available_date": "2026-10-01",
+            "allocation_id": "batch-06",
+            "crop_id": "pak_choi",
+            "sow_date": "2026-08-24",
+            "transplant_date": "2026-08-31",
+            "harvest_date": "2026-09-28",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-07",
+            "name": "B3",
+            "area_m2": 20,
+            "stage": "growing",
+            "progress": 0.667,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-09-30",
+            "next_available_date": "2026-10-01",
+            "allocation_id": "batch-07",
+            "crop_id": "kailan",
+            "sow_date": "2026-08-17",
+            "transplant_date": "2026-08-27",
+            "harvest_date": "2026-09-28",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-08",
+            "name": "B4",
+            "area_m2": 20,
+            "stage": "growing",
+            "progress": 0.6,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-09-30",
+            "next_available_date": "2026-10-01",
+            "allocation_id": "batch-08",
+            "crop_id": "lettuce",
+            "sow_date": "2026-08-24",
+            "transplant_date": "2026-09-03",
+            "harvest_date": "2026-09-28",
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-09",
+            "name": "C1",
+            "area_m2": 20,
+            "stage": "empty",
+            "progress": 0,
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-10",
+            "name": "C2",
+            "area_m2": 20,
+            "stage": "nursery",
+            "progress": 0,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-10-21",
+            "next_available_date": "2026-10-22",
+            "allocation_id": "allocation-5d27089d3e95583cd9935c86cc1df936",
+            "crop_id": "pak_choi",
+            "sow_date": "2026-09-14",
+            "transplant_date": "2026-09-21",
+            "harvest_date": "2026-10-19",
+            "nursery_allocations": [
+              "allocation-5d27089d3e95583cd9935c86cc1df936"
+            ]
+          },
+          {
+            "id": "bed-11",
+            "name": "C3",
+            "area_m2": 20,
+            "stage": "empty",
+            "progress": 0,
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-12",
+            "name": "C4",
+            "area_m2": 20,
+            "stage": "empty",
+            "progress": 0,
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-13",
+            "name": "D1",
+            "area_m2": 20,
+            "stage": "nursery",
+            "progress": 0,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-10-14",
+            "next_available_date": "2026-10-15",
+            "allocation_id": "allocation-608147fa67c03fd79b656790b68dfdb2",
+            "crop_id": "caixin",
+            "sow_date": "2026-09-14",
+            "transplant_date": "2026-09-21",
+            "harvest_date": "2026-10-12",
+            "nursery_allocations": [
+              "allocation-608147fa67c03fd79b656790b68dfdb2"
+            ]
+          },
+          {
+            "id": "bed-14",
+            "name": "D2",
+            "area_m2": 20,
+            "stage": "nursery",
+            "progress": 0,
+            "progress_basis": "elapsed_schedule_fraction",
+            "growth_model_version": "schedule-state-v2",
+            "physiological_biomass_model": false,
+            "state_basis": "snapshot_schedule",
+            "sanitation_end_date": "2026-10-21",
+            "next_available_date": "2026-10-22",
+            "allocation_id": "allocation-259b30fe0485ce71d5e2ff4077d4f8fb",
+            "crop_id": "lettuce",
+            "sow_date": "2026-09-14",
+            "transplant_date": "2026-09-24",
+            "harvest_date": "2026-10-19",
+            "nursery_allocations": [
+              "allocation-259b30fe0485ce71d5e2ff4077d4f8fb"
+            ]
+          },
+          {
+            "id": "bed-15",
+            "name": "D3",
+            "area_m2": 20,
+            "stage": "empty",
+            "progress": 0,
+            "nursery_allocations": []
+          },
+          {
+            "id": "bed-16",
+            "name": "D4",
+            "area_m2": 20,
+            "stage": "empty",
+            "progress": 0,
+            "nursery_allocations": []
+          }
+        ],
+        "simulation_only": true,
+        "inference_triggered": false
+      }
+    },
+    {
+      "name": "scene reloads recorded clock and server simulation bed state",
+      "pass": true,
+      "detail": {
+        "sceneText": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg",
+        "bed": {
+          "id": "bed-01",
+          "name": "A1",
+          "area_m2": 20,
+          "stage": "harvested",
+          "progress": 1,
+          "progress_basis": "elapsed_schedule_fraction",
+          "growth_model_version": "schedule-state-v2",
+          "physiological_biomass_model": false,
+          "state_basis": "recorded_synthetic_tasks",
+          "sanitation_end_date": "2026-09-16",
+          "next_available_date": "2026-09-17",
+          "allocation_id": "batch-01",
+          "crop_id": "caixin",
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-24",
+          "harvest_date": "2026-09-14",
+          "nursery_allocations": [
+            "allocation-7efcabee2717ea8949a12733ed2a343a"
+          ]
+        }
+      }
+    },
+    {
+      "name": "recorded consequence transition remains factual and provider-free",
+      "pass": true,
+      "detail": "Farm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation changed · 2026-09-14\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+    },
+    {
+      "name": "200% zoom uses document scrolling",
+      "pass": true
+    },
+    {
+      "name": "normal-motion transition is finite",
+      "pass": true
+    },
+    {
+      "name": "reduced motion retains the same recorded consequence facts",
+      "pass": true,
+      "detail": "Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg"
+    },
+    {
+      "name": "recorded-consequence-reduced-390: document fits the viewport",
+      "pass": true
+    },
+    {
+      "name": "fresh journey persisted proposal apply inverse and approval mutations",
+      "pass": true,
+      "detail": [
+        "/api/v1/planning-sessions",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/calculate",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/farm-workflow/proposals",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/farm-workflow/proposals/1d7daf2e4ec557d5586cf03a267a40ff/apply",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/farm-workflow/proposals/1d7daf2e4ec557d5586cf03a267a40ff/inverse",
+        "/api/v1/farm-workflow/proposals",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/farm-workflow/proposals/de8405d83abcc0a385c463859f2a1392/apply",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/farm-workflow/proposals/de8405d83abcc0a385c463859f2a1392/approve-actions",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+        "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/advance"
+      ]
+    },
+    {
+      "name": "full card journey made no automatic provider request",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no uncaught browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "journey-final-390: document fits the viewport",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "reports/v16/reservation-before-review-390.png",
+    "reports/v16/reservation-review-390.png",
+    "reports/v16/reservation-explanation-390.png",
+    "reports/v16/recorded-consequence-reduced-390.png",
+    "reports/v16/journey-final-390.png"
+  ],
+  "video": "/home/sprite/workspaces/Code2/reports/v16/video/page@2f65d1a08eb9bad80b82b8b9ced51246.webm",
+  "mutations": [
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/calculate",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/farm-workflow/proposals",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/farm-workflow/proposals/1d7daf2e4ec557d5586cf03a267a40ff/apply",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/farm-workflow/proposals/1d7daf2e4ec557d5586cf03a267a40ff/inverse",
+    "/api/v1/farm-workflow/proposals",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/farm-workflow/proposals/de8405d83abcc0a385c463859f2a1392/apply",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/farm-workflow/proposals/de8405d83abcc0a385c463859f2a1392/approve-actions",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/guidance",
+    "/api/v1/planning-sessions/cc87ca686f8da842ebbbbf1dff0ec4f2/advance"
+  ],
+  "providerRequests": []
+}
