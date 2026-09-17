@@ -11,19 +11,19 @@ dist/assets/IntegratedResearch-CmbOu-un.css       2.00 kB │ gzip:  0.74 kB
 dist/assets/tool-card-CoW2HBZl.css                2.22 kB │ gzip:  0.74 kB
 dist/assets/IntegratedHistory-Bpy88piB.css        3.20 kB │ gzip:  1.06 kB
 dist/assets/IntegratedRecords-DnrFUODk.css        4.20 kB │ gzip:  1.29 kB
-dist/assets/IntegratedKnowledge-Csps7LPM.css      6.09 kB │ gzip:  1.78 kB
-dist/assets/index-CjjBliFG.css                  134.04 kB │ gzip: 28.16 kB
-dist/assets/cardNavigation-D8K0azoW.js            0.86 kB │ gzip:  0.48 kB
+dist/assets/IntegratedKnowledge-OhCff2zS.css      6.95 kB │ gzip:  1.87 kB
+dist/assets/index-dCI3MlGv.css                  134.10 kB │ gzip: 28.18 kB
+dist/assets/cardNavigation-Df5G2NbE.js            0.86 kB │ gzip:  0.48 kB
 dist/assets/cardProjection-Cw99jypQ.js            0.98 kB │ gzip:  0.54 kB
-dist/assets/ToolCard-DoFyEv-Z.js                  2.14 kB │ gzip:  0.96 kB
-dist/assets/createLucideIcon-DjVGanvR.js          3.08 kB │ gzip:  1.48 kB
-dist/assets/AdvisorEvidence-DWLeGRjc.js          10.94 kB │ gzip:  4.11 kB
-dist/assets/IntegratedHistory-BJ6spmPg.js        17.32 kB │ gzip:  6.37 kB
-dist/assets/IntegratedPlan-DnaCMjKZ.js           22.75 kB │ gzip:  6.68 kB
-dist/assets/IntegratedResearch-BCVdkX-V.js       24.28 kB │ gzip:  7.76 kB
-dist/assets/IntegratedKnowledge-C8UI0zep.js      28.48 kB │ gzip:  8.77 kB
-dist/assets/IntegratedExperiments-BlUibSZS.js    31.47 kB │ gzip:  9.68 kB
-dist/assets/IntegratedRecords-CPPekcck.js        46.90 kB │ gzip: 14.00 kB
-dist/assets/index-X6-Yr6Ln.js                   249.66 kB │ gzip: 77.39 kB
+dist/assets/ToolCard-Ct6Zj8WG.js                  2.14 kB │ gzip:  0.96 kB
+dist/assets/createLucideIcon-BL7REnKV.js          3.08 kB │ gzip:  1.48 kB
+dist/assets/AdvisorEvidence-D2ZK_YfM.js          10.94 kB │ gzip:  4.11 kB
+dist/assets/IntegratedHistory-C7T0b1FP.js        17.32 kB │ gzip:  6.38 kB
+dist/assets/IntegratedPlan-LOBUjwxF.js           22.99 kB │ gzip:  6.74 kB
+dist/assets/IntegratedResearch-B-6oxXjR.js       24.28 kB │ gzip:  7.77 kB
+dist/assets/IntegratedKnowledge-B9D-8jPl.js      29.65 kB │ gzip:  9.01 kB
+dist/assets/IntegratedExperiments-Ck-RitZ5.js    31.47 kB │ gzip:  9.68 kB
+dist/assets/IntegratedRecords-Bh-gf3g8.js        47.04 kB │ gzip: 14.04 kB
+dist/assets/index-CHDAS7Ra.js                   250.51 kB │ gzip: 77.67 kB
 
-✓ built in 1.43s
+✓ built in 1.27s

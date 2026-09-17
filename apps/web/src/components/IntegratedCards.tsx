@@ -66,6 +66,17 @@ function difference(left: unknown, right: unknown, multiplier = 1) {
   return Number.isFinite(a) && Number.isFinite(b) ? (a - b) * multiplier : null;
 }
 
+function progressLabel(stage: string | null | undefined) {
+  if (!stage) return "Calculating plans…";
+  const known: Record<string, string> = {
+    queued: "Waiting to calculate…",
+    calculating_schedules_and_inventory: "Calculating schedules and inventory…",
+    calculating_strategies: "Comparing plan choices…",
+    recalculating: "Recalculating plans…",
+  };
+  return known[stage.toLowerCase()] || `${stage.replaceAll("_", " ").replace(/^./, (letter) => letter.toUpperCase())}…`;
+}
+
 function assumptionsFor(session: PlanningSession): FarmerAssumptions {
   const value = (session.assumptions || {}) as Partial<FarmerAssumptions>;
   return {
@@ -179,6 +190,7 @@ export default function IntegratedCards({
   const missionScroll = useRef(0);
   const origin = useRef<{ label: string; scroll: number } | null>(null);
   const missionOrigin = useRef<{ label: string; scroll: number } | null>(null);
+  const pendingRestore = useRef<{ label: string; scroll: number } | null>(null);
   const directTool = useRef(false);
   const navigationReady = useRef(false);
   const resumedSession = useRef("");
@@ -324,6 +336,14 @@ export default function IntegratedCards({
     try { localStorage.setItem(editionStorageKey(`integrated-cards-navigation:${session.id}`), JSON.stringify({ surface, index, missionIndex: missionIndex.current, missionScroll: missionScroll.current, directTool: directTool.current, toolTarget, origin: origin.current, missionOrigin: missionOrigin.current })); } catch { /* optional */ }
   }, [session?.id, surface, index, detail, toolTarget]);
   useEffect(() => {
+    if (loadingBusy || !pendingRestore.current) return;
+    const restore = pendingRestore.current; pendingRestore.current = null;
+    afterPaint(() => {
+      window.scrollTo({ top: restore.scroll, behavior: "auto" });
+      [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === restore.label)?.focus();
+    });
+  }, [loadingBusy, surface, index]);
+  useEffect(() => {
     if (loadingBusy) return;
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status)) return;
     let cancelled = false, timer = 0;
@@ -421,10 +441,10 @@ export default function IntegratedCards({
     }));
     const reservation = grow ? [{
       id: "reservation", eyebrow: activeProposal ? "Applied constraint" : "Optional sample constraint",
-      title: activeProposal ? `${grow.name} is reserved` : `Keep ${grow.name} available`,
+      title: activeProposal ? `${grow.name} is reserved` : `Try setting ${grow.name} aside`,
       summary: activeProposal
         ? "The saved recalculation includes this reservation. Server deltas show its consequence."
-        : `Try an optional dated constraint: ask the planner to avoid ${grow.name} from ${grow.reservation_window.start_date} to ${grow.reservation_window.end_date}. No maintenance reason is asserted by the farm record.`,
+        : `Practice a what-if: leave ${grow.name} out of future allocations from ${grow.reservation_window.start_date} to ${grow.reservation_window.end_date}, then compare production and cost before deciding.`,
       facts: activeProposal ? [
         ["Production coverage", signed(activeProposal.metric_deltas?.coverage_kg, "kg")],
         ["Expiry exposure", signed(activeProposal.metric_deltas?.expiry_kg, "kg")],
@@ -524,8 +544,16 @@ export default function IntegratedCards({
     if (["QUEUED", "RUNNING"].includes(session?.job?.status || "")) return;
     const card = missionCards[activeIndex];
     if (card?.id === "reservation" && !taskCount && (activeProposal ? approval?.available === false : grow?.reserve_eligible === false)) return;
-    if (card?.id === "approved" || (card?.id === "reservation" && taskCount)) { missionIndex.current = activeIndex; directTool.current = true; setSurface("records"); return; }
-    if (card?.id === "simulation-result") { missionIndex.current = activeIndex; directTool.current = true; setSurface("history"); return; }
+    if (card?.id === "approved" || (card?.id === "reservation" && taskCount)) {
+      origin.current = { label: primaryLabel, scroll: window.scrollY };
+      missionIndex.current = activeIndex; missionScroll.current = window.scrollY; directTool.current = true;
+      setToolTarget({ records: { view: "tasks" } }); setSurface("records"); setIndex(0); return;
+    }
+    if (card?.id === "simulation-result") {
+      origin.current = { label: primaryLabel, scroll: window.scrollY };
+      missionIndex.current = activeIndex; missionScroll.current = window.scrollY; directTool.current = true;
+      setToolTarget({ history: "simulations" }); setSurface("history"); setIndex(0); return;
+    }
     if (!strategies.length) void calculate();
     else if (card?.id === "situation") setIndex(Math.max(1, missionCards.findIndex((item) => item.id.startsWith("strategy-"))));
     else if (card?.id.startsWith("strategy-")) { setIndex(missionCards.findIndex((item) => item.id === "reservation")); void guide("tradeoff"); }
@@ -568,17 +596,13 @@ export default function IntegratedCards({
   const closeTool = () => {
     if (directTool.current) {
       directTool.current = false; setToolTarget(undefined); setSurface("mission"); setIndex(missionIndex.current);
-      void load().finally(() => afterPaint(() => {
-        window.scrollTo({ top: origin.current?.scroll ?? missionScroll.current, behavior: "auto" });
-        [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
-      })); return;
+      pendingRestore.current = { label: origin.current?.label || "", scroll: origin.current?.scroll ?? missionScroll.current };
+      void load(); return;
     }
     const toolIndex = toolCards.findIndex((item) => item.id === surface);
     setToolTarget(undefined); setSurface("tools"); setIndex(Math.max(0, toolIndex));
-    void load().finally(() => afterPaint(() => {
-      window.scrollTo({ top: origin.current?.scroll ?? missionScroll.current, behavior: "auto" });
-      [...document.querySelectorAll<HTMLButtonElement>(".ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
-    }));
+    pendingRestore.current = { label: origin.current?.label || "", scroll: origin.current?.scroll ?? missionScroll.current };
+    void load();
   };
   const openTools = () => { missionIndex.current = activeIndex; missionScroll.current = window.scrollY; missionOrigin.current = { label: "More", scroll: window.scrollY }; setSurface("tools"); setIndex(0); };
   const returnToMission = () => {
@@ -614,9 +638,11 @@ export default function IntegratedCards({
   const reservationEligible = !reservationDecision || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false);
   const reservationReason = reservationDecision && activeProposal && approval?.available === false ? approval.reason || "Approval is unavailable."
     : reservationDecision && !activeProposal && grow?.reserve_eligible === false ? grow.reserve_disabled_reason || "Reservation is unavailable." : undefined;
+  const demoStepCount = 2 + (chosen && feasible.some((item) => item.id !== chosen.id) ? 1 : 0) + (grow ? 1 : 0)
+    + (proposalTransition?.event_id ? 1 : 0) + (approvedTasks.length ? 1 : 0) + (simulationTransition?.event_id ? 1 : 0);
   const cardActions = demoStep != null ? [
     { id: "demo-previous", label: "Previous step", eligible: demoStep > 0, authority: "local_navigation" as const, eligibilitySource: "local" as const },
-    { id: "demo-next", label: "Next step", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
+    { id: "demo-next", label: demoStep >= demoStepCount - 1 ? "Finish demonstration" : "Next step", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "demo-skip", label: "Skip demonstration", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
   ] : detail ? [
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
@@ -631,7 +657,11 @@ export default function IntegratedCards({
     { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate three plans", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: reservationDecision ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
     { id: "more", label: "More", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
   ];
-  const boundCard: FarmCard | null = current ? surface === "tools" ? {
+  const boundCard: FarmCard | null = demoStep != null ? {
+    id: `first-use-demo-${demoStep + 1}`, entityId: session.id, entityKind: "demonstration", title: "First-use demonstration", provenance: [],
+    binding: { sessionId: session.id, inputHash: snapshotBinding?.input_hash || session.input_hash, revision: snapshotBinding?.revision ?? session.revision, resultId: boundResultId || null },
+    boardTargets: [], actions: cardActions, outcomeBasis: null,
+  } : current ? surface === "tools" ? {
     id: `tool-${current.id}`, entityId: current.id, entityKind: "tool", title: current.title, provenance: [],
     binding: { sessionId: null, inputHash: null, revision: null, resultId: null },
     boardTargets: [], actions: cardActions, outcomeBasis: null,
@@ -849,7 +879,7 @@ export default function IntegratedCards({
                 : detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
                 : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
                 : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
-                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? session.job?.stage || "Calculating…" : primaryLabel)}</button>
+                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? progressLabel(session.job?.stage) : primaryLabel)}</button>
                   <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}
             </div>
           </nav>

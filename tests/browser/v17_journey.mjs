@@ -9,7 +9,7 @@ const expectedEdition = String(process.env.EXPECTED_EDITION || 'v17').toLowerCas
 if (!/^v(?:15|16|17)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15, v16 or v17');
 const editionNumber = expectedEdition.slice(1);
 const planningSessionKey = `farmtact:${expectedEdition}:planning-session`;
-const staged = process.env.STAGED_SOURCE ? await import('./v15_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;
+const staged = process.env.STAGED_SOURCE ? await import('./v17_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;
 const base = (staged ? 'http://127.0.0.1:4199' : process.env.BASE_URL || process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:4191').replace(/\/$/, '');
 const reportDir = process.env.REPORT_DIR ? resolve(process.env.REPORT_DIR) : resolve(root, `reports/${expectedEdition}`);
 const temporaryStorageState = process.env.STORAGE_STATE || `/tmp/farmtact-${expectedEdition}-cards-storage.json`;
@@ -124,6 +124,7 @@ try {
     await context.storageState({ path: temporaryStorageState });
     await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
     await page.waitForFunction(id => document.querySelector('.ic-card')?.getAttribute('data-session-id') === id && !document.querySelector('[role="status"]'), fresh.id, { timeout: 30_000 });
+    if (await page.getByRole('button', {name: 'Skip demonstration', exact: true}).count()) await page.getByRole('button', {name: 'Skip demonstration', exact: true}).click();
   }
   if (await page.locator('.integrated-tool').count()) await page.locator('.integrated-tool').getByRole('button', { name: 'Back', exact: true }).click();
   if ((await page.locator('.ic-deck-nav').innerText()).includes('Farm tools')) await page.getByRole('button', { name: 'Back', exact: true }).click();
@@ -196,9 +197,9 @@ try {
     await next.click();
   }
   check('Lean Balanced and Resilient are all available', ['Lean', 'Balanced', 'Resilient'].every(name => names.has(name)), [...names]);
-  for (let i = 0; i < 8 && !/Keep .+ available|is reserved/i.test(await card.locator('h1').innerText()); i++)
+  for (let i = 0; i < 8 && !/Try setting .+ aside|Keep .+ available|is reserved/i.test(await card.locator('h1').innerText()); i++)
     await page.getByRole('button', { name: '← Previous' }).click();
-  await page.getByRole('heading', { name: /Keep .+ available|is reserved/ }).waitFor();
+  await page.getByRole('heading', { name: /Try setting .+ aside|Keep .+ available|is reserved/ }).waitFor();
   await shot(page, `reservation-before-review-${journeyWidth}`);
 
   // Proposal must be reviewed before apply; review replaces the active card content.

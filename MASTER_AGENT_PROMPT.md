@@ -1,3 +1,7 @@
+## V17 persona-led rewrite — private candidate, 17 September 2026
+
+The active work is specified in [docs/v17-persona-rewrite.md](docs/v17-persona-rewrite.md). Three AI-persona V15 walkthroughs and the GitHub page-13 judging rubric guide restored crop/research/data discoverability, factual demonstrations and expert shortcuts. Preserve the complete adviser/Council/reviewed-proposal loop, numerical authority, shared admission limits and disabled physical operations. V16 remains public until final candidate verification and immutable publication. See `reports/v17/implementation.md` for current evidence; persona review is not human usability research.
+
 Current release, 17 September 2026: V16 is published from source
 `3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
 `registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.

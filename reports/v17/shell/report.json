@@ -1,0 +1,269 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "first-use states sample order, all demand and horizon",
+      "pass": true,
+      "detail": "FIRST-USE DEMONSTRATION · 1 OF 7\nOne sample order, all demand retained\n1 · Read the situation\n\nThe example is 24 kg of caixin due 2026-09-21. The planner includes all 28 order lines across 49 days.\n\nAuthoritative fact\nSample farm date 2026-09-15 · 16 grow spaces\nBasis\nRecorded sample-farm input\nMotion\nFinite highlights on authoritative entities"
+    },
+    {
+      "name": "demonstration has one three-control footer and no farm deck navigation",
+      "pass": true,
+      "detail": "Previous step\nNext step\nSkip demonstration"
+    },
+    {
+      "name": "Enter advances demonstration only and sends zero writes",
+      "pass": true,
+      "detail": {
+        "before": "1 · Read the situation",
+        "after": "2 · Compare without saving",
+        "writes": []
+      }
+    },
+    {
+      "name": "comparison demo shows server preview overlays without saving",
+      "pass": true,
+      "detail": "FIRST-USE DEMONSTRATION · 2 OF 7\nBalanced and Lean use the same farm and dates\n2 · Compare without saving\n\nPreview—not saved. All-demand coverage differs by +10 percentage points; shortfall differs by −95 kg. This does not change the selected strategy.\n\nAuthoritative fact\nFrozen result 7aba1ef728a777af7c2582f8ff4ffebf\nBasis\nPlanner projection\nMotion\nFinite highlights on authoritative entities"
+    },
+    {
+      "name": "B3 demo uses dated recorded-to-proposed lifecycle",
+      "pass": true,
+      "detail": "FIRST-USE DEMONSTRATION · 3 OF 7\nOptional sample constraint for B3\n3 · Understand the constraint\n\nThe proposed window is 2026-09-15 to 2026-11-02. The recorded bed crop is not reported; recorded harvest date not reported; sanitation date is not separately reported. No maintenance reason is invented.\n\nRecorded crop\nNot reported\nRecorded harvest\nNot reported\nSanitation\nNot separately reported\nProposed reservation\n2026-09-15 → 2026-11-02\nAuthoritative fact\nbed-07 · 20 m²\nBasis\nRecorded bed facts and server-supplied reservation window\nMotion\nFinite highlights on authoritative entities"
+    },
+    {
+      "name": "B3 causal scene focuses the actual target bed",
+      "pass": true,
+      "detail": "ic-scene  is-demo-constraint "
+    },
+    {
+      "name": "saved consequence demo binds highlights to listed event entities",
+      "pass": true,
+      "detail": "FIRST-USE DEMONSTRATION · 4 OF 7\nThe confirmed recalculation changed the saved projection\n4 · Saved after explicit apply\n\nEvent proposal:658ca187bc1938c1ee162163fbcabbbe:result:7aba1ef728a777af7c2582f8ff4ffebf affected bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-08, bed-09, bed-10, bed-11, bed-12, bed-13, bed-14, bed-15, bed-16 on 2026-09-15. Aggregate differences describe the whole recalculated plan, not B3 alone.\n\nAuthoritative fact\ncoverage kg −20 kg · surplus kg +13 kg · expiry kg +23 kg\nBasis\nSaved projection event\nMotion\nFinite highlights on authoritative entities"
+    },
+    {
+      "name": "saved consequence demo binds highlights to listed event entities",
+      "pass": true,
+      "detail": "FIRST-USE DEMONSTRATION · 6 OF 7\nFinite saved event on 2026-09-14\n6 · Recorded simulation result\n\nOnly this saved simulation event supports the displayed consequence. Affected entities: bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14.\n\nAuthoritative fact\nharvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\nBasis\nRecorded simulation\nMotion\nFinite highlights on authoritative entities"
+    },
+    {
+      "name": "final demo footer and canonical action both say Finish demonstration",
+      "pass": true,
+      "detail": {
+        "actions": [
+          {
+            "id": "demo-previous",
+            "label": "Previous step",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "demo-next",
+            "label": "Finish demonstration",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          },
+          {
+            "id": "demo-skip",
+            "label": "Skip demonstration",
+            "eligible": true,
+            "authority": "local_navigation",
+            "eligibilitySource": "local"
+          }
+        ],
+        "cardId": "first-use-demo-7"
+      }
+    },
+    {
+      "name": "constraint lesson is always present when tactical target exists",
+      "pass": true,
+      "detail": {
+        "sawConstraint": true,
+        "sawPreview": true,
+        "sawSaved": true
+      }
+    },
+    {
+      "name": "arrival next step names its destination",
+      "pass": true,
+      "detail": "View calculated plans"
+    },
+    {
+      "name": "order shortcut returns exact card, focus and scroll",
+      "pass": true,
+      "detail": {
+        "focused": "Inspect selected order",
+        "scrollY": 120
+      }
+    },
+    {
+      "name": "simulation primary opens the simulations destination",
+      "pass": true,
+      "detail": "Farm tools › History & preferences\n\nSandbox · actual farm operations disabled\nSimulations\n2026-09-14 · ACTIVE\n\nd6a0a2837d64142acec0a9294ae3e0eb\n\ntype\nsimulation\nstatus\nACTIVE\nrevision\n2\neffective date\n2026-09-14\nresult id\n\nNot available\n\nsnapshot\n\nNot available\n\nprovenance\nplanning-session:63c1b1bb786f77833bc71a1ff3ed1479\nBack\nRead-only replay"
+    },
+    {
+      "name": "tools index exposes all five categories at once",
+      "pass": true,
+      "detail": "Plan\nCalculate, compare and approve revision-bound plans.\nRecords & work\nReview farm records, imports, tasks and corrections.\nKnowledge & evidence\nInspect crops, sources and saved specialist reviews.\nExperiments\nOpen scenarios, datasets, forecasts and local studies.\nHistory & preferences\nReplay saved events and manage display preferences.\nReplay demonstration\nReview the factual decision sequence without saving or inference."
+    },
+    {
+      "name": "category close returns tools index and originating control",
+      "pass": true,
+      "detail": {
+        "focus": "\n    Objective · selected sample order24 kg caixin by 2026-09-21All 28 order lines remain in the 49-day plan.Sandbox farm · real operations disabledSaved simulation scene · Area 1 of 2 · showing 8 of 162026-09-14A1Harvested residuecaixinharvestedA2Harvested residuepak choiharvestedA3Harvested residuekailanharvestedA4Harvested residuelettuceharvestedB1caixingrowingB2pak choigrowingB3kailangrowingSaved reservation2026-10-01 → 2026-11-02B4lettucegrowingShowing 8 of 16 grow spaces. Scene reflects saved records; listed affected IDs may include spaces outside this area. Selecting cards only changes the highlighted preview.Recorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kgFarm toolsChoose a toolOpen one category or use Next and Previous to inspect its summary.PlanCalculate, compare and approve revision-bound plans.Records & workReview farm records, imports, tasks and corrections.Knowledge & evidenceInspect crops, sources and saved specialist reviews.ExperimentsOpen scenarios, datasets, forecasts and local studies.History & preferencesReplay saved events and manage display preferences.Replay demonstrationReview the factual decision sequence without saving or inference.Farm tools › Knowledge & evidence← PreviousFarm tools · 3 of 5Next →BackOpen toolResume guide\n  \n\n"
+      }
+    },
+    {
+      "name": "replay is finite and skippable",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "read-only first-use journey preserves planning state",
+      "pass": true,
+      "detail": {
+        "selected": {
+          "id": "63c1b1bb786f77833bc71a1ff3ed1479",
+          "revision": 13,
+          "result_id": "7aba1ef728a777af7c2582f8ff4ffebf",
+          "status": "COMPLETED",
+          "updated_at": "2026-09-17T13:39:07.312100+00:00"
+        },
+        "after": {
+          "revision": 13,
+          "result_id": "7aba1ef728a777af7c2582f8ff4ffebf",
+          "status": "COMPLETED",
+          "updated_at": "2026-09-17T13:39:07.312100+00:00"
+        }
+      }
+    },
+    {
+      "name": "first-use navigation makes zero writes or provider calls",
+      "pass": true,
+      "detail": {
+        "writes": [],
+        "providers": []
+      }
+    },
+    {
+      "name": "reduced motion shows the same first-step facts without animation",
+      "pass": true,
+      "detail": {
+        "animation": "none"
+      }
+    },
+    {
+      "name": "responsive tools index fits 360px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "minButton": 56
+      }
+    },
+    {
+      "name": "200% zoom remains operable at 360px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 640,
+        "clientWidth": 360
+      }
+    },
+    {
+      "name": "responsive tools index fits 390px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "minButton": 56
+      }
+    },
+    {
+      "name": "200% zoom remains operable at 390px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 640,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "responsive tools index fits 430px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 430,
+        "clientWidth": 430,
+        "minButton": 56
+      }
+    },
+    {
+      "name": "200% zoom remains operable at 430px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 640,
+        "clientWidth": 430
+      }
+    },
+    {
+      "name": "responsive tools index fits 1280px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "minButton": 56
+      }
+    },
+    {
+      "name": "200% zoom remains operable at 1280px",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280
+      }
+    },
+    {
+      "name": "pending calculation footer fits 360px with readable progress",
+      "pass": true,
+      "detail": {
+        "page": 360,
+        "viewport": 360,
+        "actions": {
+          "x": 10,
+          "y": 857.34375,
+          "width": 340,
+          "height": 160.1875,
+          "top": 857.34375,
+          "right": 350,
+          "bottom": 1017.53125,
+          "left": 10
+        },
+        "label": "Calculating schedules and inventory…",
+        "disabled": true
+      }
+    },
+    {
+      "name": "pending calculation footer fits 390px with readable progress",
+      "pass": true,
+      "detail": {
+        "page": 390,
+        "viewport": 390,
+        "actions": {
+          "x": 10,
+          "y": 891.4375,
+          "width": 370,
+          "height": 160.1875,
+          "top": 891.4375,
+          "right": 380,
+          "bottom": 1051.625,
+          "left": 10
+        },
+        "label": "Calculating schedules and inventory…",
+        "disabled": true
+      }
+    }
+  ],
+  "failures": [],
+  "writes": [],
+  "providers": []
+}

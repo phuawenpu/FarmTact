@@ -1,0 +1,24 @@
+{
+  "title": "FarmTact V17 — Clear decisions, accessible farm tools",
+  "summary": "One ordinary sandbox connects a factual first-use demonstration, direct planning controls, a searchable crop library, research and data tools, and evidence-bearing specialist workflows.",
+  "changes": [
+    {
+      "title": "Understand a decision before saving it",
+      "description": "The skippable demonstration explains the selected order versus all demand, unsaved previews, dated constraints, task approval and recorded simulation. Finite highlights use actual saved facts and preserve reduced-motion access.",
+      "feedback_ids": [],
+      "evidence": ["reports/v17/personas/review.md", "reports/v17/shell/report.json", "reports/v17/journey/browser-cards.json"]
+    },
+    {
+      "title": "Find crops, research and data directly",
+      "description": "Named category indexes and contextual links restore access to crop profiles, public evidence, dated schedules, records, Data Explorer, isolated research studies and saved outcomes. Each path retains its origin and explicit review controls.",
+      "feedback_ids": [],
+      "evidence": ["reports/v17/tools/browser.json", "reports/v17/navigation/checks.json", "reports/v17/adapters.json"]
+    },
+    {
+      "title": "Keep the complete specialist reasoning loop",
+      "description": "Direct questions, invited specialists and Council preserve frozen context, full transcripts, citations, partial or withheld findings, and discussion-linked reviewed proposals. Browsing and replay make no inference calls; every actual submission retains existing provider and API limits.",
+      "feedback_ids": [],
+      "evidence": ["reports/v17/personas/v17-acceptance.json", "docs/v17-persona-rewrite.md"]
+    }
+  ]
+}

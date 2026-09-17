@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "build": "/assets/index-CHDAS7Ra.js",
+  "checks": [
+    {
+      "name": "approved-task primary action is present",
+      "pass": true,
+      "detail": "APPLIED CONSTRAINT\nB3 is reserved\n\nThe saved recalculation includes this reservation. Server deltas show its consequence.\n\nProduction coverage\n−4 kg\nExpiry exposure\n+17 kg\nPlanner margin\n−199.5 SGD"
+    },
+    {
+      "name": "approved-task primary opens targeted Tasks & results",
+      "pass": true,
+      "detail": "Review sandbox work"
+    },
+    {
+      "name": "targeted Records Back restores mission primary focus",
+      "pass": true,
+      "detail": "Review sandbox work"
+    },
+    {
+      "name": "recorded simulation primary action is present",
+      "pass": true,
+      "detail": "RECORDED SIMULATION\nFarm date 2026-09-14\n\nThese quantities come from recorded simulation events, separate from the planning projection.\n\nHarvested\n190 kg\nDelivered\n136 kg\nCash\nSGD 2,746.1\nView simulation results"
+    },
+    {
+      "name": "simulation primary opens targeted Simulations history",
+      "pass": true
+    },
+    {
+      "name": "targeted History Back restores mission primary focus",
+      "pass": true,
+      "detail": "Open simulation history"
+    },
+    {
+      "name": "strategy contextual schedule action is present",
+      "pass": true,
+      "detail": "CALCULATED CHOICE\nLean plan\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nPreview—not saved\nAll-demand coverage\n44.3%\nAll-demand shortfall\n606 kg\nHorizon\n56 days\nSelected order\nCoverage not separately reported\nDated schedule\nPlanning Council\nResearch overview"
+    },
+    {
+      "name": "direct Strategies target renders the strategy card identity without Objectives fallback",
+      "pass": true,
+      "detail": {
+        "id": "plan:strategies:7c226eab4bc2e0bd32f6",
+        "kind": "strategy"
+      }
+    },
+    {
+      "name": "Plan assumptions binds requested adapter-session-a",
+      "pass": true,
+      "detail": {
+        "requested": "adapter-session-a",
+        "bound": "adapter-session-a"
+      }
+    },
+    {
+      "name": "session A ignores the historical unscoped Plan draft",
+      "pass": true,
+      "detail": "{\n  \"tentative_orders\": [],\n  \"future_demand\": [],\n  \"seasonal\": [],\n  \"order_ch"
+    },
+    {
+      "name": "Plan assumptions binds requested adapter-session-b",
+      "pass": true,
+      "detail": {
+        "requested": "adapter-session-b",
+        "bound": "adapter-session-b"
+      }
+    },
+    {
+      "name": "session B does not inherit session A Plan draft",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "Plan assumptions binds requested adapter-session-a",
+      "pass": true,
+      "detail": {
+        "requested": "adapter-session-a",
+        "bound": "adapter-session-a"
+      }
+    },
+    {
+      "name": "Plan restores only the selected session draft",
+      "pass": true,
+      "detail": {
+        "planKeys": [
+          "farmtact:v17:planning-assumptions-draft:adapter-session-a",
+          "farmtact:v17:planning-assumptions-draft",
+          "farmtact:v17:planning-assumptions-draft:9ae0581dcfef26049fbed0d13ec3e2d7",
+          "farmtact:v17:planning-assumptions-draft:adapter-session-b"
+        ],
+        "capacity": {
+          "cash_sgd": 111
+        }
+      }
+    },
+    {
+      "name": "Records ignores the historical unscoped farm draft and creates a session-scoped key",
+      "pass": true,
+      "detail": {
+        "recordKeys": [
+          "farmtact:v17:records:adapter-session-a:v15-farm-json-draft",
+          "farmtact:v17:records:v15-farm-json-draft"
+        ],
+        "farmDraft": ""
+      }
+    },
+    {
+      "name": "adapter audit performs no API writes",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "writes": [],
+  "failures": [],
+  "scope": "Existing acceptance tenant; navigation and local draft state only. Every API write is blocked."
+}

@@ -1,0 +1,114 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "scope": "V17 Knowledge, Experiments, Data Explorer and Council research discoverability on an existing tenant; if prerequisites are absent, the UI explicitly saves one local snapshot and starts one isolated Council study; provider calls remain blocked.",
+  "checks": [
+    {
+      "name": "knowledge index exposes three top category choices",
+      "pass": true,
+      "detail": "3"
+    },
+    {
+      "name": "saved discussions and Planning Council stay immediately visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "seven specialists appear only after category selection",
+      "pass": true,
+      "detail": "7"
+    },
+    {
+      "name": "crop search narrows atlas",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "crop Back restores exact picker focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "crop search draft retained",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "crop category remains selected after detail return",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "experiments landing names five choices",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "dataset overview exposes frozen identity",
+      "pass": true,
+      "detail": "Sandbox · actual farm operations disabled\nSaved datasets\nDATA EXPLORER · FROZEN OVERVIEW\nOriginal generated dataset\n\nreference · cutoff 2026-09-08T00:00:00Z\n\nUse this snapshot to t"
+    },
+    {
+      "name": "real saved snapshot is inspectable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "actual snapshot renders accessible chart or truthful empty state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "chart fits mobile card",
+      "pass": true,
+      "detail": "{\"x\":47.59375,\"y\":4828.34375,\"width\":294.8125,\"height\":280}"
+    },
+    {
+      "name": "chart has accessible time-series title",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "research overview exposes complete study path",
+      "pass": true,
+      "detail": "9"
+    },
+    {
+      "name": "complete saved transcript remains reachable",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "research detail returns to narrative overview",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "only explicit local dataset setup writes, when needed, and no provider request",
+      "pass": true,
+      "detail": "{\"writes\":[],\"provider\":[]}"
+    },
+    {
+      "name": "no browser errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "writes": [],
+  "provider": [],
+  "errors": [],
+  "screenshots": [
+    "01-knowledge-index-390.png",
+    "02-crop-profile-390.png",
+    "03-crop-return-390.png",
+    "04-experiments-index-390.png",
+    "05-data-overview-390.png",
+    "06-data-records-chart-390.png",
+    "07-research-overview-390.png",
+    "08-research-transcript-390.png"
+  ]
+}

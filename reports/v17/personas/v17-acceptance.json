@@ -1,6 +1,6 @@
 {
-  "status": "FAIL",
-  "build": "/assets/index-9HFQmJws.js",
+  "status": "PASS",
+  "build": "/assets/index-CHDAS7Ra.js",
   "realApiSmoke": [
     {
       "kind": "GET-only existing tenant",
@@ -12,10 +12,105 @@
     {
       "name": "real API exposes the V17 Knowledge category index without inference",
       "pass": true,
-      "detail": "LIBRARY INDEX · READING MAKES NO PROVIDER CALL\nChoose what you need\n\nCrops and sources explain planning assumptions. Specialists answer an explicit question. Planning Council reviews the current frozen alternatives; the separate Council research study is under Experiments.\n\nCrops\n12 profiles\n\nRecipes, representative stage art, cautions and evidence limits.\n\nFind a crop\nCaixin\n28 day cycle\nXiao bai cai / pak choi\n35 day cycle\nKailan\n42 day cycle\nBayam / Chinese spinach\nAccounting profile only\nKangkong / water spinach\nAccounting profile only\nLettuce\n35 day cycle\nKale\nAccounting profile only\nChinese mustard / mustard greens\nAccounting profile only\nCeylon / Malabar spinach\nAccounting profile only\nSweet-potato leaves / shoots\nAccounting profile only\nGarlic chives\nAccounting profile only\nSawtooth coriander\nAccounting profile only\nSources\n1 records\n\nFreshness, coverage, licence and admitted facts.\n\nPublic source registry\nmissing\nSpecialists\n7 roles\n\nOpening is read-only. Only Submit question, Invite specialist or Convene Council invokes the provider.\n\nRavi\nDemand\nHana\nWeather\nIdris\nMarket\nMei\nProduction\nLina\nSupply Chain\nBen\nProfit\nAsha\nPlanner\nSaved discussions\nReplay full transcripts and reviewed handoffs\nPlanning Council review\nAdvisory review of the current frozen plan"
+      "detail": "LIBRARY INDEX · READING MAKES NO PROVIDER CALL\nChoose what you need\n\nCrops and sources explain planning assumptions. Specialists answer an explicit question. Planning Council reviews the current frozen alternatives; the separate Council research study is under Experiments.\n\nCrops\n12 profiles\nSources\n1 records\nSpecialists\n7 roles\n\nChoose a category above, or open a saved discussion or Planning Council review below.\n\nSaved discussions\nReplay full transcripts and reviewed handoffs\nPlanning Council review\nAdvisory review of the current frozen plan"
     },
     {
       "name": "real API category smoke performs no writes",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "category detail Back restores the Knowledge index and originating specialist control",
+      "pass": true,
+      "detail": {
+        "text": "RaviDemand",
+        "scroll": 692
+      }
+    },
+    {
+      "name": "direct submission preserves canonical colon context and renders citation/fact evidence",
+      "pass": true,
+      "detail": {
+        "direct": 1,
+        "focus": {
+          "card_id": "order-order:with:colon",
+          "entity_kind": "order",
+          "entity_id": "order:with:colon"
+        }
+      }
+    },
+    {
+      "name": "invite and Council preserve partial/withheld/validated statuses",
+      "pass": true,
+      "detail": {
+        "invites": 1,
+        "councils": 1,
+        "withheldCard": "Idris\nWITHHELD\n\nThe invited specialist withheld a recommendation because evidence is incomplete.",
+        "councilCard": "Planning Council\nREFERENCES VERIFIED\n\nCouncil preserved the cited reply and recorded a bounded conclusion.\n\nCode-rendered frozen values\norder · confirmed · fixture\n12 kg\nValue supplied in the server-rendered fact record.\nCanonical reference\n\nValues come from server records, never from the adviser’s prose. Their presence does not verify the interpretation.",
+        "citationCount": 1
+      }
+    },
+    {
+      "name": "reload restores the same frozen focus and thread without manual context repair or provider resubmission",
+      "pass": true,
+      "detail": {
+        "id": "v17-persona-thread",
+        "count": 6,
+        "focus": {
+          "card_id": "order-order:with:colon",
+          "entity_kind": "order",
+          "entity_id": "order:with:colon"
+        },
+        "snapshot": {
+          "kind": "planning",
+          "id": "f6da20ad6aec3f821b43ce1f31669cad:result-fixture",
+          "hash": "v17-frozen-hash",
+          "version": 1
+        },
+        "selectedFocus": "order:order:with:colon",
+        "manualRepairNeeded": false
+      }
+    },
+    {
+      "name": "discussion handoff preserves exact source conversation and message IDs",
+      "pass": true,
+      "detail": {
+        "session_id": "f6da20ad6aec3f821b43ce1f31669cad",
+        "base_revision": 2,
+        "changes": [
+          {
+            "kind": "planning_assumptions",
+            "assumptions": {}
+          }
+        ],
+        "selected_strategy_id": "ee7f26bd61834f1954d6",
+        "source_candidate_ids": [],
+        "source_conversation_id": "v17-persona-thread",
+        "source_message_id": "v17-cited-finding",
+        "idempotency_key": "e2a7e671-1cb2-4f59-b419-4210ae2b9aad"
+      }
+    },
+    {
+      "name": "linked proposal applies only after explicit review action",
+      "pass": true,
+      "detail": {
+        "proposal_id": "v17-linked-proposal",
+        "expected_base_revision": 2,
+        "idempotency_key": "d90fb187-57cd-46da-a257-c2324e291d34"
+      }
+    },
+    {
+      "name": "transport emitted only the four explicit provider-capable requests",
+      "pass": true,
+      "detail": {
+        "creates": 1,
+        "direct": 1,
+        "invites": 1,
+        "councils": 1
+      }
+    },
+    {
+      "name": "no unexpected write escaped the labelled fixture",
       "pass": true,
       "detail": []
     }
@@ -24,10 +119,12 @@
     "Labelled in-browser validated-gateway transport: direct partial+cited reply, withheld invite, validated Council, and discussion-linked draft/apply. No external provider is contacted."
   ],
   "requests": {
-    "providerCapable": [],
+    "providerCapable": [
+      "POST /api/v1/conversations/v17-persona-thread/messages",
+      "POST /api/v1/conversations/v17-persona-thread/invite",
+      "POST /api/v1/conversations/v17-persona-thread/council"
+    ],
     "unexpectedWrites": []
   },
-  "failures": [
-    "page.waitForFunction: Timeout 30000ms exceeded.\n    at /home/sprite/workspaces/Code2/tests/browser/v17_acceptance.mjs:87:14"
-  ]
+  "failures": []
 }

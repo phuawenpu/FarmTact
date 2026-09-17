@@ -1,0 +1,108 @@
+{
+  "main": "/assets/index-CHDAS7Ra.js",
+  "main_asset": {
+    "path": "assets/index-CHDAS7Ra.js",
+    "bytes": 250519,
+    "gzip_bytes": 76653
+  },
+  "total_bytes": 595345,
+  "total_gzip_bytes": 171414,
+  "assets": [
+    {
+      "path": "assets/AdvisorEvidence-D2ZK_YfM.js",
+      "bytes": 10941,
+      "gzip_bytes": 4108
+    },
+    {
+      "path": "assets/IntegratedExperiments-Ck-RitZ5.js",
+      "bytes": 31472,
+      "gzip_bytes": 9612
+    },
+    {
+      "path": "assets/IntegratedExperiments-TCtX-Io8.css",
+      "bytes": 1349,
+      "gzip_bytes": 540
+    },
+    {
+      "path": "assets/IntegratedHistory-Bpy88piB.css",
+      "bytes": 3204,
+      "gzip_bytes": 1061
+    },
+    {
+      "path": "assets/IntegratedHistory-C7T0b1FP.js",
+      "bytes": 17328,
+      "gzip_bytes": 6333
+    },
+    {
+      "path": "assets/IntegratedKnowledge-B9D-8jPl.js",
+      "bytes": 29656,
+      "gzip_bytes": 8948
+    },
+    {
+      "path": "assets/IntegratedKnowledge-OhCff2zS.css",
+      "bytes": 6957,
+      "gzip_bytes": 1875
+    },
+    {
+      "path": "assets/IntegratedPlan-LOBUjwxF.js",
+      "bytes": 22992,
+      "gzip_bytes": 6690
+    },
+    {
+      "path": "assets/IntegratedRecords-Bh-gf3g8.js",
+      "bytes": 47043,
+      "gzip_bytes": 13914
+    },
+    {
+      "path": "assets/IntegratedRecords-DnrFUODk.css",
+      "bytes": 4204,
+      "gzip_bytes": 1293
+    },
+    {
+      "path": "assets/IntegratedResearch-B-6oxXjR.js",
+      "bytes": 24283,
+      "gzip_bytes": 7694
+    },
+    {
+      "path": "assets/IntegratedResearch-CmbOu-un.css",
+      "bytes": 2003,
+      "gzip_bytes": 744
+    },
+    {
+      "path": "assets/ToolCard-Ct6Zj8WG.js",
+      "bytes": 2146,
+      "gzip_bytes": 967
+    },
+    {
+      "path": "assets/cardNavigation-Df5G2NbE.js",
+      "bytes": 860,
+      "gzip_bytes": 481
+    },
+    {
+      "path": "assets/cardProjection-Cw99jypQ.js",
+      "bytes": 982,
+      "gzip_bytes": 541
+    },
+    {
+      "path": "assets/createLucideIcon-BL7REnKV.js",
+      "bytes": 3082,
+      "gzip_bytes": 1479
+    },
+    {
+      "path": "assets/index-CHDAS7Ra.js",
+      "bytes": 250519,
+      "gzip_bytes": 76653
+    },
+    {
+      "path": "assets/index-dCI3MlGv.css",
+      "bytes": 134102,
+      "gzip_bytes": 27733
+    },
+    {
+      "path": "assets/tool-card-CoW2HBZl.css",
+      "bytes": 2222,
+      "gzip_bytes": 748
+    }
+  ],
+  "note": "Production build measurement; lazy chunks are not all loaded at initial entry."
+}

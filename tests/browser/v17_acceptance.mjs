@@ -17,6 +17,7 @@ const check=(name,pass,detail)=>{report.checks.push({name,pass:Boolean(pass),det
 const record=(name,pass,detail)=>{report.checks.push({name,pass:Boolean(pass),detail});if(!pass)report.failures.push(`${name}: ${JSON.stringify(detail)}`)}
 const click=(page,name)=>page.getByRole('button',{name,exact:true}).filter({visible:true}).first().click()
 const json=(route,body,status=200)=>route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)})
+const showSpecialists=async page=>{const selector=page.getByRole('button',{name:/^Specialists\b/}).filter({visible:true});if(await selector.isVisible().catch(()=>false))await selector.click()}
 
 async function enterKnowledge(page){
   const skip=page.getByRole('button',{name:'Skip demonstration',exact:true}).filter({visible:true})
@@ -83,11 +84,11 @@ try{
   await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('.ic-shell').waitFor()
   await page.evaluate(()=>{for(const key of Object.keys(localStorage))if(/knowledge-(drafts|bindings|focus)/.test(key))localStorage.removeItem(key)})
   await page.reload({waitUntil:'domcontentloaded'});await page.locator('.ic-shell').waitFor();await enterKnowledge(page)
-  await page.getByRole('button',{name:/Ravi/}).click();await page.getByRole('heading',{name:/Ravi · Demand/}).waitFor();await click(page,'Back')
+  await showSpecialists(page);await page.getByRole('button',{name:/Ravi/}).click();await page.getByRole('heading',{name:/Ravi · Demand/}).waitFor();await click(page,'Back')
   await page.waitForFunction(()=>/Ravi/.test(document.activeElement?.textContent||''))
   const returnedFocus=await page.evaluate(()=>({text:document.activeElement?.textContent?.replace(/\s+/g,' ').trim(),scroll:window.scrollY}))
   check('category detail Back restores the Knowledge index and originating specialist control',await page.getByRole('heading',{name:'Choose what you need',exact:true}).isVisible()&&/Ravi/.test(returnedFocus.text||''),returnedFocus)
-  await page.getByRole('button',{name:/Ravi/}).click();await page.getByLabel('Frozen focus').selectOption(`order:${planning.farm.orders[0].id}`)
+  await showSpecialists(page);await page.getByRole('button',{name:/Ravi/}).click();await page.getByLabel('Frozen focus').selectOption(`order:${planning.farm.orders[0].id}`)
   await page.getByLabel('Question about the frozen planning session').fill('Explain the frozen order trade-off.');await click(page,'Submit question');await page.getByText(cited.content,{exact:true}).waitFor()
   check('direct submission preserves canonical colon context and renders citation/fact evidence',direct===1&&createBody?.focus?.entity_id===colonOrder.id&&createBody?.focus?.card_id===`order-${colonOrder.id}`&&await page.getByText(/Frozen order record/).first().isVisible()&&await page.locator('[data-fact-reference="order:confirmed:fixture"]').isVisible(),{direct,focus:createBody?.focus})
   await page.getByLabel('Discussion action').selectOption('invite');await page.getByLabel('Reply to saved specialist finding').selectOption(cited.id);await page.getByLabel('Question about the frozen planning session').fill('Ask the invited specialist to review the cited finding.');await click(page,'Invite specialist');await page.getByText(withheld.content,{exact:true}).waitFor()
@@ -95,8 +96,8 @@ try{
   const withheldCard=await page.locator('.ik-message',{hasText:withheld.content}).innerText(),councilCard=await page.locator('.ik-message',{hasText:council.content}).innerText(),citationCount=await page.getByText(/Frozen order record/).count()
   check('invite and Council preserve partial/withheld/validated statuses',invites===1&&councils===1&&/withheld/i.test(withheldCard)&&/references verified|validated/i.test(councilCard)&&citationCount>0,{invites,councils,withheldCard,councilCard,citationCount})
   const beforeReload={id:conversation.id,count:conversation.messages.length,focus:conversation.focus,snapshot:conversation.snapshot_ref}
-  await page.reload({waitUntil:'domcontentloaded'});await page.locator('.ic-shell').waitFor();await enterKnowledge(page);await page.getByRole('button',{name:/Ravi/}).click()
-  const autoRestored=await page.getByText(council.content,{exact:true}).isVisible().catch(()=>false)
+  await page.reload({waitUntil:'domcontentloaded'});await page.locator('.ic-shell').waitFor();await enterKnowledge(page);await showSpecialists(page);await page.getByRole('button',{name:/Ravi/}).click()
+  const autoRestored=await page.getByText(council.content,{exact:true}).waitFor({timeout:5000}).then(()=>true).catch(()=>false)
   if(!autoRestored)await page.getByLabel('Frozen focus').selectOption(`order:${colonOrder.id}`)
   const restored=await page.getByText(council.content,{exact:true}).isVisible().catch(()=>false)
   record('reload restores the same frozen focus and thread without manual context repair or provider resubmission',autoRestored&&await page.getByLabel('Frozen focus').inputValue()===`order:${colonOrder.id}`&&conversation.id===beforeReload.id&&conversation.messages.length===beforeReload.count&&direct===1&&invites===1&&councils===1,{...beforeReload,selectedFocus:await page.getByLabel('Frozen focus').inputValue(),manualRepairNeeded:!autoRestored})

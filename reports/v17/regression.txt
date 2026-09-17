@@ -1,0 +1,341 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 35%]
+........................................................................ [ 44%]
+..........................................................E............. [ 53%]
+.........................F.........................EE......F............ [ 62%]
+........................................................................ [ 71%]
+........................................................................ [ 80%]
+........................................................................ [ 89%]
+..................................................................FF.... [ 98%]
+.s...........                                                            [100%]
+==================================== ERRORS ====================================
+______________ ERROR at setup of test_tenant_isolation_all_routes ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f12a0834280>
+
+    @pytest.fixture
+    def env(monkeypatch):
+        import services.api.scenarios as module
+        monkeypatch.setattr(module,'plan',lambda farm:plan(farm,time_limit=.03))
+        store=Store('sqlite://')
+>       with TestClient(create_app(store,start_worker=False)) as c:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/gameplay/test_scenarios.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f129c0a63d0>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+_ ERROR at setup of test_strategy_requires_and_uses_the_frozen_planning_result _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f12a06627b0>
+
+    @pytest.fixture
+    def env(monkeypatch):
+        store = Store("sqlite://")
+>       app = create_app(store, start_worker=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/gameplay/test_v13_conversation_focus.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f1269baf3d0>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+_ ERROR at setup of test_task_focus_fails_closed_when_tasks_are_not_in_frozen_result _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f12864d7620>
+
+    @pytest.fixture
+    def env(monkeypatch):
+        store = Store("sqlite://")
+>       app = create_app(store, start_worker=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/gameplay/test_v13_conversation_focus.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f1285bac850>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+=================================== FAILURES ===================================
+_____ test_stale_approval_results_corrections_restart_and_tenant_isolation _____
+
+isolated_database_url = 'postgresql+psycopg://sprite@/farmtact_review?host=%2Ftmp%2Ffarmtact-pg&options=-csearch_path%3Dv12_acceptance_acdbcd1123494807bfa7faa2b72961b3'
+
+    def test_stale_approval_results_corrections_restart_and_tenant_isolation(isolated_database_url):
+        store = Store(isolated_database_url)
+        app = create_app(store, start_worker=False)
+        with TestClient(app) as client:
+            tenant, path, session = calculated_workflow(store, client)
+            stale = proposal(client, session, 'stale-' + uuid4().hex)
+            disrupted = post(client, path + '/disrupt', {'revision': session['revision'], 'assumptions': {
+                'future_demand': [], 'seasonal': [], 'order_changes': [], 'reservations': []}})
+            assert disrupted.status_code == 202, disrupted.text
+            execute_job(store, tenant, disrupted.json()['job']['id'])
+            response = post(client, f'/farm-workflow/proposals/{stale["id"]}/apply', {
+                'proposal_id': stale['id'], 'expected_base_revision': stale['base_revision'],
+                'idempotency_key': 'stale-apply-' + uuid4().hex})
+            assert response.status_code == 409
+    
+            session = client.get('/api/v1' + path).json()
+>           approved = apply_and_approve(store, client, tenant, session,
+                                         proposal(client, session, 'current-' + uuid4().hex))
+
+tests/gameplay/test_v12_acceptance_adversarial.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+store = <services.api.store.Store object at 0x7f1259a48520>
+client = <starlette.testclient.TestClient object at 0x7f1259893130>
+tenant = '885167512343e48976688c259d604bbc'
+session = {'id': 'ac1c82863b4b0183e0cc4561ba9fbafb', 'name': 'Adversarial acceptance', 'version': 'guided-planning-v1', 'revision': 4, ...}
+draft = {'id': '1162d3500707c8dc856d920421928eb6', 'tenant_id': '885167512343e48976688c259d604bbc', 'session_id': 'ac1c82863b4b0183e0cc4561ba9fbafb', 'base_revision': 4, ...}
+
+    def apply_and_approve(store, client, tenant, session, draft):
+        apply_key = 'apply-' + uuid4().hex
+        response = post(client, f'/farm-workflow/proposals/{draft["id"]}/apply', {
+            'proposal_id': draft['id'], 'expected_base_revision': draft['base_revision'],
+            'idempotency_key': apply_key}, apply_key)
+        assert response.status_code == 202, response.text
+        applied = response.json(); execute_job(store, tenant, applied['recalculation_job']['id'])
+        approve_key = 'approve-' + uuid4().hex
+        body = {'proposal_id': draft['id'], 'proposal_revision': applied['proposal_revision'],
+                'selected_strategy_id': draft['selected_strategy_id'], 'idempotency_key': approve_key}
+        endpoint = f'/farm-workflow/proposals/{draft["id"]}/approve-actions'
+        response = post(client, endpoint, body, approve_key)
+>       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":"Only a feasible calculated strategy can be approved"}
+E       assert 409 == 200
+E        +  where 409 = <Response [409 Conflict]>.status_code
+
+tests/gameplay/test_v12_acceptance_adversarial.py:78: AssertionError
+_____ test_transition_replay_stale_review_and_session_limit_preserve_farm ______
+
+    def test_transition_replay_stale_review_and_session_limit_preserve_farm():
+        store = Store('sqlite://')
+>       with TestClient(create_app(store, start_worker=False)) as client:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/gameplay/test_v15_farm_transition.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f126b781ed0>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+_________ test_scenario_freezes_news_and_advisor_uses_the_same_records _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f12a02b8360>
+
+    def test_scenario_freezes_news_and_advisor_uses_the_same_records(monkeypatch):
+        from services.api.conversation_store import ConversationStore
+        original = cache(at=AT-timedelta(days=2), payload=feed(date="Mon, 07 Sep 2026 09:00:00 +0000"))
+        monkeypatch.setattr(news, 'load_cache', lambda: deepcopy(original))
+        monkeypatch.setattr(httpx.HTTPTransport, 'handle_request', lambda *a, **k: pytest.fail('No external HTTP during browse or numerical setup'))
+        store=Store('sqlite://')
+>       with TestClient(create_app(store,start_worker=False)) as client:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/seven_agents/test_news.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f12596b3250>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+_______ test_mission_freeze_and_replay_keep_news_separate_from_farm_hash _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1285ddd710>
+
+    def test_mission_freeze_and_replay_keep_news_separate_from_farm_hash(monkeypatch):
+        from services.api.app import MissionRequest,create_mission
+        original=cache(at=AT-timedelta(days=2),payload=feed(date="Mon, 07 Sep 2026 09:00:00 +0000"))
+        monkeypatch.setattr(news,'load_cache',lambda:deepcopy(original))
+        store=Store('sqlite://')
+>       with TestClient(create_app(store,start_worker=False)) as client:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/seven_agents/test_news.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+services/api/app.py:447: in create_app
+    app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <starlette.staticfiles.StaticFiles object at 0x7f126a963bd0>
+directory = PosixPath('/home/sprite/workspaces/Code2/apps/web/dist/assets')
+packages = None, html = False, check_dir = True, follow_symlink = False
+
+    def __init__(
+        self,
+        *,
+        directory: PathLike | None = None,
+        packages: list[str | tuple[str, str]] | None = None,
+        html: bool = False,
+        check_dir: bool = True,
+        follow_symlink: bool = False,
+    ) -> None:
+        self.directory = directory
+        self.packages = packages
+        self.all_directories = self.get_directories(directory, packages)
+        self.html = html
+        self.config_checked = False
+        self.follow_symlink = follow_symlink
+        if check_dir and directory is not None and not os.path.isdir(directory):
+>           raise RuntimeError(f"Directory '{directory}' does not exist")
+E           RuntimeError: Directory '/home/sprite/workspaces/Code2/apps/web/dist/assets' does not exist
+
+.venv/lib/python3.13/site-packages/starlette/staticfiles.py:56: RuntimeError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /home/sprite/workspaces/Code2/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+.venv/lib/python3.13/site-packages/starlette/testclient.py:53
+  /home/sprite/workspaces/Code2/.venv/lib/python3.13/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/gameplay/test_beginner_postgres.py::test_beginner_create_and_calculate_are_exactly_once_across_connections
+  /home/sprite/workspaces/Code2/.venv/lib/python3.13/site-packages/pydantic/_internal/_generate_schema.py:2274: UnsupportedFieldAttributeWarning: The 'alias' attribute with value 'policy' was provided to the `Field()` function, which has no effect in the context it was used. 'alias' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+    warnings.warn(
+
+tests/gameplay/test_v8_simulation_postgres.py::test_postgres_world_advance_is_serialized_isolated_and_durable
+  /home/sprite/workspaces/Code2/.venv/lib/python3.13/site-packages/pydantic/_internal/_generate_schema.py:2274: UnsupportedFieldAttributeWarning: The 'alias' attribute with value 'id' was provided to the `Field()` function, which has no effect in the context it was used. 'alias' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/gameplay/test_v12_acceptance_adversarial.py::test_stale_approval_results_corrections_restart_and_tenant_isolation
+FAILED tests/gameplay/test_v15_farm_transition.py::test_transition_replay_stale_review_and_session_limit_preserve_farm
+FAILED tests/seven_agents/test_news.py::test_scenario_freezes_news_and_advisor_uses_the_same_records
+FAILED tests/seven_agents/test_news.py::test_mission_freeze_and_replay_keep_news_separate_from_farm_hash
+ERROR tests/gameplay/test_scenarios.py::test_tenant_isolation_all_routes - Ru...
+ERROR tests/gameplay/test_v13_conversation_focus.py::test_strategy_requires_and_uses_the_frozen_planning_result
+ERROR tests/gameplay/test_v13_conversation_focus.py::test_task_focus_fails_closed_when_tasks_are_not_in_frozen_result
+4 failed, 797 passed, 1 skipped, 4 warnings, 3 errors in 885.66s (0:14:45)

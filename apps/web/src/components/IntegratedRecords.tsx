@@ -45,6 +45,7 @@ const emptyWorkflow: FarmerWorkflowState = {
   events: [],
   real_operations_enabled: false,
 };
+const DraftScopeContext = createContext("unbound");
 const CardMetaContext = createContext<FarmCard | null>(null);
 function CardMeta({ card, children }: { card: FarmCard; children: ReactNode }) { return <CardMetaContext.Provider value={card}>{children}</CardMetaContext.Provider>; }
 
@@ -128,7 +129,7 @@ export function IntegratedRecords({ onClose, onOpenPlan, onOpenWasteRescue, init
   const bed = view === "beds" ? session?.farm.beds[index] : undefined;
   const inventory = view === "inventory" && Array.isArray(session?.farm.inventory) ? (session.farm.inventory as Record<string, unknown>[])[index] : undefined;
   return (
-    <Shell title={title(view, form)} onBack={back} onKeyDown={(event) => {
+    <DraftScopeContext.Provider key={session?.id || "unbound"} value={session?.id || "unbound"}><Shell title={title(view, form)} onBack={back} onKeyDown={(event) => {
       if ((event.target as HTMLElement).closest("input,textarea,select,button,a")) return;
       if (form) return;
       if (view === "home" && event.key === "ArrowRight" && homeIndex < homeItems(workflow, session).length - 1) { event.preventDefault(); setHomeIndex(homeIndex + 1); return; }
@@ -191,7 +192,7 @@ export function IntegratedRecords({ onClose, onOpenPlan, onOpenWasteRescue, init
         {view === "inventory" && !form && onOpenWasteRescue && <button onClick={onOpenWasteRescue}>Compare Waste Rescue</button>}
         <span id="ir-form-actions" className="ir-form-actions" />
       </div>
-    </Shell>
+    </Shell></DraftScopeContext.Provider>
   );
 }
 
@@ -295,4 +296,4 @@ function InlineSourceReview({ item }: { item: FarmerImport }) {
 }
 
 const FarmImportReviewForm = FarmImportForm;
-function usePersistentState<T>(name: string, initial: T) { const key = editionStorageKey(`records:${name}`); const [value, setValue] = useState<T>(() => { try { const saved = localStorage.getItem(key); return saved == null ? initial : JSON.parse(saved) as T; } catch { return initial; } }); useEffect(() => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* draft persistence is best effort */ } }, [key, value]); return [value, setValue] as const; }
+function usePersistentState<T>(name: string, initial: T) { const scope = useContext(DraftScopeContext); const key = editionStorageKey(`records:${scope}:${name}`); const [value, setValue] = useState<T>(() => { try { const saved = localStorage.getItem(key); return saved == null ? initial : JSON.parse(saved) as T; } catch { return initial; } }); useEffect(() => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* draft persistence is best effort */ } }, [key, value]); return [value, setValue] as const; }

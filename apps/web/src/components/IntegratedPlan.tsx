@@ -16,12 +16,13 @@ function parsedSettings(raw:string):FarmerAssumptions|null {
  } catch{return null}
 }
 export default function IntegratedPlan({onClose,initialTarget}:{onClose:()=>void;initialTarget?:PlanTarget}){
- const [session,setSession]=useState<PlanningSession|null>(null),[index,setIndex]=useState(0),[view,setView,restoreView,captureView]=useCardView(initialTarget||'index'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[proposal,setProposal]=useState<FarmerProposal|null>(null)
+ const [session,setSession]=useState<PlanningSession|null>(null),[index,setIndex]=useState(Math.max(0,['objectives','strategies','assumptions','proposals','new'].indexOf(initialTarget||''))),[view,setView,restoreView,captureView]=useCardView(initialTarget||'index'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[proposal,setProposal]=useState<FarmerProposal|null>(null)
  const [assumptionsOrigin,setAssumptionsOrigin]=useState('index')
- const [draft,setDraft]=useState(()=>{try{return localStorage.getItem(editionStorageKey('planning-assumptions-draft'))||JSON.stringify(blank,null,2)}catch{return JSON.stringify(blank,null,2)}}),[strategy,setStrategy]=useState('')
+ const [draft,setDraft]=useState(JSON.stringify(blank,null,2)),[draftOwner,setDraftOwner]=useState<string|null>(null),[strategy,setStrategy]=useState('')
  const act=async(fn:()=>Promise<void>)=>{captureView();setBusy(true);setError('');try{await fn()}catch(e){setError(e instanceof Error?e.message:'Request interrupted. Review retained.')}finally{setBusy(false)}}
  useEffect(()=>{void act(async()=>{const list=await planningApi.list();const saved=rememberedPlanningSession();const s=list.sessions.find(s=>s.id===saved&&s.workflow)||list.sessions.find(s=>s.workflow);setSession(s||null);setStrategy(s?.selected_strategy_id||s?.result?.strategies?.[0]?.id||'')})},[])
- useEffect(()=>{try{localStorage.setItem(editionStorageKey('planning-assumptions-draft'),draft)}catch{}},[draft])
+ useEffect(()=>{if(!session||draftOwner===session.id)return;let saved:string|null=null;try{saved=localStorage.getItem(editionStorageKey(`planning-assumptions-draft:${session.id}`))}catch{}setDraft(saved||JSON.stringify({...blank,...session.assumptions},null,2));setDraftOwner(session.id)},[session?.id,draftOwner])
+ useEffect(()=>{if(!session||draftOwner!==session.id)return;try{localStorage.setItem(editionStorageKey(`planning-assumptions-draft:${session.id}`),draft)}catch{}},[draft,draftOwner,session?.id])
  useEffect(()=>{if(!session||!['QUEUED','RUNNING'].includes(session.job?.status||''))return;const timer=window.setInterval(()=>void planningApi.get(session.id).then(setSession).catch(e=>setError(e instanceof Error?e.message:'Status unavailable')),2000);return()=>window.clearInterval(timer)},[session?.id,session?.job?.status])
  const labels=['Objectives & all demand','Strategies & schedules','Resources & assumptions','Proposals & recalculation','New planning attempt']
  const strategies=session?.result?.strategies||[]
