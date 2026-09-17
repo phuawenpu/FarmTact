@@ -32,6 +32,7 @@ type FarmRecords = {
   farm?: { name?: string; beds?: Array<{ name: string; area_m2: string | number }>;
     orders?: Array<{ crop_id: string; quantity_kg: string | number; due_date: string }>;
     recipes?: Array<{ crop_id: string; nursery_days: number; grow_days: number }> }
+  origin_farm?: FarmRecords['farm']
 }
 
 export default function BeginnerApp({ landing }: { landing: boolean }) {
@@ -61,7 +62,12 @@ export default function BeginnerApp({ landing }: { landing: boolean }) {
     finally { setLoading(false) }
   }, [])
 
-  useEffect(() => { void load() }, [load])
+  useEffect(() => {
+    // A first-time visitor can learn the controls without creating a session or
+    // consuming the anonymous-session allowance. Start is the admission point.
+    if (landing && !readBeginnerProgress().serverSeasonId) { setLoading(false); return }
+    void load()
+  }, [landing, load])
 
   useEffect(() => {
     if (!journey || !pending(journey)) return
@@ -128,11 +134,12 @@ export default function BeginnerApp({ landing }: { landing: boolean }) {
     if (lock.current) return
     lock.current = true; setBusy(true); setError(null)
     try {
+      let existing = journey
       if (!initialized.current) {
-        await load()
+        existing = await load()
         if (!initialized.current) return
       }
-      const next = journey || await beginnerApi.create()
+      const next = existing || await beginnerApi.create()
       remember(next); setJourney(next)
       window.location.assign('/play')
     } catch (caught) { setError(message(caught)) }
@@ -158,7 +165,8 @@ export default function BeginnerApp({ landing }: { landing: boolean }) {
   }
 
   const utilities = useMemo(() => {
-    const farm = (journey as (BeginnerJourney & FarmRecords) | null)?.farm
+    const records = journey as (BeginnerJourney & FarmRecords) | null
+    const farm = records?.origin_farm || records?.farm
     const rows = defaultBeginnerUtilities.map((item): BeginnerUtilityCard => {
       if (item.kind === 'next_step') return { ...item, summary: journey?.next_action
         ? `Your next move: ${journey.next_action.label}. Return to the season to see the decision and its explanation.` : 'Return to your season for the current objective.' }

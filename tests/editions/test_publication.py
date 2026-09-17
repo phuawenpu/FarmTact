@@ -179,6 +179,55 @@ def test_legacy_active_migrates_latest_only_and_rejects_truncated_history():
         publication.active_from_public({'latest':'v11','editions':[{'id':'v11'}]})
 
 
+def test_v14_active_policy_is_latest_only_while_v13_pair_remains_valid():
+    publication.validate_active({'previous': 'v12', 'latest': 'v13'}, registry(13))
+    publication.validate_active({'previous': None, 'latest': 'v14'}, registry(14))
+    with pytest.raises(publication.PublicationError, match='only the latest'):
+        publication.validate_active({'previous': 'v13', 'latest': 'v14'}, registry(14))
+    assert publication.next_active_manifest('v13', 'v12') == {'previous': 'v12', 'latest': 'v13'}
+    assert publication.next_active_manifest('v14', 'v13') == {'previous': None, 'latest': 'v14'}
+
+
+def test_hidden_public_release_endpoints_fall_back_to_private_bundle(monkeypatch):
+    from urllib.error import HTTPError
+    bundle = {'history': registry(14), 'active': {'previous': None, 'latest': 'v14'}}
+    monkeypatch.setattr(publication, 'urlopen', lambda request, timeout:
+                        (_ for _ in ()).throw(HTTPError(request.full_url, 404, 'Not Found', {}, None)))
+    calls = []
+    monkeypatch.setattr(publication, 'private_release_bundle', lambda: calls.append(True) or bundle)
+    assert publication.remote_registry('https://farmtact.fly.dev') == bundle['history']
+    assert publication.remote_active('https://farmtact.fly.dev') == bundle['active']
+    assert calls == [True, True]
+
+
+def test_v14_cleanup_archives_and_stops_workers_without_deletion_operator(monkeypatch):
+    history = registry(14)
+    for entry in history['editions']:
+        entry['image_digest'] = 'registry.fly.io/farmtact@sha256:' + entry['id'][1:].zfill(64)
+        entry['source_commit'] = 'a' * 40
+    active = {'previous': None, 'latest': 'v14'}
+    settings = {'app': 'farmtact', 'machine_id': '1234567890abcd', 'volume_id': 'vol_review123'}
+    runtime = {'config': {'containers': [
+        {'name': 'gateway', 'env': {}}, {'name': 'v12', 'env': {}},
+        {'name': 'v13', 'env': {}}, {'name': 'v14', 'env': {}},
+    ]}}
+    events = []
+    monkeypatch.setattr(publication, 'shared_settings', lambda: settings)
+    monkeypatch.setattr(publication, 'guard_shared_cleanup_runtime', lambda *_args: runtime)
+    monkeypatch.setattr(publication, 'create_recovery_snapshot', lambda *_args: events.append('snapshot') or 'snapshot-v14-archive')
+    monkeypatch.setattr(publication, 'deploy_shared', lambda *_args: events.append('stop-workers'))
+    monkeypatch.setattr(publication, 'command', lambda args, **kwargs:
+                        events.append((args, kwargs)) or type('Result', (), {'stdout': ''})())
+    result = publication.retire_oldest_shared(history, active)
+    flattened = ' '.join(str(item) for event in events if isinstance(event, tuple) for item in event[0])
+    assert events[1:3] == ['snapshot', 'stop-workers']
+    assert 'shared_retirement_operator' not in flattened and 'retirement-operator' not in flattened
+    assert result['status'] == 'archived'
+    assert result['protected_editions'] == [f'v{i}' for i in range(1, 14)]
+    assert result['workers_stopped'] == ['v12', 'v13']
+    assert result['snapshot_id'] == 'snapshot-v14-archive'
+
+
 def test_rolling_retirement_stops_oldest_then_snapshots_and_applies(tmp_path, monkeypatch):
     history = registry(13)
     for entry in history['editions']:

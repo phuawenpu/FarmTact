@@ -13,5 +13,5 @@ class CreateBeginnerJourney(Strict):
 
 class BeginnerActionRequest(Strict):
     revision: int = Field(ge=0, strict=True)
-    action_id: str = Field(min_length=1, max_length=64, pattern=r'^[a-z_]+$')
+    action_id: str = Field(min_length=1, max_length=64, pattern=r'^[a-z0-9_]+$')
     option_id: str | None = Field(default=None, min_length=1, max_length=100)

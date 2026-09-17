@@ -1,0 +1,24 @@
+{
+  "title": "Grow your first delivery",
+  "summary": "One animated introduction and one card-driven teaching season replace public edition navigation and dashboard-first play. Compare real calculated plans, respond to maintenance, and record a simulated delivery.",
+  "changes": [
+    {
+      "title": "One consistent beginner journey",
+      "description": "Swipe decision cards and use the action area below them. A noninteractive 2.5D farm illustrates saved events. Explanation, journal, settings and replay use the same card deck.",
+      "feedback_ids": [],
+      "evidence": ["tests/browser/v14_first_season.mjs", "reports/v14/interaction-review.md"]
+    },
+    {
+      "title": "Real planning and simulated consequences",
+      "description": "Isolated teaching seasons use the local planner and execution ledger, dated B3 maintenance, explicit recovery selection, per-order delivery validation and three closing cards. Nothing advances while away.",
+      "feedback_ids": [],
+      "evidence": ["tests/gameplay/test_beginner_journey.py", "scripts/v14_acceptance_trial.py", "tests/gameplay/test_beginner_postgres.py"]
+    },
+    {
+      "title": "One current public game with protected history",
+      "description": "The root is an introduction and /play is the current game. Old public editions are retired with recoverable private state retained. Durable API admission, provider budgets and explicit-only adviser requests remain enforced.",
+      "feedback_ids": [],
+      "evidence": ["tests/security/test_beginner_admission.py", "tests/editions/test_gateway.py", "tests/editions/test_publication.py"]
+    }
+  ]
+}

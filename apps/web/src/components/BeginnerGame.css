@@ -182,9 +182,11 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
 .bg-art-choice path:first-child { fill: var(--bg-paper); }
 .bg-art-choice path, .bg-art-choice circle { stroke: var(--bg-forest); stroke-width: 5; fill: none; stroke-linecap: round; }
 .bg-art-choice circle { fill: var(--bg-lime); animation: bg-pop 2.5s ease-in-out infinite; transform-origin: 248px 49px; }
-.bg-art-weather path:first-child { fill: #eef8f6; stroke: var(--bg-forest); stroke-width: 5; }
-.bg-art-weather path:not(:first-child) { fill: none; stroke: #28798a; stroke-width: 6; stroke-linecap: round; animation: bg-rain 1.2s linear infinite; }
-.bg-art-weather .bg-art-arrow { stroke: var(--bg-coral); animation: bg-bob 1.8s ease-in-out infinite; }
+.bg-art-delivery { animation: bg-delivery-loop 3.6s ease-in-out infinite; transform-origin: 270px 110px; }
+.bg-art-delivery > path { fill: var(--bg-coral); stroke: var(--bg-forest-deep); stroke-width: 5; stroke-linejoin: round; }
+.bg-art-delivery circle { fill: var(--bg-forest-deep); stroke: var(--bg-paper); stroke-width: 4; }
+.bg-art-delivery .bg-art-crate-mini { fill: #e7ae58; }
+.bg-art-delivery .bg-art-check { fill: none; stroke: var(--bg-forest); stroke-width: 6; stroke-linecap: round; }
 .bg-intro-card__copy {
   display: flex;
   min-width: 0;
@@ -233,6 +235,8 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
 }
 .bg-landing-actions > p,
 .bg-landing-actions > small { flex-basis: 100%; margin: 4px 0 0; color: var(--bg-muted); text-align: center; font-size: 11px; }
+.bg-landing-error { display: flex; flex-basis: 100%; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid #d77965; border-radius: 12px; color: #7f3122; background: #ffe2d9; font-size: 11px; font-weight: 750; line-height: 1.35; }
+.bg-landing-error svg { width: 18px; flex: 0 0 auto; }
 .bg-landing-actions > p { display: flex; align-items: center; justify-content: center; gap: 5px; }
 .bg-landing-actions > p svg { width: 15px; }
 .bg-landing kbd,
@@ -276,15 +280,15 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
 .bg-farm-scene { position: relative; margin: 0; overflow: hidden; border: 1px solid rgba(23,54,42,.19); border-radius: 21px; background: #bce2df; box-shadow: 0 10px 28px rgba(23,54,42,.12); }
 .bg-farm-scene > svg { display: block; width: 100%; height: clamp(175px, 36vw, 270px); }
 .bg-farm-scene figcaption {
-  position: absolute;
-  inset: auto 9px 9px;
+  position: static;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  border: 1px solid rgba(255,255,255,.32);
-  border-radius: 11px;
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,.32);
+  border-radius: 0;
   color: #fff;
   background: rgba(12,48,36,.87);
   backdrop-filter: blur(8px);
@@ -297,15 +301,21 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
 .bg-scene-greenhouse path { fill: rgba(239,251,244,.43); stroke: #326d5c; stroke-width: 5; stroke-linejoin: round; }
 .bg-scene-path { fill: #d6c7a4; }
 .bg-scene-bed__edge { fill: #352b23; }
+.bg-scene-bed { animation: bg-stage-enter 620ms cubic-bezier(.2,.8,.2,1) both; }
 .bg-scene-plant { fill: var(--bed-accent); stroke: #24533c; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; transform-box: fill-box; transform-origin: bottom center; animation: bg-grow 3s ease-in-out infinite; }
 .bg-scene-bed--maintenance .bg-scene-bed__edge { fill: var(--bg-coral); }
 .bg-scene-bed--recovering .bg-scene-plant { fill: #c8dd6a; }
 .bg-scene-bed--harvested .bg-scene-plant,
 .bg-scene-bed--empty .bg-scene-plant { opacity: .2; }
-.bg-scene-bed text { fill: #fffdf4; paint-order: stroke; stroke: #17362a; stroke-width: 5; font: 800 13px Inter, sans-serif; }
+.bg-scene-bed.is-target > path:first-child { stroke: var(--bg-coral); stroke-width: 8; paint-order: stroke; }
+.bg-scene-bed text { fill: #fffdf4; paint-order: stroke; stroke: #17362a; stroke-width: 6; font: 900 17px Inter, sans-serif; }
+.bg-scene-maintenance > path:first-child { fill: #ffd36b; stroke: #7d4b27; stroke-width: 5; }
+.bg-scene-maintenance > path:not(:first-child) { fill: none; stroke: #a35231; stroke-width: 7; stroke-linecap: round; }
+.bg-scene-maintenance circle { fill: var(--bg-coral); stroke: #fff8e6; stroke-width: 5; }
 .bg-scene-rain path { fill: none; stroke: #3c8ba0; stroke-width: 6; stroke-linecap: round; animation: bg-rain 1.1s linear infinite; }
 .bg-scene-truck path { fill: var(--bg-coral); stroke: var(--bg-forest-deep); stroke-width: 5; stroke-linejoin: round; }
 .bg-scene-truck circle { fill: var(--bg-forest-deep); stroke: #eee3c8; stroke-width: 4; }
+.bg-scene-truck { animation: bg-truck-arrive 900ms cubic-bezier(.15,.8,.2,1) both; }
 .bg-scene-recovery path { fill: none; stroke: var(--bg-lime); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; animation: bg-rotate 4s linear infinite; transform-origin: 596px 103px; }
 
 .bg-decision-region { margin-top: 13px; border-radius: 20px; touch-action: pan-y; }
@@ -408,6 +418,9 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
 @keyframes bg-rain { from { transform: translateY(-12px); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(18px); opacity: 0; } }
 @keyframes bg-bob { 50% { transform: translateY(8px); } }
 @keyframes bg-rotate { to { transform: rotate(360deg); } }
+@keyframes bg-stage-enter { from { opacity: .25; } to { opacity: 1; } }
+@keyframes bg-truck-arrive { from { opacity: 0; transform: translateX(150px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes bg-delivery-loop { 0%, 18% { transform: translateX(40px); opacity: .2; } 42%, 82% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-8px); opacity: 0; } }
 
 .is-paused *,
 [data-motion="paused"] * { animation-play-state: paused !important; }
@@ -417,8 +430,8 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
   .bg-landing__hero { margin-bottom: 14px; }
   .bg-kicker { margin-top: 18px; }
   .bg-landing__hero h1 { font-size: clamp(36px, 12vw, 52px); }
-  .bg-intro-cards { min-height: 360px; }
-  .bg-intro-card { grid-template-columns: 1fr; grid-template-rows: 172px 1fr; border-radius: 22px; }
+  .bg-intro-cards { min-height: 330px; }
+  .bg-intro-card { grid-template-columns: 1fr; grid-template-rows: 158px 1fr; border-radius: 22px; }
   .bg-intro-card__art { min-height: 0; padding: 8px 20px; }
   .bg-intro-card__art svg { max-height: 175px; }
   .bg-intro-card__copy { justify-content: start; padding: 19px 20px 18px; }
@@ -435,7 +448,7 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
   .bg-progress::before { grid-row: 1; grid-column: 1; }
   .bg-progress b { grid-column: 2; }
   .bg-objective p { display: none; }
-  .bg-farm-scene > svg { height: 188px; }
+  .bg-farm-scene > svg { height: 218px; }
   .bg-farm-scene figcaption { grid-template-columns: auto 1fr; }
   .bg-farm-scene figcaption small { display: none; }
   .bg-card { min-height: 265px; }
@@ -449,7 +462,7 @@ body:has(.bg-game) .app-content main { max-width: none; padding: 0; }
   .bg-game { padding-inline: 8px; }
   .bg-objective { padding: 11px 12px; }
   .bg-farm-region { margin-top: 10px; }
-  .bg-farm-scene > svg { height: 166px; }
+  .bg-farm-scene > svg { height: 200px; }
   .bg-card { min-height: 252px; }
   .bg-card__body { padding: 11px 13px; }
   .bg-card__body h2 { font-size: 23px; }

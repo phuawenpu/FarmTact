@@ -12,12 +12,14 @@ export type BeginnerPhase =
 
 export type BeginnerCropStage =
   | "empty"
+  | "nursery"
   | "seedling"
   | "growing"
   | "ready"
   | "maintenance"
   | "recovering"
-  | "harvested";
+  | "harvested"
+  | "sanitation";
 
 export type BeginnerActionKind =
   | "start"
@@ -66,6 +68,7 @@ export interface BeginnerCard {
   primaryAction?: BeginnerAction;
   boardTargetIds?: string[];
   resultId?: string;
+  sourceLabel?: string;
   entity?: {
     kind: string;
     id: string;
@@ -85,6 +88,7 @@ export interface BeginnerBed {
 
 export interface BeginnerScene {
   resultId?: string;
+  boardTargetIds?: string[];
   dateLabel?: string;
   weatherLabel?: string;
   eventLabel?: string;
@@ -119,14 +123,17 @@ export type BeginnerJourneyStage =
   | "RECALCULATING"
   | "CHOOSE_RECOVERY"
   | "RECOVERY_SELECTED"
+  | "GROWING"
   | "DELIVERY_DUE"
-  | "COMPLETE";
+  | "COMPLETE"
+  | "FAILED";
 
 export interface BeginnerJourneyChoice {
   id: string;
   strategy_id?: string | null;
   title: string;
   tradeoff: string;
+  explanation?: string | null;
   metrics: Record<string, string | number | null>;
   eligible: boolean;
   disabled_reason?: string | null;
@@ -152,6 +159,12 @@ export interface BeginnerJourneyCard {
   state: string;
   provenance: { label: string; source: string };
   entity: { kind: string; id: string };
+  facts?: Array<{
+    id: string;
+    label: string;
+    value: string | number;
+    detail?: string | null;
+  }>;
   actions: Array<BeginnerJourneyNextAction & { inference_triggered?: false }>;
 }
 
@@ -235,7 +248,7 @@ export interface BeginnerJourney {
     highlights: string[];
     replay_available: boolean;
   } | null;
-  audit: Array<Record<string, unknown>>;
+  audit: Array<Record<string, unknown>> | { event_count: number; latest_revision: number };
   execution_mode: string;
   data_mode: string;
   real_operations_enabled: false;
@@ -331,7 +344,7 @@ export const defaultBeginnerUtilities: BeginnerUtilityCard[] = [
     kind: "adviser",
     eyebrow: "Optional",
     title: "Ask an adviser",
-    summary: "Submit a question about the current server-validated card. Nothing is sent automatically.",
+    summary: "Submit a question about the current saved decision. Nothing is sent automatically.",
     primaryAction: { id: "ask-adviser", kind: "ask", label: "Prepare a question" },
   },
   {
@@ -402,10 +415,11 @@ function metricLabel(key: string) {
   const known: Record<string, string> = {
     planned_harvest_kg: "Planned harvest",
     committed_demand_kg: "Committed demand",
-    fulfilled_demand_kg: "Fulfilled demand",
+    fulfilled_demand_kg: "Expected delivery",
     waste_kg: "Expected waste",
     shortfall_kg: "Expected shortfall",
-    land_utilization_pct: "Land used",
+    land_utilization_pct: "Growing space used",
+    cost_sgd: "Estimated cost",
     cash_balance: "Cash balance",
   };
   return known[key] || key.replaceAll("_", " ");
@@ -416,6 +430,7 @@ function metricValue(key: string, value: string | number | null | undefined) {
   if (typeof value === "string") return value;
   if (key === "land_utilization_pct") return `${value.toLocaleString(undefined, { maximumFractionDigits: 1 })}%`;
   if (key === "cash_balance") return `SGD ${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+  if (key === "cost_sgd" || key === "margin_sgd") return `SGD ${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
   if (key.endsWith("_kg")) return `${value.toLocaleString(undefined, { maximumFractionDigits: 1 })} kg`;
   return value.toLocaleString();
 }
@@ -435,15 +450,19 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
     : journey.objective.title || "Complete your first farm season";
   const objectiveDetail = typeof journey.objective === "string" ? undefined : journey.objective.detail;
   const nextAction = journey.next_action;
-  const serverDecisionCards = nextAction
-    ? journey.cards.filter((card) => card.actions.some((action) => action.id === nextAction.id))
-    : journey.cards.filter((card) => ["active", "selected", "completed", "current"].includes(card.state.toLowerCase()));
+  const serverDecisionCards = journey.stage === "COMPLETE"
+    ? journey.cards
+    : nextAction
+      ? journey.cards.filter((card) => card.actions.some((action) => action.id === nextAction.id))
+      : journey.cards.filter((card) => ["active", "selected", "completed", "current"].includes(card.state.toLowerCase()));
   const contextualCards = serverDecisionCards.length
     ? serverDecisionCards
     : journey.cards.length ? [journey.cards[journey.cards.length - 1]] : [];
   const choicesAreCurrent = Boolean(nextAction?.requires_option && journey.choices.length);
   const cards: BeginnerCard[] = (choicesAreCurrent ? [] : contextualCards).map((card) => {
-    const cardAction = nextAction && !nextAction.requires_option ? nextAction : undefined;
+    const cardAction = journey.stage === "COMPLETE"
+      ? card.actions[0]
+      : nextAction && !nextAction.requires_option ? nextAction : undefined;
     return {
       id: card.id,
       phase,
@@ -452,6 +471,14 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
       summary: card.summary,
       statusLabel: card.state.replaceAll("_", " "),
       explanation: `This comes from ${card.provenance.source}. It is recorded as ${card.provenance.label.toLowerCase()}.`,
+      sourceLabel: card.provenance.label,
+      facts: card.facts?.map((fact) => ({
+        id: fact.id,
+        label: fact.label,
+        value: String(fact.value),
+        detail: fact.detail || undefined,
+        source: card.provenance.source,
+      })),
       entity: { kind: card.entity.kind, id: card.entity.id, revision: journey.revision },
       primaryAction: cardAction ? {
         id: cardAction.id,
@@ -471,11 +498,12 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
         eyebrow: phase === "recovery" ? "Recovery choice" : "Calculated plan",
         title: choice.title,
         summary: choice.tradeoff,
+        explanation: choice.explanation || choice.tradeoff,
         statusLabel: choice.eligible ? "Eligible" : "Unavailable",
-        facts: Object.entries(choice.metrics).map(([key, value]) => ({
+        facts: ["fulfilled_demand_kg", "land_utilization_pct", "cost_sgd"].filter((key) => choice.metrics[key] != null).map((key) => ({
           id: `${choice.id}-${key}`,
           label: metricLabel(key),
-          value: metricValue(key, value),
+          value: metricValue(key, choice.metrics[key]),
           source: "Stored local planner result",
         })),
         boardTargetIds: choice.board_target_ids || [],
@@ -508,7 +536,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
         source: journey.scenario.provenance_label,
       })),
       entity: { kind: "beginner_journey", id: journey.id, revision: journey.revision },
-      primaryAction: action ? {
+      primaryAction: action && !action.requires_option ? {
         id: action.id,
         kind: actionKind(action.kind, phase),
         label: action.label,
@@ -517,7 +545,10 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
       } : undefined,
     });
   }
-  const preferredChoiceId = journey.selected_choice_id || journey.choices.find((choice) => choice.eligible)?.id;
+  const currentSelectedChoice = journey.choices.find(
+    (choice) => choice.id === journey.selected_choice_id && choice.eligible,
+  );
+  const preferredChoiceId = currentSelectedChoice?.id || journey.choices.find((choice) => choice.eligible)?.id;
   const selectedChoiceCard = preferredChoiceId ? `choice-${preferredChoiceId}` : undefined;
   return {
     id: journey.id,
@@ -531,6 +562,7 @@ export function seasonFromBeginnerJourney(journey: BeginnerJourney): BeginnerSea
     serverStage: journey.stage,
     scene: journey.scene ? {
       resultId: journey.scene.result_id || undefined,
+      boardTargetIds: journey.scene.board_target_ids,
       dateLabel: journey.scene.clock_date || journey.scene.event?.date || undefined,
       weatherLabel: journey.scene.event?.weather || undefined,
       eventLabel: journey.scene.event?.label || undefined,

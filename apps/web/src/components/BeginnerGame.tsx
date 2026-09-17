@@ -75,16 +75,16 @@ const introCards = [
     eyebrow: "Your goal",
     title: "Keep one promise",
     body: "Guide a tiny Singapore farm from a confirmed order to a recorded delivery.",
-    caption: "Illustrative animation · not a live farm reading",
+    caption: "Illustrated example · not a live farm reading",
     art: "goal",
   },
   {
     id: "intro-choices",
     number: "02",
     eyebrow: "Your choices",
-    title: "Choose with real limits",
-    body: "Compare server-calculated plans, then make one clear choice at a time.",
-    caption: "Guide preview · actual eligibility comes from the server",
+    title: "Compare two plans",
+    body: "See how each growing plan uses the little farm, then make one clear choice.",
+    caption: "Illustrated example · your season will show its own choices",
     art: "choices",
   },
   {
@@ -92,8 +92,8 @@ const introCards = [
     number: "03",
     eyebrow: "Consequences",
     title: "See the farm respond",
-    body: "Weather, maintenance and delivery reveal the cost of each decision without changing real operations.",
-    caption: "Illustrative animation · simulation only",
+    body: "Maintenance and delivery show what each decision changes without touching real operations.",
+    caption: "Illustrated example · simulation only",
     art: "consequences",
   },
 ] as const;
@@ -142,6 +142,7 @@ export default function BeginnerGame({
   const [replayingIntro, setReplayingIntro] = useState(false);
   const [motionPaused, setMotionPaused] = useState(false);
   const [prefersReduced, setPrefersReduced] = useState(false);
+  const [documentHidden, setDocumentHidden] = useState(document.hidden);
   const [selectedCardId, setSelectedCardId] = useState<string | undefined>(
     serverSeason?.selectedCardId || stored.selectedCardId,
   );
@@ -157,7 +158,10 @@ export default function BeginnerGame({
   const cardStageRef = useRef<HTMLDivElement>(null);
   const isLanding = landing ?? defaultLanding();
   const showIntro = isLanding || replayingIntro;
-  const isPaused = motionPaused || prefersReduced;
+  const isPaused = motionPaused || prefersReduced || documentHidden;
+  const continuing = hasSavedSeason !== undefined
+    ? hasSavedSeason
+    : Boolean(serverSeason || stored.serverSeasonId);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -165,6 +169,12 @@ export default function BeginnerGame({
     sync();
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const sync = () => setDocumentHidden(document.hidden);
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
   }, []);
 
   useEffect(() => {
@@ -247,7 +257,7 @@ export default function BeginnerGame({
   const runLandingAction = async () => {
     setLocalBusy(true);
     try {
-      if (serverSeason || hasSavedSeason || stored.serverSeasonId) {
+      if (continuing) {
         if (onContinue) await onContinue();
         else navigateToPlay();
       } else if (onStart) await onStart();
@@ -284,6 +294,13 @@ export default function BeginnerGame({
       onReplayIntroduction?.();
       return;
     }
+    if (activeUtility.kind === "settings" || action.id === "open-settings") {
+      setReplayingIntro(true);
+      setUtilityOpen(false);
+      setIntroIndex(0);
+      onReplayIntroduction?.();
+      return;
+    }
     if (action.kind === "ask") { setAskOpen(true); return; }
     await onUtilityAction?.(activeUtility, action);
   };
@@ -300,7 +317,7 @@ export default function BeginnerGame({
   };
 
   const keyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.target instanceof HTMLTextAreaElement) return;
+    if (event.target instanceof HTMLElement && event.target.closest("button, textarea, input, select, a")) return;
     if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
     else if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
     else if (event.key === "Enter") {
@@ -315,11 +332,12 @@ export default function BeginnerGame({
 
   if (showIntro) return <IntroLanding
     index={introIndex}
-    continuing={Boolean(serverSeason || hasSavedSeason || stored.serverSeasonId)}
+    continuing={continuing}
     busy={busy || localBusy}
     paused={isPaused}
     reduced={prefersReduced}
     replaying={replayingIntro}
+    error={error || undefined}
     direction={slideDirection}
     onMove={move}
     onStart={() => void runLandingAction()}
@@ -353,7 +371,9 @@ export default function BeginnerGame({
 
     <section className="bg-farm-region" aria-labelledby="bg-farm-title">
       <div className="bg-section-label"><span>Farm view</span><strong id="bg-farm-title">{serverSeason?.scene.eventLabel || "Season not started"}</strong></div>
-      <FarmScene scene={serverSeason?.scene} paused={isPaused} />
+      <FarmScene scene={serverSeason?.scene} paused={isPaused}
+        activeTargets={utilityOpen ? [] : activeCard?.boardTargetIds?.length ? activeCard.boardTargetIds : serverSeason?.scene.boardTargetIds || []}
+        resultId={utilityOpen ? serverSeason?.scene.resultId : activeCard?.resultId || serverSeason?.scene.resultId} />
     </section>
 
     <section
@@ -391,9 +411,9 @@ export default function BeginnerGame({
           <button type="button" className="is-primary" disabled={!activeUtility?.primaryAction || activeUtility.primaryAction.disabled || busy || localBusy}
             title={activeUtility?.primaryAction?.disabledReason} onClick={() => void runUtilityPrimary()}>
             {localBusy ? <LoaderCircle className="bg-spin" /> : utilityIcon(activeUtility?.kind)}
-            {activeUtility?.primaryAction?.label || "Open"}
+            {activeUtility?.kind === "settings" ? "Replay introduction" : activeUtility?.primaryAction?.label || "Open"}
           </button>
-          <button type="button" onClick={() => setMotionPaused((value) => !value)}>{isPaused ? <Play /> : <Pause />}{isPaused ? "Motion on" : "Pause"}</button>
+          <button type="button" aria-label={isPaused ? "Play motion" : "Pause motion"} onClick={() => setMotionPaused((value) => !value)}>{isPaused ? <Play /> : <Pause />}{isPaused ? "Motion on" : "Pause"}</button>
         </> : <>
           <button type="button" disabled={!activeCard} aria-pressed={explanationOpen} onClick={() => setExplanationOpen((value) => !value)}><HelpCircle />Explain</button>
           <button type="button" className="is-primary" data-testid="beginner-primary" disabled={!activeCard?.primaryAction || activeCard.primaryAction.disabled || busy || localBusy}
@@ -405,7 +425,7 @@ export default function BeginnerGame({
         </>}
       </div>}
       {!askOpen && <div className="bg-control-strip">
-        <button type="button" onClick={() => setMotionPaused((value) => !value)} aria-pressed={isPaused}>{isPaused ? <Play /> : <Pause />}{isPaused ? "Play motion" : "Pause motion"}</button>
+        <button type="button" onClick={() => setMotionPaused((value) => !value)} aria-label={isPaused ? "Play motion" : "Pause motion"} aria-pressed={isPaused}>{isPaused ? <Play /> : <Pause />}{isPaused ? "Play motion" : "Pause motion"}</button>
         <span><Keyboard /> <kbd>←</kbd><kbd>→</kbd> cards · <kbd>Enter</kbd> act · <kbd>E</kbd> explain · <kbd>M</kbd> more</span>
       </div>}
       {activeCard?.primaryAction?.disabledReason && !utilityOpen && <p className="bg-disabled-reason" role="status">{activeCard.primaryAction.disabledReason}</p>}
@@ -415,13 +435,15 @@ export default function BeginnerGame({
 }
 
 function IntroLanding({ index, continuing, busy, paused, reduced, replaying, direction, onMove, onStart, onPause, onBackToSeason,
-  onPointerDown, onPointerMove, onPointerEnd, onKeyDown }: {
+  error, onPointerDown, onPointerMove, onPointerEnd, onKeyDown }: {
   index: number; continuing: boolean; busy: boolean; paused: boolean; reduced: boolean; replaying: boolean; direction: "next" | "previous";
+  error?: string;
   onMove: (delta: number) => void; onStart: () => void; onPause: () => void; onBackToSeason: () => void;
   onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void; onPointerMove: (event: ReactPointerEvent<HTMLElement>) => void;
   onPointerEnd: (event: ReactPointerEvent<HTMLElement>) => void; onKeyDown: (event: ReactKeyboardEvent<HTMLElement>) => void;
 }) {
-  return <main className={`bg-landing ${paused ? "is-paused" : ""}`} data-motion={paused ? "paused" : "playing"}>
+  return <main className={`bg-landing ${paused ? "is-paused" : ""}`} data-motion={paused ? "paused" : "playing"}
+    data-testid="beginner-shell" data-stage="INTRO" data-revision="0">
     <header className="bg-landing__hero">
       <span className="bg-wordmark"><i><Sprout /></i> FarmTact</span>
       <p className="bg-kicker">A first season you can finish</p>
@@ -433,17 +455,19 @@ function IntroLanding({ index, continuing, busy, paused, reduced, replaying, dir
       <div className="bg-intro-cards">
         {introCards.map((card, cardIndex) => <article key={card.id}
           className={`bg-intro-card bg-intro-card--${card.art} ${cardIndex === index ? "is-active" : ""} is-${direction}`}
-          aria-hidden={cardIndex !== index}>
-          <div className="bg-intro-card__art" aria-hidden="true"><IntroArt kind={card.art} /></div>
+          aria-hidden={cardIndex !== index} hidden={cardIndex !== index}
+          data-testid={cardIndex === index ? "beginner-card" : undefined} tabIndex={cardIndex === index ? 0 : -1}>
+          <div className="bg-intro-card__art" aria-hidden="true" data-testid={cardIndex === index ? "beginner-scene" : undefined}><IntroArt kind={card.art} /></div>
           <div className="bg-intro-card__copy"><span>{card.number} · {card.eyebrow}</span><h2>{card.title}</h2><p>{card.body}</p><small><Sparkles />{card.caption}</small></div>
         </article>)}
       </div>
     </section>
     <section className="bg-landing-actions" aria-label="Introduction actions">
+      {error && <div className="bg-landing-error" role="alert"><CircleAlert /><span>{error}</span></div>}
       <CardNavigation index={index} count={introCards.length} onPrevious={() => onMove(-1)} onNext={() => onMove(1)} />
       <button className="bg-landing-primary" data-testid="beginner-primary" type="button" disabled={busy} onClick={onStart}>
         {busy ? <LoaderCircle className="bg-spin" /> : continuing ? <Play /> : <Sprout />}
-        {busy ? "Opening season…" : continuing ? "Continue my season" : "Start playing"}
+        {busy ? "Opening season…" : error ? "Try again" : continuing ? "Continue my season" : "Start playing"}
       </button>
       <button type="button" onClick={onPause} aria-pressed={paused}>{paused ? <Play /> : <Pause />}{paused ? "Play illustrations" : "Pause illustrations"}</button>
       {replaying && <button type="button" onClick={onBackToSeason}><ArrowLeft />Return to season</button>}
@@ -464,17 +488,17 @@ function IntroArt({ kind }: { kind: "goal" | "choices" | "consequences" }) {
     </g>
     {kind === "goal" && <g className="bg-art-crate"><path d="m231 89 49-23 37 18-49 24Z" /><path d="m231 89 37 19v38l-37-19Z" /><path d="m268 108 49-24v39l-49 23Z" /><path className="bg-art-check" d="m276 120 8 6 17-19" /></g>}
     {kind === "choices" && <g className="bg-art-choice"><path d="M221 63h54v72h-54z" /><path d="M232 81h32M232 95h22M232 109h29" /><circle cx="248" cy="49" r="17" /><path d="m239 49 7 7 12-15" /></g>}
-    {kind === "consequences" && <g className="bg-art-weather"><path d="M210 56c5-19 34-21 43-6 19-7 33 17 18 30h-61c-16-8-12-22 0-24Z" /><path d="m220 92-8 19m31-19-8 19m31-19-8 19" /><path className="bg-art-arrow" d="M294 104v36m-12-11 12 12 12-12" /></g>}
+    {kind === "consequences" && <g className="bg-art-delivery"><path d="M207 88h77v45h-77z" /><path d="m284 101 28 1 20 31h-48Z" /><circle cx="228" cy="137" r="12" /><circle cx="306" cy="137" r="12" /><path className="bg-art-crate-mini" d="m221 64 27-13 24 12-28 14Z" /><path className="bg-art-check" d="m231 64 7 6 14-17" /></g>}
   </svg>;
 }
 
-function FarmScene({ scene, paused }: { scene?: BeginnerSeasonState["scene"]; paused: boolean }) {
+function FarmScene({ scene, paused, activeTargets, resultId }: { scene?: BeginnerSeasonState["scene"]; paused: boolean; activeTargets: string[]; resultId?: string }) {
   const beds = scene?.beds.slice(0, 4) || [];
   const label = beds.length
     ? `${beds.map((bed) => `${bed.name}, ${bed.cropLabel || "crop"}, ${bed.cropStage}`).join("; ")}. ${scene?.eventLabel || ""}`
-    : "Illustrated farm view waiting for a server-owned season record.";
+    : "Illustrated farm view waiting for the saved season.";
   return <figure className={`bg-farm-scene bg-farm-scene--${scene?.eventTone || "calm"} ${paused ? "is-paused" : ""}`} aria-label={label}
-    data-testid="beginner-scene" data-result-id={scene?.resultId || undefined}>
+    data-testid="beginner-scene" data-result-id={resultId || undefined}>
     <svg viewBox="0 0 760 300" aria-hidden="true" focusable="false">
       <defs>
         <linearGradient id="bg-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#bce2df" /><stop offset="1" stopColor="#f4e8c9" /></linearGradient>
@@ -485,25 +509,26 @@ function FarmScene({ scene, paused }: { scene?: BeginnerSeasonState["scene"]; pa
       <path className="bg-scene-horizon" d="M0 190 180 103l143 72 160-95 277 125v95H0Z" />
       <g className="bg-scene-greenhouse"><path d="m82 153 94-54 94 54v82l-94 45-94-45Z" /><path d="m82 153 94 46 94-46M176 99v100m-63-27v79m126-79v78" /></g>
       <path className="bg-scene-path" d="m286 300 165-95 83 41-93 54Z" />
-      {beds.map((bed, index) => <SceneBed key={bed.id} bed={bed} index={index} />)}
-      {(scene?.eventTone === "rain" || scene?.eventTone === "maintenance") && <g className="bg-scene-rain">{[320,352,384,416,448,480,512,544,576].map((x) => <path key={x} d={`M${x} 32l-12 25`} />)}</g>}
-      {scene?.eventTone === "delivery" && <g className="bg-scene-truck"><path d="M565 213h96v44h-96z" /><path d="m661 229 29 1 21 27h-50Z" /><circle cx="590" cy="260" r="13" /><circle cx="683" cy="260" r="13" /><path d="M579 226h49m-25-12v25" /></g>}
+      {beds.map((bed, index) => <SceneBed key={`${bed.id}:${bed.cropStage}:${bed.progress ?? "unknown"}`} bed={bed} index={index}
+        active={activeTargets.includes(bed.id)} maintenance={scene?.eventTone === "warning" && activeTargets.includes(bed.id)} />)}
+      {scene?.eventTone === "success" && <g key={`${resultId}:${scene.eventLabel}:${scene.dateLabel}`} className="bg-scene-truck"><path d="M565 213h96v44h-96z" /><path d="m661 229 29 1 21 27h-50Z" /><circle cx="590" cy="260" r="13" /><circle cx="683" cy="260" r="13" /><path d="M579 226h49m-25-12v25" /></g>}
       {scene?.eventTone === "recovery" && <g className="bg-scene-recovery"><path d="M596 103a34 34 0 1 1-13 28" /><path d="m568 109 16 23 20-18" /></g>}
     </svg>
-    <figcaption><span>{scene?.dateLabel || "Season clock waits for the server"}</span><strong>{scene?.weatherLabel || scene?.eventLabel || "Tiny farm"}</strong><small>Illustrated view · server-owned state · noninteractive</small></figcaption>
+    <figcaption><span>{scene?.dateLabel || "Season clock not started"}</span><strong>{scene?.weatherLabel || scene?.eventLabel || "Tiny farm"}</strong><small>Simulated farm · noninteractive</small></figcaption>
   </figure>;
 }
 
-function SceneBed({ bed, index }: { bed: BeginnerSeasonState["scene"]["beds"][number]; index: number }) {
+function SceneBed({ bed, index, active, maintenance }: { bed: BeginnerSeasonState["scene"]["beds"][number]; index: number; active: boolean; maintenance: boolean }) {
   const columns = [0, 1, 2, 3];
-  const x = 330 + (index % 2) * 154;
-  const y = 150 + Math.floor(index / 2) * 72;
+  const x = 292 + (index % 2) * 166;
+  const y = 103 + Math.floor(index / 2) * 88;
   const progress = clampProgress(bed.progress);
-  const plantScale = bed.cropStage === "seedling" ? .55 : bed.cropStage === "ready" ? 1.15 : bed.cropStage === "harvested" || bed.cropStage === "empty" ? .12 : .9;
-  return <g className={`bg-scene-bed bg-scene-bed--${bed.cropStage}`} transform={`translate(${x} ${y})`} style={{ "--bed-accent": bed.accent || "#86b943", "--plant-scale": plantScale, "--growth-progress": progress } as CSSProperties}>
+  const plantScale = bed.progress == null ? .75 : .35 + progress * .8;
+  return <g className={`bg-scene-bed bg-scene-bed--${bed.cropStage} ${active ? "is-target" : ""}`} transform={`translate(${x} ${y})`} style={{ "--bed-accent": bed.accent === "warning" ? "#f47c62" : bed.accent === "neutral" ? "#b4bd9c" : bed.accent || "#86b943", "--plant-scale": plantScale, "--growth-progress": progress } as CSSProperties}>
     <path d="M0 34 83 0l65 32-86 38Z" fill="url(#bg-soil)" /><path className="bg-scene-bed__edge" d="m0 34 62 36v15L0 49Zm62 36 86-38v15L62 85Z" />
     {columns.map((column) => <g className="bg-scene-plant" key={column} transform={`translate(${28 + column * 25} ${37 - column * 10}) scale(${plantScale})`}><path d="M0 15V-5" /><path d="M0 7c-16 0-18-13-16-17C-4-10 1-1 0 7Z" /><path d="M0 3c16 1 19-12 17-16C5-13-1-5 0 3Z" /></g>)}
-    <text x="2" y="102">{bed.name}</text>
+    {maintenance && <g className="bg-scene-maintenance"><path d="M20 10h108v49H20Z" /><path d="M34 10 56 59m24-49 22 49m12-49 14 31" /><circle cx="135" cy="3" r="19" /><path d="M135-8v13m0 7v2" /></g>}
+    <text x="2" y="103">{bed.name}{bed.cropLabel ? ` · ${bed.cropLabel}` : ""}</text>
   </g>;
 }
 
@@ -513,9 +538,9 @@ function DecisionCard({ card, index, count, explanationOpen, direction }: { card
     <div className="bg-card__body"><h2>{card.title}</h2><p>{card.summary}</p>
       {card.facts?.length ? <dl>{card.facts.slice(0, 4).map((fact) => <div key={fact.id} data-tone={fact.tone || "default"}><dt>{fact.label}</dt><dd>{fact.value}</dd>{fact.detail && <small>{fact.detail}</small>}</div>)}</dl> : null}
       {card.guideTip && <aside><Sparkles /><div><b>Guide tip</b><p>{card.guideTip}</p></div></aside>}
-      {explanationOpen && <div className="bg-card__explanation" role="status"><b>Why this is here</b><p>{card.explanation || "This card is part of the guided season. Its facts and action eligibility come from the stored server state."}</p></div>}
+      {explanationOpen && <div className="bg-card__explanation" role="status"><b>Why this is here</b><p>{card.explanation || "This card is part of the guided season. Its facts and available action come from the saved season."}</p></div>}
     </div>
-    <footer><span>{card.entity ? `${card.entity.kind.replaceAll("_", " ")} · ${card.entity.id}` : "Guided season"}</span><strong>Swipe or use controls below</strong></footer>
+    <footer><span>{card.sourceLabel || "Simulated farm lesson"}</span><strong>Swipe or use controls below</strong></footer>
   </article>;
 }
 
@@ -548,5 +573,5 @@ function LoadingCard() {
 }
 
 function EmptyCard() {
-  return <article className="bg-card bg-card--empty" data-testid="beginner-card" tabIndex={0}><div className="bg-card__body"><Sprout /><h2>Your season is ready to begin</h2><p>Start from the introduction. No farm action or inference runs automatically.</p></div></article>;
+  return <article className="bg-card bg-card--empty" data-testid="beginner-card" tabIndex={0}><div className="bg-card__body"><Sprout /><h2>Your season is ready to begin</h2><p>Start from the introduction. No farm action or adviser message starts by itself.</p></div></article>;
 }

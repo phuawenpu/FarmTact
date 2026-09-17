@@ -111,6 +111,18 @@ def test_staged_admission_does_not_publish_route(gateway, monkeypatch):
     assert not seen
 
 
+def test_staged_v14_never_exposes_candidate_root_bundle(gateway, monkeypatch):
+    client, seen = gateway
+    monkeypatch.setenv('FARMTACT_STAGED_EDITION', 'v14')
+    response = client.get('/', follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers['location'] == '/v2/'
+    assert client.get('/play', follow_redirects=False).headers['location'] == '/v2/'
+    assert client.get('/review', follow_redirects=False).headers['location'] == '/v2/review'
+    assert client.get('/assets/candidate.js').status_code == 404
+    assert not seen
+
+
 def test_single_public_bundle_controls_history_and_active_together(gateway, monkeypatch, tmp_path):
     client, _seen = gateway
     history = json.loads(client.get('/api/releases/history').text)
@@ -120,3 +132,74 @@ def test_single_public_bundle_controls_history_and_active_together(gateway, monk
     assert [item['id'] for item in client.get('/api/releases').json()['editions']] == ['v2']
     assert client.get('/v1/').status_code == 410
     assert len(client.get('/api/releases/history').json()['editions']) == 2
+
+
+@pytest.fixture
+def current_gateway(monkeypatch, tmp_path):
+    from services.api.edition_gateway import create_gateway
+    from services.api.release_registry import ROOT
+    history = json.loads((ROOT / 'config/releases/registry.json').read_text())
+    candidate = dict(history['editions'][-1])
+    candidate.update(id='v14', title='Current', status='published')
+    history = {'latest': 'v14', 'editions': [*history['editions'], candidate]}
+    bundle = tmp_path / 'public.json'
+    bundle.write_text(json.dumps({'history': history, 'active': {'previous': None, 'latest': 'v14'}}))
+    monkeypatch.setenv('FARMTACT_PUBLIC_RELEASES', str(bundle))
+    monkeypatch.setenv('FARMTACT_CONTROL_SECRET', 'test-control-secret-long-enough')
+    monkeypatch.setenv('FARMTACT_PUBLIC_ORIGIN', 'https://farmtact.fly.dev')
+    seen = []
+
+    async def handle(request):
+        seen.append(request)
+        if request.url.path in ('/', '/play'):
+            return httpx.Response(200, text='<script src="/assets/game.js"></script>', headers={'content-type': 'text/html'})
+        if request.url.path == '/assets/game.js':
+            return httpx.Response(200, content=b'current-asset', headers={'content-type': 'text/javascript'})
+        headers = {'set-cookie': 'farmtact_session=current_session_123456789; HttpOnly; Path=/; SameSite=Strict'} if request.url.path.endswith('/new') else {}
+        return httpx.Response(200, json={'path': request.url.path}, headers=headers)
+
+    app = create_gateway(Store('sqlite://'), httpx.MockTransport(handle))
+    with TestClient(app, client=('127.0.0.1', 5000), base_url='https://farmtact.fly.dev') as client:
+        yield client, seen
+
+
+def test_v14_current_routes_proxy_without_version_prefix(current_gateway):
+    client, seen = current_gateway
+    assert client.get('/').status_code == 200
+    assert '/assets/game.js' in client.get('/play').text
+    assert client.get('/api/v1/bootstrap').json()['path'] == '/api/v1/bootstrap'
+    assert client.get('/assets/game.js').content == b'current-asset'
+    assert [request.url.path for request in seen[-4:]] == ['/', '/play', '/api/v1/bootstrap', '/assets/game.js']
+
+
+def test_v14_cookie_origin_and_header_boundaries(current_gateway):
+    client, seen = current_gateway
+    response = client.get('/api/v1/new')
+    assert 'farmtact_v14_session=' in response.headers['set-cookie']
+    assert 'Path=/' in response.headers['set-cookie']
+    client.cookies.set('farmtact_v13_session', 'old_session_123456789012345')
+    client.cookies.set('farmtact_v14_session', 'new_session_123456789012345')
+    client.get('/api/v1/bootstrap', headers={
+        'authorization': 'Bearer attacker', 'x-farmtact-gateway': 'attacker',
+    })
+    assert seen[-1].headers['cookie'] == 'farmtact_session=new_session_123456789012345'
+    assert 'authorization' not in seen[-1].headers
+    assert seen[-1].headers['x-farmtact-gateway'] != 'attacker'
+    before = len(seen)
+    assert client.post('/api/v1/bootstrap', headers={'origin': 'https://evil.example'}).status_code == 403
+    assert len(seen) == before
+
+
+def test_v14_hides_history_and_retires_numbered_routes(current_gateway):
+    client, seen = current_gateway
+    assert client.get('/api/releases').status_code == 404
+    assert client.get('/api/releases/history').status_code == 404
+    for method in ('get', 'post', 'delete'):
+        response = getattr(client, method)('/v13/api/v1/bootstrap')
+        assert response.status_code == 410
+        assert response.text.count('<a ') == 1
+        assert 'href="/"' in response.text and '<li>' not in response.text
+    response = client.get('/v14/', follow_redirects=False)
+    assert response.status_code == 308 and response.headers['location'] == '/play'
+    assert client.post('/v14/api/v1/bootstrap').status_code == 404
+    assert not seen

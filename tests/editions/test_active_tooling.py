@@ -26,10 +26,13 @@ def test_local_launcher_rejects_historical_retired_worker_by_default(tmp_path):
     assert 'retired or not staged' in result.stderr
 
 
-def test_generic_verifier_uses_active_and_history_apis_without_fixed_old_pair():
+def test_generic_verifier_supports_private_history_and_latest_only_api_without_fixed_old_pair():
     source = (ROOT / 'scripts/verify_editions.py').read_text()
     assert "client.get('/api/releases/history')" in source
     assert "client.get('/api/releases')" in source
+    assert 'remote_active, remote_registry' in source
+    assert "prefix = '/api/v1' if latest_only" in source
+    assert "'path': '/' if latest_only" in source
     assert "for edition in ('v1', 'v2')" not in source
     assert "client.get(f'/{retired_id}/api/v1/bootstrap')" in source
     assert "client.post(f'/{retired_id}/api/v1/planning-sessions'" in source

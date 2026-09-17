@@ -1,24 +1,21 @@
-# FarmTact · Command & Cultivate
+# FarmTact · Grow your first delivery
 
 **V11 reading copies:** [PDF](reports/v11/farmtact-report.pdf) · [offline HTML](reports/v11/farmtact-report.html).
 
-FarmTact is a visual production-planning demonstration for a fictional Singapore
-vegetable farm. Use customer demand, crop cycles, growing space and declared
-seasonal conditions to compare planting schedules, customer fulfillment and crop
-wastage. The farm board and adviser Council make those decisions tangible.
-Local Python calculations produce quantities and schedules; optional DeepSeek calls
-interpret frozen results. Actual planting, purchases and farm communications are disabled.
+FarmTact teaches farm planning through a small playable season. Meet a customer
+order, swipe between calculated growing plans, choose one, and watch recorded
+simulation events unfold on a 2.5D farm. Respond to maintenance, make the delivery,
+and learn what your decisions changed. The cards and the action area below them are
+the controls; there are no buildings to hunt for or dashboards to navigate.
 
-**Play:** [V13 tactical field console](https://farmtact.fly.dev/v13/) ·
-[previous V12 guided workflow](https://farmtact.fly.dev/v12/) ·
-[active edition chooser](https://farmtact.fly.dev/)
+**Start:** [animated introduction](https://farmtact.fly.dev/) ·
+[play or continue your season](https://farmtact.fly.dev/play).
 
-V13 is the latest edition; V12 is retained unchanged as the previous edition.
-V1–V11 applications are retired; their
-URLs return 410 and their release history remains in Git. See the
-[V13 implementation evidence](reports/v13/implementation.md),
-[blind judging report](reports/v13/judging-personas.md), and
-[scripted usability report](reports/v13/scripted-usability.md).
+V14 replaces the public edition chooser with one current game. Historical public
+applications are retired; source/image history remains immutable, and prior state
+is archived rather than migrated or deleted. See the
+[V14 implementation plan](docs/v14-implementation-plan.md) and
+[publication policy](docs/deployment/editions.md).
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
@@ -27,12 +24,33 @@ URLs return 410 and their release history remains in Git. See the
 [v8 remediation report](docs/technical/v8-remediation-report.md) ·
 [V8 failed-quality postmortem](reports/v8/public-ai-postmortem.md)
 
-The release registry pins V13 to an exact Git commit and immutable container digest;
-the public edition chooser is the runtime source of truth. Only V12 and V13 run
-publicly, with separate databases, caches and progress. Numerical facts and optional
-AI interpretation remain distinct, and actual farm operations remain disabled.
+All farms and deliveries in the lessons are simulations. Local Python calculations
+produce schedules and quantities; optional DeepSeek questions interpret a frozen
+planning snapshot. Browsing, planning, advancing time and completing lessons invoke
+no LLM. Actual planting, purchases and farm communications remain disabled.
 
-## V13 tactical field console
+## Your first season
+
+1. Open the introduction. Swipe the three examples or press **Start playing**.
+2. Read your first order: 25 kg of lettuce. Find the growing plans and compare
+   delivery, growing space and cost. Swiping is a preview; confirming selects a plan.
+3. Advance explicitly through the season. Simulated time never advances while away.
+4. When B3 needs maintenance, compare the original placement with a recalculated
+   alternative. Choose a feasible recovery before continuing.
+5. Review your recorded delivery and debrief. Replay starts a separate attempt;
+   the next challenge adds a second crop and competing order.
+
+**Explain** helps with the current decision. **More** contains your next step,
+journal, teaching records, crop information, settings, optional adviser and replay,
+all as cards in the same place. Returning players can continue their saved season.
+Previous/Next and arrow keys provide alternatives to swiping. Motion can be paused;
+the system reduced-motion preference is respected. Sound is not required.
+
+The teaching farm has four beds and uses the existing synthetic lettuce and pak
+choi recipes. The follow-on challenge requests 18 kg lettuce and 7 kg pak choi.
+These are authored teaching conditions, not real orders or agronomic predictions.
+
+## Historical V13 tactical field console
 
 V13 reorganizes the full shell around one current decision without replacing the
 farm board or numerical evidence. Mobile uses a compact card stack, normal-flow
@@ -86,7 +104,11 @@ The starting screen and V11 switcher list numbered editions newest first.
 Planning remains synthetic: the accepted example still leaves 440 kg of booked
 demand unserved. Empirical model calibration and farmer validation remain open.
 
-## What you can do
+## Earlier planning capabilities and technical background
+
+The capabilities below document the retained planning engine and previous UI
+iterations. V14 presents its beginner workflow through cards; it does not expose
+the historical room-based navigation or public release chooser.
 
 - Navigate the V13 field deck by swipe, Previous/Next or arrow keys; inspect the
   frozen scenario, reserve B3 through the real planner, compare calculated

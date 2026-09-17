@@ -29,13 +29,16 @@ def machine_config(registry, volume, *, active=None, staged=None, retirement_ope
     active_ids = [item for item in (active['previous'], active['latest']) if item is not None]
     if any(item not in all_images for item in active_ids) or len(active_ids) != len(set(active_ids)):
         raise ValueError('Active editions must exist in release history')
-    if len(active_ids) == 2 and int(active_ids[1][1:]) != int(active_ids[0][1:]) + 1:
+    latest_number = int(active['latest'][1:])
+    if latest_number >= 14 and active['previous'] is not None:
+        raise ValueError('V14 and later expose only the latest public edition')
+    if latest_number < 14 and len(active_ids) == 2 and int(active_ids[1][1:]) != int(active_ids[0][1:]) + 1:
         raise ValueError('Active editions must be consecutive')
     if staged is not None and (staged not in all_images or staged in active_ids or int(staged[1:]) != len(ids)):
         raise ValueError('Invalid staged edition')
     runtime_ids = [*active_ids, *([staged] if staged else [])]
     images = {name: all_images[name] for name in runtime_ids}
-    upstreams = {name: f'http://farmtact-local-{name}.flycast:{8080+int(name[1:])}' for name in ids}
+    upstreams = {name: f'http://farmtact-local-{name}.flycast:{8080+int(name[1:])}' for name in runtime_ids}
     adapter = base64.b64encode((ROOT/'scripts/shared_container_entrypoint.py').read_bytes()).decode()
     containers = []
     # V11 refreshes the chooser to newest-first without touching older edition images.

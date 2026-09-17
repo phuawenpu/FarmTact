@@ -171,6 +171,10 @@ def _create_world(store,tenant,session,result):
             if allocation.get('executed') and allocation[field]<world['start_date']:world['completed_task_ids'].append(f"{allocation['id']}:{task}")
     with store.connection(write=True) as c:c.execute(WORLDS.insert().values(id=world['id'],tenant_id=tenant,payload=world))
     append_event(store,tenant,world,'world_created',world['start_date'],planning_session_id=session['id'],strategy_hash=content_hash(chosen),inherited_task_ids=world['completed_task_ids'])
+    # Persist the incremented event sequence even when the caller does not
+    # immediately advance the new world (beginner journeys pause for a player
+    # checkpoint here).
+    with store.connection(write=True) as c:c.execute(update(WORLDS).where(WORLDS.c.id==world['id'],WORLDS.c.tenant_id==tenant).values(payload=world))
     session['world_id']=world['id']
     return world
 

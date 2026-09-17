@@ -68,14 +68,19 @@ def _status(session: dict) -> str:
 
 
 def _metric_view(strategy: dict | None, total_area: float = 20) -> dict:
+    if strategy is None:
+        return {"planned_harvest_kg":None,"committed_demand_kg":None,"fulfilled_demand_kg":None,
+                "waste_kg":None,"shortfall_kg":None,"land_utilization_pct":None,"cost_sgd":None,"margin_sgd":None}
     metric=(strategy or {}).get("metrics",{})
+    planned_beds={row["bed_id"]:float(row.get("area_m2",0)) for row in strategy.get("allocations",[]) if not row.get("executed")}
     return {
         "planned_harvest_kg": float(metric.get("harvest_kg",0)),
         "committed_demand_kg": float(metric.get("booked_requested_kg",0)),
         "fulfilled_demand_kg": float(metric.get("booked_delivered_kg",0)),
         "waste_kg": float(metric.get("waste_kg",0)),
         "shortfall_kg": float(metric.get("booked_shortfall_kg",metric.get("shortfall_kg",0))),
-        "land_utilization_pct": round(float(metric.get("area_m2",0))/total_area*100,1) if total_area else 0.0,
+        "land_utilization_pct": round(sum(planned_beds.values())/total_area*100,1) if total_area else 0.0,
+        "cost_sgd": float(metric.get("cost_sgd",0)),
         "margin_sgd": float(metric.get("margin_sgd",0)),
     }
 
@@ -94,7 +99,8 @@ def _choices(session: dict, stage: str | None = None) -> list[dict]:
     total_area=float(sum(bed.area_m2 for bed in Farm.model_validate(session["farm"]).beds))
     feasible=[row for row in (result or {}).get("strategies",[]) if row.get("status")=="FEASIBLE" and not row.get("violations")]
     ordered=[]
-    for policy in ("Lean","Resilient","Balanced"):
+    policies=("Balanced","Resilient","Lean") if _journey(session)["lesson_id"]=="two_orders" else ("Lean","Resilient","Balanced")
+    for policy in policies:
         row=next((item for item in feasible if item.get("name")==policy),None)
         if row and _strategy_signature(row,total_area) not in {_strategy_signature(item,total_area) for item in ordered}:
             ordered.append(row)
@@ -155,18 +161,51 @@ def _next_action(session: dict, stage: str) -> dict | None:
     if stage=="CHOOSE_RECOVERY":return _action("select_recovery","Choose recovery plan","choose",option=True)
     if stage=="GROWING":return _action("advance","Advance to next crop event","advance")
     if stage=="DELIVERY_DUE":return _action("record_delivery","Review recorded delivery","record")
-    if stage=="COMPLETE":return _action("replay","Replay lesson","replay")
+    if stage=="COMPLETE":
+        if _journey(session)["lesson_id"]=="first_delivery":return _action("next_challenge","Try two competing orders","replay")
+        return _action("replay","Replay this challenge","replay")
     if stage=="FAILED":return _action("replay","Start a fresh attempt","replay")
     return None
 
 
 def _cards(session: dict, stage: str, choices: list[dict]) -> list[dict]:
     journey=_journey(session)
+    origin=Farm.model_validate(journey["origin_farm"])
+    due=max(order.due_date for order in origin.orders)
+    requirements=[f'{float(order.quantity_kg-order.cancelled_kg):g} kg of {order.crop_id.replace("_"," ")}'
+                  for order in sorted(origin.orders,key=lambda row:row.id)]
+    requirement=" and ".join(requirements)
+    customer="customer" if len(origin.orders)==1 else "customers"
+    verb="needs" if len(origin.orders)==1 else "need"
     provenance={"label":"SYNTHETIC TEACHING SIMULATION","source":FIXTURE_VERSION}
     next_action=_next_action(session,stage)
+    if stage=="COMPLETE":
+        metrics=_metrics(session["_store"],session["_tenant"],session)
+        initial=journey.get("initial_choice") or {};recovery=journey.get("recovery_choice") or {}
+        delivered=float(metrics.get("fulfilled_demand_kg") or 0);requested=float(metrics.get("committed_demand_kg") or 0)
+        replay=_action("replay","Replay this lesson","replay")
+        onward=next_action
+        initial_beds=", ".join(initial.get("board_target_ids",[])) or "the original beds"
+        recovery_beds=", ".join(recovery.get("board_target_ids",[])) or "the recalculated beds"
+        return [{
+            "id":"debrief-result","type":"result","title":f"Delivered {delivered:g} of {requested:g} kg",
+            "summary":f'The recorded season finished with SGD {float(metrics.get("cost_sgd") or 0):.2f} in cost and {float(metrics.get("waste_kg") or 0):g} kg disposed.',
+            "state":"completed","provenance":{"label":"RECORDED SIMULATION RESULT","source":"synthetic-execution-v1"},
+            "entity":{"kind":"simulation","id":session.get("world_id")},"actions":[],"inference_triggered":False,
+        },{
+            "id":"debrief-change","type":"comparison","title":"What your decision changed",
+            "summary":f'Your starting plan used {initial_beds}. After B3 maintenance, the calculated recovery moved future work to {recovery_beds}.',
+            "state":"completed","provenance":{"label":"STORED PLAN COMPARISON","source":"guided-planning-v1"},
+            "entity":{"kind":"planning_result","id":session.get("result_id")},"actions":[replay],"inference_triggered":False,
+        },{
+            "id":"debrief-next","type":"next_challenge","title":"Balance two customer orders" if journey["lesson_id"]=="first_delivery" else "Replay with a different policy",
+            "summary":"Try the isolated follow-on farm with lettuce and pak choi competing for the same four beds." if journey["lesson_id"]=="first_delivery" else "Replay this challenge and choose the other calculated starting policy.",
+            "state":"current","provenance":provenance,"entity":{"kind":"lesson","id":"two_orders" if journey["lesson_id"]=="first_delivery" else journey["lesson_id"]},
+            "actions":[onward] if onward else [],"inference_triggered":False,
+        }]
     cards=[{
-        "id":"lesson-objective","type":"objective","title":"Deliver the confirmed order",
-        "summary":"Choose a feasible schedule, respond to B3 maintenance, and follow the crop through delivery.",
+        "id":"lesson-objective","type":"objective","title":f"Grow {requirement} for {due.strftime('%-d %b')}",
+        "summary":f"Your {customer} {verb} {requirement} by {due.strftime('%-d %B')}. Compare two ways to grow it, then choose your plan.",
         "state":"active" if stage=="START" else "recorded","provenance":provenance,
         "entity":{"kind":"order","id":"order-first-delivery"},
         "actions":[next_action] if next_action and stage in ("START","PLAN_SELECTED","GROWING","DELIVERY_DUE","COMPLETE","FAILED") else [],
@@ -240,11 +279,14 @@ def _metrics(store, tenant_id: str, session: dict) -> dict:
     strategy=_selected_strategy(session)
     view=_metric_view(strategy,float(sum(bed.area_m2 for bed in farm.beds)))
     world=get_world(store,tenant_id,session.get("world_id")) if session.get("world_id") else None
+    origin=Farm.model_validate(_journey(session)["origin_farm"])
     view.update({
         "clock_date":world.get("clock_date") if world else None,
         "horizon_end":world.get("end_date") if world else str(farm.planning_date+timedelta(days=farm.horizon_days-1)),
+        "committed_demand_kg":float(sum(order.quantity_kg-order.cancelled_kg for order in origin.orders)),
         "fulfilled_demand_kg":float(world["totals"]["delivered_kg"]) if world else 0.0,
         "waste_kg":float(world["totals"]["disposed_kg"]) if world else 0.0,
+        "cost_sgd":float(world["cost_sgd"]) if world else view.get("cost_sgd"),
         "cash_balance":float(world["cash_sgd"]) if world else float(farm.resources.cash_sgd),
     })
     return view
@@ -276,52 +318,85 @@ def _scene(store, tenant_id: str, session: dict, stage: str) -> dict:
         crop_id=row.get("crop_id");crop_stage=row.get("stage","empty")
         is_target=row["id"]==MAINTENANCE_BED_ID
         beds.append({"id":row["id"],"name":row["name"],"crop_label":crop_labels.get(crop_id,crop_id.replace("_"," ").title() if crop_id else None),
-                     "crop_stage":crop_stage,"progress":float(row.get("progress",0)),
+                     "crop_stage":crop_stage,"stage":crop_stage,"progress":float(row.get("progress",0)),
                      "accent":"warning" if is_target and maintenance_active else ("crop" if crop_stage!="empty" else "neutral"),
                      "status_label":"Maintenance constraint" if is_target and maintenance_active else crop_stage.replace("_"," ").title(),
                      "allocation_id":row.get("allocation_id")})
     if stage in ("MAINTENANCE_DUE","RECALCULATING","CHOOSE_RECOVERY"):
-        event={"tone":"warning","label":"B3 maintenance","date":str(MAINTENANCE_START),"weather":"Sheltered synthetic teaching conditions"}
+        event={"tone":"warning","label":"B3 maintenance","date":str(MAINTENANCE_START),"weather":"Simulated farm"}
     elif stage in ("DELIVERY_DUE","COMPLETE"):
-        event={"tone":"success","label":"Confirmed delivery","date":max(str(order.due_date) for order in Farm.model_validate(_journey(session)["origin_farm"]).orders),"weather":"Sheltered synthetic teaching conditions"}
+        event={"tone":"success","label":"Customer delivery","date":max(str(order.due_date) for order in Farm.model_validate(_journey(session)["origin_farm"]).orders),"weather":"Simulated farm"}
     else:
-        event={"tone":"neutral","label":"Next recorded crop checkpoint","date":world.get("clock_date") if world else str(farm.planning_date),"weather":"Sheltered synthetic teaching conditions"}
+        event={"tone":"neutral","label":"Your teaching farm","date":world.get("clock_date") if world else str(farm.planning_date),"weather":"Simulated farm"}
+        if world:
+            current=date.fromisoformat(world["clock_date"]) if world.get("clock_date") else date.fromisoformat(world["start_date"])-timedelta(days=1)
+            upcoming=[]
+            names={bed.id:bed.name for bed in farm.beds}
+            for allocation in world["segment_allocations"]:
+                for task,field in (("Sow","sow_date"),("Transplant","transplant_date"),("Harvest","harvest_date")):
+                    task_day=date.fromisoformat(allocation[field])
+                    if task_day>current:
+                        upcoming.append((task_day,task,f'{crop_labels.get(allocation["crop_id"],allocation["crop_id"])} in {names[allocation["bed_id"]]}'))
+            if upcoming:
+                task_day,task,label=min(upcoming)
+                event.update(label=f"{task} {label}",date=str(task_day))
     return {"result_id":session.get("result_id"),"world_id":session.get("world_id"),"clock_date":world.get("clock_date") if world else None,
             "beds":beds,"event":event,"board_target_ids":[MAINTENANCE_BED_ID] if maintenance_active else [],
+            "date_label":world.get("clock_date") if world and world.get("clock_date") else event["date"],
+            "weather_label":event["weather"],"event_label":event["label"],"event_tone":event["tone"],
             "projection_source":"synthetic-execution-v1" if world else FIXTURE_VERSION}
 
 
-def _debrief(session: dict, metrics: dict, stage: str) -> dict | None:
+def _order_outcomes(store, tenant_id: str, session: dict) -> list[dict]:
+    origin=Farm.model_validate(_journey(session)["origin_farm"])
+    raw=[]
+    if session.get("world_id"):
+        from services.api.simulation import EVENTS
+        with store.connection() as connection:
+            raw=list(connection.execute(select(EVENTS.c.payload).where(
+                EVENTS.c.tenant_id==tenant_id,EVENTS.c.world_id==session["world_id"]
+            ).order_by(EVENTS.c.sequence)).scalars())
+    output=[]
+    for order in origin.orders:
+        events=[row for row in raw if row.get("type")=="demand_serviced" and row.get("order_id")==order.id]
+        requested=float(order.quantity_kg-order.cancelled_kg);delivered=sum(float(row.get("delivered_kg",0)) for row in events)
+        output.append({"order_id":order.id,"crop_id":order.crop_id,"requested_kg":requested,
+                       "delivered_kg":round(delivered,6),"fulfilled":delivered+1e-6>=requested,
+                       "event_recorded":bool(events)})
+    return output
+
+
+def _debrief(store, tenant_id: str, session: dict, metrics: dict, stage: str) -> dict | None:
     if stage!="COMPLETE":return None
-    requested=sum(float(order.quantity_kg-order.cancelled_kg) for order in Farm.model_validate(_journey(session)["origin_farm"]).orders)
-    delivered=metrics["fulfilled_demand_kg"]
-    met=delivered+1e-6>=requested
+    orders=_order_outcomes(store,tenant_id,session)
+    requested=sum(row["requested_kg"] for row in orders);delivered=sum(min(row["delivered_kg"],row["requested_kg"]) for row in orders)
+    met=bool(orders) and all(row["fulfilled"] and row["event_recorded"] for row in orders)
     return {"outcome":"delivered" if met else "partial_delivery","title":"Teaching season complete",
             "summary":f'{delivered:.1f} of {requested:.1f} kg in confirmed orders was delivered by the recorded simulation.',
             "objective_met":met,"highlights":["You selected a calculated policy.","B3 maintenance was recorded before its affected transplant.","The remaining schedule was recalculated rather than edited by hand."],
-            "replay_available":True}
+            "orders":orders,"replay_available":True}
 
 
 def _public(store, tenant_id: str, source: dict) -> dict:
     session=deepcopy(source);session["_store"]=store;session["_tenant"]=tenant_id
     journey=_journey(session);stage=_effective_stage(session);choices=_choices(session,stage)
-    metrics=_metrics(store,tenant_id,session);next_action=_next_action(session,stage)
+    metrics=_metrics(store,tenant_id,session);next_action=_next_action(session,stage);cards=_cards(session,stage,choices)
     if stage in ("CHOOSE_PLAN","CHOOSE_RECOVERY") and not any(choice["eligible"] for choice in choices):
-        next_action=_action("replay","No feasible choice; start a fresh attempt","replay",eligible=False,
-                            reason="The local planner did not produce a feasible alternative for this frozen attempt.")
+        next_action=_action("replay","No feasible choice; start a fresh attempt","replay",eligible=True)
     return {
         "id":session["id"],"version":VERSION,"lesson_id":journey["lesson_id"],"attempt":journey["attempt"],
         "name":session["name"],"revision":session["revision"],"status":_status(session),"stage":stage,
         "objective":{"id":"deliver-confirmed-orders","title":"Deliver the confirmed order" if journey["lesson_id"]=="first_delivery" else "Balance two confirmed orders",
-                     "summary":"Use the recorded four-bed simulation to meet booked demand through a dated B3 interruption.","server_derived":True},
+                     "summary":cards[0]["summary"],"detail":cards[0]["summary"],"server_derived":True},
+        "origin_farm":deepcopy(journey["origin_farm"]),
         "scenario":{"title":"Scheduled B3 maintenance","summary":"A dated maintenance window is introduced before the affected B3 transplant.",
                     "bed_id":MAINTENANCE_BED_ID,"bed_name":"B3","maintenance":{"start_date":str(MAINTENANCE_START),"end_date":str(MAINTENANCE_END)},
                     "provenance_label":"SYNTHETIC TEACHING SIMULATION","data_mode":"synthetic_demo"},
         "planning_session":{"id":session["id"],"status":session["status"],"revision":session["revision"],"result_id":session.get("result_id"),"job":deepcopy(session.get("job"))},
-        "cards":_cards(session,stage,choices),"choices":choices,"selected_choice_id":journey.get("selected_choice_id"),
+        "cards":cards,"choices":choices,"selected_choice_id":journey.get("selected_choice_id"),
         "result_id":session.get("result_id"),"scene":_scene(store,tenant_id,session,stage),
         "next_action":next_action,"timeline":_timeline(store,tenant_id,session),"metrics":metrics,
-        "debrief":_debrief(session,metrics,stage),"audit":{"event_count":len(journey.get("audit",[])),"latest_revision":session["revision"]},
+        "debrief":_debrief(store,tenant_id,session,metrics,stage),"audit":{"event_count":len(journey.get("audit",[])),"latest_revision":session["revision"]},
         "execution_mode":"simulation","data_mode":"synthetic_demo","real_operations_enabled":False,
     }
 
@@ -361,6 +436,8 @@ def _ready(session: dict, body: BeginnerActionRequest) -> str:
               "MAINTENANCE_DUE":{"record_b3_maintenance"},"CHOOSE_RECOVERY":{"select_recovery"},
               "GROWING":{"advance"},"DELIVERY_DUE":{"record_delivery"},
               "COMPLETE":{"replay","next_challenge"},"FAILED":{"replay"}}
+    expected.setdefault(stage,set()).add("replay")
+    if stage=="COMPLETE" and _journey(session)["lesson_id"]!="first_delivery":expected[stage].discard("next_challenge")
     if body.action_id not in expected.get(stage,set()):raise HTTPException(409,f'Action {body.action_id} is not available at stage {stage}')
     return stage
 
@@ -464,11 +541,13 @@ def install_routes(app, tenant):
                 queue_initial_calculation(store,tenant_id,session)
             elif body.action_id in ("select_plan","select_recovery"):
                 choices=_choices(dict(session,_store=store,_tenant=tenant_id),stage)
-                selected=next((choice for choice in choices if choice["id"]==body.option_id),None)
+                selected=next((choice for choice in choices if choice["id"]==body.option_id and choice["eligible"]),None)
                 if not selected:raise HTTPException(422,"Choose one of the current server-derived options")
                 replacing=body.action_id=="select_recovery"
                 activate_strategy(store,tenant_id,session,selected["strategy_id"],replace_future=replacing)
                 journey["selected_choice_id"]=selected["strategy_id"]
+                snapshot={key:deepcopy(selected[key]) for key in ("strategy_id","result_id","title","metrics","board_target_ids")}
+                journey["recovery_choice" if replacing else "initial_choice"]=snapshot
                 journey["stage"]="GROWING" if replacing else "PLAN_SELECTED"
                 _audit(session,"recovery_selected" if replacing else "plan_selected",
                        "Recovery selected" if replacing else "Starting plan selected",
@@ -495,6 +574,8 @@ def install_routes(app, tenant):
                 events=_simulation_events(store,tenant_id,session.get("world_id"))
                 if not any(row["event_type"]=="demand_serviced" for row in events):
                     raise HTTPException(409,"No simulated delivery event has been recorded")
+                if not all(row["event_recorded"] for row in _order_outcomes(store,tenant_id,session)):
+                    raise HTTPException(409,"A confirmed order has no recorded delivery event")
                 journey["stage"]="COMPLETE"
                 _audit(session,"delivery_reviewed","Delivery reviewed","The debrief is derived from recorded demand-service and inventory events.")
                 session["revision"]+=1;save_session(store,tenant_id,session)

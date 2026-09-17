@@ -12,6 +12,7 @@ const check = (name, pass, detail) => {
   if (!pass) throw new Error(`${name}: ${JSON.stringify(detail)}`);
 };
 const browser = await chromium.launch({ headless: true });
+let activePage;
 await mkdir(resolve(root, 'apps/web/screenshots/v14'), { recursive: true });
 
 async function shot(page, name) {
@@ -42,6 +43,7 @@ try {
 
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
+  activePage = page;
   let journey = null;
   const providerRequests = [], failedMutations = [], consoleErrors = [];
   page.on('pageerror', error => consoleErrors.push(String(error)));
@@ -54,12 +56,14 @@ try {
     if (/\/beginner-journeys(?:\/[^/]+(?:\/actions)?)?$/.test(path) && response.ok()) {
       const body = await response.json().catch(() => null);
       if (body?.id && body?.stage) journey = body;
+      else if (body?.journeys?.length) journey = body.journeys[0];
     }
   });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   await page.getByRole('button', { name: 'Start playing', exact: true }).click();
   await page.waitForURL('**/play');
   await page.waitForFunction(() => document.querySelector('[data-testid="beginner-shell"]')?.getAttribute('data-stage') === 'START', null, { timeout: 30000 });
+  for (let tries = 0; !journey && tries < 20; tries++) await page.waitForTimeout(100);
   check('starting creates a saved isolated lesson', Boolean(journey?.id));
   const firstId = journey.id;
   await shot(page, 'first-order-390');
@@ -69,6 +73,7 @@ try {
       const node = document.querySelector('[data-testid="beginner-primary"]');
       return node && !node.disabled;
     }, null, { timeout: 120000 });
+    for (let tries = 0; journey?.stage !== await page.getByTestId('beginner-shell').getAttribute('data-stage') && tries < 30; tries++) await page.waitForTimeout(100);
     const stage = journey?.stage;
     evidence.stages.push(stage);
     if (stage === 'COMPLETE') break;
@@ -83,7 +88,12 @@ try {
       await shot(page, 'maintenance-390');
     }
     const before = journey?.revision;
-    await page.getByTestId('beginner-primary').click();
+    process.stdout.write(`Action ${step}: ${stage} · ${await page.getByTestId('beginner-primary').innerText()}\n`);
+    const [response] = await Promise.all([
+      page.waitForResponse(response => response.request().method() === 'POST' && response.url().endsWith('/actions'), { timeout: 30000 }),
+      page.getByTestId('beginner-primary').click(),
+    ]);
+    check(`${stage}: action accepted`, response.ok(), response.ok() ? undefined : await response.text());
     await page.waitForFunction(({ before }) => {
       const shell = document.querySelector('[data-testid="beginner-shell"]');
       return shell && Number(shell.getAttribute('data-revision')) > before;
@@ -101,6 +111,7 @@ try {
   await context.close();
   evidence.status = 'PASS';
 } catch (error) {
+  if (activePage && !activePage.isClosed()) await shot(activePage, 'failure-current');
   evidence.status = 'FAIL';
   evidence.failures.push(error.stack || String(error));
   process.exitCode = 1;

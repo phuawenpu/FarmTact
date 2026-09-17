@@ -7,6 +7,35 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 EDITION = re.compile(r'v[1-9][0-9]*\Z')
+LATEST_ONLY_FROM = 14
+
+
+def edition_number(edition: str) -> int:
+    if not EDITION.fullmatch(edition):
+        raise ValueError('Invalid edition identifier')
+    return int(edition[1:])
+
+
+def latest_only_policy(active: dict) -> bool:
+    """Whether the published application has switched to one public runtime."""
+    latest = active.get('latest') if isinstance(active, dict) else None
+    return isinstance(latest, str) and EDITION.fullmatch(latest) is not None and edition_number(latest) >= LATEST_ONLY_FROM
+
+
+def _validate_active(data: dict, ids: list[str]) -> dict:
+    if set(data) != {'previous', 'latest'}:
+        raise ValueError('Invalid active-edition manifest')
+    previous, latest = data['previous'], data['latest']
+    if latest not in ids or (previous is not None and previous not in ids):
+        raise ValueError('Active edition is absent from release history')
+    if previous == latest:
+        raise ValueError('Active editions must be distinct')
+    if edition_number(latest) >= LATEST_ONLY_FROM:
+        if previous is not None:
+            raise ValueError('V14 and later expose only the latest public edition')
+    elif previous is not None and edition_number(latest) != edition_number(previous) + 1:
+        raise ValueError('Active editions must be consecutive')
+    return data
 
 
 def _public_bundle():
@@ -55,17 +84,8 @@ def active_manifest(history=None):
         data = json.loads(path.read_text()) if path.is_file() else {
             'previous': None, 'latest': history['latest'],
         }
-    if set(data) != {'previous', 'latest'}:
-        raise ValueError('Invalid active-edition manifest')
     ids = [item['id'] for item in history['editions']]
-    previous, latest = data['previous'], data['latest']
-    if latest not in ids or (previous is not None and previous not in ids):
-        raise ValueError('Active edition is absent from release history')
-    if previous == latest:
-        raise ValueError('Active editions must be distinct')
-    if previous is not None and int(latest[1:]) != int(previous[1:]) + 1:
-        raise ValueError('Active editions must be consecutive')
-    return data
+    return _validate_active(data, ids)
 
 
 def active_registry():
@@ -75,10 +95,7 @@ def active_registry():
         ids = [item['id'] for item in history.get('editions', [])]
         if len(set(ids)) != len(ids) or any(not EDITION.fullmatch(item) for item in ids):
             raise ValueError('Invalid release registry')
-        if set(active) != {'previous', 'latest'} or active['latest'] not in ids:
-            raise ValueError('Invalid active-edition manifest')
-        if active['previous'] is not None and (active['previous'] not in ids or int(active['latest'][1:]) != int(active['previous'][1:]) + 1):
-            raise ValueError('Invalid active-edition manifest')
+        _validate_active(active, ids)
     else:
         history = history_registry()
         active = active_manifest(history)

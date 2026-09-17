@@ -40,6 +40,20 @@ def test_config_retains_registry_images_and_bounds_one_machine():
     assert all(row["files"][0]["guest_path"] == "/opt/farmtact-shared-entrypoint.py" for row in containers.values())
 
 
+def test_v14_config_runs_latest_only_without_historical_upstreams():
+    source = copy.deepcopy(registry())
+    candidate = copy.deepcopy(source['editions'][-1])
+    candidate.update(id='v14', image_digest='registry.fly.io/farmtact@sha256:' + 'e' * 64)
+    source['editions'].append(candidate); source['latest'] = 'v14'
+    config = machine_config(source, 'vol_review123', active={'previous': None, 'latest': 'v14'}, public=True)
+    rows = {row['name']: row for row in config['containers']}
+    assert set(rows) == {'gateway', 'v14'}
+    upstreams = json.loads(rows['gateway']['env']['FARMTACT_EDITION_UPSTREAMS'])
+    assert set(upstreams) == {'v14'}
+    with pytest.raises(ValueError, match='only the latest'):
+        machine_config(source, 'vol_review123', active={'previous': 'v13', 'latest': 'v14'}, public=True)
+
+
 def test_private_probe_relay_is_service_less_and_never_enters_public_config():
     private = machine_config(registry(), "vol_review123", active=active(), public=False, origin="http://127.0.0.1:8088")
     public = machine_config(registry(), "vol_review123", active=active(), public=True)
@@ -202,7 +216,7 @@ def test_shared_publisher_updates_exact_machine_then_probes_new_local_port(monke
         return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
 
     monkeypatch.setattr(publication, "command", fake_command)
-    publication.deploy_shared(new, {'previous': source['latest'], 'latest': new['latest']})
+    publication.deploy_shared(new, {'previous': None, 'latest': new['latest']})
 
     assert calls[0][:5] == ["fly", "machine", "update", "1234567890abcd", "--app"]
     assert calls[0][5] == "farmtact"
@@ -282,7 +296,7 @@ def test_shared_atomic_publish_targets_pinned_gateway_container(tmp_path, monkey
     source = registry()
     new = copy.deepcopy(source); number = len(source['editions']) + 1
     new['editions'].append({'id':f'v{number}'}); new['latest'] = f'v{number}'
-    publication.publish_remote(new, {'previous':source['latest'],'latest':new['latest']}, tmp_path / "registry.json")
+    publication.publish_remote(new, {'previous':None,'latest':new['latest']}, tmp_path / "registry.json")
 
     pinned = ["--machine", "1234567890abcd", "--container", "gateway"]
     assert all(all(item in args for item in pinned) for args, _ in calls)

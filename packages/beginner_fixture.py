@@ -16,7 +16,7 @@ from packages.fixtures import synthetic_farm
 FIXTURE_VERSION = "beginner-teaching-farm-v1"
 PLANNING_DAY = date(2026, 1, 5)
 MAINTENANCE_BED_ID = "bed-03"
-MAINTENANCE_START = date(2026, 1, 19)
+MAINTENANCE_START = date(2026, 1, 18)
 MAINTENANCE_END = date(2026, 1, 31)
 
 
@@ -40,7 +40,7 @@ def beginner_farm(lesson_id: Literal["first_delivery", "two_orders"] = "first_de
             "crop_id": "lettuce",
             "booked_at": datetime(2026, 1, 4, tzinfo=timezone.utc),
             "due_date": PLANNING_DAY + timedelta(days=49),
-            "quantity_kg": "25",
+            "quantity_kg": "18" if lesson_id == "two_orders" else "25",
             "price_sgd_per_kg": "8",
         }
     ]
@@ -52,7 +52,7 @@ def beginner_farm(lesson_id: Literal["first_delivery", "two_orders"] = "first_de
                 "crop_id": "pak_choi",
                 "booked_at": datetime(2026, 1, 4, tzinfo=timezone.utc),
                 "due_date": PLANNING_DAY + timedelta(days=49),
-                "quantity_kg": "12",
+                "quantity_kg": "7",
                 "price_sgd_per_kg": "7",
             }
         )

@@ -104,8 +104,19 @@ def validate_active(active: dict, history: dict) -> None:
     ids = [item['id'] for item in history['editions']]
     if active['latest'] not in ids or (active['previous'] is not None and active['previous'] not in ids):
         raise PublicationError('Active edition is absent from release history')
-    if active['previous'] is not None and int(active['latest'][1:]) != int(active['previous'][1:]) + 1:
+    latest_number = int(active['latest'][1:])
+    if latest_number >= 14 and active['previous'] is not None:
+        raise PublicationError('V14 and later expose only the latest public edition')
+    if latest_number < 14 and active['previous'] is not None and latest_number != int(active['previous'][1:]) + 1:
         raise PublicationError('Active editions must be consecutive')
+
+
+def next_active_manifest(edition: str, previous_latest: str) -> dict:
+    """Select the publication policy without exposing retired V14-era workers."""
+    return {
+        'previous': None if int(edition[1:]) >= 14 else previous_latest,
+        'latest': edition,
+    }
 
 
 def active_from_public(payload: dict) -> dict:
@@ -117,6 +128,29 @@ def active_from_public(payload: dict) -> dict:
     return active
 
 
+def private_release_bundle() -> dict:
+    """Read publication metadata over authenticated operator SSH, never public HTTP."""
+    import shlex
+    code = "import pathlib;print(pathlib.Path('/data/releases/public.json').read_text(),end='')"
+    try:
+        result = command([
+            'fly', 'ssh', 'console', '--app', 'farmtact', *shared_ssh_args(),
+            '--command', 'python -c ' + shlex.quote(code),
+        ])
+        if len(result.stdout.encode()) > 1_000_000:
+            raise PublicationError('Private release bundle is too large')
+        bundle = json.loads(result.stdout)
+    except PublicationError:
+        raise
+    except Exception as error:
+        raise PublicationError('Private release bundle unavailable') from error
+    if set(bundle) != {'history', 'active'} or not isinstance(bundle['history'], dict) or not isinstance(bundle['active'], dict):
+        raise PublicationError('Private release bundle is invalid')
+    validate_registry(bundle['history'])
+    validate_active(bundle['active'], bundle['history'])
+    return bundle
+
+
 def remote_registry(origin: str) -> dict:
     if origin != "https://farmtact.fly.dev":
         raise PublicationError("Publication origin is fixed")
@@ -125,10 +159,16 @@ def remote_registry(origin: str) -> dict:
         try:
             response = urlopen(request, timeout=10)
         except HTTPError as error:
-            if error.code != 404: raise
+            if error.code != 404:
+                raise
             # One-time V11 gateway migration: the old public endpoint IS history.
             # validate_registry below rejects a truncated active-edition response.
-            response = urlopen(Request(origin + "/api/releases", headers={"Accept":"application/json"}), timeout=10)
+            try:
+                response = urlopen(Request(origin + "/api/releases", headers={"Accept":"application/json"}), timeout=10)
+            except HTTPError as active_error:
+                if active_error.code == 404:
+                    return private_release_bundle()['history']
+                raise
         with response:
             if response.status != 200 or int(response.headers.get("Content-Length", "0") or 0) > 1_000_000:
                 raise PublicationError("Remote registry unavailable")
@@ -151,6 +191,10 @@ def remote_active(origin: str) -> dict:
     try:
         with urlopen(Request(origin + '/api/releases', headers={'Accept': 'application/json'}), timeout=10) as response:
             payload = json.loads(response.read(1_000_001))
+    except HTTPError as error:
+        if error.code == 404:
+            return private_release_bundle()['active']
+        raise PublicationError('Remote active manifest unavailable') from error
     except Exception as error:
         raise PublicationError('Remote active manifest unavailable') from error
     active = active_from_public(payload)
@@ -537,7 +581,52 @@ def retire_oldest_shared(history: dict, active: dict) -> dict:
     if not settings:
         return {'status': 'not_shared'}
     validate_active(active, history)
-    guard_shared_cleanup_runtime(settings, history, active)
+    runtime = guard_shared_cleanup_runtime(settings, history, active)
+    if int(active['latest'][1:]) >= 14:
+        # V14 permanently changes retention policy: preserve every edition data
+        # subtree, archive the release metadata, snapshot the common volume, and
+        # only stop displaced workers. Neither this path nor resume-cleanup ever
+        # installs or invokes the deletion-capable retirement operator.
+        containers = runtime.get('config', {}).get('containers', [])
+        displaced = sorted(
+            row['name'] for row in containers
+            if isinstance(row, dict) and isinstance(row.get('name'), str)
+            and EDITION.fullmatch(row['name']) and row['name'] != active['latest']
+        )
+        protected = [entry['id'] for entry in history['editions'] if entry['id'] != active['latest']]
+        import shlex
+        archive = f"/data/releases/archive-{active['latest']}"
+        prepare = (
+            "import pathlib,shutil; d=pathlib.Path(" + repr(archive) + "); d.mkdir(parents=True,exist_ok=True); "
+            "r=pathlib.Path('/data/releases'); "
+            "[(shutil.copy2(p,d/p.name)) for p in r.iterdir() if p.is_file() and p.name in "
+            "{'registry.json','registry.json.previous','active.json','active.json.previous','public.json','public.json.previous'}]"
+        )
+        command([
+            'fly', 'ssh', 'console', '--app', settings['app'], '--machine', settings['machine_id'],
+            '--container', 'gateway', '--command', 'python -c ' + shlex.quote(prepare),
+        ])
+        snapshot_id = create_recovery_snapshot(settings)
+        deploy_shared(history, active)
+        report = f"{archive}/retention.json"
+        payload = json.dumps({
+            'edition': active['latest'], 'policy': 'archive-only',
+            'snapshot_id': snapshot_id, 'protected_editions': protected,
+            'workers_stopped': displaced,
+            'storage_deleted': False,
+        }, sort_keys=True)
+        record = (
+            "import pathlib; p=pathlib.Path(" + repr(report) + "); "
+            "p.write_text(" + repr(payload + '\n') + ")"
+        )
+        command([
+            'fly', 'ssh', 'console', '--app', settings['app'], '--machine', settings['machine_id'],
+            '--container', 'gateway', '--command', 'python -c ' + shlex.quote(record),
+        ])
+        return {
+            'status': 'archived', 'snapshot_id': snapshot_id, 'report': report,
+            'protected_editions': protected, 'workers_stopped': displaced,
+        }
     if active['previous'] is None:
         deploy_shared(history, active)
         return {'status': 'nothing_to_retire'}
@@ -584,12 +673,13 @@ def publish_remote(registry: dict, active: dict, temporary: Path) -> None:
     temporary.write_text(json.dumps({'history': registry, 'active': active}, sort_keys=False, indent=2) + "\n")
     remote_tmp = "/data/releases/public.json.next"
     command(["fly", "ssh", "sftp", "shell", "--app", "farmtact", *shared_ssh_args()], input_text=f"put {temporary} {remote_tmp}\nquit\n")
+    expected_active = repr(active)
     code = (
         "import json,os,shutil; p='/data/releases/registry.json'; q='/data/releases/active.json'; u='/data/releases/public.json'; n=u+'.next'; "
         "x=json.load(open(n)); a=json.load(open(p)); b=x['history']; c=x['active']; "
         "assert b['editions'][:-1]==a['editions'] and len(b['editions'])==len(a['editions'])+1; "
-        "assert b['latest']==b['editions'][-1]['id']; assert c=={'previous':a['latest'],'latest':b['latest']}; "
-        "shutil.copy2(p,p+'.previous'); shutil.copy2(q,q+'.previous'); "
+        f"assert b['latest']==b['editions'][-1]['id']; assert c=={expected_active}; "
+        "shutil.copy2(p,p+'.previous'); shutil.copy2(q,q+'.previous'); shutil.copy2(u,u+'.previous'); "
         "os.replace(n,u); t=p+'.next'; open(t,'w').write(json.dumps(b)); os.replace(t,p); "
         "t=q+'.next'; open(t,'w').write(json.dumps(c)); os.replace(t,q)"
     )
@@ -655,7 +745,7 @@ def main(argv: list[str] | None = None) -> int:
             if not config.exists(): config.write_text(expected_config)
         cutover_complete = False
         try:
-            next_active = {'previous': remote['latest'], 'latest': args.edition}
+            next_active = next_active_manifest(args.edition, remote['latest'])
             if shared: deploy_shared(updated, current_active, staged=args.edition)
             else: deploy(args.edition, image, config)
             with tempfile.TemporaryDirectory(prefix="farmtact-publish-") as directory:
