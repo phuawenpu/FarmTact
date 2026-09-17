@@ -1,7 +1,8 @@
-Current work, 17 September 2026: V13 is published; V14 follows
-docs/v14-implementation-plan.md. The master owns integration and shared contracts;
-three existing specialists own backend, UI and gateway packages. Public UX has one
+Current release, 17 September 2026: V14 is published from `c0e585f`.
+Read reports/v14/implementation.md and config/releases/v14.json. Public UX has one
 animated introduction and one card-driven game, with private release history.
+The application image is immutable; subsequent fixes to Fly health-check metadata
+are hosting configuration only. The next unused publication number is V15.
 
 Historical release, 16 September 2026: V12 is published from source 9fd5789;
 V11 is the retained previous edition. V1–V10 workers/storage are retired, while

@@ -3,8 +3,10 @@
 V14 replaces dashboard-first navigation with an animated introduction at `/` and
 one card-driven game at `/play`. This supersedes V13's multi-panel shell; V13 source
 and image remain immutable. Publication uses private, recoverable historical state,
-not destructive cleanup. Release status and deployed source are recorded separately
-in the release manifest; this document describes the candidate implementation.
+not destructive cleanup. Published application source: `c0e585f08235c2137577652f590223180b8f71f9`;
+pinned image: `registry.fly.io/farmtact@sha256:29e39f61e6dc6734a944c88b8adc812ecd649c892c597c543d849d8cd8970128`.
+The release manifest and immutable tag retain that identity. Hosting metadata fixes
+after publication did not overwrite the application image.
 
 ## Beginner loop
 
@@ -73,6 +75,40 @@ inference is made by opening, browsing, calculating or completing a season.
 Malformed image preflight now happens before credentials or inference reservation.
 
 ## Evidence and remaining limits
+
+Final public verification after hosting repair: `browser-public.json` (75 checks),
+`acceptance-public.json` (71 checks, both lessons), `isolation-public.json` (13 checks),
+and `routes-public.json` (all old V1–V13 read/write routes retired, current routes
+available, public history hidden, historical manifests unchanged). The exact final
+image also passed the two-lesson private trial (`acceptance-staged.json`).
+
+`hosting-final.json` confirms only gateway and V14 are running with the same pinned
+image and a passing public health check. `retention-final.json` confirms archive-only
+retention, `storage_deleted: false`, and recovery snapshot
+`vs_ggaxxDLaONgVU1YA0m535jq7`. Publication cleanup is complete. A redundant restart
+was avoided during archive completion only after revalidating the already-applied
+worker set, exact image, readiness configuration and source health.
+
+Screenshots: [mobile introduction](../../apps/web/screenshots/v14/introduction-390.png),
+[first order](../../apps/web/screenshots/v14/first-order-390.png),
+[mobile debrief](../../apps/web/screenshots/v14/delivery-debrief-390.png),
+[desktop](../../apps/web/screenshots/v14/delivery-debrief-1280.png).
+
+### Hosting incident and resolution
+
+The first public journey passed before the next Fly health probe marked the gateway
+unhealthy: latest-only health now proxies the application, but the probe lacked its
+trusted client header. The initial configuration repair also encountered Fly's
+field-merging behavior and exposed a gateway/application readiness dependency cycle.
+The final host configuration supplies the fixed loopback client header for probes
+and starts the edition after gateway startup rather than waiting on a health check
+that itself needs the edition. Both container and public HTTP checks now pass.
+The 25 focused hosting tests and repeated public checks pass. This was a deployment
+availability incident, not an application-image replacement or a data deletion.
+The configuration uses the documented [Fly health-check and dependency model](https://fly.io/docs/machines/guides-examples/multi-container-machines/)
+and [health-check header schema](https://docs.machines.dev/models#flymachinehttpheader).
+
+### Regression and local evidence
 
 - `browser-local.json`: 75 passing checks; 360/390/430/1280 introductions and a
   complete real 390px season, resume, actual delivery, three closing cards,

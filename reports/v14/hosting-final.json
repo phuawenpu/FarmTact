@@ -1,0 +1,33 @@
+[
+  {
+    "id": "2871575b4544d8",
+    "state": "started",
+    "checks": [
+      {
+        "name": "servicecheck-00-http-8080",
+        "status": "passing",
+        "output": "{\"status\":\"ok\",\"development_phase\":\"autonomous_development\",\"edition\":\"v14\",\"source_commit\":\"c0e585f08235c2137577652f590223180b8f71f9\"}",
+        "updated_at": "2026-09-17T09:57:09.52Z"
+      }
+    ],
+    "containers": [
+      {
+        "name": "gateway",
+        "image": "registry.fly.io/farmtact@sha256:29e39f61e6dc6734a944c88b8adc812ecd649c892c597c543d849d8cd8970128"
+      },
+      {
+        "name": "v14",
+        "image": "registry.fly.io/farmtact@sha256:29e39f61e6dc6734a944c88b8adc812ecd649c892c597c543d849d8cd8970128"
+      }
+    ],
+    "mounts": [
+      {
+        "encrypted": true,
+        "path": "/persist",
+        "size_gb": 3,
+        "volume": "vol_vdejexpzm8ydn5x4",
+        "name": "farmtact_shared_data"
+      }
+    ]
+  }
+]

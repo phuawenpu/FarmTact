@@ -1,0 +1,2412 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "360: introduction has an obvious start",
+      "pass": true
+    },
+    {
+      "name": "360: illustrative animation is labelled",
+      "pass": true
+    },
+    {
+      "name": "360: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "360: no public version navigation",
+      "pass": true
+    },
+    {
+      "name": "360: farm is a noninteractive stage",
+      "pass": true
+    },
+    {
+      "name": "360: keyboard card navigation",
+      "pass": true
+    },
+    {
+      "name": "390: introduction has an obvious start",
+      "pass": true
+    },
+    {
+      "name": "390: illustrative animation is labelled",
+      "pass": true
+    },
+    {
+      "name": "390: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "390: no public version navigation",
+      "pass": true
+    },
+    {
+      "name": "390: farm is a noninteractive stage",
+      "pass": true
+    },
+    {
+      "name": "390: keyboard card navigation",
+      "pass": true
+    },
+    {
+      "name": "430: introduction has an obvious start",
+      "pass": true
+    },
+    {
+      "name": "430: illustrative animation is labelled",
+      "pass": true
+    },
+    {
+      "name": "430: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "430: no public version navigation",
+      "pass": true
+    },
+    {
+      "name": "430: farm is a noninteractive stage",
+      "pass": true
+    },
+    {
+      "name": "430: keyboard card navigation",
+      "pass": true
+    },
+    {
+      "name": "1280: introduction has an obvious start",
+      "pass": true
+    },
+    {
+      "name": "1280: illustrative animation is labelled",
+      "pass": true
+    },
+    {
+      "name": "1280: no horizontal page overflow",
+      "pass": true
+    },
+    {
+      "name": "1280: no public version navigation",
+      "pass": true
+    },
+    {
+      "name": "1280: farm is a noninteractive stage",
+      "pass": true
+    },
+    {
+      "name": "1280: keyboard card navigation",
+      "pass": true
+    },
+    {
+      "name": "starting creates a saved isolated lesson",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 0",
+      "pass": true
+    },
+    {
+      "name": "START: action accepted",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 1",
+      "pass": true
+    },
+    {
+      "name": "two or more actual choices are available",
+      "pass": true,
+      "detail": [
+        {
+          "id": "64ac59d3c34a977b62bd",
+          "strategy_id": "64ac59d3c34a977b62bd",
+          "title": "Lean plan",
+          "tradeoff": "Uses 62.5% of the growing space and delivers 23 of 25 kg, leaving a 2 kg shortfall.",
+          "status_label": "Feasible with 2 kg shortfall",
+          "metrics": {
+            "planned_harvest_kg": 29.9,
+            "committed_demand_kg": 25,
+            "fulfilled_demand_kg": 23,
+            "waste_kg": 6.9,
+            "shortfall_kg": 2,
+            "land_utilization_pct": 62.5,
+            "cost_sgd": 72.65,
+            "margin_sgd": 111.35
+          },
+          "deltas": {},
+          "eligible": true,
+          "disabled_reason": null,
+          "result_id": "0d7ca028a8eeae19f3aba5d7abed805a",
+          "result_hash": "24a6b3363116a123abb0af99f7da7f7079c3e87f179f8baf8f99de53c4f760eb",
+          "board_target_ids": [
+            "bed-03",
+            "bed-04"
+          ],
+          "allocations": [
+            {
+              "id": "existing-lettuce",
+              "bed_id": "bed-01",
+              "crop_id": "lettuce",
+              "sow_date": "2025-12-19",
+              "transplant_date": "2025-12-29",
+              "harvest_date": "2026-01-23",
+              "expected_kg": 6.9
+            },
+            {
+              "id": "allocation-932d6704e80f72906d47676a33a062a0",
+              "bed_id": "bed-03",
+              "crop_id": "lettuce",
+              "sow_date": "2026-01-18",
+              "transplant_date": "2026-01-28",
+              "harvest_date": "2026-02-22",
+              "expected_kg": 11.5
+            },
+            {
+              "id": "allocation-46d7c05dfd9adcfeb7b48c19ed5bb360",
+              "bed_id": "bed-04",
+              "crop_id": "lettuce",
+              "sow_date": "2026-01-19",
+              "transplant_date": "2026-01-29",
+              "harvest_date": "2026-02-23",
+              "expected_kg": 11.5
+            }
+          ],
+          "inference_triggered": false
+        },
+        {
+          "id": "e499bff6200bec3eb224",
+          "strategy_id": "e499bff6200bec3eb224",
+          "title": "Resilient plan",
+          "tradeoff": "Uses 81.2% of the growing space and covers all 25 kg of confirmed demand under the tested conditions.",
+          "status_label": "Covers all confirmed demand",
+          "metrics": {
+            "planned_harvest_kg": 36.8,
+            "committed_demand_kg": 25,
+            "fulfilled_demand_kg": 25,
+            "waste_kg": 11.8,
+            "shortfall_kg": 0,
+            "land_utilization_pct": 81.2,
+            "cost_sgd": 91.66,
+            "margin_sgd": 108.34
+          },
+          "deltas": {},
+          "eligible": true,
+          "disabled_reason": null,
+          "result_id": "0d7ca028a8eeae19f3aba5d7abed805a",
+          "result_hash": "24a6b3363116a123abb0af99f7da7f7079c3e87f179f8baf8f99de53c4f760eb",
+          "board_target_ids": [
+            "bed-01",
+            "bed-03",
+            "bed-04"
+          ],
+          "allocations": [
+            {
+              "id": "existing-lettuce",
+              "bed_id": "bed-01",
+              "crop_id": "lettuce",
+              "sow_date": "2025-12-19",
+              "transplant_date": "2025-12-29",
+              "harvest_date": "2026-01-23",
+              "expected_kg": 6.9
+            },
+            {
+              "id": "allocation-6201705eda59b739e7894b8fc7595b71",
+              "bed_id": "bed-01",
+              "crop_id": "lettuce",
+              "sow_date": "2026-01-18",
+              "transplant_date": "2026-01-28",
+              "harvest_date": "2026-02-22",
+              "expected_kg": 6.9
+            },
+            {
+              "id": "allocation-2829ef0887bf61aadeebf7ac530343be",
+              "bed_id": "bed-03",
+              "crop_id": "lettuce",
+              "sow_date": "2026-01-19",
+              "transplant_date": "2026-01-29",
+              "harvest_date": "2026-02-23",
+              "expected_kg": 11.5
+            },
+            {
+              "id": "allocation-7761d961780fcd0bf4063a7c0d2f1f9e",
+              "bed_id": "bed-04",
+              "crop_id": "lettuce",
+              "sow_date": "2026-01-18",
+              "transplant_date": "2026-01-28",
+              "harvest_date": "2026-02-22",
+              "expected_kg": 11.5
+            }
+          ],
+          "inference_triggered": false
+        }
+      ]
+    },
+    {
+      "name": "CHOOSE_PLAN: action accepted",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 2",
+      "pass": true
+    },
+    {
+      "name": "PLAN_SELECTED: action accepted",
+      "pass": true
+    },
+    {
+      "name": "PLAN_SELECTED: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 3",
+      "pass": true
+    },
+    {
+      "name": "PLAN_SELECTED: action accepted",
+      "pass": true
+    },
+    {
+      "name": "PLAN_SELECTED: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 4",
+      "pass": true
+    },
+    {
+      "name": "reload resumes the maintenance checkpoint",
+      "pass": true
+    },
+    {
+      "name": "MAINTENANCE_DUE: action accepted",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 5",
+      "pass": true
+    },
+    {
+      "name": "CHOOSE_RECOVERY: action accepted",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 6",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 7",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 8",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 9",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 10",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 11",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 12",
+      "pass": true
+    },
+    {
+      "name": "GROWING: action accepted",
+      "pass": true
+    },
+    {
+      "name": "GROWING: advancing visibly changes the checkpoint card",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 13",
+      "pass": true
+    },
+    {
+      "name": "DELIVERY_DUE: action accepted",
+      "pass": true
+    },
+    {
+      "name": "lesson progress is monotonic at action 14",
+      "pass": true
+    },
+    {
+      "name": "full season reaches debrief",
+      "pass": true,
+      "detail": {
+        "id": "086e5f4113f585ec2b413e63c78e1d59",
+        "version": "beginner-journey-v1",
+        "lesson_id": "first_delivery",
+        "attempt": 1,
+        "name": "First harvest lesson",
+        "revision": 16,
+        "status": "COMPLETE",
+        "stage": "COMPLETE",
+        "objective": {
+          "id": "deliver-confirmed-orders",
+          "title": "Deliver the confirmed order",
+          "summary": "The recorded season finished with SGD 79.14 in cost and 6.9 kg disposed.",
+          "detail": "The recorded season finished with SGD 79.14 in cost and 6.9 kg disposed.",
+          "server_derived": true
+        },
+        "origin_farm": {
+          "schema_version": "1.0",
+          "id": "demo-farm",
+          "name": "Four-bed teaching farm",
+          "location": "Synthetic classroom, Singapore",
+          "timezone": "Asia/Singapore",
+          "data_mode": "synthetic_demo",
+          "cutoff": "2026-01-05T00:00:00Z",
+          "horizon_days": 56,
+          "version": 1,
+          "recipes": [
+            {
+              "id": "lettuce-demo-v1",
+              "crop_id": "lettuce",
+              "system": "sheltered_hydroponic",
+              "nursery_days": 10,
+              "grow_days": 25,
+              "sanitation_days": 2,
+              "density_per_m2": 16,
+              "marketable_kg_per_m2": "2.3",
+              "cost_sgd_per_m2": "3.0",
+              "sow_labour_hours_per_m2": "0.08",
+              "harvest_labour_hours_per_kg": "0.07",
+              "shelf_life_days": 4,
+              "validation_status": "demo_only",
+              "origin": "synthetic"
+            }
+          ],
+          "beds": [
+            {
+              "id": "bed-01",
+              "name": "A1",
+              "area_m2": "3",
+              "system": "sheltered_hydroponic"
+            },
+            {
+              "id": "bed-02",
+              "name": "A2",
+              "area_m2": "3",
+              "system": "sheltered_hydroponic"
+            },
+            {
+              "id": "bed-03",
+              "name": "B3",
+              "area_m2": "5",
+              "system": "sheltered_hydroponic"
+            },
+            {
+              "id": "bed-04",
+              "name": "B4",
+              "area_m2": "5",
+              "system": "sheltered_hydroponic"
+            }
+          ],
+          "batches": [
+            {
+              "id": "existing-lettuce",
+              "bed_id": "bed-01",
+              "recipe_id": "lettuce-demo-v1",
+              "sow_date": "2025-12-19",
+              "transplant_date": "2025-12-29",
+              "harvest_date": "2026-01-23",
+              "expected_marketable_kg": "6.9",
+              "executed": true,
+              "origin": "synthetic"
+            }
+          ],
+          "orders": [
+            {
+              "id": "order-first-delivery",
+              "crop_id": "lettuce",
+              "booked_at": "2026-01-04T00:00:00Z",
+              "due_date": "2026-02-23",
+              "quantity_kg": "25",
+              "price_sgd_per_kg": "8",
+              "cancelled_kg": "0",
+              "origin": "synthetic"
+            }
+          ],
+          "history": [],
+          "inventory": [],
+          "resources": {
+            "nursery_sites": 1000,
+            "labour_hours_per_week": "12",
+            "cash_sgd": "300"
+          },
+          "fixture_seed": 20261401
+        },
+        "scenario": {
+          "title": "Scheduled B3 maintenance",
+          "summary": "A dated maintenance window is introduced before the affected B3 transplant.",
+          "bed_id": "bed-03",
+          "bed_name": "B3",
+          "maintenance": {
+            "start_date": "2026-01-18",
+            "end_date": "2026-01-31"
+          },
+          "provenance_label": "SYNTHETIC TEACHING SIMULATION",
+          "data_mode": "synthetic_demo"
+        },
+        "planning_session": {
+          "id": "086e5f4113f585ec2b413e63c78e1d59",
+          "status": "COMPLETED",
+          "revision": 16,
+          "result_id": "a0fd1188d6341e35aace14ffc6edb9d3",
+          "job": {
+            "id": "a0fd1188d6341e35aace14ffc6edb9d3",
+            "kind": "disrupt",
+            "status": "COMPLETED",
+            "stage": "complete",
+            "created_at": "2026-09-17T09:58:14.046355+00:00",
+            "started_at": "2026-09-17T09:58:14.196523+00:00",
+            "completed_at": "2026-09-17T09:58:15.825538+00:00",
+            "error": null
+          }
+        },
+        "cards": [
+          {
+            "id": "debrief-result",
+            "type": "result",
+            "title": "Delivered 25 of 25 kg",
+            "summary": "The recorded season finished with SGD 79.14 in cost and 6.9 kg disposed.",
+            "state": "completed",
+            "provenance": {
+              "label": "RECORDED SIMULATION RESULT",
+              "source": "synthetic-execution-v1"
+            },
+            "entity": {
+              "kind": "simulation",
+              "id": "e55443938cf4bce776c7eb07bc414423"
+            },
+            "actions": [],
+            "inference_triggered": false
+          },
+          {
+            "id": "debrief-change",
+            "type": "comparison",
+            "title": "What your decision changed",
+            "summary": "Your starting plan used A1, B3, B4. After B3 maintenance, the calculated recovery moved future work to A1, A2, B4.",
+            "state": "completed",
+            "provenance": {
+              "label": "STORED PLAN COMPARISON",
+              "source": "guided-planning-v1"
+            },
+            "entity": {
+              "kind": "planning_result",
+              "id": "a0fd1188d6341e35aace14ffc6edb9d3"
+            },
+            "actions": [
+              {
+                "id": "replay",
+                "label": "Replay this lesson",
+                "kind": "replay",
+                "eligible": true,
+                "disabled_reason": null,
+                "requires_option": false,
+                "inference_triggered": false
+              }
+            ],
+            "inference_triggered": false
+          },
+          {
+            "id": "debrief-next",
+            "type": "next_challenge",
+            "title": "Balance two customer orders",
+            "summary": "Try the isolated follow-on farm with lettuce and pak choi competing for the same four beds.",
+            "state": "current",
+            "provenance": {
+              "label": "SYNTHETIC TEACHING SIMULATION",
+              "source": "beginner-teaching-farm-v1"
+            },
+            "entity": {
+              "kind": "lesson",
+              "id": "two_orders"
+            },
+            "actions": [
+              {
+                "id": "next_challenge",
+                "label": "Try two competing orders",
+                "kind": "replay",
+                "eligible": true,
+                "disabled_reason": null,
+                "requires_option": false,
+                "inference_triggered": false
+              }
+            ],
+            "inference_triggered": false
+          }
+        ],
+        "choices": [],
+        "selected_choice_id": "179fa8223b2a3a3ad475",
+        "result_id": "a0fd1188d6341e35aace14ffc6edb9d3",
+        "scene": {
+          "result_id": "a0fd1188d6341e35aace14ffc6edb9d3",
+          "world_id": "e55443938cf4bce776c7eb07bc414423",
+          "clock_date": "2026-02-23",
+          "beds": [
+            {
+              "id": "bed-01",
+              "name": "A1",
+              "crop_label": "Lettuce",
+              "crop_stage": "harvested",
+              "stage": "harvested",
+              "progress": 1,
+              "accent": "crop",
+              "status_label": "Harvested",
+              "allocation_id": "allocation-de63e60065dfde60efbe8c9bc39c70aa"
+            },
+            {
+              "id": "bed-02",
+              "name": "A2",
+              "crop_label": "Lettuce",
+              "crop_stage": "harvested",
+              "stage": "harvested",
+              "progress": 1,
+              "accent": "crop",
+              "status_label": "Harvested",
+              "allocation_id": "allocation-693dd4287dbfe05039ed3bafffdf8f32"
+            },
+            {
+              "id": "bed-03",
+              "name": "B3",
+              "crop_label": null,
+              "crop_stage": "empty",
+              "stage": "empty",
+              "progress": 0,
+              "accent": "neutral",
+              "status_label": "Empty",
+              "allocation_id": null
+            },
+            {
+              "id": "bed-04",
+              "name": "B4",
+              "crop_label": "Lettuce",
+              "crop_stage": "harvested",
+              "stage": "harvested",
+              "progress": 1,
+              "accent": "crop",
+              "status_label": "Harvested",
+              "allocation_id": "allocation-46d7c05dfd9adcfeb7b48c19ed5bb360"
+            }
+          ],
+          "event": {
+            "tone": "success",
+            "label": "Customer delivery",
+            "date": "2026-02-23",
+            "weather": "Simulated farm",
+            "summary": "The simulated customer delivery was recorded on 23 Feb."
+          },
+          "board_target_ids": [],
+          "date_label": "2026-02-23",
+          "weather_label": "Simulated farm",
+          "event_label": "Customer delivery",
+          "event_tone": "success",
+          "projection_source": "synthetic-execution-v1"
+        },
+        "next_action": {
+          "id": "next_challenge",
+          "label": "Try two competing orders",
+          "kind": "replay",
+          "eligible": true,
+          "disabled_reason": null,
+          "requires_option": false,
+          "inference_triggered": false
+        },
+        "timeline": [
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:1",
+            "sequence": 1,
+            "event_type": "journey_created",
+            "occurred_on": "2026-09-17",
+            "title": "Lesson created",
+            "summary": "Attempt 1 uses an isolated four-bed synthetic farm.",
+            "source": "beginner-journey-v1",
+            "revision": 1
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:2",
+            "sequence": 2,
+            "event_type": "calculation_queued",
+            "occurred_on": "2026-09-17",
+            "title": "Planning calculation queued",
+            "summary": "The bounded local worker is calculating two feasible policy choices.",
+            "source": "beginner-journey-v1",
+            "revision": 1
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:3",
+            "sequence": 3,
+            "event_type": "plan_selected",
+            "occurred_on": "2026-09-17",
+            "title": "Starting plan selected",
+            "summary": "Resilient plan was bound to its exact calculated execution trace.",
+            "source": "beginner-journey-v1",
+            "revision": 3
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:4",
+            "sequence": 4,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-01-11",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 7 day(s) through 2026-01-11.",
+            "source": "beginner-journey-v1",
+            "revision": 4
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:5",
+            "sequence": 5,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-01-17",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 6 day(s) through 2026-01-17.",
+            "source": "beginner-journey-v1",
+            "revision": 5
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:6",
+            "sequence": 6,
+            "event_type": "maintenance_recorded",
+            "occurred_on": "2026-01-18",
+            "title": "B3 maintenance recorded",
+            "summary": "The dated B3 constraint was added before its affected transplant.",
+            "source": "beginner-journey-v1",
+            "revision": 6
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:7",
+            "sequence": 7,
+            "event_type": "recovery_selected",
+            "occurred_on": "2026-09-17",
+            "title": "Recovery selected",
+            "summary": "Lean plan was bound to its exact calculated execution trace.",
+            "source": "beginner-journey-v1",
+            "revision": 8
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:8",
+            "sequence": 8,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-01-19",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 2 day(s) through 2026-01-19.",
+            "source": "beginner-journey-v1",
+            "revision": 9
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:9",
+            "sequence": 9,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-01-23",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 4 day(s) through 2026-01-23.",
+            "source": "beginner-journey-v1",
+            "revision": 10
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:10",
+            "sequence": 10,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-01-29",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 6 day(s) through 2026-01-29.",
+            "source": "beginner-journey-v1",
+            "revision": 11
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:11",
+            "sequence": 11,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-02-05",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 7 day(s) through 2026-02-05.",
+            "source": "beginner-journey-v1",
+            "revision": 12
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:12",
+            "sequence": 12,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-02-12",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 7 day(s) through 2026-02-12.",
+            "source": "beginner-journey-v1",
+            "revision": 13
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:13",
+            "sequence": 13,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-02-19",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 7 day(s) through 2026-02-19.",
+            "source": "beginner-journey-v1",
+            "revision": 14
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:14",
+            "sequence": 14,
+            "event_type": "simulation_advanced",
+            "occurred_on": "2026-02-23",
+            "title": "Simulation advanced",
+            "summary": "The frozen ledger advanced 4 day(s) through 2026-02-23.",
+            "source": "beginner-journey-v1",
+            "revision": 15
+          },
+          {
+            "id": "journey:086e5f4113f585ec2b413e63c78e1d59:15",
+            "sequence": 15,
+            "event_type": "delivery_reviewed",
+            "occurred_on": "2026-09-17",
+            "title": "Delivery reviewed",
+            "summary": "The debrief is derived from recorded demand-service and inventory events.",
+            "source": "beginner-journey-v1",
+            "revision": 16
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:1",
+            "sequence": 1,
+            "event_type": "world_created",
+            "occurred_on": "2026-01-05",
+            "title": "Simulation started",
+            "summary": "Recorded by the deterministic local simulation.",
+            "source": "synthetic-execution-v1",
+            "revision": 1
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:2",
+            "sequence": 2,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-05",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 2
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:3",
+            "sequence": 3,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-06",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 3
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:4",
+            "sequence": 4,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-07",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 4
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:5",
+            "sequence": 5,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-08",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 5
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:6",
+            "sequence": 6,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-09",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 6
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:7",
+            "sequence": 7,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-10",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 7
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:8",
+            "sequence": 8,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-11",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 8
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:9",
+            "sequence": 9,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-12",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 9
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:10",
+            "sequence": 10,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-13",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 10
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:11",
+            "sequence": 11,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-14",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 11
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:12",
+            "sequence": 12,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-15",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 12
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:13",
+            "sequence": 13,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-16",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 13
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:14",
+            "sequence": 14,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-17",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 14
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:15",
+            "sequence": 15,
+            "event_type": "maintenance_recorded",
+            "occurred_on": "2026-01-18",
+            "title": "B3 maintenance recorded",
+            "summary": "B3 unavailable 2026-01-18 to 2026-01-31.",
+            "source": "synthetic-execution-v1",
+            "revision": 15
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:16",
+            "sequence": 16,
+            "event_type": "future_replanned",
+            "occurred_on": "2026-01-18",
+            "title": "Future schedule replaced",
+            "summary": "Recorded by the deterministic local simulation.",
+            "source": "synthetic-execution-v1",
+            "revision": 16
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:17",
+            "sequence": 17,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-18",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 17
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:18",
+            "sequence": 18,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-19",
+            "title": "Farm task completed",
+            "summary": "Sow · lettuce · bed-01",
+            "source": "synthetic-execution-v1",
+            "revision": 18
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:19",
+            "sequence": 19,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-19",
+            "title": "Farm task completed",
+            "summary": "Sow · lettuce · bed-02",
+            "source": "synthetic-execution-v1",
+            "revision": 19
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:20",
+            "sequence": 20,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-19",
+            "title": "Farm task completed",
+            "summary": "Sow · lettuce · bed-04",
+            "source": "synthetic-execution-v1",
+            "revision": 20
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:21",
+            "sequence": 21,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-19",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 21
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:22",
+            "sequence": 22,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-20",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 22
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:23",
+            "sequence": 23,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-21",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 23
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:24",
+            "sequence": 24,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-22",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 24
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:25",
+            "sequence": 25,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-23",
+            "title": "Farm task completed",
+            "summary": "Harvest · lettuce · bed-01",
+            "source": "synthetic-execution-v1",
+            "revision": 25
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:26",
+            "sequence": 26,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-23",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 26
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:27",
+            "sequence": 27,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-24",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 27
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:28",
+            "sequence": 28,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-25",
+            "title": "Farm task completed",
+            "summary": "Sanitation Complete · lettuce · bed-01",
+            "source": "synthetic-execution-v1",
+            "revision": 28
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:29",
+            "sequence": 29,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-25",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 29
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:30",
+            "sequence": 30,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-26",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 30
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:31",
+            "sequence": 31,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-27",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 31
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:32",
+            "sequence": 32,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-28",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 32
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:33",
+            "sequence": 33,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-29",
+            "title": "Farm task completed",
+            "summary": "Transplant · lettuce · bed-01",
+            "source": "synthetic-execution-v1",
+            "revision": 33
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:34",
+            "sequence": 34,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-29",
+            "title": "Farm task completed",
+            "summary": "Transplant · lettuce · bed-02",
+            "source": "synthetic-execution-v1",
+            "revision": 34
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:35",
+            "sequence": 35,
+            "event_type": "task_completed",
+            "occurred_on": "2026-01-29",
+            "title": "Farm task completed",
+            "summary": "Transplant · lettuce · bed-04",
+            "source": "synthetic-execution-v1",
+            "revision": 35
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:36",
+            "sequence": 36,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-29",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 36
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:37",
+            "sequence": 37,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-30",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 37
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:38",
+            "sequence": 38,
+            "event_type": "day_closed",
+            "occurred_on": "2026-01-31",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 38
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:39",
+            "sequence": 39,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-01",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 39
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:40",
+            "sequence": 40,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-02",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 40
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:41",
+            "sequence": 41,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-03",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 41
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:42",
+            "sequence": 42,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-04",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 42
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:43",
+            "sequence": 43,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-05",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 43
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:44",
+            "sequence": 44,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-06",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 44
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:45",
+            "sequence": 45,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-07",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 45
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:46",
+            "sequence": 46,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-08",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 46
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:47",
+            "sequence": 47,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-09",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 47
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:48",
+            "sequence": 48,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-10",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 48
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:49",
+            "sequence": 49,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-11",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 49
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:50",
+            "sequence": 50,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-12",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 50
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:51",
+            "sequence": 51,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-13",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 51
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:52",
+            "sequence": 52,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-14",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 52
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:53",
+            "sequence": 53,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-15",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 53
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:54",
+            "sequence": 54,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-16",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 54
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:55",
+            "sequence": 55,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-17",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 55
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:56",
+            "sequence": 56,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-18",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 56
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:57",
+            "sequence": 57,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-19",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 57
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:58",
+            "sequence": 58,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-20",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 58
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:59",
+            "sequence": 59,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-21",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 59
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:60",
+            "sequence": 60,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-22",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 60
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:61",
+            "sequence": 61,
+            "event_type": "task_completed",
+            "occurred_on": "2026-02-23",
+            "title": "Farm task completed",
+            "summary": "Harvest · lettuce · bed-01",
+            "source": "synthetic-execution-v1",
+            "revision": 61
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:62",
+            "sequence": 62,
+            "event_type": "task_completed",
+            "occurred_on": "2026-02-23",
+            "title": "Farm task completed",
+            "summary": "Harvest · lettuce · bed-02",
+            "source": "synthetic-execution-v1",
+            "revision": 62
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:63",
+            "sequence": 63,
+            "event_type": "task_completed",
+            "occurred_on": "2026-02-23",
+            "title": "Farm task completed",
+            "summary": "Harvest · lettuce · bed-04",
+            "source": "synthetic-execution-v1",
+            "revision": 63
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:64",
+            "sequence": 64,
+            "event_type": "demand_serviced",
+            "occurred_on": "2026-02-23",
+            "title": "Customer demand serviced",
+            "summary": "25.0 kg delivered for order-first-delivery.",
+            "source": "synthetic-execution-v1",
+            "revision": 64
+          },
+          {
+            "id": "e55443938cf4bce776c7eb07bc414423:65",
+            "sequence": 65,
+            "event_type": "day_closed",
+            "occurred_on": "2026-02-23",
+            "title": "Simulation day recorded",
+            "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+            "source": "synthetic-execution-v1",
+            "revision": 65
+          }
+        ],
+        "metrics": {
+          "planned_harvest_kg": 32.2,
+          "committed_demand_kg": 25,
+          "fulfilled_demand_kg": 25,
+          "waste_kg": 6.9,
+          "shortfall_kg": 0,
+          "land_utilization_pct": 68.8,
+          "cost_sgd": 79.14,
+          "margin_sgd": 120.81,
+          "clock_date": "2026-02-23",
+          "horizon_end": "2026-03-01",
+          "cash_balance": 420.86
+        },
+        "debrief": {
+          "outcome": "delivered",
+          "title": "Teaching season complete",
+          "summary": "25.0 of 25.0 kg in confirmed orders was delivered by the recorded simulation.",
+          "objective_met": true,
+          "highlights": [
+            "You selected a calculated policy.",
+            "B3 maintenance was recorded before its affected transplant.",
+            "The remaining schedule was recalculated rather than edited by hand."
+          ],
+          "orders": [
+            {
+              "order_id": "order-first-delivery",
+              "crop_id": "lettuce",
+              "requested_kg": 25,
+              "delivered_kg": 25,
+              "fulfilled": true,
+              "event_recorded": true
+            }
+          ],
+          "replay_available": true
+        },
+        "audit": {
+          "event_count": 15,
+          "latest_revision": 16
+        },
+        "execution_mode": "simulation",
+        "data_mode": "synthetic_demo",
+        "real_operations_enabled": false
+      }
+    },
+    {
+      "name": "actual delivery fulfils the teaching objective",
+      "pass": true,
+      "detail": {
+        "outcome": "delivered",
+        "title": "Teaching season complete",
+        "summary": "25.0 of 25.0 kg in confirmed orders was delivered by the recorded simulation.",
+        "objective_met": true,
+        "highlights": [
+          "You selected a calculated policy.",
+          "B3 maintenance was recorded before its affected transplant.",
+          "The remaining schedule was recalculated rather than edited by hand."
+        ],
+        "orders": [
+          {
+            "order_id": "order-first-delivery",
+            "crop_id": "lettuce",
+            "requested_kg": 25,
+            "delivered_kg": 25,
+            "fulfilled": true,
+            "event_recorded": true
+          }
+        ],
+        "replay_available": true
+      }
+    },
+    {
+      "name": "season used actual saved simulation events",
+      "pass": true,
+      "detail": [
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:1",
+          "sequence": 1,
+          "event_type": "journey_created",
+          "occurred_on": "2026-09-17",
+          "title": "Lesson created",
+          "summary": "Attempt 1 uses an isolated four-bed synthetic farm.",
+          "source": "beginner-journey-v1",
+          "revision": 1
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:2",
+          "sequence": 2,
+          "event_type": "calculation_queued",
+          "occurred_on": "2026-09-17",
+          "title": "Planning calculation queued",
+          "summary": "The bounded local worker is calculating two feasible policy choices.",
+          "source": "beginner-journey-v1",
+          "revision": 1
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:3",
+          "sequence": 3,
+          "event_type": "plan_selected",
+          "occurred_on": "2026-09-17",
+          "title": "Starting plan selected",
+          "summary": "Resilient plan was bound to its exact calculated execution trace.",
+          "source": "beginner-journey-v1",
+          "revision": 3
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:4",
+          "sequence": 4,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-01-11",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 7 day(s) through 2026-01-11.",
+          "source": "beginner-journey-v1",
+          "revision": 4
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:5",
+          "sequence": 5,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-01-17",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 6 day(s) through 2026-01-17.",
+          "source": "beginner-journey-v1",
+          "revision": 5
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:6",
+          "sequence": 6,
+          "event_type": "maintenance_recorded",
+          "occurred_on": "2026-01-18",
+          "title": "B3 maintenance recorded",
+          "summary": "The dated B3 constraint was added before its affected transplant.",
+          "source": "beginner-journey-v1",
+          "revision": 6
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:7",
+          "sequence": 7,
+          "event_type": "recovery_selected",
+          "occurred_on": "2026-09-17",
+          "title": "Recovery selected",
+          "summary": "Lean plan was bound to its exact calculated execution trace.",
+          "source": "beginner-journey-v1",
+          "revision": 8
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:8",
+          "sequence": 8,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-01-19",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 2 day(s) through 2026-01-19.",
+          "source": "beginner-journey-v1",
+          "revision": 9
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:9",
+          "sequence": 9,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-01-23",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 4 day(s) through 2026-01-23.",
+          "source": "beginner-journey-v1",
+          "revision": 10
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:10",
+          "sequence": 10,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-01-29",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 6 day(s) through 2026-01-29.",
+          "source": "beginner-journey-v1",
+          "revision": 11
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:11",
+          "sequence": 11,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-02-05",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 7 day(s) through 2026-02-05.",
+          "source": "beginner-journey-v1",
+          "revision": 12
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:12",
+          "sequence": 12,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-02-12",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 7 day(s) through 2026-02-12.",
+          "source": "beginner-journey-v1",
+          "revision": 13
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:13",
+          "sequence": 13,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-02-19",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 7 day(s) through 2026-02-19.",
+          "source": "beginner-journey-v1",
+          "revision": 14
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:14",
+          "sequence": 14,
+          "event_type": "simulation_advanced",
+          "occurred_on": "2026-02-23",
+          "title": "Simulation advanced",
+          "summary": "The frozen ledger advanced 4 day(s) through 2026-02-23.",
+          "source": "beginner-journey-v1",
+          "revision": 15
+        },
+        {
+          "id": "journey:086e5f4113f585ec2b413e63c78e1d59:15",
+          "sequence": 15,
+          "event_type": "delivery_reviewed",
+          "occurred_on": "2026-09-17",
+          "title": "Delivery reviewed",
+          "summary": "The debrief is derived from recorded demand-service and inventory events.",
+          "source": "beginner-journey-v1",
+          "revision": 16
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:1",
+          "sequence": 1,
+          "event_type": "world_created",
+          "occurred_on": "2026-01-05",
+          "title": "Simulation started",
+          "summary": "Recorded by the deterministic local simulation.",
+          "source": "synthetic-execution-v1",
+          "revision": 1
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:2",
+          "sequence": 2,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-05",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 2
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:3",
+          "sequence": 3,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-06",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 3
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:4",
+          "sequence": 4,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-07",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 4
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:5",
+          "sequence": 5,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-08",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 5
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:6",
+          "sequence": 6,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-09",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 6
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:7",
+          "sequence": 7,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-10",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 7
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:8",
+          "sequence": 8,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-11",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 8
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:9",
+          "sequence": 9,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-12",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 9
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:10",
+          "sequence": 10,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-13",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 10
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:11",
+          "sequence": 11,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-14",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 11
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:12",
+          "sequence": 12,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-15",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 12
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:13",
+          "sequence": 13,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-16",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 13
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:14",
+          "sequence": 14,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-17",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 14
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:15",
+          "sequence": 15,
+          "event_type": "maintenance_recorded",
+          "occurred_on": "2026-01-18",
+          "title": "B3 maintenance recorded",
+          "summary": "B3 unavailable 2026-01-18 to 2026-01-31.",
+          "source": "synthetic-execution-v1",
+          "revision": 15
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:16",
+          "sequence": 16,
+          "event_type": "future_replanned",
+          "occurred_on": "2026-01-18",
+          "title": "Future schedule replaced",
+          "summary": "Recorded by the deterministic local simulation.",
+          "source": "synthetic-execution-v1",
+          "revision": 16
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:17",
+          "sequence": 17,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-18",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 17
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:18",
+          "sequence": 18,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-19",
+          "title": "Farm task completed",
+          "summary": "Sow · lettuce · bed-01",
+          "source": "synthetic-execution-v1",
+          "revision": 18
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:19",
+          "sequence": 19,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-19",
+          "title": "Farm task completed",
+          "summary": "Sow · lettuce · bed-02",
+          "source": "synthetic-execution-v1",
+          "revision": 19
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:20",
+          "sequence": 20,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-19",
+          "title": "Farm task completed",
+          "summary": "Sow · lettuce · bed-04",
+          "source": "synthetic-execution-v1",
+          "revision": 20
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:21",
+          "sequence": 21,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-19",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 21
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:22",
+          "sequence": 22,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-20",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 22
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:23",
+          "sequence": 23,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-21",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 23
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:24",
+          "sequence": 24,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-22",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 24
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:25",
+          "sequence": 25,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-23",
+          "title": "Farm task completed",
+          "summary": "Harvest · lettuce · bed-01",
+          "source": "synthetic-execution-v1",
+          "revision": 25
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:26",
+          "sequence": 26,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-23",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 26
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:27",
+          "sequence": 27,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-24",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 27
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:28",
+          "sequence": 28,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-25",
+          "title": "Farm task completed",
+          "summary": "Sanitation Complete · lettuce · bed-01",
+          "source": "synthetic-execution-v1",
+          "revision": 28
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:29",
+          "sequence": 29,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-25",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 29
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:30",
+          "sequence": 30,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-26",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 30
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:31",
+          "sequence": 31,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-27",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 31
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:32",
+          "sequence": 32,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-28",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 32
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:33",
+          "sequence": 33,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-29",
+          "title": "Farm task completed",
+          "summary": "Transplant · lettuce · bed-01",
+          "source": "synthetic-execution-v1",
+          "revision": 33
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:34",
+          "sequence": 34,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-29",
+          "title": "Farm task completed",
+          "summary": "Transplant · lettuce · bed-02",
+          "source": "synthetic-execution-v1",
+          "revision": 34
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:35",
+          "sequence": 35,
+          "event_type": "task_completed",
+          "occurred_on": "2026-01-29",
+          "title": "Farm task completed",
+          "summary": "Transplant · lettuce · bed-04",
+          "source": "synthetic-execution-v1",
+          "revision": 35
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:36",
+          "sequence": 36,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-29",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 36
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:37",
+          "sequence": 37,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-30",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 37
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:38",
+          "sequence": 38,
+          "event_type": "day_closed",
+          "occurred_on": "2026-01-31",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 38
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:39",
+          "sequence": 39,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-01",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 39
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:40",
+          "sequence": 40,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-02",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 40
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:41",
+          "sequence": 41,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-03",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 41
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:42",
+          "sequence": 42,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-04",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 42
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:43",
+          "sequence": 43,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-05",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 43
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:44",
+          "sequence": 44,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-06",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 44
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:45",
+          "sequence": 45,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-07",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 45
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:46",
+          "sequence": 46,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-08",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 46
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:47",
+          "sequence": 47,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-09",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 47
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:48",
+          "sequence": 48,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-10",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 48
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:49",
+          "sequence": 49,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-11",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 49
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:50",
+          "sequence": 50,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-12",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 50
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:51",
+          "sequence": 51,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-13",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 51
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:52",
+          "sequence": 52,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-14",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 52
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:53",
+          "sequence": 53,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-15",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 53
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:54",
+          "sequence": 54,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-16",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 54
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:55",
+          "sequence": 55,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-17",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 55
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:56",
+          "sequence": 56,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-18",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 56
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:57",
+          "sequence": 57,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-19",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 57
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:58",
+          "sequence": 58,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-20",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 58
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:59",
+          "sequence": 59,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-21",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 59
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:60",
+          "sequence": 60,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-22",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 60
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:61",
+          "sequence": 61,
+          "event_type": "task_completed",
+          "occurred_on": "2026-02-23",
+          "title": "Farm task completed",
+          "summary": "Harvest · lettuce · bed-01",
+          "source": "synthetic-execution-v1",
+          "revision": 61
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:62",
+          "sequence": 62,
+          "event_type": "task_completed",
+          "occurred_on": "2026-02-23",
+          "title": "Farm task completed",
+          "summary": "Harvest · lettuce · bed-02",
+          "source": "synthetic-execution-v1",
+          "revision": 62
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:63",
+          "sequence": 63,
+          "event_type": "task_completed",
+          "occurred_on": "2026-02-23",
+          "title": "Farm task completed",
+          "summary": "Harvest · lettuce · bed-04",
+          "source": "synthetic-execution-v1",
+          "revision": 63
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:64",
+          "sequence": 64,
+          "event_type": "demand_serviced",
+          "occurred_on": "2026-02-23",
+          "title": "Customer demand serviced",
+          "summary": "25.0 kg delivered for order-first-delivery.",
+          "source": "synthetic-execution-v1",
+          "revision": 64
+        },
+        {
+          "id": "e55443938cf4bce776c7eb07bc414423:65",
+          "sequence": 65,
+          "event_type": "day_closed",
+          "occurred_on": "2026-02-23",
+          "title": "Simulation day recorded",
+          "summary": "Inventory, cash and commitments were advanced from the frozen ledger.",
+          "source": "synthetic-execution-v1",
+          "revision": 65
+        }
+      ]
+    },
+    {
+      "name": "journey makes zero automatic provider requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no failed gameplay mutations",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no uncaught browser errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "three server-provided closing cards",
+      "pass": true
+    },
+    {
+      "name": "closing next action previews without mutation",
+      "pass": true
+    },
+    {
+      "name": "follow-on challenge is discoverable",
+      "pass": true
+    },
+    {
+      "name": "returning player sees continue",
+      "pass": true
+    }
+  ],
+  "screenshots": [
+    "apps/web/screenshots/v14/introduction-360.png",
+    "apps/web/screenshots/v14/introduction-390.png",
+    "apps/web/screenshots/v14/introduction-430.png",
+    "apps/web/screenshots/v14/introduction-1280.png",
+    "apps/web/screenshots/v14/first-order-390.png",
+    "apps/web/screenshots/v14/plan-preview-390.png",
+    "apps/web/screenshots/v14/maintenance-390.png",
+    "apps/web/screenshots/v14/delivery-debrief-390.png",
+    "apps/web/screenshots/v14/delivery-debrief-1280.png"
+  ],
+  "stages": [
+    "START",
+    "CHOOSE_PLAN",
+    "PLAN_SELECTED",
+    "PLAN_SELECTED",
+    "MAINTENANCE_DUE",
+    "CHOOSE_RECOVERY",
+    "GROWING",
+    "GROWING",
+    "GROWING",
+    "GROWING",
+    "GROWING",
+    "GROWING",
+    "GROWING",
+    "DELIVERY_DUE",
+    "COMPLETE"
+  ],
+  "failures": []
+}

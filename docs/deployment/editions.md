@@ -17,6 +17,14 @@ archived state are not rewritten or automatically migrated into the new season.
 The shared inference budget and abuse counters survive cutover. Cookie names and
 browser progress remain release-specific even though the public URL is unversioned.
 
+V14 hosting follow-up: the current gateway health route proxies the current
+application. Configure the container/public HTTP probes with the fixed
+`Fly-Client-IP: 127.0.0.1` health-probe header, and make the edition depend on gateway
+`started`, not `healthy`, to avoid a readiness cycle. Keep actual HTTP readiness
+checks for both components. Fly updates may merge omitted fields; inspect the
+applied configuration and live check results, not only the generated JSON. These
+are host metadata changes and do not replace the immutable application image.
+
 The procedures below describe earlier pair-based releases unless explicitly updated
 for this policy. Use the publisher's current validation and the checked-in registry
 to determine the next number; do not infer it from historical examples.

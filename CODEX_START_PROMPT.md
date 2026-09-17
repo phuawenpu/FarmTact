@@ -1,7 +1,8 @@
-Current work, 17 September 2026: V13 is published; implement V14 on
-`feature/v14-first-season` per docs/v14-implementation-plan.md. The latest user scope
-supersedes public edition navigation and dashboard-first interaction. Preserve
-immutable historical releases and recoverable state; expose one current game.
+Current release, 17 September 2026: V14 is published from `c0e585f` on
+`feature/v14-first-season`. Read reports/v14/implementation.md before changing it.
+One animated introduction and one card-driven game replace public edition navigation.
+V1–V13 public routes are retired; immutable history and remaining state are retained.
+The next unused publication number is V15. V14's image must not be overwritten.
 
 Historical release, 16 September 2026: V12 is published from source 9fd5789;
 V11 is the retained previous edition. V1–V10 workers/storage are retired, while

@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "base": "https://farmtact.fly.dev",
+  "checks": [
+    {
+      "name": "Public root creates no farm session",
+      "pass": true
+    },
+    {
+      "name": "Public registry exposes exactly the active editions",
+      "pass": true
+    },
+    {
+      "name": "V14+ has one latest public runtime",
+      "pass": true
+    },
+    {
+      "name": "Immutable history remains contiguous through latest",
+      "pass": true
+    },
+    {
+      "name": "Retired edition read returns 410 with a safe destination",
+      "pass": true
+    },
+    {
+      "name": "Retired edition mutation returns 410",
+      "pass": true
+    },
+    {
+      "name": "Private controls are not publicly accessible",
+      "pass": true
+    },
+    {
+      "name": "Unknown edition never falls back",
+      "pass": true
+    },
+    {
+      "name": "v14 bootstrap succeeds",
+      "pass": true
+    },
+    {
+      "name": "v14 uses its own named session",
+      "pass": true
+    },
+    {
+      "name": "Latest saves its own reproducible dataset",
+      "pass": true
+    },
+    {
+      "name": "Saved dataset survives reloading latest",
+      "pass": true
+    },
+    {
+      "name": "Latest sandbox save leaves its main farm unchanged",
+      "pass": true
+    }
+  ]
+}

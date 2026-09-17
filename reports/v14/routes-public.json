@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "health": {
+    "status": "ok",
+    "development_phase": "autonomous_development",
+    "edition": "v14",
+    "source_commit": "c0e585f08235c2137577652f590223180b8f71f9"
+  },
+  "checks": [
+    {
+      "name": "GET retired v1",
+      "pass": true
+    },
+    {
+      "name": "POST retired v1",
+      "pass": true
+    },
+    {
+      "name": "GET retired v2",
+      "pass": true
+    },
+    {
+      "name": "POST retired v2",
+      "pass": true
+    },
+    {
+      "name": "GET retired v3",
+      "pass": true
+    },
+    {
+      "name": "POST retired v3",
+      "pass": true
+    },
+    {
+      "name": "GET retired v4",
+      "pass": true
+    },
+    {
+      "name": "POST retired v4",
+      "pass": true
+    },
+    {
+      "name": "GET retired v5",
+      "pass": true
+    },
+    {
+      "name": "POST retired v5",
+      "pass": true
+    },
+    {
+      "name": "GET retired v6",
+      "pass": true
+    },
+    {
+      "name": "POST retired v6",
+      "pass": true
+    },
+    {
+      "name": "GET retired v7",
+      "pass": true
+    },
+    {
+      "name": "POST retired v7",
+      "pass": true
+    },
+    {
+      "name": "GET retired v8",
+      "pass": true
+    },
+    {
+      "name": "POST retired v8",
+      "pass": true
+    },
+    {
+      "name": "GET retired v9",
+      "pass": true
+    },
+    {
+      "name": "POST retired v9",
+      "pass": true
+    },
+    {
+      "name": "GET retired v10",
+      "pass": true
+    },
+    {
+      "name": "POST retired v10",
+      "pass": true
+    },
+    {
+      "name": "GET retired v11",
+      "pass": true
+    },
+    {
+      "name": "POST retired v11",
+      "pass": true
+    },
+    {
+      "name": "GET retired v12",
+      "pass": true
+    },
+    {
+      "name": "POST retired v12",
+      "pass": true
+    },
+    {
+      "name": "GET retired v13",
+      "pass": true
+    },
+    {
+      "name": "POST retired v13",
+      "pass": true
+    },
+    {
+      "name": "/",
+      "pass": true
+    },
+    {
+      "name": "/play",
+      "pass": true
+    },
+    {
+      "name": "/api/releases",
+      "pass": true
+    },
+    {
+      "name": "/api/releases/history",
+      "pass": true
+    },
+    {
+      "name": "/v14/",
+      "pass": true
+    },
+    {
+      "name": "Pinned deployed source",
+      "pass": true
+    },
+    {
+      "name": "Historical release entries unchanged",
+      "pass": true
+    }
+  ]
+}
