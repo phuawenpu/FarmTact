@@ -1,6 +1,6 @@
 # V17 persona-led integrated workflow rewrite
 
-Status: private implementation, 17 September 2026. V16 remains public. V17 is the next unused immutable release; published V12–V16 sources and assets remain unchanged.
+Status: V17 was published on 17 September 2026 from `e9528b2`. V18 is the next unpublished immutable correction: it makes card-detail return focus synchronous and preserves the action's visible reading position. Published V12–V17 sources and assets remain unchanged.
 
 ## User objective and evidence
 

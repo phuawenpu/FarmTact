@@ -1,0 +1,18 @@
+{
+  "title": "FarmTact V18 — Immediate card-return focus",
+  "summary": "V18 preserves the V17 integrated farm experience while making detail-card returns immediately accessible to keyboard users.",
+  "changes": [
+    {
+      "title": "Restore action focus and position immediately",
+      "description": "Returning from Explain, review or detail cards now focuses the originating action during layout and returns to its visible reading position.",
+      "feedback_ids": ["v17-public-responsive-detail-return"],
+      "evidence": ["reports/v18/implementation.md", "reports/v18/local/browser-cards.json"]
+    },
+    {
+      "title": "Keep immutable V17 workflows intact",
+      "description": "The change retains the ordinary sandbox, five contextual tool groups, agent workflows, local calculation, explicit approval and recorded simulation boundaries.",
+      "feedback_ids": ["v17-persona-rewrite"],
+      "evidence": ["docs/v17-persona-rewrite.md", "reports/v17/capability-map.md"]
+    }
+  ]
+}

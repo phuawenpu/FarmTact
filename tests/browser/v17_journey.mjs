@@ -5,8 +5,8 @@ import { existsSync } from 'node:fs';
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs';
 
 const root = resolve(new URL('../..', import.meta.url).pathname);
-const expectedEdition = String(process.env.EXPECTED_EDITION || 'v17').toLowerCase().replace(/^v?/, 'v');
-if (!/^v(?:15|16|17)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15, v16 or v17');
+const expectedEdition = String(process.env.EXPECTED_EDITION || 'v18').toLowerCase().replace(/^v?/, 'v');
+if (!/^v(?:15|16|17|18)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15 through v18');
 const editionNumber = expectedEdition.slice(1);
 const planningSessionKey = `farmtact:${expectedEdition}:planning-session`;
 const staged = process.env.STAGED_SOURCE ? await import('./v17_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;
@@ -75,8 +75,12 @@ try {
     check(`${width}: page has no horizontal overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     const next = page.getByRole('button', { name: 'Next →' });
     if (await next.isEnabled()) await next.click();
-    const originScroll = await page.evaluate(() => scrollY);
-    await page.getByRole('button', { name: 'Explain' }).click();
+    const explain = page.getByRole('button', { name: 'Explain' });
+    // Establish the user-visible action position before measuring it. Playwright
+    // otherwise scrolls an off-screen target as part of click actionability,
+    // after the old measurement but before the app can retain its origin.
+    const originScroll = await explain.evaluate(element => { element.scrollIntoView({ block: 'nearest' }); return scrollY; });
+    await explain.click();
     check(`${width}: deterministic explanation is available`, await page.getByRole('heading', { name: 'What this means' }).isVisible());
     const beforeExplainEnter = traffic.mutations.length;
     await page.locator('.ic-card').focus(); await page.keyboard.press('Enter');

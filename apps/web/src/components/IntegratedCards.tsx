@@ -192,6 +192,7 @@ export default function IntegratedCards({
   const origin = useRef<{ label: string; scroll: number } | null>(null);
   const missionOrigin = useRef<{ label: string; scroll: number } | null>(null);
   const pendingRestore = useRef<{ label: string; scroll: number } | null>(null);
+  const pendingDetailRestore = useRef<{ label: string; scroll: number } | null | undefined>(undefined);
   const directTool = useRef(false);
   const navigationReady = useRef(false);
   const resumedSession = useRef("");
@@ -345,6 +346,16 @@ export default function IntegratedCards({
     window.scrollTo({ top: restore.scroll, behavior: "auto" });
     [...document.querySelectorAll<HTMLButtonElement>(".ic-context-links button,.ic-tool-index button,.ic-actions button")].find((button) => button.textContent?.trim() === restore.label)?.focus({ preventScroll: true });
   }, [loadingBusy, surface, index]);
+  useLayoutEffect(() => {
+    if (detail || pendingDetailRestore.current === undefined) return;
+    const restore = pendingDetailRestore.current; pendingDetailRestore.current = undefined;
+    if (!restore) { cardRef.current?.focus(); return; }
+    [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === restore.label)?.focus({ preventScroll: true });
+    // The browser's native focus scrolling is not uniformly synchronous. Put
+    // the saved position last so a keyboard reader returns to both the action
+    // and the exact reading position it left.
+    window.scrollTo({ top: restore.scroll, behavior: "auto" });
+  }, [detail]);
   useEffect(() => {
     if (loadingBusy) return;
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status)) return;
@@ -579,13 +590,8 @@ export default function IntegratedCards({
     if (event.key === "Enter") { event.preventDefault(); primary(); }
   };
   const closeDetail = () => {
+    pendingDetailRestore.current = origin.current;
     setDetail(null); setReviewProposal(null); setReviewInverse(null);
-    afterPaint(() => {
-      if (origin.current) {
-        window.scrollTo({ top: origin.current.scroll, behavior: "auto" });
-        [...document.querySelectorAll<HTMLButtonElement>(".ic-actions button")].find((button) => button.textContent?.trim() === origin.current?.label)?.focus();
-      } else cardRef.current?.focus();
-    });
   };
   const rememberOrigin = (button: HTMLButtonElement) => { origin.current = { label: button.textContent?.trim() || "", scroll: window.scrollY }; };
   const openContextTool = (tool: ToolId, target: ToolTarget | undefined, button: HTMLButtonElement) => {

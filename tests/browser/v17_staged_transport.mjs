@@ -7,15 +7,15 @@ import { createHash } from 'node:crypto';
 
 const quote = value => "'" + value.replaceAll("'", "'\\''") + "'";
 const normalizeEdition = value => {
-  const edition = String(value || 'v17').toLowerCase().replace(/^v?/, 'v');
-  if (!/^v(?:15|16|17)$/.test(edition)) throw Error('EXPECTED_EDITION must be v15, v16 or v17');
+  const edition = String(value || 'v18').toLowerCase().replace(/^v?/, 'v');
+  if (!/^v(?:15|16|17|18)$/.test(edition)) throw Error('EXPECTED_EDITION must be v15 through v18');
   return edition;
 };
 const expectedEdition = normalizeEdition(process.env.EXPECTED_EDITION);
 const sshContainer = process.env.STAGED_CONTAINER || expectedEdition;
 const remotePort = Number(process.env.STAGED_PORT || (8080 + Number(expectedEdition.slice(1))));
 if (sshContainer !== expectedEdition) throw Error('STAGED_CONTAINER must match EXPECTED_EDITION');
-if (![8095, 8096, 8097].includes(remotePort) || remotePort !== (8080 + Number(expectedEdition.slice(1)))) throw Error('STAGED_PORT does not match the expected edition');
+if (![8095, 8096, 8097, 8098].includes(remotePort) || remotePort !== (8080 + Number(expectedEdition.slice(1)))) throw Error('STAGED_PORT does not match the expected edition');
 
 function remote(code, input = '') {
   return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 # V17 persona-led rewrite — technical candidate verified
 
-V16 remains the public release. No V17 publication or human-usability result is claimed.
+V17 was published from `e9528b2dfca98b92d3c5ab25e1c423a8f55da700`. V18 is the pending immutable accessibility-return correction. No human-usability result is claimed.
 
 The user objective and unchanged full acceptance scope are in `docs/v17-persona-rewrite.md`. Three distinct AI personas reviewed exact V15: beginner farm manager, expert planner and architecture/evaluation judge. Their observed evidence, fresh-arrival supplements, hypotheses and seven-criterion GitHub rubric mapping are in `personas/review.md`. The organizer PDF's GitHub blob was verified and page 13 was reread locally using pypdf.
 
@@ -12,4 +12,4 @@ Integration caught genuine defects: category tiles bypassed useful indexes; cont
 
 The frozen final isolated PostgreSQL run passed 804 tests with one skip in 861.21 seconds. The production build and generated-contract check also pass. Final-candidate browser evidence covers root category navigation (7); Knowledge/Data/Research (18); shell, keyboard, reduced-motion and responsive return behavior (30); specialist/adviser transport (10); contextual adapter and draft isolation (16); private staging transport guards (11); and a fresh real 390px reservation → review → recalculate → explain → inverse → approval → seven-day recorded-simulation journey (27). That journey made no provider requests. These are scoped automated checks, not provider-quality or human-comprehension evidence.
 
-The next gate is private immutable V17 image staging and its exact-image operator/browser acceptance. V16 remains public until that succeeds.
+Private V17 image staging, bounded operator acceptance, exact-image browser acceptance, preservation and public isolation all passed before V17 publication. See the V18 correction report for the one later public-browser return-timing finding.

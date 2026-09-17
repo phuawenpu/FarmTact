@@ -1,3 +1,11 @@
+# V18 accessibility-return correction — 17 September 2026
+
+V17 published the persona-led full rewrite from `e9528b2`. A public browser
+verification found that a detail-card return could restore focus after a paint;
+V18 makes that restoration synchronous and keeps the user at the action position
+they left. V18 remains private until its exact-image acceptance and preservation
+checks pass. V17 remains the sole public experience in the interim.
+
 # Completed integrated rewrite: V16 — 17 September 2026
 
 V16 is the sole public experience at `/` and `/play`, source `3487faf`, publication
