@@ -189,3 +189,19 @@ loopback port 8095. It exposes no listening endpoint and keeps gateway credentia
 remote; its staged acceptance awaits deployment. Shared-control and retained-data
 preservation tooling was live-validated read-only and passes five focused tests.
 A private before-staging capture now exists. No V15 Fly mutation has occurred.
+
+Local release gate (17 September, 14:06 UTC): complete 360/430/1280 journeys
+pass 20 checks each, supplementing 390 px normal/reduced-motion and recorded-event
+evidence. The 430 px timeout was a harness readiness race; the session was still
+DRAFT and no calculation request had been sent. Session binding and exact guidance
+POST/GET reconciliation replace fixed timing assumptions. The clean production
+build passes, with 405,241 bytes total JS across main/lazy chunks and 147,347 bytes
+CSS; main JS is 232.72 kB / 72.99 kB gzip. Generated contracts pass. The final
+responsive native Plan rerun passes 25 checks on that clean build. One initial
+read-only rerun used cookies from a different isolated local database and was
+corrected to its actual 4196 service; no quota or server state was reset.
+
+`local-acceptance-gate.json` records the current local evidence, including the
+792-pass PostgreSQL regression and five additional preservation-tool tests.
+Staging and publication are still pending; the next step pins this committed
+candidate for private Fly numerical and browser acceptance before public cutover.

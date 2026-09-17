@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "built_at": "2026-09-17T14:06:29.133415+00:00",
+  "command": "npm --prefix apps/web run build",
+  "clean_output": true,
+  "generated_contract_check": "PASS",
+  "files": [
+    {
+      "path": "assets/AdvisorEvidence-CwuL48uA.js",
+      "bytes": 10941,
+      "gzip_bytes": 4109,
+      "sha256": "3011b70e070396f38ec05645848214c775f36a8802a77905e44b1ab9de01a223"
+    },
+    {
+      "path": "assets/IntegratedExperiments-Dq0QizA7.js",
+      "bytes": 27537,
+      "gzip_bytes": 8606,
+      "sha256": "bf70818e2ca0bd3255fd7f63136ab279b7f22aef98720838ae27697428b260bd"
+    },
+    {
+      "path": "assets/IntegratedHistory-Bpy88piB.css",
+      "bytes": 3204,
+      "gzip_bytes": 1061,
+      "sha256": "d0e3e79a6e05b6464a33bc9789a3502b13bef5616f687171ba5b88445deb3a37"
+    },
+    {
+      "path": "assets/IntegratedHistory-CJEK6u-5.js",
+      "bytes": 15812,
+      "gzip_bytes": 5753,
+      "sha256": "d9250b3655d5078e734907b98c34b7185303e3f634c68d5c69f7f568d25d7df2"
+    },
+    {
+      "path": "assets/IntegratedKnowledge-Bs5bltuL.css",
+      "bytes": 4752,
+      "gzip_bytes": 1541,
+      "sha256": "992c7d3e0d37d403d82d5968fe89acdf7a9315883fb02592966c59d93c2f9d6a"
+    },
+    {
+      "path": "assets/IntegratedKnowledge-D0W1u9_E.js",
+      "bytes": 23286,
+      "gzip_bytes": 7504,
+      "sha256": "3ff245ae3f782113d84f8da7fc2ea06573529c7f5af834b1dcefea729e0b8d57"
+    },
+    {
+      "path": "assets/IntegratedPlan-BMvqrMJy.js",
+      "bytes": 20033,
+      "gzip_bytes": 5825,
+      "sha256": "647f3ac4ceb9278c7297ad6573e6fe0dd947dbe9582a56ae4219889428962e3d"
+    },
+    {
+      "path": "assets/IntegratedRecords-DnrFUODk.css",
+      "bytes": 4204,
+      "gzip_bytes": 1293,
+      "sha256": "1d810267828fec1776695cf0af0776edd27561099887b5021ac8013404e6f5c9"
+    },
+    {
+      "path": "assets/IntegratedRecords-DoWLTcX1.js",
+      "bytes": 45954,
+      "gzip_bytes": 13524,
+      "sha256": "9c058d2ac8f16c37399ce42e6f28895434b513f422d118b46bb67232d81674e9"
+    },
+    {
+      "path": "assets/IntegratedResearch-CITsWA2S.js",
+      "bytes": 21920,
+      "gzip_bytes": 7025,
+      "sha256": "5b2b375b7f14272f4adc0ca067242fb71de6e867974661252e657bbbbcb31183"
+    },
+    {
+      "path": "assets/IntegratedResearch-CgxGCA64.css",
+      "bytes": 1327,
+      "gzip_bytes": 526,
+      "sha256": "06f663fc46c01446241f92bb1038f7baa763e8e0f9f389d72d3aced71bc0da9b"
+    },
+    {
+      "path": "assets/ToolCard-CjCbg2jW.css",
+      "bytes": 1504,
+      "gzip_bytes": 562,
+      "sha256": "83508e02f6d8e52ceaf5f7bd788dc87b523f07ac9d737a0d7dfa3c8e76c1e0e6"
+    },
+    {
+      "path": "assets/ToolCard-CxdVwKk6.js",
+      "bytes": 2114,
+      "gzip_bytes": 955,
+      "sha256": "1cd0ba6ff96ab6e70f2bfb7c2739dda000af7c7bb71edd4093ac5fdd3862a55d"
+    },
+    {
+      "path": "assets/cardNavigation-eu6qIZka.js",
+      "bytes": 860,
+      "gzip_bytes": 483,
+      "sha256": "30c54c94dab4600b1d283771e8f9d939cb2387decd94c9e1cd97eb828e09a55f"
+    },
+    {
+      "path": "assets/cardProjection-Cw99jypQ.js",
+      "bytes": 982,
+      "gzip_bytes": 541,
+      "sha256": "ad3665ac30e4d513fa8b251444c9b808e67906514f194fc341eca8a7b55c6acb"
+    },
+    {
+      "path": "assets/createLucideIcon-BRxX86-l.js",
+      "bytes": 3082,
+      "gzip_bytes": 1480,
+      "sha256": "a6b60538d04ade801b39f24694f1b6c3ab4e4427074dd9abcb6808f6928682a8"
+    },
+    {
+      "path": "assets/index-B7yRMKVz.js",
+      "bytes": 232720,
+      "gzip_bytes": 72042,
+      "sha256": "d0c41d0c80d164abfbf0821888600d4a0055d29a46596af72fbf4ef9802d5d5c"
+    },
+    {
+      "path": "assets/index-C7WqCYkk.css",
+      "bytes": 132356,
+      "gzip_bytes": 27395,
+      "sha256": "f492797d5393f3b881d6b403758b1e17755fd348edf30e0050b223b8a51660b4"
+    }
+  ],
+  "total_js_bytes": 405241,
+  "total_css_bytes": 147347
+}

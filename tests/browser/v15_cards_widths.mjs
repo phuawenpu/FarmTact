@@ -1,0 +1,8 @@
+import { spawn } from 'node:child_process';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+const root=resolve(new URL('../..',import.meta.url).pathname),widths=(process.env.JOURNEY_WIDTHS||'360,430,1280').split(',').map(Number),storage=process.env.STORAGE_STATE||'/tmp/farmtact-v15-tools-storage.json',reportDir=process.env.REPORT_DIR?resolve(process.env.REPORT_DIR):resolve(root,'reports/v15');
+const summary={status:'RUNNING',base:process.env.STAGED_SOURCE?'http://127.0.0.1:4199':process.env.BASE_URL||'http://127.0.0.1:4196',widths,reports:[],failures:[]};
+for(const width of widths){const file=`browser-cards-${width}.json`,env={...process.env,JOURNEY_WIDTH:String(width),REPORT_FILE:file,STORAGE_STATE:storage,FRESH_SESSION:'1',RESPONSIVE_SMOKE:'0',RESUME:'1'};const exit=await new Promise((resolveExit,reject)=>{const child=spawn(process.execPath,[resolve(root,'tests/browser/v15_cards.mjs')],{cwd:root,env,stdio:['ignore','ignore','inherit']});child.on('error',reject);child.on('close',resolveExit)});let report=null;try{report=JSON.parse(await readFile(resolve(reportDir,file),'utf8'))}catch{}summary.reports.push({width,file,status:report?.status||'MISSING',checks:report?.checks?.length||0,mutations:report?.mutations?.length||0,video:report?.video||null});if(exit!==0||report?.status!=='PASS'){summary.failures.push({width,exit,detail:report?.failures||['Report unavailable']});break}}
+summary.status=summary.failures.length?'FAIL':'PASS';await mkdir(reportDir,{recursive:true});await writeFile(resolve(reportDir,'browser-cards-widths.json'),JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify(summary,null,2));if(summary.status!=='PASS')process.exitCode=1;

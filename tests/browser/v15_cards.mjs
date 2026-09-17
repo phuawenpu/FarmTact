@@ -1,13 +1,17 @@
 /** Actual V15 integrated-card journey. Planner and workflow responses are never mocked. */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs';
 
 const root = resolve(new URL('../..', import.meta.url).pathname);
-const base = (process.env.BASE_URL || process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:4191').replace(/\/$/, '');
-const reportDir = resolve(root, 'reports/v15');
-const temporaryStorageState = '/tmp/farmtact-v15-cards-storage.json';
-const result = { status: 'RUNNING', base, checks: [], failures: [], screenshots: [], video: null, mutations: [], providerRequests: [] };
+const staged = process.env.STAGED_SOURCE ? await import('./v15_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;
+const base = (staged ? 'http://127.0.0.1:4199' : process.env.BASE_URL || process.env.FARMTACT_BASE_URL || 'http://127.0.0.1:4191').replace(/\/$/, '');
+const reportDir = process.env.REPORT_DIR ? resolve(process.env.REPORT_DIR) : resolve(root, 'reports/v15');
+const temporaryStorageState = process.env.STORAGE_STATE || '/tmp/farmtact-v15-cards-storage.json';
+const journeyWidth = Number(process.env.JOURNEY_WIDTH || 390), journeyHeight = journeyWidth > 500 ? 900 : 844;
+const reportFile = process.env.REPORT_FILE || 'browser-cards.json';
+const result = { status: 'RUNNING', base, width: journeyWidth, checks: [], failures: [], screenshots: [], video: null, mutations: [], providerRequests: [], ...(staged ? { stagedEvidence: staged.evidence } : {}) };
 const check = (name, pass, detail) => {
   result.checks.push({ name, pass: Boolean(pass), ...(detail === undefined ? {} : { detail }) });
   if (!pass) throw new Error(`${name}: ${JSON.stringify(detail)}`);
@@ -19,7 +23,7 @@ let activePage;
 async function shot(page, name) {
   const path = resolve(reportDir, `${name}.png`);
   await page.screenshot({ path, fullPage: true, animations: 'disabled' });
-  result.screenshots.push(`reports/v15/${name}.png`);
+  result.screenshots.push(process.env.REPORT_DIR ? path : `reports/v15/${name}.png`);
 }
 
 function observe(page) {
@@ -47,8 +51,9 @@ async function open(page) {
 
 try {
   // Responsive read-only smoke: opening and browsing cards cannot mutate or invoke a provider.
-  if (process.env.RESUME !== '1') {
-    const responsiveContext = await browser.newContext({ viewport: { width: 360, height: 844 }, reducedMotion: 'reduce' });
+  if (process.env.RESPONSIVE_SMOKE !== '0' && process.env.RESUME !== '1') {
+    const responsiveContext = await browser.newContext({ viewport: { width: 360, height: 844 }, reducedMotion: 'reduce', ...(existsSync(temporaryStorageState) ? { storageState: temporaryStorageState } : {}) });
+    if (staged) await staged.attach(responsiveContext);
     for (const width of [360, 390, 430, 1280]) {
     const page = await responsiveContext.newPage();
     await page.setViewportSize({ width, height: width > 500 ? 900 : 844 });
@@ -97,10 +102,22 @@ try {
 
   const videoDir = resolve(reportDir, 'video');
   await mkdir(videoDir, { recursive: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, storageState: temporaryStorageState, recordVideo: { dir: videoDir, size: { width: 390, height: 844 } } });
+  const context = await browser.newContext({ viewport: { width: journeyWidth, height: journeyHeight }, ...(existsSync(temporaryStorageState) ? { storageState: temporaryStorageState } : {}), recordVideo: { dir: videoDir, size: { width: journeyWidth, height: journeyHeight } } });
+  if (staged) await staged.attach(context);
   const page = await context.newPage(); activePage = page;
   const traffic = observe(page);
   await open(page);
+  if (process.env.FRESH_SESSION === '1') {
+    const fresh = await page.evaluate(async width => {
+      const response = await fetch('/api/v1/planning-sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ name: `V15 complete ${width}px journey`, workflow: true }) });
+      if (!response.ok) throw new Error(await response.text());
+      return response.json();
+    }, journeyWidth);
+    await page.evaluate(id => localStorage.setItem('farmtact:v15:planning-session', id), fresh.id);
+    await context.storageState({ path: temporaryStorageState });
+    await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
+    await page.waitForFunction(id => document.querySelector('.ic-card')?.getAttribute('data-session-id') === id && !document.querySelector('[role="status"]'), fresh.id, { timeout: 30_000 });
+  }
   if (await page.locator('.integrated-tool').count()) await page.locator('.integrated-tool').getByRole('button', { name: 'Back', exact: true }).click();
   if ((await page.locator('.ic-deck-nav').innerText()).includes('Farm tools')) await page.getByRole('button', { name: 'Back', exact: true }).click();
   const card = page.locator('.ic-card');
@@ -109,10 +126,13 @@ try {
   await page.getByRole('button', { name: 'Explain' }).click();
   const skip = page.getByRole('button', { name: 'Skip guide' });
   if (await skip.count()) {
-    await Promise.all([
-      page.waitForResponse(response => response.request().method() === 'POST' && /\/guidance$/.test(new URL(response.url()).pathname) && response.ok()),
+    const sessionId = await card.getAttribute('data-session-id');
+    const [guidanceResponse] = await Promise.all([
+      page.waitForResponse(response => response.request().method() === 'POST' && /\/guidance$/.test(new URL(response.url()).pathname)),
+      page.waitForResponse(response => response.request().method() === 'GET' && new URL(response.url()).pathname.endsWith(`/planning-sessions/${sessionId}`) && response.ok()),
       skip.click(),
     ]);
+    check('guide skip mutation is accepted before reconciliation', guidanceResponse.ok(), { status: guidanceResponse.status() });
     await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
     await page.getByRole('button', { name: 'Explain' }).click();
     check('server guidance skip resumes after reload', await page.getByRole('button', { name: 'Skip guide' }).count() === 0);
@@ -172,7 +192,7 @@ try {
   for (let i = 0; i < 8 && !/Keep .+ available|is reserved/i.test(await card.locator('h1').innerText()); i++)
     await page.getByRole('button', { name: '← Previous' }).click();
   await page.getByRole('heading', { name: /Keep .+ available|is reserved/ }).waitFor();
-  await shot(page, 'reservation-before-review-390');
+  await shot(page, `reservation-before-review-${journeyWidth}`);
 
   // Proposal must be reviewed before apply; review replaces the active card content.
   const reviewButton = page.getByRole('button', { name: 'Review reservation' });
@@ -181,7 +201,7 @@ try {
     await page.waitForFunction(() => /REVIEW BEFORE APPLYING/i.test(document.querySelector('.ic-card')?.textContent || ''), null, { timeout: 30_000 });
     check('reservation opens explicit review before apply', /REVIEW BEFORE APPLYING/i.test(await card.innerText()), await card.innerText());
     check('review retains one card and one three-key action area', await page.locator('.ic-card').count() === 1 && await page.locator('.ic-keys > button').count() === 3);
-    await shot(page, 'reservation-review-390');
+    await shot(page, `reservation-review-${journeyWidth}`);
     await page.getByRole('button', { name: 'Apply & recalculate' }).click();
     await page.getByRole('button', { name: 'Approve actions' }).waitFor({ timeout: 180_000 });
   }
@@ -191,7 +211,7 @@ try {
     ['What changed', 'Why', 'Tradeoff', 'Evidence / limits', 'Next action'].every(label => explanation.includes(label))
       && /bed-\d+/.test(explanation) && /\d{4}-\d{2}-\d{2}→\d{4}-\d{2}-\d{2}/.test(explanation), explanation);
   check('read/explain triggered no provider request', traffic.providers.length === 0, traffic.providers);
-  await shot(page, 'reservation-explanation-390');
+  await shot(page, `reservation-explanation-${journeyWidth}`);
 
   // Approval and inverse remain explicit, revision-bound operations.
   const inverseReview = page.getByRole('button', { name: 'Review inverse' });
@@ -273,9 +293,9 @@ try {
     const recordedFacts = await page.locator('.ic-saved-change').innerText();
     await page.emulateMedia({ reducedMotion: 'reduce' }); await page.reload({ waitUntil: 'domcontentloaded' }); await page.locator('.ic-shell').waitFor();
     check('reduced motion retains the same recorded consequence facts', (await page.locator('.ic-saved-change').innerText()) === recordedFacts && await page.locator('.ic-beds').evaluate(node => getComputedStyle(node).animationName === 'none'), recordedFacts);
-    await shot(page, 'recorded-consequence-reduced-390');
+    await shot(page, `recorded-consequence-reduced-${journeyWidth}`);
   }
-  if (process.env.RESUME !== '1') {
+  if (process.env.RESUME !== '1' || process.env.FRESH_SESSION === '1') {
     check('fresh journey persisted proposal apply inverse and approval mutations',
       traffic.mutations.some(path => /\/farm-workflow\/proposals$/.test(path))
         && traffic.mutations.some(path => /\/apply$/.test(path))
@@ -284,9 +304,16 @@ try {
   }
   check('full card journey made no automatic provider request', traffic.providers.length === 0, traffic.providers);
   check('no uncaught browser errors', traffic.errors.length === 0, traffic.errors);
-  await shot(page, 'journey-final-390');
+  if (staged) {
+    const health = await page.evaluate(async () => { const response = await fetch('/api/v1/health'); if (!response.ok) throw new Error(`Health ${response.status}`); return response.json(); });
+    result.stagedHealth = { edition: health.edition || null, source_commit: health.source_commit || null, status: health.status || null };
+    check('staged health matches the pinned source and declares an edition', health.source_commit === process.env.STAGED_SOURCE && Boolean(health.edition), result.stagedHealth);
+    check('staged private transport completed without failures', staged.evidence.failures.length === 0, staged.evidence.failures);
+  }
+  await shot(page, `journey-final-${journeyWidth}`);
   result.mutations = traffic.mutations; result.providerRequests = traffic.providers;
   const video = page.video();
+  await context.storageState({ path: temporaryStorageState });
   await context.close();
   if (video) { result.video = await video.path(); }
   result.status = 'PASS';
@@ -295,6 +322,6 @@ try {
   result.status = 'FAIL'; result.failures.push(error?.stack || String(error)); process.exitCode = 1;
 } finally {
   await browser.close();
-  await writeFile(resolve(reportDir, 'browser-cards.json'), JSON.stringify(result, null, 2) + '\n');
+  await writeFile(resolve(reportDir, reportFile), JSON.stringify(result, null, 2) + '\n');
   process.stdout.write(JSON.stringify(result, null, 2) + '\n');
 }

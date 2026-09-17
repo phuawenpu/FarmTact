@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "scope": "Local implementation acceptance only; exact private staging and public cutover remain pending. Human usability and new live provider prose are not established.",
+  "checked_at": "2026-09-17T14:09:14.929985+00:00",
+  "reports": [
+    {
+      "report": "browser-cards-fresh.json",
+      "status": "PASS",
+      "checks": 19
+    },
+    {
+      "report": "browser-cards-recorded.json",
+      "status": "PASS",
+      "checks": 13
+    },
+    {
+      "report": "browser-cards-360.json",
+      "status": "PASS",
+      "checks": 20
+    },
+    {
+      "report": "browser-cards-430.json",
+      "status": "PASS",
+      "checks": 20
+    },
+    {
+      "report": "browser-cards-1280.json",
+      "status": "PASS",
+      "checks": 20
+    },
+    {
+      "report": "records-browser.json",
+      "status": "PASSED",
+      "checks": 16
+    },
+    {
+      "report": "records-extended-browser.json",
+      "status": "PASSED",
+      "checks": 20
+    },
+    {
+      "report": "records-gaps-browser.json",
+      "status": "PASSED",
+      "checks": 12
+    },
+    {
+      "report": "knowledge-browser.json",
+      "status": "PASS",
+      "checks": 27
+    },
+    {
+      "report": "research-browser.json",
+      "status": "PASS",
+      "checks": 18
+    },
+    {
+      "report": "tools-browser.json",
+      "status": "PASS",
+      "checks": 30
+    },
+    {
+      "report": "plan-history-browser.json",
+      "status": "PASSED",
+      "checks": 26
+    },
+    {
+      "report": "plan-history-gaps-browser.json",
+      "status": "PASS",
+      "checks": 7
+    },
+    {
+      "report": "native-assumptions-browser.json",
+      "status": "PASS",
+      "checks": 36
+    },
+    {
+      "report": "plan-strategy-selection-browser.json",
+      "status": "PASS",
+      "checks": 8
+    },
+    {
+      "report": "responsive-decks.json",
+      "status": "PASS",
+      "checks": 101
+    },
+    {
+      "report": "responsive-plan-final.json",
+      "status": "PASS",
+      "checks": 25
+    },
+    {
+      "report": "crosswidth-interactions.json",
+      "status": "PASS",
+      "checks": 25
+    },
+    {
+      "report": "frontend-build.json",
+      "status": "PASS",
+      "checks": 0
+    },
+    {
+      "report": "acceptance-local.json",
+      "status": "PASS",
+      "checks": 20
+    }
+  ],
+  "python_regression": {
+    "passed": 792,
+    "skipped": 1,
+    "report": "regression-final.xml"
+  },
+  "additional_preservation_tests": 5,
+  "backend_tree": "044d4ef765c53a57802cdf8edfcae4cf05172fdc",
+  "contracts": "PASS",
+  "clean_build": "PASS"
+}

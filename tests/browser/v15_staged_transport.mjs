@@ -22,7 +22,7 @@ function remote(code, input = '') {
 
 export async function stagedTransport(expectedSource) {
   if (!/^[0-9a-f]{40}$/.test(expectedSource || '')) throw Error('Full staged source identity required');
-  const artifact = await remote(`import base64,hashlib,json,mimetypes,httpx
+  const artifact = await remote(`import base64,hashlib,json,mimetypes,httpx,os
 from pathlib import Path
 root=Path('/app/apps/web/dist')
 files={}
@@ -31,7 +31,10 @@ for p in root.rglob('*'):
   data=p.read_bytes()
   files['/'+p.relative_to(root).as_posix()]={'body':base64.b64encode(data).decode(),'sha256':hashlib.sha256(data).hexdigest(),'type':mimetypes.guess_type(str(p))[0] or 'application/octet-stream'}
 health=httpx.get('http://127.0.0.1:8095/api/v1/health',timeout=15,trust_env=False).json()
-print(json.dumps({'source':Path('/app/config/build-source.txt').read_text().strip(),'files':files,'health':health}))`);
+response=httpx.get('http://127.0.0.1:8095/',headers={'host':'farmtact.fly.dev','x-farmtact-gateway':os.environ['FARMTACT_CONTROL_SECRET'],'x-farmtact-client-ip':'127.0.0.1'},timeout=15,trust_env=False)
+assert response.status_code==200 and hashlib.sha256(response.content).hexdigest()==files['/index.html']['sha256']
+headers={k:v for k,v in response.headers.items() if k.lower() not in ('content-encoding','content-length','transfer-encoding','connection','set-cookie','etag','last-modified','content-type')}
+print(json.dumps({'source':Path('/app/config/build-source.txt').read_text().strip(),'files':files,'health':health,'document_headers':headers}))`);
   if (artifact.source !== expectedSource || artifact.health?.source_commit !== expectedSource || artifact.health?.edition !== 'v15' || artifact.health?.status !== 'ok' || !artifact.files['/index.html']) throw Error('Staged artifact/runtime source mismatch');
   const requestCode = `import base64,json,os,sys,httpx
 from urllib.parse import urlsplit
@@ -50,7 +53,7 @@ with httpx.Client(timeout=120,trust_env=False) as c:
  print(json.dumps({'status':r.status_code,'headers':safe,'body':base64.b64encode(r.content).decode()}))`;
   const traffic = []; const failures = [];
   return {
-    evidence: { source_commit: artifact.source, edition: artifact.health.edition, asset_sha256: Object.fromEntries(Object.entries(artifact.files).map(([path, f]) => [path, f.sha256])), transport: 'authenticated Fly SSH; exact image assets; fixed loopback API', traffic, failures },
+    evidence: { source_commit: artifact.source, edition: artifact.health.edition, content_security_policy: artifact.document_headers['content-security-policy'] || null, asset_sha256: Object.fromEntries(Object.entries(artifact.files).map(([path, f]) => [path, f.sha256])), transport: 'authenticated Fly SSH; exact image assets and document security headers; fixed loopback API', traffic, failures },
     async attach(context) {
       await context.route('**/*', async route => {
         try {
@@ -69,7 +72,7 @@ with httpx.Client(timeout=120,trust_env=False) as c:
             if (!file) return route.fulfill({ status: 404, body: 'Not found' });
             const body = Buffer.from(file.body, 'base64');
             if (createHash('sha256').update(body).digest('hex') !== file.sha256) throw Error('Staged asset digest mismatch');
-            await route.fulfill({ status: 200, contentType: file.type, body });
+            await route.fulfill({ status: 200, headers: artifact.document_headers, contentType: file.type, body });
           }
         } catch (error) { failures.push(String(error)); await route.abort('failed').catch(() => {}); }
       });
