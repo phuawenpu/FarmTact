@@ -1,0 +1,39 @@
+{
+  "id": "v18",
+  "title": "FarmTact V18 \u2014 Immediate card-return focus",
+  "published_at": "2026-09-17",
+  "summary": "V18 preserves the V17 integrated farm experience while making detail-card returns immediately accessible to keyboard users.",
+  "status": "published",
+  "source_commit": "4ab3e9ba51895080cae7f900333b977447f96217",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/4ab3e9ba51895080cae7f900333b977447f96217",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/e9528b2dfca98b92d3c5ab25e1c423a8f55da700...4ab3e9ba51895080cae7f900333b977447f96217",
+  "image_digest": "registry.fly.io/farmtact@sha256:ea9fd16063b7108e47e5ed698663284f0ad449bc013725a4c87d214cfb2703f7",
+  "review_url": "/v18/review",
+  "play_url": "/v18/",
+  "changes": [
+    {
+      "title": "Restore action focus and position immediately",
+      "description": "Returning from Explain, review or detail cards now focuses the originating action during layout and returns to its visible reading position.",
+      "feedback_ids": [
+        "v17-public-responsive-detail-return"
+      ],
+      "evidence": [
+        "reports/v18/implementation.md",
+        "reports/v18/local/browser-cards.json"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Keep immutable V17 workflows intact",
+      "description": "The change retains the ordinary sandbox, five contextual tool groups, agent workflows, local calculation, explicit approval and recorded simulation boundaries.",
+      "feedback_ids": [
+        "v17-persona-rewrite"
+      ],
+      "evidence": [
+        "docs/v17-persona-rewrite.md",
+        "reports/v17/capability-map.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
