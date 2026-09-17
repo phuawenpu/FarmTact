@@ -1,0 +1,66 @@
+{
+  "id": "v13",
+  "title": "FarmTact V13 \u2014 Tactical Field Console",
+  "published_at": "2026-09-17",
+  "summary": "A tactile, responsive mission shell turns a frozen scenario and real farm entities into explicit, revision-bound planning decisions with calculated consequences and auditable recovery.",
+  "status": "published",
+  "source_commit": "30f4e974cda4e5624d85f66627e7667be91d9a15",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/30f4e974cda4e5624d85f66627e7667be91d9a15",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/9fd57898b8a4e3b69a40c3abf03895f0fcb05daf...30f4e974cda4e5624d85f66627e7667be91d9a15",
+  "image_digest": "registry.fly.io/farmtact@sha256:62c81b68097b41af46d4a8a2de5f3b26b0bb2ebafe9463578be40f89bf382d77",
+  "review_url": "/v13/review",
+  "play_url": "/v13/",
+  "changes": [
+    {
+      "title": "Navigate a decision-first field deck",
+      "description": "One active tactical card stays readable across mobile and desktop, with swipe, buttons and keyboard equivalents, compact provenance, a real farm board, strategy tray and secondary tools under More.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/browser/v13_tactical_cards.mjs",
+        "reports/v13/accessibility-review.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Reserve B3 through the real planner",
+      "description": "Grow space B3 maps to bed-07. Reserve Space creates a revision-bound proposal after the recorded crop and sanitation period, runs the local CP-SAT worker, highlights the board and displays selected-strategy values with signed deltas.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/browser/v13_real_journey.mjs",
+        "tests/gameplay/test_v13_inverse_proposal.py"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Undo with a compensating calculation",
+      "description": "Undo appends an inverse proposal at the current revision and recalculates from its feasible source. Original history remains; stale inverses fail closed with an explicit reason.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/gameplay/test_v13_inverse_proposal.py",
+        "tests/browser/v13_tactical_cards.mjs"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Ask in validated card context",
+      "description": "Conversation focus binds card, entity and frozen planning snapshot on the server. Opening Ask performs no inference; only explicit submission enters the bounded provider path, and provider failure invents no dialogue.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/gameplay/test_v13_conversation_focus.py",
+        "reports/v13/judging-personas.md"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Apply layered abuse protection",
+      "description": "Every API receives durable global and source-network admission; authenticated and mutation calls add edition-scoped session quotas; provider-triggering routes add stricter burst, hourly and shared daily limits before inference work.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/review/test_abuse_limits.py",
+        "tests/security/test_request_admission.py",
+        "tests/editions/test_control.py"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
