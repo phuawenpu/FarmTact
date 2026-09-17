@@ -40,17 +40,17 @@ try {
   await page.getByRole("heading", { name: "Keep grow space B3 free" }).waitFor();
   const constraintText = await page.locator(".tc-card").innerText();
   check("B3 reservation starts after crop sanitation clears", constraintText.includes("2026-10-01"), constraintText);
+  await page.getByRole("button", { name: "Details" }).click();
+  check("Details updates the contextual panel", (await page.locator(".tm-focus").innerText()).includes("Keep grow space B3 free"));
   await page.getByRole("button", { name: "Reserve space" }).click();
   await page.locator(".tc-action-dock--progress").waitFor({ timeout: 10_000 });
   await page.getByRole("button", { name: "Undo" }).waitFor({ timeout: 120_000 });
   const tray = await page.locator(".tm-strategy-wrap").innerText();
-  check("recalculated plan retains at least one feasible strategy", tray.includes("Feasible") && !tray.includes("No feasible option"), tray);
+  check("recalculated plan retains at least one feasible strategy", tray.includes("FEASIBLE") && !tray.includes("NO FEASIBLE OPTION"), tray);
   check("B3 is highlighted after reserve", await page.locator('[data-board-target-id="bed-07"]').getAttribute("data-highlighted") === "true");
   check("calculated deltas are visible", await page.locator(".tc-metric-changes").isVisible(), await page.locator(".tc-metric-changes").innerText());
   check("reserve and recalculation make no provider request", providerMutations.length === 0, providerMutations);
 
-  await page.getByRole("button", { name: "Details" }).click();
-  check("Details updates the contextual panel", (await page.locator(".tc-context-card").innerText()).includes("Keep grow space B3 free"));
   await page.getByRole("button", { name: "Ask why" }).click();
   check("opening Ask Why makes no provider request", providerMutations.length === 0, providerMutations);
   check("Ask dialog keeps card context visible", await page.getByRole("dialog", { name: "Ask why" }).isVisible()

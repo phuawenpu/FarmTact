@@ -24,8 +24,9 @@ from sqlalchemy import Boolean, Column, Integer, PrimaryKeyConstraint, String, T
 from sqlalchemy.exc import IntegrityError
 
 from services.api.security import (
-    AI_IP_BURST, AI_IP_HOUR, AI_TENANT, API_GLOBAL, API_IP, PREVIEW_IP,
+    AI_IP_BURST, AI_IP_HOUR, AI_TENANT, API_GLOBAL, API_IP, API_TENANT, PREVIEW_IP,
     PREVIEW_TENANT, PROBE_IP, SESSION_GLOBAL, SESSION_IP, STREAM_IP, WRITE_IP,
+    WRITE_TENANT,
     AbuseLimits, Limited,
 )
 from services.api.store import budget, metadata
@@ -38,11 +39,14 @@ ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 
 CONTROL_RULES = {
     rule.name: rule for rule in (
-        API_IP, API_GLOBAL, WRITE_IP, SESSION_IP, SESSION_GLOBAL, AI_IP_BURST,
+        API_IP, API_GLOBAL, API_TENANT, WRITE_IP, WRITE_TENANT,
+        SESSION_IP, SESSION_GLOBAL, AI_IP_BURST,
         AI_IP_HOUR, AI_TENANT, PREVIEW_IP, PREVIEW_TENANT, PROBE_IP, STREAM_IP,
     )
 }
-EDITION_SCOPED_RULES = frozenset({AI_TENANT.name, PREVIEW_TENANT.name})
+EDITION_SCOPED_RULES = frozenset({
+    API_TENANT.name, WRITE_TENANT.name, AI_TENANT.name, PREVIEW_TENANT.name,
+})
 
 control_reservations = Table(
     "edition_control_reservations", metadata,

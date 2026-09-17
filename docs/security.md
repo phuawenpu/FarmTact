@@ -16,7 +16,7 @@ work. If admission storage is unavailable, requests fail closed with HTTP 503.
 | --- | --- |
 | AI-triggering POSTs, per source IP/network | 6 per minute and 20 per hour |
 | AI-triggering POSTs, per authenticated demo session | 12 per hour |
-| New demo sessions, per source IP/network | 10 per hour |
+| New demo sessions, per source IP/network | 30 per hour |
 | New demo sessions, entire app | 100 per hour |
 | API requests, per source IP/network | 600 per minute |
 | Application writes, per source IP/network | 60 per minute |

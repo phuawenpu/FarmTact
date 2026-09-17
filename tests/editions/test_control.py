@@ -11,7 +11,7 @@ from sqlalchemy import select
 from services.api.edition_control import (
     ControlUnavailable, RemoteControl, control_reservations, create_control_router,
 )
-from services.api.security import AI_IP_BURST, AI_TENANT, Limited
+from services.api.security import AI_IP_BURST, AI_TENANT, API_TENANT, Limited, WRITE_TENANT
 from services.api.store import Store, budget
 
 
@@ -90,6 +90,14 @@ def test_abuse_counters_share_ip_but_scope_tenant_by_edition(control):
         assert consume("v1", AI_TENANT, "tenant-1").status_code == 200
     assert consume("v1", AI_TENANT, "tenant-1").status_code == 429
     assert consume("v2", AI_TENANT, "tenant-1").status_code == 200
+
+    # Generic authenticated API and mutation quotas must also be admitted by
+    # the shared production control service and isolated between editions.
+    assert consume("v1", API_TENANT, "tenant-2").status_code == 200
+    for _ in range(WRITE_TENANT.limit):
+        assert consume("v1", WRITE_TENANT, "tenant-2").status_code == 200
+    assert consume("v1", WRITE_TENANT, "tenant-2").status_code == 429
+    assert consume("v2", WRITE_TENANT, "tenant-2").status_code == 200
 
 
 def test_remote_adapter_matches_store_and_limiter_contracts():
