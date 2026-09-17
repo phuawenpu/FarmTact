@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "scope": "Full original V15 integrated rewrite, completed in immutable V16; earlier V15 semantic finding retained and corrected.",
+  "source_commit": "3487faf90ec9205c903f8a6e40fc09aa94614dcc",
+  "image_digest": "registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493",
+  "current_public_edition": "v16",
+  "checks": {
+    "final-semantics.json": {
+      "status": "PASS",
+      "checks": 49
+    },
+    "explanation-layout.json": {
+      "status": "PASS",
+      "checks": 97
+    },
+    "browser-cards-widths.json": {
+      "status": "PASS",
+      "checks": 0
+    },
+    "frontend-build.json": {
+      "status": "PASS",
+      "checks": 0
+    },
+    "final-motion-review.json": {
+      "status": "PASS",
+      "checks": 0
+    },
+    "release/operator-acceptance.json": {
+      "status": "PASS",
+      "checks": 20
+    },
+    "release/staged-browser.json": {
+      "status": "PASS",
+      "checks": 28
+    },
+    "release/public-browser.json": {
+      "status": "PASS",
+      "checks": 67
+    },
+    "release/public-isolation.json": {
+      "status": "PASS",
+      "checks": 13
+    },
+    "release/preservation-staged.json": {
+      "status": "PASS",
+      "checks": 9
+    },
+    "release/preservation-public.json": {
+      "status": "PASS",
+      "checks": 9
+    },
+    "release/runtime-image.json": {
+      "status": "PASS",
+      "checks": 0
+    }
+  },
+  "all_four_full_journeys": 108,
+  "backend_unchanged_from_verified_regression": true,
+  "application_unchanged_since_pinned_source": true,
+  "capability_inventory_has_no_open_functional_rows": true,
+  "human_usability_verified": false,
+  "physical_farm_operations_enabled": false,
+  "new_provider_quality_claim": false,
+  "audit": "completion-audit.md"
+}

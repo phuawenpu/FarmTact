@@ -1,5 +1,9 @@
 # V15 implementation and publication
 
+Current resolution: the explanation finding below was corrected in immutable V16.
+See [the completed rewrite report](../v16/implementation.md). V15 remains preserved;
+the dated open-goal finding below is historical.
+
 V15 is published at **https://farmtact.fly.dev/** and **/play**, which serve the same
 integrated card shell. Immutable source: `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63`;
 image: `registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.

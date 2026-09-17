@@ -1,3 +1,7 @@
+Resolution: the reopened explanation finding below was corrected and verified in
+immutable V16. See `reports/v16/completion-audit.md` for the final full-scope audit.
+The earlier finding and evidence below remain historical records.
+
 # V15 completion audit — 17 September 2026
 
 Scope is the full user-approved V15 replacement plan, not only onboarding. The

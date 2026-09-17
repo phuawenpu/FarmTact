@@ -1,18 +1,22 @@
-Current release, 17 September 2026: V15 is published from source
-`a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and immutable image
-`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
-The public `/` and `/play` routes serve the same V15 integrated card shell for the
+Current release, 17 September 2026: V16 is published from source
+`3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
+`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
+The public `/` and `/play` routes serve the same V16 integrated card shell for the
 one ordinary synthetic farm. Plan, Records & work, Knowledge & evidence,
 Experiments, and History & preferences are available through that shell. Public
 edition selection and the V14 four-bed teaching season are historical rather than
-the current interface. Read `reports/v15/implementation.md` and
+the current interface. V16 corrects V15's post-publication raw-JSON and wrong-stage
+proposal explanation defects without changing the five-tool scope. Read
+`reports/v16/implementation.md` and
 `docs/v15-capability-checklist.md` before making current-state claims.
+Completed V16 evidence records 49 semantic, 97 layout, 108 complete-journey,
+20 operator and 28 exact staged-image checks, with zero provider requests.
 
-V15 preserves explicit review, revision-bound mutations, read-only replay and the
+V16 preserves explicit review, revision-bound mutations, read-only replay and the
 existing provider/admission boundaries. It does not establish human usability,
 new provider quality, calibrated agronomy or real-farm performance. Actual farm
-operations remain disabled. Preserve all historical release records. The next
-unused publication number is **V16**; never overwrite V15's source/image or reuse
+operations remain disabled. V15 remains immutable and preserved. The next unused
+publication number is **V17**; never overwrite a published source/image or reuse
 its number.
 
 Fresh-workspace restart: read [docs/workspace-handoff.md](docs/workspace-handoff.md).

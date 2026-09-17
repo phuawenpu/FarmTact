@@ -1,26 +1,28 @@
 # Current handoff — 17 September 2026
 
-V15 is published from exact source
-`a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and immutable image
-`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+V16 is published from exact source
+`3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
+`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
 Both https://farmtact.fly.dev/ and https://farmtact.fly.dev/play serve the same
-V15 integrated card shell for the ordinary synthetic farm. The shell opens five
+V16 integrated card shell for the ordinary synthetic farm. The shell opens five
 tool decks: Plan, Records & work, Knowledge & evidence, Experiments, and History
 & preferences. The V14 four-bed teaching season and public edition-selection
 experience are historical and are not the current public workflow.
 
-Start with [the V15 implementation evidence](../reports/v15/implementation.md)
-and [the V15 capability checklist](v15-capability-checklist.md), then read the
-repository prompts and current execution records. Publication verification passed
-for the exact source, public browser journey, preservation and edition isolation.
+V16 corrects V15's post-publication raw-JSON and wrong-stage proposal explanation
+defects. Start with [the V16 implementation evidence](../reports/v16/implementation.md)
+and the preserved [V15 capability checklist](v15-capability-checklist.md), then read
+the repository prompts and current execution records.
+Completed V16 evidence records 49 semantic, 97 layout, 108 complete-journey,
+20 operator and 28 exact staged-image checks, with zero provider requests.
 These automated results do not establish human usability, farmer comprehension,
 provider answer quality, agronomic calibration or real-farm outcomes. Actual farm
 operations remain disabled; optional provider-triggering actions retain the
 existing explicit submission and admission boundaries.
 
-V15's source and image are frozen. Preserve the historical records below and all
-prior immutable release artifacts. The next unused application number is **V16**;
-future application changes require a new edition rather than replacing V15.
+V16 and V15 have frozen source/image identities. Preserve the historical records
+below and all prior immutable release artifacts. The next unused application
+number is **V17**; future application changes require a new edition.
 Private browser state and credentials remain non-portable and must never be
 committed or printed.
 

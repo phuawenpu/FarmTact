@@ -1,6 +1,6 @@
 # FarmTact · One farm, one card experience
 
-FarmTact V15 presents the ordinary synthetic farm through one integrated card
+FarmTact V16 presents the ordinary synthetic farm through one integrated card
 shell. The same application is served at
 [the public root](https://farmtact.fly.dev/) and
 [/play](https://farmtact.fly.dev/play): review the current farm, calculate and
@@ -10,13 +10,13 @@ edition chooser. Previous/Next buttons, arrow keys and horizontal swipe provide
 equivalent card navigation; forms and decisions remain inside the active card
 with a bounded action area below it.
 
-V15 is published from source
-`a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and immutable image
-`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
-Historical application sources and images remain preserved, while the public
-entry points now open V15 directly. The next unused publication number is **V16**;
-never overwrite the V15 image or reuse its number. Read the
-[V15 implementation evidence](reports/v15/implementation.md),
+V16 is published from source
+`3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
+`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
+It corrects a post-publication V15 defect that could expose raw proposal JSON or
+show an explanation from the wrong planning stage. V15 remains immutable and
+preserved. The next unused publication number is **V17**. Read the
+[V16 implementation evidence](reports/v16/implementation.md),
 [V15 capability checklist](docs/v15-capability-checklist.md), and
 [publication policy](docs/deployment/editions.md).
 
@@ -26,17 +26,18 @@ farm snapshot and local numerical strategies. Reviewed proposals, imports, task
 results, corrections, recovery plans and simulation advances remain explicit,
 revision-bound actions. Reading saved explanations, evidence and replays makes no
 provider call. Optional adviser and extraction submissions retain the existing
-bounded DeepSeek controls; V15 adds no new provider-quality claim.
+bounded DeepSeek controls; V16 adds no new provider-quality claim.
 
 All farm records and outcomes in the public application remain synthetic or
 simulated and are labelled by evidence type. Actual planting, purchasing,
 delivery, communication and other physical farm operations are disabled. Automated
-browser, regression, preservation and isolation evidence passed for publication;
-human farmer comprehension and usability have not been verified.
+V16 verification currently includes 49 semantic, 97 layout, 108 complete-journey,
+20 operator, and 28 exact staged-image checks with zero provider requests. Human
+farmer comprehension and usability have not been verified.
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
-[V15 implementation evidence](reports/v15/implementation.md) ·
+[V16 implementation evidence](reports/v16/implementation.md) ·
 [V15 capability checklist](docs/v15-capability-checklist.md)
 
 ## Historical V13 tactical field console

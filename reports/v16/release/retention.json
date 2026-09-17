@@ -1,0 +1,32 @@
+{
+  "edition": "v16",
+  "policy": "archive-only",
+  "protected_editions": [
+    "v1",
+    "v2",
+    "v3",
+    "v4",
+    "v5",
+    "v6",
+    "v7",
+    "v8",
+    "v9",
+    "v10",
+    "v11",
+    "v12",
+    "v13",
+    "v14",
+    "v15"
+  ],
+  "snapshot_id": "vs_l0J99DGJLe0wtewPKlJM8LXV",
+  "storage_deleted": false,
+  "workers_stopped": [
+    "v15"
+  ],
+  "snapshot_verification": {
+    "status": "created",
+    "created_at": "2026-09-17T15:57:28Z",
+    "digest": "20681860c09b4e9106a011d7a8955136299f279724e591d9fddec5a3a2586748",
+    "retention_days": 7
+  }
+}

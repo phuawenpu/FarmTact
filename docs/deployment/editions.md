@@ -2,10 +2,10 @@
 
 ## Current-game publication policy
 
-V15 is published from `a5ab2a8`, with the same ordinary-farm integrated card
-application at `/` and `/play`. A postpublication explanation audit reopened the
-full-rewrite goal; the correction must publish as V16 without overwriting V15.
-The next unused edition is V16; always verify the registry before publication.
+V16 is published from `3487faf`, with the same ordinary-farm integrated card
+application at `/` and `/play`. It completes the V15 rewrite by correcting its
+postpublication explanation finding. V15 remains immutable and privately retained.
+The next unused edition is V17; always verify the registry before publication.
 
 V15 replaces the historical first-season introduction with the same full card
 application at `/` and `/play`. From V14 onward the active

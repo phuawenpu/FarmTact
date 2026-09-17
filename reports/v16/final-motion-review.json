@@ -1,0 +1,109 @@
+{
+  "status": "PASS",
+  "review": "read-only ffmpeg frame inspection of final C4J V16 normal-motion recordings",
+  "build": "index-C4Jepg7l.js",
+  "repository_files_written": false,
+  "browser_or_api_activity": false,
+  "event": {
+    "effective_date": "2026-09-14",
+    "affected_beds": [
+      "bed-01",
+      "bed-02",
+      "bed-03",
+      "bed-04",
+      "bed-05",
+      "bed-06",
+      "bed-07",
+      "bed-08",
+      "bed-10",
+      "bed-13",
+      "bed-14"
+    ],
+    "fact_text": "Recorded simulation \u00b7 2026-09-14 \u00b7 bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 \u00b7 harvest kg +190 kg \u00b7 delivered kg +136 kg \u00b7 disposed kg +5 kg",
+    "visible_transitions": [
+      "A1\u2013A4 recorded batches \u2192 harvested residue / Harvested",
+      "B1\u2013B4 recorded batches \u2192 crop art / Growing",
+      "B3 saved reservation 2026-10-01 \u2192 2026-11-02 persists"
+    ],
+    "classification": "recorded synthetic simulation; actual farm operations disabled"
+  },
+  "recordings": [
+    {
+      "width": 390,
+      "video": "reports/v16/video/page@2f65d1a08eb9bad80b82b8b9ced51246.webm",
+      "duration_seconds": 25.32,
+      "temporary_frames": "reports/v16/final-motion/390",
+      "samples": [
+        {
+          "second": 21.0,
+          "phase": "start",
+          "observation": "2026-09-08 recorded-batch scene; saved projection; simulation opening pending"
+        },
+        {
+          "second": 21.5,
+          "phase": "mid",
+          "observation": "clock becomes 2026-09-14; stages change; affected beds visibly emphasized; changed banner and exact recorded facts appear"
+        },
+        {
+          "second": 22.0,
+          "phase": "mid",
+          "observation": "affected-bed outline is at its strongest while exact recorded facts remain readable"
+        },
+        {
+          "second": 23.0,
+          "phase": "end",
+          "observation": "outline and changed banner are gone; settled harvested/growing stages and exact recorded facts persist"
+        },
+        {
+          "second": 24.0,
+          "phase": "settled",
+          "observation": "stable recorded state remains without endless growth or repeated emphasis"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "video": "reports/v16/video/page@cf373b3655cbaca9cbd66331b2113e6f.webm",
+      "duration_seconds": 30.76,
+      "temporary_frames": "reports/v16/final-motion/1280",
+      "samples": [
+        {
+          "second": 25.0,
+          "phase": "start",
+          "observation": "2026-09-08 recorded-batch scene; simulation opening pending"
+        },
+        {
+          "second": 25.5,
+          "phase": "mid",
+          "observation": "clock becomes 2026-09-14; crop stages change; affected-bed outlines, changed banner and exact recorded facts appear"
+        },
+        {
+          "second": 26.0,
+          "phase": "mid",
+          "observation": "finite event emphasis is receding; exact facts remain stable"
+        },
+        {
+          "second": 27.0,
+          "phase": "end",
+          "observation": "outlines and changed banner are gone; settled stages and exact recorded facts persist"
+        },
+        {
+          "second": 30.0,
+          "phase": "settled",
+          "observation": "stable final state persists with no endless animation"
+        }
+      ]
+    }
+  ],
+  "reduced_motion": {
+    "matches_normal_motion_facts": true,
+    "source_reports": [
+      "reports/v16/browser-cards-390.json",
+      "reports/v16/browser-cards-1280.json"
+    ],
+    "assertion": "reduced motion retains the same recorded consequence facts",
+    "fact_text": "Recorded simulation \u00b7 2026-09-14 \u00b7 bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 \u00b7 harvest kg +190 kg \u00b7 delivered kg +136 kg \u00b7 disposed kg +5 kg"
+  },
+  "conclusion": "Both fresh recordings show an actual bounded causal transition from the pre-event scene through changed stages and highlighted affected beds to a stable final scene. They are not still-screenshot evidence. Reduced motion reports the identical event date, bed identities and numerical differences immediately.",
+  "limitations": "Visual frame inspection verifies the recorded browser sequence and matching text facts, not human comprehension or physical-device behavior."
+}

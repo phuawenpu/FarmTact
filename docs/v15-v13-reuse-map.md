@@ -1,7 +1,8 @@
 # V13 → V15 reuse map: preserve depth, replace navigation
 
-Status: implemented in published V15, 17 September 2026. Exact verification and
-remaining human-validation limits are in reports/v15/implementation.md. Companion to the
+Status: implemented in V15 and verified with the completed V16 follow-up,
+17 September 2026. Exact verification and human-validation limits are in
+reports/v16/implementation.md. Companion to the
 [integrated card experience](v15-integrated-card-experience.md). Reuse the intellectual
 structure and graphical vocabulary of V13 inside V14's minimal flow; do not mount
 both applications, resurrect edition navigation or copy old state into a new context.

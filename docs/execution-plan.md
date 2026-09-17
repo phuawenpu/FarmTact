@@ -1,4 +1,19 @@
-# Published V15 — 17 September 2026
+# Completed integrated rewrite: V16 — 17 September 2026
+
+V16 is the sole public experience at `/` and `/play`, source `3487faf`, publication
+commit `b7a3eec`. It retains V15's complete workflows and corrects its final
+explanation audit finding. Verification: semantics49, API-checked layout97,
+four full journeys108, exact hosted operator20/browser28, public browser67,
+isolation13 and preservation9. The unchanged backend's isolated PostgreSQL run
+passed792 with one skipped generated-cache test. See
+[final implementation](../reports/v16/implementation.md) and
+[completion audit](../reports/v16/completion-audit.md).
+
+The full goal is complete. Human usability remains unverified; actual operations
+remain disabled. V15 source/image/data are preserved privately without automatic
+state migration. V17 is next. Earlier sections below are historical milestones.
+
+# Historical publication: V15 — 17 September 2026
 
 Immutable application source: `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63`.
 The public `/` and `/play` now share the ordinary sandbox and five integrated card

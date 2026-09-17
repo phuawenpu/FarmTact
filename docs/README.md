@@ -1,17 +1,21 @@
 # FarmTact documentation
 
-Documentation updated **17 September 2026**. Latest public application: **V15**,
-frozen from source `a5ab2a8bf86b0a40968eb1b3b6f97dbd34c46f63` and image
-`registry.fly.io/farmtact@sha256:7f19f29f1465ca9f678f29e0336a4bbcccd5d2ba03826d8184f52cff693c39b4`.
+Documentation updated **17 September 2026**. Latest public application: **V16**,
+frozen from source `3487faf90ec9205c903f8a6e40fc09aa94614dcc` and image
+`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
 The public `/` and `/play` routes now serve the same integrated card shell for one
 ordinary synthetic farm. Historical release artifacts remain immutable; older UI
 and edition descriptions below are evidence of their dated state, not descriptions
-of the current public interface. The next unused application number is **V16**.
+of the current public interface. V16 corrects V15's post-publication raw-JSON and
+wrong-stage proposal explanation defects. V15 remains immutable and preserved.
+The next unused application number is **V17**.
 
-Start with the [V15 implementation report](../reports/v15/implementation.md),
-[V15 capability checklist](v15-capability-checklist.md), and
-[current workspace handoff](workspace-handoff.md). V15 publication evidence is
-automated technical evidence. Human usability and farmer comprehension remain
+Start with the [V16 implementation report](../reports/v16/implementation.md),
+the preserved [V15 capability checklist](v15-capability-checklist.md), and
+[current workspace handoff](workspace-handoff.md). V16 publication evidence is
+automated technical evidence: 49 semantic, 97 layout, 108 complete-journey,
+20 operator and 28 exact staged-image checks, with zero provider requests. Human
+usability and farmer comprehension remain
 unverified, no new provider-quality result is claimed, and actual farm operations
 remain disabled.
 

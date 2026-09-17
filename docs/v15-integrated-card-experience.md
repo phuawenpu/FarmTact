@@ -1,12 +1,13 @@
 # V15 proposal: one farm table, full planning depth
 
-Status: published 17 September 2026 from immutable source `a5ab2a8` on
-`feature/v15-integrated-cards`. `/` and `/play` serve the same integrated shell.
-[The implementation report](../reports/v15/implementation.md) and
-[capability checklist](v15-capability-checklist.md) identify the acceptance evidence
-and its limits. V14 and earlier source/images remain immutable; recoverable private
-state is retained without automatic cross-edition migration. The next unused
-publication number is V16. Human usability remains unverified.
+Status: implemented in V15 and completed by immutable V16 on 17 September 2026.
+V16 source `3487faf` corrects V15's postpublication semantic explanation finding.
+`/` and `/play` serve the same complete integrated shell; see
+[the final implementation report](../reports/v16/implementation.md),
+[completion audit](../reports/v16/completion-audit.md) and
+[capability checklist](v15-capability-checklist.md). V15 and earlier releases remain
+immutable, with recoverable private state retained and no automatic cross-edition
+migration. The next unused publication number is V17. Human usability is unverified.
 
 Evidence: [live review and capability comparison](../reports/v14/animation-explanation-review.md).
 The [V13 asset and workflow reuse map](v15-v13-reuse-map.md) identifies exact reusable

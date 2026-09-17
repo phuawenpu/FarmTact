@@ -1,12 +1,14 @@
-## V16 explanation completion — implementation in progress
+## V16 explanation completion — published 17 September 2026
 
-The full V15 rewrite goal remains active after a postpublication semantic audit.
-V16 replaces raw assumption JSON and unrelated proposal prose with stage-specific
-order, strategy, reservation, task and recorded-simulation explanations. The full
-integrated workflows, local numerical authority, explicit inference submissions,
-shared admission limits and disabled actual operations remain unchanged. V15 is
-immutable and remains public until the new candidate passes acceptance. See
-reports/v16/implementation.md and the retained failing V15 semantic audit.
+The full integrated rewrite is complete in V16 from `3487faf`. It retains the V15
+workflows and corrects the postpublication semantic finding with stage-specific
+order, strategy, reservation, task and recorded-simulation explanations. Both `/`
+and `/play` serve this same ordinary-farm shell. V15 and prior source/images and
+recoverable state remain preserved without automatic cross-edition migration.
+Local numerical authority, explicit inference submissions, shared admission limits
+and disabled actual operations are unchanged. See reports/v16/implementation.md
+and reports/v16/completion-audit.md for verification and explicit human/provider
+validation limits. V17 is the next unused edition.
 
 ## Published V15 integration amendment — 17 September 2026
 
