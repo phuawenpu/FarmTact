@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-09-17T13:37:26.956Z",
+  "checks": [
+    {
+      "name": "server-ineligible approval is disabled with exact reason",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "approval metadata carries server eligibility and reason",
+      "pass": true,
+      "detail": "[{\"id\":\"back\",\"label\":\"Back\",\"eligible\":true,\"authority\":\"local_navigation\",\"eligibilitySource\":\"local\"},{\"id\":\"approve\",\"label\":\"Approve revision & create tasks\",\"eligible\":false,\"authority\":\"server_mutation\",\"eligibilitySource\":\"server\",\"disabledReason\":\"Controlled server reason: recalculated strategy is infeasible.\"}]"
+    },
+    {
+      "name": "eligibility review performs no POST",
+      "pass": true,
+      "detail": "0"
+    }
+  ],
+  "failures": [],
+  "fixture": "Labelled GET-only server eligibility projection; no mutation is forwarded.",
+  "finished_at": "2026-09-17T13:37:31.457Z",
+  "status": "PASSED"
+}

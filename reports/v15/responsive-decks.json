@@ -1,0 +1,1070 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4192",
+  "build": "index-C2Hgt_dH.js",
+  "checks": [
+    {
+      "name": "360 plan-assumptions: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 1373,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 plan-assumptions: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "360 plan-assumptions: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 529,
+        "content": 1373,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 plan-assumptions: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360 records-import: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 1014,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 records-import: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 3
+      }
+    },
+    {
+      "name": "360 records-import: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 170,
+        "content": 1014,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 records-import: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360 knowledge-crop: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 1905,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 knowledge-crop: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "360 knowledge-crop: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 1061,
+        "content": 1905,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 knowledge-crop: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360 knowledge-source: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 1427,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 knowledge-source: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "360 knowledge-source: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 583,
+        "after": 583,
+        "content": 1427,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 knowledge-source: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360 experiments-controls: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 1237,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 experiments-controls: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "360 experiments-controls: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 4,
+        "after": 393,
+        "content": 1237,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 experiments-controls: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360 history-identities: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 360,
+        "documentClientWidth": 360,
+        "documentScrollHeight": 848,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 331,
+        "cardScrollWidth": 300,
+        "cardClientWidth": 300
+      }
+    },
+    {
+      "name": "360 history-identities: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "360 history-identities: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 4,
+        "content": 848,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 history-identities: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "360: sampled decks have no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390 plan-assumptions: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 1372,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 plan-assumptions: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "390 plan-assumptions: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 528,
+        "content": 1372,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 plan-assumptions: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390 records-import: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 1012,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 records-import: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 3
+      }
+    },
+    {
+      "name": "390 records-import: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 168,
+        "content": 1012,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 records-import: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390 knowledge-crop: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 1840,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 knowledge-crop: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "390 knowledge-crop: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 996,
+        "content": 1840,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 knowledge-crop: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390 knowledge-source: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 1362,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 knowledge-source: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "390 knowledge-source: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 518,
+        "after": 518,
+        "content": 1362,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 knowledge-source: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390 experiments-controls: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 1283,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 experiments-controls: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "390 experiments-controls: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 439,
+        "content": 1283,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 experiments-controls: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390 history-identities: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "documentScrollHeight": 894,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 361,
+        "cardScrollWidth": 330,
+        "cardClientWidth": 330
+      }
+    },
+    {
+      "name": "390 history-identities: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "390 history-identities: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 50,
+        "content": 894,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 history-identities: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "390: sampled decks have no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430 plan-assumptions: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 1349,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 plan-assumptions: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "430 plan-assumptions: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 505,
+        "content": 1349,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 plan-assumptions: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430 records-import: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 1012,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 records-import: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 3
+      }
+    },
+    {
+      "name": "430 records-import: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 168,
+        "content": 1012,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 records-import: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430 knowledge-crop: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 1775,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 knowledge-crop: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "430 knowledge-crop: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 931,
+        "content": 1775,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 knowledge-crop: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430 knowledge-source: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 1297,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 knowledge-source: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "430 knowledge-source: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 453,
+        "after": 453,
+        "content": 1297,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 knowledge-source: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430 experiments-controls: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 1252,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 experiments-controls: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "430 experiments-controls: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 408,
+        "content": 1252,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 experiments-controls: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430 history-identities: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 430,
+        "documentClientWidth": 430,
+        "documentScrollHeight": 894,
+        "viewportHeight": 844,
+        "cardLeft": 29,
+        "cardRight": 401,
+        "cardScrollWidth": 370,
+        "cardClientWidth": 370
+      }
+    },
+    {
+      "name": "430 history-identities: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "430 history-identities: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 50,
+        "content": 894,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 history-identities: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "430: sampled decks have no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280 plan-assumptions: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 975,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 plan-assumptions: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "1280 plan-assumptions: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 75,
+        "content": 975,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 plan-assumptions: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280 records-import: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 900,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 records-import: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 3
+      }
+    },
+    {
+      "name": "1280 records-import: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 0,
+        "content": 900,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 records-import: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280 knowledge-crop: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 1262,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 knowledge-crop: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "1280 knowledge-crop: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 362,
+        "content": 1262,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 knowledge-crop: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280 knowledge-source: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 1024,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 knowledge-source: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 1
+      }
+    },
+    {
+      "name": "1280 knowledge-source: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 124,
+        "after": 124,
+        "content": 1024,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 knowledge-source: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280 experiments-controls: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 932,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 experiments-controls: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "1280 experiments-controls: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 32,
+        "content": 932,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 experiments-controls: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280 history-identities: no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "documentScrollHeight": 900,
+        "viewportHeight": 900,
+        "cardLeft": 755.140625,
+        "cardRight": 1210.984375,
+        "cardScrollWidth": 454,
+        "cardClientWidth": 454
+      }
+    },
+    {
+      "name": "1280 history-identities: action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "actionCount": 2
+      }
+    },
+    {
+      "name": "1280 history-identities: content fits or scrolls vertically",
+      "pass": true,
+      "detail": {
+        "before": 0,
+        "after": 0,
+        "content": 900,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 history-identities: keyboard focus is visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "focusVisible": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "4px",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "1280: sampled decks have no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "responsive deck audit sends zero POST/write requests",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "screenshots": [
+    "reports/v15/responsive-decks-360-plan-assumptions.png",
+    "reports/v15/responsive-decks-360-records-import.png",
+    "reports/v15/responsive-decks-360-knowledge-crop.png",
+    "reports/v15/responsive-decks-360-knowledge-source.png",
+    "reports/v15/responsive-decks-360-experiments-controls.png",
+    "reports/v15/responsive-decks-360-history-identities.png",
+    "reports/v15/responsive-decks-390-plan-assumptions.png",
+    "reports/v15/responsive-decks-390-records-import.png",
+    "reports/v15/responsive-decks-390-knowledge-crop.png",
+    "reports/v15/responsive-decks-390-knowledge-source.png",
+    "reports/v15/responsive-decks-390-experiments-controls.png",
+    "reports/v15/responsive-decks-390-history-identities.png",
+    "reports/v15/responsive-decks-430-plan-assumptions.png",
+    "reports/v15/responsive-decks-430-records-import.png",
+    "reports/v15/responsive-decks-430-knowledge-crop.png",
+    "reports/v15/responsive-decks-430-knowledge-source.png",
+    "reports/v15/responsive-decks-430-experiments-controls.png",
+    "reports/v15/responsive-decks-430-history-identities.png",
+    "reports/v15/responsive-decks-1280-plan-assumptions.png",
+    "reports/v15/responsive-decks-1280-records-import.png",
+    "reports/v15/responsive-decks-1280-knowledge-crop.png",
+    "reports/v15/responsive-decks-1280-knowledge-source.png",
+    "reports/v15/responsive-decks-1280-experiments-controls.png",
+    "reports/v15/responsive-decks-1280-history-identities.png"
+  ],
+  "requests": {
+    "writes": []
+  },
+  "failures": []
+}

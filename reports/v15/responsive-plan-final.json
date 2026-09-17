@@ -1,0 +1,244 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4192",
+  "build": "index-Bnpql8zk.js",
+  "checks": [
+    {
+      "name": "360 Plan native assumptions have no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "document": 360,
+        "client": 360,
+        "left": 29,
+        "right": 331,
+        "cardScroll": 300,
+        "cardClient": 300,
+        "height": 1968,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 Plan native assumptions retain vertical scrolling",
+      "pass": true,
+      "detail": {
+        "document": 360,
+        "client": 360,
+        "left": 29,
+        "right": 331,
+        "cardScroll": 300,
+        "cardClient": 300,
+        "height": 1968,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "360 Plan action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "buttons": 2
+      }
+    },
+    {
+      "name": "360 Plan keyboard focus remains visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "visible": true,
+        "outline": "4px"
+      }
+    },
+    {
+      "name": "360 Plan exposes native structured fields instead of default raw JSON",
+      "pass": true,
+      "detail": {
+        "text": "Sandbox · actual farm operations disabled\nResource & demand assumptions\n\nSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.\n\nSelected strategy\nAvailable capacity\n\nBlank fields keep the farm's recorded capacity. Enter a value only to test a change.\n\nNursery sites\nLabour hours per week\nCash available (SGD)\nTentative orders\nAdd tentative orders\nFuture demand\nAdd future demand\nSeasonal yield and delay\nAdd seasonal yield and delay\nConfirmed order changes\nAdd confirmed order changes\nBed reservations\nAdd reservation\nImport saved settings\n\nFarm Lit"
+      }
+    },
+    {
+      "name": "360 Plan has no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "390 Plan native assumptions have no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "document": 390,
+        "client": 390,
+        "left": 29,
+        "right": 361,
+        "cardScroll": 330,
+        "cardClient": 330,
+        "height": 1932,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 Plan native assumptions retain vertical scrolling",
+      "pass": true,
+      "detail": {
+        "document": 390,
+        "client": 390,
+        "left": 29,
+        "right": 361,
+        "cardScroll": 330,
+        "cardClient": 330,
+        "height": 1932,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "390 Plan action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "buttons": 2
+      }
+    },
+    {
+      "name": "390 Plan keyboard focus remains visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "visible": true,
+        "outline": "4px"
+      }
+    },
+    {
+      "name": "390 Plan exposes native structured fields instead of default raw JSON",
+      "pass": true,
+      "detail": {
+        "text": "Sandbox · actual farm operations disabled\nResource & demand assumptions\n\nSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.\n\nSelected strategy\nAvailable capacity\n\nBlank fields keep the farm's recorded capacity. Enter a value only to test a change.\n\nNursery sites\nLabour hours per week\nCash available (SGD)\nTentative orders\nAdd tentative orders\nFuture demand\nAdd future demand\nSeasonal yield and delay\nAdd seasonal yield and delay\nConfirmed order changes\nAdd confirmed order changes\nBed reservations\nAdd reservation\nImport saved settings\n\nFarm Lit"
+      }
+    },
+    {
+      "name": "390 Plan has no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "430 Plan native assumptions have no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "document": 430,
+        "client": 430,
+        "left": 29,
+        "right": 401,
+        "cardScroll": 370,
+        "cardClient": 370,
+        "height": 1909,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 Plan native assumptions retain vertical scrolling",
+      "pass": true,
+      "detail": {
+        "document": 430,
+        "client": 430,
+        "left": 29,
+        "right": 401,
+        "cardScroll": 370,
+        "cardClient": 370,
+        "height": 1909,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "430 Plan action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "buttons": 2
+      }
+    },
+    {
+      "name": "430 Plan keyboard focus remains visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "visible": true,
+        "outline": "4px"
+      }
+    },
+    {
+      "name": "430 Plan exposes native structured fields instead of default raw JSON",
+      "pass": true,
+      "detail": {
+        "text": "Sandbox · actual farm operations disabled\nResource & demand assumptions\n\nSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.\n\nSelected strategy\nAvailable capacity\n\nBlank fields keep the farm's recorded capacity. Enter a value only to test a change.\n\nNursery sites\nLabour hours per week\nCash available (SGD)\nTentative orders\nAdd tentative orders\nFuture demand\nAdd future demand\nSeasonal yield and delay\nAdd seasonal yield and delay\nConfirmed order changes\nAdd confirmed order changes\nBed reservations\nAdd reservation\nImport saved settings\n\nFarm Lit"
+      }
+    },
+    {
+      "name": "430 Plan has no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "1280 Plan native assumptions have no horizontal overflow",
+      "pass": true,
+      "detail": {
+        "document": 1280,
+        "client": 1280,
+        "left": 755.140625,
+        "right": 1210.984375,
+        "cardScroll": 454,
+        "cardClient": 454,
+        "height": 1403,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 Plan native assumptions retain vertical scrolling",
+      "pass": true,
+      "detail": {
+        "document": 1280,
+        "client": 1280,
+        "left": 755.140625,
+        "right": 1210.984375,
+        "cardScroll": 454,
+        "cardClient": 454,
+        "height": 1403,
+        "viewport": 900
+      }
+    },
+    {
+      "name": "1280 Plan action area has at most three controls",
+      "pass": true,
+      "detail": {
+        "buttons": 2
+      }
+    },
+    {
+      "name": "1280 Plan keyboard focus remains visible",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "visible": true,
+        "outline": "4px"
+      }
+    },
+    {
+      "name": "1280 Plan exposes native structured fields instead of default raw JSON",
+      "pass": true,
+      "detail": {
+        "text": "Sandbox · actual farm operations disabled\nResource & demand assumptions\n\nSet available resources and review optional demand, seasonal and bed changes. Empty groups keep the existing baseline. Only the four existing crop recipes are modeled; these are projected planning inputs.\n\nSelected strategy\nAvailable capacity\n\nBlank fields keep the farm's recorded capacity. Enter a value only to test a change.\n\nNursery sites\nLabour hours per week\nCash available (SGD)\nTentative orders\nAdd tentative orders\nFuture demand\nAdd future demand\nSeasonal yield and delay\nAdd seasonal yield and delay\nConfirmed order changes\nAdd confirmed order changes\nBed reservations\nAdd reservation\nImport saved settings\n\nFarm Lit"
+      }
+    },
+    {
+      "name": "1280 Plan has no browser error",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "Plan responsive rerun sends zero POST/write requests",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "screenshots": [
+    "reports/v15/responsive-decks-360-plan-assumptions.png",
+    "reports/v15/responsive-decks-390-plan-assumptions.png",
+    "reports/v15/responsive-decks-430-plan-assumptions.png",
+    "reports/v15/responsive-decks-1280-plan-assumptions.png"
+  ],
+  "writes": [],
+  "failures": []
+}

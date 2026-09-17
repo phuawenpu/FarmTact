@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "reload restores the exact open tool",
+      "pass": true,
+      "detail": {
+        "toolHeading": "Farm tools › Plan",
+        "after": "Farm tools › Plan"
+      }
+    },
+    {
+      "name": "tool Back returns to the preserved More index",
+      "pass": true,
+      "detail": "OBJECTIVE · DELIVER THE CONFIRMED ORDER\n22 kg caixin by 2026-09-14\n\nSandbox farm · real operations disabled\n\nFarm scene · Area 1 of 2 · showing 8 of 16\n2026-09-14\nA1\nHarvested residue\nCaixin\nHarvested\nA2\nHarvested residue\nPak Choi\nHarvested\nA3\nHarvested residue\nKailan\nHarvested\nA4\nHarvested residue\nLettuce\nHarvested\nB1\nCaixin\nGrowing\nB2\nPak Choi\nGrowing\nB3\nKailan\nGrowing\nSaved reservation\n2026-10-01 → 2026-11-02\nB4\nLettuce\nGrowing\n\nRecorded simulation · 2026-09-14 · bed-01, bed-02, bed-03, bed-04, bed-05, bed-06, bed-07, bed-08, bed-10, bed-13, bed-14 · harvest kg +190 kg · delivered kg +136 kg · disposed kg +5 kg\n\nFARM TOOLS\nPlan\n\nCalculate, compare and approve revision-bound plans.\n\nFarm tools › Plan\n← Previous\nFarm tools · 1 of 5\nNext →\nBack\nOpen tool\nResume guide"
+    },
+    {
+      "name": "Back restores exact mission card ID and index",
+      "pass": true,
+      "detail": {
+        "before": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        },
+        "after": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        }
+      }
+    },
+    {
+      "name": "Back restores original More focus",
+      "pass": true,
+      "detail": {
+        "before": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        },
+        "after": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        }
+      }
+    },
+    {
+      "name": "Back restores original document scroll",
+      "pass": true,
+      "detail": {
+        "before": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        },
+        "after": {
+          "cardId": "strategy-1dee4a9ec3e906c66cab",
+          "pager": "Farm plan · 2 of 7",
+          "scroll": 316,
+          "focus": "More"
+        }
+      }
+    },
+    {
+      "name": "reload-return browsing makes zero farm writes",
+      "pass": true,
+      "detail": {
+        "baselineWrites": 0,
+        "writes": []
+      }
+    },
+    {
+      "name": "reload-return browsing makes zero provider submissions",
+      "pass": true,
+      "detail": {
+        "baselineProviders": 0,
+        "providers": []
+      }
+    }
+  ],
+  "failures": []
+}

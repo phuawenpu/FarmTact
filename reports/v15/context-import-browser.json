@@ -1,0 +1,31 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "Inventory shortcut opens the actual Waste Rescue card directly",
+      "pass": true
+    },
+    {
+      "name": "Waste Rescue Back restores inventory identity, focus and position",
+      "pass": true
+    },
+    {
+      "name": "Import review shows both current and incoming identities and cutoff",
+      "pass": true
+    },
+    {
+      "name": "Import review states counts, validation boundary and preserved history",
+      "pass": true
+    },
+    {
+      "name": "Cancelling the reviewed transition preserves the exact current farm",
+      "pass": true
+    },
+    {
+      "name": "Context navigation and import preview perform zero writes or inference",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

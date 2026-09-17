@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "Existing accepted plan has real recorded execution prerequisite",
+      "pass": true
+    },
+    {
+      "name": "Future-only local recalculation saves a new result",
+      "pass": true
+    },
+    {
+      "name": "Recovery approval card binds recalculated proposal",
+      "pass": true
+    },
+    {
+      "name": "Server exposes eligible current future-only approval",
+      "pass": true
+    },
+    {
+      "name": "Approved replan retains simulation identity, clock and completed tasks",
+      "pass": true
+    },
+    {
+      "name": "Approved replan preserves inventory and harvest lot origins",
+      "pass": true
+    },
+    {
+      "name": "Replan does not change recorded physical totals",
+      "pass": true
+    },
+    {
+      "name": "Executed source result remains replayable",
+      "pass": true
+    },
+    {
+      "name": "Future-only card workflow submits no provider request",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "session_id": "63c1b1bb786f77833bc71a1ff3ed1479",
+  "world_id": "d6a0a2837d64142acec0a9294ae3e0eb",
+  "mutations": [
+    "/api/v1/farm-workflow/proposals",
+    "/api/v1/farm-workflow/proposals/658ca187bc1938c1ee162163fbcabbbe/apply",
+    "/api/v1/farm-workflow/proposals/658ca187bc1938c1ee162163fbcabbbe/approve-actions"
+  ],
+  "status": "PASS"
+}

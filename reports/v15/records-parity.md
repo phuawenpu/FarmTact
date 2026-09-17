@@ -10,7 +10,7 @@ Evidence was collected against the local PostgreSQL-backed application, with rea
 | Admission throttling | Manual record → Create review candidate with one controlled 429 and `Retry-After`, then retry | `v15_records.mjs`: immediate retry suppressed and later request reaches the real API | Covered; labelled transport fault |
 | Manual accounting candidate and explicit review | Farm records → Manual record → candidate card → Review candidate → Confirm reviewed fields | `v15_records.mjs`: stable candidate card and confirmed state from `/api/v1/farm-workflow` | Covered |
 | CSV accounting upload | Farm records → Add candidate → Upload accounting candidate | `v15_records_extended.mjs`: real CSV creates an `accounting_export` candidate with its parsed reference and amount | Covered |
-| Original source inspection | Accounting candidate → Source → Inspect source | `v15_records_extended.mjs`: authenticated `/farm-workflow/imports/{candidate_id}/source` returns the uploaded reference and the UI opens the source view | Covered |
+| Original source inspection | Accounting candidate → Source → Inspect source | `v15_records_extended.mjs`: authenticated retained CSV bytes render escaped inside the card; images use bounded data URLs, while PDF/XLSX retain extracted rows and authenticated original download | Covered |
 | Accounting confirmation | Accounting candidate → Review candidate → Confirm reviewed fields | `v15_records_extended.mjs`: real candidate becomes `confirmed` | Covered |
 | XLSX parsing and validation | Farm records → Add candidate → Upload accounting candidate | `v15_records_gaps.mjs`: generated workbook reaches the real API, parses its dated expense/reference, and appears as an accounting candidate; backend tests cover date epochs and formula rejection | Covered |
 | Photo/document provider boundary | Add candidate → select PDF/image → Submit for AI extraction | `v15_records_extended.mjs`: card states one bounded provider request; controlled 503 retains the selected PDF and invokes no provider | UI/outage covered; labelled fixture |
@@ -23,6 +23,7 @@ Evidence was collected against the local PostgreSQL-backed application, with rea
 | Orders, beds and inventory browse cards | Records & work → Confirmed orders / Growing spaces / Inventory → Open | `v15_records_gaps.mjs`: order identity/quantity/date and bed identity/area/system/crop are rendered; inventory renders facts or an explicit empty state | Covered; also caught and fixed missing bed-stage crash |
 | Proposal identity and review | Proposal approvals → exact proposal card → Review approval | `v15_records_extended.mjs`: exact real prerequisite proposal ID is visible before action | Covered |
 | Stale approval fails closed | Approval review → Approve revision & create tasks with controlled 409 | `v15_records_extended.mjs`: alert retains the review and the real workflow has zero tasks for that proposal | Covered; labelled 409 transport fixture, with server eligibility covered by backend tests |
+| Server-ineligible approval | Proposal approvals → Review approval | `v15_records_approval_guard.mjs`: labelled GET-only fixture shows the exact infeasible reason, disables submission, publishes server eligibility metadata and makes zero POSTs | Covered; labelled presentation fixture |
 | Explicit approval creates simulation tasks | Approval review → Approve revision & create tasks | `v15_records_extended.mjs`: real API state contains tasks bound to the exact proposal | Covered |
 | Task result form stays bound under alternate navigation | Tasks & results → exact task → Record result → ArrowRight and swipe on form | `v15_records_extended.mjs`: task-specific heading and Result form remain active; no navigation mutation occurs | Covered |
 | Failed result and recovery trigger | Result form → select Blocked or failed → checklist/note → Save reported result | `v15_records_extended.mjs`: exact task reaches `recovery_required` with a new event revision | Covered |
@@ -50,6 +51,7 @@ Evidence was collected against the local PostgreSQL-backed application, with rea
 - `tests/browser/v15_records.mjs` and `reports/v15/records-browser.json`
 - `tests/browser/v15_records_extended.mjs` and `reports/v15/records-extended-browser.json`
 - `tests/browser/v15_records_gaps.mjs` and `reports/v15/records-gaps-browser.json`
+- `tests/browser/v15_records_approval_guard.mjs` and `reports/v15/records-approval-guard-browser.json`
 - `tests/browser/v15_plan_history.mjs` and `reports/v15/plan-history-browser.json`
 - `tests/data/test_financial_ingestion.py`
 - `tests/data/test_document_extraction.py`

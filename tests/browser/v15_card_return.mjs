@@ -24,7 +24,7 @@ try {
   };
   const planScroll = await capture();
   await click('Open'); await page.getByRole('heading', { name: 'Objectives and all demand' }).waitFor();
-  await click('Review demand changes'); await page.getByLabel('Planning assumptions JSON').waitFor(); await click('Back');
+  await click('Review demand changes'); await page.getByText('Import saved settings',{exact:true}).waitFor(); await click('Back');
   await page.getByRole('heading', { name: 'Objectives and all demand' }).waitFor(); await page.waitForTimeout(100);
   check('Demand editor Back restores the originating objective and action focus', await page.getByRole('button', { name: 'Review demand changes', exact: true }).evaluate(e => e === document.activeElement));
   await click('Back'); await page.waitForTimeout(100);

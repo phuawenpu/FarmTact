@@ -1,0 +1,16 @@
+{
+  "status": "INSPECTED",
+  "recording": "reports/v15/video/page@db32f03de7d50f8d20f52138b7f1640c.webm",
+  "duration_seconds": 59.84,
+  "frame_size": "390x844",
+  "samples": [
+    {"second": 5, "frame": "video/frames-multitime/early-5.png", "observed": "Planning date 2026-09-08; recorded-batch bed state; calculation in progress; no saved transition facts yet."},
+    {"second": 18, "frame": "video/frames-multitime/before-18.png", "observed": "Applied-constraint card for B3; B3 outline visible; metric fields say Not reported while recalculation is in progress."},
+    {"second": 31, "frame": "video/frames-multitime/transition-31.png", "observed": "Saved reservation barrier 2026-10-01 to 2026-11-02; saved-projection caption lists affected beds and coverage -4 kg, surplus -13 kg, expiry +17 kg; card lists coverage -4 kg, expiry +17 kg and margin -199.5 SGD."},
+    {"second": 45, "frame": "video/frames-multitime/settled-45.png", "observed": "A later inverse/recalculation state shows saved-projection coverage +4 kg, surplus +13 kg and expiry -17 kg; card metrics are temporarily Not reported."},
+    {"second": 52, "frame": "video/frames-multitime/sim-before-52.png", "observed": "Before simulation advance settles: planning date remains 2026-09-08 and recorded-batch beds remain visible."},
+    {"second": 55, "frame": "video/frames-multitime/sim-transition-55.png", "observed": "History tool is waiting for server confirmation; the saved-projection scene and reservation barrier remain visible."},
+    {"second": 59, "frame": "video/frames-multitime/sim-settled-59.png", "observed": "Settled recorded simulation date 2026-09-14; A beds show harvested residue, B beds show growing crops, reservation barrier persists, and caption reports harvest +190 kg, delivered +136 kg, disposed +5 kg. Recorded-consequence card shows 52 sandbox tasks and operations disabled."}
+  ],
+  "scope": "Manual frame inspection records visible states only. The recording spans calculation, proposal/inverse work, History waiting, and simulation settlement; it is not treated as a controlled single-transition usability study."
+}

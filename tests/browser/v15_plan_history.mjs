@@ -76,7 +76,7 @@ try {
     reservations: [],
     capacity: { nursery_sites: session.farm.resources.nursery_sites, labour_hours_per_week: session.farm.resources.labour_hours_per_week, cash_sgd: session.farm.resources.cash_sgd },
   };
-  await page.getByLabel("Planning assumptions JSON").fill(JSON.stringify(assumptions, null, 2));
+  await page.getByText("Import saved settings", {exact:true}).click();await page.getByLabel("Planning assumptions JSON").fill(JSON.stringify(assumptions, null, 2));
   await page.getByRole("button", { name: "Review", exact: true }).click();
   check("assumptions require a distinct review card", await page.getByRole("heading", { name: "Review planning changes" }).isVisible());
   await page.getByRole("button", { name: "Create proposal", exact: true }).click();

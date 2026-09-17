@@ -158,3 +158,18 @@ The latest retained-assets build succeeds (main JS 232.72 kB / 72.99 kB gzip;
 main CSS 132.35 kB / 27.81 kB gzip). Final source/approval/import/context-return
 checks and exact dataset reload verification remain in progress. A final clean
 build and private staging still precede public cutover.
+
+Private integration checkpoint (17 September, 13:50 UTC): the final isolated
+PostgreSQL regression is **792 passed, one skipped, four warnings in 857.27 seconds**.
+No backend product changes followed this run. Generated web contracts pass their
+check. Real-service Plan/History checks pass seven assertions after the native
+resource and demand editor replaced default raw JSON; seven focus/scroll-return
+checks also pass. JSON import remains an optional disclosure. Responsive coverage
+passes 101 cross-deck assertions plus 25 checks of the final native Plan editor
+at 360, 390, 430 and 1280 px. Native field combinations and the final clean build
+are still being verified. Recorded future-only replanning preserves executed work;
+its nine-check browser report and the twelve-check history replay report pass.
+
+The current motion recording was inspected at seven timestamps, including settled
+recorded quantities after finite consequences. This is automated/visual inspection,
+not a representative-user study. V14 is still public; V15 remains unpublished.
