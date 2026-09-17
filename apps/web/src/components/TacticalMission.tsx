@@ -1,7 +1,7 @@
 import { AlertTriangle, Check, LoaderCircle, ShieldCheck, Sprout } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
-import type { Conversation } from "../lib/game";
+import { ADVISORS, type Conversation } from "../lib/game";
 import {
   farmerWorkflowApi,
   planningApi,
@@ -125,6 +125,7 @@ export function TacticalMission({
   const [detailCard, setDetailCard] = useState<TacticalCard | null>(null);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const strategyTrayRef = useRef<HTMLDivElement>(null);
+  const mutationLockRef = useRef<string | null>(null);
 
   const refreshWorkflow = useCallback(async () => {
     const next = await farmerWorkflowApi.state();
@@ -194,7 +195,9 @@ export function TacticalMission({
   );
   const constraintActive = Boolean(originalReservation && !inverseComplete);
   const strategies = session?.result?.strategies || [];
-  const selectedStrategy = strategies.find((item) => item.id === session?.selected_strategy_id) || strategies[0];
+  const selectedStrategy = strategies.find(
+    (item) => item.id === session?.selected_strategy_id && item.status === "FEASIBLE" && !item.violations?.length,
+  ) || strategies.find((item) => item.status === "FEASIBLE" && !item.violations?.length);
   const tactical = session?.tactical_context;
   const growSpace = tactical?.grow_space;
   const planningSnapshot = tactical?.planning_snapshot;
@@ -242,7 +245,7 @@ export function TacticalMission({
         title: constraintActive ? "Grow space B3 reserved" : growSpace.title,
         summary: constraintActive
           ? "The reservation is bound to the stored proposal and recalculated planning result."
-          : "Reserve the existing bed-07 grow space across the remaining planning horizon.",
+          : "Keep bed-07 free after its recorded crop clears, through the remaining planning horizon.",
         detail: `${growSpace.area_m2} m² · ${growSpace.system.replaceAll("_", " ")} · ${growSpace.reservation_window.start_date} to ${growSpace.reservation_window.end_date}`,
         entity: { kind: constraintActive ? "proposal" : "grow_space", id: growSpace.id, title: growSpace.title },
         state, stateLabel: state === "pending" ? "Recalculating" : constraintActive ? "Applied" : "Ready",
@@ -272,18 +275,24 @@ export function TacticalMission({
     strategies.forEach((strategy) => {
       const eligibleProposal = sessionProposals.find((item) => item.status === "applied" &&
         item.recalculation_job?.id === (session as { result_id?: string }).result_id);
+      const approvalDisabledReason = strategy.status !== "FEASIBLE"
+        ? "The local planner marked this option infeasible under the current constraints."
+        : strategy.id !== session.selected_strategy_id
+          ? "Only the currently selected feasible option can be approved."
+          : undefined;
       result.push({
         id: `strategy-${strategy.id}`, type: "strategy", eyebrow: "Calculated option", title: `${strategy.name} strategy`,
         summary: strategy.description, entity: { kind: "strategy", id: strategy.id, title: strategy.name },
         state: strategy.id === selectedStrategy?.id ? "selected" : "ready",
         stateLabel: strategy.status, provenance: { sourceTitle: "Stored local planner result", sourceKind: "synthetic", executionMode: "local_cpsat" },
-        boardTargets: strategy.allocations.map((item) => item.bed_id), planning: binding,
+        boardTargets: [...new Set(strategy.allocations.map((item) => item.bed_id))], planning: binding,
         facts: [{ id: "fill", label: "Fill rate", value: `${number(Number(strategy.metrics.fill_rate) * 100, 1)}%` },
           { id: "margin", label: "Margin", value: `SGD ${number(strategy.metrics.margin_sgd, 0)}` }],
         strategy, actions: [
           { id: "preview", kind: "preview", label: "Preview plan", emphasis: "primary" },
           eligibleProposal
-            ? { id: "approve", kind: "approve", label: "Approve", emphasis: "secondary" }
+            ? { id: "approve", kind: "approve", label: "Approve", emphasis: "secondary",
+                disabled: Boolean(approvalDisabledReason), disabledReason: approvalDisabledReason }
             : { id: "compare", kind: "compare", label: "Compare", emphasis: "secondary" },
           details,
         ], suggestedQuestions: ["What is the strongest evidence for this strategy?"],
@@ -315,6 +324,22 @@ export function TacticalMission({
       suggestedQuestions: ["How does the current plan cover this confirmed order?"],
     });
     const task = workflow.tasks.find((item) => sessionProposals.some((proposal) => proposal.id === item.proposal_id));
+    const planner = ADVISORS.find((advisor) => advisor.id === "asha");
+    if (planner) result.push({
+      id: `agent-${planner.id}`, type: "agent", eyebrow: "Council role", title: `${planner.name} · ${planner.role}`,
+      summary: planner.focus, detail: `${planner.location} · ${planner.prompt}`,
+      entity: { kind: "council_role", id: planner.id, title: `${planner.name} · ${planner.role}` },
+      state: "ready", stateLabel: "Advisory",
+      provenance: { sourceTitle: "FarmTact council roster", sourceKind: "advisory_role", executionMode: "explicit_ask_only" },
+      boardTargets: [], planning: binding,
+      facts: [{ id: "boundary", label: "Decision influence", value: "Advisory only" },
+        { id: "trigger", label: "Provider trigger", value: "Explicit submitted question" }],
+      actions: [{ id: "ask-specialist", kind: "ask", label: "Ask specialist", emphasis: "primary",
+        disabled: !askEligible, disabledReason: tactical.scenario.ask_disabled_reason || undefined },
+        { id: "evidence", kind: "details", label: "Evidence" },
+        { id: "role", kind: "details", label: "Role details" }],
+      suggestedQuestions: ["Which option is feasible under the current constraints?", "What evidence limits this recommendation?"],
+    });
     if (task) result.push({
       id: `action-${task.id}`, type: "action", eyebrow: "Sandbox farm task", title: `${task.action.replaceAll("_", " ")} · ${task.crop_id || "farm"}`,
       summary: "The task is revision-bound; results append events and never authorize a physical operation.",
@@ -330,7 +355,8 @@ export function TacticalMission({
       inverseComplete, jobActive, strategies, selectedStrategy, sessionProposals, workflow.tasks]);
 
   const reserve = async () => {
-    if (!session || !growSpace || !selectedStrategy) return;
+    if (!session || !growSpace || !selectedStrategy || mutationLockRef.current) return;
+    mutationLockRef.current = "reserve";
     setBusy("Submitting B3 reservation"); setError("");
     try {
       const assumptions = normalizedAssumptions(session);
@@ -343,16 +369,28 @@ export function TacticalMission({
       setSession(await planningApi.get(session.id));
       await refreshWorkflow();
     } catch (caught) { setBusy(""); setError(errorMessage(caught, "Could not reserve grow space B3.")); }
+    finally { mutationLockRef.current = null; }
   };
 
   const undo = async () => {
-    if (!session || !originalReservation) return;
+    if (!session || !originalReservation || mutationLockRef.current) return;
+    mutationLockRef.current = "undo";
     setBusy("Submitting inverse proposal"); setError("");
     try {
       await farmerWorkflowApi.inverseProposal(originalReservation);
       setSession(await planningApi.get(session.id));
       await refreshWorkflow();
     } catch (caught) { setBusy(""); setError(errorMessage(caught, "Could not submit the inverse proposal.")); }
+    finally { mutationLockRef.current = null; }
+  };
+
+  const calculateBaseline = async () => {
+    if (!session || mutationLockRef.current) return;
+    mutationLockRef.current = "baseline";
+    setBusy("Calculating baseline"); setError("");
+    try { setSession(await planningApi.calculate(session.id, session.revision)); }
+    catch (caught) { setBusy(""); setError(errorMessage(caught, "Could not calculate the baseline.")); }
+    finally { mutationLockRef.current = null; }
   };
 
   const approve = async () => {
@@ -383,6 +421,7 @@ export function TacticalMission({
       return;
     }
     setError("");
+    setDetailCard(null);
     try {
       const advisor = card.entity.kind === "scenario" ? "hana" : card.entity.kind === "order" ? "ravi" :
         card.entity.kind === "crop_batch" ? "mei" : "asha";
@@ -422,12 +461,13 @@ export function TacticalMission({
       demandSummary={{ demandLabel: "Booked demand", demandValue: metrics?.booked_requested_kg == null ? "—" : `${number(metrics.booked_requested_kg, 1)} kg`,
         supplyLabel: "Planned supply", supplyValue: metrics?.booked_delivered_kg == null ? "—" : `${number(metrics.booked_delivered_kg, 1)} kg`,
         gapLabel: "Booked gap", gapValue: metrics?.booked_shortfall_kg == null ? "—" : `${number(metrics.booked_shortfall_kg, 1)} kg`,
-        basis: selectedStrategy ? `${selectedStrategy.name} · stored planner metrics` : "Calculate a local baseline" }}
+        basis: selectedStrategy ? `${selectedStrategy.name} · stored planner metrics` :
+          strategies.length ? "No feasible strategy · diagnostics only" : "Calculate a local baseline" }}
       councilStatus={conversation ? conversation.last_request_status || conversation.status || "Open" : "Not submitted"}
       board={(context) => <TacticalFarmBoard session={session} crops={crops} context={context}
         active={constraintActive} busy={Boolean(busy) || jobActive}
-        onCalculate={async () => { setBusy("Calculating baseline"); setError(""); try { setSession(await planningApi.calculate(session.id, session.revision)); } catch (caught) { setBusy(""); setError(errorMessage(caught, "Could not calculate the baseline.")); } }} />}
-      conversation={conversation ? <ConversationSummary conversation={conversation} /> : detailCard ? <CardDetails card={detailCard} /> : undefined}
+        onCalculate={calculateBaseline} />}
+      conversation={detailCard ? <CardDetails card={detailCard} /> : conversation ? <ConversationSummary conversation={conversation} /> : undefined}
       strategyTray={<div ref={strategyTrayRef}><StrategyTray strategies={strategies} selectedId={selectedStrategy?.id} /></div>}
       moreItems={[
         { id: "data", label: "Data Explorer", onSelect: () => onOpenTool("data") },
@@ -468,10 +508,19 @@ function TacticalFarmBoard({ session, crops, context, active, busy, onCalculate 
 
 function StrategyTray({ strategies, selectedId }: { strategies: Strategy[]; selectedId?: string }) {
   if (!strategies.length) return <p className="tm-empty">No calculated strategy yet.</p>;
-  return <div className="tm-strategies">{strategies.map((strategy) => <article key={strategy.id} className={strategy.id === selectedId ? "is-selected" : ""}>
-    <span>{strategy.status}</span><h3>{strategy.name}</h3><p>{strategy.description}</p>
-    <dl><div><dt>Fill rate</dt><dd>{number(Number(strategy.metrics.fill_rate) * 100, 1)}%</dd></div><div><dt>Margin</dt><dd>SGD {number(strategy.metrics.margin_sgd)}</dd></div><div><dt>Waste</dt><dd>{number(strategy.metrics.waste_kg, 1)} kg</dd></div></dl>
-  </article>)}</div>;
+  const noFeasible = strategies.every((strategy) => strategy.status !== "FEASIBLE");
+  return <div className="tm-strategy-wrap">
+    {noFeasible && <p className="tm-strategy-alert" role="status"><AlertTriangle /> No feasible option under the current constraints. Inspect the violation or undo the latest constraint before approval.</p>}
+    <p className="tm-strategy-hint">{strategies.length} calculated options <span>Swipe sideways to compare</span></p>
+    <div className="tm-strategies">{strategies.map((strategy) => {
+      const violation = (strategy.violations?.[0] || {}) as { constraint_code?: string };
+      return <article key={strategy.id} className={strategy.id === selectedId && strategy.status === "FEASIBLE" ? "is-selected" : ""}>
+        <span>{strategy.status === "FEASIBLE" ? "Feasible" : "Not feasible"}</span><h3>{strategy.name}</h3><p>{strategy.description}</p>
+        {violation.constraint_code && <p className="tm-strategy-violation">Constraint: {violation.constraint_code.toLowerCase().replaceAll("_", " ")}</p>}
+        <dl><div><dt>Fill rate</dt><dd>{number(Number(strategy.metrics.fill_rate) * 100, 1)}%</dd></div><div><dt>Margin</dt><dd>SGD {number(strategy.metrics.margin_sgd)}</dd></div><div><dt>Waste</dt><dd>{number(strategy.metrics.waste_kg, 1)} kg</dd></div></dl>
+      </article>;
+    })}</div>
+  </div>;
 }
 
 function ConversationSummary({ conversation }: { conversation: Conversation }) {
@@ -481,6 +530,7 @@ function ConversationSummary({ conversation }: { conversation: Conversation }) {
     <p className="tm-provider-boundary">Creating this discussion did not contact a provider. Only the submitted question enters the existing bounded DeepSeek workflow.</p>
     <div aria-live="polite">{conversation.messages?.map((message) => <article key={message.id} className={`is-${message.speaker}`}><b>{message.speaker_name || message.speaker}</b><p>{message.content}</p>{message.validation_status && <small>{message.validation_status.replaceAll("_", " ")}</small>}</article>)}</div>
     {["QUEUED", "RUNNING"].includes(conversation.last_request_status || "") && <p className="tm-conversation__running"><LoaderCircle className="tm-spin" /> Specialist response {conversation.last_request_status?.toLowerCase()}</p>}
+    {conversation.last_request_error && <div className="tm-conversation__blocked" role="status"><AlertTriangle /><div><strong>Specialist response unavailable</strong><p>{conversation.last_request_error}</p><small>The stored local plan and code-derived metrics remain available. No fallback dialogue was invented.</small></div></div>}
   </div>;
 }
 

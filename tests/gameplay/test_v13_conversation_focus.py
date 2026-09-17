@@ -101,7 +101,7 @@ def test_b3_focus_is_frozen_trusted_and_selected_bed_compatible(env):
         "snapshot_kind": "planning",
         "snapshot_id": session["id"],
         "focus": {
-            "card_id": "constraint-grow-space-b3",
+            "card_id": "constraint-bed-07",
             "entity_kind": "grow_space",
             "entity_id": "bed-07",
         },
@@ -113,7 +113,7 @@ def test_b3_focus_is_frozen_trusted_and_selected_bed_compatible(env):
 
     assert public["selected_bed_id"] == "bed-07"
     assert public["focus"] == {
-        "card_id": "constraint-grow-space-b3",
+        "card_id": "constraint-bed-07",
         "entity_kind": "grow_space",
         "entity_id": "bed-07",
         "title": "Grow space B3",
@@ -152,7 +152,7 @@ def test_heavy_rainfall_focus_is_planning_bound_scenario_only(env):
         "snapshot_kind": "planning",
         "snapshot_id": session["id"],
         "focus": {
-            "card_id": "evidence-heavy-rainfall",
+            "card_id": "scenario-heavy-rainfall",
             "entity_kind": "scenario",
             "entity_id": "synthetic-heavy-rainfall-v1",
         },
@@ -178,7 +178,24 @@ def test_heavy_rainfall_focus_is_planning_bound_scenario_only(env):
 
 
 def test_focus_rejects_missing_unknown_mismatched_and_client_claimed_entities(env):
-    client, _, _ = env
+    client, store, tenant = env
+    session, _ = _install_planning_snapshot(store, tenant, session_id="focus-rejection")
+
+    mismatched_card = _create(
+        client,
+        {
+            "snapshot_kind": "planning",
+            "snapshot_id": session["id"],
+            "focus": {
+                "card_id": "constraint-bed-08",
+                "entity_kind": "grow_space",
+                "entity_id": "bed-07",
+            },
+        },
+        "focus-card-coordinate-mismatch",
+    )
+    assert mismatched_card.status_code == 422
+    assert mismatched_card.json()["detail"] == "Focused card does not match the frozen entity"
 
     assert _create(
         client,
@@ -235,7 +252,7 @@ def test_focus_idempotency_includes_card_and_entity_coordinates(env):
     client, _, _ = env
     body = {
         "focus": {
-            "card_id": "batch-card-01",
+            "card_id": "crop-batch-batch-01",
             "entity_kind": "batch",
             "entity_id": "batch-01",
         }
@@ -313,7 +330,14 @@ def test_available_snapshot_entity_kinds_resolve_from_server_data(
         client,
         {
             "focus": {
-                "card_id": f"card-{entity_kind}",
+                "card_id": ({
+                    "order": "order-order-0-0",
+                    "crop": "crop-caixin",
+                    "batch": "crop-batch-batch-01",
+                    "agent": "agent-mei",
+                    "role": "agent-mei",
+                    "evidence": "evidence-P01",
+                })[entity_kind],
                 "entity_kind": entity_kind,
                 "entity_id": entity_id,
             }
@@ -340,7 +364,7 @@ def test_strategy_requires_and_uses_the_frozen_planning_result(env):
             "snapshot_kind": "planning",
             "snapshot_id": session["id"],
             "focus": {
-                "card_id": "strategy-balanced",
+                "card_id": f"strategy-{strategy['id']}",
                 "entity_kind": "strategy",
                 "entity_id": strategy["id"],
             },
@@ -357,7 +381,7 @@ def test_strategy_requires_and_uses_the_frozen_planning_result(env):
         client,
         {
             "focus": {
-                "card_id": "strategy-without-result",
+                "card_id": f"strategy-{strategy['id']}",
                 "entity_kind": "strategy",
                 "entity_id": strategy["id"],
             }
@@ -373,7 +397,7 @@ def test_task_focus_fails_closed_when_tasks_are_not_in_frozen_result(env):
         client,
         {
             "focus": {
-                "card_id": "task-card",
+                "card_id": "action-task-not-frozen",
                 "entity_kind": "task",
                 "entity_id": "task-not-frozen",
             }

@@ -82,6 +82,7 @@ export interface Conversation {
   selected_bed_id?: string | null
   last_request_id?: string | null
   last_request_status?: string | null
+  last_request_error?: string | null
   tool_results?: Record<string, unknown>
   typed_facts?: Record<string, RenderedFact>
   evidence_context?: Array<{ evidence_id?: string; title?: string; finding?: string; scope?: string; limit?: string; source_url?: string; access_review_status?: string }>

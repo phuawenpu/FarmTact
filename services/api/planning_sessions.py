@@ -58,6 +58,11 @@ def public_result(result):
     # planning screen receives the corresponding metrics and order attribution.
     for strategy in [*value.get('strategies',[]),value.get('retained_strategy')]:
         if strategy:
+            metrics = strategy.get('metrics') or {}
+            if metrics.get('booked_requested_kg') is not None and metrics.get('booked_delivered_kg') is not None:
+                requested = Decimal(str(metrics['booked_requested_kg']))
+                delivered = Decimal(str(metrics['booked_delivered_kg']))
+                metrics['booked_shortfall_kg'] = float(max(Decimal(0), requested - delivered))
             for key in ('ledger','inventory_snapshots'):
                 strategy.pop(key,None)
     return value
@@ -74,6 +79,17 @@ def public_session(store,tenant,session):
     farm = Farm.model_validate(session['farm'])
     target = next((bed for bed in farm.beds if bed.id == 'bed-07'), None)
     horizon_end = farm.planning_date + timedelta(days=farm.horizon_days - 1)
+    recipes = {recipe.id: recipe for recipe in farm.recipes}
+    occupied_through = max(
+        (
+            batch.harvest_date + timedelta(days=recipes[batch.recipe_id].sanitation_days)
+            for batch in farm.batches
+            if batch.bed_id == 'bed-07' and batch.executed
+        ),
+        default=farm.planning_date - timedelta(days=1),
+    )
+    reservation_start = max(farm.planning_date, occupied_through + timedelta(days=1))
+    reservation_window_available = reservation_start <= horizon_end
     planning_ready = bool(session.get('result_id') and session.get('status') == 'COMPLETED')
     reservation_active = any(
         row.get('bed_id') == 'bed-07'
@@ -92,10 +108,11 @@ def public_session(store,tenant,session):
                         'title': f'Keep grow space {target.name} free', 'name': target.name,
                         'area_m2': float(target.area_m2), 'system': target.system,
                         'source': 'Frozen planning snapshot',
-                        'reservation_window': {'start_date': str(farm.planning_date), 'end_date': str(horizon_end)},
+                        'reservation_window': {'start_date': str(reservation_start), 'end_date': str(horizon_end)},
                         'reservation_active': reservation_active,
-                        'reserve_eligible': planning_ready and not reservation_active,
+                        'reserve_eligible': planning_ready and reservation_window_available and not reservation_active,
                         'reserve_disabled_reason': ('This grow space is already reserved.' if reservation_active else
+                            'No free reservation window remains after the recorded B3 crop.' if not reservation_window_available else
                             None if planning_ready else 'Complete the local baseline calculation first.'),
                         'ask_eligible': planning_ready,
                         'ask_disabled_reason': None if planning_ready else 'Complete the local baseline calculation first.'} if target else None),
@@ -419,6 +436,21 @@ def queue_recalculation(store, tenant_id, session, changes):
     session.update(workflow_version='farmer-workflow-v1',job={k:v for k,v in job.items() if k!='input'},status='QUEUED',revision=session['revision']+1)
     save_session(store,tenant_id,session)
     return {k:v for k,v in job.items() if k!='input'}
+
+
+def queue_inverse_recalculation(store, tenant_id, session, changes, base_result_id, base_strategy_id):
+    """Queue an exact inverse from its last feasible source even if the current result is infeasible."""
+    current_result_id = session.get('result_id')
+    current_selected_strategy_id = session.get('selected_strategy_id')
+    baseline = deepcopy(session)
+    baseline['result_id'] = base_result_id
+    baseline['selected_strategy_id'] = base_strategy_id
+    job = queue_recalculation(store, tenant_id, baseline, changes)
+    session.update(job=deepcopy(baseline['job']), status=baseline['status'], revision=baseline['revision'])
+    session['result_id'] = current_result_id
+    session['selected_strategy_id'] = current_selected_strategy_id
+    save_session(store, tenant_id, session)
+    return job
 
 
 def approve_result(store, tenant_id, session, proposal, result, strategy_id):

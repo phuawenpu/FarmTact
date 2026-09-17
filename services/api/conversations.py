@@ -409,6 +409,28 @@ def _focus_not_found() -> None:
     raise HTTPException(422, "Focused entity is outside the frozen snapshot")
 
 
+def _canonical_focus_card_id(kind: str, entity_id: str) -> str:
+    prefixes = {
+        "bed": "constraint-",
+        "grow_space": "constraint-",
+        "strategy": "strategy-",
+        "order": "order-",
+        "crop": "crop-",
+        "batch": "crop-batch-",
+        "task": "action-",
+        "action": "action-",
+        "role": "agent-",
+        "agent": "agent-",
+        "evidence": "evidence-",
+        "scenario": "scenario-",
+    }
+    if kind == "scenario" and entity_id == "synthetic-heavy-rainfall-v1":
+        return "scenario-heavy-rainfall"
+    if kind == "role":
+        entity_id = ROLE_TO_ADVISOR.get(entity_id, entity_id)
+    return f"{prefixes[kind]}{entity_id}"
+
+
 def _derive_focus(
     frozen: dict[str, Any], requested: ConversationFocus
 ) -> dict[str, Any]:
@@ -618,6 +640,9 @@ def _derive_focus(
             _focus_not_found()
     else:  # pragma: no cover - the strict Literal rejects this at the API edge.
         _focus_not_found()
+
+    if requested.card_id != _canonical_focus_card_id(kind, entity_id):
+        raise HTTPException(422, "Focused card does not match the frozen entity")
 
     return {
         "card_id": requested.card_id,
@@ -870,6 +895,8 @@ def _public_conversation(
         new_calculation_occurred=False,
         contract_versions=conversation.get("contract_versions", CONVERSATION_VERSIONS.public()),
     )
+    if (last_request or {}).get("error"):
+        public["last_request_error"] = last_request["error"]
     if replay:
         public["replay_of"] = conversation["id"]
     return public

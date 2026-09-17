@@ -24,6 +24,7 @@ from services.api.security import (
     AI_IP_BURST,
     AI_IP_HOUR,
     AI_TENANT,
+    SESSION_IP,
     STREAM_IP,
     AbuseLimits,
     AbuseMiddleware,
@@ -304,13 +305,13 @@ def test_new_session_limits_cover_rotated_invalid_cookies_and_global_principal()
     store = Store("sqlite://")
     app = create_app(store, start_worker=False)
     with TestClient(app, client=("203.0.113.91", 50000)) as client:
-        for index in range(11):
+        for index in range(SESSION_IP.limit + 1):
             client.cookies.clear()
             client.cookies.set("farmtact_session", f"invalid-rotated-{index}")
             response = client.get("/api/v1/bootstrap")
-            assert response.status_code == (200 if index < 10 else 429)
+            assert response.status_code == (200 if index < SESSION_IP.limit else 429)
         with store.engine.connect() as connection:
-            assert connection.execute(select(func.count()).select_from(tenants)).scalar_one() == 10
+            assert connection.execute(select(func.count()).select_from(tenants)).scalar_one() == SESSION_IP.limit
 
     global_store = Store("sqlite://")
     limits = AbuseLimits(global_store, clock=MutableClock(), trust_fly=False)

@@ -91,6 +91,50 @@ def test_workflow_state_exposes_available_then_submitted_undo_reason(setup):
     assert after["undo"] == {"available": False, "reason": "Undo has already been submitted."}
 
 
+def test_recalculated_consequences_follow_the_result_selected_strategy(setup):
+    store, tenant, _, adapter = setup
+    proposal = farm_workflow.create_proposal(
+        store, tenant, adapter=adapter, session_id="session-1", base_revision=2,
+        changes=reservation(), selected_strategy_id="balanced",
+        idempotency_key="metric-binding-reserve",
+    )
+    farm_workflow.apply_proposal(
+        store, tenant, proposal["id"], adapter=adapter,
+        expected_base_revision=2, idempotency_key="metric-binding-apply",
+    )
+    result = {
+        "id": "job-1",
+        "strategies": [
+            {"id": "lean-recalculated", "name": "Lean", "metrics": {
+                "booked_requested_kg": 10, "booked_delivered_kg": 4,
+                "closing_stock_kg": 1, "waste_kg": 1, "margin_sgd": 11,
+            }},
+            {"id": "balanced-recalculated", "name": "Balanced", "metrics": {
+                "booked_requested_kg": 10, "booked_delivered_kg": 7,
+                "closing_stock_kg": 2, "waste_kg": 2, "margin_sgd": 22,
+            }},
+        ],
+    }
+    adapter.session.update(
+        result_id="job-1", selected_strategy_id="balanced-recalculated",
+        status="COMPLETED", revision=4,
+    )
+    with store.connection(write=True) as connection:
+        connection.execute(planning_sessions.VERSIONS.insert().values(
+            id="job-1", tenant_id=tenant, session_id="session-1", payload=result,
+        ))
+        connection.execute(update(planning_sessions.SESSIONS).where(
+            planning_sessions.SESSIONS.c.id == "session-1",
+            planning_sessions.SESSIONS.c.tenant_id == tenant,
+        ).values(status="COMPLETED", payload=deepcopy(adapter.session)))
+
+    visible = next(item for item in farm_workflow.workflow_state(store, tenant)["proposals"]
+                   if item["id"] == proposal["id"])
+    assert visible["recalculated_strategy_id"] == "balanced-recalculated"
+    assert visible["recalculated_metrics"]["coverage_kg"] == 7
+    assert visible["recalculated_metrics"]["margin_sgd"] == 22
+
+
 def test_planning_session_exposes_server_bound_scenario_and_b3_context(setup):
     store, tenant, _, _ = setup
     farm = synthetic_farm().model_dump(mode="json")
@@ -108,7 +152,7 @@ def test_planning_session_exposes_server_bound_scenario_and_b3_context(setup):
         "id": "bed-07", "entity_kind": "grow_space", "title": "Keep grow space B3 free",
         "name": "B3", "area_m2": 20.0, "system": "sheltered_hydroponic",
         "source": "Frozen planning snapshot",
-        "reservation_window": {"start_date": "2026-09-08", "end_date": "2026-11-02"},
+        "reservation_window": {"start_date": "2026-10-01", "end_date": "2026-11-02"},
         "reservation_active": False, "reserve_eligible": False,
         "reserve_disabled_reason": "Complete the local baseline calculation first.",
         "ask_eligible": False,

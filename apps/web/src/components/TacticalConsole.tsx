@@ -92,7 +92,7 @@ export interface TacticalPlanningBinding {
 
 export interface TacticalCardProvenance {
   sourceTitle: string;
-  sourceKind: "public" | "synthetic" | "farm_record" | "farmer_reported";
+  sourceKind: "public" | "synthetic" | "farm_record" | "farmer_reported" | "advisory_role";
   observedAt?: string | null;
   retrievedAt?: string | null;
   freshness?: string;

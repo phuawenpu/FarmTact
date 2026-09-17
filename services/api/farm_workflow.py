@@ -412,7 +412,14 @@ def apply_inverse_proposal(store, tenant: str, proposal_id: str, *, adapter: Pla
             "source_candidates": [], "source_conversation": None, "created_at": now(),
             "updated_at": now(), "version": VERSION,
         }
-        job = adapter.queue_recalculation(store, tenant, session, deepcopy(inverse_changes))
+        queue_inverse = getattr(adapter, "queue_inverse_recalculation", None)
+        if queue_inverse:
+            job = queue_inverse(
+                store, tenant, session, deepcopy(inverse_changes),
+                original.get("result_id"), original.get("selected_strategy_id"),
+            )
+        else:
+            job = adapter.queue_recalculation(store, tenant, session, deepcopy(inverse_changes))
         inverse.update(applied_session_revision=session["revision"], applied_input_hash=session.get("input_hash"),
                        recalculation_job=job)
         original.update(inverse_proposal_id=inverse["id"], inverse_submitted_at=now(), updated_at=now())
@@ -675,8 +682,18 @@ def workflow_state(store, tenant: str) -> dict[str, Any]:
         job_id = item.get("recalculation_job", {}).get("id")
         bound_result = planning_sessions.get_result(store, tenant, job_id) if job_id else None
         if bound_result:
-            after_metrics = calculated_metrics(bound_result, item.get("selected_strategy_id"))
+            # Strategy IDs are content-derived and therefore change after a
+            # recalculation. Bind consequences to the result's stored selected
+            # strategy, rather than silently falling back to the first (Lean)
+            # strategy when the proposal's source ID no longer exists.
+            bound_session = planning_sessions.get_session(store, tenant, item["session_id"])
+            selected_id = item.get("selected_strategy_id")
+            if (bound_session and bound_session.get("result_id") == job_id
+                    and bound_session.get("selected_strategy_id")):
+                selected_id = bound_session["selected_strategy_id"]
+            after_metrics = calculated_metrics(bound_result, selected_id)
             before_metrics = item.get("calculated_metrics", {})
+            item["recalculated_strategy_id"] = selected_id
             item["recalculated_metrics"] = after_metrics
             item["metric_deltas"] = {
                 key: (None if before_metrics.get(key) is None or value is None
@@ -768,6 +785,10 @@ def register(app, tenant):
             if not hasattr(planning_sessions, "queue_recalculation"):
                 raise ValueError("Workflow recalculation adapter unavailable")
             return planning_sessions.queue_recalculation(store, tenant_id, session, changes)
+        def queue_inverse_recalculation(self, store, tenant_id, session, changes, base_result_id, base_strategy_id):
+            return planning_sessions.queue_inverse_recalculation(
+                store, tenant_id, session, changes, base_result_id, base_strategy_id
+            )
         def approve_result(self, store, tenant_id, session, proposal, result, strategy_id):
             if not hasattr(planning_sessions, "approve_result"):
                 raise ValueError("Workflow approval adapter unavailable")
