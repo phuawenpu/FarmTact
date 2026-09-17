@@ -1,5 +1,10 @@
 # V14: one farm, one decision, one action area
 
+Follow-up: the [live UX review](../reports/v14/animation-explanation-review.md) found
+explanation, motion and capability-access gaps despite the completed technical
+journey. The [proposed V15 integration spec](v15-integrated-card-experience.md)
+addresses them and is being implemented privately; acceptance and publication remain pending. This document remains the historical V14 plan.
+
 Approved scope: replace the edition chooser with an illustrated, animated introduction
 at `/`; serve the latest game at `/play`. Retire old public editions while retaining
 immutable source/image history and recoverable state. No public version navigation.

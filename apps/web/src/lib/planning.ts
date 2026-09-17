@@ -42,6 +42,9 @@ export interface OrderChange {
   price_sgd_per_kg?: number;
 }
 export interface PlanningAssumptions {
+  tentative_orders?: FarmerAssumptions["tentative_orders"];
+  reservations?: FarmerAssumptions["reservations"];
+  capacity?: FarmerAssumptions["capacity"];
   future_demand: FutureDemandAssumption[];
   seasonal: SeasonalAssumption[];
   order_changes: OrderChange[];

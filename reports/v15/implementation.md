@@ -125,3 +125,20 @@ inverse, approval, simulation, reported delivery/correction and read-only replay
 It made zero provider submissions. This is local evidence only; staging and
 publication remain pending. Final focused browser reruns are in progress and
 any failing report remains a release gate until resolved.
+
+Final parity audit follow-up (17 September, 13:18 UTC): Records' narrow real-service
+journey passes 12 checks, including XLSX review/rejection, completed task reporting,
+non-default note correction, reported forecast and event replay. Final Knowledge,
+Research and broad tools runs pass 12, 18 and 30 checks. Planning now displays
+confirmed totals, separate tentative demand and the planning horizon, and offers
+a reviewed demand-edit path. History sorts saved objects and shows their status,
+date and provenance; saved-plan replay offers a reviewed new attempt from the
+current imported farm. Seven additional real-service Plan/History checks pass.
+
+The audit also found missing conversation-to-experiment branching and unclear
+dataset policy semantics; those are being tested against existing supported APIs.
+The scenario API always calculates all policies, so the UI now says that explicitly.
+Card-binding verification found form eligibility metadata out of step with disabled
+buttons; final checks are verifying the correction. A resumed shell also needs to
+distinguish general proposals from reservation-specific drafts. These remain
+acceptance work, not waived limitations. No V15 staging or publication has occurred.

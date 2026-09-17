@@ -1,0 +1,75 @@
+{
+  "started_at": "2026-09-17T13:07:44.273Z",
+  "base_url": "http://127.0.0.1:4196",
+  "checks": [
+    {
+      "name": "order card exposes identity quantity and date",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "bed path renders facts or explicit empty state",
+      "pass": true,
+      "detail": "Stable record ID | System | Area | Reported crop | Batch ID :: sult · coverage kg ±0 kg · surplus kg ±0 kg · expiry kg ±0 kg\n\nFarm tools › Records & work\n\nRecords & work\nGrowing spaces\n\nSandbox farm · real operations disabled\n\nPrevious\nBed 1 of 16\nNext\nGrowing Space · Bed-01\nA1\nREPORTED\nStable Record ID\nbed-01\nSystem\nsheltered hydroponic\nArea\n20 m²\nReported Crop\nNone\nBatch ID\nNone\n\nThe reported stage is a farm record; future allocations are projections.\n\nBack"
+    },
+    {
+      "name": "inventory path renders facts or explicit empty state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "real XLSX upload creates parsed accounting candidate",
+      "pass": true,
+      "detail": "{\"candidate_id\":\"fin-3d9f3428ae84a63401e99766\",\"tenant_id\":\"52ea3f0d6a9702294edede8a1382eabe\",\"source_name\":\"v15-records-1789650468578.xlsx\",\"source_sha256\":\"534b1e958afa32884abf9f80da3857b6efae2c22d0f11b45478bbd292f513a4c\",\"media_type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"import_kind\":\"accounting_export\",\"created_at\":\"2026-09-17 13:07:48.711251+00:00\",\"rows\":[{\"row_number\":2,\"occurred_on\":\"2026-09-17\",\"kind\":\"expense\",\"reference\":\"XLSX-1789650468578\",\"description\":\"XLSX nutrients\",\"quantity\":null,\"unit\":null,\"amount_sgd\":\"9.75\",\"crop_id\":null,\"corrects_reference\":null,\"provenance\":{\"source_name\":\"v15-records-1789650468578.xlsx\",\"source_sha256\":\"534b1e958afa32884abf9f80da3857b6efae2c22d0f11b45478bbd292f513a4c\",\"row_number\":2}}],\"warnings\":[],\"status\":\"candidate\",\"reviewed_at\":null,\"reviewed_by\":null,\"source_kind\":\"accounting_export\",\"authority\":\"review_candidate\",\"reconciliation\":{\"source_row_count\":1,\"counted_row_count\":1,\"duplicate_references\":[],\"correction_row_count\":0,\"correction_semantics\":\"target_category_signed_delta\",\"revenue_sgd\":\"0\",\"expense_sgd\":\"9.75\",\"net_sgd\":\"-9.75\",\"quantity_by_unit\":{},\"resolved_corrections\":[]}}"
+    },
+    {
+      "name": "candidate rejection persists without authority",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "image outage retains file and makes one controlled request",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "task card binds completed-result prerequisite",
+      "pass": true,
+      "detail": "task-23afcb2072d51ac516d5b2c1"
+    },
+    {
+      "name": "completed result submitted through task card",
+      "pass": true,
+      "detail": "{\"id\":\"task-23afcb2072d51ac516d5b2c1\",\"tenant_id\":\"52ea3f0d6a9702294edede8a1382eabe\",\"session_id\":\"a06e7f63867a58e506f7cfbb9cc6c233\",\"proposal_id\":\"7d12246b31e13f01e8a54a0782de61f5\",\"proposal_revision\":2,\"action\":\"harvest\",\"due_date\":\"2026-09-28\",\"crop_id\":\"caixin\",\"batch_id\":\"batch-05\",\"location\":\"bed-05\",\"biological_dates\":{\"sow_date\":\"2026-08-31\",\"transplant_date\":\"2026-09-07\",\"harvest_date\":\"2026-09-28\"},\"checklist\":[\"Weigh accepted crop\",\"Record rejected crop\"],\"photo_required\":false,\"planned_quantity\":44,\"actual_quantity\":\"44\",\"unit\":\"kg\",\"status\":\"completed\",\"event_revision\":1,\"created_at\":\"2026-09-17T13:08:05.084714+00:00\",\"updated_at\":\"2026-09-17T13:08:08.459298+00:00\",\"real_operations_enabled\":false,\"reported_result_status\":\"completed\",\"rejected_quantity\":null,\"result_note\":\"Completed through Records gaps acceptance\",\"photo_reference\":null,\"checklist_completed\":[\"Weigh accepted crop\",\"Record rejected crop\"],\"forecast_feedback\":{\"planned_quantity\":\"44.0\",\"actual_quantity\":\"44\",\"delta_quantity\":\"0.0\",\"unit\":\"kg\",\"basis\":\"farmer_reported_unverified\"},\"recovery\":{\"required\":false}}"
+    },
+    {
+      "name": "completed task remains addressable for correction",
+      "pass": true,
+      "detail": "task-23afcb2072d51ac516d5b2c1"
+    },
+    {
+      "name": "non-default result-note correction is audited",
+      "pass": true,
+      "detail": "{\"id\":\"task-23afcb2072d51ac516d5b2c1\",\"tenant_id\":\"52ea3f0d6a9702294edede8a1382eabe\",\"session_id\":\"a06e7f63867a58e506f7cfbb9cc6c233\",\"proposal_id\":\"7d12246b31e13f01e8a54a0782de61f5\",\"proposal_revision\":2,\"action\":\"harvest\",\"due_date\":\"2026-09-28\",\"crop_id\":\"caixin\",\"batch_id\":\"batch-05\",\"location\":\"bed-05\",\"biological_dates\":{\"sow_date\":\"2026-08-31\",\"transplant_date\":\"2026-09-07\",\"harvest_date\":\"2026-09-28\"},\"checklist\":[\"Weigh accepted crop\",\"Record rejected crop\"],\"photo_required\":false,\"planned_quantity\":44,\"actual_quantity\":\"44\",\"unit\":\"kg\",\"status\":\"completed\",\"event_revision\":2,\"created_at\":\"2026-09-17T13:08:05.084714+00:00\",\"updated_at\":\"2026-09-17T13:08:15.414944+00:00\",\"real_operations_enabled\":false,\"reported_result_status\":\"completed\",\"rejected_quantity\":null,\"result_note\":\"Corrected farmer note through Records UI\",\"photo_reference\":null,\"checklist_completed\":[\"Weigh accepted crop\",\"Record rejected crop\"],\"forecast_feedback\":{\"planned_quantity\":\"44.0\",\"actual_quantity\":\"44\",\"delta_quantity\":\"0.0\",\"unit\":\"kg\",\"basis\":\"farmer_reported_unverified\"},\"recovery\":{\"required\":false}}"
+    },
+    {
+      "name": "Verify card exposes farmer-reported forecast and source result",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Records history replays task event read-only",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "prerequisites": [
+    "Created and approved proposal 7d12246b31e13f01e8a54a0782de61f5; task decisions below use UI."
+  ],
+  "controlled_fixtures": [
+    "One labelled PNG extraction 503 was fulfilled in-browser before backend/provider access."
+  ],
+  "finished_at": "2026-09-17T13:08:22.144Z",
+  "status": "PASSED"
+}

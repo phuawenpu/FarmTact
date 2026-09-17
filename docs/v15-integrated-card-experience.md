@@ -1,10 +1,11 @@
 # V15 proposal: one farm table, full planning depth
 
 Status: implementation in progress, 17 September 2026. Requested after the live V14
-animation/explanation and functionality review. Nothing in this document claims
-implementation, validation, publication or permission to change a published edition.
-V14 remains immutable. A future implementation uses a new feature branch and a new
-numbered release after acceptance. Historical source, images and private state stay
+animation/explanation and functionality review. The implementation is on `feature/v15-integrated-cards`;
+[the implementation report](../reports/v15/implementation.md) records actual checks
+and remaining gates. This specification alone does not establish acceptance or
+publication. V14 remains immutable. V15 receives a new numbered release only after
+acceptance. Historical source, images and private state stay
 preserved; old public editions are not restored.
 
 Evidence: [live review and capability comparison](../reports/v14/animation-explanation-review.md).

@@ -14,6 +14,7 @@ try {
   page.on('request', request => { if (request.method() === 'POST') writes++; });
   await page.goto(base); await page.locator('.ic-shell').waitFor();
   const click = name => page.getByRole('button', { name, exact: true }).filter({ visible: true }).click();
+  for(let i=0;i<6&&!await page.getByRole('button',{name:'More',exact:true}).isVisible();i++)await click('Back');
   await click('More'); await click('Open tool');
   const capture = async () => {
     await page.getByRole('button', { name: 'Open', exact: true }).scrollIntoViewIfNeeded();
@@ -23,6 +24,9 @@ try {
   };
   const planScroll = await capture();
   await click('Open'); await page.getByRole('heading', { name: 'Objectives and all demand' }).waitFor();
+  await click('Review demand changes'); await page.getByLabel('Planning assumptions JSON').waitFor(); await click('Back');
+  await page.getByRole('heading', { name: 'Objectives and all demand' }).waitFor(); await page.waitForTimeout(100);
+  check('Demand editor Back restores the originating objective and action focus', await page.getByRole('button', { name: 'Review demand changes', exact: true }).evaluate(e => e === document.activeElement));
   await click('Back'); await page.waitForTimeout(100);
   check('Plan Back restores original action focus', await page.getByRole('button', { name: 'Open', exact: true }).evaluate(e => e === document.activeElement));
   check('Plan Back restores scroll', Math.abs(await page.evaluate(() => window.scrollY) - planScroll) < 3);

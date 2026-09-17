@@ -1,7 +1,7 @@
 ## Proposed V15 explanation/admission amendment — 17 September 2026
 
-The [integrated card specification](docs/v15-integrated-card-experience.md) is pending
-implementation. Deterministic Explain must expose causes, changed allocations,
+The [integrated card specification](docs/v15-integrated-card-experience.md) is being
+implemented privately; acceptance and publication remain pending. Deterministic Explain must expose causes, changed allocations,
 tradeoffs and source identity without inference; provenance alone is insufficient.
 Restored Council/conversation cards retain frozen validated focus, complete recorded
 threads, citations and withheld/partial status. Guidance shares the ordinary sandbox planning identity and does not duplicate farm state. Opening/replaying evidence, animation and numerical planning

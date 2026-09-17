@@ -1,0 +1,35 @@
+{
+  "base": "http://127.0.0.1:4196",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Objectives show full confirmed total, tentative distinction and server horizon",
+      "pass": true
+    },
+    {
+      "name": "Server rejects invalid capacity on apply and retains its draft without a revision change",
+      "pass": true
+    },
+    {
+      "name": "Reviewed resource and demand proposal persists all supported assumption groups without applying",
+      "pass": true
+    },
+    {
+      "name": "History lists newest plan with status, date and provenance",
+      "pass": true
+    },
+    {
+      "name": "Historical new attempt explicitly reviews current imported farm",
+      "pass": true
+    },
+    {
+      "name": "History new attempt creates a separate session and preserves saved replay",
+      "pass": true
+    },
+    {
+      "name": "Focused planning and history workflow makes no provider submission",
+      "pass": true
+    }
+  ],
+  "failures": []
+}

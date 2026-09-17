@@ -9,6 +9,18 @@ verification. Bounded specialists: parity owns docs/v15-capability-checklist.md;
 card_shell owns IntegratedCards.tsx/css; workflow_cards owns IntegratedRecords.tsx/css.
 No recursive delegation. Specialists requested the offered gpt-5.6-sol model.
 
+## Final V15 parity audit ownership — 17 September, 13:20 UTC
+
+- Root: Plan, History, shared contracts/types, integration, regression and release.
+- `card_shell`: shell draft/tool precedence, canonical card metadata and responsive/return checks.
+- `workflow_cards`: Records forms, live eligibility/action authority and records workflow verification.
+- `parity`: Knowledge/Research verification complete; now owns Experiments conversation branching,
+  dataset policy wording, changed-control presentation and focused tests.
+
+Specialists edit only their components/tests and their capability-checklist sections.
+Root coordinates builds to avoid removing assets during browser verification. Publication
+remains gated on full parity; the audit's newly found gaps are not waived as limitations.
+
 # Current specification work: V15 integrated card experience
 
 The 17 September live [animation/explanation and capability review](../reports/v14/animation-explanation-review.md)
