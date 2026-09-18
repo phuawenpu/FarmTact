@@ -1,0 +1,35 @@
+[
+  {
+    "id": "c3760c91369be4b0cd10184e71f27d52",
+    "status": "FAILED",
+    "stage": "records",
+    "result_id": null,
+    "job": {
+      "id": "c34056d7cee45c970a4c858620b7a644",
+      "kind": "calculate",
+      "status": "FAILED",
+      "stage": "failed",
+      "created_at": "2026-09-18T02:49:45.029051+00:00",
+      "started_at": "2026-09-18T02:49:45.507395+00:00",
+      "completed_at": "2026-09-18T02:52:45.269675+00:00",
+      "error": "ValueError: Cannot close a process while it is still running. You should first call join() or terminate()."
+    },
+    "error": null,
+    "updated_at": "2026-09-18T02:52:47.425853+00:00"
+  },
+  {
+    "id": "c34056d7cee45c970a4c858620b7a644",
+    "status": "FAILED",
+    "kind": "calculate",
+    "created_at": "2026-09-18T02:49:45.029051+00:00",
+    "detail": {
+      "status": "FAILED",
+      "stage": "failed",
+      "error": "ValueError: Cannot close a process while it is still running. You should first call join() or terminate().",
+      "error_code": null,
+      "started_at": "2026-09-18T02:49:45.507395+00:00",
+      "finished_at": null,
+      "progress": null
+    }
+  }
+]

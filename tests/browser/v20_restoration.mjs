@@ -71,7 +71,12 @@ try {
   );
   const calculate=page.getByRole("button", { name: /Calculate options/ });
   if(await calculate.count())await calculate.click();
-  await page.getByText("Lean", { exact: true }).waitFor({ timeout: 180000 });
+  await Promise.race([
+    page.getByText("Lean", { exact: true }).waitFor({ timeout: 180000 }),
+    page.getByRole('alert').waitFor({timeout:180000}).then(async () => {
+      throw new Error(`Calculation reported an error: ${await page.getByRole('alert').innerText()}`);
+    }),
+  ]);
   check(
     "real numerical calculation returns three options",
     (
@@ -193,7 +198,7 @@ try {
   check('explicit approval persists revision-bound actions',Boolean(approvedProposal)&&durableTasks.length>0,{proposal:approvedProposal?.id,tasks:durableTasks.length});
   if(process.env.EXPECTED_EDITION === 'v21') {
     for(const [label,selector] of [['Act','.action-stage'],['Verify','.task-result-panel']]) {
-      await page.locator('.flow-rail button').filter({hasText:label}).click();
+      await page.locator('.flow-rail button').nth(label === 'Act' ? 4 : 5).click();
       check(`${label} rail focuses saved task workspace`,await page.locator(selector).evaluate(el=>document.activeElement===el));
     }
   }

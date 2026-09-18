@@ -345,6 +345,17 @@ export function FarmerWorkflow({
           </button>
         </div>
       )}
+      {session.job?.status === "FAILED" && (
+        <div className="guided-error" role="alert">
+          <AlertTriangle size={18} />
+          <span>
+            The calculation did not finish. Your saved inputs remain available.{" "}
+            {strategies.length
+              ? "Review the inputs with Apply & Recalculate before trying again."
+              : "Review your records, then try Calculate options again."}
+          </span>
+        </div>
+      )}
       {busy && (
         <div className="guided-running" role="status">
           <LoaderCircle className="spin" />
