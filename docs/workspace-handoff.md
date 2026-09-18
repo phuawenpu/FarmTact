@@ -1,5 +1,61 @@
 # Current handoff — 18 September 2026
 
+## V22 publication, deployment review and security audit exit
+
+`main` is now the V22 line. `feature/v22-council-guidance` was a strict ancestor of
+the old `main`, so it was fast-forwarded (`95a42ad` → `dead5fa`, "Publish immutable
+FarmTact v22") and pushed; no history was rewritten. Publication `dead5fa` precedes
+the documentation commits from this session, including the README live-edition and
+deployment update (`0c9ee90`) and the V22 security audit.
+
+Verified against the live service during this session: app `farmtact`, machine
+`2871575b4544d8`, region `sin`, state started, health check 1/1 reporting
+`{"edition":"v22","source_commit":"ac6c84d09d515eac51802138baceabf84a3c01a8"}`; image
+digest `registry.fly.io/farmtact@sha256:e05b00a575983dfc79d83a41563c3cfe762579475e57d885df414d6705ecdee1`
+matching the registry entry and tag `farmtact-v22`; two containers (public `gateway`
+on 8080 and private `v22` on 8102) from the same pinned digest; encrypted 3-GB volume
+`vol_vdejexpzm8ydn5x4`; `/`, `/play` and `/v22/` return 200 while `/v1/`, `/v13/`,
+`/v20/` and `/v21/` return 410 for reads and mutations.
+
+Documents updated: [README](../README.md) (V22 sections plus the live deployment
+topology and the "generic `fly deploy` is wrong" warning),
+[V22 release evidence](../reports/v22/README.md) (publication status),
+[V22 restart handoff](v22-restart-handoff.md) (marked superseded),
+[security inventory](security.md) (new audit section) and
+[V22 audit report](../reports/security_v22_audit.md) (evidence and commands).
+
+**Open, not fixed.** The running image is immutable, so these belong to the next
+edition (V23) and a regenerated shared-host configuration:
+
+1. High — the `/_control/*` "private only" gate is not an authorization boundary. A
+   public request with `Host: farmtact.flycast` reached the control router (422 empty
+   body, 401 for an invalid bearer) instead of being rejected, and the live
+   rate-limit rows attributed that public request to `127.0.0.1`. Fix by requiring a
+   non-public listener or true loopback transport peer, not address classification.
+2. Medium — install `AbuseMiddleware` (or an equivalent) on the gateway: `/`, static
+   assets, the health probe and `/_control/*` are currently uncounted and unthrottled
+   on the public listener.
+3. Medium — add `Strict-Transport-Security`; the deployment relies on a port-80
+   redirect and `Secure` cookies only.
+4. Low — split `FARMTACT_CONTROL_SECRET` from a separate ingress secret; store fixed
+   error text instead of `str(exc)` in `services/api/planning_sessions.py`; validate
+   upload filename/media type before reserving provider budget; add
+   `Permissions-Policy`.
+
+The rotating-cookie/XFF and forged-`Fly-Client-IP` live admission probes were **not**
+re-run in this session because they deliberately consume the shared per-network AI
+allowance; their last recorded evidence is the V8-era
+[live probe](../reports/security_live_probe.json). Re-run them before the next
+publication, and treat [docs/security.md](security.md) as authoritative over this
+summary.
+
+Exit state: no local development services were started or left running
+(`sprite-env services list` is empty, no listeners on the workspace), no database,
+volume, machine, secret or published edition was modified, and no provider call was
+made. `main` and `origin/main` are identical with a clean worktree. The next unused
+edition is V23; inspect `config/releases/registry.json` before publishing. Historical
+source, images, shared abuse counters and provider budgets remain preserved.
+
 ## Review session exit
 
 The current-app usability review is complete and pushed in `3cd31a2` on

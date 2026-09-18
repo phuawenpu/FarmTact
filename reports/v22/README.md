@@ -7,8 +7,14 @@ bound to the current reviewed result. The opening demonstration is a skippable,
 captioned illustration of the ordinary farm workflow. It cannot create a farm
 record, calculate, or submit an AI request.
 
-The release is not yet published. V21 remains the public edition while V22 waits
-for exact-image acceptance and a valid Fly authentication context.
+The release is published and served from `/` and `/play`. The live machine reports
+edition `v22`, source commit `ac6c84d09d515eac51802138baceabf84a3c01a8` (tag
+`farmtact-v22`) and image digest
+`registry.fly.io/farmtact@sha256:e05b00a575983dfc79d83a41563c3cfe762579475e57d885df414d6705ecdee1`,
+which matches the `v22` entry in `config/releases/registry.json`. Earlier editions
+are retired and return 410. The exact-image operator, preservation and public-entry
+checks performed during publication were not recorded as repository evidence; only
+the verification table below and the live identity above are recorded.
 
 ## Completed verification
 

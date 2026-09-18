@@ -1,4 +1,10 @@
-# V22 restart handoff
+# V22 restart handoff (superseded — V22 published 18 September 2026)
+
+> Historical record. The candidate below was staged, verified and published:
+> V22 is the live edition from source `ac6c84d09d515eac51802138baceabf84a3c01a8`
+> and `feature/v22-council-guidance` was fast-forwarded into `main`. The Fly
+> authentication blocker described at the end was resolved; the resume steps below
+> are retained only as evidence of how the release was staged.
 
 The V22 candidate is committed and pushed on `feature/v22-council-guidance` at
 `57faeb96150f46635aac3198ecd3e75e270aba00`. The worktree was clean at this

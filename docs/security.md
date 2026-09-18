@@ -145,3 +145,49 @@ Strict deadline cancellation, monetary reservation and infrastructure egress rem
 separate requirements; the implemented limits must not be described more broadly.
 
 Anonymous tenant cleanup is an explicit operator action: see the [retention runbook](runbooks/retention.md). The command defaults to a dry run and 30 retained days, enforces a minimum of seven days and a maximum of 500 candidate tenants per invocation, skips any tenant with queued/running mission, scenario, conversation or research work, and preserves shared budgets and security records. Twelve isolated tests cover dry-run, complete child deletion, active/recent retention and input bounds. It is not automatically scheduled.
+
+## Live-deployment audit — 18 September 2026 (V22, findings open)
+
+The running V22 deployment was audited read-only against the published image
+`registry.fly.io/farmtact@sha256:e05b00a575983dfc79d83a41563c3cfe762579475e57d885df414d6705ecdee1`
+(source `ac6c84d09d515eac51802138baceabf84a3c01a8`). Full evidence, commands and
+residual uncertainty are in
+[the V22 audit report](../reports/security_v22_audit.md). No fix has been deployed;
+the published image is immutable, so correction requires the next contiguous edition.
+
+The controls described above still hold where they are enforced. The findings below
+are gaps in *where* they are enforced, and they must not be described as resolved:
+
+- **Control-plane reachability (high).** The `/_control/*` private-only gate in
+  `services/api/edition_gateway.py` relies on address classification from
+  `services/api/security.py`, which is not an authorization boundary. A public
+  request with `Host: farmtact.flycast` reached the control router (422 on an empty
+  body, 401 for an invalid bearer) instead of being rejected; the live rate-limit
+  rows attributed that public request to `127.0.0.1`. The bearer
+  `FARMTACT_CONTROL_SECRET` still rejected the invalid token, and no control action
+  succeeded.
+- **No gateway admission (medium).** `AbuseMiddleware` is installed only in the
+  edition app, so `/`, static assets, the health probe and `/_control/*` are uncounted
+  and unthrottled on the public listener.
+- **No HSTS (medium).** `Strict-Transport-Security` is absent; HTTPS is reached by a
+  port-80 redirect and `Secure` cookies only.
+- **Shared control secret (low).** One `FARMTACT_CONTROL_SECRET` serves both the
+  `/_control/*` bearer and the gateway-to-edition ingress header, so the two trust
+  relationships cannot be rotated separately.
+- **Persisted internal error text (low).** `services/api/planning_sessions.py` stores
+  `type(exc).__name__` plus up to 400 characters of `str(exc)` for unexpected job
+  failures and returns it to the owning session.
+- **Upload validation ordering (low).** One import path validates the filename and
+  media type after the document-extraction provider call is reserved.
+- **Missing `Permissions-Policy` (low).** Framing is already covered by
+  `frame-ancestors 'none'`; `nosniff` and `same-origin` referrers are present.
+
+Verified clean in the same audit: history-wide secret scan, session cookie flags and
+token derivation, retired-edition 410 isolation for reads and mutations, disabled
+public schema/docs/metrics paths, no internal disclosure in response bodies,
+cross-origin rejection without CORS reflection, absence of SQL string interpolation
+or unsafe deserialisation, fixed-path file serving and the provider/egress allowlist.
+The rotating-cookie and forged-identity live probes were **not** re-run because they
+consume the shared per-network AI allowance; their last recorded result is the
+V8-era [live probe evidence](../reports/security_live_probe.json) and they should be
+re-run before the next publication.
