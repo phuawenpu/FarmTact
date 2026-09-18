@@ -1,6 +1,6 @@
 # FarmTact · One farm, one card experience
 
-FarmTact V16 presents the ordinary synthetic farm through one integrated card
+FarmTact V19 is the current unpublished candidate for the ordinary synthetic farm through one integrated card
 shell. The same application is served at
 [the public root](https://farmtact.fly.dev/) and
 [/play](https://farmtact.fly.dev/play): review the current farm, calculate and
@@ -10,13 +10,12 @@ edition chooser. Previous/Next buttons, arrow keys and horizontal swipe provide
 equivalent card navigation; forms and decisions remain inside the active card
 with a bounded action area below it.
 
-V16 is published from source
-`3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
-`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
-It corrects a post-publication V15 defect that could expose raw proposal JSON or
-show an explanation from the wrong planning stage. V15 remains immutable and
-preserved. The next unused publication number is **V17**. Read the
-[V16 implementation evidence](reports/v16/implementation.md),
+V18 remains the published public experience while V19 is verified. V19 brings an
+optional Planning Council checkpoint and layered decision brief onto every calculated
+strategy card, while preserving the ordinary sandbox, complete tool decks,
+revision-bound actions and disabled physical operations. Publication requires a new
+immutable V19 source/image record; V18 data and source remain preserved. Read the
+[V19 decision-brief contract](docs/v19-council-decision-brief.md),
 [V15 capability checklist](docs/v15-capability-checklist.md), and
 [publication policy](docs/deployment/editions.md).
 

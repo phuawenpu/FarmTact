@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "valid V19 target",
+      "pass": true
+    },
+    {
+      "name": "wrong edition container",
+      "pass": true
+    },
+    {
+      "name": "wrong candidate port",
+      "pass": true
+    },
+    {
+      "name": "unbounded port",
+      "pass": true
+    },
+    {
+      "name": "non-numeric port",
+      "pass": true
+    },
+    {
+      "name": "edition path injection",
+      "pass": true
+    },
+    {
+      "name": "unapproved future edition",
+      "pass": true
+    },
+    {
+      "name": "reject malformed source length 0 before SSH",
+      "pass": true
+    },
+    {
+      "name": "reject malformed source length 6 before SSH",
+      "pass": true
+    },
+    {
+      "name": "reject malformed source length 9 before SSH",
+      "pass": true
+    },
+    {
+      "name": "reject malformed source length 40 before SSH",
+      "pass": true
+    }
+  ],
+  "network_requests": 0
+}

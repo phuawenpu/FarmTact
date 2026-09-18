@@ -30,6 +30,15 @@ export interface CardAction {
   eligibilitySource: 'local' | 'server'
   disabledReason?: string
 }
+/** A Council review is advisory, frozen to a calculated planning result, and never grants approval authority. */
+export interface CouncilReviewBinding {
+  sessionId: string
+  revision: number
+  resultId: string | null
+  status: string
+  findingCount: number
+  providerSubmissionRequired: boolean
+}
 export interface FarmCard {
   id: string
   entityId: string
@@ -40,6 +49,7 @@ export interface FarmCard {
   boardTargets: string[]
   actions: CardAction[]
   outcomeBasis: 'projection' | 'recorded_simulation' | 'farmer_reported' | null
+  council?: CouncilReviewBinding | null
 }
 export interface SceneTransition {
   event_id: string

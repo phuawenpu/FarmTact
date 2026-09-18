@@ -5,8 +5,8 @@ import { existsSync } from 'node:fs';
 import { chromium } from '../../apps/web/node_modules/@playwright/test/index.mjs';
 
 const root = resolve(new URL('../..', import.meta.url).pathname);
-const expectedEdition = String(process.env.EXPECTED_EDITION || 'v18').toLowerCase().replace(/^v?/, 'v');
-if (!/^v(?:15|16|17|18)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15 through v18');
+const expectedEdition = String(process.env.EXPECTED_EDITION || 'v19').toLowerCase().replace(/^v?/, 'v');
+if (!/^v(?:15|16|17|18|19)$/.test(expectedEdition)) throw new Error('EXPECTED_EDITION must be v15 through v19');
 const editionNumber = expectedEdition.slice(1);
 const planningSessionKey = `farmtact:${expectedEdition}:planning-session`;
 const staged = process.env.STAGED_SOURCE ? await import('./v17_staged_transport.mjs').then(module => module.stagedTransport(process.env.STAGED_SOURCE)) : null;

@@ -542,6 +542,22 @@ export default function IntegratedCards({
     if (selectedSession.current !== actionSessionId) return;
     await reconcileSession(actionSessionId); await guide("results");
   });
+  const openCouncil = (button: HTMLButtonElement, requestReview = false) => {
+    if (!session) return;
+    const actionSessionId = session.id;
+    rememberOrigin(button); missionIndex.current = activeIndex; missionScroll.current = window.scrollY;
+    const showCouncil = () => {
+      directTool.current = true;
+      setToolTarget({ knowledge: { kind: "council" } }); setSurface("knowledge"); setIndex(0);
+    };
+    if (!requestReview) { showCouncil(); return; }
+    void run("Requesting Planning Council review", async () => {
+      const next = await planningApi.review(actionSessionId, session.revision);
+      if (selectedSession.current !== actionSessionId) return;
+      setSession((current) => newerSession(current, next));
+      showCouncil();
+    });
+  };
   const prepareInverse = () => { if (original) { setReviewInverse(original); setDetail("inverse"); } };
   const acceptInverse = () => reviewInverse && session && run("Recalculating inverse", async () => {
     const actionSessionId = session.id;
@@ -642,6 +658,10 @@ export default function IntegratedCards({
   const selectedStrategy = current?.id.startsWith("strategy-") ? strategies.find((row) => `strategy-${row.id}` === current.id) : undefined;
   const jobRunning = ["QUEUED", "RUNNING"].includes(session.job?.status || "");
   const primaryLabel = !strategies.length ? "Calculate three plans" : current?.id === "situation" ? "View calculated plans" : current?.id?.startsWith("strategy-") ? "Try optional B3 constraint" : current?.id === "reservation" ? taskCount ? "Review sandbox work" : activeProposal ? "Approve actions" : "Review reservation" : current?.id === "approved" ? "Open work records" : current?.id === "simulation-result" ? "Open simulation history" : "Open farm tools";
+  const councilFindings = session.review?.findings || [];
+  const councilStatus = String(session.review?.status || (jobRunning ? session.job?.status : "not requested"));
+  const councilActionLabel = councilFindings.length ? "Read Council findings" : "Ask Council about this plan";
+  const councilReviewUnavailable = !selectedStrategy || jobRunning || Boolean(busy);
   const reservationDecision = current?.id === "reservation" && !taskCount;
   const reservationEligible = !reservationDecision || (activeProposal ? approval?.available !== false : grow?.reserve_eligible !== false);
   const reservationReason = reservationDecision && activeProposal && approval?.available === false ? approval.reason || "Approval is unavailable."
@@ -660,6 +680,10 @@ export default function IntegratedCards({
     { id: "back", label: "Back", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "open-tool", label: "Open tool", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "toggle-guide", label: session.guidance?.skipped ? "Resume guide" : "Skip guide", eligible: !busy && !jobRunning, authority: "server_mutation" as const, eligibilitySource: "local" as const },
+  ] : current?.id.startsWith("strategy-") ? [
+    { id: "explain", label: "Explain", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
+    { id: "council", label: councilActionLabel, eligible: !councilReviewUnavailable, authority: councilFindings.length ? "local_navigation" as const : "server_mutation" as const, eligibilitySource: "server" as const, ...(councilReviewUnavailable ? { disabledReason: jobRunning ? session.job?.stage || "Calculation is in progress." : busy ? "Waiting for server confirmation." : "A calculated strategy is required." } : {}) },
+    { id: "more", label: "More", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
   ] : [
     { id: "explain", label: "Explain", eligible: true, authority: "local_navigation" as const, eligibilitySource: "local" as const },
     { id: "primary", label: primaryLabel, eligible: !busy && !jobRunning && reservationEligible, authority: ["Calculate three plans", "Review reservation", "Approve actions"].includes(primaryLabel) ? "server_mutation" as const : "local_navigation" as const, eligibilitySource: reservationDecision ? "server" as const : "local" as const, ...(reservationReason ? { disabledReason: reservationReason } : jobRunning ? { disabledReason: session.job?.stage || "Calculation is in progress." } : busy ? { disabledReason: "Waiting for server confirmation." } : {}) },
@@ -687,6 +711,7 @@ export default function IntegratedCards({
       resultId: boundResultId || null },
     boardTargets: current.id === "reservation" && grow ? [grow.id] : selectedStrategy ? selectedStrategy.allocations.map((allocation) => allocation.bed_id) : [],
     actions: cardActions,
+    council: selectedStrategy ? { sessionId: session.id, revision: snapshotBinding?.revision ?? session.revision, resultId: boundResultId || null, status: councilStatus, findingCount: councilFindings.length, providerSubmissionRequired: !councilFindings.length } : null,
     outcomeBasis: current.id === "simulation-result" ? "recorded_simulation" : boundResultId ? "projection" : null,
   } : null : null;
 
@@ -699,6 +724,11 @@ export default function IntegratedCards({
   const strategyWhy = currentStrategy && alternativeStrategy
     ? `${strategyStatus} ${currentStrategy.name} compared with feasible ${alternativeStrategy.name}: delivery ${signed(difference(currentStrategy.metrics.fill_rate, alternativeStrategy.metrics.fill_rate, 100), "percentage points")}; shortfall ${signed(difference(currentStrategy.metrics.shortfall_kg, alternativeStrategy.metrics.shortfall_kg), "kg")}; cost ${signed(difference(currentStrategy.metrics.cost_sgd, alternativeStrategy.metrics.cost_sgd), "SGD")}.`
     : undefined;
+  const strategyBrief = currentStrategy ? {
+    allocationCount: currentStrategy.allocations.length,
+    beds: [...new Set(currentStrategy.allocations.map((row) => row.bed_id))],
+    allocations: currentStrategy.allocations.slice(0, 5),
+  } : null;
   const reservationExplanation = reservationExplanationProposal?.explanation;
   const reservationTradeoff = typeof reservationExplanation?.tradeoff === "object"
     ? Object.entries(reservationExplanation.tradeoff).map(([key, value]) => `${key.replaceAll("_", " ")}: ${value == null ? "not available" : typeof value === "number" ? signed(value, key.includes("sgd") ? "SGD" : "kg") : typeof value === "string" ? value : "not reported"}`).join("; ")
@@ -868,9 +898,10 @@ export default function IntegratedCards({
                   {current.id.startsWith("strategy-") && <span className="ic-preview">Preview—not saved</span>}
                   {surface === "mission" && !session.guidance?.skipped && session.guidance?.step !== "results" && <p className="ic-guide-tip"><b>Guide · {(session.guidance?.step || "inspect").replaceAll("_", " ")}</b> {guideTips[session.guidance?.step || "inspect"]}</p>}
                   {"facts" in current && current.facts && <dl>{current.facts.slice(0, 4).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                  {strategyBrief && <section className="ic-decision-brief" aria-label="Decision brief"><header><b>Decision brief</b><span>Projection · frozen result</span></header><p><strong>{strategyBrief.allocationCount}</strong> dated allocation{strategyBrief.allocationCount === 1 ? "" : "s"} across <strong>{strategyBrief.beds.length}</strong> affected grow space{strategyBrief.beds.length === 1 ? "" : "s"}.</p><div className="ic-council-lens"><b>Planning Council</b><span>{councilFindings.length ? `${councilFindings.length} recorded finding${councilFindings.length === 1 ? "" : "s"}` : `${councilStatus.replaceAll("_", " ")} · optional advisory review`}</span></div><details><summary>Decision details</summary><p><b>Affected beds:</b> {strategyBrief.beds.join(", ") || "None reported"}</p><ul>{strategyBrief.allocations.map((row) => <li key={`${row.bed_id}:${row.transplant_date}:${row.harvest_date}`}>{row.bed_id}: {row.crop_id.replaceAll("_", " ")} · {row.transplant_date} → {row.harvest_date} · {num(row.expected_kg)} kg</li>)}</ul><p>Dates and quantities are planner output for this frozen result. The Council can interpret cited facts but cannot change assumptions, approve work, or make a physical operation happen.</p></details></section>}
                   {surface === "mission" && <div className="ic-context-links" aria-label="Relevant tools">
                     {current.id === "situation" && objectiveOrder && <><button onClick={(event) => openContextTool("records", { records: { view: "orders", entityId: objectiveOrder.id } }, event.currentTarget)}>Inspect selected order</button><button onClick={(event) => openContextTool("knowledge", { knowledge: { kind: "crop", id: objectiveOrder.crop_id } }, event.currentTarget)}>Crop evidence</button></>}
-                    {current.id.startsWith("strategy-") && <><button onClick={(event) => openContextTool("plan", { plan: "strategies" }, event.currentTarget)}>Dated schedule</button><button onClick={(event) => openContextTool("knowledge", { knowledge: { kind: "council" } }, event.currentTarget)}>Planning Council</button><button onClick={(event) => openContextTool("experiments", { experiments: "research", research: "overview" }, event.currentTarget)}>Research overview</button></>}
+                    {current.id.startsWith("strategy-") && <><button onClick={(event) => openContextTool("plan", { plan: "strategies" }, event.currentTarget)}>Dated schedule</button><button onClick={(event) => openCouncil(event.currentTarget, !councilFindings.length)}>Planning Council</button><button onClick={(event) => openContextTool("experiments", { experiments: "research", research: "overview" }, event.currentTarget)}>Research overview</button></>}
                     {current.id === "simulation-result" && <button onClick={(event) => openContextTool("history", { history: "simulations" }, event.currentTarget)}>View simulation results</button>}
                   </div>}
                   {surface === "tools" && <div className="ic-tool-index" aria-label="Farm tool categories">{toolCards.map((tool) => <button key={tool.id} onClick={(event) => openIndexedTool(tool.id, undefined, event.currentTarget)}><b>{tool.title}</b><span>{tool.summary}</span></button>)}<button onClick={() => { setDemoStep(0); saveDemo({ step: 0 }); }}><b>Replay demonstration</b><span>Review the factual decision sequence without saving or inference.</span></button></div>}
@@ -887,7 +918,7 @@ export default function IntegratedCards({
                 : detail ? <><button onClick={closeDetail}>Back</button><button className="is-primary" disabled={Boolean(busy || (detail === "review" && !reviewProposal) || (detail === "inverse" && !reviewInverse))} onClick={() => void (detail === "review" ? apply() : detail === "inverse" ? acceptInverse() : closeDetail())}>{busy || (detail === "review" ? "Apply & recalculate" : detail === "inverse" ? "Confirm inverse" : "Back to card")}</button>{detail === "explain" && activeProposal?.undo?.available && current?.id === "reservation" ? <button onClick={prepareInverse}>Review inverse</button> : detail === "explain" ? <button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button> : <button onClick={() => setDetail("explain")}>Details</button>}</>
                 : surface === "tools" ? <><button onClick={returnToMission}>Back</button><button className="is-primary" onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>Open tool</button><button disabled={Boolean(busy || jobRunning)} onClick={() => void guide(session.guidance?.step || "inspect", !session.guidance?.skipped)}>{session.guidance?.skipped ? "Resume guide" : "Skip guide"}</button></>
                 : <><button onClick={(event) => { rememberOrigin(event.currentTarget); setDetail("explain"); }}>Explain</button>
-                  <button className="is-primary" title={reservationReason} disabled={Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { rememberOrigin(event.currentTarget); primary(); }}>{busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "") ? progressLabel(session.job?.stage) : primaryLabel)}</button>
+                  <button className="is-primary" title={current?.id.startsWith("strategy-") ? (councilReviewUnavailable ? (jobRunning ? session.job?.stage || "Calculation is in progress." : busy ? "Waiting for server confirmation." : "A calculated strategy is required.") : undefined) : reservationReason} disabled={current?.id.startsWith("strategy-") ? councilReviewUnavailable : Boolean(!reservationEligible || busy || (surface === "mission" && ["QUEUED", "RUNNING"].includes(session.job?.status || "")) || (current?.id === "reservation" && activeProposal && !taskCount && approval?.available === false))} onClick={(event) => { if (current?.id.startsWith("strategy-")) openCouncil(event.currentTarget, !councilFindings.length); else { rememberOrigin(event.currentTarget); primary(); } }}>{busy ? busy : jobRunning ? progressLabel(session.job?.stage) : current?.id.startsWith("strategy-") ? councilActionLabel : primaryLabel}</button>
                   <button onClick={(event) => { rememberOrigin(event.currentTarget); openTools(); }}>More</button></>}
             </div>
           </nav>

@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "ordinary workflow session is bound to the opening card",
+      "pass": true,
+      "detail": "fa8ee57c4e7914ee30901ce373d55194"
+    },
+    {
+      "name": "local calculation request is accepted",
+      "pass": true,
+      "detail": {
+        "status": 202
+      }
+    },
+    {
+      "name": "local calculation completes",
+      "pass": true,
+      "detail": "COMPLETED"
+    },
+    {
+      "name": "calculated strategy exposes an immutable Council binding",
+      "pass": true,
+      "detail": {
+        "sessionId": "fa8ee57c4e7914ee30901ce373d55194",
+        "revision": 2,
+        "resultId": "e37353538b60dcacdc29ee8fa468ea8a",
+        "status": "not_requested",
+        "findingCount": 0,
+        "providerSubmissionRequired": true
+      }
+    },
+    {
+      "name": "calculated strategy presents a layered decision brief",
+      "pass": true,
+      "detail": "CALCULATED CHOICE\nLean plan\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\nPreview—not saved\n\nGuide · inspect Inspect the confirmed order, available space and planning date before calculating.\n\nAll-demand coverage\n44.5%\nAll-demand shortfall\n604 kg\nHorizon\n56 days\nSelected order\nCoverage not separately reported\nDecision brief\nPROJECTION · FROZEN RESULT\n\n14 dated allocations across 11 affected grow spaces.\n\nPlanning Council\nnot requested · optional advisory review\nDecision details\nDated schedule\nPlanning Council\nResearch overview"
+    },
+    {
+      "name": "strategy preserves the three-action card row",
+      "pass": true,
+      "detail": [
+        "Explain",
+        "Ask Council about this plan",
+        "More"
+      ]
+    },
+    {
+      "name": "brief reading and tool browsing make no provider request",
+      "pass": true,
+      "detail": {
+        "mutations": [
+          "/api/v1/planning-sessions",
+          "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/calculate",
+          "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/review"
+        ],
+        "provider": [
+          "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/review"
+        ]
+      }
+    },
+    {
+      "name": "Council opens only through its explicit primary action",
+      "pass": true,
+      "detail": [
+        "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/review"
+      ]
+    },
+    {
+      "name": "Council card retains a back action and advisory review action",
+      "pass": true,
+      "detail": [
+        {
+          "id": "back",
+          "label": "Back",
+          "eligible": true,
+          "authority": "local_navigation",
+          "eligibilitySource": "local"
+        },
+        {
+          "id": "review-with-council",
+          "label": "Review with Council",
+          "eligible": true,
+          "authority": "server_mutation",
+          "eligibilitySource": "local"
+        }
+      ]
+    }
+  ],
+  "mutations": [
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/calculate",
+    "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/review"
+  ],
+  "provider_requests": [
+    "/api/v1/planning-sessions/fa8ee57c4e7914ee30901ce373d55194/review"
+  ],
+  "failures": []
+}

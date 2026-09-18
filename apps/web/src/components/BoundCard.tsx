@@ -25,6 +25,7 @@ const BoundCard = forwardRef<HTMLElement, Props>(function BoundCard({ card, chil
     data-card-actions={JSON.stringify(card.actions)}
     data-action-authority={JSON.stringify(Object.fromEntries(card.actions.map((action) => [action.id, action.authority])))}
     data-action-eligibility={JSON.stringify(Object.fromEntries(card.actions.map((action) => [action.id, { eligible: action.eligible, source: action.eligibilitySource, reason: action.disabledReason ?? null }] )))}
+    data-council-binding={card.council ? JSON.stringify(card.council) : undefined}
   >{children}</article>
 })
 
