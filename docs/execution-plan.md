@@ -1,3 +1,10 @@
+# V22 active — Council-led V12 workspace
+
+See [approved V22 scope](v22-council-guidance.md). Root owns contracts, API, guidance,
+integration and release; specialists own the bounded Council component, decision
+form/comparison sections and public role/room context. V21 stays published until
+V22 completes verification.
+
 # V21 published: V12 remains the base — 18 September 2026
 
 V20 restored V12 first. V21 is now live from `b980180`, with the original named

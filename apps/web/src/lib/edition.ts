@@ -1,5 +1,5 @@
 export type EditionId = `v${number}`
-export const CURRENT_EDITION: EditionId = 'v21'
+export const CURRENT_EDITION: EditionId = 'v22'
 
 const EDITION_PATH = /^\/(v[1-9][0-9]*)(?:\/|$)/
 

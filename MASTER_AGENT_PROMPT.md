@@ -1,3 +1,9 @@
+## V22 implementation active — 18 September 2026
+
+Follow [V22 Council guidance](docs/v22-council-guidance.md). V12 remains the base.
+Use short role labels, explicit Council submissions and a guided decision loop.
+V21 stays public until V22 passes verification; no physical operations.
+
 ## Current release: V21, improved V12 workspace — 18 September 2026
 
 V20 restored V12 first. V21 is now published at `/` and `/play` from

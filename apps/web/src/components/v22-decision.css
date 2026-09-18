@@ -1,0 +1,103 @@
+.proposal-order-toggle {
+  display: flex !important;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 10px;
+}
+
+.proposal-order-toggle input {
+  width: 20px;
+  min-height: 20px;
+}
+
+.proposal-order-fields {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #c8c2b3;
+  border-radius: 14px;
+}
+
+.proposal-order-fields legend {
+  padding-inline: 6px;
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.proposal-order-fields label,
+.schedule-filters label {
+  display: grid;
+  gap: 6px;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.proposal-order-fields input,
+.proposal-order-fields select,
+.schedule-filters input,
+.schedule-filters select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid #c8c2b3;
+  border-radius: 9px;
+  background: #fff;
+  font: inherit;
+}
+
+.proposal-review,
+.strategy-differences {
+  margin-block: 16px;
+  padding: 14px;
+  border: 1px solid #b7c99b;
+  border-radius: 14px;
+  background: #f0f5df;
+}
+
+.proposal-review h3,
+.proposal-review p,
+.strategy-differences p {
+  margin-block: 6px;
+}
+
+.proposal-review li,
+.proposal-review p,
+.strategy-differences p {
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+.proposal-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.schedule-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-block: 8px 12px;
+}
+
+.metric-strip__coverage {
+  grid-column: span 2;
+}
+
+@media (max-width: 760px) {
+  .proposal-order-fields,
+  .schedule-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .proposal-editor-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .metric-strip__coverage {
+    flex-basis: 210px !important;
+  }
+}

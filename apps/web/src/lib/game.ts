@@ -11,6 +11,7 @@ export interface Advisor {
   prompt: string
   color: string
   roleId: string
+  publicLabel: string
 }
 
 export interface ConversationMessage {
@@ -171,14 +172,37 @@ export interface Quest {
 }
 
 export const ADVISORS: Advisor[] = [
-  { id: 'ravi', name: 'Ravi', role: 'Demand', roleId: 'demand_analyst', location: 'Orders desk', focus: 'Booked demand, shortages and buyer commitments in kg', prompt: 'Which delivery is most exposed?', color: '#4f8d8c' },
-  { id: 'hana', name: 'Hana', role: 'Weather', roleId: 'weather_analyst', location: 'Weather station', focus: 'Public conditions, source time and uncertainty', prompt: 'What conditions should we watch?', color: '#4b80a3' },
-  { id: 'idris', name: 'Idris', role: 'Market', roleId: 'market_analyst', location: 'Market stall', focus: 'Market evidence and explicitly connected community signals', prompt: 'What market evidence is available?', color: '#667457' },
-  { id: 'mei', name: 'Mei', role: 'Production', roleId: 'production_analyst', location: 'Greenhouse', focus: 'Crop development, yield in kg and biological timing', prompt: 'Why is this bed delayed?', color: '#d98164' },
-  { id: 'lina', name: 'Lina', role: 'Supply Chain', roleId: 'supply_chain_analyst', location: 'Packing shed', focus: 'Inventory, harvest arrivals and delivery timing in kg', prompt: 'Where could supply miss delivery?', color: '#c77b54' },
-  { id: 'ben', name: 'Ben', role: 'Profit', roleId: 'profit_analyst', location: 'Accounts desk', focus: 'Cash, cost and contribution margin in SGD', prompt: 'What drives the margin?', color: '#b07746' },
-  { id: 'asha', name: 'Asha', role: 'Planner', roleId: 'planning_chair', location: 'Council pavilion', focus: 'Validated alternatives, constraints and final synthesis', prompt: 'Compare our best alternatives.', color: '#8a6ea8' },
+  { id: 'ravi', name: 'Demand Planner', role: 'Demand', roleId: 'demand_analyst', publicLabel: 'Demand Planner', location: 'Orders desk', focus: 'Booked demand, shortages and buyer commitments in kg', prompt: 'Which delivery is most exposed?', color: '#4f8d8c' },
+  { id: 'hana', name: 'Weather & Risk', role: 'Weather', roleId: 'weather_analyst', publicLabel: 'Weather & Risk', location: 'Weather station', focus: 'Public conditions, source time and uncertainty', prompt: 'What conditions should we watch?', color: '#4b80a3' },
+  { id: 'idris', name: 'Market Analyst', role: 'Market', roleId: 'market_analyst', publicLabel: 'Market Analyst', location: 'Market stall', focus: 'Market evidence and explicitly connected community signals', prompt: 'What market evidence is available?', color: '#667457' },
+  { id: 'mei', name: 'Crop Planner', role: 'Production', roleId: 'production_analyst', publicLabel: 'Crop Planner', location: 'Greenhouse', focus: 'Crop development, yield in kg and biological timing', prompt: 'Why is this bed delayed?', color: '#d98164' },
+  { id: 'lina', name: 'Supply Planner', role: 'Supply Chain', roleId: 'supply_chain_analyst', publicLabel: 'Supply Planner', location: 'Packing shed', focus: 'Inventory, harvest arrivals and delivery timing in kg', prompt: 'Where could supply miss delivery?', color: '#c77b54' },
+  { id: 'ben', name: 'Resource Planner', role: 'Profit', roleId: 'profit_analyst', publicLabel: 'Resource Planner', location: 'Accounts desk', focus: 'Cash, cost and contribution margin in SGD', prompt: 'What drives the margin?', color: '#b07746' },
+  { id: 'asha', name: 'Chair', role: 'Planner', roleId: 'planning_chair', publicLabel: 'Chair', location: 'Council pavilion', focus: 'Validated alternatives, constraints and final synthesis', prompt: 'Compare our best alternatives.', color: '#8a6ea8' },
 ]
+
+const advisorLabelLookup = new Map<string, string>()
+for (const advisor of ADVISORS) {
+  for (const value of [advisor.id, advisor.name, advisor.role, advisor.roleId, advisor.publicLabel]) {
+    advisorLabelLookup.set(value.toLowerCase().replaceAll('-', '_').replaceAll(' ', '_'), advisor.publicLabel)
+  }
+}
+const legacyPublicLabels: Record<string, string> = {
+  weather_risk_monitor: 'Weather & Risk', market_price_analyst: 'Market Analyst',
+  farm_planner: 'Supply Planner', planning_supply: 'Supply Planner', planning_production: 'Crop Planner',
+  planning_demand: 'Demand Planner', planning_weather: 'Weather & Risk', planning_market: 'Market Analyst',
+  planning_profit: 'Resource Planner', planning_planner: 'Chair', chair: 'Chair',
+}
+
+/** Public speaker label for current IDs and preserved historical/backend names. */
+export function publicAdvisorLabel(value: unknown): string {
+  const original = String(value ?? '').trim()
+  if (!original) return 'Council'
+  const key = original.toLowerCase().replaceAll('&', ' ').replaceAll('-', '_').replace(/\s+/g, '_')
+  return advisorLabelLookup.get(key) || legacyPublicLabels[key] || original.replaceAll('_', ' ')
+}
+
+export function advisorPublicLabel(advisor: Pick<Advisor, 'publicLabel'>): string { return advisor.publicLabel }
 
 export const QUEST_FALLBACKS: Quest[] = [
   { id: 'late_harvest', title: 'Late harvest', description: 'Delay a selected batch and test its expected yield.', advisor_id: 'mei', status: 'available' },

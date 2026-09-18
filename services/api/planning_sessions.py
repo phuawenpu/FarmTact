@@ -74,6 +74,11 @@ def public_session(store,tenant,session):
     value['workflow']=session.get('workflow_version')=='farmer-workflow-v1'
     value['guidance']=deepcopy(session.get('guidance', dict(version='integrated-guidance-v1',revision=0,step='inspect',skipped=False)))
     value['result']=public_result(get_result(store,tenant,session.get('result_id')))
+    if value.get('review', {}).get('status') != 'not_requested':
+        matching=[row for row in session.get('review_history', []) if row.get('result_id') == session.get('result_id')]
+        if matching:
+            value['review']['result_id']=matching[-1]['result_id']
+            value['review']['job_id']=matching[-1]['job_id']
     value['farm']['planning_date']=str(Farm.model_validate(session['farm']).planning_date)
     world=get_world(store,tenant,session['world_id']) if session.get('world_id') else None
     value['simulation']=public_world(world) if world else None

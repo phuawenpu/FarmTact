@@ -132,11 +132,14 @@ class CreateConversation(Strict):
     snapshot_id: str | None = Field(default=None, max_length=100)
     selected_bed_id: str | None = Field(default=None, max_length=100)
     focus: ConversationFocus | None = None
+    council_review_result_id: str | None = Field(default=None, max_length=100)
 
     @model_validator(mode="after")
     def scenario_requires_id(self) -> "CreateConversation":
         if self.snapshot_kind in {"scenario", "research", "planning"} and not self.snapshot_id:
             raise ValueError("Scenario conversations require a snapshot_id")
+        if self.council_review_result_id and self.snapshot_kind != "planning":
+            raise ValueError("Council review context requires a planning snapshot")
         return self
 
 
@@ -679,6 +682,13 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         snapshot = deepcopy(guided_result.get('input_snapshot',guided_session['farm']))
         snapshot_id = guided_session['id'] + ':' + guided_session['result_id']
         snapshot_hash = content_hash({'farm':snapshot,'planning_result':guided_result})
+        if body.council_review_result_id:
+            if body.council_review_result_id != guided_session['result_id']:
+                raise HTTPException(409, "Council review belongs to a different result")
+            matching = [entry for entry in guided_session.get('review_history', [])
+                        if entry.get('result_id') == body.council_review_result_id]
+            if not matching:
+                raise HTTPException(409, "Complete a Council review for this result first")
     elif body.snapshot_kind == "research":
         from services.api.council_research import get_session, result_current
         research = get_session(store, tenant, body.snapshot_id)
@@ -835,6 +845,15 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         "source_context": frozen_sources,
         "market_signals": market_signals,
         "news_context": news_context,
+        "council_review": ({
+            "result_id": body.council_review_result_id,
+            "job_id": matching[-1]['job_id'],
+            "status": matching[-1]['review'].get('status'),
+            "findings": [{key: row.get(key) for key in (
+                'role', 'status', 'tradeoff', 'rationale', 'proposed_strategy_id',
+                'rendered_interpretation', 'rendered_facts', 'rejection_reasons')}
+                for row in matching[-1]['review'].get('findings', [])],
+        } if body.council_review_result_id else None),
     }
 
 
@@ -1052,14 +1071,22 @@ def build_conversation_router(
         return {"advisors": list(ADVISORS.values())}
 
     @router.get("")
-    def listing(request: Request, limit: int = 30, before: str | None = None) -> dict[str, Any]:
+    def listing(request: Request, limit: int = 30, before: str | None = None, planning_session_id: str | None = None, result_id: str | None = None) -> dict[str, Any]:
         tenant = tenant_resolver(request)
         persistence = ConversationStore(request.app.state.store)
+        if result_id and not planning_session_id:
+            raise HTTPException(422, "Result filter requires a planning session")
+        if planning_session_id:
+            from services.api.planning_sessions import get_session
+            if not get_session(request.app.state.store, tenant, planning_session_id):
+                raise HTTPException(404, "Planning session not found")
         try:
-            rows = persistence.list_conversations(tenant, limit=limit, before=before)
+            rows = persistence.list_conversations(tenant, limit=limit, before=before,
+                planning_session_id=planning_session_id, result_id=result_id)
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
         return {
+            "next_before": (str(rows[-1]["updated_at"]) + "|" + rows[-1]["id"]) if len(rows) == limit else None,
             "conversations": [
                 _public_conversation(
                     persistence, tenant, row, replay=False, include_messages=False
@@ -1117,6 +1144,8 @@ def build_conversation_router(
             "_source_context": frozen["source_context"],
             "_market_signals": frozen["market_signals"],
             "_news_context": frozen["news_context"],
+            "_council_review": frozen["council_review"],
+            "council_review_result_id": body.council_review_result_id,
         }
         try:
             result, created = persistence.create_conversation(
@@ -1778,6 +1807,7 @@ def _provider_messages(
         "snapshot_ref": conversation["snapshot_ref"],
         "selected_bed_id": conversation.get("selected_bed_id"),
         "focus": _bounded_context_value(conversation.get("focus")),
+        "recorded_council_review": _bounded_context_value(conversation.get("_council_review")),
         "scenario_summary": {
             key: conversation.get("_scenario", {}).get(key)
             for key in (

@@ -12,6 +12,8 @@ from typing import Any
 
 from sqlalchemy import (
     JSON,
+    and_,
+    or_,
     Column,
     ForeignKey,
     ForeignKeyConstraint,
@@ -164,15 +166,27 @@ class ConversationStore:
         return payload, True
 
     def list_conversations(
-        self, tenant: str, *, limit: int = CONVERSATION_LIST_LIMIT, before: str | None = None
+        self, tenant: str, *, limit: int = CONVERSATION_LIST_LIMIT, before: str | None = None,
+        planning_session_id: str | None = None, result_id: str | None = None
     ) -> list[dict[str, Any]]:
         if not 1 <= limit <= CONVERSATION_LIST_LIMIT:
             raise ValueError("Conversation list limit must be from 1 to 30")
         with self.store.connection() as connection:
             updated = conversations.c.payload["updated_at"].as_string()
             query = select(conversations.c.payload).where(conversations.c.tenant_id == tenant)
+            if planning_session_id is not None:
+                ref = conversations.c.payload["snapshot_ref"]
+                query = query.where(ref["kind"].as_string() == "planning")
+                if result_id is not None:
+                    query = query.where(ref["id"].as_string() == planning_session_id + ":" + result_id)
+                else:
+                    query = query.where(ref["id"].as_string().startswith(planning_session_id + ":", autoescape=True))
             if before is not None:
-                query = query.where(updated < before)
+                if '|' in before:
+                    timestamp, cursor_id = before.rsplit('|', 1)
+                    query = query.where(or_(updated < timestamp, and_(updated == timestamp, conversations.c.id < cursor_id)))
+                else:
+                    query = query.where(updated < before)
             rows = connection.execute(
                 query.order_by(updated.desc(), conversations.c.id.desc()).limit(limit)
             ).scalars().all()

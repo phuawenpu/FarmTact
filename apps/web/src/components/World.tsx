@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Hand, BookOpen, CalendarDays, ClipboardList, Crosshair, FlaskConical, List, Minus, Plus, RotateCcw, SlidersHorizontal, Users, Wrench } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Allocation, Bed, Crop, Farm, Run } from '../lib/types'
-import { ADVISORS, type Advisor, type AdvisorId, type ProposedAction, type Scenario } from '../lib/game'
+import { ADVISORS, advisorPublicLabel, type Advisor, type AdvisorId, type ProposedAction, type Scenario } from '../lib/game'
 import { AccessibleFarmView, BedDetailPanel, ConversationPanel, QuestJournal, ScenarioLab } from './GamePanels'
 import { DecisionMissionCard, type DecisionMission } from './DecisionJourney'
 import { NewsPanel } from './NewsPanel'
@@ -18,6 +18,8 @@ interface WorldProps {
   onOpenTools: () => void
   onOpenCrops: () => void
   onOpenOutcomes: () => void
+  guidedPlanAvailable?: boolean
+  onReturnToGuidedPlan?: () => void
 }
 
 const advisorPositions: Record<AdvisorId, { x: number; y: number }> = {
@@ -26,7 +28,7 @@ const advisorPositions: Record<AdvisorId, { x: number; y: number }> = {
 }
 const advisorById = (id: AdvisorId) => ADVISORS.find(advisor => advisor.id === id)!
 
-export function World({ farm, crops, run, mission, executionMode, onOpenTools, onOpenCrops, onOpenOutcomes }: WorldProps) {
+export function World({ farm, crops, run, mission, executionMode, onOpenTools, onOpenCrops, onOpenOutcomes, guidedPlanAvailable, onReturnToGuidedPlan }: WorldProps) {
   const [panel, setPanel] = useState<Panel>(null)
   const [selectedBedId, setSelectedBedId] = useState<string | null>(farm.beds[0]?.id || null)
   const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor>(advisorById('mei'))
@@ -92,6 +94,7 @@ export function World({ farm, crops, run, mission, executionMode, onOpenTools, o
           <button className="world-chip" onClick={onOpenCrops}><BookOpen size={17}/><span>Crop almanac</span></button>
         </div>
       </section>
+      <aside className="room-context" aria-label="Room scope"><div><strong>Farm snapshot and main mission</strong><span>The map reads the connected farm version. Its plan count can differ from the separate current guided plan.</span></div>{guidedPlanAvailable && onReturnToGuidedPlan && <button className="button button--cream" onClick={onReturnToGuidedPlan}>Return to current guided plan</button>}</aside>
 
       {mission&&<DecisionMissionCard mission={mission} action={()=>{setQuestContext('busy_market');setProposedAction(null);setPanel('scenarios')}}/>}
       <NewsPanel/>
@@ -176,11 +179,11 @@ export function World({ farm, crops, run, mission, executionMode, onOpenTools, o
               const position = advisorPositions[advisor.id]
               const hasNotice = Boolean(run?.claims.some(claim => roleMatchesAdvisor(claim.role, advisor.id)))
               return (
-                <button key={advisor.id} className={`world-advisor world-advisor--${advisor.id}`} style={{ left: position.x, top: position.y, zIndex: 80 + position.y }} onClick={() => openAdvisor(advisor)} aria-label={`Talk to ${advisor.name}, ${advisor.role} at ${advisor.location}`}>
+                <button key={advisor.id} className={`world-advisor world-advisor--${advisor.id}`} style={{ left: position.x, top: position.y, zIndex: 80 + position.y }} onClick={() => openAdvisor(advisor)} aria-label={`Talk to ${advisorPublicLabel(advisor)} at ${advisor.location}`}>
                   {hasNotice && <span className="world-advisor__notice">!</span>}
                   <span className="world-advisor__bubble">{advisor.prompt}</span>
                   <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt="" draggable={false}/>
-                  <span className="world-advisor__name"><b>{advisor.name}</b><small>{advisor.role}</small></span>
+                  <span className="world-advisor__name"><b>{advisorPublicLabel(advisor)}</b></span>
                 </button>
               )
             })}

@@ -112,13 +112,14 @@ export function CropLibrary({ crops, onLoadCrop }: { crops: Crop[]; onLoadCrop: 
   )
 }
 
-export function Outcomes({ run, crops, busy, onReplay }: { run: Run | null; crops: Crop[]; busy: string | null; onReplay: () => void }) {
+export function Outcomes({ run, crops, busy, onReplay, guidedPlanAvailable, onReturnToGuidedPlan }: { run: Run | null; crops: Crop[]; busy: string | null; onReplay: () => void; guidedPlanAvailable?: boolean; onReturnToGuidedPlan?: () => void }) {
   const strategy = run?.strategies.find(item => item.id === run.accepted_strategy_id) || run?.strategies[0]
   const maxValue = Math.max(0, ...(strategy?.weekly.flatMap(week => [week.demand_kg, week.harvest_kg, week.delivered_kg]) || []))
   return (
     <div className="room-page">
       <RoomHero eyebrow="Outcome lab" title="Learn from every turn." copy="Compare expected harvest, delivery and shortfall using the stored decision record." icon={<BarChart3 size={27} />} />
-      {!run || !strategy ? <div className="state-panel state-panel--empty"><span className="state-panel__icon"><CalendarClock size={24}/></span><div><h2>No plan outcome yet</h2><p>Run a planning mission first. Its weekly results and stored replay will appear here.</p></div></div> : (
+      <aside className="room-context" aria-label="Room scope"><div><strong>Recorded main-mission outcomes</strong><span>This room shows stored simulation outcomes from Farm tools. Guided Plan results stay in the Plan room.</span></div>{guidedPlanAvailable && onReturnToGuidedPlan && <button className="button button--cream" onClick={onReturnToGuidedPlan}>Return to current guided plan</button>}</aside>
+      {!run || !strategy ? <div className="state-panel state-panel--empty"><span className="state-panel__icon"><CalendarClock size={24}/></span><div><h2>No recorded main-mission outcome yet</h2><p>This does not remove your guided result. Run a mission from Farm tools to create a stored replay here.</p>{guidedPlanAvailable && onReturnToGuidedPlan && <button className="button button--forest" onClick={onReturnToGuidedPlan}>Open current guided plan</button>}</div></div> : (
         <>
           <section className="outcome-scoreboard">
             <div><span>Expected harvest</span><strong>{strategy.metrics.harvest_kg.toLocaleString('en-SG')}<small> kg</small></strong></div>
@@ -139,7 +140,7 @@ export function Outcomes({ run, crops, busy, onReplay }: { run: Run | null; crop
   )
 }
 
-export function Setup({ farm, busy, onSeed, onImport }: { farm: Farm | null; busy: string | null; onSeed: () => void; onImport: (farm: unknown) => void }) {
+export function Setup({ farm, busy, onSeed, onImport, guidedPlanAvailable, onReturnToGuidedPlan }: { farm: Farm | null; busy: string | null; onSeed: () => void; onImport: (farm: unknown) => void; guidedPlanAvailable?: boolean; onReturnToGuidedPlan?: () => void }) {
   const input = useRef<HTMLInputElement>(null)
   const [fileError, setFileError] = useState<string | null>(null)
   const chooseFile = async (file?: File) => {
@@ -156,6 +157,7 @@ export function Setup({ farm, busy, onSeed, onImport }: { farm: Farm | null; bus
   return (
     <div className="room-page">
       <RoomHero eyebrow="Farm setup" title="Bring the farm onto the board." copy="Load the versioned synthetic demo or import a validated JSON farm record." icon={<FileJson size={27} />} />
+      <aside className="room-context" aria-label="Room scope"><div><strong>Future planning snapshot</strong><span>Loading or importing records changes the connected farm used by future missions. An existing guided session remains a frozen record of the version it calculated.</span></div>{guidedPlanAvailable && onReturnToGuidedPlan && <button className="button button--cream" onClick={onReturnToGuidedPlan}>Return to current guided plan</button>}</aside>
       <section className="setup-choice-grid">
         <article className="setup-choice setup-choice--seed"><span><Play size={23} fill="currentColor"/></span><p className="kicker">One click</p><h2>Seed the demo farm</h2><p>Loads the complete synthetic demonstration through the backend’s validated fixture importer.</p><button className="button button--lime" onClick={onSeed} disabled={!!busy}>{busy === 'seed' ? 'Loading demo…' : 'Load synthetic demo'}</button></article>
         <article className="setup-choice"><span><Upload size={23}/></span><p className="kicker">Private input</p><h2>Import farm JSON</h2><p>The browser parses the file and submits its farm object. Embedded scripts are never executed.</p><input ref={input} className="sr-only" type="file" accept="application/json,.json" onChange={event => chooseFile(event.target.files?.[0])}/><button className="button button--forest" onClick={() => input.current?.click()} disabled={!!busy}>{busy === 'import' ? 'Importing…' : 'Choose JSON file'}</button>{fileError && <p className="field-error" role="alert">{fileError}</p>}</article>

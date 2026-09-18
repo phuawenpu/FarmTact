@@ -114,6 +114,7 @@ export class ApiError extends Error {
 }
 
 let admissionRetryAt = 0;
+let bootstrapPending: Promise<Bootstrap> | null = null;
 
 export async function request<T>(path: string, init?: RequestInit, responseKind: 'json' | 'blob' = 'json'): Promise<T> {
   if (Date.now() < admissionRetryAt) {
@@ -243,7 +244,10 @@ export async function mutationRequest<T>(
 export const api = {
   news: (query: URLSearchParams = new URLSearchParams()) =>
     request<NewsContext>(`/news?${query}`),
-  bootstrap: () => request<Bootstrap>("/bootstrap"),
+  bootstrap: () => {
+    if (!bootstrapPending) bootstrapPending = request<Bootstrap>("/bootstrap").finally(() => { bootstrapPending = null; });
+    return bootstrapPending;
+  },
   crop: async (id: string) => {
     const response = await request<{ crop: Crop; evidence: EvidenceRecord[] }>(
       `/crops/${encodeURIComponent(id)}/evidence`,
@@ -275,8 +279,8 @@ export const api = {
   demoReplay: () => request<Run>("/demo/replay"),
   eventsUrl: (id: string) =>
     `${API()}/planning-runs/${encodeURIComponent(id)}/events`,
-  conversations: async () =>
-    (await request<{ conversations: Conversation[] }>("/conversations"))
+  conversations: async (filters: {planning_session_id?:string;result_id?:string;before?:string;limit?:number} = {}) =>
+    (await request<{ conversations: Conversation[] }>("/conversations?" + new URLSearchParams(Object.entries(filters).map(([key,value]) => [key,String(value)]))))
       .conversations,
   conversation: (id: string) =>
     request<Conversation>(`/conversations/${encodeURIComponent(id)}`),
@@ -287,6 +291,7 @@ export const api = {
     snapshot_kind: "farm" | "scenario" | "planning";
     snapshot_id?: string;
     selected_bed_id?: string;
+    council_review_result_id?: string;
     focus?: {
       card_id: string;
       entity_kind: string;

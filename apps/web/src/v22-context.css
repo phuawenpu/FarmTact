@@ -1,0 +1,23 @@
+.room-context {
+  align-items: center;
+  background: color-mix(in srgb, var(--cream, #fff8e8) 88%, white);
+  border: 1px solid color-mix(in srgb, var(--forest, #173f37) 18%, transparent);
+  border-radius: 16px;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+}
+
+.room-context > div { display: grid; gap: 3px; }
+.room-context strong { color: var(--forest, #173f37); }
+.room-context span { color: var(--muted, #5e6c67); font-size: .88rem; line-height: 1.4; }
+.room-context .button { flex: 0 0 auto; }
+
+@media (max-width: 640px) {
+  .room-context { align-items: stretch; flex-direction: column; gap: 10px; }
+  .room-context .button { min-height: 42px; width: 100%; }
+  .topbar { min-height: 58px; }
+  .topbar__mobile-brand .brand small { display: none; }
+}

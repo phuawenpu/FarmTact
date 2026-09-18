@@ -14,6 +14,8 @@ import { deriveDecisionMission, loadDecisionMission, saveDecisionMission, type D
 import { runSoundOutcome } from './lib/game'
 import { FarmerWorkflow } from './components/FarmerWorkflow'
 import { CURRENT_EDITION } from './lib/edition'
+import { rememberedPlanningSession } from './lib/planning'
+import './v22-context.css'
 
 type WorkspaceView = AppView | 'planning'
 const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
@@ -192,6 +194,8 @@ export default function App({ editionId = CURRENT_EDITION, initialView }: { edit
   }, [bootstrap, mission])
   const continueMission = (next: DecisionMission) => { setMission(next); saveDecisionMission(next); if(next.snapshotKind==='farm')setMainMission(next);setView(next.snapshotKind === 'farm' ? 'world' : 'data'); window.scrollTo({ top: 0, behavior: 'auto' }) }
   const navigate = (next: WorkspaceView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
+  const guidedPlanAvailable = Boolean(rememberedPlanningSession())
+  const returnToGuidedPlan = () => navigate('planning')
 
   return (
     <div className="app-shell app-shell--guided" data-experience="v12" data-edition={editionId}>
@@ -206,7 +210,6 @@ export default function App({ editionId = CURRENT_EDITION, initialView }: { edit
       <div className="app-content">
         <header className="topbar">
           <div className="topbar__mobile-brand"><Brand /></div>
-          {editionId!=='v1'&&<div className="mobile-audio-controls"><AudioControls editionKey={editionId}/></div>}
           <div className="farm-identity">
             <span className="farm-identity__icon"><Sprout size={20}/></span>
             <span><small>Active farm</small><strong>{bootstrap?.farm.name || 'Farm not loaded'}</strong></span>
@@ -226,13 +229,13 @@ export default function App({ editionId = CURRENT_EDITION, initialView }: { edit
           ) : (
             <>
               {view === 'planning' && <FarmerWorkflow crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/>}
-              {view === 'council' && <CouncilResearch />}
-              {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
+              {view === 'council' && <><RoomContext title="Independent Council research" detail="This study has its own frozen inputs and results. It does not change or replace the current guided plan." showReturn={guidedPlanAvailable} onReturn={returnToGuidedPlan}/><CouncilResearch /></>}
+              {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} guidedPlanAvailable={guidedPlanAvailable} onReturnToGuidedPlan={returnToGuidedPlan} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} capabilities={bootstrap.capabilities} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
               {view === 'crops' && <CropLibrary crops={bootstrap.crops} onLoadCrop={loadCrop} />}
               {view === 'data' && <DataExplorer bootstrap={bootstrap} onContinueMission={continueMission} />}
-              {view === 'outcomes' && <Outcomes run={run} crops={bootstrap.crops} busy={busy} onReplay={replay} />}
-              {view === 'setup' && <Setup farm={bootstrap.farm} busy={busy} onSeed={seed} onImport={importFarm} />}
+              {view === 'outcomes' && <Outcomes run={run} crops={bootstrap.crops} busy={busy} onReplay={replay} guidedPlanAvailable={guidedPlanAvailable} onReturnToGuidedPlan={returnToGuidedPlan} />}
+              {view === 'setup' && <Setup farm={bootstrap.farm} busy={busy} onSeed={seed} onImport={importFarm} guidedPlanAvailable={guidedPlanAvailable} onReturnToGuidedPlan={returnToGuidedPlan} />}
             </>
           )}
         </main>
@@ -243,6 +246,10 @@ export default function App({ editionId = CURRENT_EDITION, initialView }: { edit
       </nav>
     </div>
   )
+}
+
+function RoomContext({ title, detail, showReturn, onReturn }: { title: string; detail: string; showReturn: boolean; onReturn: () => void }) {
+  return <aside className="room-context" aria-label="Room scope"><div><strong>{title}</strong><span>{detail}</span></div>{showReturn && <button className="button button--cream" onClick={onReturn}>Return to current guided plan</button>}</aside>
 }
 
 function Brand() {

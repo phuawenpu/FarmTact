@@ -122,7 +122,7 @@ export function NumericalPerspectives({ scenario, policy, mission }: { scenario:
   return <section className="numerical-perspectives" aria-label={`Computed numerical perspectives for ${policy}`}>
     <header><div><p className="kicker">Computed perspectives · numerical, no inference</p><h3>Seven views of the trade-off</h3></div><span>These are deterministic templates over frozen results, not agent messages. They may agree, disagree or lack an input.</span></header>
     <div>{perspectives.map(item => { const advisor = ADVISORS.find(value => value.id === item.advisorId)!; return <article key={item.advisorId} className={`perspective-card perspective-card--${item.stance}`}><span className="perspective-card__stance">{item.stance}</span><h4>{advisor.name} · {advisor.role}</h4><p>{item.statement}</p><details><summary>Evidence used</summary><ul>{item.facts.map(fact=><li key={fact}>{fact}</li>)}</ul><small>Frozen record: {item.evidence}</small></details></article> })}</div>
-    <p className="numerical-perspectives__action"><CheckCircle2 size={15}/> For an actual paid council interpretation, open Asha and deliberately send a question or choose Convene council.</p>
+    <p className="numerical-perspectives__action"><CheckCircle2 size={15}/> For an actual paid council interpretation, open Chair and deliberately send a question or choose Convene council.</p>
   </section>
 }
 

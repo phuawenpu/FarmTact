@@ -27,7 +27,10 @@ import {
   type ReactNode,
 } from "react";
 import { api } from "../lib/api";
-import { ADVISORS } from "../lib/game";
+import { ADVISORS, publicAdvisorLabel } from "../lib/game";
+import { CouncilWorkspace } from "./CouncilWorkspace";
+import { DecisionGuide, SavedConsequence } from "./DecisionGuide";
+import { workspaceDrafts } from "../lib/workspaceDrafts";
 import { editionPath, editionStorageKey } from "../lib/edition";
 import {
   farmerWorkflowApi,
@@ -43,6 +46,7 @@ import {
 import type { Conversation, ConversationMessage } from "../lib/game";
 import type { Crop, Strategy } from "../lib/types";
 import { CropArt } from "./Visuals";
+import "./v22-decision.css";
 
 type Phase =
   "observe" | "discuss" | "decide" | "approve" | "act" | "verify" | "replan";
@@ -55,17 +59,21 @@ type ProposalDraft = {
   demand: number;
   yieldPct: number;
   delay: number;
+  scenarioCrop: string;
   bed: string;
   reserveStart: string;
   reserveEnd: string;
   nursery: number;
   labour: number;
   cash: number;
+  orderEnabled: boolean;
+  orderReference: string;
+  orderCrop: string;
+  orderDueDate: string;
   orderQty: number;
-  tentativeQty: number;
+  orderPrice: number;
+  orderStatus: "confirmed" | "tentative";
 };
-const defaultSpecialistQuestion =
-  "What constraint or alternative should I review before approving this plan?";
 const phases: Array<[Phase, string, string]> = [
   ["observe", "Observe", "Review records"],
   ["discuss", "Discuss", "Council review"],
@@ -93,7 +101,6 @@ const functionalRoleIds: Record<string, string> = {
   "Farm Planner": "supply_chain_analyst",
   "Plan Reviewer": "planning_chair",
 };
-const tutorialKey = editionStorageKey("farmer-tutorial-dismissed");
 const blankWorkflow: FarmerWorkflowState = {
   version: "farmer-workflow-v1",
   phase: "planning",
@@ -119,31 +126,24 @@ export function FarmerWorkflow({
     [error, setError] = useState(""),
     [navigationHint, setNavigationHint] = useState(""),
     [phase, setPhase] = useState<Phase>("observe");
-  const [tutorial, setTutorial] = useState(() => {
-    try {
-      return localStorage.getItem(tutorialKey) !== "1";
-    } catch {
-      return true;
-    }
-  });
   const [inboxOpen, setInboxOpen] = useState(false),
     [mediaOpen, setMediaOpen] = useState(false),
     [selected, setSelected] = useState("");
   const [formOpen, setFormOpen] = useState(false),
     [actionsOpen, setActionsOpen] = useState(false),
-    [councilOpen, setCouncilOpen] = useState(false),
-    [councilAdvisor, setCouncilAdvisor] = useState(ADVISORS[0].id),
     [discussionSource, setDiscussionSource] = useState<DiscussionSource | null>(null),
     [rescueOpen, setRescueOpen] = useState(false);
-  // Unsent edits belong to this mounted workspace, never to saved farm records.
-  const [proposalDrafts] = useState(() => new Map<string, ProposalDraft>());
-  const [questionDrafts] = useState(() => new Map<string, string>());
+  // Edition-scoped local drafts survive reload; they never become submitted records.
+  const [proposalDrafts] = useState(() => workspaceDrafts<ProposalDraft>("proposals"));
   const refreshWorkflow = useCallback(async () => {
     const next = await farmerWorkflowApi.state();
     setWorkflow({ ...blankWorkflow, ...next });
     return next;
   }, []);
+  const loadPending = useRef(false);
   const load = useCallback(async () => {
+    if (loadPending.current) return;
+    loadPending.current = true;
     setLoading(true);
     setError("");
     try {
@@ -171,6 +171,7 @@ export function FarmerWorkflow({
     } catch (caught) {
       setError(message(caught, "The farm workflow could not be opened."));
     } finally {
+      loadPending.current = false;
       setLoading(false);
     }
   }, [refreshWorkflow]);
@@ -247,20 +248,12 @@ export function FarmerWorkflow({
     let target = document.querySelector<HTMLElement>(targets[next]);
     const missing = !target;
     if (!target) target = document.querySelector<HTMLElement>(strategies.length ? '.decision-stage' : '.flow-callout');
-    setNavigationHint(missing ? (!strategies.length ? 'Calculate options first. No farm change has been made.'
+    setNavigationHint(missing ? (!strategies.length ? 'Compare planting plans first. No farm change has been made.'
       : next === 'verify' ? 'Record a task result before verifying its impact.'
-      : next === 'replan' ? 'No task currently requires recovery. Use Apply & Recalculate to review a future change.'
+      : next === 'replan' ? 'No task currently requires recovery. Use Adjust assumptions to review a future change.'
       : 'Review and approve a proposal before recording sandbox work.') : '');
     target?.focus({preventScroll:true});
     target?.scrollIntoView({block:'start',behavior:'instant'});
-  };
-  const dismissTutorial = () => {
-    setTutorial(false);
-    try {
-      localStorage.setItem(tutorialKey, "1");
-    } catch {
-      /* persistence is optional */
-    }
   };
   if (loading)
     return (
@@ -289,26 +282,13 @@ export function FarmerWorkflow({
   ]);
   return (
     <div className="farmer-flow">
-      <header className="flow-hero">
-        <div>
-          <p className="kicker">
-            Singapore demo farm · connected planning workspace
-          </p>
-          <h1>See the farm. Decide together. Learn from every crop.</h1>
-          <p>
-            One guided loop from records to recovery. Projected, simulated and
-            farmer-reported values stay separate.
-          </p>
-        </div>
-        <div className="flow-hero__status">
-          <span>
-            <ShieldCheck size={16} /> Real operations disabled
-          </span>
-          <small>
-            Synthetic farm · Asia/Singapore · session {session.id.slice(0, 8)}
-          </small>
-        </div>
-      </header>
+      <DecisionGuide title={!strategies.length ? "What should this farm plan next?" : sessionTasks.some(task=>task.status==='recovery_required') ? "Review what changed; plan the next step" : "Compare the plans with your Council"}
+        detail={!strategies.length ? "Start with the recorded orders and crops. Calculate options, then ask the Council to explain their tradeoffs." : "Ask a specialist, compare recommendations and review exact changes before saving simulated work."}
+        label={!strategies.length ? 'Compare planting plans' : sessionTasks.some(task=>task.status==='recovery_required') ? 'Compare recovery plans' : sessionTasks.length ? 'Report a result' : approvableProposal ? 'Save simulation plan' : 'Discuss these plans'}
+        disabled={Boolean(busy)}
+        onAction={()=>{if(!strategies.length)void mutate('Calculating planting plans',value=>planningApi.calculate(value.id,value.revision));else if(sessionTasks.some(task=>task.status==='recovery_required'))setFormOpen(true);else if(sessionTasks.length)jumpToPhase('act');else if(approvableProposal)setActionsOpen(true);else jumpToPhase('discuss')}}
+        secondary={strategies.length ? 'Review this plan' : 'Review records'}
+        onSecondary={()=>strategies.length?jumpToPhase('decide'):setInboxOpen(true)} />
       <nav className="flow-rail" aria-label="Farm decision workflow">
         {phases.map(([id, label, hint], index) => (
           <button
@@ -326,22 +306,6 @@ export function FarmerWorkflow({
         ))}
       </nav>
       <p className="flow-navigation-hint" role="status">{navigationHint || "Choose a section to jump to it. Saved milestones below show completed work."}</p>
-      {tutorial && (
-        <aside className="tutorial-card" role="note">
-          <Sparkles size={21} />
-          <div>
-            <strong>Start with what the farm knows</strong>
-            <p>
-              Review the recorded farm, then Calculate options below. Compare the
-              plans before applying a change. The Council can help you question
-              a tradeoff; its advice is optional.
-            </p>
-          </div>
-          <button onClick={dismissTutorial} aria-label="Dismiss tutorial">
-            <X size={18} />
-          </button>
-        </aside>
-      )}
       {error && (
         <div className="guided-error" role="alert">
           <AlertTriangle size={18} />
@@ -357,8 +321,8 @@ export function FarmerWorkflow({
           <span>
             The calculation did not finish. Your saved inputs remain available.{" "}
             {strategies.length
-              ? "Review the inputs with Apply & Recalculate before trying again."
-              : "Review your records, then try Calculate options again."}
+              ? "Review the inputs with Adjust assumptions before trying again."
+              : "Review your records, then try Compare planting plans again."}
           </span>
         </div>
       )}
@@ -374,6 +338,10 @@ export function FarmerWorkflow({
           </span>
         </div>
       )}
+      <CouncilWorkspace session={session} strategy={chosen} busy={Boolean(busy)}
+        onReview={()=>void mutate('Reviewing plans with Council',value=>planningApi.review(value.id,value.revision))}
+        onSelectStrategy={setSelected}
+        onHandoff={source=>{setDiscussionSource(source);setFormOpen(true)}} onError={setError}/>
       <section className="flow-observe" tabIndex={-1}>
         <header>
           <div>
@@ -401,7 +369,7 @@ export function FarmerWorkflow({
               <Leaf size={22} />
             </span>
             <div>
-              <strong>Turn reviewed records into three feasible options</strong>
+              <strong>Compare plans against every recorded order</strong>
               <p>
                 Calculation is numerical and uses the current records, crop
                 cycles and constraints.
@@ -416,101 +384,15 @@ export function FarmerWorkflow({
                 )
               }
             >
-              Calculate options <ArrowRight size={16} />
+              Compare planting plans <ArrowRight size={16} />
             </button>
           </div>
         )}
         <MetricStrip strategy={chosen} session={session} />
         <FarmBoard session={session} crops={crops} strategy={chosen} />
       </section>
+      {Boolean(session.result_id) && <SavedConsequence identity={String(session.result_id)+':'+String(workflow.revision)} label={sessionTasks.length ? `${sessionTasks.length} saved simulation tasks` : `${strategies.length} plans ready`} details={`Result ${String(session.result_id).slice(0,8)} · revision ${session.revision}. ${sessionTasks.length ? 'Reports and corrections remain in history.' : 'Projected options. Selecting a candidate does not save or approve it.'}`}/>}
       <MissionProgress session={session} workflow={workflow} />
-      {!!strategies.length && (
-        <section className="council-room" tabIndex={-1}>
-          <header>
-            <div>
-              <p className="kicker">Discuss · central Council table</p>
-              <h2>Seven roles, one reviewable proposal</h2>
-              <p>
-                Questions, challenges, constraints and alternatives stay
-                attached to evidence. Invalid advice cannot support approval.
-              </p>
-            </div>
-            <span className={`review-state review-state--${reviewState}`}>
-              {reviewState}
-            </span>
-          </header>
-          <div className="council-table">
-            {findings.map((item, index) => (
-              <article
-                key={item.role}
-                className={`role-card role-card--${item.truth}`}
-              >
-                <div className="role-card__person">
-                  <img
-                    src={editionPath(
-                      `/art/advisors/${item.advisor.id}.svg`,
-                    )}
-                    alt=""
-                  />
-                  <span>
-                    <b>{item.name}</b>
-                    <small>{item.role}</small>
-                  </span>
-                  <em>{item.truth}</em>
-                </div>
-                <p>
-                  {item.truth === "withheld" && item.reasons.length
-                    ? `Withheld: ${item.reasons[0]}`
-                    : item.summary}
-                </p>
-                <details>
-                  <summary>Question, evidence &amp; tools</summary>
-                  <strong>{item.question}</strong>
-                  <span>
-                    {item.evidence.length
-                      ? item.evidence.join(" · ")
-                      : "No admissible evidence"}
-                  </span>
-                  <span>Tool status: {item.tool}</span>
-                  {item.reasons.map((reason) => (
-                    <span className="role-reason" key={reason}>
-                      {reason}
-                    </span>
-                  ))}
-                </details>
-                <button
-                  className="text-button"
-                  onClick={() => {
-                    setCouncilAdvisor(item.advisor.id);
-                    setCouncilOpen(true);
-                    setPhase("discuss");
-                  }}
-                >
-                  Ask this specialist
-                </button>
-              </article>
-            ))}
-          </div>
-          {!session.review || session.review.status === "not_requested" ? (
-            <button
-              className="button button--coral council-review-button"
-              disabled={Boolean(busy)}
-              onClick={() =>
-                void mutate("Convening the bounded Council", (value) =>
-                  planningApi.review(value.id, value.revision),
-                )
-              }
-            >
-              <Users size={18} /> Review with Council
-            </button>
-          ) : (
-            <p className="council-boundary">
-              <ShieldCheck size={16} /> Rejected and unavailable findings remain
-              visible but cannot authorize a decision.
-            </p>
-          )}
-        </section>
-      )}
       {!!strategies.length && (
         <section className="decision-stage" tabIndex={-1}>
           <header>
@@ -518,7 +400,7 @@ export function FarmerWorkflow({
               <p className="kicker">Decide · reviewed proposals</p>
               <h2>Choose what the farm should test</h2>
               <p>
-                Every value is projected. Apply &amp; Recalculate creates a
+                Every value is projected. Calculate revised plans creates a
                 revision-bound proposal; approval is a separate action.
               </p>
             </div>
@@ -536,7 +418,7 @@ export function FarmerWorkflow({
           {chosen && <PlanBrief strategy={chosen} session={session} crops={crops} />}
           <p className="flow-next-action">{approvableProposal
             ? 'Ready to review approval for this calculated proposal. Approval creates sandbox tasks.'
-            : 'Select an option, then use Apply & Recalculate to review a proposal before approval. Council review is optional.'}</p>
+            : 'Select an option and Adjust assumptions to review it before approval. Council review is optional.'}</p>
           <div className="decision-actions" tabIndex={-1}>
             <div>
               <strong>{chosen?.name} candidate</strong>
@@ -548,14 +430,14 @@ export function FarmerWorkflow({
               className="button button--cream"
               onClick={() => setFormOpen(true)}
             >
-              <RefreshCw size={16} /> Apply &amp; Recalculate
+              <RefreshCw size={16} /> Adjust assumptions
             </button>
             <button
               className="button button--forest"
               disabled={!approvableProposal}
               onClick={() => setActionsOpen(true)}
             >
-              <ClipboardCheck size={17} /> Approve &amp; Create Actions
+              <ClipboardCheck size={17} /> Save simulation plan
             </button>
           </div>
         </section>
@@ -583,7 +465,7 @@ export function FarmerWorkflow({
             className="button button--coral"
             onClick={() => setFormOpen(true)}
           >
-            <RefreshCw size={17} /> Replan remaining work
+            <RefreshCw size={17} /> Compare recovery plans
           </button>
         </section>
       )}
@@ -648,26 +530,6 @@ export function FarmerWorkflow({
           onClose={() => setActionsOpen(false)}
         />
       )}
-      {councilOpen && (
-        <SpecialistDialog
-          key={draftContext}
-          draftContext={draftContext}
-          drafts={questionDrafts}
-          session={session}
-          initialAdvisor={councilAdvisor}
-          onAdvisorChange={(id) => {
-            const advisor = ADVISORS.find(item => item.id === id);
-            if (advisor) setCouncilAdvisor(advisor.id);
-          }}
-          onError={setError}
-          onHandoff={(source) => {
-            setDiscussionSource(source);
-            setCouncilOpen(false);
-            setFormOpen(true);
-          }}
-          onClose={() => setCouncilOpen(false)}
-        />
-      )}
       {rescueOpen && (
         <WasteRescue
           session={session}
@@ -703,55 +565,66 @@ function ProposalEditor({
 }) {
   const start = session.farm.planning_date || session.farm.cutoff.slice(0, 10),
     end = addDays(start, Math.min(55, session.farm.horizon_days - 1)),
-    crop =
-      strategy.allocations[0]?.crop_id ||
-      session.farm.orders[0]?.crop_id ||
-      "caixin";
+    recipes = (Array.isArray(session.farm.recipes) ? session.farm.recipes : []) as Array<{ crop_id: string }>,
+    cropIds = Array.from(new Set([
+      ...strategy.allocations.map((item) => item.crop_id),
+      ...session.farm.orders.map((item) => item.crop_id),
+      ...recipes.map((item) => item.crop_id),
+    ].filter(Boolean))),
+    defaultCrop = cropIds[0] || "caixin";
   const savedDraft = drafts.get(draftKey);
   const [demand, setDemand] = useState(savedDraft?.demand ?? 100),
     [yieldPct, setYieldPct] = useState(savedDraft?.yieldPct ?? 100),
     [delay, setDelay] = useState(savedDraft?.delay ?? 0),
+    [scenarioCrop, setScenarioCrop] = useState(savedDraft?.scenarioCrop ?? defaultCrop),
     [bed, setBed] = useState(savedDraft?.bed ?? ""),
     [reserveStart, setReserveStart] = useState(savedDraft?.reserveStart ?? start),
-    [reserveEnd, setReserveEnd] = useState(savedDraft?.reserveEnd ?? addDays(start, 3)),
+    [reserveEnd, setReserveEnd] = useState(savedDraft?.reserveEnd ?? (addDays(start, 3) > end ? end : addDays(start, 3))),
     [nursery, setNursery] = useState(savedDraft?.nursery ?? session.farm.resources.nursery_sites),
     [labour, setLabour] = useState(
       savedDraft?.labour ?? session.farm.resources.labour_hours_per_week,
     ),
     [cash, setCash] = useState(savedDraft?.cash ?? session.farm.resources.cash_sgd),
+    [orderEnabled, setOrderEnabled] = useState(savedDraft?.orderEnabled ?? false),
+    [orderReference, setOrderReference] = useState(savedDraft?.orderReference ?? ""),
+    [orderCrop, setOrderCrop] = useState(savedDraft?.orderCrop ?? defaultCrop),
+    [orderDueDate, setOrderDueDate] = useState(savedDraft?.orderDueDate ?? (addDays(start, 21) > end ? end : addDays(start, 21))),
     [orderQty, setOrderQty] = useState(savedDraft?.orderQty ?? 0),
-    [tentativeQty, setTentativeQty] = useState(savedDraft?.tentativeQty ?? 0),
+    [orderPrice, setOrderPrice] = useState(savedDraft?.orderPrice ?? 8),
+    [orderStatus, setOrderStatus] = useState<"confirmed" | "tentative">(savedDraft?.orderStatus ?? "confirmed"),
     [busy, setBusy] = useState(false);
   useEffect(() => {
     drafts.set(draftKey, {
-      demand, yieldPct, delay, bed, reserveStart, reserveEnd,
-      nursery, labour, cash, orderQty, tentativeQty,
+      demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
+      nursery, labour, cash, orderEnabled, orderReference, orderCrop,
+      orderDueDate, orderQty, orderPrice, orderStatus,
     });
-  }, [drafts, draftKey, demand, yieldPct, delay, bed, reserveStart, reserveEnd,
-    nursery, labour, cash, orderQty, tentativeQty]);
+  }, [drafts, draftKey, demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
+    nursery, labour, cash, orderEnabled, orderReference, orderCrop, orderDueDate,
+    orderQty, orderPrice, orderStatus]);
   const submit = async () => {
     setBusy(true);
     try {
       const assumptions: FarmerAssumptions = {
         tentative_orders:
-          tentativeQty > 0
+          orderEnabled && orderStatus === "tentative" && orderQty > 0
             ? [
                 {
-                  order_id: `tentative-${crypto.randomUUID()}`,
-                  crop_id: crop,
-                  due_date: addDays(start, 28),
-                  quantity_kg: tentativeQty,
-                  price_sgd_per_kg: 8,
+                  order_id: orderReference.trim(),
+                  crop_id: orderCrop,
+                  due_date: orderDueDate,
+                  quantity_kg: orderQty,
+                  price_sgd_per_kg: orderPrice,
                   status: "tentative",
                 },
               ]
             : [],
         future_demand: [
-          { crop_id: crop, start_date: start, end_date: end, percent: demand },
+          { crop_id: scenarioCrop, start_date: start, end_date: end, percent: demand },
         ],
         seasonal: [
           {
-            crop_id: crop,
+            crop_id: scenarioCrop,
             system: "sheltered_hydroponic",
             start_date: start,
             end_date: end,
@@ -762,15 +635,15 @@ function ProposalEditor({
           },
         ],
         order_changes:
-          orderQty > 0
+          orderEnabled && orderStatus === "confirmed" && orderQty > 0
             ? [
                 {
                   operation: "add",
-                  order_id: `v12-${crypto.randomUUID()}`,
-                  crop_id: crop,
-                  due_date: addDays(start, 21),
+                  order_id: orderReference.trim(),
+                  crop_id: orderCrop,
+                  due_date: orderDueDate,
                   quantity_kg: orderQty,
-                  price_sgd_per_kg: 8,
+                  price_sgd_per_kg: orderPrice,
                 },
               ]
             : [],
@@ -812,8 +685,8 @@ function ProposalEditor({
       <p className="media-boundary">
         Explicit edits create a draft proposal. Confirmed imports remain
         evidence; they do not silently rewrite demand or yield.
-        Unsubmitted edits stay available when you close and reopen this dialog
-        in this workspace. Reloading or changing the plan revision starts a new draft.
+        Unsubmitted edits are saved on this device for this edition, session and
+        revision. They never contain credentials and can be discarded below.
       </p>
       {discussionSource && (
         <section className="discussion-handoff">
@@ -843,8 +716,15 @@ function ProposalEditor({
         </section>
       )}
       <div className="assumption-grid">
+        <label>
+          Crop affected by demand, yield and delay
+          <select value={scenarioCrop} onChange={(event) => setScenarioCrop(event.target.value)}>
+            {cropIds.map((cropId) => <option key={cropId} value={cropId}>{cropId}</option>)}
+          </select>
+          <small>Only this crop changes for {civil(start)}–{civil(end)}.</small>
+        </label>
         <Range
-          label="Expected demand"
+          label={`Expected demand · current estimate is 100% · ${civil(start)}–${civil(end)}`}
           value={demand}
           setValue={setDemand}
           min={50}
@@ -852,7 +732,7 @@ function ProposalEditor({
           suffix="%"
         />
         <Range
-          label="Seasonal yield"
+          label={`Seasonal yield · current estimate is 100% · ${civil(start)}–${civil(end)}`}
           value={yieldPct}
           setValue={setYieldPct}
           min={50}
@@ -860,7 +740,7 @@ function ProposalEditor({
           suffix="%"
         />
         <Range
-          label="Harvest delay"
+          label={`Harvest delay for ${scenarioCrop} · ${civil(start)}–${civil(end)}`}
           value={delay}
           setValue={setDelay}
           min={0}
@@ -884,6 +764,7 @@ function ProposalEditor({
               Reservation starts
               <input
                 type="date"
+                min={start} max={end}
                 value={reserveStart}
                 onChange={(e) => setReserveStart(e.target.value)}
               />
@@ -892,6 +773,7 @@ function ProposalEditor({
               Reservation ends
               <input
                 type="date"
+                min={reserveStart || start} max={end}
                 value={reserveEnd}
                 onChange={(e) => setReserveEnd(e.target.value)}
               />
@@ -913,29 +795,41 @@ function ProposalEditor({
           value={cash}
           setValue={setCash}
         />
-        <NumberField
-          label="Add confirmed order (kg)"
-          value={orderQty}
-          setValue={setOrderQty}
-        />
-        <NumberField
-          label="Add tentative order (kg)"
-          value={tentativeQty}
-          setValue={setTentativeQty}
-        />
-        <p className="tentative-disclosure">
-          Tentative orders are scenario evidence only. They remain separate from
-          confirmed customer commitments.
-        </p>
+        <label className="proposal-order-toggle">
+          <input type="checkbox" checked={orderEnabled} onChange={(event) => setOrderEnabled(event.target.checked)} />
+          Add an order to this scenario
+        </label>
+        {orderEnabled && <fieldset className="proposal-order-fields">
+          <legend>Order addition</legend>
+          <label>Customer / order reference<input required value={orderReference} onChange={(event) => setOrderReference(event.target.value)} /></label>
+          <label>Crop<select value={orderCrop} onChange={(event) => setOrderCrop(event.target.value)}>{cropIds.map((cropId) => <option key={cropId} value={cropId}>{cropId}</option>)}</select></label>
+          <label>Due date<input type="date" min={start} max={end} value={orderDueDate} onChange={(event) => setOrderDueDate(event.target.value)} /></label>
+          <NumberField label="Quantity (kg)" value={orderQty} setValue={setOrderQty} />
+          <NumberField label="Price (SGD/kg)" value={orderPrice} setValue={setOrderPrice} />
+          <label>Status<select value={orderStatus} onChange={(event) => setOrderStatus(event.target.value as "confirmed" | "tentative")}><option value="confirmed">Confirmed commitment</option><option value="tentative">Tentative scenario evidence</option></select></label>
+        </fieldset>}
       </div>
+      <section className="proposal-review" aria-label="Exact changes to calculate">
+        <h3>Review exact changes</h3>
+        <ul>
+          <li><b>{scenarioCrop}</b> demand {demand}% of the current estimate and yield {yieldPct}% of the current estimate from {civil(start)} to {civil(end)}.</li>
+          <li><b>{scenarioCrop}</b> harvest dates move {delay ? `${delay} days later` : "0 days (unchanged)"} within that period.</li>
+          <li>Capacity: {num(nursery)} nursery sites, {num(labour)} labour hours/week and SGD {num(cash)} cash.</li>
+          <li>{bed ? `${session.farm.beds.find((item) => item.id === bed)?.name || bed} reserved ${civil(reserveStart)}–${civil(reserveEnd)}.` : "No bed reservation added."}</li>
+          <li>{orderEnabled ? `${orderStatus === "confirmed" ? "Confirmed" : "Tentative"} order ${orderReference || "(reference required)"}: ${num(orderQty)} kg ${orderCrop}, due ${civil(orderDueDate)}, SGD ${num(orderPrice)}/kg.` : "No order added."}</li>
+        </ul>
+        <p>Past recorded work stays unchanged. The server will validate these assumptions and calculate a new revision; this does not approve tasks.</p>
+      </section>
+      <div className="proposal-editor-actions">
       <button
         className="button button--forest"
-        disabled={busy}
+        disabled={busy || Boolean(bed && (!reserveStart || reserveStart < start || reserveEnd < reserveStart || reserveEnd > end)) || (orderEnabled && (!orderReference.trim() || orderQty <= 0 || orderPrice < 0 || !orderDueDate || orderDueDate < start || orderDueDate > end))}
         onClick={() => void submit()}
       >
-        {busy ? <LoaderCircle className="spin" /> : <RefreshCw />} Apply &amp;
-        Recalculate
+        {busy ? <LoaderCircle className="spin" /> : <RefreshCw />} Calculate revised plans
       </button>
+      <button className="text-button" disabled={busy} onClick={() => { drafts.delete(draftKey); onClose(); }}>Discard saved draft</button>
+      </div>
     </Dialog>
   );
 }
@@ -971,7 +865,7 @@ function ApprovalDialog({
     }
   };
   return (
-    <Dialog title="Approve & Create Actions" onClose={onClose}>
+    <Dialog title="Save simulation plan" onClose={onClose}>
       <p>
         Approval is bound to proposal revision{" "}
         {proposal?.proposal_revision ?? "—"} and creates simulation tasks only.
@@ -991,7 +885,7 @@ function ApprovalDialog({
             disabled={busy}
             onClick={() => void approve()}
           >
-            <ClipboardCheck /> Approve revision &amp; create actions
+            <ClipboardCheck /> Confirm simulation plan
           </button>
         </>
       ) : (
@@ -1254,147 +1148,6 @@ function TaskWorkspace({
         </div>
       </div>
     </section>
-  );
-}
-
-function SpecialistDialog({
-  draftContext,
-  drafts,
-  session,
-  initialAdvisor,
-  onAdvisorChange,
-  onError,
-  onHandoff,
-  onClose,
-}: {
-  draftContext: string;
-  drafts: Map<string, string>;
-  session: PlanningSession;
-  initialAdvisor: string;
-  onAdvisorChange: (advisor: string) => void;
-  onError: (v: string) => void;
-  onHandoff: (source: DiscussionSource) => void;
-  onClose: () => void;
-}) {
-  const [advisor, setAdvisor] = useState<string>(initialAdvisor),
-    [question, setQuestion] = useState(
-      drafts.get(JSON.stringify([draftContext, initialAdvisor])) ?? defaultSpecialistQuestion,
-    ),
-    [conversation, setConversation] = useState<Conversation | null>(null),
-    [busy, setBusy] = useState(false);
-  const questionDraftKey = JSON.stringify([draftContext, advisor]);
-  const validatedMessage = [...(conversation?.messages || [])]
-    .reverse()
-    .find(
-      (item) =>
-        item.speaker !== "user" &&
-        ["validated", "references_verified"].includes(
-          String(item.validation_status || item.evidence_status).toLowerCase(),
-        ),
-    );
-  const ask = async () => {
-    setBusy(true);
-    try {
-      let current = conversation;
-      if (!current) {
-        const created = await api.createConversation({
-          advisor,
-          snapshot_kind: "planning",
-          snapshot_id: session.id,
-        });
-        current = await api.conversation(created.id);
-      }
-      await api.sendConversationMessage(current.id, { content: question });
-      if (drafts.get(questionDraftKey) === question || !drafts.has(questionDraftKey)) {
-        drafts.set(questionDraftKey, "");
-      }
-      const until = Date.now() + 90000;
-      while (Date.now() < until) {
-        current = await api.conversation(current.id);
-        setConversation(current);
-        if (
-          !["QUEUED", "RUNNING", "PENDING"].includes(
-            String(current.last_request_status || "").toUpperCase(),
-          )
-        )
-          break;
-        await new Promise((r) => setTimeout(r, 1200));
-      }
-    } catch (caught) {
-      onError(
-        message(caught, "The specialist question could not be completed."),
-      );
-    } finally {
-      setBusy(false);
-    }
-  };
-  return (
-    <Dialog title="Ask a planning specialist" onClose={onClose}>
-      <p className="media-boundary">
-        The conversation freezes planning session {session.id.slice(0, 8)}.
-        Answers are advisory and cannot change the proposal. Unsent questions
-        remain available per specialist when you close and reopen this dialog
-        in this workspace; they are not retained after a reload.
-      </p>
-      <label>
-        Specialist
-        <select
-          aria-label="Specialist"
-          value={advisor}
-          onChange={(e) => {
-            const nextAdvisor = e.target.value;
-            setAdvisor(nextAdvisor);
-            onAdvisorChange(nextAdvisor);
-            setQuestion(drafts.get(JSON.stringify([draftContext, nextAdvisor])) ?? defaultSpecialistQuestion);
-            setConversation(null);
-          }}
-        >
-          {ADVISORS.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name} ·{" "}
-              {roleFallbacks.find(
-                (role) => functionalRoleIds[role] === item.roleId,
-              ) || item.role}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Question
-        <textarea
-          aria-label="Question"
-          value={question}
-          onChange={(e) => {
-            setQuestion(e.target.value);
-            drafts.set(questionDraftKey, e.target.value);
-          }}
-        />
-      </label>
-      <button
-        className="button button--coral"
-        disabled={busy || !question.trim()}
-        onClick={() => void ask()}
-      >
-        <Users /> {busy ? "Waiting for bounded response…" : "Ask specialist"}
-      </button>
-      {conversation?.messages.map((item) => (
-        <ConversationRow key={item.id} message={item} />
-      ))}
-      {validatedMessage && conversation && (
-        <button
-          className="button button--cream"
-          onClick={() =>
-            onHandoff({
-              conversationId: conversation.id,
-              messageId: validatedMessage.id,
-              actions: validatedMessage.proposed_actions || [],
-            })
-          }
-        >
-          <RefreshCw /> Review a proposal from this discussion
-        </button>
-      )}
-    </Dialog>
   );
 }
 
@@ -1807,7 +1560,7 @@ function MissionProgress({
       basis: "user-reported",
     },
     {
-      label: "Recovery needed",
+      label: "Attention required",
       done: recovery.length > 0,
       evidence: recovery.length
         ? recovery.map((item) => item.id).join(", ")
@@ -1858,17 +1611,45 @@ function MissionProgress({
 
 function PlanBrief({strategy, session, crops}: {strategy:Strategy;session:PlanningSession;crops:Crop[]}) {
   const beds = new Set(strategy.allocations.map(item => item.bed_id));
+  const [cropFilter, setCropFilter] = useState(""),
+    [bedFilter, setBedFilter] = useState(""),
+    [dateFrom, setDateFrom] = useState(""),
+    [dateTo, setDateTo] = useState("");
+  const schedule = strategy.allocations.filter((item) =>
+    (!cropFilter || item.crop_id === cropFilter) &&
+    (!bedFilter || item.bed_id === bedFilter) &&
+    (!dateFrom || item.harvest_date >= dateFrom) &&
+    (!dateTo || item.sow_date <= dateTo));
+  const current = metricValues(strategy);
+  const alternatives = (session.result?.strategies || []).filter((item) => item.id !== strategy.id);
+  const signed = (value: number | null, unit: string) => value === null ? "Unknown" : `${value > 0 ? "+" : value < 0 ? "−" : "±"}${num(Math.abs(value))}${unit}`;
   return <section className="v12-plan-brief" aria-label="Selected plan details" data-preview-strategy={strategy.id}>
     <h3>{strategy.name} · projected plan</h3>
     <p>{strategy.allocations.length} dated allocations across {beds.size} beds. Selecting a candidate changes this preview only; it does not save assumptions or approve work.</p>
-    <p>All modeled demand remains in the calculation. Booked coverage measures confirmed orders. Council advice is optional; the numerical result supplies these values.</p>
+    <p><b>{current.requested === null ? "Unknown requested kg" : `${num(current.delivered)} of ${num(current.requested)} kg fulfilled`}</b> for {civil(session.farm.planning_date || session.farm.cutoff)}–{civil(addDays(session.farm.planning_date || session.farm.cutoff, session.farm.horizon_days - 1))}; {current.shortfall === null ? "shortfall unknown" : `${num(current.shortfall)} kg shortfall`}.</p>
+    <p>{strategy.violations.length ? `${strategy.violations.length} declared constraint${strategy.violations.length === 1 ? " is" : "s are"} flagged.` : "Feasible within the modeled resource, timing and inventory limits."} This does not mean every order is fulfilled or that unmodeled farm conditions are safe. Contribution margin is projected revenue minus modeled variable costs, not net profit.</p>
+    {!!alternatives.length && <div className="strategy-differences" aria-label={`Differences from ${strategy.name}`}>
+      <strong>Difference if you choose another plan</strong>
+      {alternatives.map((alternative) => {
+        const other = metricValues(alternative);
+        return <p key={alternative.id}><b>{alternative.name}</b>: {signed(other.delivered === null || current.delivered === null ? null : other.delivered - current.delivered, " kg fulfilled")} · {signed(other.shortfall === null || current.shortfall === null ? null : other.shortfall - current.shortfall, " kg shortfall")} · {signed(other.expiry === null || current.expiry === null ? null : other.expiry - current.expiry, " kg expiry")} · {signed(other.margin === null || current.margin === null ? null : other.margin - current.margin, " SGD contribution margin")}</p>;
+      })}
+    </div>}
     <details><summary>View full dated schedule and evidence</summary>
       <p>Session revision {session.revision} · result {String(session.result_id || 'not supplied')}</p>
-      <ol>{strategy.allocations.map((item,index) => <li key={item.id || index}>
+      <div className="schedule-filters" aria-label="Schedule filters">
+        <label>Crop<select value={cropFilter} onChange={(event) => setCropFilter(event.target.value)}><option value="">All crops</option>{Array.from(new Set(strategy.allocations.map((item) => item.crop_id))).map((id) => <option key={id} value={id}>{crops.find((crop) => crop.id === id)?.label || id}</option>)}</select></label>
+        <label>Bed<select value={bedFilter} onChange={(event) => setBedFilter(event.target.value)}><option value="">All beds</option>{Array.from(beds).map((id) => <option key={id} value={id}>{session.farm.beds.find((bed) => bed.id === id)?.name || id}</option>)}</select></label>
+        <label>Active on/after<input type="date" value={dateFrom} onChange={(event) => setDateFrom(event.target.value)} /></label>
+        <label>Active on/before<input type="date" value={dateTo} onChange={(event) => setDateTo(event.target.value)} /></label>
+      </div>
+      <p>{schedule.length} of {strategy.allocations.length} complete schedule rows shown.</p>
+      <ol>{schedule.map((item,index) => <li key={item.id || index}>
         <strong>{session.farm.beds.find(bed=>bed.id===item.bed_id)?.name || item.bed_id} · {crops.find(crop=>crop.id===item.crop_id)?.label || item.crop_id}</strong>
         <span>Sow {item.sow_date} → transplant {item.transplant_date} → harvest {item.harvest_date}</span>
         <span>{num(item.expected_kg)} kg projected · {num(item.area_m2)} m²</span>
       </li>)}</ol>
+      {!schedule.length && <p>No schedule rows match these filters.</p>}
     </details>
   </section>;
 }
@@ -1956,7 +1737,7 @@ function MetricStrip({
     reportedRequested = Number(reported?.metrics?.booked_requested_kg || 0),
     reportedDelivered = Number(reported?.metrics?.booked_delivered_kg || 0),
     rows = [
-      ["Booked coverage", m.coverage, m.coverage === null ? "kg" : "%"],
+      ["Booked coverage", m.coverage, "%"],
       ["Surplus", m.surplus, "kg"],
       ["Expiry", m.expiry, "kg"],
       ["Rejection", m.rejection, "kg"],
@@ -1974,6 +1755,11 @@ function MetricStrip({
           <span>Projected</span>
         </article>
       ))}
+      <article className="metric-strip__coverage">
+        <small>Confirmed orders · {civil(session.farm.planning_date || session.farm.cutoff)}–{civil(addDays(session.farm.planning_date || session.farm.cutoff, session.farm.horizon_days - 1))}</small>
+        <strong>{!strategy ? "Not calculated" : m.requested === null ? "Unknown" : `${num(m.delivered)} / ${num(m.requested)} kg`}</strong>
+        <span>{m.shortfall === null ? "Shortfall unknown" : `${num(m.shortfall)} kg shortfall`}</span>
+      </article>
       <article className="metric-strip__reported">
         <small>Reported forecast</small>
         <strong>
@@ -2003,7 +1789,7 @@ function Proposal({
     >
       <span>{selected ? "Candidate" : "Alternative"}</span>
       <h3>{strategy.name}</h3>
-      <p>{strategy.description}</p>
+      <p>{strategy.name === "Lean" ? "Uses a tighter resource plan while the modeled limits hold." : strategy.name === "Resilient" ? "Keeps more modeled capacity for demand and supply variation." : "Balances modeled order service, capacity and contribution margin."}</p>
       <div>
         <b>{m.coverage === null ? "Unknown" : `${num(m.coverage)}%`}</b>
         <small>booked coverage</small>
@@ -2015,7 +1801,7 @@ function Proposal({
       <em>
         {strategy.violations.length
           ? `${strategy.violations.length} constraints flagged`
-          : "Numerically feasible"}
+          : `Feasible within modeled limits${m.shortfall && m.shortfall > 0 ? ` · ${num(m.shortfall)} kg still unfulfilled` : ""}`}
       </em>
     </button>
   );
@@ -2294,100 +2080,10 @@ function MetricValues({ values }: { values: Record<string, number | null> }) {
     </div>
   );
 }
-function ConversationRow({ message: item }: { message: ConversationMessage }) {
-  const referencesChecked =
-    String(item.validation_status).toLowerCase() === "references_verified";
-  const interpretation = String(
-    item.interpretation_status || "not_assessed",
-  ).toLowerCase();
-  return (
-    <article className={`message-card message-card--${item.speaker}`}>
-      <header>
-        <strong>{item.speaker_name || item.speaker}</strong>
-        <span className="validation-chip">
-          {item.validation_status || "recorded"}
-        </span>
-      </header>
-      <p>{item.content}</p>
-      {referencesChecked && (
-        <p className="message-truth-boundary">
-          <ShieldCheck size={14} />
-          <span>
-            <strong>
-              Evidence references checked; interpretation{" "}
-              {interpretation === "qualitative_unverified"
-                ? "unverified"
-                : interpretation.replaceAll("_", " ")}
-            </strong>
-            <small>
-              Evidence status{" "}
-              {String(item.evidence_status || "not reported").replaceAll(
-                "_",
-                " ",
-              )}.
-            </small>
-          </span>
-        </p>
-      )}
-      {!!item.evidence_refs?.length && (
-        <small>Evidence: {item.evidence_refs.join(" · ")}</small>
-      )}
-      {!!item.rendered_facts?.length && (
-        <div className="message-facts">
-          <strong>Typed facts from the frozen snapshot</strong>
-          {item.rendered_facts.map((fact, index) => (
-            <article key={`${fact.reference}-${index}`}>
-              <b>
-                {reviewValue(fact.value)} {fact.unit || ""}
-              </b>
-              <span>
-                {readableFactLabel(fact)}
-              </span>
-              <details>
-                <summary>Fact provenance</summary>
-                <dl>
-                  <div><dt>Reference</dt><dd>{fact.reference}</dd></div>
-                  {fact.entity?.id && <div><dt>Entity</dt><dd>{fact.entity.type || "record"} · {fact.entity.id}</dd></div>}
-                  {fact.snapshot_hash && <div><dt>Snapshot</dt><dd>{fact.snapshot_hash}</dd></div>}
-                  <div><dt>Verification</dt><dd>{fact.verification || "not reported"}</dd></div>
-                </dl>
-              </details>
-            </article>
-          ))}
-        </div>
-      )}
-      {!!item.proposed_actions?.length && (
-        <div className="message-actions">
-          <strong>Proposed actions · advisory only</strong>
-          {item.proposed_actions.map((action, index) => (
-            <span key={`${action.control}-${index}`}>
-              {action.control.replaceAll("_", " ")} · target{" "}
-              {action.target_id || "not specified"} · {action.value} {action.unit} ·{" "}
-              {action.status}
-            </span>
-          ))}
-        </div>
-      )}
-    </article>
-  );
-}
 function reviewValue(value: unknown) {
   if (value === null || value === undefined || value === "") return "Not supplied";
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
-}
-function readableFactLabel(
-  fact: NonNullable<ConversationMessage["rendered_facts"]>[number],
-) {
-  const tail = fact.reference.split(/[.:/]/).at(-1) || "planning fact";
-  const metric = tail
-    .replace(/_(sgd|kg|hours?|percent)$/, "")
-    .replaceAll("_", " ")
-    .replace(/^./, (letter) => letter.toUpperCase());
-  const entity = fact.entity?.id?.replaceAll("_", " ");
-  const context = String(fact.context || "").toLowerCase();
-  const readableContext = context && context !== "strategy" ? fact.context : "";
-  return [metric, entity, readableContext].filter(Boolean).join(" · ");
 }
 function Empty({
   icon,
@@ -2497,6 +2193,12 @@ function metricValues(strategy?: Strategy) {
     rejection: m?.rejected_kg == null ? null : Number(m.rejected_kg),
     margin: Number(m?.margin_sgd || 0),
     rescue: Number(m?.waste_rescue_kg || 0),
+    requested: m?.booked_requested_kg == null ? null : requested,
+    delivered: m?.booked_delivered_kg == null ? null : delivered,
+    shortfall:
+      m?.booked_requested_kg == null || m?.booked_delivered_kg == null
+        ? null
+        : Math.max(0, requested - delivered),
   };
 }
 function derivePhase(

@@ -4,13 +4,13 @@ COUNCIL_VERSION = "seven-agent-council-v3"
 COUNCIL_WORKFLOW_TYPE = "sequential_specialists_then_chair"
 
 ADVISORS = {
-    "ravi": dict(id="ravi", name="Ravi", role="demand_analyst", title="Demand agent", location="Market stall", expertise="Required crop quantities and delivery dates; booked orders versus forecast demand"),
-    "hana": dict(id="hana", name="Hana", role="weather_analyst", title="Weather agent", location="Weather station", expertise="Observed conditions, source freshness and environmental uncertainty; no unsupported yield adjustment"),
-    "idris": dict(id="idris", name="Idris", role="market_analyst", title="Market agent", location="Market desk", expertise="Selling prices, commercial opportunities and sourced buyer/grower reactions; reactions are not measured demand"),
-    "mei": dict(id="mei", name="Mei", role="production_analyst", title="Production agent", location="Greenhouse", expertise="Crop recipes, biological lead times, growing space and feasible production"),
-    "lina": dict(id="lina", name="Lina", role="supply_chain_analyst", title="Supply Chain agent", location="Packing station", expertise="Inventory, expiry, input availability and delivery timing; distinguish modelled constraints from missing logistics data"),
-    "ben": dict(id="ben", name="Ben", role="profit_analyst", title="Profit agent", location="Tool shed", expertise="Computed costs, cash, labour and margins under declared price and demand assumptions"),
-    "asha": dict(id="asha", name="Asha", role="planning_chair", title="Planner agent", location="Council pavilion", expertise="Reconcile evidence-backed tradeoffs across feasible numerical strategies and explain the selection policy"),
+    "ravi": dict(id="ravi", name="Demand Planner", role="demand_analyst", title="Demand Planner", location="Market stall", expertise="Required crop quantities and delivery dates; booked orders versus forecast demand"),
+    "hana": dict(id="hana", name="Weather & Risk", role="weather_analyst", title="Weather & Risk", location="Weather station", expertise="Observed conditions, source freshness and environmental uncertainty; no unsupported yield adjustment"),
+    "idris": dict(id="idris", name="Market Analyst", role="market_analyst", title="Market Analyst", location="Market desk", expertise="Selling prices, commercial opportunities and sourced buyer/grower reactions; reactions are not measured demand"),
+    "mei": dict(id="mei", name="Crop Planner", role="production_analyst", title="Crop Planner", location="Greenhouse", expertise="Crop recipes, biological lead times, growing space and feasible production"),
+    "lina": dict(id="lina", name="Supply Planner", role="supply_chain_analyst", title="Supply Planner", location="Packing station", expertise="Inventory, expiry, input availability and delivery timing; distinguish modelled constraints from missing logistics data"),
+    "ben": dict(id="ben", name="Resource Planner", role="profit_analyst", title="Resource Planner", location="Tool shed", expertise="Computed costs, cash, labour and margins under declared price and demand assumptions"),
+    "asha": dict(id="asha", name="Chair", role="planning_chair", title="Chair", location="Council pavilion", expertise="Reconcile evidence-backed tradeoffs across feasible numerical strategies and explain the selection policy"),
 }
 
 ROLES = [advisor["role"] for advisor in ADVISORS.values()]

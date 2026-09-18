@@ -1,7 +1,7 @@
 import { ArrowRight, Award, BadgeCheck, Bot, Check, ChevronRight, CircleAlert, Database, FlaskConical, GitBranch, LoaderCircle, MessageCircle, Play, RotateCcw, Send, Sparkles, Users, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Advisor, Conversation, ConversationMessage, ProposedAction, Quest, Scenario, ScenarioComparison, ScenarioControls } from '../lib/game'
-import { QUEST_FALLBACKS, scenarioSoundOutcome } from '../lib/game'
+import { QUEST_FALLBACKS, advisorPublicLabel, publicAdvisorLabel, scenarioSoundOutcome } from '../lib/game'
 import { api, type MarketSignals } from '../lib/api'
 import { editionFromPath, editionPath, editionStorageKey } from '../lib/edition'
 import { playAudioEffect, playSimulationResult } from '../lib/audio'
@@ -63,7 +63,7 @@ export function BedDetailPanel({ open, bed, crop, farm, run, previewDate, alloca
       {(earlierDeliveries.length > 0 || bedIssues.length > 0) && <div className="bed-issues"><strong><CircleAlert size={15}/> Planning issues to inspect</strong>{earlierDeliveries.map(order => <p key={order.id}>Delivery {order.id} is due {order.due_date} before this bed’s scheduled harvest. This bed cannot supply it; other beds or inventory may.</p>)}{bedIssues.map((issue,index) => <p key={index}>{formatConstraint(issue)}</p>)}</div>}
       {run && !runMatchesFarm && <p className="panel-note">The visible plan belongs to a different or recorded snapshot, so its constraint findings are not attached to this bed.</p>}
       <p className="preview-note">This is a schedule preview from recorded dates. It does not claim that growth was observed.</p>
-      <div className="panel-actions"><button className="button button--forest" onClick={onAsk}><MessageCircle size={17}/> Ask Mei</button><button className="button button--coral" onClick={onExperiment}><FlaskConical size={17}/> Try a change</button></div>
+      <div className="panel-actions"><button className="button button--forest" onClick={onAsk}><MessageCircle size={17}/> Ask Crop Planner</button><button className="button button--coral" onClick={onExperiment}><FlaskConical size={17}/> Try a change</button></div>
     </div>
   </PanelShell>
 }
@@ -200,10 +200,10 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
     finally { if (generation === conversationGeneration.current) setLoading(false) }
   }
 
-  return <PanelShell open={open} title={`${advisor.name} · ${advisor.role}`} eyebrow={advisor.location} onClose={onClose}>
+  return <PanelShell open={open} title={advisorPublicLabel(advisor)} eyebrow={advisor.location} onClose={onClose}>
     <div className="conversation-shell">
       <div className="advisor-profile">
-        <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt={`Portrait of ${advisor.name}`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
+        <img src={editionPath(`/art/advisors/${advisor.id}.svg`)} alt={`${advisorPublicLabel(advisor)} portrait`}/><div><strong>{advisor.focus}</strong><p>Current context: {scenario ? `${scenario.name} · frozen branch ${scenario.id.slice(0, 8)}` : selectedBed ? `${selectedBed.name} · ${selectedBed.crop_id?.replaceAll('_', ' ') || 'open bed'}` : farm.name}</p></div>
       </div>
       {advisor.id === 'idris' && <MarketCommunitySignals data={marketSignals} failed={marketSignalsError}/>}
       <div className="advisor-switcher" aria-label="Advisor shortcuts">{advisors.map(item => <button key={item.id} className={item.id === advisor.id ? 'is-active' : ''} onClick={() => onSelectAdvisor(item)} aria-label={`Talk to ${item.name}`}><img src={editionPath(`/art/advisors/${item.id}.svg`)} alt=""/><span>{item.name}</span></button>)}</div>
@@ -238,7 +238,7 @@ export function ConversationPanel({ open, advisor, advisors, farm, run, selected
 }
 
 function MessageCard({ message, messages, conversation, replying, onReply, onOpenScenario, onHighlight }: { message: ConversationMessage; messages: ConversationMessage[]; conversation: Conversation; replying: boolean; onReply: () => void; onOpenScenario: (action: ProposedAction) => void; onHighlight: (refs: string[]) => void }) {
-  const author = message.speaker === 'user' ? 'You' : message.speaker_name || message.speaker_id || message.speaker
+  const author = message.speaker === 'user' ? 'You' : publicAdvisorLabel(message.speaker_id || message.speaker_name || message.speaker)
   const unsupported = message.validation_status === 'unsupported' || message.validation_status === 'blocked_unsupported'
   const blockedAction = unsupported || message.proposed_actions?.some(action => action.status === 'blocked_unsupported')
   const replied = message.reply_to ? messages.find(item => item.id === message.reply_to) : undefined
