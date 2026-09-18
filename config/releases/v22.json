@@ -1,0 +1,51 @@
+{
+  "id": "v22",
+  "title": "Council-led planning, with the next action clear",
+  "published_at": "2026-09-18",
+  "summary": "V22 keeps the restored V12 farm workspace and brings the Council forward: short public roles, explicit questions, readable findings, a skippable illustrated introduction, and recoverable planning drafts.",
+  "status": "published",
+  "source_commit": "ac6c84d09d515eac51802138baceabf84a3c01a8",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/ac6c84d09d515eac51802138baceabf84a3c01a8",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/b980180dbb49a5261e43ee1d8e4916cc24457d7f...ac6c84d09d515eac51802138baceabf84a3c01a8",
+  "image_digest": "registry.fly.io/farmtact@sha256:e05b00a575983dfc79d83a41563c3cfe762579475e57d885df414d6705ecdee1",
+  "review_url": "/v22/review",
+  "play_url": "/v22/",
+  "changes": [
+    {
+      "title": "Council roles lead planning",
+      "description": "Demand Planner, Crop Planner, Weather & Risk, Market Analyst, Resource Planner, Supply Planner and Chair now appear as short public roles while preserving durable advisor IDs, historical transcripts and numerical authority.",
+      "feedback_ids": [
+        "3cd31a2"
+      ],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/docs/v22-council-guidance.md",
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/tests/gameplay/test_v22_council_context.py"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Guided first decision without a separate tutorial",
+      "description": "A captioned, skippable 30-second illustration explains the normal planning workflow, then contextual actions lead to calculation, review, simulated approval, reported results and recovery without locking the farm.",
+      "feedback_ids": [
+        "3cd31a2"
+      ],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/apps/web/src/components/DecisionGuide.tsx",
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/tests/browser/v22_guidance.mjs"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Discussions and plan changes recover safely",
+      "description": "Council threads bind to the reviewed result, drafts survive reload, rate limits retain input, and a lost apply response reconciles the exact original proposal without duplicate work.",
+      "feedback_ids": [
+        "3cd31a2"
+      ],
+      "evidence": [
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/apps/web/src/components/CouncilWorkspace.tsx",
+        "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/tests/browser/v22_proposal_recovery.mjs"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
