@@ -1,5 +1,5 @@
 {
-  "latest": "v18",
+  "latest": "v19",
   "editions": [
     {
       "id": "v1",
@@ -873,6 +873,60 @@
           "evidence": [
             "docs/v17-persona-rewrite.md",
             "reports/v17/capability-map.md"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v19",
+      "title": "FarmTact V19 \u2014 Council decision cards",
+      "published_at": "2026-09-18",
+      "summary": "Calculated plans now pair a compact, evidence-bound decision brief with an optional Planning Council review, while retaining the complete one-farm card experience.",
+      "status": "published",
+      "source_commit": "ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/4ab3e9ba51895080cae7f900333b977447f96217...ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5",
+      "image_digest": "registry.fly.io/farmtact@sha256:ab798306de8fee61f40ecf0ca0fab5c24359ab9544e32ac258b1cc8f6614027d",
+      "review_url": "/v19/review",
+      "play_url": "/v19/",
+      "changes": [
+        {
+          "title": "Bring Council into the planning decision",
+          "description": "Each calculated strategy exposes Explain, an explicit optional Council review, and More. Council is bound to that plan's frozen result and revision; it advises but cannot save, approve or operate a farm.",
+          "feedback_ids": [
+            "v19-council-decision-copilot"
+          ],
+          "evidence": [
+            "docs/v19-council-decision-brief.md",
+            "reports/v19/council-cards.json",
+            "tests/browser/v19_council_cards.mjs"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Restore layered decision context in cards",
+          "description": "Plan cards show dated allocation samples, affected beds, review status and clear authority boundaries. The five tool decks retain crop profiles, evidence, research, Data Explorer and replay without returning to a maze of screens.",
+          "feedback_ids": [
+            "v19-layered-summary"
+          ],
+          "evidence": [
+            "reports/v19/implementation.md",
+            "reports/v19/local/browser-cards.json",
+            "docs/v17-persona-rewrite.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Keep browsing and consequences trustworthy",
+          "description": "Previews, swipes, explanations and replay make no provider request. Explicit reviews use the existing validated gateway; planning, approval and recorded simulation remain separate, revision-bound workflows with actual operations disabled.",
+          "feedback_ids": [
+            "v19-explicit-authority"
+          ],
+          "evidence": [
+            "tests/browser/v17_journey.mjs",
+            "tests/browser/v17_transport_guards.mjs",
+            "reports/v19/transport-guards.json"
           ],
           "status": "implemented"
         }
