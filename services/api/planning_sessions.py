@@ -315,6 +315,7 @@ def execute_job(store,tenant,id):
         current.update(status=job['status'],job={k:v for k,v in job.items() if k!='input'},revision=current['revision']+1)
         if not error:
             if job['kind']=='review':
+                output={**output, 'result_id':job['input']['result_id'], 'job_id':id}
                 # Preserve the frozen review after a later numerical revision clears
                 # the current advice. Replay must not need another provider call.
                 job['review_result']=deepcopy(output)

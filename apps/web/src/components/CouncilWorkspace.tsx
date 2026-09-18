@@ -45,6 +45,10 @@ const rolePrompts: Record<string, string[]> = {
   ben: ["What drives the margin and cash tradeoff?", "Which cost assumption should I challenge?"],
   asha: ["Where do the specialists agree and disagree?", "Which option is supported by the verified facts?"],
 };
+const rolePurpose: Record<string, string> = {
+  ravi: "Booked demand", hana: "Weather evidence", idris: "Market evidence",
+  mei: "Crop timing", lina: "Supply timing", ben: "Cash and cost", asha: "Plan synthesis",
+};
 
 function resultId(session: PlanningSession) {
   return typeof session.result_id === "string" ? session.result_id : "";
@@ -81,7 +85,7 @@ function findings(session: PlanningSession): Finding[] {
       ["rejected", "withheld", "blocked", "failed"].includes(raw) ? "withheld" : "unavailable";
     return {
       advisor, status,
-      summary: String(row.summary || row.statement || row.rendered_interpretation || row.rationale || (resultId(session) ? "Review not requested for this result." : "Waiting for calculated plans.")),
+      summary: String(row.summary || row.statement || row.rendered_interpretation || row.rationale || (session.review?.status && session.review.status !== "not_requested" ? "No finding was returned for this role. Inspect the review limits." : resultId(session) ? "Review not requested for this result." : "Waiting for calculated plans.")),
       recommendation: typeof row.recommendation === "string" ? row.recommendation : undefined,
       rationale: typeof row.rendered_interpretation === "string" ? row.rendered_interpretation : typeof row.rationale === "string" ? row.rationale : undefined,
       tradeoff: typeof row.tradeoff === "string" ? row.tradeoff : undefined,
@@ -119,10 +123,12 @@ export function CouncilWorkspace({ session, strategy, busy, onReview, onSelectSt
   const context = `${session.id}:${currentResult || "before-calculation"}`;
   const contextRef = useRef(context);
   const recipientRef = useRef<AdvisorId>(recipient);
+  const draftRef = useRef(draft);
   const pendingPoll = useRef<{ context: string; promise: Promise<void> } | null>(null);
   const inFlightMutation = useRef(false);
   contextRef.current = context;
   recipientRef.current = recipient;
+  draftRef.current = draft;
   const key = draftKey(session.id, currentResult, recipient);
   const active = threads.find((thread) => thread.id === activeId);
   const historical = Boolean(active && snapshotResult(active) && snapshotResult(active) !== currentResult);
@@ -156,7 +162,6 @@ export function CouncilWorkspace({ session, strategy, busy, onReview, onSelectSt
         const next = await api.conversation(id);
         if (disposed.current || contextRef.current !== expectedContext) return;
         setThreads((items) => [next, ...items.filter((item) => item.id !== next.id)]);
-        setActiveId(next.id);
         const state = String(next.last_request_status || next.status || "").toUpperCase();
         if (!state || terminal.has(state)) return;
         await new Promise((resolve) => window.setTimeout(resolve, 1200));
@@ -175,17 +180,19 @@ export function CouncilWorkspace({ session, strategy, busy, onReview, onSelectSt
     inFlightMutation.current = true;
     setSending(mode);
     try {
-      let conversation = active && snapshotResult(active) === currentResult ? active : undefined;
+      let conversation = active && snapshotResult(active) === currentResult && (mode === "council" || active.advisor_id === expectedRecipient) ? active : undefined;
       if (!conversation) {
-        const created = await api.createConversation({ advisor: mode === "council" ? "asha" : expectedRecipient, snapshot_kind: "planning", snapshot_id: session.id, council_review_result_id: currentResult });
+        const created = await api.createConversation({ advisor: mode === "council" ? "asha" : expectedRecipient, snapshot_kind: "planning", snapshot_id: session.id, expected_result_id: currentResult, ...(reviewMatchesCurrent ? { council_review_result_id: currentResult } : {}) });
         if (disposed.current || contextRef.current !== expectedContext) return;
         conversation = await api.conversation(created.id);
         if (disposed.current || contextRef.current !== expectedContext) return;
+        setThreads((items) => [conversation!, ...items.filter((item) => item.id !== conversation!.id)]);
+        setActiveId(conversation.id);
       }
       if (mode === "council") await api.conveneCouncil(conversation.id, { question });
       else await api.sendConversationMessage(conversation.id, { content: question });
-      saveDraft(expectedKey, "");
-      if (contextRef.current === expectedContext && recipientRef.current === expectedRecipient) setDraft("");
+      if (readDraft(expectedKey, "") === question) saveDraft(expectedKey, "");
+      if (contextRef.current === expectedContext && recipientRef.current === expectedRecipient && draftRef.current.trim() === question) setDraft("");
       await poll(conversation.id, expectedContext);
     } catch (error) { if (contextRef.current === expectedContext) onError(error instanceof Error ? error.message : "The Council request could not be completed."); }
     finally {
@@ -206,34 +213,41 @@ export function CouncilWorkspace({ session, strategy, busy, onReview, onSelectSt
       const transcript = await api.conversation(thread.id);
       if (disposed.current || contextRef.current !== expectedContext) return;
       setThreads((items) => items.map((item) => item.id === transcript.id ? transcript : item));
+      if (["QUEUED", "RUNNING", "PENDING"].includes(String(transcript.last_request_status || "").toUpperCase())) void poll(thread.id, expectedContext).catch(error => { if (!disposed.current && contextRef.current === expectedContext) onError(error instanceof Error ? error.message : "Could not refresh this discussion."); });
     } catch (error) {
       if (contextRef.current === expectedContext) onError(error instanceof Error ? error.message : "Could not load the saved transcript.");
     }
   }
 
-  return <section className="council-workspace council-room" tabIndex={-1} aria-labelledby="council-workspace-title">
-    <header className="cw-heading"><div><span className="cw-kicker">Shared decision area</span><h2 id="council-workspace-title">Planning Council</h2><p>Compare numerical plans, inspect each specialist’s actual status, then decide what to challenge. Advice cannot approve or change farm work.</p></div>{currentResult && !reviewMatchesCurrent && <button className="cw-primary" disabled={busy} onClick={onReview}><Users size={18}/> Review these plans with Council</button>}</header>
+  return <section className="v22-council-workspace council-room" tabIndex={-1} aria-labelledby="council-workspace-title">
+    <header className="cw-heading"><div><span className="cw-kicker">Shared decision area</span><h2 id="council-workspace-title">Planning Council</h2><p>Compare numerical plans, inspect each specialist’s actual status, then decide what to challenge. Advice cannot approve or change farm work.</p>{reviewRunning && <p className="cw-review-progress" role="status">Review in progress. Roles remain awaiting a recorded result until their saved finding is returned.</p>}</div>{currentResult && !reviewMatchesCurrent && <button className="cw-primary" disabled={busy} onClick={onReview}><Users size={18}/> Review these plans with Council</button>}</header>
 
-    <div className="cw-roster" aria-label="Council role status">{normalized.map(({ advisor, status }) => <article key={advisor.id} data-status={status}><img src={`/art/advisors/${advisor.id}.svg`} alt=""/><div><strong>{advisor.name}</strong><span>{advisor.focus}</span></div><small>{reviewRunning ? "Reviewing" : !currentResult ? "Waiting for plans" : !reviewMatchesCurrent ? "Not requested" : status}</small></article>)}</div>
+    <div className="cw-roster" aria-label="Council role status">{normalized.map(({ advisor, status }) => <article key={advisor.id} data-status={status}><img src={`/art/advisors/${advisor.id}.svg`} alt=""/><div><strong>{advisor.name}</strong><span>{rolePurpose[advisor.id]}</span></div><small>{reviewRunning ? (status === "unavailable" ? "Awaiting result" : status) : !currentResult ? "Waiting for plans" : !reviewMatchesCurrent ? "Not requested" : status}</small></article>)}</div>
 
     {proposals.length > 0 && <section className="cw-decisions"><h3>Recorded recommendations and differences</h3><p>{grouped.size ? "Validated and partial roles are grouped only when their saved findings name the same valid plan. Withheld findings remain separate." : "No validated or partial finding recommends a plan yet; the numerical alternatives remain available without inferred consensus."}</p><div className="cw-plan-strip">{proposals.map((plan) => { const supporters = grouped.get(plan.id) || []; return <button key={plan.id} className={strategy?.id === plan.id ? "is-selected" : ""} onClick={() => onSelectStrategy(plan.id)}><strong>{plan.name}</strong><span>{supporters.length ? `${supporters.map((item) => `${item.advisor.name} (${item.status})`).join(", ")} recorded this option` : "No validated role recommendation"}</span></button>; })}</div></section>}
 
     {reviewMatchesCurrent && <div className="cw-findings">{normalized.map((finding) => <FindingCard key={finding.advisor.id} finding={finding}/>)}</div>}
 
     {currentResult && <section className="cw-discussion"><header><div><h3>Discuss this frozen result</h3><p>Questions use the current calculated result. Changing the result starts a new context; older threads stay read-only.</p></div></header>
-      <label>Recipient<select value={recipient} onChange={(event) => { saveDraft(key, draft); setRecipient(event.target.value as AdvisorId); }}>{ADVISORS.map((advisor) => <option key={advisor.id} value={advisor.id}>{advisor.name} · {advisor.publicLabel}</option>)}</select></label>
-      <div className="cw-suggestions" aria-label="Suggested questions">{suggested.map((prompt) => <button key={prompt} type="button" onClick={() => { const next = draft.trim() ? `${draft.trim()}\n${prompt}` : prompt; setDraft(next); saveDraft(key, next); }}>Add question: {prompt}</button>)}</div>
-      <label>Your question<textarea maxLength={1000} value={draft} onChange={(event) => { setDraft(event.target.value); saveDraft(key, event.target.value); }} placeholder="Ask, challenge or compare…"/></label>
-      <div className="cw-compose-actions"><button type="button" className="cw-discard" disabled={!draft} onClick={() => { setDraft(""); saveDraft(key, ""); }}><X size={16}/> Discard draft</button><button type="button" disabled={busy || reviewRunning || !draft.trim() || !currentResult || Boolean(sending) || historical} onClick={() => void send("role")}><Send size={16}/> {sending === "role" ? "Sending…" : `Send to ${ADVISORS.find((item) => item.id === recipient)?.name}`}</button><button type="button" className="cw-primary" disabled={busy || reviewRunning || !draft.trim() || !currentResult || Boolean(sending) || historical} onClick={() => void send("council")}><Users size={16}/> {sending === "council" ? "Convening…" : "Ask Council"}</button></div>
+      <label>Recipient<select disabled={Boolean(sending)} value={recipient} onChange={(event) => { saveDraft(key, draft); setRecipient(event.target.value as AdvisorId); }}>{ADVISORS.map((advisor) => <option key={advisor.id} value={advisor.id}>{advisor.name}</option>)}</select></label>
+      <div className="cw-suggestions" aria-label="Suggested questions">{suggested.map((prompt) => <button key={prompt} type="button" disabled={Boolean(sending)} onClick={() => { const next = draft.trim() ? `${draft.trim()}\n${prompt}` : prompt; setDraft(next); saveDraft(key, next); }}>Add question: {prompt}</button>)}</div>
+      <label>Your question<textarea disabled={Boolean(sending)} maxLength={1000} value={draft} onChange={(event) => { setDraft(event.target.value); saveDraft(key, event.target.value); }} placeholder="Ask, challenge or compare…"/></label>
+      <div className="cw-compose-actions"><button type="button" className="cw-discard" disabled={!draft} onClick={() => { setDraft(""); saveDraft(key, ""); }}><X size={16}/> Discard draft</button><button type="button" disabled={busy || reviewRunning || !draft.trim() || !currentResult || Boolean(sending) || historical} onClick={() => void send("role")}><Send size={16}/> {sending === "role" ? "Sending…" : `Send to ${ADVISORS.find((item) => item.id === recipient)?.publicLabel}`}</button><button type="button" className="cw-primary" disabled={busy || reviewRunning || !draft.trim() || !currentResult || Boolean(sending) || historical} onClick={() => void send("council")}><Users size={16}/> {sending === "council" ? "Convening…" : "Ask Council"}</button></div>
       <p className="cw-boundary">Choosing a suggestion or editing a draft makes no provider request. Send and Ask Council are explicit requests. Device keyboard voice typing can enter text.</p>
     </section>}
 
-    {currentResult && <section className="cw-threads"><header><h3>Saved discussions</h3>{hasOlder && <button type="button" onClick={() => void loadThreads(true, context)}>Load older</button>}</header>{!threads.length && <p>No saved discussion exists for this planning session.</p>}<div className="cw-thread-layout"><nav aria-label="Saved Council discussions">{threads.map((thread) => { const old = Boolean(snapshotResult(thread) && snapshotResult(thread) !== currentResult); return <button key={thread.id} className={thread.id === activeId ? "is-selected" : ""} onClick={() => void openThread(thread)}><strong>{thread.title || ADVISORS.find((item) => item.id === thread.advisor_id)?.name || "Council discussion"}</strong><span>{old ? "Historical · read-only" : "Current result"} · {thread.created_at ? new Date(thread.created_at).toLocaleDateString() : "saved"}</span></button>; })}</nav>{active && <div className="cw-transcript">{historical && <p className="cw-history"><ShieldCheck size={16}/> Historical transcript. Its original frozen context is preserved and it cannot receive new messages.</p>}{(active.messages || []).map((message) => <Message key={message.id} message={message} allowHandoff={!historical} onHandoff={() => onHandoff({ conversationId: active.id, messageId: message.id, actions: message.proposed_actions || [] })}/>)}</div>}</div></section>}
+    {currentResult && <section className="cw-threads"><header><h3>Saved discussions</h3><div>{active && <button type="button" onClick={() => setActiveId("")}>New discussion</button>}{hasOlder && <button type="button" onClick={() => void loadThreads(true, context)}>Load older</button>}</div></header>{!threads.length && <p>No saved discussion exists for this planning session.</p>}<div className="cw-thread-layout"><nav aria-label="Saved Council discussions">{threads.map((thread) => { const old = Boolean(snapshotResult(thread) && snapshotResult(thread) !== currentResult); return <button key={thread.id} className={thread.id === activeId ? "is-selected" : ""} onClick={() => void openThread(thread)}><strong>{thread.title || ADVISORS.find((item) => item.id === thread.advisor_id)?.name || "Council discussion"}</strong><span>{old ? "Historical · read-only" : "Current result"} · {thread.created_at ? new Date(thread.created_at).toLocaleDateString() : "saved"}</span></button>; })}</nav>{active && <div className="cw-transcript">{historical && <p className="cw-history"><ShieldCheck size={16}/> Historical transcript. Its original frozen context is preserved and it cannot receive new messages.</p>}{(active.messages || []).map((message) => <Message key={message.id} message={message} allowHandoff={!historical} onHandoff={() => onHandoff({ conversationId: active.id, messageId: message.id, actions: message.proposed_actions || [] })}/>)}</div>}</div></section>}
   </section>;
 }
 
 function FindingCard({ finding }: { finding: Finding }) {
-  return <article className="cw-finding" data-status={finding.status}><header><img src={`/art/advisors/${finding.advisor.id}.svg`} alt=""/><div><h3>{finding.advisor.name}</h3><span>{finding.advisor.role}</span></div><small>{finding.status}</small></header><p>{finding.summary}</p>{(finding.recommendation || finding.rationale || finding.tradeoff) && <dl>{finding.recommendation && <div><dt>Recommendation</dt><dd>{words(finding.recommendation)}</dd></div>}{finding.rationale && <div><dt>Rationale</dt><dd>{words(finding.rationale)}</dd></div>}{finding.tradeoff && <div><dt>Tradeoff</dt><dd>{words(finding.tradeoff)}</dd></div>}</dl>}{finding.renderedFacts.length > 0 && <details><summary>Rendered facts ({finding.renderedFacts.length})</summary><ul>{finding.renderedFacts.map((fact, index) => <li key={index}>{words(fact)}</li>)}</ul></details>}{finding.reasons.length > 0 && <details><summary>Why this was withheld</summary><ul>{finding.reasons.map((reason) => <li key={reason}>{words(reason)}</li>)}</ul></details>}</article>;
+  return <article className="cw-finding" data-status={finding.status}><header><img src={`/art/advisors/${finding.advisor.id}.svg`} alt=""/><div><h3>{finding.advisor.name}</h3><span>{rolePurpose[finding.advisor.id]}</span></div><small>{finding.status}</small></header><p>{finding.summary}</p>{(finding.recommendation || finding.rationale || finding.tradeoff) && <dl>{finding.recommendation && <div><dt>Recommendation</dt><dd>{words(finding.recommendation)}</dd></div>}{finding.rationale && <div><dt>Rationale</dt><dd>{words(finding.rationale)}</dd></div>}{finding.tradeoff && <div><dt>Tradeoff</dt><dd>{words(finding.tradeoff)}</dd></div>}</dl>}{finding.renderedFacts.length > 0 && <details><summary>Rendered facts ({finding.renderedFacts.length})</summary><ul>{finding.renderedFacts.map((fact, index) => <li key={index}><FindingFact value={fact}/></li>)}</ul></details>}{finding.reasons.length > 0 && <details><summary>Why this was withheld</summary><ul>{finding.reasons.map((reason) => <li key={reason}>{words(reason)}</li>)}</ul></details>}</article>;
+}
+
+function FindingFact({ value }: { value: unknown }) {
+  if (!value || typeof value !== "object") return <>{words(value)}</>;
+  const fact = value as Partial<RenderedFact>;
+  return <span className="cw-rendered-fact"><b>{words(fact.value)} {fact.unit || ""}</b><span>{fact.reference ? factLabel(fact as RenderedFact) : words(fact.context, "Recorded planning fact")}</span><details><summary>Fact provenance</summary><dl>{fact.reference && <div><dt>Reference</dt><dd>{fact.reference}</dd></div>}{fact.entity?.id && <div><dt>Entity</dt><dd>{fact.entity.type || "record"} · {fact.entity.id}</dd></div>}{fact.period?.value && <div><dt>Period</dt><dd>{fact.period.kind || "period"} · {fact.period.value}</dd></div>}<div><dt>Verification</dt><dd>{fact.verification || "not reported"}</dd></div></dl></details></span>;
 }
 
 function factLabel(fact: RenderedFact) {

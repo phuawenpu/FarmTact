@@ -56,6 +56,37 @@
   background: #f0f5df;
 }
 
+.proposal-editor-lock {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.proposal-editor-lock:disabled {
+  opacity: .68;
+}
+
+.proposal-recovery {
+  display: grid;
+  gap: 8px;
+  margin-block: 14px;
+  padding: 14px;
+  border: 2px solid #b36b4c;
+  border-radius: 14px;
+  background: #fff1e7;
+}
+
+.proposal-recovery p {
+  margin: 0;
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+.proposal-recovery .button {
+  width: fit-content;
+}
+
 .proposal-review h3,
 .proposal-review p,
 .strategy-differences p {

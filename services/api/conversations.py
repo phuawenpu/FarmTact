@@ -133,12 +133,13 @@ class CreateConversation(Strict):
     selected_bed_id: str | None = Field(default=None, max_length=100)
     focus: ConversationFocus | None = None
     council_review_result_id: str | None = Field(default=None, max_length=100)
+    expected_result_id: str | None = Field(default=None, max_length=100)
 
     @model_validator(mode="after")
     def scenario_requires_id(self) -> "CreateConversation":
         if self.snapshot_kind in {"scenario", "research", "planning"} and not self.snapshot_id:
             raise ValueError("Scenario conversations require a snapshot_id")
-        if self.council_review_result_id and self.snapshot_kind != "planning":
+        if (self.council_review_result_id or self.expected_result_id) and self.snapshot_kind != "planning":
             raise ValueError("Council review context requires a planning snapshot")
         return self
 
@@ -675,6 +676,8 @@ def _freeze_snapshot(store: Any, tenant: str, body: CreateConversation) -> dict[
         guided_session = get_session(store, tenant, body.snapshot_id)
         if not guided_session:
             raise HTTPException(404, "Planning session not found")
+        if body.expected_result_id and body.expected_result_id != guided_session.get('result_id'):
+            raise HTTPException(409, "The planning result changed; reload before starting this discussion")
         guided_result = get_result(store, tenant, guided_session.get('result_id'))
         if not guided_result or guided_session['status'] != 'COMPLETED':
             raise HTTPException(409, "Complete the planning calculation before specialist questions")
@@ -1107,67 +1110,68 @@ def build_conversation_router(
             if prior_fingerprint != fingerprint:
                 raise HTTPException(409, "Idempotency key reused with changed conversation inputs")
             return {"id": prior["id"], "status": prior["status"], "reused": True}
-        frozen = _freeze_snapshot(request.app.state.store, tenant, body)
-        focus = _derive_focus(frozen, body.focus) if body.focus is not None else None
-        selected_bed_id = body.selected_bed_id
-        if focus and focus["entity_kind"] in {"bed", "grow_space"}:
-            if selected_bed_id is not None and selected_bed_id != focus["entity_id"]:
-                raise HTTPException(
-                    422, "Selected bed does not match the focused grow space"
+        with request.app.state.store.transaction(tenant):
+            frozen = _freeze_snapshot(request.app.state.store, tenant, body)
+            focus = _derive_focus(frozen, body.focus) if body.focus is not None else None
+            selected_bed_id = body.selected_bed_id
+            if focus and focus["entity_kind"] in {"bed", "grow_space"}:
+                if selected_bed_id is not None and selected_bed_id != focus["entity_id"]:
+                    raise HTTPException(
+                        422, "Selected bed does not match the focused grow space"
+                    )
+                selected_bed_id = focus["entity_id"]
+            payload = {
+                "id": secrets.token_hex(16),
+                "status": "OPEN",
+                "advisor_id": body.advisor,
+                "advisor_role": ADVISORS[body.advisor]["role"],
+                "snapshot_ref": frozen["snapshot_ref"],
+                "selected_bed_id": selected_bed_id,
+                "focus": focus,
+                "created_at": now(),
+                "updated_at": now(),
+                "execution_mode": "test",
+                "data_mode": frozen["snapshot_ref"]["data_mode"],
+                "development_phase": "autonomous_development",
+                "workflow_type": "persistent_advisor_conversation",
+                "contract_versions": CONVERSATION_VERSIONS.public(),
+                "warnings": [],
+                "last_request_id": None,
+                "last_request_status": None,
+                "_snapshot": frozen["snapshot"],
+                "_scenario": frozen["scenario"],
+                "_tool_results": frozen["tool_results"],
+                "_typed_facts": frozen["typed_facts"],
+                "_highlight_refs": frozen["highlight_refs"],
+                "_evidence": frozen["evidence"],
+                "_planning": frozen["planning"],
+                "_source_context": frozen["source_context"],
+                "_market_signals": frozen["market_signals"],
+                "_news_context": frozen["news_context"],
+                "_council_review": frozen["council_review"],
+                "council_review_result_id": body.council_review_result_id,
+            }
+            try:
+                result, created = persistence.create_conversation(
+                    tenant, idempotency_key, fingerprint, payload
                 )
-            selected_bed_id = focus["entity_id"]
-        payload = {
-            "id": secrets.token_hex(16),
-            "status": "OPEN",
-            "advisor_id": body.advisor,
-            "advisor_role": ADVISORS[body.advisor]["role"],
-            "snapshot_ref": frozen["snapshot_ref"],
-            "selected_bed_id": selected_bed_id,
-            "focus": focus,
-            "created_at": now(),
-            "updated_at": now(),
-            "execution_mode": "test",
-            "data_mode": frozen["snapshot_ref"]["data_mode"],
-            "development_phase": "autonomous_development",
-            "workflow_type": "persistent_advisor_conversation",
-            "contract_versions": CONVERSATION_VERSIONS.public(),
-            "warnings": [],
-            "last_request_id": None,
-            "last_request_status": None,
-            "_snapshot": frozen["snapshot"],
-            "_scenario": frozen["scenario"],
-            "_tool_results": frozen["tool_results"],
-            "_typed_facts": frozen["typed_facts"],
-            "_highlight_refs": frozen["highlight_refs"],
-            "_evidence": frozen["evidence"],
-            "_planning": frozen["planning"],
-            "_source_context": frozen["source_context"],
-            "_market_signals": frozen["market_signals"],
-            "_news_context": frozen["news_context"],
-            "_council_review": frozen["council_review"],
-            "council_review_result_id": body.council_review_result_id,
-        }
-        try:
-            result, created = persistence.create_conversation(
-                tenant, idempotency_key, fingerprint, payload
-            )
-        except ValueError as exc:
-            if str(exc) == "Thirty conversations per session maximum":
-                raise HTTPException(429, str(exc)) from exc
-            raise HTTPException(409, str(exc)) from exc
-        if created:
-            persistence.append_event(
-                tenant,
-                result["id"],
-                None,
-                "conversation_created",
-                {
-                    "advisor_id": result["advisor_id"],
-                    "snapshot_ref": result["snapshot_ref"],
-                    "focus": result.get("focus"),
-                },
-            )
-        return {"id": result["id"], "status": result["status"], "reused": not created}
+            except ValueError as exc:
+                if str(exc) == "Thirty conversations per session maximum":
+                    raise HTTPException(429, str(exc)) from exc
+                raise HTTPException(409, str(exc)) from exc
+            if created:
+                persistence.append_event(
+                    tenant,
+                    result["id"],
+                    None,
+                    "conversation_created",
+                    {
+                        "advisor_id": result["advisor_id"],
+                        "snapshot_ref": result["snapshot_ref"],
+                        "focus": result.get("focus"),
+                    },
+                )
+            return {"id": result["id"], "status": result["status"], "reused": not created}
 
     @router.get("/{conversation_id}")
     def read(conversation_id: str, request: Request) -> dict[str, Any]:

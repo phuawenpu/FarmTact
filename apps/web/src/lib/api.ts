@@ -292,6 +292,7 @@ export const api = {
     snapshot_id?: string;
     selected_bed_id?: string;
     council_review_result_id?: string;
+    expected_result_id?: string;
     focus?: {
       card_id: string;
       entity_kind: string;

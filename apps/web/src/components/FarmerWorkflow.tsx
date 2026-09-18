@@ -74,6 +74,37 @@ type ProposalDraft = {
   orderPrice: number;
   orderStatus: "confirmed" | "tentative";
 };
+type PendingProposalApply = {
+  version: "v22-pending-proposal-apply-v1";
+  sessionId: string;
+  resultId: string;
+  baseRevision: number;
+  strategyId: string;
+  draftKey: string;
+  draft: ProposalDraft;
+  assumptions: FarmerAssumptions;
+  proposal: FarmerProposal;
+  createdAt: string;
+};
+
+function pendingProposalKey(sessionId: string) {
+  return editionStorageKey(`pending-proposal-apply:${sessionId}`);
+}
+
+function readPendingProposal(sessionId: string): PendingProposalApply | null {
+  try {
+    const value = JSON.parse(localStorage.getItem(pendingProposalKey(sessionId)) || "null") as PendingProposalApply | null;
+    return value?.version === "v22-pending-proposal-apply-v1" && value.sessionId === sessionId ? value : null;
+  } catch { return null; }
+}
+
+function savePendingProposal(sessionId: string, value: PendingProposalApply | null) {
+  try {
+    const key = pendingProposalKey(sessionId);
+    if (value) localStorage.setItem(key, JSON.stringify(value));
+    else localStorage.removeItem(key);
+  } catch { /* local recovery is optional; server idempotency remains authoritative */ }
+}
 const phases: Array<[Phase, string, string]> = [
   ["observe", "Observe", "Review records"],
   ["discuss", "Discuss", "Council review"],
@@ -276,14 +307,16 @@ export function FarmerWorkflow({
         }
       />
     );
+  const firstOrder = [...session.farm.orders].sort((a,b)=>a.due_date.localeCompare(b.due_date)||a.id.localeCompare(b.id))[0];
+  const objective = firstOrder ? `Can we cover ${num(firstOrder.quantity_kg)} kg ${crops.find(crop=>crop.id===firstOrder.crop_id)?.name || firstOrder.crop_id.replaceAll('_',' ')} by ${civil(firstOrder.due_date)}?` : 'What should this farm plan next?';
   const draftContext = JSON.stringify([session.id, session.revision, chosen?.id || ""]);
   const proposalDraftKey = JSON.stringify([
     draftContext, discussionSource?.conversationId || "", discussionSource?.messageId || "",
   ]);
   return (
     <div className="farmer-flow">
-      <DecisionGuide title={!strategies.length ? "What should this farm plan next?" : sessionTasks.some(task=>task.status==='recovery_required') ? "Review what changed; plan the next step" : "Compare the plans with your Council"}
-        detail={!strategies.length ? "Start with the recorded orders and crops. Calculate options, then ask the Council to explain their tradeoffs." : "Ask a specialist, compare recommendations and review exact changes before saving simulated work."}
+      <DecisionGuide title={sessionTasks.some(task=>task.status==='recovery_required') ? "Review what changed; plan the next step" : objective}
+        detail={!strategies.length ? "Start with this dated order. All recorded demand stays in the calculation. Compare options, then ask the Council about the tradeoffs." : "Ask a specialist, compare recommendations and review exact changes before saving simulated work."}
         label={!strategies.length ? 'Compare planting plans' : sessionTasks.some(task=>task.status==='recovery_required') ? 'Compare recovery plans' : sessionTasks.length ? 'Report a result' : approvableProposal ? 'Save simulation plan' : 'Discuss these plans'}
         disabled={Boolean(busy)}
         onAction={()=>{if(!strategies.length)void mutate('Calculating planting plans',value=>planningApi.calculate(value.id,value.revision));else if(sessionTasks.some(task=>task.status==='recovery_required'))setFormOpen(true);else if(sessionTasks.length)jumpToPhase('act');else if(approvableProposal)setActionsOpen(true);else jumpToPhase('discuss')}}
@@ -572,7 +605,8 @@ function ProposalEditor({
       ...recipes.map((item) => item.crop_id),
     ].filter(Boolean))),
     defaultCrop = cropIds[0] || "caixin";
-  const savedDraft = drafts.get(draftKey);
+  const storedPending = readPendingProposal(session.id);
+  const savedDraft = storedPending?.draft ?? drafts.get(draftKey);
   const [demand, setDemand] = useState(savedDraft?.demand ?? 100),
     [yieldPct, setYieldPct] = useState(savedDraft?.yieldPct ?? 100),
     [delay, setDelay] = useState(savedDraft?.delay ?? 0),
@@ -592,17 +626,26 @@ function ProposalEditor({
     [orderQty, setOrderQty] = useState(savedDraft?.orderQty ?? 0),
     [orderPrice, setOrderPrice] = useState(savedDraft?.orderPrice ?? 8),
     [orderStatus, setOrderStatus] = useState<"confirmed" | "tentative">(savedDraft?.orderStatus ?? "confirmed"),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [pending, setPending] = useState<PendingProposalApply | null>(storedPending),
+    [recoveryNotice, setRecoveryNotice] = useState("");
+  const currentDraft: ProposalDraft = {
+    demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
+    nursery, labour, cash, orderEnabled, orderReference, orderCrop,
+    orderDueDate, orderQty, orderPrice, orderStatus,
+  };
   useEffect(() => {
+    if (pending) return;
     drafts.set(draftKey, {
       demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
       nursery, labour, cash, orderEnabled, orderReference, orderCrop,
       orderDueDate, orderQty, orderPrice, orderStatus,
     });
-  }, [drafts, draftKey, demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
+  }, [drafts, draftKey, pending, demand, yieldPct, delay, scenarioCrop, bed, reserveStart, reserveEnd,
     nursery, labour, cash, orderEnabled, orderReference, orderCrop, orderDueDate,
     orderQty, orderPrice, orderStatus]);
   const submit = async () => {
+    if (pending) return;
     setBusy(true);
     try {
       const assumptions: FarmerAssumptions = {
@@ -671,11 +714,60 @@ function ProposalEditor({
             }
           : undefined,
       );
+      const recovery: PendingProposalApply = {
+        version: "v22-pending-proposal-apply-v1",
+        sessionId: session.id,
+        resultId: String(session.result_id || ""),
+        baseRevision: session.revision,
+        strategyId: strategy.id,
+        draftKey,
+        draft: currentDraft,
+        assumptions,
+        proposal,
+        createdAt: new Date().toISOString(),
+      };
+      savePendingProposal(session.id, recovery);
+      setPending(recovery);
       await farmerWorkflowApi.applyProposal(proposal);
+      savePendingProposal(session.id, null);
+      setPending(null);
       drafts.delete(draftKey);
       await onDone();
     } catch (caught) {
       onError(message(caught, "Could not apply the proposal."));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const reconcilePending = async () => {
+    if (!pending || busy) return;
+    setBusy(true);
+    setRecoveryNotice("");
+    try {
+      const latest = await farmerWorkflowApi.state();
+      const recorded = latest.proposals.find((item) => item.id === pending.proposal.id);
+      if (!recorded) {
+        setRecoveryNotice("The saved proposal was not found in this farm workspace. No replacement was created; keep this draft and ask an owner to inspect the saved operation.");
+        return;
+      }
+      if (["applied", "approved"].includes(recorded.status)) {
+        savePendingProposal(session.id, null);
+        setPending(null);
+        drafts.delete(pending.draftKey);
+        await onDone();
+        return;
+      }
+      if (recorded.status !== "draft") {
+        setRecoveryNotice(`Proposal ${recorded.id.slice(0, 8)} is ${recorded.status}. No replacement was created; resolve or discard that server record before editing again.`);
+        return;
+      }
+      await farmerWorkflowApi.applyProposal(recorded);
+      savePendingProposal(session.id, null);
+      setPending(null);
+      drafts.delete(pending.draftKey);
+      await onDone();
+    } catch (caught) {
+      setRecoveryNotice(message(caught, "The saved proposal could not be reconciled. No replacement proposal was created."));
     } finally {
       setBusy(false);
     }
@@ -688,6 +780,12 @@ function ProposalEditor({
         Unsubmitted edits are saved on this device for this edition, session and
         revision. They never contain credentials and can be discarded below.
       </p>
+      {pending && <section className="proposal-recovery" role="status">
+        <strong>Revised-plan submission needs reconciliation</strong>
+        <p>Proposal {pending.proposal.id.slice(0, 8)} was created for result {pending.resultId.slice(0, 8) || "unknown"}, revision {pending.baseRevision}. Its apply response was not confirmed. The original fields are locked and retained; resuming will inspect this exact proposal and will never create another one.</p>
+        {recoveryNotice && <p className="warning-box">{recoveryNotice}</p>}
+        <button className="button button--forest" disabled={busy} onClick={() => void reconcilePending()}>{busy ? <LoaderCircle className="spin" /> : <RefreshCw />} Resume / reconcile saved proposal</button>
+      </section>}
       {discussionSource && (
         <section className="discussion-handoff">
           <strong>Reviewed advisory context</strong>
@@ -715,6 +813,7 @@ function ProposalEditor({
           </small>
         </section>
       )}
+      <fieldset className="proposal-editor-lock" disabled={Boolean(pending)}>
       <div className="assumption-grid">
         <label>
           Crop affected by demand, yield and delay
@@ -820,15 +919,16 @@ function ProposalEditor({
         </ul>
         <p>Past recorded work stays unchanged. The server will validate these assumptions and calculate a new revision; this does not approve tasks.</p>
       </section>
+      </fieldset>
       <div className="proposal-editor-actions">
       <button
         className="button button--forest"
-        disabled={busy || Boolean(bed && (!reserveStart || reserveStart < start || reserveEnd < reserveStart || reserveEnd > end)) || (orderEnabled && (!orderReference.trim() || orderQty <= 0 || orderPrice < 0 || !orderDueDate || orderDueDate < start || orderDueDate > end))}
+        disabled={busy || Boolean(pending) || Boolean(bed && (!reserveStart || reserveStart < start || reserveEnd < reserveStart || reserveEnd > end)) || (orderEnabled && (!orderReference.trim() || orderQty <= 0 || orderPrice < 0 || !orderDueDate || orderDueDate < start || orderDueDate > end))}
         onClick={() => void submit()}
       >
         {busy ? <LoaderCircle className="spin" /> : <RefreshCw />} Calculate revised plans
       </button>
-      <button className="text-button" disabled={busy} onClick={() => { drafts.delete(draftKey); onClose(); }}>Discard saved draft</button>
+      <button className="text-button" disabled={busy || Boolean(pending)} onClick={() => { drafts.delete(draftKey); onClose(); }}>Discard saved draft</button>
       </div>
     </Dialog>
   );
@@ -1669,6 +1769,31 @@ function FarmBoard({
   for (const item of [...(strategy?.allocations || [])].sort((a,b) => a.sow_date.localeCompare(b.sow_date))) {
     alloc.set(item.bed_id, [...(alloc.get(item.bed_id) || []), item]);
   }
+  // A selected strategy is always a preview. Only a new server revision may
+  // briefly mark the beds whose recorded plan changed, so the scene never
+  // implies that simply browsing has changed the farm.
+  const allocationSignature = [...alloc.entries()]
+    .map(([bedId, cycles]) => `${bedId}:${cycles.map((item) => `${item.crop_id}/${item.sow_date}/${item.harvest_date}`).join(',')}`)
+    .sort()
+    .join('|');
+  const previous = useRef<{revision:number; allocations:Map<string,string>} | undefined>(undefined);
+  const [affectedBeds, setAffectedBeds] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    const next = new Map(allocationSignature.split('|').filter(Boolean).map((entry) => {
+      const [bedId, value = ''] = entry.split(':', 2);
+      return [bedId, value];
+    }));
+    const before = previous.current;
+    if (before && before.revision !== session.revision) {
+      const ids = new Set([...before.allocations.keys(), ...next.keys()]);
+      const changed = new Set([...ids].filter((id) => before.allocations.get(id) !== next.get(id)));
+      setAffectedBeds(changed);
+      const timer = window.setTimeout(() => setAffectedBeds(new Set()), 550);
+      previous.current = {revision: session.revision, allocations: next};
+      return () => window.clearTimeout(timer);
+    }
+    previous.current = {revision: session.revision, allocations: next};
+  }, [allocationSignature, session.revision]);
   return (
     <div className="living-board" data-preview-strategy={strategy?.id || ""}>
       <div className="living-board__beds">
@@ -1679,7 +1804,7 @@ function FarmBoard({
           const stage = item ? 'planned' : batch?.stage || bed.stage || (cropId ? 'recorded batch' : 'empty');
           const crop = crops.find(x => x.id === cropId);
           return (
-            <article key={bed.id}>
+            <article key={bed.id} className={affectedBeds.has(bed.id) ? "is-affected" : ""} data-affected={affectedBeds.has(bed.id) || undefined}>
               <CropArt
                 cropId={cropId}
                 color={crop?.color}

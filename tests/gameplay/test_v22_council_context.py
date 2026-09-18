@@ -51,10 +51,12 @@ def install_session(store, tenant, session_id="v22-session", result_id="v22-resu
     return session, result
 
 
-def create(client, session_id, key, *, result_id=None, advisor="mei"):
+def create(client, session_id, key, *, result_id=None, expected_result_id=None, advisor="mei"):
     body = {"advisor": advisor, "snapshot_kind": "planning", "snapshot_id": session_id}
     if result_id is not None:
         body["council_review_result_id"] = result_id
+    if expected_result_id is not None:
+        body["expected_result_id"] = expected_result_id
     return client.post("/api/v1/conversations", json=body, headers={"Idempotency-Key": key})
 
 
@@ -153,3 +155,81 @@ def test_public_role_names_keep_internal_ids_and_roles(env):
     assert saved["advisor_role"] == "demand_analyst"
     public = client.get(f"/api/v1/conversations/{saved['id']}").json()
     assert public["advisor"] == ADVISORS["ravi"]
+
+
+def test_expected_result_id_accepts_current_and_rejects_changed_result(env):
+    client, store, tenant = env
+    session, _ = install_session(store, tenant, session_id="expected-session", result_id="expected-current")
+    accepted = create(
+        client, session["id"], "expected-current-key",
+        expected_result_id=session["result_id"],
+    )
+    assert accepted.status_code == 201, accepted.text
+    saved = ConversationStore(store).get_conversation(tenant, accepted.json()["id"])
+    assert saved["snapshot_ref"]["id"] == "expected-session:expected-current"
+
+    changed = create(
+        client, session["id"], "expected-stale-key",
+        expected_result_id="result-visible-before-recalculation",
+    )
+    assert changed.status_code == 409
+    assert changed.json()["detail"] == "The planning result changed; reload before starting this discussion"
+    assert ConversationStore(store).get_conversation_by_key(tenant, "expected-stale-key") is None
+
+
+def test_composite_cursor_covers_equal_updated_timestamps_without_skips(env):
+    client, store, tenant = env
+    session, _ = install_session(store, tenant, session_id="cursor-session", result_id="cursor-result")
+    created = [create(client, session["id"], f"cursor-{index}") for index in range(3)]
+    assert all(response.status_code == 201 for response in created)
+    ids = {response.json()["id"] for response in created}
+    same_time = "2026-09-18T08:00:00+00:00"
+    persistence = ConversationStore(store)
+    payloads = [persistence.get_conversation(tenant, conversation_id) for conversation_id in ids]
+    with store.connection(write=True) as connection:
+        for payload in payloads:
+            payload["updated_at"] = same_time
+            connection.execute(update(conversations).where(conversations.c.id == payload["id"]).values(payload=payload))
+
+    seen = []
+    cursor = None
+    for _ in range(3):
+        params = {"planning_session_id": session["id"], "limit": 1}
+        if cursor is not None:
+            params["before"] = cursor
+        response = client.get("/api/v1/conversations", params=params)
+        assert response.status_code == 200
+        page = response.json()
+        assert len(page["conversations"]) == 1
+        seen.append(page["conversations"][0]["id"])
+        cursor = page["next_before"]
+        assert cursor == f"{same_time}|{seen[-1]}"
+    assert set(seen) == ids
+    assert len(seen) == len(set(seen))
+    final = client.get("/api/v1/conversations", params={
+        "planning_session_id": session["id"], "limit": 1, "before": cursor,
+    }).json()
+    assert final["conversations"] == []
+    assert final["next_before"] is None
+
+
+def test_snapshot_freeze_runs_inside_tenant_transaction(env, monkeypatch):
+    client, store, tenant = env
+    session, _ = install_session(store, tenant, session_id="locked-session", result_id="locked-result")
+    import services.api.conversations as conversation_api
+
+    original = conversation_api._freeze_snapshot
+    observed = []
+
+    def asserting_freeze(current_store, current_tenant, body):
+        connection = current_store._transaction.get()
+        observed.append((connection is not None, current_tenant))
+        return original(current_store, current_tenant, body)
+
+    monkeypatch.setattr(conversation_api, "_freeze_snapshot", asserting_freeze)
+    response = create(
+        client, session["id"], "transaction-guard",
+        expected_result_id=session["result_id"],
+    )
+    assert response.status_code == 201, response.text
+    assert observed == [(True, tenant)]

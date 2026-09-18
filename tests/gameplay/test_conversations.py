@@ -189,13 +189,13 @@ def test_seven_current_advisors_and_frozen_create_idempotency(env):
     client, store, tenant = env
     roster = client.get("/api/v1/conversations/advisors").json()["advisors"]
     assert [(row["id"], row["name"]) for row in roster] == [
-        ("ravi", "Ravi"),
-        ("hana", "Hana"),
-        ("idris", "Idris"),
-        ("mei", "Mei"),
-        ("lina", "Lina"),
-        ("ben", "Ben"),
-        ("asha", "Asha"),
+        ("ravi", "Demand Planner"),
+        ("hana", "Weather & Risk"),
+        ("idris", "Market Analyst"),
+        ("mei", "Crop Planner"),
+        ("lina", "Supply Planner"),
+        ("ben", "Resource Planner"),
+        ("asha", "Chair"),
     ]
     first = create(client).json()
     frozen = ConversationStore(store).get_conversation(tenant, first["id"])

@@ -7,7 +7,7 @@ const base=(process.env.BASE_URL||'http://127.0.0.1:4199').replace(/\/$/,'');
 const artifacts=process.env.ARTIFACT_DIR||'/tmp/v22-lifecycle';
 const report={status:'RUNNING',base_url:base+(process.env.APP_PATH||'/'),checks:[],failures:[],page_errors:[],provider_requests:[],screenshots:[]};
 const check=(name,pass,detail)=>{report.checks.push({name,pass:!!pass,detail});console.log(`${pass?'PASS':'FAIL'} ${name}`);if(!pass)throw Error(`${name}: ${JSON.stringify(detail)}`)};
-let browser,transport,page;
+let browser,transport,page,context;
 try{
  await mkdir(artifacts,{recursive:true});
  if(process.env.STAGED_SOURCE){
@@ -16,7 +16,7 @@ try{
   transport=await transport(process.env.STAGED_SOURCE);
  }
  browser=await chromium.launch({headless:true});
- const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:process.env.NORMAL_MOTION?'no-preference':'reduce',...(process.env.VIDEO_DIR?{recordVideo:{dir:process.env.VIDEO_DIR,size:{width:390,height:844}}}:{})});
+ context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:process.env.NORMAL_MOTION?'no-preference':'reduce',...(process.env.VIDEO_DIR?{recordVideo:{dir:process.env.VIDEO_DIR,size:{width:390,height:844}}}:{})});
  if(transport)await transport.attach(context);
  context.setDefaultTimeout(transport?180000:45000);
  page=await context.newPage();
@@ -67,7 +67,7 @@ try{
  await page.getByLabel('Farmer note').fill('V22 lifecycle short result');
  await page.getByRole('button',{name:/Save reported result/}).click();
  await page.locator(`[data-task-id="${target.id}"]`).getByText('recovery_required').waitFor();
- const recovery=page.getByRole('button',{name:'Compare recovery plans',exact:true});
+ const recovery=page.locator('.decision-guide').getByRole('button',{name:'Compare recovery plans',exact:true});
  check('reported exception offers future-only recovery',await recovery.isVisible()&&await page.getByText(/Keep completed work, change only the future/).isVisible());
  const corrected=Math.max(0,Number(target.planned_quantity||1)-.5);
  await page.getByLabel('Corrected quantity').fill(String(corrected));
@@ -96,6 +96,7 @@ try{
  report.status='PASS';await context.close();
 }catch(error){report.status='FAIL';report.failures.push(error.stack||String(error));if(page)await page.screenshot({path:resolve(artifacts,'failure.png'),fullPage:true}).catch(()=>{});process.exitCode=1}
 finally{
+ if(process.env.STORAGE_STATE_OUT&&context)await context.storageState({path:process.env.STORAGE_STATE_OUT}).catch(()=>{});
  if(transport)report.staged_transport=transport.evidence;
  if(browser)await browser.close();
  const output=resolve(process.env.REPORT_PATH||resolve(artifacts,'report.json'));await mkdir(resolve(output,'..'),{recursive:true});await writeFile(output,JSON.stringify(report,null,2)+'\n');

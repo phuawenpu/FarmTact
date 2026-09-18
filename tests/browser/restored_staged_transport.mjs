@@ -8,14 +8,14 @@ import { createHash } from 'node:crypto';
 const quote = value => "'" + value.replaceAll("'", "'\\''") + "'";
 const normalizeEdition = value => {
   const edition = String(value || 'v20').toLowerCase().replace(/^v?/, 'v');
-  if (!/^v(?:20|21)$/.test(edition)) throw Error('EXPECTED_EDITION must be v20 or v21');
+  if (!/^v(?:20|21|22)$/.test(edition)) throw Error('EXPECTED_EDITION must be v20, v21 or v22');
   return edition;
 };
 const expectedEdition = normalizeEdition(process.env.EXPECTED_EDITION);
 const sshContainer = process.env.STAGED_CONTAINER || expectedEdition;
 const remotePort = Number(process.env.STAGED_PORT || (8080 + Number(expectedEdition.slice(1))));
 if (sshContainer !== expectedEdition) throw Error('STAGED_CONTAINER must match EXPECTED_EDITION');
-if (![8100, 8101].includes(remotePort) || remotePort !== (8080 + Number(expectedEdition.slice(1)))) throw Error('STAGED_PORT does not match the expected edition');
+if (![8100, 8101, 8102].includes(remotePort) || remotePort !== (8080 + Number(expectedEdition.slice(1)))) throw Error('STAGED_PORT does not match the expected edition');
 
 // Each request launches a remote interpreter; bound operator overhead separately
 // from the application's API limits. This queue never retries a request.
