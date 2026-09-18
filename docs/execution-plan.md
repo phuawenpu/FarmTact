@@ -1,10 +1,14 @@
-# V12 restoration — active, 18 September 2026
+# V12 restoration — published; V21 targeted UX follow-up, 18 September 2026
 
 Root owns shell selection, API compatibility, release identity, verification and
 publication. Bounded specialists own restoration browser checks and comparative UX
 evidence. V20 restores V12 first; subsequent fixes require a separate release. The
 V15–V19 universal card-shell requirement is superseded by the user's correction.
-See [restoration contract](v20-v12-restoration.md).
+V20 is live from `6054b6f` after 804 regression tests passed (one skipped),
+47 exact-image browser checks and preservation verification. V21 keeps this
+structure and addresses the observed navigation, preview and dialog issues.
+See [restoration contract](v20-v12-restoration.md), [walkthrough](v12-restoration-ux-review.md)
+and [V21 scope](v21-v12-ux.md).
 
 # V19 Council decision cards — published, 18 September 2026
 

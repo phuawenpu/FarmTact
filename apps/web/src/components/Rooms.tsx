@@ -1,5 +1,5 @@
 import { AlertTriangle, ArrowUpRight, BarChart3, BookOpen, CalendarClock, CheckCircle2, Cloud, Database, FileJson, FlaskConical, Leaf, LockKeyhole, Play, RefreshCw, Search, ShieldCheck, Upload } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Capabilities, Crop, Farm, Run, Source } from '../lib/types'
 import { editionPath } from '../lib/edition'
 import { CropArt, formatDate, formatMoney, humanizeExecutionMode, StatusPill } from './Visuals'
@@ -44,21 +44,47 @@ export function CropLibrary({ crops, onLoadCrop }: { crops: Crop[]; onLoadCrop: 
   const [selected, setSelected] = useState<Crop | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
+  const profileDialog = useRef<HTMLElement>(null)
+  const profileTrigger = useRef<HTMLButtonElement | null>(null)
+  const profileRequest = useRef(0)
+  const closeCrop = useCallback(() => {
+    profileRequest.current += 1
+    setSelected(null)
+    setLoading(null)
+    profileTrigger.current?.focus({ preventScroll: true })
+  }, [])
+  useEffect(() => () => { profileRequest.current += 1 }, [])
   const filtered = useMemo(() => crops.filter(crop => `${crop.label} ${crop.aliases.join(' ')}`.toLowerCase().includes(query.toLowerCase())), [crops, query])
 
-  const openCrop = async (crop: Crop) => {
+  const openCrop = async (crop: Crop, trigger: HTMLButtonElement) => {
+    const request = ++profileRequest.current
+    profileTrigger.current = trigger
     setSelected(crop)
     setLoading(crop.id)
-    try { setSelected(await onLoadCrop(crop.id)) } catch { /* summary remains usable */ } finally { setLoading(null) }
+    try {
+      const profile = await onLoadCrop(crop.id)
+      if (profileRequest.current === request) setSelected(profile)
+    } catch { /* summary remains usable */ } finally {
+      if (profileRequest.current === request) setLoading(null)
+    }
   }
 
+  const selectedCropId = selected?.id
   useEffect(() => {
-    if (!selected) return
+    if (!selectedCropId) return
     closeButton.current?.focus()
-    const handleKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelected(null) }
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); closeCrop(); return }
+      if (event.key !== 'Tab') return
+      const controls = Array.from(profileDialog.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]') || []).filter(element => element.getClientRects().length > 0)
+      const first = controls[0], last = controls[controls.length - 1]
+      if (!first) return
+      if (event.shiftKey && (document.activeElement === first || !profileDialog.current?.contains(document.activeElement))) { event.preventDefault(); last.focus() }
+      else if (!event.shiftKey && (document.activeElement === last || !profileDialog.current?.contains(document.activeElement))) { event.preventDefault(); first.focus() }
+    }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [selected])
+  }, [selectedCropId, closeCrop])
 
   return (
     <div className="room-page">
@@ -66,7 +92,7 @@ export function CropLibrary({ crops, onLoadCrop }: { crops: Crop[]; onLoadCrop: 
       <label className="search-field"><Search size={18} /><span className="sr-only">Search crops</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search crop or local alias" /></label>
       <section className="crop-library">
         {filtered.map((crop, index) => (
-          <button className="crop-profile-card" onClick={() => openCrop(crop)} key={crop.id} style={{ '--delay': `${index * 35}ms` } as React.CSSProperties}>
+          <button className="crop-profile-card" onClick={event => void openCrop(crop, event.currentTarget)} key={crop.id} style={{ '--delay': `${index * 35}ms` } as React.CSSProperties}>
             <div className="crop-profile-card__art"><CropArt cropId={crop.id} color={crop.color} /></div>
             <div className="crop-profile-card__body">
               <div><h2>{crop.label}</h2><p>{crop.aliases.length ? crop.aliases.join(' · ') : 'No aliases reported'}</p></div>
@@ -81,7 +107,7 @@ export function CropLibrary({ crops, onLoadCrop }: { crops: Crop[]; onLoadCrop: 
         ))}
         {!filtered.length && <div className="soft-empty"><Search size={20} /><span>No crops match “{query}”.</span></div>}
       </section>
-      {selected && <div className="sheet-layer" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null) }}><section className="crop-modal" role="dialog" aria-modal="true" aria-label={`${selected.label} profile`}><button ref={closeButton} className="modal-close" onClick={() => setSelected(null)}>Close</button><CropArt cropId={selected.id} color={selected.color} /><p className="illustration-caveat">Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty.</p><p className="kicker">{selected.harvested_part}</p><h2>{selected.label}</h2><p className="crop-aliases">{selected.aliases.join(' · ')}</p>{loading === selected.id ? <p className="muted-copy">Loading evidence profile…</p> : <><h3 className="subheading">Planning recipe</h3>{selected.recipe ? <div className="metric-grid"><div><span>Full cycle</span><strong>{selected.recipe.cycle_days} days</strong></div><div><span>Nursery</span><strong>{selected.recipe.nursery_days} days</strong></div><div><span>Expected yield</span><strong>{selected.recipe.yield_kg_per_m2} kg/m²</strong></div><div><span>Validation</span><strong>{selected.recipe.validation_status.replaceAll('_', ' ')}</strong></div></div> : <p className="muted-copy">No planning recipe is available.</p>}<h3 className="subheading">Cautions</h3>{selected.warnings.length ? <ul className="clean-list warning-list">{selected.warnings.map(item => <li key={item}><AlertTriangle size={15}/>{item}</li>)}</ul> : <p className="muted-copy">No warnings reported.</p>}<h3 className="subheading">Evidence</h3>{selected.evidence?.length ? <div className="evidence-records">{selected.evidence.map(record => <article key={record.evidence_id}><div><span><BookOpen size={13}/>{record.evidence_id}</span>{record.year && <small>{record.year}</small>}</div><strong>{record.title || 'Untitled evidence record'}</strong>{record.finding && <p>{record.finding}</p>}{record.limit && <p className="evidence-limit"><AlertTriangle size={13}/>{record.limit}</p>}{record.source_url && <a href={record.source_url} target="_blank" rel="noreferrer">Open source <ArrowUpRight size={13}/></a>}</article>)}</div> : <div className="evidence-chips">{selected.evidence_ids.map(id => <span key={id}><BookOpen size={13}/>{id}</span>)}</div>}</>}</section></div>}
+      {selected && <div className="sheet-layer" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) closeCrop() }}><section ref={profileDialog} className="crop-modal" role="dialog" aria-modal="true" aria-label={`${selected.label} profile`}><button ref={closeButton} className="modal-close" onClick={closeCrop}>Close</button><CropArt cropId={selected.id} color={selected.color} /><p className="illustration-caveat">Illustration shows a representative form; cultivar and SKU may vary. Artwork does not resolve catalogue taxonomy or agronomic uncertainty.</p><p className="kicker">{selected.harvested_part}</p><h2>{selected.label}</h2><p className="crop-aliases">{selected.aliases.join(' · ')}</p>{loading === selected.id ? <p className="muted-copy">Loading evidence profile…</p> : <><h3 className="subheading">Planning recipe</h3>{selected.recipe ? <div className="metric-grid"><div><span>Full cycle</span><strong>{selected.recipe.cycle_days} days</strong></div><div><span>Nursery</span><strong>{selected.recipe.nursery_days} days</strong></div><div><span>Expected yield</span><strong>{selected.recipe.yield_kg_per_m2} kg/m²</strong></div><div><span>Validation</span><strong>{selected.recipe.validation_status.replaceAll('_', ' ')}</strong></div></div> : <p className="muted-copy">No planning recipe is available.</p>}<h3 className="subheading">Cautions</h3>{selected.warnings.length ? <ul className="clean-list warning-list">{selected.warnings.map(item => <li key={item}><AlertTriangle size={15}/>{item}</li>)}</ul> : <p className="muted-copy">No warnings reported.</p>}<h3 className="subheading">Evidence</h3>{selected.evidence?.length ? <div className="evidence-records">{selected.evidence.map(record => <article key={record.evidence_id}><div><span><BookOpen size={13}/>{record.evidence_id}</span>{record.year && <small>{record.year}</small>}</div><strong>{record.title || 'Untitled evidence record'}</strong>{record.finding && <p>{record.finding}</p>}{record.limit && <p className="evidence-limit"><AlertTriangle size={13}/>{record.limit}</p>}{record.source_url && <a href={record.source_url} target="_blank" rel="noreferrer">Open source <ArrowUpRight size={13}/></a>}</article>)}</div> : <div className="evidence-chips">{selected.evidence_ids.map(id => <span key={id}><BookOpen size={13}/>{id}</span>)}</div>}</>}</section></div>}
     </div>
   )
 }

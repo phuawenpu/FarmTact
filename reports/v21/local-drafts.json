@@ -1,0 +1,254 @@
+{
+  "status": "PASS",
+  "test_kind": "local calculation + intercepted UI draft fixtures",
+  "backend_claims": "Real local creation/calculation only. Proposal and adviser acceptance/failure are intercepted UI fixtures, not backend acceptance evidence.",
+  "checks": [
+    {
+      "name": "restored V12 experience is active",
+      "pass": true
+    },
+    {
+      "name": "local planner supplied ordinary calculated strategies",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: all proposal edits survive Escape/reopen",
+      "pass": true,
+      "detail": {
+        "Expected demand": "123",
+        "Seasonal yield": "81",
+        "Harvest delay": "4",
+        "Reserve a bed": "bed-01",
+        "Reservation starts": "2026-09-08",
+        "Reservation ends": "2026-09-13",
+        "Nursery sites": "213",
+        "Labour hours/week": "34",
+        "Cash capacity (SGD)": "987",
+        "Add confirmed order (kg)": "12",
+        "Add tentative order (kg)": "7"
+      }
+    },
+    {
+      "name": "fixture UI: proposal edits survive close button/reopen",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: proposal draft does not cross strategy",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: returning to original strategy restores its draft",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: failed explicit proposal submission retains all edits",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: fixture accepted proposal clears same-context draft",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: old unsent strategy draft does not cross revision",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: specialist question survives Escape/reopen",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: question does not leak to another adviser",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: switching back restores adviser-specific question",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: failed explicit specialist submission retains question",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: fixture accepted question clears reopened draft",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: accepting one question preserves another adviser draft",
+      "pass": true
+    },
+    {
+      "name": "fixture UI: fixture guard saw no unexpected writes",
+      "pass": true,
+      "detail": {
+        "kind": "intercepted-ui-only",
+        "writes": [
+          {
+            "method": "POST",
+            "path": "/api/v1/farm-workflow/proposals",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/farm-workflow/proposals",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/farm-workflow/proposals/fixture-draft-proposal/apply",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/farm-workflow/proposals",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/farm-workflow/proposals/fixture-draft-proposal/apply",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/conversations",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/conversations",
+            "intercepted": true
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/conversations/fixture-draft-conversation/messages",
+            "intercepted": true
+          }
+        ],
+        "unexpectedWrites": []
+      }
+    },
+    {
+      "name": "all client provider-like requests were intercepted UI fixtures",
+      "pass": true,
+      "detail": {
+        "count": 3
+      }
+    },
+    {
+      "name": "draft scope: unsent text is not persisted to browser storage",
+      "pass": true
+    },
+    {
+      "name": "draft scope: navigating away and remounting resets proposal",
+      "pass": true
+    },
+    {
+      "name": "draft scope: navigating away and remounting resets question",
+      "pass": true
+    },
+    {
+      "name": "draft scope: reload resets unsent proposal",
+      "pass": true
+    },
+    {
+      "name": "draft scope: reload resets unsent question",
+      "pass": true
+    },
+    {
+      "name": "draft checks made no additional real backend mutations",
+      "pass": true,
+      "detail": [
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/planning-sessions/9e0d495e70296466c395353605e000a1/calculate"
+        }
+      ]
+    },
+    {
+      "name": "outer guard blocked no unexpected mutations",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no page exceptions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "page_errors": [],
+  "real_backend_writes": [
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions/9e0d495e70296466c395353605e000a1/calculate"
+    }
+  ],
+  "blocked_writes": [],
+  "client_provider_requests": [
+    "/api/v1/conversations",
+    "/api/v1/conversations",
+    "/api/v1/conversations/fixture-draft-conversation/messages"
+  ],
+  "fixture_ui": {
+    "kind": "intercepted-ui-only",
+    "writes": [
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals/fixture-draft-proposal/apply",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals/fixture-draft-proposal/apply",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/conversations",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/conversations",
+        "intercepted": true
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/conversations/fixture-draft-conversation/messages",
+        "intercepted": true
+      }
+    ],
+    "unexpectedWrites": []
+  },
+  "draft_scope": "React memory within mounted V12 workspace; no reload/navigation persistence"
+}

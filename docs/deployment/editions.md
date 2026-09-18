@@ -2,11 +2,12 @@
 
 ## Current-game publication policy
 
-V19 is published from `ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5`, with the
-ordinary-farm integrated card application at `/` and `/play`. It brings an optional
-Council decision brief to calculated planning cards while preserving explicit review,
-revision-bound approval and the five tool decks. V18 remains immutable and privately
-retained. Always inspect the current registry before determining the next edition.
+V20 restores the V12 farmer workspace at `/` and `/play`, from
+`6054b6f5a4dba6ba77a9090d2141c0c45fc045db`. The experience is explicitly selected
+in the entry point, independently of the immutable edition identity. V19 and
+previous source/image/data remain privately retained. V21 is the separate small
+UX follow-up; V12 remains its product baseline. Always inspect the current registry
+before choosing the next edition number.
 
 V15 replaces the historical first-season introduction with the same full card
 application at `/` and `/play`. From V14 onward the active

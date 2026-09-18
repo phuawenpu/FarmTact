@@ -29,7 +29,7 @@ try {
     transport=await stagedTransport(process.env.STAGED_SOURCE);
   }
   browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({viewport: {width:390,height:844}, reducedMotion:"reduce"});
+  const context = await browser.newContext({viewport: {width:390,height:844}, reducedMotion:process.env.NORMAL_MOTION ? "no-preference" : "reduce", ...(process.env.VIDEO_DIR ? {recordVideo:{dir:process.env.VIDEO_DIR,size:{width:390,height:844}}} : {})});
   if(transport) await transport.attach(context);
   context.setDefaultTimeout(transport ? 180000 : 30000);
   const
@@ -191,6 +191,12 @@ try {
   const approvedProposal=[...approvedState.proposals].reverse().find(item=>item.status==='approved');
   const durableTasks=approvedState.tasks.filter(item=>item.proposal_id===approvedProposal?.id);
   check('explicit approval persists revision-bound actions',Boolean(approvedProposal)&&durableTasks.length>0,{proposal:approvedProposal?.id,tasks:durableTasks.length});
+  if(process.env.EXPECTED_EDITION === 'v21') {
+    for(const [label,selector] of [['Act','.action-stage'],['Verify','.task-result-panel']]) {
+      await page.locator('.flow-rail button').filter({hasText:label}).click();
+      check(`${label} rail focuses saved task workspace`,await page.locator(selector).evaluate(el=>document.activeElement===el));
+    }
+  }
   const target=durableTasks.find(item=>['pending','in_progress'].includes(item.status)&&item.planned_quantity>0&&item.unit)||durableTasks.find(item=>item.planned_quantity>0&&item.unit)||durableTasks[0];
   await page.locator(`[data-task-id="${target.id}"]`).click();
   const actual=page.getByLabel(new RegExp('Actual quantity'));
@@ -200,6 +206,10 @@ try {
   await page.getByRole('button',{name:/Save reported result/}).click();
   await page.locator(`[data-task-id="${target.id}"]`).getByText('recovery_required').waitFor({timeout:30000});
   check('short reported result opens durable recovery',await page.getByText(/Keep completed work, change only the future/).isVisible());
+  if(process.env.EXPECTED_EDITION === 'v21') {
+    await page.locator('.flow-rail button').filter({hasText:'Replan'}).click();
+    check('Replan rail focuses server-evidenced recovery section',await page.locator('.recovery-stage').evaluate(el=>document.activeElement===el));
+  }
   const corrected=Math.max(0,Number(target.planned_quantity||1)-0.5);
   await page.getByLabel('Corrected quantity').fill(String(corrected));
   await page.getByLabel('Reason').fill('Scale reading reconciled');

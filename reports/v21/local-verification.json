@@ -1,0 +1,39 @@
+{
+  "status": "PARTIAL_LOCAL_COMPLETE",
+  "build": "PASS",
+  "generated_contracts": "PASS",
+  "python_regression": {
+    "passed": 804,
+    "skipped": 1,
+    "scope": "unchanged backend; complete isolated V20 regression"
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "checks": 47,
+    "normal_motion_video": "local-lifecycle.webm",
+    "duration_seconds": 38.88,
+    "inspected_frames": [
+      "lifecycle-frame-0.2.png",
+      "lifecycle-frame-0.5.png",
+      "lifecycle-frame-0.75.png"
+    ]
+  },
+  "draft_ui": {
+    "status": "PASS",
+    "checks": 25,
+    "scope": "intercepted submission responses, no inference or additional real backend mutations"
+  },
+  "responsive": {
+    "initial_60_checks": "PASS",
+    "later_run": "found moving hover target at430px; targets now stationary",
+    "final_local_retry": "blocked by existing new_session_ip limit; not reset or relaxed",
+    "remaining_gate": "exact staged image responsive, zoom and lifecycle checks"
+  },
+  "bundle": {
+    "javascript_bytes": 526120,
+    "javascript_gzip_bytes": 153730,
+    "css_bytes": 148450,
+    "css_gzip_bytes": 30570,
+    "warning": "existing >500kB chunk warning retained"
+  }
+}

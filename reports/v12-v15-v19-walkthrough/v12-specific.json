@@ -1,0 +1,14 @@
+{
+  "before": {
+    "board": "A1\nKailan · planned\nA2\nLettuce · planned\nA3\nCaixin · planned\nA4\nLettuce · planned\nB1\nCaixin · planned\nB2\nXiao bai cai / pak choi · planned\nB3\nKailan · planned\nB4\nCaixin · planned\nC1\nKailan · planned\nC2\nAvailable ·\nC3\nAvailable ·\nC4\nLettuce · planned\nD1\nAvailable ·\nD2\nAvailable ·\nD3\nXiao bai cai / pak choi · planned\nD4\nXiao bai cai / pak choi · planned\n\nFARM PULSE\n\n16 beds · 320 m²\nCash\nSGD 2,200\nLabour\n32 h/week\nHorizon\n56 days\nSynthetic state · refreshed from saved session",
+    "metrics": "Coverage\n54.1 %\nPROJECTED\nSurplus\n54 kg\nPROJECTED\nExpiry\n176 kg\nPROJECTED\nRejection\nUnknown\nPROJECTED\nMargin\n2,930.6 SGD\nPROJECTED\nWaste Rescue\n0 kg\nPROJECTED\nReported forecast\nNo results yet\nFARMER-REPORTED · UNVERIFIED"
+  },
+  "after": {
+    "board": "A1\nKailan · planned\nA2\nLettuce · planned\nA3\nCaixin · planned\nA4\nLettuce · planned\nB1\nCaixin · planned\nB2\nXiao bai cai / pak choi · planned\nB3\nKailan · planned\nB4\nCaixin · planned\nC1\nKailan · planned\nC2\nAvailable ·\nC3\nAvailable ·\nC4\nLettuce · planned\nD1\nAvailable ·\nD2\nAvailable ·\nD3\nXiao bai cai / pak choi · planned\nD4\nXiao bai cai / pak choi · planned\n\nFARM PULSE\n\n16 beds · 320 m²\nCash\nSGD 2,200\nLabour\n32 h/week\nHorizon\n56 days\nSynthetic state · refreshed from saved session",
+    "metrics": "Coverage\n44.9 %\nPROJECTED\nSurplus\n35 kg\nPROJECTED\nExpiry\n154 kg\nPROJECTED\nRejection\nUnknown\nPROJECTED\nMargin\n2,467.6 SGD\nPROJECTED\nWaste Rescue\n0 kg\nPROJECTED\nReported forecast\nNo results yet\nFARMER-REPORTED · UNVERIFIED"
+  },
+  "boardUnchanged": true,
+  "metricsChanged": true,
+  "focused": "<button class=\"button button--cream\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-file-spreadsheet\" aria-hidden=\"true\"><path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"></path><path d=\"M14 2v5a1 1 0 0 0 1 1h5\"></path><path d=\"M8 13h2\"></path><path d=\"M14 13h2\"></path><path d=\"M8 17h2\"></path><path d=\"M14 17h2\"></path></svg> Inbox </button>",
+  "escapeClosed": false
+}

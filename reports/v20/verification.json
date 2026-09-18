@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "tests": 805,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "seconds": "845.799",
+  "database": "isolated PostgreSQL farmtact_v20_regression",
+  "provider_credentials": "removed from process",
+  "first_run": {
+    "passed": 802,
+    "failed": 2,
+    "skipped": 1,
+    "note": "Concurrent historical applications were stopped before full isolated rerun. Original failure evidence retained in /tmp/v20-regression.log."
+  },
+  "browser": {
+    "staged_checks": 47,
+    "status": "PASS"
+  },
+  "operator": {
+    "status": "PASS",
+    "provider_submissions": 0
+  }
+}

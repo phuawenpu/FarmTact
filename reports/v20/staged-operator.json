@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Ordinary general demo farm retained",
+      "pass": true
+    },
+    {
+      "name": "Workflow retains every ordinary farm entity",
+      "pass": true
+    },
+    {
+      "name": "Guidance preserves the farm and planner revision",
+      "pass": true
+    },
+    {
+      "name": "Guidance preserves the farm and planner revision",
+      "pass": true
+    },
+    {
+      "name": "Local numerical job completed",
+      "pass": true
+    },
+    {
+      "name": "All strategies and demand remain available",
+      "pass": true
+    },
+    {
+      "name": "Proposal creation is idempotent",
+      "pass": true
+    },
+    {
+      "name": "Local numerical job completed",
+      "pass": true
+    },
+    {
+      "name": "Saved explanation binds both results and affected beds",
+      "pass": true
+    },
+    {
+      "name": "Exact inverse is eligible before dependent work",
+      "pass": true
+    },
+    {
+      "name": "Local numerical job completed",
+      "pass": true
+    },
+    {
+      "name": "Inverse is an append-only compensating proposal",
+      "pass": true
+    },
+    {
+      "name": "Proposal creation is idempotent",
+      "pass": true
+    },
+    {
+      "name": "Local numerical job completed",
+      "pass": true
+    },
+    {
+      "name": "Server permits current sandbox approval",
+      "pass": true
+    },
+    {
+      "name": "Approval creates sandbox tasks exactly once",
+      "pass": true
+    },
+    {
+      "name": "Clock advance records authoritative scene facts",
+      "pass": true
+    },
+    {
+      "name": "Delivery report and correction retain separate revisions",
+      "pass": true
+    },
+    {
+      "name": "Original result still replays read-only",
+      "pass": true
+    },
+    {
+      "name": "Bootstrap farm remains unchanged",
+      "pass": true
+    }
+  ],
+  "mutations": [
+    "/planning-sessions",
+    "/planning-sessions/729f6bf44c6695e4f8339e914cf76a97/guidance",
+    "/planning-sessions/729f6bf44c6695e4f8339e914cf76a97/guidance",
+    "/planning-sessions/729f6bf44c6695e4f8339e914cf76a97/calculate",
+    "/farm-workflow/proposals",
+    "/farm-workflow/proposals",
+    "/farm-workflow/proposals/f6f248b003dc2eda546e115d25cbd754/apply",
+    "/farm-workflow/proposals/f6f248b003dc2eda546e115d25cbd754/inverse",
+    "/farm-workflow/proposals",
+    "/farm-workflow/proposals",
+    "/farm-workflow/proposals/c9d57bc6d780f06117470c8de6f7e9c7/apply",
+    "/farm-workflow/proposals/c9d57bc6d780f06117470c8de6f7e9c7/approve-actions",
+    "/farm-workflow/proposals/c9d57bc6d780f06117470c8de6f7e9c7/approve-actions",
+    "/planning-sessions/729f6bf44c6695e4f8339e914cf76a97/advance",
+    "/farm-workflow/tasks/task-d14a9e2f286913dd7a8247e9/result",
+    "/farm-workflow/tasks/task-d14a9e2f286913dd7a8247e9/corrections"
+  ],
+  "provider_submissions": 0,
+  "session_id": "729f6bf44c6695e4f8339e914cf76a97"
+}

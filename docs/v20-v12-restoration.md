@@ -34,3 +34,13 @@ after the completed session poll but before the refreshed workflow response. Tha
 window sent the old strategy identity and was rejected with 409. Restoration now
 requires the server-owned proposal approval eligibility before enabling approval;
 the current result and proposal bindings still apply. No approval checks are relaxed.
+
+## Published baseline
+
+V20 was published before applying any follow-up UX changes. Both `/` and `/play`
+serve the V12 experience from source `6054b6f5a4dba6ba77a9090d2141c0c45fc045db`.
+The isolated full PostgreSQL regression passed 804 tests, with one skipped.
+The first concurrent run failed two timing-sensitive numerical fixtures; all
+passed in the complete isolated rerun after stopping historical services.
+Exact-image browser acceptance passed 47 checks, operator acceptance passed,
+and the nine-part preservation audit passed after publication. See reports/v20.

@@ -1,0 +1,46 @@
+{
+  "version": "v19",
+  "checks": [
+    {
+      "name": "existing approved task prerequisite",
+      "pass": true,
+      "detail": {
+        "sessionId": "6d64da3bb4306c675f495d87d90aa215",
+        "tasks": 52
+      }
+    },
+    {
+      "name": "form arrow and swipe keep task binding",
+      "pass": true,
+      "detail": "task-3ded2f20e98da9cfaf35d27f: harvest"
+    },
+    {
+      "name": "failed task result becomes recovery-required",
+      "pass": true,
+      "detail": "{\"status\":\"recovery_required\",\"revision\":1}"
+    },
+    {
+      "name": "recovery exposes retained-schedule comparison",
+      "pass": true
+    },
+    {
+      "name": "recovery returns focus to originating action",
+      "pass": true,
+      "detail": "Replan future work"
+    },
+    {
+      "name": "recovery restores originating scroll",
+      "pass": true,
+      "detail": "522->522"
+    },
+    {
+      "name": "future-only replan preserves reported work",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "providerRequests": [],
+  "status": "PASS",
+  "video": null,
+  "curation_note": "Recovery assertions retained. Recovery video omitted from curated package; the separate normal-motion mutation recording is retained."
+}

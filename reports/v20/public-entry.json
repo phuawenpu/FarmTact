@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "rows": [
+    {
+      "path": "/",
+      "edition": "v20",
+      "title": "FarmTact · Plan, compare and learn"
+    },
+    {
+      "path": "/play",
+      "edition": "v20",
+      "title": "FarmTact · Plan, compare and learn"
+    }
+  ]
+}

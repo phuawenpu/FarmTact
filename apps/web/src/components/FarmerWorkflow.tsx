@@ -20,7 +20,9 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -49,6 +51,21 @@ type DiscussionSource = {
   messageId: string;
   actions: NonNullable<ConversationMessage["proposed_actions"]>;
 };
+type ProposalDraft = {
+  demand: number;
+  yieldPct: number;
+  delay: number;
+  bed: string;
+  reserveStart: string;
+  reserveEnd: string;
+  nursery: number;
+  labour: number;
+  cash: number;
+  orderQty: number;
+  tentativeQty: number;
+};
+const defaultSpecialistQuestion =
+  "What constraint or alternative should I review before approving this plan?";
 const phases: Array<[Phase, string, string]> = [
   ["observe", "Observe", "Review records"],
   ["discuss", "Discuss", "Council review"],
@@ -100,6 +117,7 @@ export function FarmerWorkflow({
   const [loading, setLoading] = useState(true),
     [busy, setBusy] = useState(""),
     [error, setError] = useState(""),
+    [navigationHint, setNavigationHint] = useState(""),
     [phase, setPhase] = useState<Phase>("observe");
   const [tutorial, setTutorial] = useState(() => {
     try {
@@ -117,6 +135,9 @@ export function FarmerWorkflow({
     [councilAdvisor, setCouncilAdvisor] = useState(ADVISORS[0].id),
     [discussionSource, setDiscussionSource] = useState<DiscussionSource | null>(null),
     [rescueOpen, setRescueOpen] = useState(false);
+  // Unsent edits belong to this mounted workspace, never to saved farm records.
+  const [proposalDrafts] = useState(() => new Map<string, ProposalDraft>());
+  const [questionDrafts] = useState(() => new Map<string, string>());
   const refreshWorkflow = useCallback(async () => {
     const next = await farmerWorkflowApi.state();
     setWorkflow({ ...blankWorkflow, ...next });
@@ -207,6 +228,26 @@ export function FarmerWorkflow({
     sessionTasks = workflow.tasks.filter((task) =>
       sessionProposalIds.has(task.proposal_id),
     );
+  useEffect(() => {
+    setSelected(current => strategies.some(item => item.id === current)
+      ? current : session?.selected_strategy_id || strategies[0]?.id || "");
+  }, [session?.result, session?.selected_strategy_id]);
+  const jumpToPhase = (next: Phase) => {
+    setPhase(next);
+    const targets: Record<Phase, string> = {
+      observe: '.flow-observe', discuss: '.council-room', decide: '.decision-stage',
+      approve: '.decision-actions', act: '.action-stage', verify: '.task-result-panel', replan: '.recovery-stage',
+    };
+    let target = document.querySelector<HTMLElement>(targets[next]);
+    const missing = !target;
+    if (!target) target = document.querySelector<HTMLElement>(strategies.length ? '.decision-stage' : '.flow-callout');
+    setNavigationHint(missing ? (!strategies.length ? 'Calculate options first. No farm change has been made.'
+      : next === 'verify' ? 'Record a task result before verifying its impact.'
+      : next === 'replan' ? 'No task currently requires recovery. Use Apply & Recalculate to review a future change.'
+      : 'Review and approve a proposal before recording sandbox work.') : '');
+    target?.focus({preventScroll:true});
+    target?.scrollIntoView({block:'start',behavior:'instant'});
+  };
   const dismissTutorial = () => {
     setTutorial(false);
     try {
@@ -236,7 +277,10 @@ export function FarmerWorkflow({
         }
       />
     );
-  const phaseIndex = phases.findIndex(([id]) => id === phase);
+  const draftContext = JSON.stringify([session.id, session.revision, chosen?.id || ""]);
+  const proposalDraftKey = JSON.stringify([
+    draftContext, discussionSource?.conversationId || "", discussionSource?.messageId || "",
+  ]);
   return (
     <div className="farmer-flow">
       <header className="flow-hero">
@@ -263,10 +307,11 @@ export function FarmerWorkflow({
         {phases.map(([id, label, hint], index) => (
           <button
             key={id}
-            className={`${phase === id ? "is-current" : ""} ${index < phaseIndex ? "is-done" : ""}`}
-            onClick={() => setPhase(id)}
+            className={phase === id ? "is-current" : ""}
+            aria-current={phase === id ? "location" : undefined}
+            onClick={() => jumpToPhase(id)}
           >
-            <b>{index < phaseIndex ? <Check size={14} /> : index + 1}</b>
+            <b>{index + 1}</b>
             <span>
               {label}
               <small>{hint}</small>
@@ -274,15 +319,16 @@ export function FarmerWorkflow({
           </button>
         ))}
       </nav>
+      <p className="flow-navigation-hint" role="status">{navigationHint || "Choose a section to jump to it. Saved milestones below show completed work."}</p>
       {tutorial && (
         <aside className="tutorial-card" role="note">
           <Sparkles size={21} />
           <div>
             <strong>Start with what the farm knows</strong>
             <p>
-              Review the Inbox, scan the living board, then ask the Council to
-              challenge the plan. Recommendations keep their evidence and
-              validation status.
+              Review the recorded farm, then Calculate options below. Compare the
+              plans before applying a change. The Council can help you question
+              a tradeoff; its advice is optional.
             </p>
           </div>
           <button onClick={dismissTutorial} aria-label="Dismiss tutorial">
@@ -311,7 +357,7 @@ export function FarmerWorkflow({
           </span>
         </div>
       )}
-      <section className="flow-observe">
+      <section className="flow-observe" tabIndex={-1}>
         <header>
           <div>
             <p className="kicker">Observe · current farm picture</p>
@@ -332,10 +378,8 @@ export function FarmerWorkflow({
             </button>
           </div>
         </header>
-        <MetricStrip strategy={chosen} session={session} />
-        <FarmBoard session={session} crops={crops} />
         {!strategies.length && (
-          <div className="flow-callout">
+          <div className="flow-callout" tabIndex={-1}>
             <span>
               <Leaf size={22} />
             </span>
@@ -359,10 +403,12 @@ export function FarmerWorkflow({
             </button>
           </div>
         )}
+        <MetricStrip strategy={chosen} session={session} />
+        <FarmBoard session={session} crops={crops} strategy={chosen} />
       </section>
       <MissionProgress session={session} workflow={workflow} />
       {!!strategies.length && (
-        <section className="council-room">
+        <section className="council-room" tabIndex={-1}>
           <header>
             <div>
               <p className="kicker">Discuss · central Council table</p>
@@ -449,7 +495,7 @@ export function FarmerWorkflow({
         </section>
       )}
       {!!strategies.length && (
-        <section className="decision-stage">
+        <section className="decision-stage" tabIndex={-1}>
           <header>
             <div>
               <p className="kicker">Decide · reviewed proposals</p>
@@ -470,7 +516,11 @@ export function FarmerWorkflow({
               />
             ))}
           </div>
-          <div className="decision-actions">
+          {chosen && <PlanBrief strategy={chosen} session={session} crops={crops} />}
+          <p className="flow-next-action">{approvableProposal
+            ? 'Ready to review approval for this calculated proposal. Approval creates sandbox tasks.'
+            : 'Select an option, then use Apply & Recalculate to review a proposal before approval. Council review is optional.'}</p>
+          <div className="decision-actions" tabIndex={-1}>
             <div>
               <strong>{chosen?.name} candidate</strong>
               <small>
@@ -503,7 +553,7 @@ export function FarmerWorkflow({
         />
       )}
       {sessionTasks.some((task) => task.status === "recovery_required") && (
-        <section className="recovery-stage">
+        <section className="recovery-stage" tabIndex={-1}>
           <div>
             <p className="kicker">Replan · recovery path</p>
             <h2>Keep completed work, change only the future</h2>
@@ -548,6 +598,9 @@ export function FarmerWorkflow({
       {mediaOpen && <Explainers onClose={() => setMediaOpen(false)} />}
       {formOpen && chosen && (
         <ProposalEditor
+          key={proposalDraftKey}
+          draftKey={proposalDraftKey}
+          drafts={proposalDrafts}
           session={session}
           strategy={chosen}
           workflow={workflow}
@@ -580,8 +633,15 @@ export function FarmerWorkflow({
       )}
       {councilOpen && (
         <SpecialistDialog
+          key={draftContext}
+          draftContext={draftContext}
+          drafts={questionDrafts}
           session={session}
           initialAdvisor={councilAdvisor}
+          onAdvisorChange={(id) => {
+            const advisor = ADVISORS.find(item => item.id === id);
+            if (advisor) setCouncilAdvisor(advisor.id);
+          }}
           onError={setError}
           onHandoff={(source) => {
             setDiscussionSource(source);
@@ -604,6 +664,8 @@ export function FarmerWorkflow({
 }
 
 function ProposalEditor({
+  draftKey,
+  drafts,
   session,
   strategy,
   workflow,
@@ -612,6 +674,8 @@ function ProposalEditor({
   onError,
   onClose,
 }: {
+  draftKey: string;
+  drafts: Map<string, ProposalDraft>;
   session: PlanningSession;
   strategy: Strategy;
   workflow: FarmerWorkflowState;
@@ -626,20 +690,28 @@ function ProposalEditor({
       strategy.allocations[0]?.crop_id ||
       session.farm.orders[0]?.crop_id ||
       "caixin";
-  const [demand, setDemand] = useState(100),
-    [yieldPct, setYieldPct] = useState(100),
-    [delay, setDelay] = useState(0),
-    [bed, setBed] = useState(""),
-    [reserveStart, setReserveStart] = useState(start),
-    [reserveEnd, setReserveEnd] = useState(addDays(start, 3)),
-    [nursery, setNursery] = useState(session.farm.resources.nursery_sites),
+  const savedDraft = drafts.get(draftKey);
+  const [demand, setDemand] = useState(savedDraft?.demand ?? 100),
+    [yieldPct, setYieldPct] = useState(savedDraft?.yieldPct ?? 100),
+    [delay, setDelay] = useState(savedDraft?.delay ?? 0),
+    [bed, setBed] = useState(savedDraft?.bed ?? ""),
+    [reserveStart, setReserveStart] = useState(savedDraft?.reserveStart ?? start),
+    [reserveEnd, setReserveEnd] = useState(savedDraft?.reserveEnd ?? addDays(start, 3)),
+    [nursery, setNursery] = useState(savedDraft?.nursery ?? session.farm.resources.nursery_sites),
     [labour, setLabour] = useState(
-      session.farm.resources.labour_hours_per_week,
+      savedDraft?.labour ?? session.farm.resources.labour_hours_per_week,
     ),
-    [cash, setCash] = useState(session.farm.resources.cash_sgd),
-    [orderQty, setOrderQty] = useState(0),
-    [tentativeQty, setTentativeQty] = useState(0),
+    [cash, setCash] = useState(savedDraft?.cash ?? session.farm.resources.cash_sgd),
+    [orderQty, setOrderQty] = useState(savedDraft?.orderQty ?? 0),
+    [tentativeQty, setTentativeQty] = useState(savedDraft?.tentativeQty ?? 0),
     [busy, setBusy] = useState(false);
+  useEffect(() => {
+    drafts.set(draftKey, {
+      demand, yieldPct, delay, bed, reserveStart, reserveEnd,
+      nursery, labour, cash, orderQty, tentativeQty,
+    });
+  }, [drafts, draftKey, demand, yieldPct, delay, bed, reserveStart, reserveEnd,
+    nursery, labour, cash, orderQty, tentativeQty]);
   const submit = async () => {
     setBusy(true);
     try {
@@ -710,6 +782,7 @@ function ProposalEditor({
           : undefined,
       );
       await farmerWorkflowApi.applyProposal(proposal);
+      drafts.delete(draftKey);
       await onDone();
     } catch (caught) {
       onError(message(caught, "Could not apply the proposal."));
@@ -722,6 +795,8 @@ function ProposalEditor({
       <p className="media-boundary">
         Explicit edits create a draft proposal. Confirmed imports remain
         evidence; they do not silently rewrite demand or yield.
+        Unsubmitted edits stay available when you close and reopen this dialog
+        in this workspace. Reloading or changing the plan revision starts a new draft.
       </p>
       {discussionSource && (
         <section className="discussion-handoff">
@@ -777,7 +852,7 @@ function ProposalEditor({
         />
         <label>
           Reserve a bed
-          <select value={bed} onChange={(e) => setBed(e.target.value)}>
+          <select aria-label="Reserve a bed" value={bed} onChange={(e) => setBed(e.target.value)}>
             <option value="">No reservation</option>
             {session.farm.beds.map((item) => (
               <option key={item.id} value={item.id}>
@@ -1014,7 +1089,7 @@ function TaskWorkspace({
     }
   };
   return (
-    <section className="action-stage">
+    <section className="action-stage" tabIndex={-1}>
       <header>
         <div>
           <p className="kicker">Act → Verify</p>
@@ -1053,7 +1128,7 @@ function TaskWorkspace({
             </button>
           ))}
         </div>
-        <div>
+        <div className="task-result-panel" tabIndex={-1}>
           <form
             className="result-form"
             onSubmit={(e) => {
@@ -1166,24 +1241,31 @@ function TaskWorkspace({
 }
 
 function SpecialistDialog({
+  draftContext,
+  drafts,
   session,
   initialAdvisor,
+  onAdvisorChange,
   onError,
   onHandoff,
   onClose,
 }: {
+  draftContext: string;
+  drafts: Map<string, string>;
   session: PlanningSession;
   initialAdvisor: string;
+  onAdvisorChange: (advisor: string) => void;
   onError: (v: string) => void;
   onHandoff: (source: DiscussionSource) => void;
   onClose: () => void;
 }) {
   const [advisor, setAdvisor] = useState<string>(initialAdvisor),
     [question, setQuestion] = useState(
-      "What constraint or alternative should I review before approving this plan?",
+      drafts.get(JSON.stringify([draftContext, initialAdvisor])) ?? defaultSpecialistQuestion,
     ),
     [conversation, setConversation] = useState<Conversation | null>(null),
     [busy, setBusy] = useState(false);
+  const questionDraftKey = JSON.stringify([draftContext, advisor]);
   const validatedMessage = [...(conversation?.messages || [])]
     .reverse()
     .find(
@@ -1206,6 +1288,9 @@ function SpecialistDialog({
         current = await api.conversation(created.id);
       }
       await api.sendConversationMessage(current.id, { content: question });
+      if (drafts.get(questionDraftKey) === question || !drafts.has(questionDraftKey)) {
+        drafts.set(questionDraftKey, "");
+      }
       const until = Date.now() + 90000;
       while (Date.now() < until) {
         current = await api.conversation(current.id);
@@ -1230,14 +1315,20 @@ function SpecialistDialog({
     <Dialog title="Ask a planning specialist" onClose={onClose}>
       <p className="media-boundary">
         The conversation freezes planning session {session.id.slice(0, 8)}.
-        Answers are advisory and cannot change the proposal.
+        Answers are advisory and cannot change the proposal. Unsent questions
+        remain available per specialist when you close and reopen this dialog
+        in this workspace; they are not retained after a reload.
       </p>
       <label>
         Specialist
         <select
+          aria-label="Specialist"
           value={advisor}
           onChange={(e) => {
-            setAdvisor(e.target.value);
+            const nextAdvisor = e.target.value;
+            setAdvisor(nextAdvisor);
+            onAdvisorChange(nextAdvisor);
+            setQuestion(drafts.get(JSON.stringify([draftContext, nextAdvisor])) ?? defaultSpecialistQuestion);
             setConversation(null);
           }}
         >
@@ -1254,8 +1345,12 @@ function SpecialistDialog({
       <label>
         Question
         <textarea
+          aria-label="Question"
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+          onChange={(e) => {
+            setQuestion(e.target.value);
+            drafts.set(questionDraftKey, e.target.value);
+          }}
         />
       </label>
       <button
@@ -1744,44 +1839,68 @@ function MissionProgress({
   );
 }
 
+function PlanBrief({strategy, session, crops}: {strategy:Strategy;session:PlanningSession;crops:Crop[]}) {
+  const beds = new Set(strategy.allocations.map(item => item.bed_id));
+  return <section className="v12-plan-brief" aria-label="Selected plan details" data-preview-strategy={strategy.id}>
+    <h3>{strategy.name} · projected plan</h3>
+    <p>{strategy.allocations.length} dated allocations across {beds.size} beds. Selecting a candidate changes this preview only; it does not save assumptions or approve work.</p>
+    <p>All modeled demand remains in the calculation. Booked coverage measures confirmed orders. Council advice is optional; the numerical result supplies these values.</p>
+    <details><summary>View full dated schedule and evidence</summary>
+      <p>Session revision {session.revision} · result {String(session.result_id || 'not supplied')}</p>
+      <ol>{strategy.allocations.map((item,index) => <li key={item.id || index}>
+        <strong>{session.farm.beds.find(bed=>bed.id===item.bed_id)?.name || item.bed_id} · {crops.find(crop=>crop.id===item.crop_id)?.label || item.crop_id}</strong>
+        <span>Sow {item.sow_date} → transplant {item.transplant_date} → harvest {item.harvest_date}</span>
+        <span>{num(item.expected_kg)} kg projected · {num(item.area_m2)} m²</span>
+      </li>)}</ol>
+    </details>
+  </section>;
+}
+
 function FarmBoard({
   session,
   crops,
+  strategy,
 }: {
   session: PlanningSession;
   crops: Crop[];
+  strategy?: Strategy;
 }) {
-  const strategy =
-      session.result?.strategies?.find(
-        (x) => x.id === session.selected_strategy_id,
-      ) || session.result?.strategies?.[0],
-    alloc = new Map(strategy?.allocations.map((x) => [x.bed_id, x]));
+  const batches = (Array.isArray(session.farm.batches) ? session.farm.batches : []) as Array<{bed_id:string;recipe_id?:string;crop_id?:string;stage?:string}>;
+  const recipes = (Array.isArray(session.farm.recipes) ? session.farm.recipes : []) as Array<{id:string;crop_id:string}>;
+  const alloc = new Map<string, Strategy['allocations']>();
+  for (const item of [...(strategy?.allocations || [])].sort((a,b) => a.sow_date.localeCompare(b.sow_date))) {
+    alloc.set(item.bed_id, [...(alloc.get(item.bed_id) || []), item]);
+  }
   return (
-    <div className="living-board">
+    <div className="living-board" data-preview-strategy={strategy?.id || ""}>
       <div className="living-board__beds">
         {session.farm.beds.map((bed) => {
-          const item = alloc.get(bed.id),
-            crop = crops.find((x) => x.id === (item?.crop_id || bed.crop_id));
+          const cycles = alloc.get(bed.id) || [], item = cycles[0];
+          const batch = batches.find(record => record.bed_id === bed.id);
+          const cropId = item?.crop_id || batch?.crop_id || recipes.find(recipe => recipe.id === batch?.recipe_id)?.crop_id || bed.crop_id;
+          const stage = item ? 'planned' : batch?.stage || bed.stage || (cropId ? 'recorded batch' : 'empty');
+          const crop = crops.find(x => x.id === cropId);
           return (
             <article key={bed.id}>
               <CropArt
-                cropId={item?.crop_id || bed.crop_id}
+                cropId={cropId}
                 color={crop?.color}
-                stage={item ? "planned" : bed.stage}
+                stage={item ? "seedling" : ["harvested", "sanitation", "empty"].includes(stage) ? "empty" : stage === "ready" ? "ready" : stage === "nursery" ? "seedling" : "growing"}
                 compact
               />
               <span>
                 <b>{bed.name}</b>
                 <small>
-                  {crop?.label || "Available"} · {item ? "planned" : bed.stage}
+                  {crop?.label || cropId || 'No recorded crop'} · {item ? 'preview' : stage}
                 </small>
+                {item && <small>{item.sow_date} → {item.harvest_date}{cycles.length > 1 ? ` · ${cycles.length} cycles` : ''}</small>}
               </span>
             </article>
           );
         })}
       </div>
       <aside>
-        <p className="kicker">Farm pulse</p>
+        <p className="kicker">{strategy ? `${strategy.name} · planning preview` : "Recorded farm snapshot"}</p>
         <strong>
           {session.farm.beds.length} beds ·{" "}
           {num(
@@ -1802,7 +1921,7 @@ function FarmBoard({
         <span>
           Horizon <b>{session.farm.horizon_days} days</b>
         </span>
-        <small>Synthetic state · refreshed from saved session</small>
+        <small>{strategy ? "Projected allocations, not live growth. Selecting an option does not save or approve work; see its full schedule below." : "Saved synthetic records. No crop is inferred where records are missing."}</small>
       </aside>
     </div>
   );
@@ -1820,7 +1939,7 @@ function MetricStrip({
     reportedRequested = Number(reported?.metrics?.booked_requested_kg || 0),
     reportedDelivered = Number(reported?.metrics?.booked_delivered_kg || 0),
     rows = [
-      ["Coverage", m.coverage, m.coverage === null ? "kg" : "%"],
+      ["Booked coverage", m.coverage, m.coverage === null ? "kg" : "%"],
       ["Surplus", m.surplus, "kg"],
       ["Expiry", m.expiry, "kg"],
       ["Rejection", m.rejection, "kg"],
@@ -1833,7 +1952,7 @@ function MetricStrip({
         <article key={String(label)}>
           <small>{label}</small>
           <strong>
-            {value === null ? "Unknown" : `${num(value)} ${unit}`}
+            {!strategy ? "Not calculated" : value === null ? "Unknown" : `${num(value)} ${unit}`}
           </strong>
           <span>Projected</span>
         </article>
@@ -1990,6 +2109,76 @@ function Dialog({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const dialogRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const closeRef = useRef(onClose);
+
+  useLayoutEffect(() => {
+    closeRef.current = onClose;
+  }, [onClose]);
+
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const opener = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const windowPosition = { left: window.scrollX, top: window.scrollY };
+    const ancestors: { element: HTMLElement; left: number; top: number }[] = [];
+    for (let element = opener?.parentElement; element; element = element.parentElement) {
+      ancestors.push({ element, left: element.scrollLeft, top: element.scrollTop });
+    }
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const focusHeading = () => headingRef.current?.focus({ preventScroll: true });
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>(
+      'a[href], button, input, select, textarea, [contenteditable="true"], [tabindex]',
+    )).filter((element) => element.tabIndex >= 0
+      && !element.matches(":disabled")
+      && !element.closest('[hidden], [inert], [aria-hidden="true"]')
+      && element.getClientRects().length > 0
+      && getComputedStyle(element).visibility !== "hidden");
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        closeRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      const current = document.activeElement;
+      const index = items.indexOf(current as HTMLElement);
+      if (items.length === 0) {
+        event.preventDefault();
+        focusHeading();
+      } else if (index < 0 || (event.shiftKey ? index === 0 : index === items.length - 1)) {
+        event.preventDefault();
+        items[event.shiftKey ? items.length - 1 : 0].focus();
+      }
+    };
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof Node && !dialog.contains(event.target)) focusHeading();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("focusin", onFocusIn);
+    focusHeading();
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("focusin", onFocusIn);
+      document.body.style.overflow = previousOverflow;
+      // Synchronous restoration also makes StrictMode's setup/cleanup replay safe.
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+      for (const { element, left, top } of ancestors) {
+        if (element.isConnected) element.scrollTo({ left, top, behavior: "instant" });
+      }
+      window.scrollTo({ ...windowPosition, behavior: "instant" });
+    };
+  }, []);
+
   return (
     <div
       className="sheet-layer"
@@ -1998,13 +2187,14 @@ function Dialog({
       }}
     >
       <section
+        ref={dialogRef}
         className="bottom-sheet explainer-sheet"
         role="dialog"
         aria-modal="true"
         aria-label={title}
       >
         <header>
-          <h2>{title}</h2>
+          <h2 ref={headingRef} tabIndex={-1}>{title}</h2>
           <button
             className="icon-button"
             onClick={onClose}

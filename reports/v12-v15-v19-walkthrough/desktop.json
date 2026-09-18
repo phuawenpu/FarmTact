@@ -1,0 +1,59 @@
+[
+  {
+    "v": 12,
+    "height": 2115,
+    "width": 1280,
+    "buttons": [
+      "Plan",
+      "Farm",
+      "Council research",
+      "Farm tools",
+      "Crops",
+      "Data",
+      "Outcomes",
+      "Setup",
+      "Sound off",
+      "Sound preferences",
+      "",
+      "",
+      "1ObserveReview records",
+      "2DiscussCouncil review",
+      "3DecideCompare proposals",
+      "4ApproveCreate actions",
+      "5ActRecord results",
+      "6VerifyCheck impact",
+      "7ReplanRecover safely",
+      "",
+      " Inbox ",
+      " How it works",
+      "Calculate options ",
+      " Open Waste Rescue"
+    ]
+  },
+  {
+    "v": 15,
+    "height": 900,
+    "width": 1280,
+    "buttons": [
+      "← Previous",
+      "Next →",
+      "Explain",
+      "Calculate",
+      "More"
+    ]
+  },
+  {
+    "v": 19,
+    "height": 900,
+    "width": 1280,
+    "buttons": [
+      "Inspect selected order",
+      "Crop evidence",
+      "← Previous",
+      "Next →",
+      "Explain",
+      "Calculate three plans",
+      "More"
+    ]
+  }
+]

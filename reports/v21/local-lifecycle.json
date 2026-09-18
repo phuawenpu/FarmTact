@@ -1,0 +1,299 @@
+{
+  "status": "PASS",
+  "base_url": "http://127.0.0.1:4199/",
+  "inference_policy": "No Council or specialist request submitted.",
+  "checks": [
+    {
+      "name": "public entry restores V12 experience in current edition",
+      "pass": true
+    },
+    {
+      "name": "real backend opens seven-stage farmer workflow",
+      "pass": true
+    },
+    {
+      "name": "real operations boundary visible",
+      "pass": true
+    },
+    {
+      "name": "projected and reported classifications visible",
+      "pass": true
+    },
+    {
+      "name": "original seven stages retained in order",
+      "pass": true,
+      "detail": [
+        "ObserveReview records",
+        "DiscussCouncil review",
+        "DecideCompare proposals",
+        "ApproveCreate actions",
+        "ActRecord results",
+        "VerifyCheck impact",
+        "ReplanRecover safely"
+      ]
+    },
+    {
+      "name": "tutorial dismissal persists",
+      "pass": true
+    },
+    {
+      "name": "real numerical calculation returns three options",
+      "pass": true
+    },
+    {
+      "name": "Council review remains explicit and unsubmitted",
+      "pass": true
+    },
+    {
+      "name": "all seven Council specialists visible",
+      "pass": true
+    },
+    {
+      "name": "strategy comparison selects candidate locally",
+      "pass": true
+    },
+    {
+      "name": "Crop Planner opens Mei production specialist",
+      "pass": true
+    },
+    {
+      "name": "Weather role opens Hana weather specialist",
+      "pass": true
+    },
+    {
+      "name": "constraint editor covers farm bottlenecks",
+      "pass": true,
+      "detail": "Challenge constraints and recalculate\n\nExplicit edits create a draft proposal. Confirmed imports remain evidence; they do not silently rewrite demand or yield. Unsubmitted edits stay available when you close and reopen this dialog in this workspace. Reloading or changing the plan revision starts a new draft.\n\nExpected demand\n100%\nSeasonal yield\n100%\nHarvest delay\n0 days\nReserve a bed\nNo reservation\nA1\nA2\nA3\nA4\nB1\nB2\nB3\nB4\nC1\nC2\nC3\nC4\nD1\nD2\nD3\nD4\nNursery sites\nLabour hours/week\nCash capacity (SGD)\nAdd confirmed order (kg)\nAdd tentative order (kg)\n\nTentative orders are scenario evidence only. They remain separate from confirmed customer commitments.\n\nApply & Recalculate"
+    },
+    {
+      "name": "real Inbox exposes explicit candidate boundary",
+      "pass": true
+    },
+    {
+      "name": "real candidate exposes provenance and extracted fields before confirmation",
+      "pass": true,
+      "detail": "Review extracted evidence\nProvenance\n7d1773405e73263e27c9a7b06e56dc419f6568a54d049ffa67db429c85c8f6eb\nAuthority\nreview_candidate\nCurrent Planning Authority\nNot active; confirmation required\nRecord 1\nRow Number\n2\nOccurred On\n2026-09-01\nKind\nexpense\nReference\nacceptance-1789698683814\nDescription\nNot supplied\nQuantity\nNot supplied\nUnit\nNot supplied\nAmount Sgd\n14.50\nCrop Id\nNot supplied\nCorrects Reference\nNot supplied\nProvenance\n{\"source_name\":\"acceptance-1789698683814.csv\",\"source_sha256\":\"7d1773405e73263e27c9a7b06e56dc419f6568a54d049ffa67db429c85c8f6eb\",\"row_number\":2}"
+    },
+    {
+      "name": "real upload requires and records explicit review",
+      "pass": true
+    },
+    {
+      "name": "manual candidate endpoint accepts tenant-scoped record",
+      "pass": true,
+      "detail": {
+        "status": 201,
+        "body": "{\"candidate_id\":\"fin-5800be72bc2a79545442dd7d\",\"tenant_id\":\"a95b8c474581323ef905d85516e082f6\",\"source_name\":\"Manual acceptance 1789698684454\",\"source_sha256\":\"d328756787f11c69f75a8fb3126a80a0af11da40c762ab4e55d0de2c317ed27d\",\"media_type\":\"application/json\",\"import_kind\":\"manual\",\"created_at\":\"2026-09-18 02:31:24.623450+00:00\",\"rows\":[{\"row_number\":2,\"occurred_on\":\"2026-09-08\",\"kind\":\"expense\",\"reference\":\"manual-1789698683782\",\"description\":\"\",\"quantity\":null,\"unit\":null,\"amount_sgd\":\"64.73\",\"crop_id\":null,\"corrects_reference\":null,\"provenance\":{\"source_name\":\"Manual acceptance 1789698684454\",\"source_sha256\":\"d328756787f11c69f75a8fb3126a80a0af11da40c762ab4e55d0de2c317ed27d\",\"row_number\":2}}],\"warnings\":[],\"status\":\"candidate\",\"reviewed_at\":null,\"reviewed_by\":null,\"source_kind\":\"manual\",\"authority\":\"review_candidate\",\"reconciliation\":{\"source_row_count\":1,\"counted_row_count\":1,\"duplicate_references\":[],\"correction_row_count\":0,\"correction_semantics\":\"target_category_signed_delta\",\"revenue_sgd\":\"0\",\"expense_sgd\":\"64.73\",\"net_sgd\":\"-64.73\",\"quantity_by_unit\":{},\"resolved_corrections\":[]}}"
+      }
+    },
+    {
+      "name": "real manual entry creates reviewable unconfirmed candidate",
+      "pass": true,
+      "detail": "Manual acceptance 1789698684454 · candidate\n\nmanual · review_candidate · 1 extracted rows\n\nReview extracted evidence\nProvenance\nd328756787f11c69f75a8fb3126a80a0af11da40c762ab4e55d0de2c317ed27d\nAuthority\nreview_candidate\nCurrent Planning Authority\nNot active; confirmation required\nRecord 1\nRow Number\n2\nOccurred On\n2026-09-08\nKind\nexpense\nReference\nmanual-1789698683782\nDescription\nNot supplied\nQuantity\nNot supplied\nUnit\nNot supplied\nAmount Sgd\n64.73\nCrop Id\nNot supplied\nCorrects Reference\nNot supplied\nProvenance\n{\"source_name\":\"Manual acceptance 1789698684454\",\"source_sha256\":\"d328756787f11c69f75a8fb3126a80a0af11da40c762ab4e55d0de2c317ed27d\",\"row_number\":2}\nReject\nConfirm reviewed fields"
+    },
+    {
+      "name": "real manual candidate requires explicit confirmation",
+      "pass": true
+    },
+    {
+      "name": "real proposal is persisted and applied",
+      "pass": true
+    },
+    {
+      "name": "approval discloses advisory Council state and numerical checks",
+      "pass": true
+    },
+    {
+      "name": "explicit approval persists revision-bound actions",
+      "pass": true,
+      "detail": {
+        "proposal": "44a93d98ea7d84211baa1e85afcb58b7",
+        "tasks": 52
+      }
+    },
+    {
+      "name": "short reported result opens durable recovery",
+      "pass": true
+    },
+    {
+      "name": "reported result and correction survive reload",
+      "pass": true,
+      "detail": {
+        "id": "task-0bde68ef27c302654c2dfa30",
+        "tenant_id": "a95b8c474581323ef905d85516e082f6",
+        "session_id": "a3c9950ad2579dc7ce2cce9ece218050",
+        "proposal_id": "44a93d98ea7d84211baa1e85afcb58b7",
+        "proposal_revision": 2,
+        "action": "sow",
+        "due_date": "2026-09-21",
+        "crop_id": "kailan",
+        "batch_id": "allocation-2ff529f81ef5fe69b72faeccc9bc6eb5",
+        "location": "bed-13",
+        "biological_dates": {
+          "sow_date": "2026-09-21",
+          "transplant_date": "2026-10-01",
+          "harvest_date": "2026-11-02"
+        },
+        "checklist": [
+          "Confirm seed lot",
+          "Record sowing"
+        ],
+        "photo_required": false,
+        "planned_quantity": 320,
+        "actual_quantity": "319.5",
+        "unit": "plants",
+        "status": "recovery_required",
+        "event_revision": 2,
+        "created_at": "2026-09-18T02:31:37.232215+00:00",
+        "updated_at": "2026-09-18T02:31:38.381494+00:00",
+        "real_operations_enabled": false,
+        "reported_result_status": "completed",
+        "rejected_quantity": null,
+        "result_note": "Acceptance-reported short quantity",
+        "photo_reference": null,
+        "checklist_completed": [
+          "Confirm seed lot",
+          "Record sowing"
+        ],
+        "forecast_feedback": {
+          "planned_quantity": "320.0",
+          "actual_quantity": "319.5",
+          "delta_quantity": "-0.5",
+          "unit": "plants",
+          "basis": "farmer_reported_unverified"
+        },
+        "recovery": {
+          "required": true,
+          "reasons": [
+            "quantity_below_plan"
+          ],
+          "preserve_completed_work": true
+        }
+      }
+    },
+    {
+      "name": "Waste Rescue binds server-derived frozen stock",
+      "pass": true
+    },
+    {
+      "name": "three videos have captions",
+      "pass": true
+    },
+    {
+      "name": "three transcripts and downloads",
+      "pass": true
+    },
+    {
+      "name": "caption-matched guides expose all twelve transcript scenes",
+      "pass": true
+    },
+    {
+      "name": "360px has all eight named sections",
+      "pass": true
+    },
+    {
+      "name": "360px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px has all eight named sections",
+      "pass": true
+    },
+    {
+      "name": "390px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px has all eight named sections",
+      "pass": true
+    },
+    {
+      "name": "430px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px has all eight named sections",
+      "pass": true
+    },
+    {
+      "name": "1280px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "named section Farm opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named section Farm tools opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named section Crops opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "crop profile closes with Escape",
+      "pass": true
+    },
+    {
+      "name": "named section Data opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named section Outcomes opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named section Setup opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named section Council research opens actual workspace",
+      "pass": true
+    },
+    {
+      "name": "named navigation returns to original durable planning workflow",
+      "pass": true
+    },
+    {
+      "name": "no inference mutation submitted",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no page exceptions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "screenshots": [
+    "/tmp/v20-browser/restoration-360.png",
+    "/tmp/v20-browser/restoration-390.png",
+    "/tmp/v20-browser/restoration-430.png",
+    "/tmp/v20-browser/restoration-1280.png"
+  ],
+  "failures": [],
+  "ux_observations": [
+    {
+      "name": "crop profile returns source focus",
+      "pass": true,
+      "classification": "original V12 accessibility behavior; later improvement"
+    }
+  ]
+}
