@@ -1,5 +1,29 @@
 # Current handoff — 18 September 2026
 
+## Review session exit
+
+The current-app usability review is complete and pushed in `3cd31a2` on
+`feature/v21-v12-ux`. Read [the review](../reports/v21/usability-review/README.md)
+for resolved V12 findings, remaining V21 usability issues, personas, CTAs,
+animations, field-photo feedback and weather/Council recommendations. Two public
+walkthroughs passed 19 checks each with zero provider calls. No implementation
+or deployment is pending from this review; recommendations are not implemented.
+
+Use `feature/v21-v12-ux` when resuming: `main` still pointed to the V12 handoff at
+exit. Verify the current public health/source and remote branch before another
+review. The review worktree is `/home/sprite/workspaces/farmtact-v21-review` on
+local branch `docs/v21-usability-review`; its commits were pushed to the V21
+branch. The original V12 assessment remains local-only under
+`/home/sprite/workspaces/Downloads/reports/local-ux-review-2026-09-18/` and is
+superseded for current-state claims. Do not publish it as a V21 assessment.
+
+Review browser processes are closed; this session started no persistent servers.
+Existing `farmtact-v20-api`, `farmtact-v20-web` and `farmtact-v13-postgres`
+services belong to the separate `Code2` workspace and were left intact. No
+database, source checkout, production service or stored farm data was deleted.
+
+## Published application
+
 V21 is published from `b980180dbb49a5261e43ee1d8e4916cc24457d7f` at `/` and
 `/play`. V20 restored V12 first. V21 keeps its named sections, board, visible
 Council and direct controls, adding targeted UX and recovery fixes. The earlier
