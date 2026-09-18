@@ -93,7 +93,9 @@ try{
  await page.locator('.side-rail nav').getByRole('button',{name:'Crops',exact:true}).click();
  await page.getByRole('heading',{name:'Recipes with receipts.'}).waitFor();
  let release,seen;const gate=new Promise(r=>release=r),requestSeen=new Promise(r=>seen=r);
- await page.route('**/api/v1/crops/*/evidence',async route=>{seen();await gate;await route.fallback();},{times:1});
+ const heldProfile=await page.evaluate(async()=>{const bootstrap=await fetch('/api/v1/bootstrap').then(r=>r.json());const id=bootstrap.crops[0].id;const response=await fetch(`/api/v1/crops/${encodeURIComponent(id)}/evidence`);if(!response.ok)throw Error('Profile preload failed');return {id,body:await response.text()};});
+ report.delayed_profile_scope='Actual server profile snapshot, held and fulfilled by one browser route to avoid overlapping operator transports.';
+ await page.route(`**/api/v1/crops/${encodeURIComponent(heldProfile.id)}/evidence`,async route=>{seen();await gate;await route.fulfill({status:200,contentType:'application/json',body:heldProfile.body});},{times:1});
  const crop=page.locator('.crop-profile-card').first();await crop.click();await requestSeen;
  const cropDialog=page.getByRole('dialog');await cropDialog.waitFor();
  await page.keyboard.press('Escape');await cropDialog.waitFor({state:'hidden'});

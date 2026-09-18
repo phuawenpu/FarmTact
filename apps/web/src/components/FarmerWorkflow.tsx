@@ -180,23 +180,29 @@ export function FarmerWorkflow({
   useEffect(() => {
     if (!session?.job || !["QUEUED", "RUNNING"].includes(session.job.status))
       return;
-    const timer = window.setInterval(
-      () =>
-        void planningApi
-          .get(session.id)
-          .then(async (next) => {
-            setSession(next);
-            if (!["QUEUED", "RUNNING"].includes(next.job?.status || "")) {
-              setBusy("");
-              const flow = await refreshWorkflow();
-              setPhase(derivePhase(next, flow));
-            }
-          })
-          .catch(() => {}),
-      1800,
-    );
-    return () => window.clearInterval(timer);
-  }, [session?.id, session?.job?.id, session?.job?.status, refreshWorkflow]);
+    let disposed = false;
+    let pending = false;
+    const timer = window.setInterval(async () => {
+      if (pending) return;
+      pending = true;
+      try {
+        const next = await planningApi.get(session.id);
+        if (disposed) return;
+        setSession(next);
+        if (!["QUEUED", "RUNNING"].includes(next.job?.status || "")) {
+          window.clearInterval(timer);
+          setBusy("");
+          const flow = await refreshWorkflow();
+          if (!disposed) setPhase(derivePhase(next, flow));
+        }
+      } catch {
+        // A later read reconciles the same job; never resubmit a mutation here.
+      } finally {
+        pending = false;
+      }
+    }, 1800);
+    return () => { disposed = true; window.clearInterval(timer); };
+  }, [session?.id, session?.job?.id, refreshWorkflow]);
   const mutate = async (
     label: string,
     action: (current: PlanningSession) => Promise<PlanningSession>,
