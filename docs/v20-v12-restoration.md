@@ -28,3 +28,9 @@ After this baseline is public, compare isolated original V12/V15/V19 application
 Any later improvements must be small, observed fixes inside V12's structure and
 receive a separate immutable publication. The later universal card-deck navigation,
 three-action limit and buried named sections are not design requirements.
+
+Staged compatibility finding: the V12 approval predicate could enable immediately
+after the completed session poll but before the refreshed workflow response. That
+window sent the old strategy identity and was rejected with 409. Restoration now
+requires the server-owned proposal approval eligibility before enabling approval;
+the current result and proposal bindings still apply. No approval checks are relaxed.

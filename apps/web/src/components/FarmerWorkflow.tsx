@@ -927,7 +927,8 @@ function currentAppliedProposal(
   return [...workflow.proposals].reverse().find(
     (proposal) =>
       proposal.session_id === session.id &&
-      proposal.selected_strategy_id === selected &&
+      (proposal.selected_strategy_id === selected || proposal.approval?.strategy_id === selected) &&
+      proposal.approval?.available === true &&
       proposal.status === "applied" &&
       proposal.recalculation_job?.id === session.result_id,
   );
