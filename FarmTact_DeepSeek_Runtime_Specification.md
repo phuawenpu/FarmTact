@@ -1,3 +1,12 @@
+## Current direction: restore V12 — 18 September 2026
+
+The user rejected the V15–V19 interaction direction. V12 is the product baseline.
+Follow [the restoration contract](docs/v20-v12-restoration.md): publish the V12
+experience first with only compatibility changes, then perform fresh comparative
+walkthroughs and make small, separate UX improvements. Preserve named sections,
+the farm board and seven-stage workflow. Earlier claims below that the integrated
+card shell is the final product are historical and superseded.
+
 ## V17 persona-led rewrite — private candidate, 17 September 2026
 
 The active work is specified in [docs/v17-persona-rewrite.md](docs/v17-persona-rewrite.md). Three AI-persona V15 walkthroughs and the GitHub page-13 judging rubric guide restored crop/research/data discoverability, factual demonstrations and expert shortcuts. Preserve the complete adviser/Council/reviewed-proposal loop, numerical authority, shared admission limits and disabled physical operations. V16 remains public until final candidate verification and immutable publication. See `reports/v17/implementation.md` for current evidence; persona review is not human usability research.

@@ -1,3 +1,12 @@
+## Current direction: restore V12 — 18 September 2026
+
+The user rejected the V15–V19 interaction direction. V12 is the product baseline.
+Follow [the restoration contract](docs/v20-v12-restoration.md): publish the V12
+experience first with only compatibility changes, then perform fresh comparative
+walkthroughs and make small, separate UX improvements. Preserve named sections,
+the farm board and seven-stage workflow. Earlier claims below that the integrated
+card shell is the final product are historical and superseded.
+
 ## V19 Council decision cards — published, 18 September 2026
 
 The active work is specified in [docs/v19-council-decision-brief.md](docs/v19-council-decision-brief.md). V19 keeps the V18 shared ordinary-farm card shell while restoring the most useful V11–V13 decision context in place: every calculated strategy has a compact, evidence-bound decision brief and an optional explicit Planning Council review. Crop, evidence, research, Data Explorer and historical tools remain reachable through the five-card index rather than becoming separate screens.

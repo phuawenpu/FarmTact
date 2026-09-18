@@ -1,3 +1,11 @@
+# V12 restoration — active, 18 September 2026
+
+Root owns shell selection, API compatibility, release identity, verification and
+publication. Bounded specialists own restoration browser checks and comparative UX
+evidence. V20 restores V12 first; subsequent fixes require a separate release. The
+V15–V19 universal card-shell requirement is superseded by the user's correction.
+See [restoration contract](v20-v12-restoration.md).
+
 # V19 Council decision cards — published, 18 September 2026
 
 V19 is published from `ef4cba0`. It retains the V18

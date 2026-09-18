@@ -8,14 +8,12 @@ import { StatePanel, StatusPill } from './components/Visuals'
 import { World } from './components/World'
 import { api } from './lib/api'
 import { AudioControls } from './components/AudioControls'
-import { EditionSwitcher } from './components/EditionChooser'
 import { playAudioEffect, playSimulationResult } from './lib/audio'
 import type { AppView, Bootstrap, Crop, Run } from './lib/types'
 import { deriveDecisionMission, loadDecisionMission, saveDecisionMission, type DecisionMission } from './components/DecisionJourney'
 import { runSoundOutcome } from './lib/game'
-import { GuidedPlanning } from './components/GuidedPlanning'
 import { FarmerWorkflow } from './components/FarmerWorkflow'
-import { TacticalMission } from './components/TacticalMission'
+import { CURRENT_EDITION } from './lib/edition'
 
 type WorkspaceView = AppView | 'planning'
 const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = [
@@ -28,16 +26,13 @@ const legacyNavItems: Array<{ id: AppView; label: string; icon: typeof Map }> = 
   { id: 'setup', label: 'Setup', icon: Settings2 },
 ]
 
-export default function App({ editionId = 'v1', initialView }: { editionId?: string; initialView?: AppView }) {
-  const editionNumber = Number.parseInt(editionId.replace(/^v/, ''), 10)
-  const isGuidedEdition = editionNumber >= 11
-  const hasFarmerWorkflow = editionNumber >= 12
-  const hasTacticalConsole = editionNumber >= 13
-  const navItems: Array<{ id: WorkspaceView; label: string; icon: typeof Map }> = isGuidedEdition ? [{ id: 'planning', label: 'Plan', icon: Sprout }, ...legacyNavItems] : legacyNavItems
+/** The restored V12 experience is explicit; release numbers never select a UI. */
+export default function App({ editionId = CURRENT_EDITION, initialView }: { editionId?: string; initialView?: AppView }) {
+  const navItems: Array<{ id: WorkspaceView; label: string; icon: typeof Map }> = [{ id: 'planning', label: 'Plan', icon: Sprout }, ...legacyNavItems]
   const initialMission=useRef<DecisionMission|null>(loadDecisionMission())
   const [mission, setMission] = useState<DecisionMission | null>(initialMission.current)
   const [mainMission,setMainMission]=useState<DecisionMission|null>(initialMission.current?.snapshotKind==='farm'?initialMission.current:null)
-  const [view, setView] = useState<WorkspaceView>(initialView || (isGuidedEdition ? 'planning' : initialMission.current?.snapshotKind&&initialMission.current.snapshotKind!=='farm'?'data':'world'))
+  const [view, setView] = useState<WorkspaceView>(initialView || 'planning')
   const [bootstrap, setBootstrap] = useState<Bootstrap | null>(null)
   const [run, setRun] = useState<Run | null>(null)
   const [loading, setLoading] = useState(true)
@@ -199,13 +194,13 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
   const navigate = (next: WorkspaceView) => { setView(next); if (editionId !== 'v1') playAudioEffect('navigate') }
 
   return (
-    <div className={`app-shell ${isGuidedEdition ? 'app-shell--guided' : ''} ${hasTacticalConsole ? 'app-shell--tactical' : ''}`}>
+    <div className="app-shell app-shell--guided" data-experience="v12" data-edition={editionId}>
       <aside className="side-rail">
         <Brand />
         <nav aria-label="FarmTact rooms">
           {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={view === id ? 'is-active' : ''} onClick={() => navigate(id)}><Icon size={20}/><span>{label}</span></button>)}
         </nav>
-        <div className="side-rail__mode"><EditionSwitcher editionId={editionId}/>{editionId !== 'v1' ? <><span>Edition &amp; evolution</span><strong>{editionId.toUpperCase()} · evolving farm</strong><a href={`/${editionId}/changes`}>What changed</a><a className="public-review-link" href={`/${editionId}/review`}>Edition reviews</a><AudioControls editionKey={editionId}/></> : <a className="public-review-link" href="/review">Independent reviews</a>}<span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong></div>
+        <div className="side-rail__mode"><span>Workspace</span><strong>{bootstrap?.capabilities.data_mode?.replaceAll('_', ' ') || 'Unavailable'}</strong><AudioControls editionKey={editionId}/></div>
       </aside>
 
       <div className="app-content">
@@ -221,7 +216,7 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
             <button className="icon-button" onClick={() => navigate('setup')} aria-label="Add or import farm"><Plus size={20}/></button>
             <button className="icon-button topbar__more" onClick={() => setMoreOpen(value => !value)} aria-label="Workspace status"><MoreHorizontal size={20}/></button>
           </div>
-          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><EditionSwitcher editionId={editionId}/><a className="public-review-link" href={editionId==='v1'?'/review':`/${editionId}/review`}>Independent reviews</a>{editionId!=='v1'&&<><a href={`/${editionId}/changes`}>Edition &amp; evolution</a><AudioControls editionKey={editionId}/></>}<span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
+          {moreOpen && <div className="topbar-popover"><button aria-label="Close" onClick={() => setMoreOpen(false)}><X size={16}/></button><AudioControls editionKey={editionId}/><span>Data mode</span><strong>{bootstrap?.capabilities.data_mode || 'unavailable'}</strong><span>Execution</span><strong>{bootstrap?.capabilities.execution_mode || 'unavailable'}</strong></div>}
         </header>
 
         <main>
@@ -230,11 +225,7 @@ export default function App({ editionId = 'v1', initialView }: { editionId?: str
             <StatePanel kind="error" title="The farm workspace is unavailable" detail="The API did not return a usable bootstrap response." action={<button className="button button--forest" onClick={loadBootstrap}>Try again</button>} />
           ) : (
             <>
-              {view === 'planning' && (hasTacticalConsole
-                ? <TacticalMission crops={bootstrap.crops}
-                    onNavigate={(destination) => { if (destination === 'mission') setView('planning'); else if (destination === 'records') setView('setup'); else if (destination === 'crops') setView('crops') }}
-                    onOpenTool={(destination) => setView(destination)} />
-                : hasFarmerWorkflow ? <FarmerWorkflow crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/> : <GuidedPlanning crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/>)}
+              {view === 'planning' && <FarmerWorkflow crops={bootstrap.crops} onOpenSetup={() => setView('setup')}/>}
               {view === 'council' && <CouncilResearch />}
               {view === 'world' && <World farm={bootstrap.farm} crops={bootstrap.crops} run={run} mission={mainMission} executionMode={bootstrap.capabilities.execution_mode} onOpenTools={() => setView('board')} onOpenCrops={() => setView('crops')} onOpenOutcomes={() => setView('outcomes')} />}
               {view === 'board' && <Board farm={bootstrap.farm} crops={bootstrap.crops} run={run} busy={busy} executionMode={bootstrap.capabilities.execution_mode} capabilities={bootstrap.capabilities} transientEvent={transientEvent} onStart={startRun} onDemoReplay={demoReplay} onReplan={replan} onReplay={replay} />}
