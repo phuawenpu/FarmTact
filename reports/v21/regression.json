@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "tests": 812,
+  "passed": 811,
+  "skipped": 1,
+  "failures": 0,
+  "errors": 0,
+  "seconds": "860.790",
+  "source_commit": "6b85b164058a2df640dd7962dfb4ffb8fcfed5d4",
+  "scope": "Complete isolated PostgreSQL regression including numerical cleanup fix; subsequent polling change is frontend-only",
+  "provider_credentials": "removed from process"
+}

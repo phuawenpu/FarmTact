@@ -17,8 +17,15 @@ const remotePort = Number(process.env.STAGED_PORT || (8080 + Number(expectedEdit
 if (sshContainer !== expectedEdition) throw Error('STAGED_CONTAINER must match EXPECTED_EDITION');
 if (![8100, 8101].includes(remotePort) || remotePort !== (8080 + Number(expectedEdition.slice(1)))) throw Error('STAGED_PORT does not match the expected edition');
 
-function remote(code, input = '') {
-  return new Promise((resolve, reject) => {
+// Each request launches a remote interpreter; bound operator overhead separately
+// from the application's API limits. This queue never retries a request.
+let activeRemote = 0;
+const waitingRemote = [];
+async function remote(code, input = '') {
+  if (activeRemote >= 2) await new Promise(resolve => waitingRemote.push(resolve));
+  else activeRemote += 1;
+  try {
+    return await new Promise((resolve, reject) => {
     const child = spawn('fly', ['ssh', 'console', '--app', 'farmtact', '--machine', '2871575b4544d8', '--container', sshContainer, '--quiet', '--command', 'python -c ' + quote(code)], { stdio: ['pipe', 'pipe', 'pipe'] });
     const output = []; let bytes = 0;
     const timer = setTimeout(() => child.kill('SIGTERM'), 180_000);
@@ -28,7 +35,12 @@ function remote(code, input = '') {
     child.on('error', () => { clearTimeout(timer); reject(Error('Private candidate SSH unavailable')); });
     child.on('close', code => { clearTimeout(timer); if (code !== 0) reject(Error('Private candidate SSH failed; request was not retried')); else { try { resolve(JSON.parse(Buffer.concat(output).toString())); } catch { reject(Error('Invalid private candidate transport response')); } } });
     child.stdin.on('error', () => {}); child.stdin.end(input);
-  });
+    });
+  } finally {
+    const next = waitingRemote.shift();
+    if (next) next();
+    else activeRemote -= 1;
+  }
 }
 
 export async function stagedTransport(expectedSource) {

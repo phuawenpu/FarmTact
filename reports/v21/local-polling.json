@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "scope": "Real sandbox bootstrap; delayed RUNNING/FAILED reads are intercepted UI fixtures. No numerical calculation, backend failure or provider call is induced.",
+  "checks": [
+    {
+      "name": "ordinary saved sandbox session is available",
+      "pass": true
+    },
+    {
+      "name": "slow poll stays singular across more than three polling intervals",
+      "pass": true,
+      "detail": {
+        "pollCount": 1,
+        "pending": 1,
+        "maximumPending": 1,
+        "held_ms": 6500
+      }
+    },
+    {
+      "name": "failed fixture job explains saved-input recovery",
+      "pass": true
+    },
+    {
+      "name": "saved farm beds remain visible after failed calculation",
+      "pass": true
+    },
+    {
+      "name": "explicit Calculate retry is available",
+      "pass": true
+    },
+    {
+      "name": "terminal job stops polling",
+      "pass": true,
+      "detail": {
+        "pollCount": 1,
+        "pending": 0
+      }
+    },
+    {
+      "name": "disposed poll response cannot refresh workflow or change room",
+      "pass": true,
+      "detail": {
+        "workflowReadsBefore": 7,
+        "workflowReadsAfter": 7
+      }
+    },
+    {
+      "name": "polling and failure recovery submit no automatic mutation",
+      "pass": true,
+      "detail": {
+        "writesBefore": 2,
+        "writesAfter": 2,
+        "blocked": []
+      }
+    },
+    {
+      "name": "no calculation or provider request submitted",
+      "pass": true,
+      "detail": [
+        "/api/v1/planning-sessions",
+        "/api/v1/planning-sessions"
+      ]
+    },
+    {
+      "name": "no page exceptions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "page_errors": [],
+  "writes": [
+    "/api/v1/planning-sessions",
+    "/api/v1/planning-sessions"
+  ],
+  "blocked_writes": [],
+  "fixture": {
+    "slow_terminal": {
+      "pollCount": 1,
+      "maximumPending": 1,
+      "held_ms": 6500
+    },
+    "disposed": {
+      "pollCount": 1,
+      "maximumPending": 1
+    }
+  }
+}
