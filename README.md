@@ -1,36 +1,49 @@
 # FarmTact · Plan, compare and learn
 
-FarmTact V21 is live at [the public root](https://farmtact.fly.dev/) and
-[/play](https://farmtact.fly.dev/play). V20 restored V12 first; V21 keeps that
-workspace and applies focused improvements learned from V12, V15 and V19
-walkthroughs. The named sections are **Plan, Farm, Council research, Farm tools,
-Crops, Data, Outcomes and Setup**. The farm board, seven advisers and direct
-proposal/approval controls remain visible parts of the workflow.
+FarmTact V22 is live at [the public root](https://farmtact.fly.dev/) and
+[/play](https://farmtact.fly.dev/play). V20 restored the V12 workspace and V21
+refined it; V22 keeps that workspace and brings the Council forward with short
+public roles, explicit suggested questions, readable findings, a skippable
+captioned introduction and recoverable planning drafts. The named sections are
+**Plan, Farm, Council research, Farm tools, Crops, Data, Outcomes and Setup**.
+The farm board, seven advisers and direct proposal/approval controls remain
+visible parts of the workflow.
 
 Calculate appears before the board. Selected comparison metrics, board preview
 and full dated schedule describe the same strategy. Stage navigation focuses the
 relevant section without claiming work is complete. Dialogs support keyboard
-focus, Escape and returning to the opener. Closing a dialog retains unsent edits
-within the mounted workspace; navigation/reload clears these memory-only drafts.
+focus, Escape and returning to the opener. Council threads bind to the reviewed
+result, drafts survive reload, and failed or rate-limited replies retain input
+instead of discarding it.
 
 Reviewed proposals, imports, task results, corrections and recovery plans remain
-explicit, revision-bound actions. Reading, previews, local numerical calculations
-and replay make no provider calls. Optional adviser/Council submissions use the
-existing validated gateway and admission budgets. Actual farm operations remain
-disabled; records distinguish projections, simulation and reported information.
+explicit, revision-bound actions. Council requests are explicit and optional, and
+specialist requests never silently expand to Council; preview and advice cannot
+authorize changes. Reading, previews, the introduction, local numerical
+calculations and replay make no provider calls. Optional adviser/Council
+submissions use the existing validated gateway and admission budgets. Actual farm
+operations remain disabled; records distinguish projections, simulation and
+reported information.
 
-Published source: `b980180dbb49a5261e43ee1d8e4916cc24457d7f`. Historical source,
-images and recoverable edition data remain private. There is no automatic merge
-of historical farm state or public edition chooser.
+Published source: `ac6c84d09d515eac51802138baceabf84a3c01a8` (tag `farmtact-v22`).
+V22 is the single active edition; earlier editions are retired and return 410,
+and the append-only ledger in `config/releases/registry.json` retains their source
+commits and pinned image digests. Historical source, images and recoverable
+edition data remain private. There is no automatic merge of historical farm state
+or public edition chooser.
 
-Verification passed: 811 regression tests (one skipped), 62 responsive UX checks,
-50 lifecycle checks, 20 operator checks and nine preservation checks. Automated
-completion does not establish human comprehension; representative-user usability
-remains unverified.
+Verification passed: the isolated PostgreSQL regression (818 passed, one skipped,
+provider credentials removed), generated web contracts, the production frontend
+build, Council/interrupted-proposal/first-load fixtures (11, 10 and 10 checks),
+guidance fixtures under both normal and reduced motion (22 checks each) and the
+real local lifecycle (22 checks, zero provider requests). Publication then matched
+the running service: edition `v22`, image digest `sha256:e05b00a5…` and source
+commit `ac6c84d0…` agree with the registry entry. Automated completion does not
+establish human comprehension; representative-user usability remains unverified.
 
-**Read:** [V21 release evidence](reports/v21/README.md) ·
+**Read:** [V22 release evidence](reports/v22/README.md) ·
+[V22 scope](docs/v22-council-guidance.md) ·
 [V12/V15/V19 walkthrough](docs/v12-restoration-ux-review.md) ·
-[V21 scope](docs/v21-v12-ux.md) ·
 [documentation index](docs/README.md) ·
 [publication policy](docs/deployment/editions.md).
 
@@ -92,8 +105,9 @@ demand unserved. Empirical model calibration and farmer validation remain open.
 
 The capabilities below document the retained planning engine and previous UI
 iterations. Historical V14 presented its beginner workflow through cards and did not
-expose the earlier room-based navigation or public release chooser. V15 supersedes
-that four-bed teaching interface with the ordinary-farm integrated shell.
+expose the earlier room-based navigation or public release chooser. V15 replaced
+that four-bed teaching interface with the ordinary-farm integrated shell that V22
+retains today.
 
 - Navigate the V13 field deck by swipe, Previous/Next or arrow keys; inspect the
   frozen scenario, reserve B3 through the real planner, compare calculated
@@ -401,17 +415,18 @@ later attempts.
 
 ## Hosting and releases
 
-The `farmtact` app runs in Singapore. V15 is the single current public application;
+The `farmtact` app runs in Singapore. V22 is the single current public application;
 its `/` and `/play` entry points share the same shell and ordinary-farm state.
-Historical application sources and images remain immutable, and prior public state
-was preserved according to the cutover records. Abuse and inference spending limits
-remain shared infrastructure boundaries. Healthy endpoints alone do not establish
-loaded capacity.
+Retained earlier editions return 410 for reads and mutations, and no edition shares
+farm state with another. Historical application sources and images remain
+immutable, and prior public state was preserved according to the cutover records.
+Abuse and inference spending limits remain shared infrastructure boundaries.
+Healthy endpoints alone do not establish loaded capacity.
 
 Every newly published application iteration receives a new immutable edition.
 Use [the edition publisher](docs/deployment/editions.md); a generic `fly deploy`
-does not describe the preserved release workflow. After V15, the next contiguous
-edition is V16; existing numbered source, image and retained state are never
+does not describe the preserved release workflow. After V22, the next contiguous
+edition is V23; existing numbered source, image and retained state are never
 overwritten. See [Fly operations](docs/deployment/fly.md).
 
 Development scope and provider policy are controlled by the
