@@ -21,12 +21,12 @@ for exact-image acceptance and a valid Fly authentication context.
 | Interrupted proposal fixture | 10 passed | Exact receipt reconciliation without duplicate create/apply; no provider endpoint |
 | First-load fixture | 10 passed | Strict Mode deduplication, dated objective, 360/390 px text-zoom visibility |
 | Guidance fixture | 22 passed, normal motion; 22 passed, reduced motion | 360/390/430/1280 px, keyboard, captions, focus, no inference or mutations in the demo |
+| Real local lifecycle | 22 passed | Calculation, reviewed import, approval, simulated tasks, result, correction, recovery, room return and 360/390/430/1280 px layouts; zero provider requests |
 
 The existing bundle-size warning for the main JavaScript chunk remains measured;
 it is not a claim that the bundle meets an unrecorded size budget. These isolated
-browser fixtures prove the listed UI behavior only. They do not substitute for
-the pending exact-image lifecycle, operator, preservation and public-entry
-checks.
+browser fixtures prove the listed UI behavior only. The local lifecycle does
+not substitute for the pending exact-image operator, preservation and public-entry checks.
 
 Actual farm operations remain disabled. Numerical calculation is local; browsing,
 previewing, the demo, and replay do not invoke the provider. Human usability is
