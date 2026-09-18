@@ -1,14 +1,18 @@
-# V12 restoration — published; V21 targeted UX follow-up, 18 September 2026
+# V21 published: V12 remains the base — 18 September 2026
 
-Root owns shell selection, API compatibility, release identity, verification and
-publication. Bounded specialists own restoration browser checks and comparative UX
-evidence. V20 restores V12 first; subsequent fixes require a separate release. The
-V15–V19 universal card-shell requirement is superseded by the user's correction.
-V20 is live from `6054b6f` after 804 regression tests passed (one skipped),
-47 exact-image browser checks and preservation verification. V21 keeps this
-structure and addresses the observed navigation, preview and dialog issues.
-See [restoration contract](v20-v12-restoration.md), [walkthrough](v12-restoration-ux-review.md)
-and [V21 scope](v21-v12-ux.md).
+V20 restored V12 first. V21 is now live from `b980180`, with the original named
+sections, board and visible Council. Targeted improvements follow fresh V12,
+V15 and V19 walkthroughs: truthful navigation, aligned previews, dated schedules,
+keyboard dialogs and bounded status polling. Root completed immutable publication
+and preservation verification. The V15–V19 universal card-shell direction below
+is historical and superseded.
+
+Verification: 811 regression tests passed (one skipped), 62 responsive UX checks,
+50 lifecycle checks, 20 operator checks, 11 polling fixture checks, 25 local draft
+fixture checks and nine preservation checks. `/` and `/play` identify the exact
+published source. See [V21 scope](v21-v12-ux.md),
+[walkthrough](v12-restoration-ux-review.md) and [release evidence](../reports/v21/README.md).
+Human usability remains unverified; actual farm operations remain disabled.
 
 # V19 Council decision cards — published, 18 September 2026
 

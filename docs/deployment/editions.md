@@ -2,12 +2,13 @@
 
 ## Current-game publication policy
 
-V20 restores the V12 farmer workspace at `/` and `/play`, from
-`6054b6f5a4dba6ba77a9090d2141c0c45fc045db`. The experience is explicitly selected
-in the entry point, independently of the immutable edition identity. V19 and
-previous source/image/data remain privately retained. V21 is the separate small
-UX follow-up; V12 remains its product baseline. Always inspect the current registry
-before choosing the next edition number.
+V21 is the current V12-based workspace at `/` and `/play`, source
+`b980180dbb49a5261e43ee1d8e4916cc24457d7f`. V20 restored V12 first; V21 adds the
+small UX improvements documented in [the release report](../../reports/v21/README.md).
+The experience is explicitly selected independently of the immutable edition
+identity. Previous source, images and data remain privately retained. Always
+inspect the registry before choosing the next edition number; V22 is next after
+this publication.
 
 V15 replaces the historical first-season introduction with the same full card
 application at `/` and `/play`. From V14 onward the active

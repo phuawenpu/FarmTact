@@ -1,11 +1,17 @@
-## Current direction: restore V12 — 18 September 2026
+## Current release: V21, improved V12 workspace — 18 September 2026
 
-The user rejected the V15–V19 interaction direction. V12 is the product baseline.
-Follow [the restoration contract](docs/v20-v12-restoration.md): publish the V12
-experience first with only compatibility changes, then perform fresh comparative
-walkthroughs and make small, separate UX improvements. Preserve named sections,
-the farm board and seven-stage workflow. Earlier claims below that the integrated
-card shell is the final product are historical and superseded.
+V20 restored V12 first. V21 is now published at `/` and `/play` from
+`b980180dbb49a5261e43ee1d8e4916cc24457d7f`. It preserves the named sections,
+farm board, visible Council and direct proposal/approval controls. Fresh V12,
+V15 and V19 walkthroughs informed targeted navigation, preview and dialog fixes.
+The V15–V19 universal card-shell direction below is historical and superseded.
+
+Read [the V21 scope](docs/v21-v12-ux.md),
+[comparative walkthrough](docs/v12-restoration-ux-review.md) and
+[release verification](reports/v21/README.md). Full isolated regression: 811 passed,
+one skipped; exact-image browser and operator checks passed. Human usability is
+unverified. Actual farm operations remain disabled. Source, images and historical
+data remain privately recoverable; do not merge edition state automatically.
 
 ## V19 Council decision cards — published, 18 September 2026
 

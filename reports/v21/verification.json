@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "edition": "v21",
+  "published_source": "b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+  "published_image": "registry.fly.io/farmtact@sha256:e3564a72292fe9a7fca69dcf9a25c3ffd9b9adaa5e38536c4a2d64d0b4a17e20",
+  "publication_commit": "2825f24",
+  "regression": {
+    "passed": 811,
+    "skipped": 1,
+    "source": "6b85b164058a2df640dd7962dfb4ffb8fcfed5d4",
+    "note": "Final backend; subsequent changes are frontend polling, browser harness and documentation."
+  },
+  "staged_checks": {
+    "responsive_ux": 62,
+    "lifecycle": 50,
+    "operator": 20,
+    "polling_ui_fixture": 11
+  },
+  "local_draft_ui_fixture_checks": 25,
+  "preservation_checks": 9,
+  "public_paths": [
+    "/",
+    "/play"
+  ],
+  "provider_submissions": 0,
+  "build": "PASS",
+  "generated_contract_check": "PASS",
+  "bundle_kb": {
+    "js": 526.54,
+    "js_gzip": 153.87,
+    "css": 148.45,
+    "css_gzip": 30.57
+  },
+  "normal_motion_video_seconds": 118.84,
+  "limitations": [
+    "Human usability unverified",
+    "Drafts survive closing dialogs only in the mounted workspace; reload or navigation clears them",
+    "Fixture UI checks do not prove provider success or backend failure handling",
+    "Existing large JavaScript chunk warning",
+    "No sustained-load capacity claim; actual farm operations disabled"
+  ]
+}

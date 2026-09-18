@@ -1,4 +1,21 @@
-# Current handoff — 17 September 2026
+# Current handoff — 18 September 2026
+
+V21 is published from `b980180dbb49a5261e43ee1d8e4916cc24457d7f` at `/` and
+`/play`. V20 restored V12 first. V21 keeps its named sections, board, visible
+Council and direct controls, adding targeted UX and recovery fixes. The earlier
+universal card-shell direction below is superseded by the user's V12-base request.
+
+Start with [V21 verification](../reports/v21/README.md),
+[scope](v21-v12-ux.md), [comparative walkthrough](v12-restoration-ux-review.md),
+and the current execution plan. Release checks passed; human usability remains
+unverified. Actual farm operations remain disabled. Historical source, images,
+data, shared abuse counters and provider budgets are preserved. Never print or
+commit credentials or browser storage. The next unused edition is V22; inspect
+the registry before publishing. Every new application iteration is immutable.
+
+---
+
+# Historical handoff — 17 September 2026
 
 V16 is published from exact source
 `3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image

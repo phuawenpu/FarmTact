@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "rows": [
+    {
+      "path": "/",
+      "edition": "v21",
+      "source_commit": "b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+      "title": "FarmTact · Plan, compare and learn"
+    },
+    {
+      "path": "/play",
+      "edition": "v21",
+      "source_commit": "b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+      "title": "FarmTact · Plan, compare and learn"
+    }
+  ],
+  "errors": [],
+  "provider_requests": []
+}

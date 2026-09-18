@@ -1,44 +1,38 @@
-# FarmTact · One farm, one card experience
+# FarmTact · Plan, compare and learn
 
-FarmTact V19 is the current experience for the ordinary synthetic farm through one integrated card
-shell. The same application is served at
-[the public root](https://farmtact.fly.dev/) and
-[/play](https://farmtact.fly.dev/play): review the current farm, calculate and
-compare plans, inspect records and evidence, explore saved experiments, replay
-history, and manage preferences without switching to a separate dashboard or
-edition chooser. Previous/Next buttons, arrow keys and horizontal swipe provide
-equivalent card navigation; forms and decisions remain inside the active card
-with a bounded action area below it.
+FarmTact V21 is live at [the public root](https://farmtact.fly.dev/) and
+[/play](https://farmtact.fly.dev/play). V20 restored V12 first; V21 keeps that
+workspace and applies focused improvements learned from V12, V15 and V19
+walkthroughs. The named sections are **Plan, Farm, Council research, Farm tools,
+Crops, Data, Outcomes and Setup**. The farm board, seven advisers and direct
+proposal/approval controls remain visible parts of the workflow.
 
-V19 brings an
-optional Planning Council checkpoint and layered decision brief onto every calculated
-strategy card, while preserving the ordinary sandbox, complete tool decks,
-revision-bound actions and disabled physical operations. It is published from immutable
-source `ef4cba0`; V18 data and source remain preserved. Read the
-[V19 decision-brief contract](docs/v19-council-decision-brief.md),
-[V15 capability checklist](docs/v15-capability-checklist.md), and
+Calculate appears before the board. Selected comparison metrics, board preview
+and full dated schedule describe the same strategy. Stage navigation focuses the
+relevant section without claiming work is complete. Dialogs support keyboard
+focus, Escape and returning to the opener. Closing a dialog retains unsent edits
+within the mounted workspace; navigation/reload clears these memory-only drafts.
+
+Reviewed proposals, imports, task results, corrections and recovery plans remain
+explicit, revision-bound actions. Reading, previews, local numerical calculations
+and replay make no provider calls. Optional adviser/Council submissions use the
+existing validated gateway and admission budgets. Actual farm operations remain
+disabled; records distinguish projections, simulation and reported information.
+
+Published source: `b980180dbb49a5261e43ee1d8e4916cc24457d7f`. Historical source,
+images and recoverable edition data remain private. There is no automatic merge
+of historical farm state or public edition chooser.
+
+Verification passed: 811 regression tests (one skipped), 62 responsive UX checks,
+50 lifecycle checks, 20 operator checks and nine preservation checks. Automated
+completion does not establish human comprehension; representative-user usability
+remains unverified.
+
+**Read:** [V21 release evidence](reports/v21/README.md) ·
+[V12/V15/V19 walkthrough](docs/v12-restoration-ux-review.md) ·
+[V21 scope](docs/v21-v12-ux.md) ·
+[documentation index](docs/README.md) ·
 [publication policy](docs/deployment/editions.md).
-
-The integrated tools cover **Plan**, **Records & work**, **Knowledge & evidence**,
-**Experiments**, and **History & preferences**. Planning uses the complete ordinary
-farm snapshot and local numerical strategies. Reviewed proposals, imports, task
-results, corrections, recovery plans and simulation advances remain explicit,
-revision-bound actions. Reading saved explanations, evidence and replays makes no
-provider call. Optional adviser and extraction submissions retain the existing
-bounded DeepSeek controls; V19 adds no new provider-quality claim.
-
-All farm records and outcomes in the public application remain synthetic or
-simulated and are labelled by evidence type. Actual planting, purchasing,
-delivery, communication and other physical farm operations are disabled. Automated
-V19 verification includes an 804-pass isolated PostgreSQL regression, a full local
-responsive card journey, a 20-check operator trial and an exact pinned-image browser
-journey, all with zero provider submissions where browsing is expected. Human
-farmer comprehension and usability have not been verified.
-
-**Read:** [documentation index](docs/README.md) ·
-[scientific implementation report](docs/technical/README.md) ·
-[V19 implementation evidence](reports/v19/implementation.md) ·
-[V15 capability checklist](docs/v15-capability-checklist.md)
 
 ## Historical V13 tactical field console
 
