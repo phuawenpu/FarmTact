@@ -2,10 +2,11 @@
 
 ## Current-game publication policy
 
-V16 is published from `3487faf`, with the same ordinary-farm integrated card
-application at `/` and `/play`. It completes the V15 rewrite by correcting its
-postpublication explanation finding. V15 remains immutable and privately retained.
-The next unused edition is V17; always verify the registry before publication.
+V19 is published from `ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5`, with the
+ordinary-farm integrated card application at `/` and `/play`. It brings an optional
+Council decision brief to calculated planning cards while preserving explicit review,
+revision-bound approval and the five tool decks. V18 remains immutable and privately
+retained. Always inspect the current registry before determining the next edition.
 
 V15 replaces the historical first-season introduction with the same full card
 application at `/` and `/play`. From V14 onward the active

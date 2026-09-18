@@ -1,9 +1,14 @@
-## V19 Council decision cards — candidate, 18 September 2026
+## V19 Council decision cards — published, 18 September 2026
 
 The active work is specified in [docs/v19-council-decision-brief.md](docs/v19-council-decision-brief.md). V19 keeps the V18 shared ordinary-farm card shell while restoring the most useful V11–V13 decision context in place: every calculated strategy has a compact, evidence-bound decision brief and an optional explicit Planning Council review. Crop, evidence, research, Data Explorer and historical tools remain reachable through the five-card index rather than becoming separate screens.
 
-V18 remains the sole public experience at `/` and `/play`, from source
-`4ab3e9ba51895080cae7f900333b977447f96217`. V19 is committed, pushed and locally verified, but is not public until the exact pinned candidate passes operator and staged-browser acceptance. Reading a brief, comparing strategies, swiping, replaying and explaining remain provider-free. Planning Council review remains an explicit, validated submission and never approves a farm change. Actual farm operations remain disabled.
+V19 is the sole public experience at `/` and `/play`, from source
+`ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5` and image
+`registry.fly.io/farmtact@sha256:ab798306de8fee61f40ecf0ca0fab5c24359ab9544e32ac258b1cc8f6614027d`.
+The immutable publication and post-cutover preservation audit passed; V18 remains
+private and preserved. Reading a brief, comparing strategies, swiping, replaying
+and explaining remain provider-free. Planning Council review remains an explicit,
+validated submission and never approves a farm change. Actual farm operations remain disabled.
 
 The isolated PostgreSQL regression passed 804 tests with one skip. The local browser journey passed responsive, keyboard, reduced-motion and full reservation-to-recorded-consequence checks at 360, 390, 430 and desktop widths, with no automatic provider requests. These automated results do not establish representative-user comprehension. Never overwrite a published source/image or reuse an edition number.
 

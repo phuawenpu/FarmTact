@@ -1,0 +1,24 @@
+{
+  "title": "FarmTact V19 — Council decision cards",
+  "summary": "Calculated plans now pair a compact, evidence-bound decision brief with an optional Planning Council review, while retaining the complete one-farm card experience.",
+  "changes": [
+    {
+      "title": "Bring Council into the planning decision",
+      "description": "Each calculated strategy exposes Explain, an explicit optional Council review, and More. Council is bound to that plan's frozen result and revision; it advises but cannot save, approve or operate a farm.",
+      "feedback_ids": ["v19-council-decision-copilot"],
+      "evidence": ["docs/v19-council-decision-brief.md", "reports/v19/council-cards.json", "tests/browser/v19_council_cards.mjs"]
+    },
+    {
+      "title": "Restore layered decision context in cards",
+      "description": "Plan cards show dated allocation samples, affected beds, review status and clear authority boundaries. The five tool decks retain crop profiles, evidence, research, Data Explorer and replay without returning to a maze of screens.",
+      "feedback_ids": ["v19-layered-summary"],
+      "evidence": ["reports/v19/implementation.md", "reports/v19/local/browser-cards.json", "docs/v17-persona-rewrite.md"]
+    },
+    {
+      "title": "Keep browsing and consequences trustworthy",
+      "description": "Previews, swipes, explanations and replay make no provider request. Explicit reviews use the existing validated gateway; planning, approval and recorded simulation remain separate, revision-bound workflows with actual operations disabled.",
+      "feedback_ids": ["v19-explicit-authority"],
+      "evidence": ["tests/browser/v17_journey.mjs", "tests/browser/v17_transport_guards.mjs", "reports/v19/transport-guards.json"]
+    }
+  ]
+}

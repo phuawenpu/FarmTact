@@ -1,6 +1,6 @@
 # FarmTact · One farm, one card experience
 
-FarmTact V19 is the current unpublished candidate for the ordinary synthetic farm through one integrated card
+FarmTact V19 is the current experience for the ordinary synthetic farm through one integrated card
 shell. The same application is served at
 [the public root](https://farmtact.fly.dev/) and
 [/play](https://farmtact.fly.dev/play): review the current farm, calculate and
@@ -10,11 +10,11 @@ edition chooser. Previous/Next buttons, arrow keys and horizontal swipe provide
 equivalent card navigation; forms and decisions remain inside the active card
 with a bounded action area below it.
 
-V18 remains the published public experience while V19 is verified. V19 brings an
+V19 brings an
 optional Planning Council checkpoint and layered decision brief onto every calculated
 strategy card, while preserving the ordinary sandbox, complete tool decks,
-revision-bound actions and disabled physical operations. Publication requires a new
-immutable V19 source/image record; V18 data and source remain preserved. Read the
+revision-bound actions and disabled physical operations. It is published from immutable
+source `ef4cba0`; V18 data and source remain preserved. Read the
 [V19 decision-brief contract](docs/v19-council-decision-brief.md),
 [V15 capability checklist](docs/v15-capability-checklist.md), and
 [publication policy](docs/deployment/editions.md).
@@ -25,18 +25,19 @@ farm snapshot and local numerical strategies. Reviewed proposals, imports, task
 results, corrections, recovery plans and simulation advances remain explicit,
 revision-bound actions. Reading saved explanations, evidence and replays makes no
 provider call. Optional adviser and extraction submissions retain the existing
-bounded DeepSeek controls; V16 adds no new provider-quality claim.
+bounded DeepSeek controls; V19 adds no new provider-quality claim.
 
 All farm records and outcomes in the public application remain synthetic or
 simulated and are labelled by evidence type. Actual planting, purchasing,
 delivery, communication and other physical farm operations are disabled. Automated
-V16 verification currently includes 49 semantic, 97 layout, 108 complete-journey,
-20 operator, and 28 exact staged-image checks with zero provider requests. Human
+V19 verification includes an 804-pass isolated PostgreSQL regression, a full local
+responsive card journey, a 20-check operator trial and an exact pinned-image browser
+journey, all with zero provider submissions where browsing is expected. Human
 farmer comprehension and usability have not been verified.
 
 **Read:** [documentation index](docs/README.md) ·
 [scientific implementation report](docs/technical/README.md) ·
-[V16 implementation evidence](reports/v16/implementation.md) ·
+[V19 implementation evidence](reports/v19/implementation.md) ·
 [V15 capability checklist](docs/v15-capability-checklist.md)
 
 ## Historical V13 tactical field console
