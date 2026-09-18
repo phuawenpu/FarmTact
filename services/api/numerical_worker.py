@@ -9,6 +9,55 @@ from packages.contracts import Farm, content_hash
 DEADLINE_SECONDS = 150
 _GATE = threading.Lock()
 _CACHE = OrderedDict()
+# Accessed only while holding _GATE. A delayed OS reap must not admit a second
+# numerical child, but must not permanently leave the admission lock acquired.
+_UNREAPED = []
+
+
+def _best_effort(action):
+    try:
+        action()
+    except Exception:
+        # Cleanup must not mask the original calculation/transport failure.
+        pass
+
+
+def _stopped(process):
+    try:
+        return not process.is_alive()
+    except Exception:
+        # Unknown liveness is not permission to start another numerical child.
+        return False
+
+
+def _cleanup_process(process):
+    _best_effort(lambda: process.join(timeout=.2))
+    if not _stopped(process):
+        _best_effort(process.terminate)
+        _best_effort(lambda: process.join(timeout=1))
+    if not _stopped(process):
+        _best_effort(process.kill)
+        _best_effort(lambda: process.join(timeout=1))
+    if _stopped(process):
+        _best_effort(process.close)
+    else:
+        _UNREAPED.append(process)
+
+
+def _await_previous_exit(started, deadline, cancelled):
+    while _UNREAPED:
+        process = _UNREAPED[0]
+        _best_effort(lambda: process.join(timeout=0))
+        if _stopped(process):
+            _best_effort(process.close)
+            _UNREAPED.pop(0)
+            continue
+        if cancelled():
+            raise InterruptedError('Calculation cancelled before execution')
+        if time.monotonic() - started >= deadline:
+            raise TimeoutError('Numerical admission deadline exceeded')
+        _best_effort(process.kill)
+        time.sleep(min(.1, max(0, deadline - (time.monotonic() - started))))
 
 
 def _child(connection, operation, payload):
@@ -48,7 +97,9 @@ def calculate(operation, payload, *, cache_scope=None, cancelled=lambda: False, 
         if time.monotonic()-started>=deadline: raise TimeoutError('Numerical admission deadline exceeded')
     process=None
     receiver=None
+    sender=None
     try:
+        _await_previous_exit(started, deadline, cancelled)
         if cancelled(): raise InterruptedError('Calculation cancelled')
         if key in _CACHE:
             _CACHE.move_to_end(key)
@@ -84,13 +135,17 @@ def calculate(operation, payload, *, cache_scope=None, cancelled=lambda: False, 
             while len(_CACHE)>8:_CACHE.popitem(last=False)
         return value
     finally:
-        if process:
-            process.join(timeout=.2)
-            if process.is_alive():process.terminate();process.join(timeout=1)
-            if process.is_alive():process.kill();process.join(timeout=1)
-            process.close()
-        if receiver:receiver.close()
-        _GATE.release()
+        try:
+            if process is not None:
+                _cleanup_process(process)
+        finally:
+            try:
+                if receiver is not None:
+                    _best_effort(receiver.close)
+                if sender is not None:
+                    _best_effort(sender.close)
+            finally:
+                _GATE.release()
 
 
 def plan(farm, **kwargs):
