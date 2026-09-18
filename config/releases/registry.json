@@ -1,5 +1,5 @@
 {
-  "latest": "v19",
+  "latest": "v20",
   "editions": [
     {
       "id": "v1",
@@ -927,6 +927,43 @@
             "tests/browser/v17_journey.mjs",
             "tests/browser/v17_transport_guards.mjs",
             "reports/v19/transport-guards.json"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v20",
+      "title": "FarmTact \u2014 V12 experience restored",
+      "published_at": "2026-09-18",
+      "summary": "Restore the original V12 farmer workflow, farm board, Council and named sections as the current experience. Later card-shell experiments remain private.",
+      "status": "published",
+      "source_commit": "6054b6f5a4dba6ba77a9090d2141c0c45fc045db",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/6054b6f5a4dba6ba77a9090d2141c0c45fc045db",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/ef4cba0e5efa84c8e7f8db9fbb36c831281a19f5...6054b6f5a4dba6ba77a9090d2141c0c45fc045db",
+      "image_digest": "registry.fly.io/farmtact@sha256:e6dd5a9f4588c54a7164661d0b522a5e03d3743ddb79868013216a99cfdb1b52",
+      "review_url": "/v20/review",
+      "play_url": "/v20/",
+      "changes": [
+        {
+          "title": "Restore the V12 product baseline",
+          "description": "Plan, Farm, Council research, Farm tools, Crops, Data, Outcomes and Setup return with the original seven-stage farmer workflow and explicit proposal and approval controls.",
+          "feedback_ids": [
+            "restore-v12-baseline"
+          ],
+          "evidence": [
+            "tests/browser/v20_restoration.mjs",
+            "docs/v20-v12-restoration.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Keep current deployment and data safeguards",
+          "description": "The restored interface uses the existing numerical services and admission controls, with isolated new-edition state, reviewed imports and disabled physical operations. V12 and later releases remain privately preserved.",
+          "feedback_ids": [],
+          "evidence": [
+            "scripts/v15_release_preservation.py",
+            "tests/gameplay/test_v12_acceptance_adversarial.py"
           ],
           "status": "implemented"
         }
