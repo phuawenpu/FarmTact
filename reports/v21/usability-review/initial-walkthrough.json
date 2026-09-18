@@ -1,0 +1,247 @@
+{
+  "reviewed_at": "2026-09-18T06:57:34.390Z",
+  "scope": "Fresh public V21 sandbox; no inference or plan approval",
+  "checks": [
+    {
+      "name": "Public health matches frozen V21 source",
+      "pass": true
+    },
+    {
+      "name": "V21 renders restored V12 workspace",
+      "pass": true
+    },
+    {
+      "name": "Unavailable Replan explains prerequisite",
+      "pass": true
+    },
+    {
+      "name": "Rail never invents completed stages",
+      "pass": true
+    },
+    {
+      "name": "Rail focuses calculation guidance",
+      "pass": true
+    },
+    {
+      "name": "Three numerical plans returned",
+      "pass": true
+    },
+    {
+      "name": "Lean board and brief use same preview",
+      "pass": true
+    },
+    {
+      "name": "Lean remains explicitly unsaved",
+      "pass": true
+    },
+    {
+      "name": "Resilient board and brief use same preview",
+      "pass": true
+    },
+    {
+      "name": "Resilient remains explicitly unsaved",
+      "pass": true
+    },
+    {
+      "name": "Decide scrolls and focuses real section",
+      "pass": true
+    },
+    {
+      "name": "Proposal heading receives focus",
+      "pass": true
+    },
+    {
+      "name": "Escape returns focus to opener",
+      "pass": true
+    },
+    {
+      "name": "360px no page horizontal overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px no page horizontal overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px no page horizontal overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px no page horizontal overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "/play also renders V21",
+      "pass": true
+    },
+    {
+      "name": "No page exceptions",
+      "pass": true
+    }
+  ],
+  "observations": {
+    "initial": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scrollY": 0,
+      "pageHeight": 3245,
+      "headings": [
+        {
+          "text": "What needs attention today?",
+          "y": 843
+        },
+        {
+          "text": "Evidence-earned outcomes",
+          "y": 2683
+        },
+        {
+          "text": "Compare a dated surplus before it expires",
+          "y": 2972
+        }
+      ],
+      "actions": [
+        {
+          "text": "Inbox",
+          "y": 890,
+          "disabled": false
+        },
+        {
+          "text": "Calculate options",
+          "y": 1149,
+          "disabled": false
+        }
+      ]
+    },
+    "initial_board": "A1\nCaixin · recorded batch\nA2\nXiao bai cai / pak choi · recorded batch\nA3\nKailan · recorded batch\nA4\nLettuce · recorded batch\nB1\nCaixin · recorded batch\nB2\nXiao bai cai / pak choi · recorded batch\nB3\nKailan · recorded batch\nB4\nLettuce · recorded batch\nC1\nNo recorded crop · empty\nC2\nNo recorded crop · empty\nC3\nNo recorded crop · empty\nC4\nNo recorded crop · empty\nD1\nNo recorded crop · empty\nD2\nNo recorded crop · empty\nD3\nNo recorded crop · empty\nD4\nNo recorded crop · empty\n\nRECORDED FARM SNAPSHOT\n\n16 beds · 320 m²\nCash\nSGD 2,200\nLabour\n32 h/week\nHorizon\n56 days\nSaved synthetic records. No crop is inferred where records are missing.",
+    "calculation_seconds": 13.42,
+    "calculated": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scrollY": 872,
+      "pageHeight": 5090,
+      "headings": [
+        {
+          "text": "What needs attention today?",
+          "y": 825
+        },
+        {
+          "text": "Evidence-earned outcomes",
+          "y": 2496
+        },
+        {
+          "text": "Seven roles, one reviewable proposal",
+          "y": 2780
+        },
+        {
+          "text": "Choose what the farm should test",
+          "y": 3280
+        },
+        {
+          "text": "Compare a dated surplus before it expires",
+          "y": 4816
+        }
+      ],
+      "actions": [
+        {
+          "text": "Inbox",
+          "y": 872,
+          "disabled": false
+        },
+        {
+          "text": "Apply & Recalculate",
+          "y": 4628,
+          "disabled": false
+        },
+        {
+          "text": "Approve & Create Actions",
+          "y": 4680,
+          "disabled": true
+        }
+      ]
+    },
+    "proposals": [
+      "ALTERNATIVE\nLean\n\nKeep inputs light. Accept more uncovered demand to limit surplus.\n\n44.9%\nbooked coverage\n154 kg\nexpiry\nSGD 2,467.6\nmargin\nNumerically feasible",
+      "CANDIDATE\nBalanced\n\nBalance customer coverage, growing cost and avoidable surplus.\n\n54.1%\nbooked coverage\n176 kg\nexpiry\nSGD 2,930.6\nmargin\nNumerically feasible",
+      "ALTERNATIVE\nResilient\n\nMaximize the worst declared scenario fill rate, then improve weighted policy utility.\n\n62.9%\nbooked coverage\n221 kg\nexpiry\nSGD 3,193.2\nmargin\nNumerically feasible"
+    ],
+    "council_before_submission": "DISCUSS · CENTRAL COUNCIL TABLE\n\nSeven roles, one reviewable proposal\n\nQuestions, challenges, constraints and alternatives stay attached to evidence. Invalid advice cannot support approval.\n\nAWAITING\nRavi\nDemand Planner\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nMei\nCrop Planner\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nHana\nWeather & Risk Monitor\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nIdris\nMarket & Price Analyst\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nBen\nCapacity & Cost Analyst\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nLina\nFarm Planner\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nAsha\nPlan Reviewer\nUNAVAILABLE\n\nAwaiting explicit review.\n\nQuestion, evidence & tools\nAsk this specialist\nReview with Council",
+    "schedule_rows": 20,
+    "proposal_editor": "Challenge constraints and recalculate\n\nExplicit edits create a draft proposal. Confirmed imports remain evidence; they do not silently rewrite demand or yield. Unsubmitted edits stay available when you close and reopen this dialog in this workspace. Reloading or changing the plan revision starts a new draft.\n\nExpected demand\n100%\nSeasonal yield\n100%\nHarvest delay\n0 days\nReserve a bed\nNo reservation\nA1\nA2\nA3\nA4\nB1\nB2\nB3\nB4\nC1\nC2\nC3\nC4\nD1\nD2\nD3\nD4\nNursery sites\nLabour hours/week\nCash capacity (SGD)\nAdd confirmed order (kg)\nAdd tentative order (kg)\n\nTentative orders are scenario evidence only. They remain separate from confirmed customer commitments.\n\nApply & Recalculate",
+    "inbox": "Farm Inbox\nSingapore leafy greens demo records\n\n32 orders · 16 beds · synthetic default\n\nReviewed demonstration fixture; no real-farm provenance claim.\nACTIVE\nOptional sandbox upload\n\nCSV, XLSX, document or photo files remain candidates until explicit review. Documents and photos are observations and never yield authority.\n\nChoose a sandbox file\nUpload candidate\nOpen manual entry",
+    "manual_entry_labels": [
+      "Choose a sandbox file",
+      "Source name",
+      "Record date",
+      "Record kind\nExpense\nSale\nCorrection",
+      "Record reference",
+      "Description (optional)",
+      "Amount (SGD)"
+    ],
+    "room_Farm": "LIM CHU KANG, SINGAPORE · SYNTHETIC SIMULATION\n\nLittle Plot Collective\n\nTap a bed or visit an advisor to explore the plan.\n\nTalk to advisors\nQuest journal\nScenario lab\nCrop almanac\n\nRECOMMENDED MISSION · PROVISIONAL SUPPLY GAP\n\nCan we cover Pak Choi due 21 Sept 2026?\n28 kg\nbooked for this date\n0 kg\nharvest eligible by shelf life\n0 kg\ninventory valid on due date\n28 kg\ngap to investigate\n\nThis screening comparison uses dated booked orders. It does not allocate an eligible harvest or inventory lot across earlier orders; the numerical planner decides actual shortfall. The containing week’s statistical forecast is 33 kg and remains context, not this order’s due quantity.\n\nA new sowing using the declared 35-day recipe would mature around 13 Oct 2026—after this delivery.\n\nInspect 14 linked input records\nSnapshot 0028677954\nTest this mission\n\nNEWS SCOUT · SUPPORTING THE COUNCIL\n\nBeyond the farm gate\n\nReported news can help you choose a question to test. It does not change your orders, crop yields or prices.\n\nNews available: 18 Sept 2026, 2:57 pm SGT.\nFarm planning date: 8 Sept 2026, 8:00 am SGT. These are separate clocks.\n\nBrowse headlines and sources\n283 matching records\n\nCached public metadata · no inference while browsing. Starting an experiment freezes the available evidence; later headlines do not rewrite it.\n\n8\nACTIVE BEDS\n32\nLABOUR HR/WK\n$2,200\nAVAILABLE CASH\n0\nPLAN OPTIONS\nMove farm\n\nSwipe to scroll the page. Choose Move farm to drag the map, or use the arrow controls. Mouse users can drag directly.\n\nGREENHOUSE\nMARKET\nNURSERY\nTOOL SHED\nCOUNCIL\nPACKING SHED\nEVIDENCE DESK\nWEATHER\nVisit greenhouse\nView nursery schedule\nVisit market stall\nVisit accounts desk\nEnter council pavilion\nOpen packing schedule\nVisit packing shed\nOpen market evidence\nCheck weather station\nA1\nCaixin\nA2\nXiao bai cai / pak choi\nA3\nKailan\nA4\nLettuce\nB1\nCaixin\nB2\nXiao bai cai / pak choi\nB3\nKailan\nB4\nLettuce\nC1\nOpen bed\nC2\nOpen bed\nC3\nOpen bed\nC4\nOpen bed\nD1\nOpen bed\nD2\nOpen bed\nD3\nOpen bed\nD4\nOpen bed\nWhich delivery is most exposed?\nRavi\nDemand\nWhat conditions should we watch?\nHana\nWeather\nWhat market evidence is available?\nIdris\nMarket\nWhy is this bed delayed?\nMei\nProduction\nWhere could supply miss delivery?\nLina\nSupply Chain\nWhat drives the margin?\nBen\nProfit\nCompare our best alternatives.\nAsha\nPlanner\n\nTap to inspect · arrows to explore\n\nPLAN PREVIEW\n8 Sept\nToday\n\nPreview only — this does not advance time or create observations.\n\nAccessible farm list\nAll 16 beds and next actions\nAdvisor shortcuts\nTalk, invite or convene council\nPlanning tools\nStrategies, timeline and resources",
+    "room_Council research": "Opening the council study…\nTry again",
+    "room_Farm tools": "PLANNING MISSION\n\nLIM CHU KANG, SINGAPORE · 56-DAY HORIZON\n\nTurn today’s beds into the next good harvest.\n\nPlan for 32 buyer commitments within the farm’s space, labour and cash limits.\n\nPlan with DeepSeek council\nPlan with numerical tools\nReplay recorded demo\nCouncil planning is the primary mission. Numerical-only planning remains available for a local, no-inference run.\n🌱\n🥬\n✓\nCONFIGURED ROUTE\nCONFIGURED\nConfiguration is readiness metadata, not proof that this mission executed inference.\nCURRENT VERIFICATION\nNot Probed\nThe planning action remains available; its run record reports the actual execution outcome.\nHISTORICAL PROBE\nRecorded · 8 Sept, 04:41 Pm\nA prior probe does not verify the current mission.\nLAST OBSERVED EXECUTION\nNone Recorded\nObservation history is shown separately from configured status.\n\nSYNTHETIC DEMO\n\nYour growing board\nTimeline\nSYNTHETIC DEMO\nTEST\nSIMULATION ONLY\n01\nGrowing\nCaixin\n\nA1 · Sheltered hydroponic\n\n79% cycle elapsed\nHarvest 14 Sept 2026\n02\nGrowing\nXiao bai cai / pak choi\n\nA2 · Sheltered hydroponic\n\n83% cycle elapsed\nHarvest 14 Sept 2026\n03\nGrowing\nKailan\n\nA3 · Sheltered hydroponic\n\n86% cycle elapsed\nHarvest 14 Sept 2026\n04\nGrowing\nLettuce\n\nA4 · Sheltered hydroponic\n\n83% cycle elapsed\nHarvest 14 Sept 2026\n05\nGrowing\nCaixin\n\nB1 · Sheltered hydroponic\n\n29% cycle elapsed\nHarvest 28 Sept 2026\n06\nGrowing\nXiao bai cai / pak choi\n\nB2 · Sheltered hydroponic\n\n43% cycle elapsed\nHarvest 28 Sept 2026\n07\nGrowing\nKailan\n\nB3 · Sheltered hydroponic\n\n52% cycle elapsed\nHarvest 28 Sept 2026\n08\nGrowing\nLettuce\n\nB4 · Sheltered hydroponic\n\n43% cycle elapsed\nHarvest 28 Sept 2026\n09\nEmpty\nC1\n\n20 m² ready for a crop\n\n10\nEmpty\nC2\n\n20 m² ready for a crop\n\n11\nEmpty\nC3\n\n20 m² ready for a crop\n\n12\nEmpty\nC4\n\n20 m² ready for a crop\n\n13\nEmpty\nD1\n\n20 m² ready for a crop\n\n14\nEmpty\nD2\n\n20 m² ready for a crop\n\n15\nEmpty\nD3\n\n20 m² ready for a crop\n\n16\nEmpty\nD4\n\n20 m² ready for a crop\n\nPLAN CANDIDATES\n\nChoose a lens\nStart a planning mission to compare Lean, Balanced and Resilient strategies.\n\nPLAN SCOPE\n\nPlan resources\n\nPlan usage will appear after calculations finish.\n\nSPECIALIST COUNCIL\n\nCouncil interpretations\nCR\nDM\nIC\n\nAdvisors are waiting on a council run. Qualitative text is shown as interpretation and is not treated as a verified numerical result.",
+    "room_Crops": "CROP ATLAS\n\nRecipes with receipts.\n\nExplore biological lead times, system fit, warnings and the evidence behind each planning parameter.\n\nSearch crops\nCaixin\n\nchye sim · choy sum\n\nDemo Only\nHarvested part\nleaves, stems, flowering_shoots\nCycle\n28 days\nEvidence\n2 references\nXiao bai cai / pak choi\n\nxiao bai cai · pak choi\n\nDemo Only\nHarvested part\nleaves, petioles\nCycle\n35 days\nEvidence\n3 references\nKailan\n\ngai lan · Chinese broccoli · Chinese kale\n\nDemo Only\nHarvested part\nleaves, stems, flowering_shoots\nCycle\n42 days\nEvidence\n3 references\nBayam / Chinese spinach\n\nbayam · Chinese spinach\n\nProfile Only\nHarvested part\nleaves, tender_stems\nCycle\nUnreported\nEvidence\n1 references\nKangkong / water spinach\n\nkangkong · water spinach\n\nProfile Only\nHarvested part\nleaves, tender_stems\nCycle\nUnreported\nEvidence\n1 references\nLettuce\n\nlettuce\n\nDemo Only\nHarvested part\nleaves, head\nCycle\n35 days\nEvidence\n5 references\nKale\n\ncurly kale\n\nProfile Only\nHarvested part\nleaves\nCycle\nUnreported\nEvidence\n1 references\nChinese mustard / mustard greens\n\nChinese mustard · mustard greens\n\nProfile Only\nHarvested part\nleaves, stems\nCycle\nUnreported\nEvidence\n1 references\nCeylon / Malabar spinach\n\nCeylon spinach · Malabar spinach · Basella\n\nProfile Only\nHarvested part\nleaves, tender_stems\nCycle\nUnreported\nEvidence\n1 references\nSweet-potato leaves / shoots\n\nsweet potato leaves · sweet potato shoots\n\nProfile Only\nHarvested part\nleaves, tender shoots\nCycle\nUnreported\nEvidence\n2 references\nGarlic chives\n\nChinese chives · Chinese leeks · flat chives · oriental garlic\n\nProfile Only\nHarvested part\nleaves, tender stems, flower stalks\nCycle\nUnreported\nEvidence\n2 references\nSawtooth coriander\n\nculantro · spiny coriander · serrated coriander · long coriander · false coriander\n\nProfile Only\nHarvested part\nleaves\nCycle\nUnreported\nEvidence\n2 references",
+    "room_Data": "DATA EXPLORER\n\nSee every number behind the plan.\n\nTrace demand, harvest and resources from source records through forecasts and planning results.\n\nDataset snapshot\nOriginal generated dataset · reference\nMain farm · version 1 · farm\nFrozen 0cfaeb9001\nPlanning policy\nLean\nBalanced\nResilient\nOverview\nGenerator\nRecords\nPublic context\nExperiments\n\nRECOMMENDED MISSION · PROVISIONAL SUPPLY GAP\n\nCan we cover Pak Choi due 21 Sept 2026?\n28 kg\nbooked for this date\n0 kg\nharvest eligible by shelf life\n0 kg\ninventory valid on due date\n28 kg\ngap to investigate\n\nThis screening comparison uses dated booked orders. It does not allocate an eligible harvest or inventory lot across earlier orders; the numerical planner decides actual shortfall. The containing week’s statistical forecast is 33 kg and remains context, not this order’s due quantity.\n\nA new sowing using the declared 35-day recipe would mature around 13 Oct 2026—after this delivery.\n\nInspect 14 linked input records\nSnapshot 0cfaeb9001\n\nThis reference mission is a playground preview. Save the dataset before running its strategies.\n\n16\nBeds\n4\nRecipes\n8\nBatches\n48\nHistory\n32\nOrders\n1\nInventory\n1\nResources\n32\nForecast\n0\nAllocations\n0\nLedger\n0\nWeekly\n\nPROVENANCE\n\nOriginal generated dataset\nOrigin\nsynthetic\nCutoff\n2026-09-08T00:00:00Z\nDate coverage\n2026-06-16 to 2026-11-02\nGenerator\nsynthetic-farm-v1\nForecast\nrecipe-ewma-v1 · α 0.35\n\nVersioned reference fixture. Engineering assumptions, not measured farm outcomes.\n\nRELATIONSHIPS\n\nHow records connect\nRecipe\n→ crop ID →\nBatch\n→ bed ID →\nBed\nHistory\n→ forecast →\nDemand\n→ plan →\nAllocation\n\nCrop IDs join biological recipes, observed history and orders. Batch and bed IDs tie scheduled harvests to capacity.\n\nHISTORY → PLANNING HORIZON\n\nDemand, harvest and forecast\n● historical\n○ forecast / planned\nCrop filter\nAll crops\ncaixin\npak_choi\nkailan\nlettuce\nStart date\nEnd date\n39 kg\n27 kg\n16 Jun 2026\n2 Nov 2026\nPlanning date\nCaixin · Ordered Kg\nPak Choi · Ordered Kg\nKailan · Ordered Kg\nLettuce · Ordered Kg\nCaixin · Expected Kg\nPak Choi · Expected Kg\nKailan · Expected Kg\nLettuce · Expected Kg\n\n16 Jun 2026 · 27 kg · Caixin · Ordered Kg · historical\n\nView chart as a table\n\nDECLARED CROP SCHEDULE\n\nScheduled harvest arrivals\n\nExpected fresh marketable kilograms become available only on each recorded harvest date.\n\n52 kg\n44 kg\n14 Sept 2026\n28 Sept 2026\nCaixin scheduled harvest\nPak Choi scheduled harvest\nKailan scheduled harvest\nLettuce scheduled harvest\n\n14 Sept 2026 · 44 kg · Caixin scheduled harvest · future / planned\n\nView chart as a table\n\nDUE DEMAND AND DATED SUPPLY\n\nSupply arrivals versus demand due\n\nEach quantity stays on its own arrival or due date. This comparison does not claim that later supply fulfils earlier demand.\n\nDemand due\n37.001 kg\n22 kg\n14 Sept 2026\n2 Nov 2026\nCaixin total demand due\nCaixin confirmed demand due\nPak Choi total demand due\nPak Choi confirmed demand due\nKailan total demand due\nKailan confirmed demand due\nLettuce total demand due\nLettuce confirmed demand due\n\n14 Sept 2026 · 31.001 kg · Caixin total demand due · future / planned\n\nView chart as a table\nScheduled supply arrivals\n52 kg\n44 kg\n14 Sept 2026\n28 Sept 2026\nCaixin supply arrival\nPak Choi supply arrival\nKailan supply arrival\nLettuce supply arrival\n\n14 Sept 2026 · 44 kg · Caixin supply arrival · future / planned\n\nView chart as a table\n\nWHOLE-FARM RESOURCE MODEL\n\nReserved capacity by week\n\nReservations and declared limits for this frozen snapshot. These are planning quantities, not measured use.\n\nRun the numerical strategies to calculate weekly reservations. Declared capacity is 32 labour hours per week and 2,560 nursery sites.\n\nWHOLE-FARM SIMULATION\n\nCost and margin comparison\nRun the numerical strategies for this snapshot to calculate costs and simulated margins.\n\nHOW DATA IS MADE\n\nRules you can inspect\n\nThese deterministic reference rules use no randomness or trained model. Every example opens the actual selected record.\n\nGrowing beds\n\nThe reference starts with sixteen sheltered beds, each 20 square metres. Bed names use four rows of four.\n\nFormula and worked example\nInspect beds example\nCrop recipes\n\nCaixin, pak choi, kailan and lettuce each have declared nursery time, grow time, density, marketable yield, labour and input cost. These are biological assumptions for demonstrations.\n\nFormula and worked example\nInspect recipes example\nExisting batches\n\nEight reference batches occupy the first eight beds. Each crop has two batches; the second set harvests fourteen days after the first. Scenario delays and yields are applied after generation.\n\nFormula and worked example\nInspect batches example\nHistorical demand\n\nThe reference generates twelve weekly values per crop. The repeating four-week pattern is an assumption, not measured seasonality. Trend is the total change over the observed period.\n\nFormula and worked example\nInspect history example\nBooked orders and prices\n\nFour crops receive one fictional booked order per future week, for eight weeks. Volume and selling-price multipliers are independent. The generator books orders seven days before cutoff.\n\nFormula and worked example\nInspect orders example\nOpening inventory\n\nThe reference has one 5 kg caixin lot harvested the day before planning. Its expiry is two days after planning. The simulator tracks expiry and stock by lot.\n\nFormula and worked example\nInspect inventory example\nAvailable resources\n\nThe reference supplies 2,560 simultaneous nursery sites, 32 labour hours per week and SGD 2,200 for the whole planning horizon. Branch controls multiply labour and cash.\n\nFormula and worked example\nInspect resources example\nHow the forecast is calculated\nHistorical evaluation · original reference at α 0.35",
+    "room_Outcomes": "OUTCOME LAB\n\nLearn from every turn.\n\nCompare expected harvest, delivery and shortfall using the stored decision record.\n\nNo plan outcome yet\n\nRun a planning mission first. Its weekly results and stored replay will appear here.",
+    "room_Setup": "FARM SETUP\n\nBring the farm onto the board.\n\nLoad the versioned synthetic demo or import a validated JSON farm record.\n\nONE CLICK\n\nSeed the demo farm\n\nLoads the complete synthetic demonstration through the backend’s validated fixture importer.\n\nLoad synthetic demo\n\nPRIVATE INPUT\n\nImport farm JSON\n\nThe browser parses the file and submits its farm object. Embedded scripts are never executed.\n\nChoose JSON file\n\nCONNECTED FARM\n\nLittle Plot Collective\nSynthetic Demo\nLocation\nLim Chu Kang, Singapore\nGrowing spaces\n16\nOrders\n32\nVersion\n1\nCutoff\n8 Sept 2026\nTimezone\nAsia/Singapore\nThis development workspace permits simulated work only. It cannot commit real planting, purchases or buyer communication."
+  },
+  "screenshots": [
+    "01-mobile-first-viewport.png",
+    "02-mobile-initial-page.png",
+    "03-calculate-guidance.png",
+    "04-mobile-plan-comparison.png",
+    "05-mobile-proposal-editor.png",
+    "06-mobile-inbox.png",
+    "07-planned-390.png",
+    "07-planned-1280.png",
+    "08-room-farm.png",
+    "08-room-council-research.png",
+    "08-room-farm-tools.png",
+    "08-room-crops.png",
+    "08-room-data.png",
+    "08-room-outcomes.png",
+    "08-room-setup.png"
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/planning-sessions/:id/calculate"
+    }
+  ],
+  "blocked": [
+    {
+      "method": "POST",
+      "path": "/api/v1/council-research"
+    }
+  ],
+  "page_errors": [],
+  "identity": {
+    "edition": "v21",
+    "source_commit": "b980180dbb49a5261e43ee1d8e4916cc24457d7f"
+  },
+  "status": "PASS"
+}

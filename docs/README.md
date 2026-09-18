@@ -3,6 +3,9 @@
 V12 is the product base; V20 restored it and V21 adds targeted improvements.
 Read [V21 scope](v21-v12-ux.md), [walkthrough](v12-restoration-ux-review.md),
 [release verification](../reports/v21/README.md) and [handoff](workspace-handoff.md).
+The [V21 usability, playability and judging review](../reports/v21/usability-review/README.md)
+checks the current public app, closes resolved V12 findings, and prioritizes clearer
+actions, field-photo feedback, Council/weather integration and event-driven motion.
 Older edition descriptions below are historical.
 
 # FarmTact documentation
