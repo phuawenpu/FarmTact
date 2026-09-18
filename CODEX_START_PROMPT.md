@@ -1,27 +1,11 @@
-## V17 persona-led rewrite — private candidate, 17 September 2026
+## V19 Council decision cards — candidate, 18 September 2026
 
-The active work is specified in [docs/v17-persona-rewrite.md](docs/v17-persona-rewrite.md). Three AI-persona V15 walkthroughs and the GitHub page-13 judging rubric guide restored crop/research/data discoverability, factual demonstrations and expert shortcuts. Preserve the complete adviser/Council/reviewed-proposal loop, numerical authority, shared admission limits and disabled physical operations. V16 remains public until final candidate verification and immutable publication. See `reports/v17/implementation.md` for current evidence; persona review is not human usability research.
+The active work is specified in [docs/v19-council-decision-brief.md](docs/v19-council-decision-brief.md). V19 keeps the V18 shared ordinary-farm card shell while restoring the most useful V11–V13 decision context in place: every calculated strategy has a compact, evidence-bound decision brief and an optional explicit Planning Council review. Crop, evidence, research, Data Explorer and historical tools remain reachable through the five-card index rather than becoming separate screens.
 
-Current release, 17 September 2026: V16 is published from source
-`3487faf90ec9205c903f8a6e40fc09aa94614dcc` and immutable image
-`registry.fly.io/farmtact@sha256:e3bedff080dbdcebc2e6619210e91bce5faeeeef51388656f1c9e75743883493`.
-The public `/` and `/play` routes serve the same V16 integrated card shell for the
-one ordinary synthetic farm. Plan, Records & work, Knowledge & evidence,
-Experiments, and History & preferences are available through that shell. Public
-edition selection and the V14 four-bed teaching season are historical rather than
-the current interface. V16 corrects V15's post-publication raw-JSON and wrong-stage
-proposal explanation defects without changing the five-tool scope. Read
-`reports/v16/implementation.md` and
-`docs/v15-capability-checklist.md` before making current-state claims.
-Completed V16 evidence records 49 semantic, 97 layout, 108 complete-journey,
-20 operator and 28 exact staged-image checks, with zero provider requests.
+V18 remains the sole public experience at `/` and `/play`, from source
+`4ab3e9ba51895080cae7f900333b977447f96217`. V19 is committed, pushed and locally verified, but is not public until the exact pinned candidate passes operator and staged-browser acceptance. Reading a brief, comparing strategies, swiping, replaying and explaining remain provider-free. Planning Council review remains an explicit, validated submission and never approves a farm change. Actual farm operations remain disabled.
 
-V16 preserves explicit review, revision-bound mutations, read-only replay and the
-existing provider/admission boundaries. It does not establish human usability,
-new provider quality, calibrated agronomy or real-farm performance. Actual farm
-operations remain disabled. V15 remains immutable and preserved. The next unused
-publication number is **V17**; never overwrite a published source/image or reuse
-its number.
+The isolated PostgreSQL regression passed 804 tests with one skip. The local browser journey passed responsive, keyboard, reduced-motion and full reservation-to-recorded-consequence checks at 360, 390, 430 and desktop widths, with no automatic provider requests. These automated results do not establish representative-user comprehension. Never overwrite a published source/image or reuse an edition number.
 
 Fresh-workspace restart: read [docs/workspace-handoff.md](docs/workspace-handoff.md).
 

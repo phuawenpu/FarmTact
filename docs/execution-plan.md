@@ -1,10 +1,19 @@
-# V18 accessibility-return correction — 17 September 2026
+# V19 Council decision cards — candidate, 18 September 2026
 
-V17 published the persona-led full rewrite from `e9528b2`. A public browser
-verification found that a detail-card return could restore focus after a paint;
-V18 makes that restoration synchronous and keeps the user at the action position
-they left. V18 is published as the sole public experience after its exact-image
-operator/browser acceptance and preservation checks passed.
+V19 is the private next-edition candidate from `dfbdd9b`. It retains the V18
+ordinary-farm card experience and restores dense V11–V13 planning context where a
+decision is made: calculated plans show a compact allocation-and-bed brief and a
+clear optional Planning Council action. The Council card binds its frozen result,
+revision, seven roles and recorded facts to that exact plan. It can advise only;
+it cannot save, approve or operate a farm. Crop, evidence, research, Data Explorer
+and replay workflows remain in the existing five contextual tool decks.
+
+The isolated PostgreSQL regression passed 804 tests with one skip, and the local
+browser journey passed its responsive, keyboard, reduced-motion and complete
+reservation-to-recorded-consequence path with zero automatic provider requests.
+V18 remains public until V19's pinned image passes private operator, staged-browser
+and preservation acceptance. Human usability remains unverified and real farm
+operations remain disabled.
 
 # Completed integrated rewrite: V16 — 17 September 2026
 
