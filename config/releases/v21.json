@@ -1,0 +1,48 @@
+{
+  "id": "v21",
+  "title": "FarmTact \u2014 clearer V12 workflow",
+  "published_at": "2026-09-18",
+  "summary": "Keep the restored V12 farm board, Council and named sections, with truthful stage navigation, aligned planning previews and accessible dialogs.",
+  "status": "published",
+  "source_commit": "b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+  "source_url": "https://github.com/phuawenpu/FarmTact/commit/b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+  "compare_url": "https://github.com/phuawenpu/FarmTact/compare/6054b6f5a4dba6ba77a9090d2141c0c45fc045db...b980180dbb49a5261e43ee1d8e4916cc24457d7f",
+  "image_digest": "registry.fly.io/farmtact@sha256:e3564a72292fe9a7fca69dcf9a25c3ffd9b9adaa5e38536c4a2d64d0b4a17e20",
+  "review_url": "/v21/review",
+  "play_url": "/v21/",
+  "changes": [
+    {
+      "title": "Keep the V12 structure and clarify decisions",
+      "description": "Calculate appears before the board. Selected comparison, board and full dated schedule share the same strategy. Browsing the seven-stage rail navigates without inventing completion. Council remains visible and optional.",
+      "feedback_ids": [
+        "v12-as-base",
+        "v15-v19-ux-lessons"
+      ],
+      "evidence": [
+        "docs/v12-restoration-ux-review.md",
+        "tests/browser/v21_ux.mjs"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Recover dialog focus and unsent edits",
+      "description": "Planning dialogs support Escape, contained keyboard focus and return to the opener. Proposal and adviser drafts survive closing within the mounted workspace. Crop evidence arriving after close cannot reopen the profile.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/browser/v21_drafts.mjs",
+        "tests/browser/v21_ux.mjs"
+      ],
+      "status": "implemented"
+    },
+    {
+      "title": "Recover cleanly from numerical worker timeouts",
+      "description": "Cleanup failures cannot mask a calculation error or strand numerical admission. A still-running child continues to block overlapping work under the existing deadline. Failed calculations retain saved inputs and show an explicit retry path. Slow connections permit only one pending status read per planning job; polling never resubmits a mutation.",
+      "feedback_ids": [],
+      "evidence": [
+        "tests/gameplay/test_numerical_worker_cleanup.py",
+        "docs/v21-v12-ux.md"
+      ],
+      "status": "implemented"
+    }
+  ]
+}
