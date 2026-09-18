@@ -23,9 +23,9 @@ See [the release report](../reports/v22/README.md) and
    `sprite-auth-check fly && fly status --app farmtact`.
 2. Capture the read-only preservation baseline with
    `.venv/bin/python scripts/v15_release_preservation.py --before /tmp/v22-preservation-before.json`.
-3. Stage exact source commit `57faeb96150f46635aac3198ecd3e75e270aba00` as
-   immutable `v22` using `scripts.stage_edition_candidate` and
-   `/tmp/v22-notes.json`.
+3. Stage the clean current `HEAD` as immutable `v22` using
+   `scripts.stage_edition_candidate` and `/tmp/v22-notes.json`; pass the full
+   value from `git rev-parse HEAD`.
 4. Run exact-image operator, browser, normal-motion and bounded Council smoke
    checks. Capture post-stage preservation evidence.
 5. Publish only with `scripts.publish_edition`, then verify public root and
