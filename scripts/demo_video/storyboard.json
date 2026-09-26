@@ -1,0 +1,107 @@
+[
+  {
+    "id": "welcome",
+    "title": "A delivery question, on two screens",
+    "seconds": 20,
+    "guide": null,
+    "text": "Welcome to FarmTact. On the left is the desktop workspace; on the right, the same journey on mobile. We are using an isolated synthetic farm. Start with the short introduction: inspect a delivery question, compare plans, review changes, and report what happened."
+  },
+  {
+    "id": "farm",
+    "title": "Read the farm before changing it",
+    "seconds": 20,
+    "guide": "observe-decide",
+    "text": "Our starting question is whether the farm can cover a dated order for caixin. Scroll down to the farm picture. Recorded crops occupy named beds, while empty beds stay empty. Cash, labour, and the planning horizon provide the context for a realistic planting decision."
+  },
+  {
+    "id": "records",
+    "title": "Inspect the source records",
+    "seconds": 20,
+    "guide": "observe-decide",
+    "text": "Open the Farm Inbox to see which records are active. This example uses the labelled Singapore leafy greens fixture. Uploaded documents and manual entries must be reviewed before they become accepted evidence. For this walkthrough, we keep the existing records and return to planning."
+  },
+  {
+    "id": "calculate",
+    "title": "Calculate real planting alternatives",
+    "seconds": 25,
+    "guide": "observe-decide",
+    "text": "Choose Compare planting plans. The local numerical engine now checks crop timing and resource constraints against the recorded demand. This is a real calculation in the app. When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison."
+  },
+  {
+    "id": "compare",
+    "title": "Compare the tradeoffs",
+    "seconds": 20,
+    "guide": "observe-decide",
+    "text": "We inspect Balanced, then Resilient, and return to Balanced. Watch the selected candidate and the projected measures change together. Feasible means the model's constraints hold; it does not promise that every order is filled. Read the shortfall alongside the margin before making a choice."
+  },
+  {
+    "id": "council",
+    "title": "Draft a focused Council question",
+    "seconds": 25,
+    "guide": "council-evidence",
+    "text": "Now bring the tradeoff to the Planning Council. Each specialist has a distinct responsibility. We type a focused question about booked deliveries and crop timing. This remains a draft: only pressing Send or Ask Council requests advice. No generated response is being presented as a completed review here."
+  },
+  {
+    "id": "assumptions",
+    "title": "Review an explicit change",
+    "seconds": 25,
+    "guide": "council-evidence",
+    "text": "Suppose expected demand for caixin rises by five percent. Open Adjust assumptions and enter one hundred and five. Read the exact changes before recalculating. The date range, crop, and capacity remain visible, so we can check precisely what the next calculation will use."
+  },
+  {
+    "id": "approve",
+    "title": "Save a simulation plan deliberately",
+    "seconds": 20,
+    "guide": "council-evidence",
+    "text": "The revised alternatives are ready. Saving is a separate decision from calculating or asking for advice. Open Save simulation plan, review its boundary, and confirm. FarmTact records this approved revision and creates its simulated work list. It does not operate equipment or contact a buyer."
+  },
+  {
+    "id": "task",
+    "title": "Open a task from the approved plan",
+    "seconds": 20,
+    "guide": "act-replan",
+    "text": "Move to the work list and open a task from the approved plan. Its crop, location, planned quantity, and checklist provide the reporting context. We will demonstrate a short result. The quantity entered next is an example report, not a measurement collected from a real farm."
+  },
+  {
+    "id": "report",
+    "title": "Report a short result",
+    "seconds": 25,
+    "guide": "act-replan",
+    "text": "Enter a quantity one unit below the task's plan, complete the checklist, and type a clear note explaining the shortage. Then save the reported result. Notice that this is labelled farmer reported and unverified. The short result prompts recovery instead of silently rewriting the original projection."
+  },
+  {
+    "id": "correction",
+    "title": "Correct the record without erasing it",
+    "seconds": 20,
+    "guide": "act-replan",
+    "text": "If a scale reading was wrong, record a correction with a reason. Here we revise the reported quantity and explain that the scale was checked. Save auditable correction preserves the history of the first report. The updated value remains a report, with its provenance intact."
+  },
+  {
+    "id": "recovery",
+    "title": "Review future recovery",
+    "seconds": 20,
+    "guide": "act-replan",
+    "text": "The next decision is Compare recovery plans. Open it to inspect a future change while keeping completed work in history. We review the proposal and close it without applying another change. Recovery is deliberate: opening a form or reading advice does not approve additional work."
+  },
+  {
+    "id": "knowledge",
+    "title": "Look up the crop behind the plan",
+    "seconds": 20,
+    "guide": null,
+    "text": "For more context, open Crops. The desktop navigation and mobile menu reach the same knowledge library. Crop profiles and their evidence help us understand the assumptions behind a plan. Knowledge is useful context; it should not be confused with a validated prediction for this particular farm."
+  },
+  {
+    "id": "guides",
+    "title": "Replay the guides when you need them",
+    "seconds": 15,
+    "guide": null,
+    "text": "Back in Plan, How it works opens three short guides. Each has playback controls, captions, a transcript, and a download. The introductory demo can also be replayed whenever you want a reminder of the decision sequence."
+  },
+  {
+    "id": "finish",
+    "title": "One workflow, desktop and mobile",
+    "seconds": 16,
+    "guide": null,
+    "text": "That is the complete loop: inspect, calculate, question, review, save, and report. Desktop and mobile preserve the same explicit decisions and the same distinction between projections, simulation, and reported results."
+  }
+]

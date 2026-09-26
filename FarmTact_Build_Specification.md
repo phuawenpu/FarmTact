@@ -1,3 +1,16 @@
+## Demo media amendment — 26 September 2026
+
+The requested desktop/mobile walkthrough and guide repair follow
+[the bounded production plan](docs/demo-video-plan.md). The public gateway must
+forward only its named asset directories, including `/explainers/`, with video
+MIME types and byte-range seeking intact. Guide failures must expose a written
+fallback, never permanent loading. Three prerecorded guides include real app
+footage, English narration, posters, WebVTT captions and matching transcripts;
+each committed video must remain below 100 MB. Main walkthrough output belongs in
+`output/demo-video/` and is committed when below the same size limit. Recorded
+synthetic UI actions are not real farm work or evidence of provider answer quality.
+This media work does not overwrite any published edition source or image.
+
 ## V22 implementation active — 18 September 2026
 
 Follow [V22 Council guidance](docs/v22-council-guidance.md). V12 remains the base.

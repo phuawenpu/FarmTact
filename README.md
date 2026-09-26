@@ -1,5 +1,8 @@
 # FarmTact · Plan, compare and learn
 
+Recorded desktop/mobile walkthrough: [video and chapters](output/demo-video/README.md).
+Production workflow and scope: [demo video plan](docs/demo-video-plan.md).
+
 FarmTact V22 is live at [the public root](https://farmtact.fly.dev/) and
 [/play](https://farmtact.fly.dev/play). V20 restored the V12 workspace and V21
 refined it; V22 keeps that workspace and brings the Council forward with short

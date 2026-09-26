@@ -17,11 +17,19 @@ try {
   await context.addInitScript(() => localStorage.clear());
   const page = await context.newPage();
   const providerMutations = [];
+  const mediaResponses = new Map();
   page.on("request", (request) => {
     if (
       request.method() !== "GET" &&
       /conversations|planning-sessions\/.+\/review/.test(request.url())
     ) providerMutations.push([request.method(), request.url()]);
+  });
+  page.on("response", (response) => {
+    if (/\/explainers\/.+\.mp4(?:\?|$)/.test(response.url()))
+      mediaResponses.set(response.url(), {
+        status: response.status(),
+        type: response.headers()["content-type"],
+      });
   });
 
   await page.goto(base, { waitUntil: "domcontentloaded" });
@@ -42,7 +50,22 @@ try {
   check("first-use Demo can be skipped", (await page.locator(".decision-demo").count()) === 0);
   await page.getByRole("button", { name: "Replay demo", exact: true }).click();
   check("first-use Demo replay reopens at scene one", await demo.getByText("30-second introduction · 1 of 4").isVisible());
+  await demo.getByRole("button", { name: "Pause", exact: true }).click();
+  await demo.getByRole("button", { name: "Play", exact: true }).click();
+  check("Demo resumes after pause", await demo.getByRole("button", { name: "Pause", exact: true }).isVisible());
+  await demo.getByRole("button", { name: "Pause", exact: true }).click();
+  for (let scene = 0; scene < 3; scene += 1)
+    await demo.getByRole("button", { name: "Next scene", exact: true }).click();
+  await demo.getByRole("button", { name: "Start planning", exact: true }).click();
+  check("last Demo scene returns to planning", await page.locator(".decision-guide").isVisible());
+  await page.getByLabel("Reduced motion", { exact: true }).check();
+  await page.getByRole("button", { name: "Replay demo", exact: true }).click();
+  check("reduced-motion Demo keeps manual scene controls", await demo.getByRole("button", { name: "Next scene", exact: true }).isVisible() && await demo.getByRole("button", { name: "Pause", exact: true }).count() === 0);
   await demo.getByRole("button", { name: "Skip demo", exact: true }).click();
+  await page.getByLabel("Reduced motion", { exact: true }).uncheck();
+  await page.getByRole("button", { name: "Hide guidance", exact: true }).click();
+  check("guidance can be hidden", await page.getByRole("button", { name: "Show guidance", exact: true }).isVisible());
+  await page.getByRole("button", { name: "Show guidance", exact: true }).click();
 
   await page.getByRole("button", { name: /How it works/ }).click();
   const guide = page.getByRole("dialog", { name: "Three short guides" });
@@ -65,12 +88,14 @@ try {
         poster: video.getAttribute("poster"),
         caption: video.querySelector('track[kind="captions"]')?.getAttribute("src"),
         source: video.querySelector("source")?.getAttribute("src"),
+        captionCues: video.textTracks[0]?.cues?.length || 0,
+        posterLoaded: await new Promise((resolve) => { const image = new Image(); image.onload = () => resolve(image.naturalWidth > 0); image.onerror = () => resolve(false); image.src = video.poster; }),
       };
       video.pause();
       return value;
     });
     check(`guide ${index + 1} loads, plays and seeks`, result.duration >= 47 && result.currentTime >= 5, result);
-    check(`guide ${index + 1} has poster and captions`, Boolean(result.poster && result.caption), result);
+    check(`guide ${index + 1} has poster and captions`, Boolean(result.poster && result.caption && result.posterLoaded && result.captionCues > 0), result);
   }
   await guide.getByText("Transcript", { exact: true }).first().click();
   const transcriptPayload = await page.evaluate(() => fetch("/explainers/transcripts.json").then((response) => response.json()));
@@ -87,11 +112,13 @@ try {
     { expected: expectedScenes.length, rendered: await guide.locator(".explainer-transcript-scene").count() },
   );
   const downloads = await guide.getByText("Download MP4", { exact: true }).evaluateAll((links) => links.map((link) => link.href));
-  const responses = await Promise.all(downloads.map((url) => page.request.get(url)));
   check(
-    "all download URLs return MP4 data",
-    responses.every((response) => response.ok() && /video\/mp4/.test(response.headers()["content-type"] || "")),
-    responses.map((response) => ({ status: response.status(), type: response.headers()["content-type"] })),
+    "all download URLs match successfully loaded MP4 data",
+    downloads.every((url) => {
+      const response = mediaResponses.get(url);
+      return [200, 206].includes(response?.status) && /video\/mp4/.test(response.type || "");
+    }),
+    downloads.map((url) => ({ url, response: mediaResponses.get(url) })),
   );
   await page.getByRole("button", { name: /Close Three short guides/ }).click();
 
@@ -103,21 +130,21 @@ try {
   const failedGuide = page.getByRole("dialog", { name: "Three short guides" });
   await failedGuide.locator("video").first().evaluate((video) => video.load());
   await failedGuide.getByText("Transcript", { exact: true }).nth(1).click();
-  await failedGuide.getByText(/full transcript is unavailable/i).waitFor();
+  await failedGuide.getByText(/full transcript is unavailable/i).first().waitFor();
   check(
     "failed video sources expose written fallbacks",
     (await failedGuide.getByText(/guide video is unavailable/i).count()) === 3 &&
       (await failedGuide.getByText("MP4 download unavailable", { exact: true }).count()) === 3,
   );
-  check("valid transcript JSON with a missing guide reports unavailable", await failedGuide.getByText(/full transcript is unavailable/i).isVisible());
+  check("valid transcript JSON with a missing guide reports unavailable", await failedGuide.getByText(/full transcript is unavailable/i).first().isVisible());
   await page.getByRole("button", { name: /Close Three short guides/ }).click();
   await page.unroute("**/explainers/transcripts.json");
   await page.route("**/explainers/transcripts.json", (route) => route.abort("failed"));
   await page.getByRole("button", { name: /How it works/ }).click();
   const transcriptFailure = page.getByRole("dialog", { name: "Three short guides" });
   await transcriptFailure.getByText("Transcript", { exact: true }).first().click();
-  await transcriptFailure.getByText(/full transcript is unavailable/i).waitFor();
-  check("failed transcript request exposes a written fallback", await transcriptFailure.getByText(/full transcript is unavailable/i).isVisible());
+  await transcriptFailure.getByText(/full transcript is unavailable/i).first().waitFor();
+  check("failed transcript request exposes a written fallback", await transcriptFailure.getByText(/full transcript is unavailable/i).first().isVisible());
   check("media and Demo checks submit no provider requests", providerMutations.length === 0, providerMutations);
   report.status = "PASS";
 } catch (error) {

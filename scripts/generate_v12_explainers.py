@@ -1,4 +1,8 @@
-"""Render deterministic, captioned farmer guides; no inference or external assets."""
+"""Historical V12 slide renderer; current guides use scripts/demo_video/render.py.
+
+Retained for historical reproduction only. Running this script overwrites the
+current guide assets with the old text slides, so use an isolated checkout.
+"""
 import json
 from pathlib import Path
 import subprocess

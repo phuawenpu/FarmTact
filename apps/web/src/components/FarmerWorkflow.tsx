@@ -2028,7 +2028,7 @@ function Explainers({ onClose }: { onClose: () => void }) {
               <summary>Transcript</summary>
               <div className="explainer-transcript">
                 {transcriptState === "error" ||
-                (transcriptState === "ready" && !transcripts[slug]) ? (
+                (transcriptState === "ready" && (!Array.isArray(transcripts[slug]) || !transcripts[slug].length)) ? (
                   <p role="alert">
                     The full transcript is unavailable. The guide summary remains
                     above.
