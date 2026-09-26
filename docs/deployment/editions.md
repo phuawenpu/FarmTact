@@ -1,3 +1,10 @@
+## Current deployment: V23 — 26 September 2026
+
+V23 is published at `/` and `/play`; `config/releases/v23.json` pins its source
+and image. The next unused edition is V24. Exact-image lifecycle/media checks,
+public routing and shared-state preservation passed; see [V23 evidence](../../reports/v23/README.md).
+Earlier dated sections below are historical. Never reuse a published number.
+
 # Publishing immutable editions
 
 ## Current-game publication policy

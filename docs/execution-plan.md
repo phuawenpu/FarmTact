@@ -1,10 +1,11 @@
-# V23 publication — 26 September 2026
+# V23 published; branches consolidated — 26 September 2026
 
-Root owns edition identity, consolidated main, build, immutable publication and
-preservation checks. The read-only release specialist audits staged acceptance.
-All ten other remote branch tips are already ancestors of main; archive their
-identities in the release evidence before removing the merged references.
-See [V23 release evidence](../reports/v23/README.md).
+V23 is live from the pinned source and image in `config/releases/v23.json`.
+Root completed release identity, exact-image acceptance, immutable publication,
+public media verification and shared-state preservation. The specialist completed
+a read-only release tooling audit. GitHub now contains only main: all ten removed
+branch tips were already ancestors, with their identities retained in the release
+report. See [V23 evidence](../reports/v23/README.md).
 
 # Demo video and media repair — completed 26 September 2026
 

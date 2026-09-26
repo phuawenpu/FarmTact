@@ -1,9 +1,9 @@
-## V23 release candidate — 26 September 2026
+## V23 published — 26 September 2026
 
-V23 publishes the narrated demo guides and fixes public video routing, seeking,
-captions and failure fallbacks. The V22 Council workspace remains the application
-base. Follow [V23 release evidence](reports/v23/README.md); historical handoffs
-below describe earlier releases. Physical farm operations remain disabled.
+V23 is live at https://farmtact.fly.dev/ and /play. It publishes narrated app
+guides and fixes public video routing, seeking, captions and failure fallbacks.
+The V22 Council workspace remains the base. See [release evidence](reports/v23/README.md).
+Historical handoffs below describe earlier releases. Physical operations remain disabled.
 
 ## Demo media amendment — 26 September 2026
 

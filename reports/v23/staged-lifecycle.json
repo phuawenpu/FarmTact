@@ -1,0 +1,561 @@
+{
+  "status": "PASS",
+  "base_url": "http://127.0.0.1:4199/",
+  "checks": [
+    {
+      "name": "V22 guided decision entry is active",
+      "pass": true
+    },
+    {
+      "name": "actual numerical backend returns plan choices",
+      "pass": true
+    },
+    {
+      "name": "Council remains explicit and unsubmitted",
+      "pass": true
+    },
+    {
+      "name": "record import remains review-before-authority",
+      "pass": true
+    },
+    {
+      "name": "approval names simulation boundary",
+      "pass": true
+    },
+    {
+      "name": "proposal recalculation and approval persist revision-bound tasks",
+      "pass": true,
+      "detail": {
+        "proposal": "9479f2497d50470379004f5d7b1d0ff4",
+        "tasks": 52
+      }
+    },
+    {
+      "name": "reported exception offers future-only recovery",
+      "pass": true
+    },
+    {
+      "name": "report and correction survive reload",
+      "pass": true,
+      "detail": {
+        "id": "task-8e5683af0de57f4580600ba1",
+        "tenant_id": "0bc543f6f522042ae61d519f6a24c5dc",
+        "session_id": "75328d69977bf851ca975736fa8003a4",
+        "proposal_id": "9479f2497d50470379004f5d7b1d0ff4",
+        "proposal_revision": 2,
+        "action": "harvest",
+        "due_date": "2026-09-14",
+        "crop_id": "caixin",
+        "batch_id": "batch-01",
+        "location": "bed-01",
+        "biological_dates": {
+          "sow_date": "2026-08-17",
+          "transplant_date": "2026-08-24",
+          "harvest_date": "2026-09-14"
+        },
+        "checklist": [
+          "Weigh accepted crop",
+          "Record rejected crop"
+        ],
+        "photo_required": false,
+        "planned_quantity": 44,
+        "actual_quantity": "43.5",
+        "unit": "kg",
+        "status": "recovery_required",
+        "event_revision": 2,
+        "created_at": "2026-09-26T16:11:13.519706+00:00",
+        "updated_at": "2026-09-26T16:11:24.834056+00:00",
+        "real_operations_enabled": false,
+        "reported_result_status": "completed",
+        "rejected_quantity": null,
+        "result_note": "V22 lifecycle short result",
+        "photo_reference": null,
+        "checklist_completed": [
+          "Weigh accepted crop",
+          "Record rejected crop"
+        ],
+        "forecast_feedback": {
+          "planned_quantity": "44.0",
+          "actual_quantity": "43.5",
+          "delta_quantity": "-0.5",
+          "unit": "kg",
+          "basis": "farmer_reported_unverified"
+        },
+        "recovery": {
+          "required": true,
+          "reasons": [
+            "quantity_below_plan"
+          ],
+          "preserve_completed_work": true
+        }
+      }
+    },
+    {
+      "name": "named room Farm opens",
+      "pass": true
+    },
+    {
+      "name": "named room Council research opens",
+      "pass": true
+    },
+    {
+      "name": "named room Farm tools opens",
+      "pass": true
+    },
+    {
+      "name": "named room Crops opens",
+      "pass": true
+    },
+    {
+      "name": "named room Data opens",
+      "pass": true
+    },
+    {
+      "name": "named room Outcomes opens",
+      "pass": true
+    },
+    {
+      "name": "named room Setup opens",
+      "pass": true
+    },
+    {
+      "name": "room tour returns to remembered guided plan",
+      "pass": true
+    },
+    {
+      "name": "360px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 360,
+        "viewport": 360
+      }
+    },
+    {
+      "name": "390px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "430px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 430,
+        "viewport": 430
+      }
+    },
+    {
+      "name": "1280px has no body overflow",
+      "pass": true,
+      "detail": {
+        "body": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "name": "lifecycle submits no provider request",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "lifecycle has no page exceptions",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "page_errors": [],
+  "provider_requests": [],
+  "screenshots": [
+    "staged-lifecycle-360.png",
+    "staged-lifecycle-390.png",
+    "staged-lifecycle-430.png",
+    "staged-lifecycle-1280.png"
+  ],
+  "staged_transport": {
+    "source_commit": "d368784be5eb111e2380da87488593c1b1c73faf",
+    "edition": "v23",
+    "content_security_policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'",
+    "asset_sha256": {
+      "/index.html": "762008f6160e165ded1b3a14e8151d242cda48a9fe51bad035ef30855e44d0c4",
+      "/explainers/act-replan.mp4": "4a11797b7a1676e07d8c51bf9ef8383bf61a5d3f6cede19b7834c77da9e1783a",
+      "/explainers/transcripts.json": "bdebb5e26b8de53973db6581891153b45a489c4a2bb9e4eaac4176039faacfc5",
+      "/explainers/council-evidence.vtt": "b78bb07c93d0b882f4be27d19852db4cc6a39a0b50340685ff52a0ad9eb3f4d5",
+      "/explainers/council-evidence.mp4": "fcc88a430e251ff9374b6804611e5e4bda86403d244b6b9965b21e71e320b8f5",
+      "/explainers/act-replan.vtt": "24addbba8807b6fa841d32cd2cdad353dbfdeb8c6ce82019e773a583b82147e5",
+      "/explainers/act-replan.png": "c3e5ef2ae041de4052df6ecc06ce1329c73d55ca26fc848a3d2e19e126656887",
+      "/explainers/council-evidence.png": "1d64171a72bbdc9a1f29be815590532aaf7301719bd292ef61f1f03a02038207",
+      "/explainers/observe-decide.mp4": "d1ba7614c7c353ee09eae03a465db26081647dbed89cdf19f8dd5d8c572eab15",
+      "/explainers/observe-decide.vtt": "53e80770db8878d5e82d5e03b803b0f850d38f4dcdaac2b623820d693c340865",
+      "/explainers/observe-decide.png": "2e213dd61b4200b902e969544258c054ac6bfcd08f219a5c511159d03d1dfb49",
+      "/research-evidence/bed-conversation-390.png": "f3791764b87f7f05e71463be2c012c811e1cb3fd8fa1479da69a1b8cdd7cad97",
+      "/research-evidence/scenario-lab-390.png": "09f0a245b1759aeacc26e61e8aabd80c18bc3047fc56d3db77ad999b568e68a9",
+      "/research-evidence/farm-board-390.png": "a79d36770fe6d5cf45ba50e1fb303a8889dee253d765ce3091b5aead1f61f6cb",
+      "/research-evidence/bed-conversation-1280.png": "2d0cb408af8392282445c73e823696cb9627222ef9fa33626b7f13ab97519f84",
+      "/audio/navigate.wav": "4a18b1ce145be1b10b181188f47ab50b5619d633fe024cf5e53f89a432af15e4",
+      "/audio/shortfall.wav": "5977970d7c692c64b4df375d79bc552421f0924955fbed2e25f481834ae9d2c0",
+      "/audio/PROVENANCE.md": "3a032c2d59e43963a9cc8699e6f2dc76c5f3c9fba5261b2d626848e82c7f34af",
+      "/audio/farm-garden-loop.wav": "4b26a176e1b617cf5d5ff9a9d12773c42c74966d38b9ff1bb457be764950157e",
+      "/audio/error.wav": "f29c6e43b14dc0deed7ce9826e1a8b9b6a8761bdad8debff5840eacec9e6da73",
+      "/audio/complete.wav": "36ed2467484c0a16a09174c483a0fca954569100f309c3d907012ccde04be38b",
+      "/audio/confirm.wav": "b0fa1609bf54a3ccbb1485a633a1580debcb9ff2d325d7548733eca47eacc5db",
+      "/audio/detail.wav": "ac1e855b9f7000b8047d3ecc4e524ac50f22dc5aba50688f19d5be975e13754c",
+      "/audio/withheld.wav": "8a81b714ae4871d212096d46c7fddaefd1a9cec6a5fdf2308c9e5ee4646bcabe",
+      "/audio/sound-test.wav": "8852ca864d22e68725bac0eb4dfd412fbfe8c6ef99d27663c3be18943ee52187",
+      "/assets/index-B4q-zpma.css": "eee8a72b2a0658534309d028a465294b45ca8b5ace29816a296e8c1d08e7a4fe",
+      "/assets/index-CWYWJjmr.js": "e5a63bcfbcff1211e4d34e9abe40060af4eb985ee515fa49f6ac861f633eb719",
+      "/art/crops/lettuce-growing.svg": "6f8fa3c1689e5186f3f4de344f22240aca3873d9ae4c473a627199bd0c064269",
+      "/art/crops/caixin-growing.svg": "9046a12edadaa6e16fe126d48aca3b80cae56ad4acff888a372362ce2e876ae4",
+      "/art/crops/malabar_spinach-ready.svg": "a33c87e1cb0df1e813b94c87ebd0ba1823450cc6b3266bc847f7d38baf48b28c",
+      "/art/crops/kangkong-ready.svg": "6e251c4f764621c9d48c74d3a95b94cf6a7fb11044bf6455fa6a44e21b60df61",
+      "/art/crops/pak_choi-seedling.svg": "b05011cd16532fe500f7df16b076749cf1513cc10dc6c68d1c4820273d371359",
+      "/art/crops/pak_choi-growing.svg": "6214dc0dc421a251b439a7e4dfee93b4ed16de2ab02c6c73305ca594c70d4353",
+      "/art/crops/kailan-growing.svg": "5cdec05a4b22c428a7b8caff30fb255845b9a0822ad073c2398fc2b4c8689c4f",
+      "/art/crops/kale-ready.svg": "5f3411b2371b3c54e2265dd580bbac88e404e17b58bf6b33081246f77783def0",
+      "/art/crops/lettuce-seedling.svg": "bac2b88747ddf06b7f7e8f6774e905d92edb23acd67ab9cabb40619850176529",
+      "/art/crops/kailan-ready.svg": "281c9b419ff62915c5de5c2f2c29529e080d498615817d2472b051299d30956d",
+      "/art/crops/caixin-seedling.svg": "2aeeab535bea5e1f7d9df626cc0d8a74034f88300fba4953fa73bdeda25e9d77",
+      "/art/crops/mustard_greens-ready.svg": "436ece025ac492be98a1129086a76556a9478ec1ea40feda475d791755b78c54",
+      "/art/crops/sweet_potato_leaves-ready.svg": "8332005055d44bfb885425a5a8ba0657f0e0ffc182261beff8da29d1fad9a667",
+      "/art/crops/pak_choi-ready.svg": "32d975b52434a01a7253c266e09c276afac284254d60f0c90b551f8e1805e039",
+      "/art/crops/caixin-ready.svg": "556a86099dc08f5ea76074172d0544547fa0fcbef7adf79dfd29017145ded1cd",
+      "/art/crops/kailan-seedling.svg": "ffbe5d49565838cc6679a9920c182478c07352e8e7f2170b01819870b6648d58",
+      "/art/crops/lettuce-ready.svg": "ecd3c91688f4e9303a9c1ec52ffad3215e0eaa69f8c168d2823821cafdd4dbda",
+      "/art/crops/sawtooth_coriander-ready.svg": "610924048a2f639bb6a3d8c552732a2e2041bcf84d74cc77b3727542cff7d043",
+      "/art/crops/garlic_chives-ready.svg": "eebe829f2d5eb69cb52b123e77c21659f356cedfe44a2608c8e0538977beaadd",
+      "/art/crops/bayam-ready.svg": "edc33de50fa7b60373b1bea33aee6c7b3abccdbd1e7fb6201f2778e40fece4ca",
+      "/art/advisors/asha.svg": "ceea68e5a61efc2ea5e989c35fb7a12e1fb5ef117ef515f77a0eed7c23bbe8ca",
+      "/art/advisors/idris.svg": "0efe79ba7ef723d825db6d30ba8c3dfaa867b15e73f47c41070b5e3b46067f2b",
+      "/art/advisors/mei.svg": "62d3b57d34edb40f5b8eea479a568d7a2edc8c3ce348bd2dc8abfcd5895563b8",
+      "/art/advisors/ravi.svg": "ea5ea8ba2e3335405b531e15d31d40a80182e54c33969babecca68d83f7994b1",
+      "/art/advisors/ben.svg": "b7e9791cabdf926d35dc2ec75621a89c447ec8faf768d048e37bbd0b78a74f22",
+      "/art/advisors/hana.svg": "f3bab1d6c0b6b02a83e1bc2df441e52aea1e5d392e7298514dec0dbf6a8c92fe",
+      "/art/advisors/lina.svg": "f336348b7b6bd5e2e13bbe40ed2908fa43cc3673985c8ce7ad434cd7f449ab8c",
+      "/review-evidence/review08/01-mobile-farm-360.png": "d8cbccc71e0e07f69acef8abc7a10ff6669a75431eb84151b820032c82f0a8f7",
+      "/review-evidence/review08/05-desktop-farm-1280.png": "0b8dc790790e5bc79214e0bf972a60b7b64f496efa44f492f7f03219fc6157c1",
+      "/review-evidence/review08/02-mobile-bed-detail-360.png": "c35a6cd23006cba5aa0cff44106f4481b69cb7ba335592899e2cf22445bdca30",
+      "/review-evidence/review08/03-mobile-date-preview-360.png": "2f0d632d440f6c4b4254b306ecb7f2b5fe7b75aa1089b03801a5e585a41d478b",
+      "/review-evidence/review08/06-desktop-keyboard-focus-1280.png": "029272126fadef09af2e8ff05a5d4c44186c8c772ed728b6e8a32ca2247c862b",
+      "/review-evidence/review08/04-mobile-scrolled-360.png": "2f0d632d440f6c4b4254b306ecb7f2b5fe7b75aa1089b03801a5e585a41d478b",
+      "/review-evidence/review08/07-desktop-keyboard-bed-dialog-1280.png": "fb6b1b901e335a796d1adcb01b1a2c84204811f0386da123d0b3ba54570caf9a",
+      "/review-evidence/review07/mobile-390-home.png": "6073f52edc8cf63d63fcc27ba2c667634368137a86537461c562b969dcc91471",
+      "/review-evidence/review07/desktop-1280-decision.png": "d53b45e8f6c695538915da73254d06499a93fd34e655de367f9428235feb978f",
+      "/review-evidence/review07/mobile-390-data-evidence.png": "200ec6704f1220a753bf22a4ea7e263f601d291151d9a3d4109734db805664a9",
+      "/review-evidence/review07/mobile-390-outcomes.png": "e682d50155ce43d7725322aa9bb8a8cea04de53b78bccdfaf75d249264201675",
+      "/review-evidence/review07/mobile-390-zone-detail.png": "13165586ff4a2f9e62e57c166223a3383dc7a50b2d0af138c506433a9c7dea9f",
+      "/review-evidence/review06/failure.png": "95cde046133ae279ac508d4eace5ac4b1d864597c011f6ccc7ae54f1efdf702e",
+      "/review-evidence/review06/mobile-430-forecast-overview.png": "6bc02f2d8257d47555fbd6d1946c48a210eb9d16a5ea1141b4ece6dab321587b",
+      "/review-evidence/review06/mobile-430-strategy-result.png": "95cde046133ae279ac508d4eace5ac4b1d864597c011f6ccc7ae54f1efdf702e",
+      "/review-evidence/review06/desktop-1280-baseline-comparison.png": "db60133fc851d20cbe4287fde37be94e3c5076a13af072f2950e0aa08c5d1b73",
+      "/review-evidence/review06/mobile-430-forecast-assumptions.png": "c2a1be810d4e3be8b910192b7803fb1bee29b1137ca9d36d7844a58257c2c5d8",
+      "/review-evidence/review06/mobile-430-forecast-record.png": "1421f17a7bfc05e13163a85a3a3b4229efbec9799a4545273da49a3f2124630a",
+      "/review-evidence/review10/03-mobile-timeline.png": "600999ac52ad1e4cae220283bf87a4c131fc33bc121f726e420a25fe3b6529fb",
+      "/review-evidence/review10/01-mobile-farm.png": "a32153dfef6cff33d27939c30ed6783ad88b09b344fabb7643fdb73fed90d4d2",
+      "/review-evidence/review10/04-mobile-outcomes.png": "f584f1963b2a30abbc8b6cb70300d0e4cb95ed5f637decd90bece9c25c9d37ee",
+      "/review-evidence/review10/07-desktop-timeline.png": "2f3db417ee91b3c503ccd0ce44b9251c4695cda0bdf1851fbed0e7b6dcd050dd",
+      "/review-evidence/review10/02-mobile-plan.png": "82684769c9dccf03a640df0be63d8de00e18a5e01030551dcdbbce0a3a5f3872",
+      "/review-evidence/review10/06-desktop-farm.png": "c46fd08178b6127a64007b6b4bd2b8f5f93b63b91d806747f6affabe386e1ea9",
+      "/review-evidence/review10/05-desktop-outcomes.png": "60b18662234ce7746dd5906658249016b429f86f1c91d7c69d0134add1a26550",
+      "/review-evidence/review09/desktop-1280-caixin-evidence.png": "21f57f09170a1378ab2bda1639b06ef6c17cf661e825dc7c0e1cdb2b23922650",
+      "/review-evidence/review09/mobile-390-late-harvest-quest.png": "614ff120c6b103308a830dfd851ffffdbfd4b9f2890451568af505801643cef2",
+      "/review-evidence/review09/desktop-1280-data-overview.png": "1084da68af85632812494208c1b19242bf805c6b11d04abd184cb478503cdfe3",
+      "/review-evidence/review09/mobile-390-home.png": "6073f52edc8cf63d63fcc27ba2c667634368137a86537461c562b969dcc91471",
+      "/review-evidence/review09/mobile-390-review-assumptions.png": "60d2fa024d73b8c7fcaf60418e3272c6973958d9eb8e79615e09fed46877d4db",
+      "/review-evidence/review09/desktop-1280-home.png": "02b89d48e688e0c407c6ecb781d02afb9fab420afab079599c57d38172e37174",
+      "/review-evidence/review09/desktop-1280-bed-a1.png": "7134dd89400e3a570f403f8f66509cc3a4399aca4e120601118c9db1e17323b5",
+      "/review-evidence/review05/mobile-advisor-guardrail-360.png": "5b10abe80ec16893d0fc06b9950a390db1ed6c6cbd8d574458b657aa4438c228",
+      "/review-evidence/review05/mobile-public-source-360.png": "49484785437314abf411294663cfae4778c09046adca5218a520f2f1f23b98fa",
+      "/review-evidence/review05/mobile-farm-360.png": "d2b1307aaa86d8e2c9e6fece7d5a66084f4746ec03b609b6bd22669cce200e57",
+      "/review-evidence/review05/desktop-setup-boundary-1280.png": "2ca95b9d5957b58da914c28daf312dda9e3558abe20992390f60487f10347524",
+      "/review-evidence/review05/desktop-public-source-1280.png": "8c02fbaf85d07b32135eaa3e940b9f655b1d8e8ee2007290b964ea3ba107ce77",
+      "/review-evidence/review01/busy-market-result-mobile-390.png": "9e251061b48018de0e05d364fc8c603c3dd884300bfb3f47ab7a86105d8cee0c",
+      "/review-evidence/review01/baseline-farm-mobile-390.png": "e34ac939c735cb666834863102912128bdb34ba7528837c746147e06f54acad5",
+      "/review-evidence/review01/advisor-response-mobile-390.png": "59260a1b7f6066f788d999453414c8174f3c6bdae5c4adfd934bf1aa241fc6a3",
+      "/review-evidence/review01/busy-market-assumptions-mobile-390.png": "0081ac17450fe3004c8db14c54cd404ee728b0b36e4136fb8cd97b10a2d46f24",
+      "/review-evidence/review01/baseline-farm-desktop-1280.png": "63d0da07d7df7f3426c3e338eed1c8e395f3ea412823944890443f568fc05a4e",
+      "/review-evidence/review01/planning-tools-desktop-1280.png": "ceb650db93cd784f13f6f0b40ca748b5efa9bcde8bcaa77b6ecef7e5ff978a66",
+      "/review-evidence/review03/mobile-430-scenario-result.png": "cc82134426c63df4ed166c1a4f8e8c5ce516f709c9ba0b05bfe0e8043883a46d",
+      "/review-evidence/review03/desktop-1280-board.png": "42bc0389f72c7ec30ec2d8a28f61ceb732e9d70987c45acea880929d72f463a8",
+      "/review-evidence/review03/desktop-1280-saved-scenario.png": "65a074d7713e4ec8019c701f83a6659195daad435daf5fa7fbf040ceadbbd74e",
+      "/review-evidence/review03/mobile-430-tools.png": "fffdbb61c31ae40d6d5b3d7b4f46972e9646bee1939d6aa0700bd10f3fc59c36",
+      "/review-evidence/review03/mobile-430-assumption.png": "b3e08863811ddbef0e0955247add67ac731f28112648ae33147ae8fe07560585",
+      "/review-evidence/review03/mobile-430-board.png": "b0ac3cfe9e2043e535a694d471b8886d81d8f1ac9483d5a087f125ef0b5e7b40",
+      "/review-evidence/review04/05-desktop-farm.png": "bd3213d34152c1221416f10a48485eb9b132a392f650c580b93db2217785bd2e",
+      "/review-evidence/review04/01-mobile-farm.png": "88f1987fce8453213b44b23b182a48e6faa3453c9639e4741575f2496a777a11",
+      "/review-evidence/review04/06-desktop-outcomes.png": "d9ae7319e9f3b5da93908efb280d7b77c85bc45dee0a0d00dd65a5595b9ae47e",
+      "/review-evidence/review04/03-mobile-scenario-result.png": "0429d422e0f04e1e7731689ba9ffc65c95ec63dc2912b6f1260969ec7baf5ee8",
+      "/review-evidence/review04/02-mobile-scenario-assumptions.png": "d9d62466b084a7b4e336eeb2b59c5a24c17a7949270b3321069357aaa0aae503",
+      "/review-evidence/review04/04-mobile-advisor.png": "401186a9ee33407988476de35630d3e2453dc90a5cb1d25b9f2c787154e63294",
+      "/review-evidence/review02/02-mobile-map-tap.png": "5036c2fa468489731a36589d7e2bd36651eceb489068c4df1a7e13380946bf5a",
+      "/review-evidence/review02/10-desktop-local-move-mode.png": "06328460bd523b122cd279c6f25ab31b7ad58cf11dc50073a67835b52099d314",
+      "/review-evidence/review02/09-mobile-local-move-mode.png": "8716bcb8eab3811b9435d7923cc673e66b9cb25787620f794e2b8c6f963662bd",
+      "/review-evidence/review02/08-desktop-scroll.png": "08298a4e8911729f2bb71a8edecdced7e922416d0f46e915753b3acac99f117e",
+      "/review-evidence/review02/03-mobile-map-drag.png": "590c631c6ea7acddbbe067a138f2bb80f3e1288fd0a7e94db541fcaa2e0ae6d6",
+      "/review-evidence/review02/09-mobile-local-default.png": "595aba9ce2c4b96f0377d475b1784cb2c4909486c35cdf70e8aee538b27311ef",
+      "/review-evidence/review02/06-mobile-numerical-result.png": "45794dc73f5e1fbdaf25ce0b5dcd567383dbf32bf676859324439e95a11ce8ed",
+      "/review-evidence/review02/09-mobile-local-move-done.png": "bea511d38d3235124c204eb874c8045a181f12355a832eea21b075e3b1d871d4",
+      "/review-evidence/review02/05-mobile-nav-plan.png": "090c087d911a2807ff0ed819bb20bcaf1470f4db6bf930126992580da4e4bb4e",
+      "/review-evidence/review02/05b-mobile-date-preview.png": "f4fbd07fb350eae586d2016d7a0e8b1d1488fe237454522cc0f49b55e7674bd7",
+      "/review-evidence/review02/09-mobile-local-date-arrows.png": "bc5793d8ce790a31b80f4510c966b63e02dde33c5e99ad0d8819f3834a9414eb",
+      "/review-evidence/review02/09-mobile-local-bed-tap.png": "474239e281bcab1cb504ec604c9473a78d28b79445d0f16a5faaf27e70594eb3",
+      "/review-evidence/review02/01-mobile-home.png": "0b96f3ee8b4440c67dddee5e93d590021ed30ffdd131c2e2c5cea5a925959af6",
+      "/review-evidence/review02/05-mobile-bed-a1.png": "c35a6cd23006cba5aa0cff44106f4481b69cb7ba335592899e2cf22445bdca30"
+    },
+    "transport": "authenticated Fly SSH; exact image assets and document security headers; fixed loopback API",
+    "traffic": [
+      {
+        "method": "GET",
+        "path": "/api/v1/bootstrap",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/planning-sessions",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots/main%3A141f9b017b6011d21dfddc8507c9fa04",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4/calculate",
+        "status": 202
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots/main%3A141f9b017b6011d21dfddc8507c9fa04",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/imports/upload",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/imports/fin-ea8ec50f5c1b0099342a6adf/review",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals",
+        "status": 201
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals/9479f2497d50470379004f5d7b1d0ff4/apply",
+        "status": 202
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/proposals/9479f2497d50470379004f5d7b1d0ff4/approve-actions",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/tasks/task-8e5683af0de57f4580600ba1/result",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/bootstrap",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/farm-workflow/tasks/task-8e5683af0de57f4580600ba1/corrections",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots/main%3A141f9b017b6011d21dfddc8507c9fa04",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/news",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/council-research",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/planning-sessions/75328d69977bf851ca975736fa8003a4",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots/main%3A141f9b017b6011d21dfddc8507c9fa04",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "path": "/api/v1/council-research",
+        "status": 201
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/data-explorer/snapshots/reference",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/farm-workflow",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "path": "/api/v1/conversations",
+        "status": 200
+      }
+    ],
+    "failures": []
+  }
+}

@@ -1,3 +1,7 @@
+V23 publication completed on 26 September 2026; [live media checks](../v23/README.md)
+confirm the deployed recordings, captions and seeking. Production evidence below
+was captured before that release.
+
 # Desktop/mobile walkthrough and guide repair — completed 26 September 2026
 
 Task A: [final walkthrough](../../output/demo-video/farmtact-desktop-mobile-demo.mp4),

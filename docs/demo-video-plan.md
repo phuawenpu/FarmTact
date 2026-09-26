@@ -3,7 +3,8 @@
 Delivered: [5:21 master and chapters](../output/demo-video/README.md), three
 narrated app guides, gateway routing repair and verified player fallbacks.
 Evidence: [71 scoped checks](../reports/demo-video/README.md) plus build/contracts.
-The files and source changes are committed; live edition publication is separate.
+The files and source changes are committed and published in V23; see
+[V23 live verification](../reports/v23/README.md).
 
 User scope: produce about five minutes of logical, real app interaction with natural
 scrolling/typing, close-ups and English voiceover. Desktop and mobile run side by

@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "tests": 821,
+  "passed": 820,
+  "skipped": 1,
+  "failures": 0,
+  "errors": 0,
+  "source_commit": "d368784be5eb111e2380da87488593c1b1c73faf",
+  "provider_credentials": "removed from process",
+  "initial_run": {
+    "passed": 817,
+    "skipped": 1,
+    "errors": 3,
+    "seconds": 751.3
+  },
+  "fixture_correction": "Created missing isolated farmtact_research_test PostgreSQL database; no application changes",
+  "affected_case_rerun": {
+    "passed": 3,
+    "seconds": 29.8,
+    "cases": [
+      "tests/council_research/test_postgres.py::test_postgres_serializes_concurrent_apply_and_replays_idempotently",
+      "tests/council_research/test_postgres.py::test_restart_retains_frozen_job_and_late_result_is_archived",
+      "tests/council_research/test_postgres.py::test_fk_tenant_isolation_and_advisor_freezes_current_result_without_provider"
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "public health identifies exact V23 source",
+      "pass": true,
+      "detail": {
+        "status": "ok",
+        "development_phase": "autonomous_development",
+        "edition": "v23",
+        "source_commit": "d368784be5eb111e2380da87488593c1b1c73faf"
+      }
+    },
+    {
+      "name": "/ serves exact staged HTML",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "/play serves exact staged HTML",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "observe-decide published bytes equal committed recording",
+      "pass": true,
+      "detail": {
+        "bytes": 7256969,
+        "sha256": "d1ba7614c7c353ee09eae03a465db26081647dbed89cdf19f8dd5d8c572eab15"
+      }
+    },
+    {
+      "name": "observe-decide HEAD has correct type and range support",
+      "pass": true,
+      "detail": {
+        "content_length": null,
+        "note": "Streaming proxy omits Content-Length; full GET hash and Content-Range independently verify size."
+      }
+    },
+    {
+      "name": "observe-decide byte range supports seeking",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "council-evidence published bytes equal committed recording",
+      "pass": true,
+      "detail": {
+        "bytes": 10058734,
+        "sha256": "fcc88a430e251ff9374b6804611e5e4bda86403d244b6b9965b21e71e320b8f5"
+      }
+    },
+    {
+      "name": "council-evidence HEAD has correct type and range support",
+      "pass": true,
+      "detail": {
+        "content_length": null,
+        "note": "Streaming proxy omits Content-Length; full GET hash and Content-Range independently verify size."
+      }
+    },
+    {
+      "name": "council-evidence byte range supports seeking",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "act-replan published bytes equal committed recording",
+      "pass": true,
+      "detail": {
+        "bytes": 8513738,
+        "sha256": "4a11797b7a1676e07d8c51bf9ef8383bf61a5d3f6cede19b7834c77da9e1783a"
+      }
+    },
+    {
+      "name": "act-replan HEAD has correct type and range support",
+      "pass": true,
+      "detail": {
+        "content_length": null,
+        "note": "Streaming proxy omits Content-Length; full GET hash and Content-Range independently verify size."
+      }
+    },
+    {
+      "name": "act-replan byte range supports seeking",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "GitHub has exactly main",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "source_commit": "d368784be5eb111e2380da87488593c1b1c73faf",
+  "image": "registry.fly.io/farmtact@sha256:532a8143c917f3520dfa7896b36cffe6fd029690aa35a96b0093d24b7bddd029"
+}

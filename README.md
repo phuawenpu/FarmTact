@@ -3,14 +3,15 @@
 Recorded desktop/mobile walkthrough: [video and chapters](output/demo-video/README.md).
 Production workflow and scope: [demo video plan](docs/demo-video-plan.md).
 
-FarmTact V22 is live at [the public root](https://farmtact.fly.dev/) and
+FarmTact V23 is live at [the public root](https://farmtact.fly.dev/) and
 [/play](https://farmtact.fly.dev/play). V20 restored the V12 workspace and V21
 refined it; V22 keeps that workspace and brings the Council forward with short
 public roles, explicit suggested questions, readable findings, a skippable
 captioned introduction and recoverable planning drafts. The named sections are
 **Plan, Farm, Council research, Farm tools, Crops, Data, Outcomes and Setup**.
 The farm board, seven advisers and direct proposal/approval controls remain
-visible parts of the workflow.
+visible parts of the workflow. V23 adds three narrated app guides with captions,
+transcripts and working video downloads and seeking. See [release verification](reports/v23/README.md).
 
 Calculate appears before the board. Selected comparison metrics, board preview
 and full dated schedule describe the same strategy. Stage navigation focuses the
