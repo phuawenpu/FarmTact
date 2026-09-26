@@ -1,3 +1,11 @@
+# V23 publication — 26 September 2026
+
+Root owns edition identity, consolidated main, build, immutable publication and
+preservation checks. The read-only release specialist audits staged acceptance.
+All ten other remote branch tips are already ancestors of main; archive their
+identities in the release evidence before removing the merged references.
+See [V23 release evidence](../reports/v23/README.md).
+
 # Demo video and media repair — completed 26 September 2026
 
 Delivered work and ownership: [desktop/mobile recording plan](demo-video-plan.md).

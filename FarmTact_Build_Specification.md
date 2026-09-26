@@ -1,3 +1,10 @@
+## V23 release candidate — 26 September 2026
+
+V23 publishes the narrated demo guides and fixes public video routing, seeking,
+captions and failure fallbacks. The V22 Council workspace remains the application
+base. Follow [V23 release evidence](reports/v23/README.md); historical handoffs
+below describe earlier releases. Physical farm operations remain disabled.
+
 ## Demo media amendment — 26 September 2026
 
 The requested desktop/mobile walkthrough and guide repair follow

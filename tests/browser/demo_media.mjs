@@ -7,13 +7,22 @@ const check = (name, pass, detail) => {
   if (!pass) throw new Error(`${name}: ${JSON.stringify(detail)}`);
 };
 
-let browser;
+let browser, transport;
 try {
+  if (process.env.STAGED_SOURCE) {
+    if (base !== 'http://127.0.0.1:4199') throw new Error('Staged transport requires fixed loopback browser origin');
+    const { stagedTransport } = await import('./restored_staged_transport.mjs');
+    transport = await stagedTransport(process.env.STAGED_SOURCE);
+  }
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     reducedMotion: "no-preference",
   });
+  if (transport) {
+    await transport.attach(context);
+    context.setDefaultTimeout(180000);
+  }
   await context.addInitScript(() => localStorage.clear());
   const page = await context.newPage();
   const providerMutations = [];
@@ -152,6 +161,7 @@ try {
   report.failures.push(error instanceof Error ? error.stack : String(error));
   process.exitCode = 1;
 } finally {
+  if (transport) report.staged_transport = transport.evidence;
   if (browser) await browser.close();
   console.log(JSON.stringify(report, null, 2));
 }

@@ -111,7 +111,7 @@ try{
  dialog=await openEditor();
  check('edition/session/revision draft survives reload',await labeled(dialog.locator('.proposal-order-fields'),'Customer / order reference').inputValue()==='V22-BUYER-17'&&await dialog.getByLabel('Expected demand',{exact:false}).inputValue()==='124');
  const storage=await page.evaluate(()=>Object.entries(localStorage).filter(([key])=>/proposal|draft/i.test(key)).map(([key,value])=>({key,value})).filter(item=>item.value.includes('V22-BUYER-17')));
- check('persistent draft is browser-local and edition namespaced',storage.length===1&&/v22/i.test(storage[0].key),storage.map(item=>({key:item.key,containsMarker:item.value.includes('V22-BUYER-17')})));
+ check('persistent draft is browser-local and edition namespaced',storage.length===1&&storage[0].key.includes(`:${process.env.EXPECTED_EDITION||'v22'}:`),storage.map(item=>({key:item.key,containsMarker:item.value.includes('V22-BUYER-17')})));
  await dialog.getByRole('button',{name:'Discard saved draft',exact:true}).click();
  dialog=await openEditor();
  check('discard clears the scoped draft',await dialog.getByLabel('Expected demand',{exact:false}).inputValue()==='100'&&!await dialog.getByLabel('Add an order to this scenario').isChecked());

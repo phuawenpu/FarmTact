@@ -11,3 +11,6 @@ apps/web/dist
 data/raw
 data/runtime
 data/normalized
+
+# Published walkthrough and raw production files are repository artifacts.
+output/

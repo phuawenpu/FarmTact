@@ -7,7 +7,9 @@ const cases=[
  ['unbounded port',{EXPECTED_EDITION:'v20',STAGED_CONTAINER:'v20',STAGED_PORT:'80'},false],
  ['non-numeric port',{EXPECTED_EDITION:'v20',STAGED_CONTAINER:'v20',STAGED_PORT:'8100@evil.invalid'},false],
  ['edition path injection',{EXPECTED_EDITION:'v20/../v19',STAGED_CONTAINER:'v20',STAGED_PORT:'8100'},false],
- ['unapproved future edition',{EXPECTED_EDITION:'v22',STAGED_CONTAINER:'v22',STAGED_PORT:'8102'},false],
+ ['valid V23 target',{EXPECTED_EDITION:'v23',STAGED_CONTAINER:'v23',STAGED_PORT:'8103'},true],
+ ['wrong V23 port',{EXPECTED_EDITION:'v23',STAGED_CONTAINER:'v23',STAGED_PORT:'8102'},false],
+ ['unapproved future edition',{EXPECTED_EDITION:'v24',STAGED_CONTAINER:'v24',STAGED_PORT:'8104'},false],
 ];
 const checks=[];
 for(const [name,overrides,expected] of cases){

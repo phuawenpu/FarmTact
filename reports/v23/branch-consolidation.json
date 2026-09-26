@@ -1,0 +1,55 @@
+{
+  "main_before": "3cd340d33cb6d81a367f5b38abc6913d9cc82d4c",
+  "branches": [
+    {
+      "branch": "copilot/featureuser-authentication",
+      "tip": "952e9e8f3cfd8320f57fa1b3fc225b1a7bf16232",
+      "already_merged": true
+    },
+    {
+      "branch": "docs/v15-first-use-review",
+      "tip": "154f8119cb19fc6ed2e21953bf23bf59e271c914",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v13-tactical-cards",
+      "tip": "141930d47b849c16822151f3d188cfa9a9e3c43b",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v14-first-season",
+      "tip": "1d1b17038411afc0a97e6ace97f21f8f6bb6ccb0",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v15-integrated-cards",
+      "tip": "76bd4a7592e3fd0ec1540ef88d2c685211e1adf6",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v16-explanation-completion",
+      "tip": "1aec94523ed224b026e39973569bcaec72cb8c19",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v17-persona-workflows",
+      "tip": "3fb120ad185d207bfa9f201c9178f6c82557a170",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v20-restore-v12",
+      "tip": "eb92c2029b2a13cb176a5a200c93997122085f89",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v21-v12-ux",
+      "tip": "16526bcc651e76ce61a10d77d0667535235c27e4",
+      "already_merged": true
+    },
+    {
+      "branch": "feature/v22-council-guidance",
+      "tip": "dead5facdfe86e7ddc87bf0d64bde1bc606adc7d",
+      "already_merged": true
+    }
+  ]
+}
