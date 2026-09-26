@@ -1,5 +1,5 @@
 {
-  "latest": "v22",
+  "latest": "v23",
   "editions": [
     {
       "id": "v1",
@@ -1063,6 +1063,49 @@
           "evidence": [
             "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/apps/web/src/components/CouncilWorkspace.tsx",
             "https://github.com/phuawenpu/FarmTact/blob/0e0a3d3/tests/browser/v22_proposal_recovery.mjs"
+          ],
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "v23",
+      "title": "Narrated app guides and working video playback",
+      "published_at": "2026-09-26",
+      "summary": "V23 preserves the Council workspace and publishes narrated app guides with captions, transcripts, reliable public routing and seekable playback.",
+      "status": "published",
+      "source_commit": "d368784be5eb111e2380da87488593c1b1c73faf",
+      "source_url": "https://github.com/phuawenpu/FarmTact/commit/d368784be5eb111e2380da87488593c1b1c73faf",
+      "compare_url": "https://github.com/phuawenpu/FarmTact/compare/ac6c84d09d515eac51802138baceabf84a3c01a8...d368784be5eb111e2380da87488593c1b1c73faf",
+      "image_digest": "registry.fly.io/farmtact@sha256:532a8143c917f3520dfa7896b36cffe6fd029690aa35a96b0093d24b7bddd029",
+      "review_url": "/v23/review",
+      "play_url": "/v23/",
+      "changes": [
+        {
+          "title": "Three narrated app guides",
+          "description": "Real app recordings explain observation and planning, Council evidence, and reporting with recovery. Each includes narration, captions, a poster and a matching transcript.",
+          "feedback_ids": [],
+          "evidence": [
+            "reports/demo-video/README.md"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Public video playback and failure recovery",
+          "description": "The gateway serves the explainers directory with byte-range seeking. Video and transcript failures expose readable fallback states.",
+          "feedback_ids": [],
+          "evidence": [
+            "tests/editions/test_gateway.py",
+            "tests/browser/demo_media.mjs"
+          ],
+          "status": "implemented"
+        },
+        {
+          "title": "Desktop and mobile walkthrough",
+          "description": "A 5:21 narrated side-by-side walkthrough is available in the GitHub output/demo-video folder.",
+          "feedback_ids": [],
+          "evidence": [
+            "output/demo-video/README.md"
           ],
           "status": "implemented"
         }
