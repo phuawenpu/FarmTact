@@ -12,6 +12,9 @@ MEDIA=ROOT/'apps/web/public/explainers'
 def run(args):subprocess.run(args,check=True,stdout=subprocess.DEVNULL)
 def probe(path):return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_format','-show_streams','-of','json',str(path)]))
 def duration(path):return float(probe(path)['format']['duration'])
+def valid(path):
+    try:return path.exists() and duration(path)>0
+    except (subprocess.CalledProcessError,KeyError,ValueError):return False
 def stamp(t,sep='.'):ms=round(t*1000);return f'{ms//3600000:02d}:{ms//60000%60:02d}:{ms//1000%60:02d}{sep}{ms%1000:03d}'
 def cues(scene,seconds):
     phrases=re.split(r'(?<=[.!?])\s+',scene['text']);weights=[len(x.split()) for x in phrases];total=sum(weights);start=.4;span=min(seconds-.7,duration(WORK/(scene['id']+'.wav')))
@@ -49,12 +52,13 @@ def main():
     scripts={s['id']:s for s in story};offset=0;allcues=[];segments=[];edl=[]
     for index,record in enumerate(scenes):
         scene={**record,**scripts[record['id']]};sid=scene['id'];target=WORK/f'{index:02d}-{sid}.mp4'
+        scene_capture=WORK/record['source_capture'] if record.get('source_capture') else CAP
         lengths={name:d['end']-d['start'] for name,d in record['views'].items()}
         secs=math.ceil(max(scene['seconds'],*lengths.values(),duration(WORK/(sid+'.wav'))+.9)*30)/30
         rows=cues(scene,secs);caption=WORK/f'{sid}.ass';ass(rows,caption);background=WORK/f'{sid}-plate.png';plate(scene,index,background)
-        edl.append({'id':sid,'title':scene['title'],'start':offset,'duration':secs,'guide':scene['guide'],'recorded':record['views']})
+        edl.append({'id':sid,'title':scene['title'],'start':offset,'duration':secs,'guide':scene['guide'],'recorded':record['views'],'source_capture':record.get('source_capture','capture')})
         allcues.extend((a+offset,b+offset,text) for a,b,text in rows);offset+=secs;segments.append(target)
-        if target.exists() and abs(duration(target)-secs)<.2:print('Reusing',sid,flush=True);continue
+        if valid(target) and abs(duration(target)-secs)<.2:print('Reusing',sid,flush=True);continue
         filters=[]
         for n,name in enumerate(['desktop','mobile']):
             start=record['views'][name]['start'];end=record['views'][name]['end'];size=views[name]['size']
@@ -69,17 +73,20 @@ def main():
             w,h=(1820,1194) if name=='desktop' else (550,1190)
             filters.append(prefix+f',scale={w}:{h}:flags=lanczos,setsar=1[{name}]')
         filters+=['[2:v][desktop]overlay=x=40:y=114:shortest=1[desk]',f"[desk][mobile]overlay=x=1968:y=116:shortest=1,ass='{caption}',format=yuv420p[v]",f'[3:a]adelay=400:all=1,apad,atrim=duration={secs:.3f},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]']
-        cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-threads','2','-i',str(CAP/'desktop.webm'),'-threads','2','-i',str(CAP/'mobile.webm'),'-loop','1','-framerate','30','-i',str(background),'-i',str(WORK/(sid+'.wav')),'-filter_complex_threads','2','-filter_complex',';'.join(filters),'-map','[v]','-map','[a]','-t',f'{secs:.3f}','-c:v','libx264','-preset','fast','-crf','24','-maxrate','2300k','-bufsize','4600k','-threads','4','-c:a','aac','-b:a','128k','-ar','48000','-movflags','+faststart',str(target)]
+        cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-threads','2','-i',str(scene_capture/'desktop.webm'),'-threads','2','-i',str(scene_capture/'mobile.webm'),'-loop','1','-framerate','30','-i',str(background),'-i',str(WORK/(sid+'.wav')),'-filter_complex_threads','2','-filter_complex',';'.join(filters),'-map','[v]','-map','[a]','-t',f'{secs:.3f}','-c:v','libx264','-preset','fast','-crf','24','-maxrate','2300k','-bufsize','4600k','-threads','4','-c:a','aac','-b:a','128k','-ar','48000','-movflags','+faststart',str(target)]
         print('Rendering',sid,round(secs,2),flush=True);run(cmd)
     mainfile=OUT/'farmtact-desktop-mobile-demo.mp4';concat(segments,mainfile);subtitles(allcues,OUT/'farmtact-desktop-mobile-demo.vtt')
     (OUT/'farmtact-desktop-mobile-demo.srt').write_text('\n\n'.join(f'{i+1}\n{stamp(a,",")} --> {stamp(b,",")}\n{text}' for i,(a,b,text) in enumerate(allcues))+'\n')
     transcripts={}
     for slug in ['observe-decide','council-evidence','act-replan']:
         selected=[(s,e,p) for s,e,p in zip(scenes,edl,segments) if scripts[s['id']]['guide']==slug]
-        source=WORK/f'{slug}-captioned-source.mp4';concat([p for s,e,p in selected],source)
-        # The master has burned footer captions; guides use selectable WebVTT.
-        # Crop only that editorial footer, retaining the entire app and chapter title.
-        run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(source),'-vf','crop=2560:1356:0:0,scale=1920:-2','-c:v','libx264','-preset','fast','-crf','23','-threads','4','-c:a','copy','-movflags','+faststart',str(MEDIA/f'{slug}.mp4')])
+        guide=MEDIA/f'{slug}.mp4'
+        if not valid(guide) or guide.stat().st_mtime < max(p.stat().st_mtime for s,e,p in selected):
+            source=WORK/f'{slug}-captioned-source.mp4';concat([p for s,e,p in selected],source)
+            # The master has burned footer captions; guides use selectable WebVTT.
+            # Crop only that editorial footer, retaining the entire app and chapter title.
+            run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(source),'-vf','crop=2560:1350:0:0,scale=1920:-2','-c:v','libx264','-preset','fast','-crf','23','-threads','4','-c:a','copy','-movflags','+faststart',str(WORK/f'{slug}-finished.mp4')])
+            (WORK/f'{slug}-finished.mp4').replace(guide)
         local=0;rows=[];transcripts[slug]=[]
         for s,e,p in selected:
             scene=scripts[s['id']];rows.extend((a+local,b+local,text) for a,b,text in cues(scene,e['duration']));transcripts[slug].append({'title':scene['title'],'text':scene['text']});local+=e['duration']

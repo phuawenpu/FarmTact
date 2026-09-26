@@ -6,7 +6,8 @@ const root=resolve(new URL('../..',import.meta.url).pathname);
 const rehearsal=process.env.REHEARSAL==='1';
 const out=resolve(process.env.CAPTURE_DIR||`${root}/output/demo-video/work/capture`);
 const base=process.env.BASE_URL||'http://127.0.0.1:8080';
-const scenes=JSON.parse(await readFile(`${root}/scripts/demo_video/storyboard.json`));
+const allScenes=JSON.parse(await readFile(`${root}/scripts/demo_video/storyboard.json`));
+const scenes=process.env.ONLY_SCENES?allScenes.filter(s=>process.env.ONLY_SCENES.split(',').includes(s.id)):allScenes;
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -79,7 +80,22 @@ let failed=false;
 try{
  for(const scene of scenes){
   const entry={...scene,views:{}};report.scenes.push(entry);console.log('SCENE',scene.id,flush());
-  await Promise.all(views.map(async v=>{const start=Date.now();entry.views[v.name]={start:(start-v.started)/1000};await actions[scene.id](v);const actionEnd=Date.now();entry.views[v.name].actions=(actionEnd-start)/1000;if(!rehearsal)await wait(Math.max(0,scene.seconds*1000-(Date.now()-start)));entry.views[v.name].end=(Date.now()-v.started)/1000;await v.page.screenshot({path:`${out}/${v.name}-${scene.id}.png`});}));
+  if(scene.id==='compare'){
+   const start=Date.now();for(const v of views)entry.views[v.name]={start:(start-v.started)/1000};
+   for(const name of ['Balanced','Resilient','Balanced']){
+    const targets=views.map(v=>v.page.locator('.proposal-card').filter({has:v.page.getByRole('heading',{name,exact:true})}));
+    await Promise.all(views.map((v,i)=>reveal(v,targets[i])));
+    await Promise.all(views.map(async(v,i)=>{const b=await targets[i].boundingBox();await move(v,b.x+b.width/2,b.y+b.height/2)}));
+    await wait(rehearsal?30:260);
+    await Promise.all(views.map((v,i)=>v.mobile?targets[i].tap():targets[i].click()));
+    await wait(rehearsal?100:2200);
+   }
+   await Promise.all(views.map(v=>focus(v,v.page.locator('.proposal-grid'),1.16)));
+   for(const v of views)entry.views[v.name].actions=(Date.now()-start)/1000;
+   if(!rehearsal)await wait(Math.max(0,scene.seconds*1000-(Date.now()-start)));
+   for(const v of views)entry.views[v.name].end=(Date.now()-v.started)/1000;
+   await Promise.all(views.map(v=>v.page.screenshot({path:`${out}/${v.name}-${scene.id}.png`})));
+  }else await Promise.all(views.map(async v=>{const start=Date.now();entry.views[v.name]={start:(start-v.started)/1000};await actions[scene.id](v);const actionEnd=Date.now();entry.views[v.name].actions=(actionEnd-start)/1000;if(!rehearsal)await wait(Math.max(0,scene.seconds*1000-(Date.now()-start)));entry.views[v.name].end=(Date.now()-v.started)/1000;await v.page.screenshot({path:`${out}/${v.name}-${scene.id}.png`});}));
   await writeFile(`${out}/timeline.json`,JSON.stringify(report,null,2));
  }
 }catch(e){failed=true;report.errors.push({error:e.stack});console.error(e);for(const v of views)await v.page.screenshot({path:`${out}/${v.name}-failure.png`}).catch(()=>{})}

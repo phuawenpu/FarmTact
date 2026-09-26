@@ -1,0 +1,173 @@
+{
+  "base_url": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "first-use Demo supports pause, next and back",
+      "pass": true,
+      "detail": {
+        "first": "Start with a delivery question",
+        "second": "Compare different perspectives"
+      }
+    },
+    {
+      "name": "first-use Demo can be skipped",
+      "pass": true
+    },
+    {
+      "name": "first-use Demo replay reopens at scene one",
+      "pass": true
+    },
+    {
+      "name": "Demo resumes after pause",
+      "pass": true
+    },
+    {
+      "name": "last Demo scene returns to planning",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion Demo keeps manual scene controls",
+      "pass": true
+    },
+    {
+      "name": "guidance can be hidden",
+      "pass": true
+    },
+    {
+      "name": "three prerecorded guides are linked",
+      "pass": true
+    },
+    {
+      "name": "guide 1 loads, plays and seeks",
+      "pass": true,
+      "detail": {
+        "duration": 85.166341,
+        "currentTime": 6,
+        "poster": "/explainers/observe-decide.png",
+        "caption": "/explainers/observe-decide.vtt",
+        "source": "/explainers/observe-decide.mp4",
+        "captionCues": 16,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "guide 1 has poster and captions",
+      "pass": true,
+      "detail": {
+        "duration": 85.166341,
+        "currentTime": 6,
+        "poster": "/explainers/observe-decide.png",
+        "caption": "/explainers/observe-decide.vtt",
+        "source": "/explainers/observe-decide.mp4",
+        "captionCues": 16,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "guide 2 loads, plays and seeks",
+      "pass": true,
+      "detail": {
+        "duration": 79.699675,
+        "currentTime": 6.000155,
+        "poster": "/explainers/council-evidence.png",
+        "caption": "/explainers/council-evidence.vtt",
+        "source": "/explainers/council-evidence.mp4",
+        "captionCues": 14,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "guide 2 has poster and captions",
+      "pass": true,
+      "detail": {
+        "duration": 79.699675,
+        "currentTime": 6.000155,
+        "poster": "/explainers/council-evidence.png",
+        "caption": "/explainers/council-evidence.vtt",
+        "source": "/explainers/council-evidence.mp4",
+        "captionCues": 14,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "guide 3 loads, plays and seeks",
+      "pass": true,
+      "detail": {
+        "duration": 85.166341,
+        "currentTime": 6,
+        "poster": "/explainers/act-replan.png",
+        "caption": "/explainers/act-replan.vtt",
+        "source": "/explainers/act-replan.mp4",
+        "captionCues": 16,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "guide 3 has poster and captions",
+      "pass": true,
+      "detail": {
+        "duration": 85.166341,
+        "currentTime": 6,
+        "poster": "/explainers/act-replan.png",
+        "caption": "/explainers/act-replan.vtt",
+        "source": "/explainers/act-replan.mp4",
+        "captionCues": 16,
+        "posterLoaded": true
+      }
+    },
+    {
+      "name": "all declared transcript scenes render with exact text",
+      "pass": true,
+      "detail": {
+        "expected": 11,
+        "rendered": 11
+      }
+    },
+    {
+      "name": "all download URLs match successfully loaded MP4 data",
+      "pass": true,
+      "detail": [
+        {
+          "url": "http://127.0.0.1:8080/explainers/observe-decide.mp4",
+          "response": {
+            "status": 206,
+            "type": "video/mp4"
+          }
+        },
+        {
+          "url": "http://127.0.0.1:8080/explainers/council-evidence.mp4",
+          "response": {
+            "status": 206,
+            "type": "video/mp4"
+          }
+        },
+        {
+          "url": "http://127.0.0.1:8080/explainers/act-replan.mp4",
+          "response": {
+            "status": 206,
+            "type": "video/mp4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed video sources expose written fallbacks",
+      "pass": true
+    },
+    {
+      "name": "valid transcript JSON with a missing guide reports unavailable",
+      "pass": true
+    },
+    {
+      "name": "failed transcript request exposes a written fallback",
+      "pass": true
+    },
+    {
+      "name": "media and Demo checks submit no provider requests",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "status": "PASS"
+}

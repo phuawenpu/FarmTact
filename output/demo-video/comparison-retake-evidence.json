@@ -1,0 +1,127 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "rehearsal": false,
+  "started": "2026-09-26T14:43:49.497Z",
+  "scenes": [
+    {
+      "id": "welcome",
+      "title": "A delivery question, on two screens",
+      "seconds": 20,
+      "guide": null,
+      "text": "Welcome to FarmTact. On the left is the desktop workspace; on the right, the same journey on mobile. We are using an isolated synthetic farm. Start with the short introduction: inspect a delivery question, compare plans, review changes, and report what happened.",
+      "views": {
+        "desktop": {
+          "start": 2.211,
+          "actions": 10.935,
+          "end": 22.216
+        },
+        "mobile": {
+          "start": 1.123,
+          "actions": 9.37,
+          "end": 21.128
+        }
+      }
+    },
+    {
+      "id": "calculate",
+      "title": "Calculate real planting alternatives",
+      "seconds": 25,
+      "guide": "observe-decide",
+      "text": "Choose Compare planting plans. The local numerical engine now checks crop timing and resource constraints against the recorded demand. This is a real calculation in the app. When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison.",
+      "views": {
+        "desktop": {
+          "start": 22.388,
+          "actions": 26.949,
+          "end": 49.338
+        },
+        "mobile": {
+          "start": 21.299,
+          "actions": 15.257,
+          "end": 46.3
+        }
+      }
+    },
+    {
+      "id": "compare",
+      "title": "Compare the tradeoffs",
+      "seconds": 20,
+      "guide": "observe-decide",
+      "text": "We inspect Balanced, then Resilient, and return to Balanced. Watch the selected candidate and the projected measures change together. Feasible means the model's constraints hold; it does not promise that every order is filled. Read the shortfall alongside the margin before making a choice.",
+      "views": {
+        "desktop": {
+          "start": 49.49,
+          "actions": 14.326,
+          "end": 69.492
+        },
+        "mobile": {
+          "start": 48.401,
+          "actions": 14.326,
+          "end": 68.403
+        }
+      },
+      "source_capture": "compare-retake"
+    }
+  ],
+  "views": [
+    {
+      "name": "desktop",
+      "size": {
+        "width": 1280,
+        "height": 840
+      },
+      "focus": [
+        {
+          "time": 3.45,
+          "x": 640,
+          "y": 419.9921875,
+          "zoom": 1
+        },
+        {
+          "time": 49.337,
+          "x": 762,
+          "y": 419.6640625,
+          "zoom": 1.12
+        },
+        {
+          "time": 63.808,
+          "x": 762,
+          "y": 419.6640625,
+          "zoom": 1.16
+        }
+      ],
+      "end": 69.672
+    },
+    {
+      "name": "mobile",
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "focus": [
+        {
+          "time": 2.406,
+          "x": 195,
+          "y": 422,
+          "zoom": 1
+        },
+        {
+          "time": 36.556,
+          "x": 195,
+          "y": 422.4765625,
+          "zoom": 1.12
+        },
+        {
+          "time": 62.727,
+          "x": 195,
+          "y": 422.4765625,
+          "zoom": 1.16
+        }
+      ],
+      "end": 70.755
+    }
+  ],
+  "errors": [],
+  "providerRequests": [],
+  "finished": "2026-09-26T14:45:01.727Z",
+  "status": "PASS"
+}

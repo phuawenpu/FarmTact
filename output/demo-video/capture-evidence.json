@@ -1,0 +1,584 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "rehearsal": false,
+  "started": "2026-09-26T14:34:15.396Z",
+  "scenes": [
+    {
+      "id": "welcome",
+      "title": "A delivery question, on two screens",
+      "seconds": 20,
+      "guide": null,
+      "text": "Welcome to FarmTact. On the left is the desktop workspace; on the right, the same journey on mobile. We are using an isolated synthetic farm. Start with the short introduction: inspect a delivery question, compare plans, review changes, and report what happened.",
+      "views": {
+        "desktop": {
+          "start": 1.589,
+          "actions": 10.197,
+          "end": 21.595
+        },
+        "mobile": {
+          "start": 0.753,
+          "actions": 9.058,
+          "end": 20.758
+        }
+      }
+    },
+    {
+      "id": "farm",
+      "title": "Read the farm before changing it",
+      "seconds": 20,
+      "guide": "observe-decide",
+      "text": "Our starting question is whether the farm can cover a dated order for caixin. Scroll down to the farm picture. Recorded crops occupy named beds, while empty beds stay empty. Cash, labour, and the planning horizon provide the context for a realistic planting decision.",
+      "views": {
+        "desktop": {
+          "start": 21.742,
+          "actions": 5.161,
+          "end": 41.745
+        },
+        "mobile": {
+          "start": 20.906,
+          "actions": 5.16,
+          "end": 40.908
+        }
+      }
+    },
+    {
+      "id": "records",
+      "title": "Inspect the source records",
+      "seconds": 20,
+      "guide": "observe-decide",
+      "text": "Open the Farm Inbox to see which records are active. This example uses the labelled Singapore leafy greens fixture. Uploaded documents and manual entries must be reviewed before they become accepted evidence. For this walkthrough, we keep the existing records and return to planning.",
+      "views": {
+        "desktop": {
+          "start": 41.92,
+          "actions": 11.714,
+          "end": 61.923
+        },
+        "mobile": {
+          "start": 41.084,
+          "actions": 11.064,
+          "end": 61.086
+        }
+      }
+    },
+    {
+      "id": "calculate",
+      "title": "Calculate real planting alternatives",
+      "seconds": 25,
+      "guide": "observe-decide",
+      "text": "Choose Compare planting plans. The local numerical engine now checks crop timing and resource constraints against the recorded demand. This is a real calculation in the app. When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison.",
+      "views": {
+        "desktop": {
+          "start": 62.072,
+          "actions": 24.38,
+          "end": 87.074
+        },
+        "mobile": {
+          "start": 61.236,
+          "actions": 14.78,
+          "end": 86.237
+        }
+      }
+    },
+    {
+      "id": "compare",
+      "title": "Compare the tradeoffs",
+      "seconds": 20,
+      "guide": "observe-decide",
+      "text": "We inspect Balanced, then Resilient, and return to Balanced. Watch the selected candidate and the projected measures change together. Feasible means the model's constraints hold; it does not promise that every order is filled. Read the shortfall alongside the margin before making a choice.",
+      "views": {
+        "desktop": {
+          "start": 49.49,
+          "actions": 14.326,
+          "end": 69.492
+        },
+        "mobile": {
+          "start": 48.401,
+          "actions": 14.326,
+          "end": 68.403
+        }
+      },
+      "source_capture": "compare-retake"
+    },
+    {
+      "id": "council",
+      "title": "Draft a focused Council question",
+      "seconds": 25,
+      "guide": "council-evidence",
+      "text": "Now bring the tradeoff to the Planning Council. Each specialist has a distinct responsibility. We type a focused question about booked deliveries and crop timing. This remains a draft: only pressing Send or Ask Council requests advice. No generated response is being presented as a completed review here.",
+      "views": {
+        "desktop": {
+          "start": 107.362,
+          "actions": 14.452,
+          "end": 132.362
+        },
+        "mobile": {
+          "start": 106.527,
+          "actions": 14.009,
+          "end": 131.528
+        }
+      }
+    },
+    {
+      "id": "assumptions",
+      "title": "Review an explicit change",
+      "seconds": 25,
+      "guide": "council-evidence",
+      "text": "Suppose expected demand for caixin rises by five percent. Open Adjust assumptions and enter one hundred and five. Read the exact changes before recalculating. The date range, crop, and capacity remain visible, so we can check precisely what the next calculation will use.",
+      "views": {
+        "desktop": {
+          "start": 132.54,
+          "actions": 34.581,
+          "end": 167.122
+        },
+        "mobile": {
+          "start": 131.705,
+          "actions": 25.069,
+          "end": 156.775
+        }
+      }
+    },
+    {
+      "id": "approve",
+      "title": "Save a simulation plan deliberately",
+      "seconds": 20,
+      "guide": "council-evidence",
+      "text": "The revised alternatives are ready. Saving is a separate decision from calculating or asking for advice. Open Save simulation plan, review its boundary, and confirm. FarmTact records this approved revision and creates its simulated work list. It does not operate equipment or contact a buyer.",
+      "views": {
+        "desktop": {
+          "start": 167.239,
+          "actions": 11.199,
+          "end": 187.24
+        },
+        "mobile": {
+          "start": 166.404,
+          "actions": 8.596,
+          "end": 186.405
+        }
+      }
+    },
+    {
+      "id": "task",
+      "title": "Open a task from the approved plan",
+      "seconds": 20,
+      "guide": "act-replan",
+      "text": "Move to the work list and open a task from the approved plan. Its crop, location, planned quantity, and checklist provide the reporting context. We will demonstrate a short result. The quantity entered next is an example report, not a measurement collected from a real farm.",
+      "views": {
+        "desktop": {
+          "start": 187.391,
+          "actions": 5.259,
+          "end": 207.396
+        },
+        "mobile": {
+          "start": 186.556,
+          "actions": 4.557,
+          "end": 206.561
+        }
+      }
+    },
+    {
+      "id": "report",
+      "title": "Report a short result",
+      "seconds": 25,
+      "guide": "act-replan",
+      "text": "Enter a quantity one unit below the task's plan, complete the checklist, and type a clear note explaining the shortage. Then save the reported result. Notice that this is labelled farmer reported and unverified. The short result prompts recovery instead of silently rewriting the original projection.",
+      "views": {
+        "desktop": {
+          "start": 207.538,
+          "actions": 22.657,
+          "end": 232.541
+        },
+        "mobile": {
+          "start": 206.703,
+          "actions": 20.239,
+          "end": 231.705
+        }
+      }
+    },
+    {
+      "id": "correction",
+      "title": "Correct the record without erasing it",
+      "seconds": 20,
+      "guide": "act-replan",
+      "text": "If a scale reading was wrong, record a correction with a reason. Here we revise the reported quantity and explain that the scale was checked. Save auditable correction preserves the history of the first report. The updated value remains a report, with its provenance intact.",
+      "views": {
+        "desktop": {
+          "start": 232.699,
+          "actions": 17.316,
+          "end": 252.701
+        },
+        "mobile": {
+          "start": 231.863,
+          "actions": 16.12,
+          "end": 251.864
+        }
+      }
+    },
+    {
+      "id": "recovery",
+      "title": "Review future recovery",
+      "seconds": 20,
+      "guide": "act-replan",
+      "text": "The next decision is Compare recovery plans. Open it to inspect a future change while keeping completed work in history. We review the proposal and close it without applying another change. Recovery is deliberate: opening a form or reading advice does not approve additional work.",
+      "views": {
+        "desktop": {
+          "start": 252.92,
+          "actions": 8.903,
+          "end": 272.927
+        },
+        "mobile": {
+          "start": 252.086,
+          "actions": 8.268,
+          "end": 272.091
+        }
+      }
+    },
+    {
+      "id": "knowledge",
+      "title": "Look up the crop behind the plan",
+      "seconds": 20,
+      "guide": null,
+      "text": "For more context, open Crops. The desktop navigation and mobile menu reach the same knowledge library. Crop profiles and their evidence help us understand the assumptions behind a plan. Knowledge is useful context; it should not be confused with a validated prediction for this particular farm.",
+      "views": {
+        "desktop": {
+          "start": 273.103,
+          "actions": 16.721,
+          "end": 293.105
+        },
+        "mobile": {
+          "start": 272.267,
+          "actions": 14.928,
+          "end": 292.268
+        }
+      }
+    },
+    {
+      "id": "guides",
+      "title": "Replay the guides when you need them",
+      "seconds": 15,
+      "guide": null,
+      "text": "Back in Plan, How it works opens three short guides. Each has playback controls, captions, a transcript, and a download. The introductory demo can also be replayed whenever you want a reminder of the decision sequence.",
+      "views": {
+        "desktop": {
+          "start": 293.325,
+          "actions": 14.341,
+          "end": 308.326
+        },
+        "mobile": {
+          "start": 292.489,
+          "actions": 11.019,
+          "end": 307.489
+        }
+      }
+    },
+    {
+      "id": "finish",
+      "title": "One workflow, desktop and mobile",
+      "seconds": 16,
+      "guide": null,
+      "text": "That is the complete loop: inspect, calculate, question, review, save, and report. Desktop and mobile preserve the same explicit decisions and the same distinction between projections, simulation, and reported results.",
+      "views": {
+        "desktop": {
+          "start": 308.518,
+          "actions": 2.249,
+          "end": 324.519
+        },
+        "mobile": {
+          "start": 307.683,
+          "actions": 2.245,
+          "end": 323.684
+        }
+      }
+    }
+  ],
+  "views": [
+    {
+      "name": "desktop",
+      "size": {
+        "width": 1280,
+        "height": 840
+      },
+      "focus": [
+        {
+          "time": 2.774,
+          "x": 640,
+          "y": 419.9921875,
+          "zoom": 1
+        },
+        {
+          "time": 26.903,
+          "x": 762,
+          "y": 420.265625,
+          "zoom": 1.1
+        },
+        {
+          "time": 45.806,
+          "x": 640,
+          "y": 496.8671875,
+          "zoom": 1.25
+        },
+        {
+          "time": 86.452,
+          "x": 762,
+          "y": 419.6640625,
+          "zoom": 1.12
+        },
+        {
+          "time": 99.492,
+          "x": 762,
+          "y": 419.6640625,
+          "zoom": 1.16
+        },
+        {
+          "time": 113.892,
+          "x": 762,
+          "y": 420.203125,
+          "zoom": 1.35
+        },
+        {
+          "time": 121.814,
+          "x": 762,
+          "y": 419.59375,
+          "zoom": 1.3
+        },
+        {
+          "time": 140.257,
+          "x": 859,
+          "y": 355.140625,
+          "zoom": 1.35
+        },
+        {
+          "time": 143.836,
+          "x": 640,
+          "y": 619.34375,
+          "zoom": 1.25
+        },
+        {
+          "time": 170.995,
+          "x": 640,
+          "y": 625.2265625,
+          "zoom": 1.15
+        },
+        {
+          "time": 192.65,
+          "x": 1024.7734375,
+          "y": 465.28125,
+          "zoom": 1.2
+        },
+        {
+          "time": 211.267,
+          "x": 1024.7734375,
+          "y": 420.28125,
+          "zoom": 1.35
+        },
+        {
+          "time": 221.193,
+          "x": 1024.7734375,
+          "y": 420.375,
+          "zoom": 1.35
+        },
+        {
+          "time": 230.195,
+          "x": 1024.7734375,
+          "y": 420.375,
+          "zoom": 1.2
+        },
+        {
+          "time": 236.29,
+          "x": 1024.7734375,
+          "y": 419.875,
+          "zoom": 1.35
+        },
+        {
+          "time": 241.119,
+          "x": 1024.7734375,
+          "y": 419.875,
+          "zoom": 1.35
+        },
+        {
+          "time": 257.472,
+          "x": 640,
+          "y": 619.34375,
+          "zoom": 1.2
+        },
+        {
+          "time": 282.257,
+          "x": 530.9765625,
+          "y": 327.90625,
+          "zoom": 1.35
+        },
+        {
+          "time": 287.617,
+          "x": 640,
+          "y": 443.1875,
+          "zoom": 1.15
+        },
+        {
+          "time": 300.421,
+          "x": 640,
+          "y": 344.875,
+          "zoom": 1.05
+        },
+        {
+          "time": 310.767,
+          "x": 762,
+          "y": 243.421875,
+          "zoom": 1
+        }
+      ],
+      "end": 324.666,
+      "result": {
+        "planned": 48,
+        "actual": "47.5",
+        "status": "recovery_required",
+        "event_revision": 2
+      }
+    },
+    {
+      "name": "mobile",
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "focus": [
+        {
+          "time": 1.945,
+          "x": 195,
+          "y": 422,
+          "zoom": 1
+        },
+        {
+          "time": 26.066,
+          "x": 195,
+          "y": 422.46875,
+          "zoom": 1.1
+        },
+        {
+          "time": 44.318,
+          "x": 195,
+          "y": 495.1484375,
+          "zoom": 1.25
+        },
+        {
+          "time": 76.016,
+          "x": 195,
+          "y": 422.4765625,
+          "zoom": 1.12
+        },
+        {
+          "time": 96.858,
+          "x": 195,
+          "y": 422.4765625,
+          "zoom": 1.16
+        },
+        {
+          "time": 112.622,
+          "x": 195,
+          "y": 422.40625,
+          "zoom": 1.35
+        },
+        {
+          "time": 120.536,
+          "x": 195,
+          "y": 421.6875,
+          "zoom": 1.3
+        },
+        {
+          "time": 137.004,
+          "x": 197,
+          "y": 479.296875,
+          "zoom": 1.35
+        },
+        {
+          "time": 140.945,
+          "x": 195,
+          "y": 573.109375,
+          "zoom": 1.25
+        },
+        {
+          "time": 169.64,
+          "x": 195,
+          "y": 640.8125,
+          "zoom": 1.15
+        },
+        {
+          "time": 191.113,
+          "x": 195,
+          "y": 467.453125,
+          "zoom": 1.2
+        },
+        {
+          "time": 209.931,
+          "x": 195,
+          "y": 422.15625,
+          "zoom": 1.35
+        },
+        {
+          "time": 218.293,
+          "x": 195,
+          "y": 422.25,
+          "zoom": 1.35
+        },
+        {
+          "time": 226.942,
+          "x": 195,
+          "y": 422.25,
+          "zoom": 1.2
+        },
+        {
+          "time": 235.062,
+          "x": 195,
+          "y": 421.75,
+          "zoom": 1.35
+        },
+        {
+          "time": 239.479,
+          "x": 195,
+          "y": 421.75,
+          "zoom": 1.35
+        },
+        {
+          "time": 256.014,
+          "x": 195,
+          "y": 573.109375,
+          "zoom": 1.2
+        },
+        {
+          "time": 280.201,
+          "x": 207.8125,
+          "y": 316,
+          "zoom": 1.35
+        },
+        {
+          "time": 284.99,
+          "x": 195,
+          "y": 472.890625,
+          "zoom": 1.15
+        },
+        {
+          "time": 297.889,
+          "x": 195,
+          "y": 393.5,
+          "zoom": 1.05
+        },
+        {
+          "time": 309.928,
+          "x": 195,
+          "y": 275.9453125,
+          "zoom": 1
+        }
+      ],
+      "end": 327.692,
+      "result": {
+        "planned": 46,
+        "actual": "45.5",
+        "status": "recovery_required",
+        "event_revision": 2
+      }
+    }
+  ],
+  "errors": [],
+  "providerRequests": [],
+  "finished": "2026-09-26T14:39:44.435Z",
+  "status": "PASS",
+  "editorial_note": "The compare chapter uses a second actual UI take with synchronized selection barriers. All other chapters retain the continuous first take."
+}

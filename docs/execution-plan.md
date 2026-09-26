@@ -1,6 +1,7 @@
-# Demo video and media repair — 26 September 2026
+# Demo video and media repair — completed 26 September 2026
 
-Active work and ownership: [desktop/mobile recording plan](demo-video-plan.md).
+Delivered work and ownership: [desktop/mobile recording plan](demo-video-plan.md).
+The 5:21 master and three narrated guides pass all scoped checks; see [evidence](../reports/demo-video/README.md).
 Final walkthrough belongs in `output/demo-video/`; commit it when below 100 MB.
 Root owns recording/media/gateway; specialist owns guide error states and browser audit.
 

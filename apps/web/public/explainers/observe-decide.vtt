@@ -1,13 +1,49 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:12.000
-Start with reviewed records. Open the Farm Data Inbox. Try a synthetic example or upload your own records into this isolated sandbox. Preview the source before confirming extracted rows.
+00:00:00.400 --> 00:00:05.217
+Our starting question is whether the farm can cover a dated order for caixin.
 
-00:00:12.000 --> 00:00:24.000
-Keep demand types separate. A market quote is a price signal. Tentative demand is uncertain. Only a confirmed order becomes a booked commitment. Review dates, crop, quantity and price before applying changes.
+00:00:05.217 --> 00:00:07.282
+Scroll down to the farm picture.
 
-00:00:24.000 --> 00:00:36.000
-Compare calculated options. Coverage compares deliveries with confirmed demand. Surplus is closing stock. Expiry is projected waste. Contribution margin subtracts modeled variable costs from revenue; it is not net profit.
+00:00:07.282 --> 00:00:10.722
+Recorded crops occupy named beds, while empty beds stay empty.
 
-00:00:36.000 --> 00:00:48.000
-Apply a reviewed proposal. Challenge an assumption or edit a constraint. Review the proposal, then choose Apply & Recalculate. Local calculations produce new options. This does not approve a plan or create farm actions.
+00:00:10.722 --> 00:00:15.539
+Cash, labour, and the planning horizon provide the context for a realistic planting decision.
+
+00:00:20.433 --> 00:00:24.093
+Open the Farm Inbox to see which records are active.
+
+00:00:24.093 --> 00:00:27.387
+This example uses the labelled Singapore leafy greens fixture.
+
+00:00:27.387 --> 00:00:32.145
+Uploaded documents and manual entries must be reviewed before they become accepted evidence.
+
+00:00:32.145 --> 00:00:36.536
+For this walkthrough, we keep the existing records and return to planning.
+
+00:00:40.467 --> 00:00:41.950
+Choose Compare planting plans.
+
+00:00:41.950 --> 00:00:47.510
+The local numerical engine now checks crop timing and resource constraints against the recorded demand.
+
+00:00:47.510 --> 00:00:50.476
+This is a real calculation in the app.
+
+00:00:50.476 --> 00:00:56.779
+When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison.
+
+00:01:05.500 --> 00:01:08.829
+We inspect Balanced, then Resilient, and return to Balanced.
+
+00:01:08.829 --> 00:01:12.529
+Watch the selected candidate and the projected measures change together.
+
+00:01:12.529 --> 00:01:18.078
+Feasible means the model's constraints hold; it does not promise that every order is filled.
+
+00:01:18.078 --> 00:01:21.777
+Read the shortfall alongside the margin before making a choice.

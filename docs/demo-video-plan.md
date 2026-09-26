@@ -1,4 +1,9 @@
-# App walkthrough and guide repair — 26 September 2026
+# App walkthrough and guide repair — completed 26 September 2026
+
+Delivered: [5:21 master and chapters](../output/demo-video/README.md), three
+narrated app guides, gateway routing repair and verified player fallbacks.
+Evidence: [71 scoped checks](../reports/demo-video/README.md) plus build/contracts.
+The files and source changes are committed; live edition publication is separate.
 
 User scope: produce about five minutes of logical, real app interaction with natural
 scrolling/typing, close-ups and English voiceover. Desktop and mobile run side by

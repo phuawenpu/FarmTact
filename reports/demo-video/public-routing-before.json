@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://farmtact.fly.dev/explainers/observe-decide.mp4",
+    "status": 404,
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://farmtact.fly.dev/explainers/council-evidence.mp4",
+    "status": 404,
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://farmtact.fly.dev/explainers/act-replan.mp4",
+    "status": 404,
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://farmtact.fly.dev/explainers/transcripts.json",
+    "status": 404,
+    "content_type": "application/json"
+  }
+]

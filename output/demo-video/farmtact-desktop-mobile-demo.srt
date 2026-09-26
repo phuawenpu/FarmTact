@@ -1,0 +1,235 @@
+1
+00:00:00,400 --> 00:00:01,554
+Welcome to FarmTact.
+
+2
+00:00:01,554 --> 00:00:07,321
+On the left is the desktop workspace; on the right, the same journey on mobile.
+
+3
+00:00:07,321 --> 00:00:10,013
+We are using an isolated synthetic farm.
+
+4
+00:00:10,013 --> 00:00:16,549
+Start with the short introduction: inspect a delivery question, compare plans, review changes, and report what happened.
+
+5
+00:00:20,433 --> 00:00:25,250
+Our starting question is whether the farm can cover a dated order for caixin.
+
+6
+00:00:25,250 --> 00:00:27,315
+Scroll down to the farm picture.
+
+7
+00:00:27,315 --> 00:00:30,756
+Recorded crops occupy named beds, while empty beds stay empty.
+
+8
+00:00:30,756 --> 00:00:35,573
+Cash, labour, and the planning horizon provide the context for a realistic planting decision.
+
+9
+00:00:40,467 --> 00:00:44,126
+Open the Farm Inbox to see which records are active.
+
+10
+00:00:44,126 --> 00:00:47,420
+This example uses the labelled Singapore leafy greens fixture.
+
+11
+00:00:47,420 --> 00:00:52,178
+Uploaded documents and manual entries must be reviewed before they become accepted evidence.
+
+12
+00:00:52,178 --> 00:00:56,570
+For this walkthrough, we keep the existing records and return to planning.
+
+13
+00:01:00,500 --> 00:01:01,983
+Choose Compare planting plans.
+
+14
+00:01:01,983 --> 00:01:07,544
+The local numerical engine now checks crop timing and resource constraints against the recorded demand.
+
+15
+00:01:07,544 --> 00:01:10,510
+This is a real calculation in the app.
+
+16
+00:01:10,510 --> 00:01:16,812
+When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison.
+
+17
+00:01:25,533 --> 00:01:28,863
+We inspect Balanced, then Resilient, and return to Balanced.
+
+18
+00:01:28,863 --> 00:01:32,562
+Watch the selected candidate and the projected measures change together.
+
+19
+00:01:32,562 --> 00:01:38,111
+Feasible means the model's constraints hold; it does not promise that every order is filled.
+
+20
+00:01:38,111 --> 00:01:41,811
+Read the shortfall alongside the margin before making a choice.
+
+21
+00:01:45,567 --> 00:01:48,543
+Now bring the tradeoff to the Planning Council.
+
+22
+00:01:48,543 --> 00:01:50,775
+Each specialist has a distinct responsibility.
+
+23
+00:01:50,775 --> 00:01:54,867
+We type a focused question about booked deliveries and crop timing.
+
+24
+00:01:54,867 --> 00:01:59,331
+This remains a draft: only pressing Send or Ask Council requests advice.
+
+25
+00:01:59,331 --> 00:02:03,423
+No generated response is being presented as a completed review here.
+
+26
+00:02:10,600 --> 00:02:14,087
+Suppose expected demand for caixin rises by five percent.
+
+27
+00:02:14,087 --> 00:02:17,574
+Open Adjust assumptions and enter one hundred and five.
+
+28
+00:02:17,574 --> 00:02:19,899
+Read the exact changes before recalculating.
+
+29
+00:02:19,899 --> 00:02:27,260
+The date range, crop, and capacity remain visible, so we can check precisely what the next calculation will use.
+
+30
+00:02:45,200 --> 00:02:47,234
+The revised alternatives are ready.
+
+31
+00:02:47,234 --> 00:02:51,710
+Saving is a separate decision from calculating or asking for advice.
+
+32
+00:02:51,710 --> 00:02:55,372
+Open Save simulation plan, review its boundary, and confirm.
+
+33
+00:02:55,372 --> 00:02:59,847
+FarmTact records this approved revision and creates its simulated work list.
+
+34
+00:02:59,847 --> 00:03:03,509
+It does not operate equipment or contact a buyer.
+
+35
+00:03:05,233 --> 00:03:09,692
+Move to the work list and open a task from the approved plan.
+
+36
+00:03:09,692 --> 00:03:13,465
+Its crop, location, planned quantity, and checklist provide the reporting context.
+
+37
+00:03:13,465 --> 00:03:15,523
+We will demonstrate a short result.
+
+38
+00:03:15,523 --> 00:03:21,011
+The quantity entered next is an example report, not a measurement collected from a real farm.
+
+39
+00:03:25,267 --> 00:03:32,707
+Enter a quantity one unit below the task's plan, complete the checklist, and type a clear note explaining the shortage.
+
+40
+00:03:32,707 --> 00:03:34,567
+Then save the reported result.
+
+41
+00:03:34,567 --> 00:03:37,915
+Notice that this is labelled farmer reported and unverified.
+
+42
+00:03:37,915 --> 00:03:42,380
+The short result prompts recovery instead of silently rewriting the original projection.
+
+43
+00:03:50,300 --> 00:03:54,285
+If a scale reading was wrong, record a correction with a reason.
+
+44
+00:03:54,285 --> 00:03:58,601
+Here we revise the reported quantity and explain that the scale was checked.
+
+45
+00:03:58,601 --> 00:04:01,922
+Save auditable correction preserves the history of the first report.
+
+46
+00:04:01,922 --> 00:04:05,242
+The updated value remains a report, with its provenance intact.
+
+47
+00:04:10,333 --> 00:04:12,784
+The next decision is Compare recovery plans.
+
+48
+00:04:12,784 --> 00:04:17,335
+Open it to inspect a future change while keeping completed work in history.
+
+49
+00:04:17,335 --> 00:04:21,187
+We review the proposal and close it without applying another change.
+
+50
+00:04:21,187 --> 00:04:26,088
+Recovery is deliberate: opening a form or reading advice does not approve additional work.
+
+51
+00:04:30,367 --> 00:04:32,194
+For more context, open Crops.
+
+52
+00:04:32,194 --> 00:04:36,214
+The desktop navigation and mobile menu reach the same knowledge library.
+
+53
+00:04:36,214 --> 00:04:40,965
+Crop profiles and their evidence help us understand the assumptions behind a plan.
+
+54
+00:04:40,965 --> 00:04:47,178
+Knowledge is useful context; it should not be confused with a validated prediction for this particular farm.
+
+55
+00:04:50,400 --> 00:04:54,051
+Back in Plan, How it works opens three short guides.
+
+56
+00:04:54,051 --> 00:04:57,701
+Each has playback controls, captions, a transcript, and a download.
+
+57
+00:04:57,701 --> 00:05:03,542
+The introductory demo can also be replayed whenever you want a reminder of the decision sequence.
+
+58
+00:05:05,433 --> 00:05:10,890
+That is the complete loop: inspect, calculate, question, review, save, and report.
+
+59
+00:05:10,890 --> 00:05:19,075
+Desktop and mobile preserve the same explicit decisions and the same distinction between projections, simulation, and reported results.

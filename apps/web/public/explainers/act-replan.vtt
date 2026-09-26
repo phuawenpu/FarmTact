@@ -1,13 +1,49 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:12.000
-Work from the approved revision. Each task identifies its crop or batch, location, due date and checklist. Tasks belong to the approved sandbox plan. The application does not operate equipment or contact buyers.
+00:00:00.400 --> 00:00:04.859
+Move to the work list and open a task from the approved plan.
 
-00:00:12.000 --> 00:00:24.000
-Report what actually happened. Complete the checklist and record quantity with its unit. Keep accepted and rejected delivery quantities separate. Optional reviewed photos support observations; photos alone cannot establish yield.
+00:00:04.859 --> 00:00:08.632
+Its crop, location, planned quantity, and checklist provide the reporting context.
 
-00:00:24.000 --> 00:00:36.000
-Verify differences honestly. Reported results update a labeled forecast. A short harvest or rejected delivery prompts recovery. User-reported results remain unverified. Corrections append an auditable event instead of erasing the original report.
+00:00:08.632 --> 00:00:10.690
+We will demonstrate a short result.
 
-00:00:36.000 --> 00:00:48.000
-Replan while preserving work. Review the recovery proposal and recalculate future work. Completed and reported tasks retain their history. Waste Rescue compares dated surplus scenarios; a hypothetical sale is never treated as a confirmed order.
+00:00:10.690 --> 00:00:16.178
+The quantity entered next is an example report, not a measurement collected from a real farm.
+
+00:00:20.433 --> 00:00:27.874
+Enter a quantity one unit below the task's plan, complete the checklist, and type a clear note explaining the shortage.
+
+00:00:27.874 --> 00:00:29.734
+Then save the reported result.
+
+00:00:29.734 --> 00:00:33.082
+Notice that this is labelled farmer reported and unverified.
+
+00:00:33.082 --> 00:00:37.546
+The short result prompts recovery instead of silently rewriting the original projection.
+
+00:00:45.467 --> 00:00:49.451
+If a scale reading was wrong, record a correction with a reason.
+
+00:00:49.451 --> 00:00:53.768
+Here we revise the reported quantity and explain that the scale was checked.
+
+00:00:53.768 --> 00:00:57.088
+Save auditable correction preserves the history of the first report.
+
+00:00:57.088 --> 00:01:00.409
+The updated value remains a report, with its provenance intact.
+
+00:01:05.500 --> 00:01:07.951
+The next decision is Compare recovery plans.
+
+00:01:07.951 --> 00:01:12.502
+Open it to inspect a future change while keeping completed work in history.
+
+00:01:12.502 --> 00:01:16.353
+We review the proposal and close it without applying another change.
+
+00:01:16.353 --> 00:01:21.255
+Recovery is deliberate: opening a form or reading advice does not approve additional work.

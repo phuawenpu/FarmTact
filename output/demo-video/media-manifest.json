@@ -1,0 +1,90 @@
+[
+  {
+    "file": "output/demo-video/farmtact-desktop-mobile-demo.mp4",
+    "bytes": 40937535,
+    "duration_seconds": 321.087045,
+    "sha256": "25ab672b95b5e6f281c1bab6b7b60ecaf86847f64ba88224d182d71e607a89b0",
+    "streams": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "width": 2560,
+        "height": 1440,
+        "sample_rate": null
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "width": null,
+        "height": null,
+        "sample_rate": "48000"
+      }
+    ]
+  },
+  {
+    "file": "apps/web/public/explainers/observe-decide.mp4",
+    "bytes": 7256969,
+    "duration_seconds": 85.166341,
+    "sha256": "d1ba7614c7c353ee09eae03a465db26081647dbed89cdf19f8dd5d8c572eab15",
+    "streams": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "width": 1920,
+        "height": 1012,
+        "sample_rate": null
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "width": null,
+        "height": null,
+        "sample_rate": "48000"
+      }
+    ]
+  },
+  {
+    "file": "apps/web/public/explainers/council-evidence.mp4",
+    "bytes": 10058734,
+    "duration_seconds": 79.699675,
+    "sha256": "fcc88a430e251ff9374b6804611e5e4bda86403d244b6b9965b21e71e320b8f5",
+    "streams": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "width": 1920,
+        "height": 1012,
+        "sample_rate": null
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "width": null,
+        "height": null,
+        "sample_rate": "48000"
+      }
+    ]
+  },
+  {
+    "file": "apps/web/public/explainers/act-replan.mp4",
+    "bytes": 8513738,
+    "duration_seconds": 85.166341,
+    "sha256": "4a11797b7a1676e07d8c51bf9ef8383bf61a5d3f6cede19b7834c77da9e1783a",
+    "streams": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "width": 1920,
+        "height": 1012,
+        "sample_rate": null
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "width": null,
+        "height": null,
+        "sample_rate": "48000"
+      }
+    ]
+  }
+]

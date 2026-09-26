@@ -130,21 +130,21 @@ try {
   const failedGuide = page.getByRole("dialog", { name: "Three short guides" });
   await failedGuide.locator("video").first().evaluate((video) => video.load());
   await failedGuide.getByText("Transcript", { exact: true }).nth(1).click();
-  await failedGuide.getByText(/full transcript is unavailable/i).first().waitFor();
+  await failedGuide.getByText(/full transcript is unavailable/i).filter({visible:true}).first().waitFor();
   check(
     "failed video sources expose written fallbacks",
     (await failedGuide.getByText(/guide video is unavailable/i).count()) === 3 &&
       (await failedGuide.getByText("MP4 download unavailable", { exact: true }).count()) === 3,
   );
-  check("valid transcript JSON with a missing guide reports unavailable", await failedGuide.getByText(/full transcript is unavailable/i).first().isVisible());
+  check("valid transcript JSON with a missing guide reports unavailable", await failedGuide.getByText(/full transcript is unavailable/i).filter({visible:true}).first().isVisible());
   await page.getByRole("button", { name: /Close Three short guides/ }).click();
   await page.unroute("**/explainers/transcripts.json");
   await page.route("**/explainers/transcripts.json", (route) => route.abort("failed"));
   await page.getByRole("button", { name: /How it works/ }).click();
   const transcriptFailure = page.getByRole("dialog", { name: "Three short guides" });
   await transcriptFailure.getByText("Transcript", { exact: true }).first().click();
-  await transcriptFailure.getByText(/full transcript is unavailable/i).first().waitFor();
-  check("failed transcript request exposes a written fallback", await transcriptFailure.getByText(/full transcript is unavailable/i).first().isVisible());
+  await transcriptFailure.getByText(/full transcript is unavailable/i).filter({visible:true}).first().waitFor();
+  check("failed transcript request exposes a written fallback", await transcriptFailure.getByText(/full transcript is unavailable/i).filter({visible:true}).first().isVisible());
   check("media and Demo checks submit no provider requests", providerMutations.length === 0, providerMutations);
   report.status = "PASS";
 } catch (error) {

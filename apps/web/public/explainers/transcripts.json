@@ -1,56 +1,52 @@
 {
   "observe-decide": [
     {
-      "title": "Start with reviewed records",
-      "text": "Open the Farm Data Inbox. Try a synthetic example or upload your own records into this isolated sandbox. Preview the source before confirming extracted rows."
+      "title": "Read the farm before changing it",
+      "text": "Our starting question is whether the farm can cover a dated order for caixin. Scroll down to the farm picture. Recorded crops occupy named beds, while empty beds stay empty. Cash, labour, and the planning horizon provide the context for a realistic planting decision."
     },
     {
-      "title": "Keep demand types separate",
-      "text": "A market quote is a price signal. Tentative demand is uncertain. Only a confirmed order becomes a booked commitment. Review dates, crop, quantity and price before applying changes."
+      "title": "Inspect the source records",
+      "text": "Open the Farm Inbox to see which records are active. This example uses the labelled Singapore leafy greens fixture. Uploaded documents and manual entries must be reviewed before they become accepted evidence. For this walkthrough, we keep the existing records and return to planning."
     },
     {
-      "title": "Compare calculated options",
-      "text": "Coverage compares deliveries with confirmed demand. Surplus is closing stock. Expiry is projected waste. Contribution margin subtracts modeled variable costs from revenue; it is not net profit."
+      "title": "Calculate real planting alternatives",
+      "text": "Choose Compare planting plans. The local numerical engine now checks crop timing and resource constraints against the recorded demand. This is a real calculation in the app. When it finishes, the alternatives appear with their own coverage, expiry, and contribution margin, ready for comparison."
     },
     {
-      "title": "Apply a reviewed proposal",
-      "text": "Challenge an assumption or edit a constraint. Review the proposal, then choose Apply & Recalculate. Local calculations produce new options. This does not approve a plan or create farm actions."
+      "title": "Compare the tradeoffs",
+      "text": "We inspect Balanced, then Resilient, and return to Balanced. Watch the selected candidate and the projected measures change together. Feasible means the model's constraints hold; it does not promise that every order is filled. Read the shortfall alongside the margin before making a choice."
     }
   ],
   "council-evidence": [
     {
-      "title": "Ask the relevant specialist",
-      "text": "Seven roles cover demand, crops, weather, markets, capacity, farm planning and review. Ask about a constraint, challenge an assumption or compare an alternative strategy."
+      "title": "Draft a focused Council question",
+      "text": "Now bring the tradeoff to the Planning Council. Each specialist has a distinct responsibility. We type a focused question about booked deliveries and crop timing. This remains a draft: only pressing Send or Ask Council requests advice. No generated response is being presented as a completed review here."
     },
     {
-      "title": "Follow the evidence",
-      "text": "Open each finding to inspect its source and tool activity. Validated means the claim passed its checks against this frozen planning result. It is not a guarantee of a real harvest."
+      "title": "Review an explicit change",
+      "text": "Suppose expected demand for caixin rises by five percent. Open Adjust assumptions and enter one hundred and five. Read the exact changes before recalculating. The date range, crop, and capacity remain visible, so we can check precisely what the next calculation will use."
     },
     {
-      "title": "Respect missing information",
-      "text": "Partial means some evidence or specialist findings are unavailable. Withheld advice failed checks or lacks support. Missing weather and market sources stay visible; the Council must not invent them."
-    },
-    {
-      "title": "Approval stays explicit",
-      "text": "Choose a feasible calculated strategy and inspect its assumptions. Approve & Create Actions records that revision in the sandbox. Later changes require a new reviewed proposal and approval."
+      "title": "Save a simulation plan deliberately",
+      "text": "The revised alternatives are ready. Saving is a separate decision from calculating or asking for advice. Open Save simulation plan, review its boundary, and confirm. FarmTact records this approved revision and creates its simulated work list. It does not operate equipment or contact a buyer."
     }
   ],
   "act-replan": [
     {
-      "title": "Work from the approved revision",
-      "text": "Each task identifies its crop or batch, location, due date and checklist. Tasks belong to the approved sandbox plan. The application does not operate equipment or contact buyers."
+      "title": "Open a task from the approved plan",
+      "text": "Move to the work list and open a task from the approved plan. Its crop, location, planned quantity, and checklist provide the reporting context. We will demonstrate a short result. The quantity entered next is an example report, not a measurement collected from a real farm."
     },
     {
-      "title": "Report what actually happened",
-      "text": "Complete the checklist and record quantity with its unit. Keep accepted and rejected delivery quantities separate. Optional reviewed photos support observations; photos alone cannot establish yield."
+      "title": "Report a short result",
+      "text": "Enter a quantity one unit below the task's plan, complete the checklist, and type a clear note explaining the shortage. Then save the reported result. Notice that this is labelled farmer reported and unverified. The short result prompts recovery instead of silently rewriting the original projection."
     },
     {
-      "title": "Verify differences honestly",
-      "text": "Reported results update a labeled forecast. A short harvest or rejected delivery prompts recovery. User-reported results remain unverified. Corrections append an auditable event instead of erasing the original report."
+      "title": "Correct the record without erasing it",
+      "text": "If a scale reading was wrong, record a correction with a reason. Here we revise the reported quantity and explain that the scale was checked. Save auditable correction preserves the history of the first report. The updated value remains a report, with its provenance intact."
     },
     {
-      "title": "Replan while preserving work",
-      "text": "Review the recovery proposal and recalculate future work. Completed and reported tasks retain their history. Waste Rescue compares dated surplus scenarios; a hypothetical sale is never treated as a confirmed order."
+      "title": "Review future recovery",
+      "text": "The next decision is Compare recovery plans. Open it to inspect a future change while keeping completed work in history. We review the proposal and close it without applying another change. Recovery is deliberate: opening a form or reading advice does not approve additional work."
     }
   ]
 }

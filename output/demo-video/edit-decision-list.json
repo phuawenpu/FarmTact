@@ -1,0 +1,302 @@
+[
+  {
+    "id": "welcome",
+    "title": "A delivery question, on two screens",
+    "start": 0,
+    "duration": 20.033333333333335,
+    "guide": null,
+    "recorded": {
+      "desktop": {
+        "start": 1.589,
+        "actions": 10.197,
+        "end": 21.595
+      },
+      "mobile": {
+        "start": 0.753,
+        "actions": 9.058,
+        "end": 20.758
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "farm",
+    "title": "Read the farm before changing it",
+    "start": 20.033333333333335,
+    "duration": 20.033333333333335,
+    "guide": "observe-decide",
+    "recorded": {
+      "desktop": {
+        "start": 21.742,
+        "actions": 5.161,
+        "end": 41.745
+      },
+      "mobile": {
+        "start": 20.906,
+        "actions": 5.16,
+        "end": 40.908
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "records",
+    "title": "Inspect the source records",
+    "start": 40.06666666666667,
+    "duration": 20.033333333333335,
+    "guide": "observe-decide",
+    "recorded": {
+      "desktop": {
+        "start": 41.92,
+        "actions": 11.714,
+        "end": 61.923
+      },
+      "mobile": {
+        "start": 41.084,
+        "actions": 11.064,
+        "end": 61.086
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "calculate",
+    "title": "Calculate real planting alternatives",
+    "start": 60.10000000000001,
+    "duration": 25.033333333333335,
+    "guide": "observe-decide",
+    "recorded": {
+      "desktop": {
+        "start": 62.072,
+        "actions": 24.38,
+        "end": 87.074
+      },
+      "mobile": {
+        "start": 61.236,
+        "actions": 14.78,
+        "end": 86.237
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "compare",
+    "title": "Compare the tradeoffs",
+    "start": 85.13333333333334,
+    "duration": 20.033333333333335,
+    "guide": "observe-decide",
+    "recorded": {
+      "desktop": {
+        "start": 49.49,
+        "actions": 14.326,
+        "end": 69.492
+      },
+      "mobile": {
+        "start": 48.401,
+        "actions": 14.326,
+        "end": 68.403
+      }
+    },
+    "source_capture": "compare-retake"
+  },
+  {
+    "id": "council",
+    "title": "Draft a focused Council question",
+    "start": 105.16666666666667,
+    "duration": 25.033333333333335,
+    "guide": "council-evidence",
+    "recorded": {
+      "desktop": {
+        "start": 107.362,
+        "actions": 14.452,
+        "end": 132.362
+      },
+      "mobile": {
+        "start": 106.527,
+        "actions": 14.009,
+        "end": 131.528
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "assumptions",
+    "title": "Review an explicit change",
+    "start": 130.20000000000002,
+    "duration": 34.6,
+    "guide": "council-evidence",
+    "recorded": {
+      "desktop": {
+        "start": 132.54,
+        "actions": 34.581,
+        "end": 167.122
+      },
+      "mobile": {
+        "start": 131.705,
+        "actions": 25.069,
+        "end": 156.775
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "approve",
+    "title": "Save a simulation plan deliberately",
+    "start": 164.8,
+    "duration": 20.033333333333335,
+    "guide": "council-evidence",
+    "recorded": {
+      "desktop": {
+        "start": 167.239,
+        "actions": 11.199,
+        "end": 187.24
+      },
+      "mobile": {
+        "start": 166.404,
+        "actions": 8.596,
+        "end": 186.405
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "task",
+    "title": "Open a task from the approved plan",
+    "start": 184.83333333333334,
+    "duration": 20.033333333333335,
+    "guide": "act-replan",
+    "recorded": {
+      "desktop": {
+        "start": 187.391,
+        "actions": 5.259,
+        "end": 207.396
+      },
+      "mobile": {
+        "start": 186.556,
+        "actions": 4.557,
+        "end": 206.561
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "report",
+    "title": "Report a short result",
+    "start": 204.86666666666667,
+    "duration": 25.033333333333335,
+    "guide": "act-replan",
+    "recorded": {
+      "desktop": {
+        "start": 207.538,
+        "actions": 22.657,
+        "end": 232.541
+      },
+      "mobile": {
+        "start": 206.703,
+        "actions": 20.239,
+        "end": 231.705
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "correction",
+    "title": "Correct the record without erasing it",
+    "start": 229.9,
+    "duration": 20.033333333333335,
+    "guide": "act-replan",
+    "recorded": {
+      "desktop": {
+        "start": 232.699,
+        "actions": 17.316,
+        "end": 252.701
+      },
+      "mobile": {
+        "start": 231.863,
+        "actions": 16.12,
+        "end": 251.864
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "recovery",
+    "title": "Review future recovery",
+    "start": 249.93333333333334,
+    "duration": 20.033333333333335,
+    "guide": "act-replan",
+    "recorded": {
+      "desktop": {
+        "start": 252.92,
+        "actions": 8.903,
+        "end": 272.927
+      },
+      "mobile": {
+        "start": 252.086,
+        "actions": 8.268,
+        "end": 272.091
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "knowledge",
+    "title": "Look up the crop behind the plan",
+    "start": 269.9666666666667,
+    "duration": 20.033333333333335,
+    "guide": null,
+    "recorded": {
+      "desktop": {
+        "start": 273.103,
+        "actions": 16.721,
+        "end": 293.105
+      },
+      "mobile": {
+        "start": 272.267,
+        "actions": 14.928,
+        "end": 292.268
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "guides",
+    "title": "Replay the guides when you need them",
+    "start": 290.00000000000006,
+    "duration": 15.033333333333333,
+    "guide": null,
+    "recorded": {
+      "desktop": {
+        "start": 293.325,
+        "actions": 14.341,
+        "end": 308.326
+      },
+      "mobile": {
+        "start": 292.489,
+        "actions": 11.019,
+        "end": 307.489
+      }
+    },
+    "source_capture": "capture"
+  },
+  {
+    "id": "finish",
+    "title": "One workflow, desktop and mobile",
+    "start": 305.0333333333334,
+    "duration": 16.033333333333335,
+    "guide": null,
+    "recorded": {
+      "desktop": {
+        "start": 308.518,
+        "actions": 2.249,
+        "end": 324.519
+      },
+      "mobile": {
+        "start": 307.683,
+        "actions": 2.245,
+        "end": 323.684
+      }
+    },
+    "source_capture": "capture"
+  }
+]
