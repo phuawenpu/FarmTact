@@ -1,3 +1,9 @@
+# Demo video and media repair — 26 September 2026
+
+Active work and ownership: [desktop/mobile recording plan](demo-video-plan.md).
+Final walkthrough belongs in `output/demo-video/`; commit it when below 100 MB.
+Root owns recording/media/gateway; specialist owns guide error states and browser audit.
+
 # V22 active — Council-led V12 workspace
 
 See [approved V22 scope](v22-council-guidance.md). Root owns contracts, API, guidance,

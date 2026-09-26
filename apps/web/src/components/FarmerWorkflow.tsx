@@ -1936,6 +1936,10 @@ function Explainers({ onClose }: { onClose: () => void }) {
   const [transcripts, setTranscripts] = useState<
     Record<string, TranscriptScene[]>
   >({});
+  const [transcriptState, setTranscriptState] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [failedVideos, setFailedVideos] = useState<Record<string, boolean>>({});
   useEffect(() => {
     let current = true;
     void fetch(editionPath("/explainers/transcripts.json"))
@@ -1944,10 +1948,16 @@ function Explainers({ onClose }: { onClose: () => void }) {
         return response.json() as Promise<Record<string, TranscriptScene[]>>;
       })
       .then((value) => {
-        if (current) setTranscripts(value);
+        if (current) {
+          setTranscripts(value);
+          setTranscriptState("ready");
+        }
       })
       .catch(() => {
-        if (current) setTranscripts({});
+        if (current) {
+          setTranscripts({});
+          setTranscriptState("error");
+        }
       });
     return () => {
       current = false;
@@ -1986,8 +1996,17 @@ function Explainers({ onClose }: { onClose: () => void }) {
             preload="metadata"
             playsInline
             poster={editionPath(`/explainers/${file.replace(".mp4", ".png")}`)}
+            onError={() =>
+              setFailedVideos((current) => ({ ...current, [file]: true }))
+            }
           >
-            <source src={editionPath(`/explainers/${file}`)} type="video/mp4" />
+            <source
+              src={editionPath(`/explainers/${file}`)}
+              type="video/mp4"
+              onError={() =>
+                setFailedVideos((current) => ({ ...current, [file]: true }))
+              }
+            />
             <track
               kind="captions"
               src={editionPath(`/explainers/${file.replace(".mp4", ".vtt")}`)}
@@ -1999,10 +2018,22 @@ function Explainers({ onClose }: { onClose: () => void }) {
           <div>
             <h3>{title}</h3>
             <p>{text}</p>
+            {failedVideos[file] && (
+              <p className="guided-error" role="alert">
+                This guide video is unavailable. Use the written summary and
+                transcript below.
+              </p>
+            )}
             <details>
               <summary>Transcript</summary>
               <div className="explainer-transcript">
-                {transcripts[slug]?.map((scene, index) => (
+                {transcriptState === "error" ||
+                (transcriptState === "ready" && !transcripts[slug]) ? (
+                  <p role="alert">
+                    The full transcript is unavailable. The guide summary remains
+                    above.
+                  </p>
+                ) : transcripts[slug]?.map((scene, index) => (
                   <section
                     className="explainer-transcript-scene"
                     key={scene.title}
@@ -2012,16 +2043,20 @@ function Explainers({ onClose }: { onClose: () => void }) {
                     </strong>
                     <p>{scene.text}</p>
                   </section>
-                )) ?? <p>Loading the caption-matched transcript…</p>}
+                )) ?? <p role="status">Loading the caption-matched transcript…</p>}
               </div>
             </details>
-            <a
-              className="text-button"
-              href={editionPath(`/explainers/${file}`)}
-              download
-            >
-              Download MP4
-            </a>
+            {failedVideos[file] ? (
+              <span className="media-boundary">MP4 download unavailable</span>
+            ) : (
+              <a
+                className="text-button"
+                href={editionPath(`/explainers/${file}`)}
+                download
+              >
+                Download MP4
+              </a>
+            )}
           </div>
         </article>
       ))}

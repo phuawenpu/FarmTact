@@ -18,6 +18,7 @@ from services.api.security import client_network, is_event_stream
 
 HOP = {'host', 'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'content-length', 'content-encoding'}
 METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+PUBLIC_ASSETS = ('assets', 'art', 'review-evidence', 'research-evidence', 'audio', 'explainers')
 
 
 class NoUpstreamCookies(DefaultCookiePolicy):
@@ -163,7 +164,7 @@ def create_gateway(store=None, transport=None):
         return result
 
     dist = ROOT / 'apps/web/dist'
-    static_apps = {name: StaticFiles(directory=dist / name) for name in ('assets', 'art', 'review-evidence', 'audio') if (dist / name).is_dir()}
+    static_apps = {name: StaticFiles(directory=dist / name) for name in PUBLIC_ASSETS if (dist / name).is_dir()}
 
     @app.api_route('/api/v1/health', methods=['GET', 'HEAD'])
     async def health(request: Request):
@@ -201,7 +202,7 @@ def create_gateway(store=None, transport=None):
             return JSONResponse({'detail': 'Not found'}, 404)
         return await proxy(request, current['latest'], 'api/v1/' + path, public_current=True)
 
-    for asset_name in ('assets', 'art', 'review-evidence', 'audio'):
+    for asset_name in PUBLIC_ASSETS:
         async def public_asset(request: Request, path: str, name=asset_name):
             current = current_release()
             if current:

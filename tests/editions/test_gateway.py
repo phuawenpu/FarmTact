@@ -157,6 +157,13 @@ def current_gateway(monkeypatch, tmp_path, request):
             return httpx.Response(200, text='<script src="/assets/game.js"></script>', headers={'content-type': 'text/html'})
         if request.url.path == '/assets/game.js':
             return httpx.Response(200, content=b'current-asset', headers={'content-type': 'text/javascript'})
+        if request.url.path == '/explainers/observe-decide.mp4':
+            if request.headers.get('range') == 'bytes=0-7':
+                return httpx.Response(206, content=b'video123', headers={
+                    'content-type': 'video/mp4', 'content-range': 'bytes 0-7/80',
+                    'accept-ranges': 'bytes',
+                })
+            return httpx.Response(200, content=b'video123', headers={'content-type': 'video/mp4'})
         headers = {'set-cookie': 'farmtact_session=current_session_123456789; HttpOnly; Path=/; SameSite=Strict'} if request.url.path.endswith('/new') else {}
         return httpx.Response(200, json={'path': request.url.path}, headers=headers)
 
@@ -173,6 +180,26 @@ def test_v14_current_routes_proxy_without_version_prefix(current_gateway):
     assert client.get('/api/v1/bootstrap').json()['path'] == '/api/v1/bootstrap'
     assert client.get('/assets/game.js').content == b'current-asset'
     assert [request.url.path for request in seen[-4:]] == ['/', '/play', '/api/v1/bootstrap', '/assets/game.js']
+
+
+def test_current_guides_support_playback_download_and_seek(current_gateway):
+    client, seen = current_gateway
+    video = client.get('/explainers/observe-decide.mp4')
+    assert video.status_code == 200
+    assert video.headers['content-type'] == 'video/mp4'
+    assert video.content == b'video123'
+    assert client.head('/explainers/observe-decide.mp4').status_code == 200
+    partial = client.get('/explainers/observe-decide.mp4', headers={'range': 'bytes=0-7'})
+    assert partial.status_code == 206
+    assert partial.headers['content-range'] == 'bytes 0-7/80'
+    assert partial.headers['accept-ranges'] == 'bytes'
+    assert seen[-1].headers['range'] == 'bytes=0-7'
+    for path in ('/explainers/observe-decide.png', '/explainers/observe-decide.vtt',
+                 '/explainers/transcripts.json', '/research-evidence/storyboard.png'):
+        assert client.get(path).json()['path'] == path
+    # This remains a named-asset allowlist, never an arbitrary filesystem server.
+    assert client.get('/.env').status_code == 404
+    assert client.get('/scripts/serve.py').status_code == 404
 
 
 def test_v14_cookie_origin_and_header_boundaries(current_gateway):
